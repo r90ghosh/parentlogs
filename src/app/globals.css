@@ -74,4 +74,8 @@
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
     @apply bg-surface-500;
   }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
