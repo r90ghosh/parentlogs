@@ -4,6 +4,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { trackerService, LogFilters, LogType } from '@/services/tracker-service'
 import { BabyLog } from '@/types'
 
+export type CreateLogInput = {
+  log_type: LogType
+  log_data: Record<string, any>
+  logged_at?: string
+  notes?: string
+}
+
 export function useTrackerLogs(filters: LogFilters = {}) {
   return useQuery({
     queryKey: ['tracker-logs', filters],
@@ -31,7 +38,7 @@ export function useCreateLog() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (log: Partial<BabyLog>) => trackerService.createLog(log),
+    mutationFn: (log: CreateLogInput) => trackerService.createLog(log),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tracker-logs'] })
       queryClient.invalidateQueries({ queryKey: ['shift-briefing'] })

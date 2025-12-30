@@ -27,7 +27,7 @@ const taskSchema = z.object({
   description: z.string().optional(),
   due_date: z.string().min(1, 'Due date is required'),
   assigned_to: z.enum(['dad', 'mom', 'both']),
-  priority: z.enum(['must-do', 'recommended', 'optional']),
+  priority: z.enum(['must-do', 'good-to-do']),
   category: z.string().min(1, 'Category is required'),
 })
 
@@ -60,7 +60,7 @@ export default function NewTaskPage() {
     resolver: zodResolver(taskSchema),
     defaultValues: {
       assigned_to: 'both',
-      priority: 'recommended',
+      priority: 'good-to-do',
       category: 'Other',
     },
   })
@@ -172,8 +172,7 @@ export default function NewTaskPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="must-do">Must-Do</SelectItem>
-                  <SelectItem value="recommended">Recommended</SelectItem>
-                  <SelectItem value="optional">Optional</SelectItem>
+                  <SelectItem value="good-to-do">Good-to-Do</SelectItem>
                 </SelectContent>
               </Select>
             </div>

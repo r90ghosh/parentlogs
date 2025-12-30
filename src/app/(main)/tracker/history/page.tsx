@@ -94,7 +94,7 @@ export default function TrackerHistoryPage() {
   }
 
   const formatLogDetails = (log: any) => {
-    const details = log.details || {}
+    const details = log.log_data || {}
     switch (log.log_type) {
       case 'feeding':
         if (details.type === 'breast') {

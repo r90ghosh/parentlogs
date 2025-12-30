@@ -1,0 +1,689 @@
+'use client'
+
+import { useState } from 'react'
+import { useBudgetSummary, useAddToBudget, useMarkAsPurchased, useRemoveBudgetItem, useAddCustomBudgetItem } from '@/hooks/use-budget'
+import { useFamily } from '@/hooks/use-family'
+import { budgetService } from '@/services/budget-service'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Progress } from '@/components/ui/progress'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  DollarSign,
+  Plus,
+  Check,
+  Trash2,
+  ShoppingCart,
+  TrendingUp,
+  Wallet,
+  AlertCircle,
+  Baby,
+  Home,
+  Car,
+  Heart,
+  Utensils,
+  Shield,
+  Monitor,
+  FileText,
+  Shirt,
+} from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
+import { BudgetTemplate, FamilyBudgetItem } from '@/types'
+
+const CATEGORY_ICONS: Record<string, React.ElementType> = {
+  'Admin': FileText,
+  'Nursery': Home,
+  'Gear': Car,
+  'Health': Heart,
+  'Feeding': Utensils,
+  'Diapering': Baby,
+  'Tech': Monitor,
+  'Safety': Shield,
+  'Clothing': Shirt,
+}
+
+const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
+  'Admin': { bg: 'bg-slate-500/20', text: 'text-slate-400', border: 'border-slate-500/30' },
+  'Nursery': { bg: 'bg-purple-500/20', text: 'text-purple-400', border: 'border-purple-500/30' },
+  'Gear': { bg: 'bg-blue-500/20', text: 'text-blue-400', border: 'border-blue-500/30' },
+  'Health': { bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/30' },
+  'Feeding': { bg: 'bg-amber-500/20', text: 'text-amber-400', border: 'border-amber-500/30' },
+  'Diapering': { bg: 'bg-cyan-500/20', text: 'text-cyan-400', border: 'border-cyan-500/30' },
+  'Tech': { bg: 'bg-indigo-500/20', text: 'text-indigo-400', border: 'border-indigo-500/30' },
+  'Safety': { bg: 'bg-orange-500/20', text: 'text-orange-400', border: 'border-orange-500/30' },
+  'Clothing': { bg: 'bg-pink-500/20', text: 'text-pink-400', border: 'border-pink-500/30' },
+}
+
+export default function BudgetPage() {
+  const { data: summary, isLoading } = useBudgetSummary()
+  const { data: family } = useFamily()
+  const addToBudget = useAddToBudget()
+  const markAsPurchased = useMarkAsPurchased()
+  const removeBudgetItem = useRemoveBudgetItem()
+  const addCustomItem = useAddCustomBudgetItem()
+
+  const [selectedTemplate, setSelectedTemplate] = useState<BudgetTemplate | null>(null)
+  const [purchaseDialogItem, setPurchaseDialogItem] = useState<FamilyBudgetItem | null>(null)
+  const [actualPrice, setActualPrice] = useState('')
+  const [showAddCustomDialog, setShowAddCustomDialog] = useState(false)
+  const [customItem, setCustomItem] = useState({ item: '', category: 'Other', price: '' })
+  const [stageFilter, setStageFilter] = useState<'all' | 'pregnancy' | 'post-birth'>('all')
+
+  const addedTemplateIds = new Set(
+    summary?.familyItems
+      .filter(i => i.budget_template_id)
+      .map(i => i.budget_template_id)
+  )
+
+  const handleAddTemplate = async (template: BudgetTemplate) => {
+    const result = await addToBudget.mutateAsync({
+      templateId: template.budget_id,
+      estimatedPrice: template.price_mid,
+    })
+
+    if (result.error) {
+      toast.error(result.error.message)
+    } else {
+      toast.success(`Added "${template.item}" to your budget`)
+    }
+    setSelectedTemplate(null)
+  }
+
+  const handleMarkPurchased = async () => {
+    if (!purchaseDialogItem) return
+
+    const priceInCents = actualPrice ? Math.round(parseFloat(actualPrice) * 100) : undefined
+    const result = await markAsPurchased.mutateAsync({
+      itemId: purchaseDialogItem.id,
+      actualPrice: priceInCents,
+    })
+
+    if (result.error) {
+      toast.error(result.error.message)
+    } else {
+      toast.success('Marked as purchased!')
+    }
+    setPurchaseDialogItem(null)
+    setActualPrice('')
+  }
+
+  const handleRemoveItem = async (itemId: string) => {
+    const result = await removeBudgetItem.mutateAsync(itemId)
+    if (result.error) {
+      toast.error(result.error.message)
+    } else {
+      toast.success('Item removed from budget')
+    }
+  }
+
+  const handleAddCustomItem = async () => {
+    if (!customItem.item || !customItem.price) return
+
+    const priceInCents = Math.round(parseFloat(customItem.price) * 100)
+    const result = await addCustomItem.mutateAsync({
+      item: customItem.item,
+      category: customItem.category,
+      estimatedPrice: priceInCents,
+    })
+
+    if (result.error) {
+      toast.error(result.error.message)
+    } else {
+      toast.success('Custom item added!')
+      setCustomItem({ item: '', category: 'Other', price: '' })
+      setShowAddCustomDialog(false)
+    }
+  }
+
+  const filteredCategories = summary?.categories.filter(category => {
+    if (stageFilter === 'all') return true
+    return category.items.some(item => item.stage === stageFilter)
+  }).map(category => ({
+    ...category,
+    items: stageFilter === 'all'
+      ? category.items
+      : category.items.filter(item => item.stage === stageFilter)
+  }))
+
+  const pendingItems = summary?.familyItems.filter(i => !i.is_purchased) || []
+  const purchasedItems = summary?.familyItems.filter(i => i.is_purchased) || []
+
+  if (isLoading) {
+    return (
+      <div className="p-4 md:ml-64 space-y-6 max-w-4xl">
+        <Skeleton className="h-8 w-48" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[...Array(3)].map((_, i) => (
+            <Skeleton key={i} className="h-32" />
+          ))}
+        </div>
+        <Skeleton className="h-96" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="p-4 md:ml-64 space-y-6 max-w-4xl">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Budget Planner</h1>
+          <p className="text-surface-400 mt-1">
+            Plan and track your baby expenses
+          </p>
+        </div>
+        <Button onClick={() => setShowAddCustomDialog(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          Add Custom
+        </Button>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="bg-surface-900 border-surface-800">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-blue-500/20">
+                <TrendingUp className="h-5 w-5 text-blue-400" />
+              </div>
+              <div>
+                <p className="text-xs text-surface-400">Estimated Total</p>
+                <p className="text-xl font-bold text-white">
+                  {budgetService.formatPriceRange(
+                    summary?.grandTotalLow || 0,
+                    summary?.grandTotalHigh || 0
+                  )}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-surface-900 border-surface-800">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-green-500/20">
+                <ShoppingCart className="h-5 w-5 text-green-400" />
+              </div>
+              <div>
+                <p className="text-xs text-surface-400">Purchased</p>
+                <p className="text-xl font-bold text-white">
+                  {budgetService.formatPrice(summary?.purchasedTotal || 0)}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-surface-900 border-surface-800">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-lg bg-amber-500/20">
+                <Wallet className="h-5 w-5 text-amber-400" />
+              </div>
+              <div>
+                <p className="text-xs text-surface-400">Remaining</p>
+                <p className="text-xl font-bold text-white">
+                  {budgetService.formatPrice(summary?.remainingTotal || 0)}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Progress */}
+      {summary && summary.familyItems.length > 0 && (
+        <Card className="bg-surface-900 border-surface-800">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-surface-400">Shopping Progress</span>
+              <span className="text-sm font-medium text-white">
+                {purchasedItems.length} of {summary.familyItems.length} items
+              </span>
+            </div>
+            <Progress
+              value={(purchasedItems.length / summary.familyItems.length) * 100}
+              className="h-2 bg-surface-800"
+            />
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Main Content Tabs */}
+      <Tabs defaultValue="my-budget" className="space-y-4">
+        <TabsList className="bg-surface-900 border border-surface-800">
+          <TabsTrigger value="my-budget">My Budget ({summary?.familyItems.length || 0})</TabsTrigger>
+          <TabsTrigger value="browse">Browse Items</TabsTrigger>
+        </TabsList>
+
+        {/* My Budget Tab */}
+        <TabsContent value="my-budget" className="space-y-4">
+          {summary?.familyItems.length === 0 ? (
+            <Card className="bg-surface-900 border-surface-800">
+              <CardContent className="py-12 text-center">
+                <DollarSign className="h-12 w-12 text-surface-600 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-white mb-2">No items yet</h3>
+                <p className="text-surface-400 mb-4">
+                  Browse our curated list to add items to your budget
+                </p>
+                <Button variant="outline" onClick={() => {
+                  const tabsList = document.querySelector('[value="browse"]') as HTMLElement
+                  tabsList?.click()
+                }}>
+                  Browse Items
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              {/* Pending Items */}
+              {pendingItems.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium text-surface-400 flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4" />
+                    To Buy ({pendingItems.length})
+                  </h3>
+                  {pendingItems.map((item) => (
+                    <BudgetItemCard
+                      key={item.id}
+                      item={item}
+                      onMarkPurchased={() => setPurchaseDialogItem(item)}
+                      onRemove={() => handleRemoveItem(item.id)}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Purchased Items */}
+              {purchasedItems.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium text-surface-400 flex items-center gap-2">
+                    <Check className="h-4 w-4" />
+                    Purchased ({purchasedItems.length})
+                  </h3>
+                  {purchasedItems.map((item) => (
+                    <BudgetItemCard
+                      key={item.id}
+                      item={item}
+                      isPurchased
+                      onRemove={() => handleRemoveItem(item.id)}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </TabsContent>
+
+        {/* Browse Items Tab */}
+        <TabsContent value="browse" className="space-y-4">
+          {/* Stage Filter */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-surface-400">Show:</span>
+            <Select value={stageFilter} onValueChange={(v) => setStageFilter(v as typeof stageFilter)}>
+              <SelectTrigger className="w-40 bg-surface-900 border-surface-700">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Items</SelectItem>
+                <SelectItem value="pregnancy">Pregnancy</SelectItem>
+                <SelectItem value="post-birth">Post-Birth</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Accordion type="multiple" defaultValue={filteredCategories?.map(c => c.name)} className="space-y-2">
+            {filteredCategories?.map((category) => {
+              const Icon = CATEGORY_ICONS[category.name] || DollarSign
+              const colors = CATEGORY_COLORS[category.name] || CATEGORY_COLORS['Admin']
+
+              return (
+                <AccordionItem
+                  key={category.name}
+                  value={category.name}
+                  className="bg-surface-900 border border-surface-800 rounded-lg overflow-hidden"
+                >
+                  <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-surface-800/50">
+                    <div className="flex items-center gap-3 flex-1">
+                      <div className={cn("p-2 rounded-lg", colors.bg)}>
+                        <Icon className={cn("h-5 w-5", colors.text)} />
+                      </div>
+                      <div className="flex-1 text-left">
+                        <span className="font-medium text-white">{category.name}</span>
+                        <span className="text-xs text-surface-400 ml-2">
+                          ({category.items.length} items)
+                        </span>
+                      </div>
+                      <span className="text-sm text-surface-400 mr-4">
+                        {budgetService.formatPriceRange(category.totalLow, category.totalHigh)}
+                      </span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 pb-4">
+                    <div className="space-y-2 pt-2">
+                      {category.items.map((template) => {
+                        const isAdded = addedTemplateIds.has(template.budget_id)
+
+                        return (
+                          <div
+                            key={template.budget_id}
+                            className={cn(
+                              "flex items-start justify-between p-3 rounded-lg border transition-colors",
+                              isAdded
+                                ? "bg-accent-500/10 border-accent-500/30"
+                                : "bg-surface-800/50 border-surface-700 hover:border-surface-600"
+                            )}
+                          >
+                            <div className="flex-1 min-w-0 pr-4">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="font-medium text-white text-sm">
+                                  {template.item}
+                                </span>
+                                {template.priority === 'must-have' && (
+                                  <Badge variant="outline" className="text-xs border-red-500/50 text-red-400">
+                                    Must-have
+                                  </Badge>
+                                )}
+                                {isAdded && (
+                                  <Badge className="text-xs bg-accent-500/20 text-accent-400 border-0">
+                                    Added
+                                  </Badge>
+                                )}
+                              </div>
+                              {template.description && (
+                                <p className="text-xs text-surface-400 line-clamp-2 mb-1">
+                                  {template.description}
+                                </p>
+                              )}
+                              <div className="flex items-center gap-3 text-xs text-surface-500">
+                                <span>
+                                  Week {template.week_start}-{template.week_end}
+                                </span>
+                                <span>
+                                  {budgetService.formatPriceRange(template.price_low, template.price_high)}
+                                </span>
+                              </div>
+                              {template.notes && (
+                                <p className="text-xs text-amber-400/80 mt-1 italic">
+                                  {template.notes}
+                                </p>
+                              )}
+                            </div>
+                            <Button
+                              size="sm"
+                              variant={isAdded ? "ghost" : "outline"}
+                              disabled={isAdded || addToBudget.isPending}
+                              onClick={() => setSelectedTemplate(template)}
+                            >
+                              {isAdded ? (
+                                <Check className="h-4 w-4 text-accent-500" />
+                              ) : (
+                                <Plus className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )
+            })}
+          </Accordion>
+        </TabsContent>
+      </Tabs>
+
+      {/* Add Template Dialog */}
+      <Dialog open={!!selectedTemplate} onOpenChange={() => setSelectedTemplate(null)}>
+        <DialogContent className="bg-surface-900 border-surface-800">
+          <DialogHeader>
+            <DialogTitle>Add to Budget</DialogTitle>
+            <DialogDescription>
+              Add "{selectedTemplate?.item}" to your budget tracker
+            </DialogDescription>
+          </DialogHeader>
+          {selectedTemplate && (
+            <div className="space-y-4">
+              <div className="p-4 bg-surface-800 rounded-lg">
+                <h4 className="font-medium text-white mb-2">{selectedTemplate.item}</h4>
+                <p className="text-sm text-surface-400 mb-3">{selectedTemplate.description}</p>
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="p-2 bg-surface-700 rounded">
+                    <p className="text-xs text-surface-400">Budget</p>
+                    <p className="text-sm font-medium text-green-400">
+                      {budgetService.formatPrice(selectedTemplate.price_low)}
+                    </p>
+                  </div>
+                  <div className="p-2 bg-surface-700 rounded border-2 border-accent-500">
+                    <p className="text-xs text-surface-400">Mid-range</p>
+                    <p className="text-sm font-medium text-white">
+                      {budgetService.formatPrice(selectedTemplate.price_mid)}
+                    </p>
+                  </div>
+                  <div className="p-2 bg-surface-700 rounded">
+                    <p className="text-xs text-surface-400">Premium</p>
+                    <p className="text-sm font-medium text-amber-400">
+                      {budgetService.formatPrice(selectedTemplate.price_high)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSelectedTemplate(null)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => selectedTemplate && handleAddTemplate(selectedTemplate)}
+              disabled={addToBudget.isPending}
+            >
+              Add to Budget
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Mark as Purchased Dialog */}
+      <Dialog open={!!purchaseDialogItem} onOpenChange={() => setPurchaseDialogItem(null)}>
+        <DialogContent className="bg-surface-900 border-surface-800">
+          <DialogHeader>
+            <DialogTitle>Mark as Purchased</DialogTitle>
+            <DialogDescription>
+              Enter the actual price you paid (optional)
+            </DialogDescription>
+          </DialogHeader>
+          {purchaseDialogItem && (
+            <div className="space-y-4">
+              <div className="p-4 bg-surface-800 rounded-lg">
+                <h4 className="font-medium text-white">{purchaseDialogItem.item}</h4>
+                <p className="text-sm text-surface-400">
+                  Estimated: {budgetService.formatPrice(purchaseDialogItem.estimated_price)}
+                </p>
+              </div>
+              <div>
+                <label className="text-sm text-surface-400 mb-2 block">
+                  Actual Price (optional)
+                </label>
+                <div className="relative">
+                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-500" />
+                  <Input
+                    type="number"
+                    step="0.01"
+                    placeholder="0.00"
+                    value={actualPrice}
+                    onChange={(e) => setActualPrice(e.target.value)}
+                    className="pl-9 bg-surface-800 border-surface-700"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPurchaseDialogItem(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleMarkPurchased} disabled={markAsPurchased.isPending}>
+              <Check className="h-4 w-4 mr-2" />
+              Mark Purchased
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Custom Item Dialog */}
+      <Dialog open={showAddCustomDialog} onOpenChange={setShowAddCustomDialog}>
+        <DialogContent className="bg-surface-900 border-surface-800">
+          <DialogHeader>
+            <DialogTitle>Add Custom Item</DialogTitle>
+            <DialogDescription>
+              Add your own item to track in your budget
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm text-surface-400 mb-2 block">Item Name</label>
+              <Input
+                placeholder="e.g., Baby monitor"
+                value={customItem.item}
+                onChange={(e) => setCustomItem(prev => ({ ...prev, item: e.target.value }))}
+                className="bg-surface-800 border-surface-700"
+              />
+            </div>
+            <div>
+              <label className="text-sm text-surface-400 mb-2 block">Category</label>
+              <Select
+                value={customItem.category}
+                onValueChange={(v) => setCustomItem(prev => ({ ...prev, category: v }))}
+              >
+                <SelectTrigger className="bg-surface-800 border-surface-700">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.keys(CATEGORY_ICONS).map(cat => (
+                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                  ))}
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-sm text-surface-400 mb-2 block">Estimated Price</label>
+              <div className="relative">
+                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-500" />
+                <Input
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={customItem.price}
+                  onChange={(e) => setCustomItem(prev => ({ ...prev, price: e.target.value }))}
+                  className="pl-9 bg-surface-800 border-surface-700"
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowAddCustomDialog(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleAddCustomItem}
+              disabled={!customItem.item || !customItem.price || addCustomItem.isPending}
+            >
+              Add Item
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  )
+}
+
+function BudgetItemCard({
+  item,
+  isPurchased = false,
+  onMarkPurchased,
+  onRemove,
+}: {
+  item: FamilyBudgetItem
+  isPurchased?: boolean
+  onMarkPurchased?: () => void
+  onRemove: () => void
+}) {
+  const colors = CATEGORY_COLORS[item.category] || CATEGORY_COLORS['Admin']
+  const Icon = CATEGORY_ICONS[item.category] || DollarSign
+
+  return (
+    <Card className={cn(
+      "bg-surface-900 border-surface-800",
+      isPurchased && "opacity-70"
+    )}>
+      <CardContent className="py-4">
+        <div className="flex items-center gap-3">
+          <div className={cn("p-2 rounded-lg shrink-0", colors.bg)}>
+            <Icon className={cn("h-5 w-5", colors.text)} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <span className={cn(
+                "font-medium text-sm",
+                isPurchased ? "text-surface-400 line-through" : "text-white"
+              )}>
+                {item.item}
+              </span>
+              {item.is_custom && (
+                <Badge variant="outline" className="text-xs">Custom</Badge>
+              )}
+            </div>
+            <div className="flex items-center gap-2 text-xs text-surface-400">
+              <span>{item.category}</span>
+              <span>|</span>
+              <span>
+                {isPurchased && item.actual_price
+                  ? `Paid: ${budgetService.formatPrice(item.actual_price)}`
+                  : `Est: ${budgetService.formatPrice(item.estimated_price)}`
+                }
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-1">
+            {!isPurchased && onMarkPurchased && (
+              <Button size="icon" variant="ghost" onClick={onMarkPurchased}>
+                <Check className="h-4 w-4 text-green-500" />
+              </Button>
+            )}
+            <Button size="icon" variant="ghost" onClick={onRemove}>
+              <Trash2 className="h-4 w-4 text-red-500" />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}

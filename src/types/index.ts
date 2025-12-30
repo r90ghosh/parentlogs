@@ -11,6 +11,7 @@ export interface User {
   family_id?: string
   subscription_tier: SubscriptionTier
   subscription_expires_at?: string
+  onboarding_completed?: boolean
   created_at: string
   updated_at: string
 }
@@ -209,13 +210,18 @@ export interface NotificationPreferences {
   user_id: string
   push_enabled: boolean
   email_enabled: boolean
-  task_reminders_7_day: boolean
-  task_reminders_3_day: boolean
-  task_reminders_1_day: boolean
+  task_reminders?: boolean
+  task_reminders_7_day?: boolean
+  task_reminders_3_day?: boolean
+  task_reminders_1_day?: boolean
+  due_date_reminders?: boolean
+  overdue_alerts?: boolean
   partner_activity: boolean
+  shift_reminders?: boolean
   weekly_briefing: boolean
   weekly_briefing_day: number
   weekly_briefing_time: string
+  quiet_hours_enabled?: boolean
   quiet_hours_start?: string
   quiet_hours_end?: string
 }

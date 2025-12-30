@@ -74,8 +74,8 @@ export default function OnboardingFamily() {
       const { data: taskCount, error: taskError } = await supabase
         .rpc('generate_family_tasks', {
           p_family_id: family.id,
-          p_due_date: stage === 'pregnancy' ? dueDate : null,
-          p_birth_date: stage === 'post-birth' ? birthDate : null,
+          p_due_date: stage === 'pregnancy' ? dueDate : undefined,
+          p_birth_date: stage === 'post-birth' ? birthDate : undefined,
         })
 
       clearInterval(progressInterval)

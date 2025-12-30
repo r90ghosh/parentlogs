@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth/auth-context'
 import { createClient } from '@/lib/supabase/client'
@@ -12,7 +12,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, Users, ArrowLeft, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 
-export default function OnboardingJoin() {
+function OnboardingJoinContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, refreshProfile } = useAuth()
@@ -21,7 +21,7 @@ export default function OnboardingJoin() {
   const [inviteCode, setInviteCode] = useState(searchParams.get('code') || '')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [familyInfo, setFamilyInfo] = useState<{ name?: string; stage: string } | null>(null)
+  const [familyInfo, setFamilyInfo] = useState<{ name: string | null; stage: string | null } | null>(null)
 
   // Validate code as user types
   useEffect(() => {
@@ -147,5 +147,21 @@ export default function OnboardingJoin() {
         </Link>
       </CardFooter>
     </Card>
+  )
+}
+
+export default function OnboardingJoin() {
+  return (
+    <Suspense fallback={
+      <Card className="w-full max-w-md bg-surface-900 border-surface-800">
+        <CardContent className="py-8">
+          <div className="flex items-center justify-center">
+            <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+          </div>
+        </CardContent>
+      </Card>
+    }>
+      <OnboardingJoinContent />
+    </Suspense>
   )
 }

@@ -2,7 +2,17 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { taskService, TaskFilters } from '@/services/task-service'
-import { FamilyTask } from '@/types'
+import { FamilyTask, TaskAssignee, TaskStatus } from '@/types'
+
+export type CreateTaskInput = {
+  title: string
+  description: string
+  due_date: string
+  assigned_to: TaskAssignee
+  priority: 'must-do' | 'good-to-do'
+  category: string
+  status: TaskStatus
+}
 
 export function useTasks(filters: TaskFilters = {}) {
   return useQuery({
@@ -57,7 +67,7 @@ export function useCreateTask() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (task: Partial<FamilyTask>) => taskService.createTask(task),
+    mutationFn: (task: CreateTaskInput) => taskService.createTask(task),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
     },

@@ -22,18 +22,20 @@ export const briefingService = {
       .eq('id', profile.family_id)
       .single()
 
-    if (!family) return null
+    if (!family || family.current_week === null) return null
+
+    const currentWeek = family.current_week
 
     // Build briefing_id based on stage and week
     let briefingId: string
     if (family.stage === 'pregnancy') {
-      briefingId = `PREG-W${String(family.current_week).padStart(2, '0')}`
+      briefingId = `PREG-W${String(currentWeek).padStart(2, '0')}`
     } else {
       // Post-birth: weeks 1-12 use W format, after that use month format
-      if (family.current_week <= 12) {
-        briefingId = `POST-W${String(family.current_week).padStart(2, '0')}`
+      if (currentWeek <= 12) {
+        briefingId = `POST-W${String(currentWeek).padStart(2, '0')}`
       } else {
-        const month = Math.ceil(family.current_week / 4)
+        const month = Math.ceil(currentWeek / 4)
         briefingId = `POST-M${String(month).padStart(2, '0')}`
       }
     }

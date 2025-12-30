@@ -166,7 +166,7 @@ export function ShiftChangeContent() {
           label="Medicine"
           value={medicineLogs.length > 0 ? 'Given' : 'None logged'}
           subValue={medicineLogs.length > 0
-            ? medicineLogs[0].details?.name || ''
+            ? (medicineLogs[0].log_data as Record<string, any>)?.name || ''
             : 'In last 8hrs'}
         />
       </div>

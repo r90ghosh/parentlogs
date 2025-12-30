@@ -70,7 +70,7 @@ export default function TrackerSummaryPage() {
       diapers: dayLogs.filter(l => l.log_type === 'diaper').length,
       sleepMinutes: dayLogs
         .filter(l => l.log_type === 'sleep')
-        .reduce((sum, l) => sum + (l.details?.duration_minutes || 0), 0),
+        .reduce((sum, l) => sum + ((l.log_data as Record<string, any>)?.duration_minutes || 0), 0),
     }
   })
 

@@ -1,11 +1,11 @@
 import { createClient } from '@/lib/supabase/client'
-import { FamilyTask, TaskStatus } from '@/types'
+import { FamilyTask, TaskStatus, TaskAssignee } from '@/types'
 
 const supabase = createClient()
 
 export interface TaskFilters {
   status?: TaskStatus | 'all'
-  assignee?: string
+  assignee?: TaskAssignee
   category?: string
   search?: string
   limit?: number
@@ -117,7 +117,15 @@ export const taskService = {
     return { error: error as Error | null }
   },
 
-  async createTask(task: Partial<FamilyTask>): Promise<{ task: FamilyTask | null; error: Error | null }> {
+  async createTask(task: {
+    title: string
+    description: string
+    due_date: string
+    assigned_to: TaskAssignee
+    priority: 'must-do' | 'good-to-do'
+    category: string
+    status: TaskStatus
+  }): Promise<{ task: FamilyTask | null; error: Error | null }> {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return { task: null, error: new Error('Not authenticated') }
 
@@ -132,7 +140,13 @@ export const taskService = {
     const { data, error } = await supabase
       .from('family_tasks')
       .insert({
-        ...task,
+        title: task.title,
+        description: task.description,
+        due_date: task.due_date,
+        assigned_to: task.assigned_to,
+        priority: task.priority,
+        category: task.category,
+        status: task.status,
         family_id: profile.family_id,
         is_custom: true,
       })

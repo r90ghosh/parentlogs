@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCreateLog } from '@/hooks/use-tracker'
 import { Button } from '@/components/ui/button'
@@ -21,7 +21,7 @@ import Link from 'next/link'
 import { useToast } from '@/hooks/use-toast'
 import { LogType } from '@/services/tracker-service'
 
-export default function LogEntryPage() {
+function LogEntryContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
@@ -118,7 +118,7 @@ export default function LogEntryPage() {
       log_type: logType,
       logged_at: new Date(loggedAt).toISOString(),
       notes: notes || undefined,
-      details,
+      log_data: details,
     })
 
     setIsSubmitting(false)
@@ -487,5 +487,17 @@ export default function LogEntryPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function LogEntryPage() {
+  return (
+    <Suspense fallback={
+      <div className="p-4 md:ml-64 flex items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+      </div>
+    }>
+      <LogEntryContent />
+    </Suspense>
   )
 }

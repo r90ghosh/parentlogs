@@ -100,7 +100,12 @@ export const trackerService = {
     return data as BabyLog
   },
 
-  async createLog(log: Partial<BabyLog>): Promise<{ log: BabyLog | null; error: Error | null }> {
+  async createLog(log: {
+    log_type: LogType
+    log_data: Record<string, any>
+    logged_at?: string
+    notes?: string
+  }): Promise<{ log: BabyLog | null; error: Error | null }> {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return { log: null, error: new Error('Not authenticated') }
 
@@ -114,14 +119,16 @@ export const trackerService = {
 
     // Premium gating for advanced log types
     const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
-    if (!isPremium && PREMIUM_LOG_TYPES.includes(log.log_type as LogType)) {
+    if (!isPremium && PREMIUM_LOG_TYPES.includes(log.log_type)) {
       return { log: null, error: new Error('Premium feature: Upgrade to log this type') }
     }
 
     const { data, error } = await supabase
       .from('baby_logs')
       .insert({
-        ...log,
+        log_type: log.log_type,
+        log_data: log.log_data,
+        notes: log.notes,
         family_id: profile.family_id,
         logged_by: user.id,
         logged_at: log.logged_at || new Date().toISOString(),
@@ -214,13 +221,13 @@ export const trackerService = {
     // Get today's sleep logs and calculate total hours
     const { data: sleepLogs } = await supabase
       .from('baby_logs')
-      .select('details')
+      .select('log_data')
       .eq('family_id', profile.family_id)
       .eq('log_type', 'sleep')
       .gte('logged_at', todayStr)
 
     const totalSleepMinutes = (sleepLogs || []).reduce((total, log) => {
-      const duration = log.details?.duration_minutes || 0
+      const duration = (log.log_data as Record<string, any>)?.duration_minutes || 0
       return total + duration
     }, 0)
 

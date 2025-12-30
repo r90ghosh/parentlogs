@@ -1,0 +1,12 @@
+{
+  "name": "ParentLogs",
+  "short_name": "ParentLogs",
+  "description": "Your Parenting Command Center - Expert-curated tasks, weekly briefings, and partner sync",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
+  "icons": [],
+  "categories": ["lifestyle", "health", "productivity"]
+}

@@ -21,7 +21,7 @@ const signupSchema = z.object({
   email: z.string().email('Please enter a valid email'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   confirm_password: z.string(),
-  role: z.enum(['dad', 'mom', 'other'], { required_error: 'Please select your role' }),
+  role: z.enum(['dad', 'mom', 'other'], { message: 'Please select your role' }),
 }).refine((data) => data.password === data.confirm_password, {
   message: 'Passwords do not match',
   path: ['confirm_password'],

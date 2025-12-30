@@ -16,11 +16,14 @@ export interface ChecklistWithItems extends ChecklistTemplate {
 }
 
 export interface ChecklistProgress {
+  id: string
+  family_id: string
   checklist_id: string
   item_id: string
-  completed: boolean
-  completed_at: string | null
-  completed_by: string | null
+  is_checked: boolean | null
+  checked_at: string | null
+  checked_by: string | null
+  created_at: string | null
 }
 
 export const checklistService = {
@@ -60,7 +63,7 @@ export const checklistService = {
 
     const progressMap = new Map<string, boolean>()
     progressData?.forEach(p => {
-      progressMap.set(`${p.checklist_id}-${p.item_id}`, p.completed)
+      progressMap.set(`${p.checklist_id}-${p.item_id}`, p.is_checked ?? false)
     })
 
     return checklists.map(checklist => {
@@ -132,7 +135,7 @@ export const checklistService = {
 
     const itemsWithProgress = (items || []).map(item => ({
       ...item,
-      completed: progressMap.get(item.item_id)?.completed || false,
+      completed: progressMap.get(item.item_id)?.is_checked || false,
     }))
 
     const completedCount = itemsWithProgress.filter(i => i.completed).length
@@ -169,9 +172,9 @@ export const checklistService = {
         family_id: profile.family_id,
         checklist_id: checklistId,
         item_id: itemId,
-        completed,
-        completed_at: completed ? new Date().toISOString() : null,
-        completed_by: completed ? user.id : null,
+        is_checked: completed,
+        checked_at: completed ? new Date().toISOString() : null,
+        checked_by: completed ? user.id : null,
       }, {
         onConflict: 'family_id,checklist_id,item_id',
       })

@@ -131,7 +131,7 @@ export function useRealtimeSync() {
 }
 
 function formatLogDetails(log: Record<string, any>): string {
-  const details = log.details || {}
+  const details = log.log_data || {}
   switch (log.log_type) {
     case 'feeding':
       if (details.type === 'breast') {

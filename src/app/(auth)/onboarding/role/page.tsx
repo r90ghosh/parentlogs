@@ -10,7 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const roles = [
+const roles: Array<{ id: 'mom' | 'dad' | 'other'; label: string; description: string; emoji: string }> = [
   {
     id: 'dad',
     label: 'Dad',
@@ -35,7 +35,7 @@ export default function OnboardingRole() {
   const router = useRouter()
   const { user, refreshProfile } = useAuth()
   const supabase = createClient()
-  const [selectedRole, setSelectedRole] = useState<string | null>(null)
+  const [selectedRole, setSelectedRole] = useState<'mom' | 'dad' | 'other' | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

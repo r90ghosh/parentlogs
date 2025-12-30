@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -22,7 +22,7 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/dashboard'
@@ -60,7 +60,7 @@ export default function LoginPage() {
   return (
     <Card className="bg-surface-900 border-surface-800">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl text-white">Welcome back</CardTitle>
+        <CardTitle className="text-2xl text-white">Welcome to ParentLogs</CardTitle>
         <CardDescription>Sign in to your ParentLogs account</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -153,5 +153,21 @@ export default function LoginPage() {
         </p>
       </CardFooter>
     </Card>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <Card className="bg-surface-900 border-surface-800">
+        <CardContent className="py-8">
+          <div className="flex items-center justify-center">
+            <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+          </div>
+        </CardContent>
+      </Card>
+    }>
+      <LoginContent />
+    </Suspense>
   )
 }
