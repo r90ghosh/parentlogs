@@ -2,9 +2,10 @@
   command = "npm run build"
   publish = ".next"
 
-[build.environment]
-  # Omit public keys from secret scanning (these are designed to be public)
-  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,NEXT_PUBLIC_STRIPE_PRICE_MONTHLY,NEXT_PUBLIC_STRIPE_PRICE_ANNUAL,NEXT_PUBLIC_STRIPE_PRICE_LIFETIME,NEXT_PUBLIC_APP_URL,NEXT_PUBLIC_APP_NAME,NEXT_PUBLIC_VAPID_PUBLIC_KEY,NEXT_PUBLIC_GA_MEASUREMENT_ID"
+# Note: SECRETS_SCAN_OMIT_KEYS must be set in Netlify UI (Site settings > Environment variables)
+# because the secrets scanner runs before build-time environment variables are loaded.
+# Set this in Netlify UI:
+# SECRETS_SCAN_OMIT_KEYS = NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,NEXT_PUBLIC_STRIPE_PRICE_MONTHLY,NEXT_PUBLIC_STRIPE_PRICE_ANNUAL,NEXT_PUBLIC_STRIPE_PRICE_LIFETIME,NEXT_PUBLIC_APP_URL,NEXT_PUBLIC_APP_NAME,NEXT_PUBLIC_VAPID_PUBLIC_KEY
 
 # Next.js requires specific headers for static assets
 [[headers]]
@@ -30,6 +31,6 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Redirect for Next.js
+# Next.js plugin
 [[plugins]]
   package = "@netlify/plugin-nextjs"
