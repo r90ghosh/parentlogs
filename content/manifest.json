@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2025-12-29",
+  "content_summary": {
+    "budget_items": 29,
+    "checklists": 15,
+    "checklist_items": 352,
+    "briefings": 62,
+    "tasks": 215
+  },
+  "files": [
+    "budget.json",
+    "checklists.json",
+    "briefings.json",
+    "tasks.json"
+  ]
+}

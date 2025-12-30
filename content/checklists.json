@@ -1,0 +1,2968 @@
+[
+  {
+    "checklist_id": "CL-01",
+    "name": "Hospital Bag â€” Mom",
+    "description": "Everything mom needs packed and ready for labor and delivery",
+    "stage": "pregnancy",
+    "week_relevant": "35-36",
+    "item_count": 29,
+    "items": [
+      {
+        "item_id": "CL-01-001",
+        "category": "Documents",
+        "item": "ID and insurance card",
+        "details": "Government ID and insurance card - hospital will need both at check-in",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-002",
+        "category": "Documents",
+        "item": "Birth plan (if any)",
+        "details": "Printed copies for nurses and doctor - keep expectations flexible",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-003",
+        "category": "Documents",
+        "item": "Hospital pre-registration confirmation",
+        "details": "Most hospitals let you pre-register online - do this around week 32",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-004",
+        "category": "Documents",
+        "item": "Pediatrician contact info",
+        "details": "Name and phone number of the pediatrician you've chosen",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-005",
+        "category": "Clothing",
+        "item": "Robe",
+        "details": "Comfortable robe for walking halls during labor and postpartum",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-006",
+        "category": "Clothing",
+        "item": "Non-slip socks",
+        "details": "Hospital floors are slippery - bring warm socks with grip",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-007",
+        "category": "Clothing",
+        "item": "Nursing bras (2-3)",
+        "details": "Even if not planning to nurse - breasts will be swollen",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-008",
+        "category": "Clothing",
+        "item": "Going-home outfit",
+        "details": "Loose and comfortable - you'll still look 5-6 months pregnant",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-009",
+        "category": "Clothing",
+        "item": "Underwear",
+        "details": "Bring underwear you don't mind throwing away - or use hospital mesh",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-010",
+        "category": "Toiletries",
+        "item": "Toothbrush and toothpaste",
+        "details": "Hospital may provide but yours is better",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-011",
+        "category": "Toiletries",
+        "item": "Lip balm",
+        "details": "Hospitals are very dry - lips will crack",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-012",
+        "category": "Toiletries",
+        "item": "Hair ties",
+        "details": "Keep hair out of face during labor",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-013",
+        "category": "Toiletries",
+        "item": "Face wipes",
+        "details": "Refreshing when you can't shower",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-014",
+        "category": "Toiletries",
+        "item": "Glasses or contacts",
+        "details": "If you wear them - don't forget",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-015",
+        "category": "Toiletries",
+        "item": "Shampoo and conditioner",
+        "details": "Hospital soap is harsh",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-016",
+        "category": "Comfort",
+        "item": "Phone charger with long cord",
+        "details": "Hospital outlets are often far from bed - bring 6ft+ cord",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-017",
+        "category": "Comfort",
+        "item": "Pillow from home",
+        "details": "Hospital pillows are flat and uncomfortable - use a colored pillowcase so it doesn't get mixed up",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-018",
+        "category": "Comfort",
+        "item": "Eye mask",
+        "details": "Helps sleep when nurses come in at all hours",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-019",
+        "category": "Comfort",
+        "item": "Headphones",
+        "details": "For music during labor or drowning out hospital noise",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-020",
+        "category": "Postpartum",
+        "item": "Nipple cream",
+        "details": "Lanolin or similar - nursing can be rough on nipples initially",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-021",
+        "category": "Postpartum",
+        "item": "Peri bottle",
+        "details": "Hospital provides but you can bring your own nicer one",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-022",
+        "category": "Postpartum",
+        "item": "Heavy pads",
+        "details": "Hospital provides but pack some for the ride home",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-023",
+        "category": "Baby",
+        "item": "Going-home outfit for baby",
+        "details": "Weather appropriate - newborns can't regulate temperature well",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-024",
+        "category": "Baby",
+        "item": "Swaddle blanket",
+        "details": "For the ride home and photos",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-025",
+        "category": "Baby",
+        "item": "Car seat installed in car",
+        "details": "Required for discharge - have it checked before due date",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-026",
+        "category": "Optional",
+        "item": "Snacks",
+        "details": "Labor is long - pack protein bars and easy snacks",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-027",
+        "category": "Optional",
+        "item": "Bluetooth speaker",
+        "details": "For music during labor",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-028",
+        "category": "Optional",
+        "item": "Tablet with downloaded shows",
+        "details": "Entertainment during long early labor or recovery",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-01-029",
+        "category": "Optional",
+        "item": "Nursing pillow",
+        "details": "Hospital has some but yours is more comfortable",
+        "required": false,
+        "action_type": "bring"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-02",
+    "name": "Hospital Bag â€” Dad",
+    "description": "Everything dad needs for the hospital stay during labor and delivery",
+    "stage": "pregnancy",
+    "week_relevant": "35-36",
+    "item_count": 26,
+    "items": [
+      {
+        "item_id": "CL-02-001",
+        "category": "Essentials",
+        "item": "ID",
+        "details": "May be needed for hospital security or check-in",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-002",
+        "category": "Essentials",
+        "item": "Insurance card",
+        "details": "Backup copy in case mom's is misplaced",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-003",
+        "category": "Essentials",
+        "item": "Phone charger",
+        "details": "Long cord recommended - you'll be on your phone a lot",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-004",
+        "category": "Essentials",
+        "item": "Cash",
+        "details": "For vending machines and parking - $40-60 recommended",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-005",
+        "category": "Essentials",
+        "item": "Credit card",
+        "details": "For cafeteria and any unexpected needs",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-006",
+        "category": "Clothing",
+        "item": "Change of clothes (2 days)",
+        "details": "Labor can be long - pack like a short trip",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-007",
+        "category": "Clothing",
+        "item": "Comfortable shoes",
+        "details": "You'll be on your feet a lot - skip the dress shoes",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-008",
+        "category": "Clothing",
+        "item": "Flip flops for shower",
+        "details": "Hospital showers need shower shoes",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-009",
+        "category": "Clothing",
+        "item": "Jacket or hoodie",
+        "details": "Hospitals are cold - especially at night",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-010",
+        "category": "Sleep",
+        "item": "Pillow",
+        "details": "Hospital chairs and fold-out beds are uncomfortable",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-011",
+        "category": "Sleep",
+        "item": "Blanket",
+        "details": "Hospital may provide but bring your own to be sure",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-012",
+        "category": "Sleep",
+        "item": "Eye mask",
+        "details": "Room will never be fully dark - nurses come in constantly",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-013",
+        "category": "Sleep",
+        "item": "Earplugs",
+        "details": "Hospital is noisy - protect your sleep when you can get it",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-014",
+        "category": "Entertainment",
+        "item": "Book or e-reader",
+        "details": "Early labor can be slow - you'll have downtime",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-015",
+        "category": "Entertainment",
+        "item": "Tablet with downloaded content",
+        "details": "Hospital wifi is often terrible - download shows in advance",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-016",
+        "category": "Entertainment",
+        "item": "Headphones",
+        "details": "For entertainment without disturbing mom",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-017",
+        "category": "Sustenance",
+        "item": "Snacks",
+        "details": "Protein bars and nuts - cafeteria may be closed at night",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-018",
+        "category": "Sustenance",
+        "item": "Empty water bottle",
+        "details": "Stay hydrated - refill at water stations",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-019",
+        "category": "Sustenance",
+        "item": "Coffee money or travel mug",
+        "details": "You will need caffeine - know where the coffee is",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-020",
+        "category": "Support",
+        "item": "Camera",
+        "details": "Phone works but dedicated camera takes better photos",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-021",
+        "category": "Support",
+        "item": "List of people to notify",
+        "details": "Pre-written text message ready to send after birth",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-022",
+        "category": "Support",
+        "item": "Massage ball or tennis ball",
+        "details": "For counter-pressure during back labor - can be huge relief",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-023",
+        "category": "Don't Forget",
+        "item": "Car seat installed and inspected",
+        "details": "Baby cannot leave hospital without it - check installation before due date",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-02-024",
+        "category": "Don't Forget",
+        "item": "Baby's going-home outfit",
+        "details": "Pack in mom's bag or yours - just make sure it's packed",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-02-025",
+        "category": "Don't Forget",
+        "item": "Full tank of gas",
+        "details": "Fill up the car around week 37 and keep it topped off",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-02-026",
+        "category": "Don't Forget",
+        "item": "Know the route to hospital",
+        "details": "Drive it once beforehand - know parking and entrance locations",
+        "required": true,
+        "action_type": "do"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-03",
+    "name": "First Car Ride Home",
+    "description": "Everything you need for baby's first car trip from hospital to home",
+    "stage": "post-birth",
+    "week_relevant": "0",
+    "item_count": 18,
+    "items": [
+      {
+        "item_id": "CL-03-001",
+        "category": "Before Discharge",
+        "item": "Car seat properly installed",
+        "details": "Rear-facing in back seat - base secured tightly (less than 1 inch movement)",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-03-002",
+        "category": "Before Discharge",
+        "item": "Car seat inspected by professional",
+        "details": "Fire station or certified tech - do this before due date not day of discharge",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-03-003",
+        "category": "Before Discharge",
+        "item": "Practice buckling with doll",
+        "details": "Car seat buckles are tricky - practice before baby arrives",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-03-004",
+        "category": "Before Discharge",
+        "item": "Understand chest clip position",
+        "details": "Clip should be at armpit level - not on belly or neck",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-03-005",
+        "category": "Safety",
+        "item": "No puffy coats in car seat",
+        "details": "Coat goes over buckled baby as blanket - not under straps",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-03-006",
+        "category": "Safety",
+        "item": "Straps snug but not tight",
+        "details": "Should not be able to pinch strap material at shoulder",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-03-007",
+        "category": "Safety",
+        "item": "Check car seat angle",
+        "details": "Most have a level indicator - head should not flop forward",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-03-008",
+        "category": "What to Bring",
+        "item": "Weather-appropriate blanket",
+        "details": "For over the buckled baby if cold - not under straps",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-03-009",
+        "category": "What to Bring",
+        "item": "Diaper bag with 2-3 diapers",
+        "details": "Probably won't need but be prepared",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-03-010",
+        "category": "What to Bring",
+        "item": "Wipes",
+        "details": "Pack travel pack in diaper bag",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-03-011",
+        "category": "What to Bring",
+        "item": "Change of clothes for baby",
+        "details": "Blowouts happen - be prepared",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-03-012",
+        "category": "What to Bring",
+        "item": "Burp cloth",
+        "details": "For spit-up during ride",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-03-013",
+        "category": "Optional",
+        "item": "Rear-facing mirror",
+        "details": "Lets you see baby from driver seat - install before discharge",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-03-014",
+        "category": "Optional",
+        "item": "Window shade",
+        "details": "Blocks sun from baby's eyes",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-03-015",
+        "category": "The Drive",
+        "item": "Drive slowly and carefully",
+        "details": "This is not a race - take your time",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-03-016",
+        "category": "The Drive",
+        "item": "Take surface streets if anxious",
+        "details": "Highway is fine but local roads feel safer to some parents",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-03-017",
+        "category": "The Drive",
+        "item": "Go directly home",
+        "details": "No errands - no stopping - baby and mom need rest",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-03-018",
+        "category": "The Drive",
+        "item": "One parent in back seat optional",
+        "details": "If it makes you feel better to sit with baby first time",
+        "required": false,
+        "action_type": "do"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-04",
+    "name": "First Pediatrician Visit",
+    "description": "What to bring and ask at baby's first doctor appointment",
+    "stage": "post-birth",
+    "week_relevant": "1",
+    "item_count": 24,
+    "items": [
+      {
+        "item_id": "CL-04-001",
+        "category": "Before the Visit",
+        "item": "Schedule before leaving hospital",
+        "details": "Most pediatricians want to see baby within 3-5 days of birth",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-04-002",
+        "category": "Before the Visit",
+        "item": "Confirm appointment time",
+        "details": "Call day before to confirm - sleep deprivation causes missed appointments",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-04-003",
+        "category": "Before the Visit",
+        "item": "Write down your questions",
+        "details": "You will forget everything in the moment - write it down",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-04-004",
+        "category": "What to Bring",
+        "item": "Insurance card",
+        "details": "They'll need to copy it for records",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-04-005",
+        "category": "What to Bring",
+        "item": "Hospital discharge papers",
+        "details": "Includes birth weight and any notes from hospital pediatrician",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-04-006",
+        "category": "What to Bring",
+        "item": "Diaper bag (2-3 diapers)",
+        "details": "Baby will probably need a change during visit",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-04-007",
+        "category": "What to Bring",
+        "item": "Extra outfit for baby",
+        "details": "In case of blowout",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-04-008",
+        "category": "What to Bring",
+        "item": "Phone or notebook for notes",
+        "details": "You'll want to write down what doctor says",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-04-009",
+        "category": "What to Bring",
+        "item": "Feeding supplies",
+        "details": "Bottle or be ready to nurse - baby may get hungry",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-04-010",
+        "category": "What to Bring",
+        "item": "Pacifier if using",
+        "details": "Can help soothe during exam",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-04-011",
+        "category": "Questions to Ask",
+        "item": "What weight gain should I expect by next visit?",
+        "details": "Helps you know if feeding is on track",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-04-012",
+        "category": "Questions to Ask",
+        "item": "How do I reach you after hours?",
+        "details": "Know the process for urgent questions",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-04-013",
+        "category": "Questions to Ask",
+        "item": "When should I worry about jaundice?",
+        "details": "Common in newborns - know the warning signs",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-04-014",
+        "category": "Questions to Ask",
+        "item": "Is baby's feeding on track?",
+        "details": "Whether nursing or bottle - confirm it's going well",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-04-015",
+        "category": "Questions to Ask",
+        "item": "When is the next appointment?",
+        "details": "Usually 2 weeks for weight check then 1 month",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-04-016",
+        "category": "Questions to Ask",
+        "item": "What are warning signs I should watch for?",
+        "details": "Temperature thresholds and other red flags",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-04-017",
+        "category": "Questions to Ask",
+        "item": "Is the umbilical cord stump healing normally?",
+        "details": "They'll check but ask if you have concerns",
+        "required": false,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-04-018",
+        "category": "Questions to Ask",
+        "item": "Should we give vitamin D drops?",
+        "details": "Usually yes for breastfed babies - confirm dosage",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-04-019",
+        "category": "What Happens",
+        "item": "Weight check",
+        "details": "Comparing to birth weight - some loss is normal but should be regaining",
+        "required": true,
+        "action_type": "expect"
+      },
+      {
+        "item_id": "CL-04-020",
+        "category": "What Happens",
+        "item": "Jaundice check",
+        "details": "Visual inspection and possibly bilirubin test",
+        "required": true,
+        "action_type": "expect"
+      },
+      {
+        "item_id": "CL-04-021",
+        "category": "What Happens",
+        "item": "Feeding assessment",
+        "details": "Discussion of how nursing or bottles are going",
+        "required": true,
+        "action_type": "expect"
+      },
+      {
+        "item_id": "CL-04-022",
+        "category": "What Happens",
+        "item": "Physical exam",
+        "details": "Head to toe check of baby",
+        "required": true,
+        "action_type": "expect"
+      },
+      {
+        "item_id": "CL-04-023",
+        "category": "What Happens",
+        "item": "Circumcision check (if applicable)",
+        "details": "Making sure it's healing properly",
+        "required": false,
+        "action_type": "expect"
+      },
+      {
+        "item_id": "CL-04-024",
+        "category": "What Happens",
+        "item": "Questions about mom's recovery",
+        "details": "Good pediatricians ask how mom is doing too",
+        "required": false,
+        "action_type": "expect"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-05",
+    "name": "First Flight with Baby",
+    "description": "Everything you need to survive air travel with an infant",
+    "stage": "post-birth",
+    "week_relevant": "8+",
+    "item_count": 26,
+    "items": [
+      {
+        "item_id": "CL-05-001",
+        "category": "Before Booking",
+        "item": "Check airline lap infant policy",
+        "details": "Most require baby to be 14+ days old - some airlines 7 days",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-05-002",
+        "category": "Before Booking",
+        "item": "Book lap infant when purchasing ticket",
+        "details": "Free for under 2 but must be added to reservation",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-05-003",
+        "category": "Before Booking",
+        "item": "Request bulkhead or window seat",
+        "details": "Bulkhead has more room - window gives privacy for nursing",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-05-004",
+        "category": "Before Booking",
+        "item": "Avoid tight connections",
+        "details": "You'll be slow moving through airport - 90+ min connections minimum",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-05-005",
+        "category": "Before Booking",
+        "item": "Book during nap time if possible",
+        "details": "Sleeping baby is a happy flight",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-05-006",
+        "category": "TSA and Security",
+        "item": "Formula and breast milk exempt from 3.4oz rule",
+        "details": "Can bring as much as you need - inform TSA before screening",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-05-007",
+        "category": "TSA and Security",
+        "item": "Inform TSA you have baby supplies",
+        "details": "They may test liquids but will not make you dump them",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-05-008",
+        "category": "TSA and Security",
+        "item": "Stroller and car seat gate-checked free",
+        "details": "Does not count toward bag limit",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-05-009",
+        "category": "TSA and Security",
+        "item": "Wear baby through security if possible",
+        "details": "Easier than folding stroller - you'll walk through with baby",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-05-010",
+        "category": "TSA and Security",
+        "item": "Get TSA PreCheck if you don't have it",
+        "details": "Shorter lines make everything easier with baby",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-05-011",
+        "category": "Carry-On Packing",
+        "item": "Double the diapers you think you need",
+        "details": "Delays happen - pack 1 diaper per hour of travel plus extras",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-05-012",
+        "category": "Carry-On Packing",
+        "item": "2 full outfit changes for baby",
+        "details": "Blowouts at altitude are real",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-05-013",
+        "category": "Carry-On Packing",
+        "item": "Plastic bags for dirty clothes",
+        "details": "Ziplock bags for blowout situations",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-05-014",
+        "category": "Carry-On Packing",
+        "item": "Extra pacifiers (3+)",
+        "details": "They will fall on the floor or get lost",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-05-015",
+        "category": "Carry-On Packing",
+        "item": "Feeding supplies (bottles or nursing cover)",
+        "details": "Pack more formula than you think you need",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-05-016",
+        "category": "Carry-On Packing",
+        "item": "Change of shirt for you",
+        "details": "Baby will spit up on you - guarantee it",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-05-017",
+        "category": "Carry-On Packing",
+        "item": "Hand sanitizer and sanitizing wipes",
+        "details": "Airplanes are dirty - wipe down area",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-05-018",
+        "category": "Carry-On Packing",
+        "item": "Portable changing pad",
+        "details": "Airplane changing tables are gross",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-05-019",
+        "category": "Gear Decisions",
+        "item": "Gate-check stroller",
+        "details": "Keeps it with you until boarding - picked up at jet bridge",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-05-020",
+        "category": "Gear Decisions",
+        "item": "Baby carrier is essential",
+        "details": "Your best friend in airport - hands free and baby is happy",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-05-021",
+        "category": "Gear Decisions",
+        "item": "Consider travel car seat",
+        "details": "If renting car at destination - or check your regular one",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-05-022",
+        "category": "During Flight",
+        "item": "Feed during takeoff and landing",
+        "details": "Nursing or bottle helps ears equalize pressure",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-05-023",
+        "category": "During Flight",
+        "item": "New small toys for novelty",
+        "details": "Save a new toy for the flight - novelty buys time",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-05-024",
+        "category": "During Flight",
+        "item": "White noise app on phone",
+        "details": "Can help soothe baby during flight",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-05-025",
+        "category": "During Flight",
+        "item": "Walk the aisle if baby is fussy",
+        "details": "Motion often calms babies - don't feel trapped in seat",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-05-026",
+        "category": "During Flight",
+        "item": "Don't apologize excessively",
+        "details": "Babies cry - you're allowed to travel - do your best",
+        "required": true,
+        "action_type": "do"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-06",
+    "name": "First Restaurant Outing",
+    "description": "How to successfully eat at a restaurant with a baby",
+    "stage": "post-birth",
+    "week_relevant": "6+",
+    "item_count": 20,
+    "items": [
+      {
+        "item_id": "CL-06-001",
+        "category": "Planning",
+        "item": "Choose the right restaurant",
+        "details": "Loud and casual is better - skip quiet fine dining",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-06-002",
+        "category": "Planning",
+        "item": "Go at off-peak hours",
+        "details": "Early dinner (4-5pm) or late lunch (2pm) - less crowded and faster service",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-06-003",
+        "category": "Planning",
+        "item": "Make a reservation if possible",
+        "details": "Reduces wait time with baby",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-06-004",
+        "category": "Planning",
+        "item": "Check if they have high chairs",
+        "details": "Not all restaurants do - car seat carrier can work in a pinch",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-06-005",
+        "category": "Planning",
+        "item": "Feed baby before leaving or plan to feed there",
+        "details": "Well-fed baby is happy baby",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-06-006",
+        "category": "Seating",
+        "item": "Request booth if available",
+        "details": "Easier to nurse or bottle feed with some privacy",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-06-007",
+        "category": "Seating",
+        "item": "Ask for table near exit",
+        "details": "Easy escape if baby has meltdown",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-06-008",
+        "category": "Seating",
+        "item": "Car seat carrier fits on booth seat or high chair base",
+        "details": "You don't have to hold baby the whole time",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-06-009",
+        "category": "What to Bring",
+        "item": "Pacifier",
+        "details": "Essential for buying a few quiet minutes",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-06-010",
+        "category": "What to Bring",
+        "item": "Small toy or rattle",
+        "details": "Something to grab attention if fussy",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-06-011",
+        "category": "What to Bring",
+        "item": "Blanket",
+        "details": "For covering car seat or nursing",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-06-012",
+        "category": "What to Bring",
+        "item": "Fully stocked diaper bag",
+        "details": "2-3 diapers and wipes and change of clothes",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-06-013",
+        "category": "What to Bring",
+        "item": "Bottle or be ready to nurse",
+        "details": "Hungry babies don't wait",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-06-014",
+        "category": "At the Restaurant",
+        "item": "Order immediately when seated",
+        "details": "Don't wait - time is limited",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-06-015",
+        "category": "At the Restaurant",
+        "item": "Ask for the check early",
+        "details": "Have it ready so you can leave quickly if needed",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-06-016",
+        "category": "At the Restaurant",
+        "item": "Order food that can be boxed",
+        "details": "You might not finish - be okay with taking it home",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-06-017",
+        "category": "At the Restaurant",
+        "item": "Take turns eating if needed",
+        "details": "One eats while other soothes baby",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-06-018",
+        "category": "Mindset",
+        "item": "Know you might leave before finishing",
+        "details": "That's okay - it's practice for next time",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-06-019",
+        "category": "Mindset",
+        "item": "Don't apologize for your baby existing",
+        "details": "Babies are allowed in restaurants - you're allowed to eat out",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-06-020",
+        "category": "Mindset",
+        "item": "Tip well",
+        "details": "Servers deal with extra mess - be generous",
+        "required": true,
+        "action_type": "do"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-07",
+    "name": "First Road Trip",
+    "description": "Everything you need for a 2+ hour car trip with baby",
+    "stage": "post-birth",
+    "week_relevant": "8+",
+    "item_count": 24,
+    "items": [
+      {
+        "item_id": "CL-07-001",
+        "category": "Timing",
+        "item": "Start at nap time or bedtime",
+        "details": "Sleeping baby means peaceful drive",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-07-002",
+        "category": "Timing",
+        "item": "Plan stops every 2 hours maximum",
+        "details": "Baby shouldn't be in car seat more than 2 hours at a stretch",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-07-003",
+        "category": "Timing",
+        "item": "Add extra time to your estimate",
+        "details": "Everything takes longer with a baby - plan for it",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-07-004",
+        "category": "Car Seat Safety",
+        "item": "Check car seat angle before leaving",
+        "details": "Head should not flop forward - most seats have level indicator",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-07-005",
+        "category": "Car Seat Safety",
+        "item": "No puffy clothing under straps",
+        "details": "Jacket goes over buckled baby as blanket",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-07-006",
+        "category": "Car Seat Safety",
+        "item": "Chest clip at armpit level",
+        "details": "Not on belly and not on neck",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-07-007",
+        "category": "Car Seat Safety",
+        "item": "Straps snug - can't pinch material",
+        "details": "Should not be able to pinch strap at shoulder",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-07-008",
+        "category": "Packing - Accessible",
+        "item": "Diaper bag in back seat not trunk",
+        "details": "You may need to access it without stopping",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-07-009",
+        "category": "Packing - Accessible",
+        "item": "Extra diapers - double what you think",
+        "details": "Pack 1 per hour of travel plus extras for delays",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-07-010",
+        "category": "Packing - Accessible",
+        "item": "Extra clothes - 2 full outfits",
+        "details": "Blowouts happen - be prepared",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-07-011",
+        "category": "Packing - Accessible",
+        "item": "Plastic bags for dirty clothes",
+        "details": "Ziplock or grocery bags for blowout disasters",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-07-012",
+        "category": "Packing - Accessible",
+        "item": "Burp cloths and bibs",
+        "details": "For spit-up during the ride",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-07-013",
+        "category": "Packing - Accessible",
+        "item": "Bottles or nursing supplies",
+        "details": "More than you think you need - traffic happens",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-07-014",
+        "category": "Entertainment",
+        "item": "Window shades",
+        "details": "Blocks sun from baby's eyes and keeps car cooler",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-07-015",
+        "category": "Entertainment",
+        "item": "Rear-facing mirror",
+        "details": "So you can see baby from front seat",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-07-016",
+        "category": "Entertainment",
+        "item": "Soft toys that attach to car seat",
+        "details": "Things that can't be dropped or thrown",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-07-017",
+        "category": "Entertainment",
+        "item": "Music or white noise ready",
+        "details": "Have playlists ready to soothe or entertain",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-07-018",
+        "category": "First Aid",
+        "item": "Thermometer",
+        "details": "In case baby feels warm during trip",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-07-019",
+        "category": "First Aid",
+        "item": "Infant Tylenol (if over 2 months)",
+        "details": "Check with pediatrician for dosing by weight",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-07-020",
+        "category": "First Aid",
+        "item": "Nasal aspirator",
+        "details": "For stuffy nose",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-07-021",
+        "category": "First Aid",
+        "item": "Saline drops",
+        "details": "Helps loosen congestion",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-07-022",
+        "category": "During the Drive",
+        "item": "One parent in back seat if possible",
+        "details": "Can soothe baby and handle needs without stopping",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-07-023",
+        "category": "During the Drive",
+        "item": "Stop at baby's feeding times",
+        "details": "Don't try to feed in moving car - take a real break",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-07-024",
+        "category": "During the Drive",
+        "item": "Get baby out of car seat at stops",
+        "details": "Stretch and move - being strapped in is tiring",
+        "required": true,
+        "action_type": "do"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-08",
+    "name": "First Night Away from Baby",
+    "description": "How to prepare when leaving baby with a caregiver overnight",
+    "stage": "post-birth",
+    "week_relevant": "12+",
+    "item_count": 24,
+    "items": [
+      {
+        "item_id": "CL-08-001",
+        "category": "Choosing the Caregiver",
+        "item": "Grandparents or trusted family ideal for first time",
+        "details": "Someone who knows baby already",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-08-002",
+        "category": "Choosing the Caregiver",
+        "item": "Do a trial run first",
+        "details": "Have them watch baby for a few hours while you're nearby before overnight",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-08-003",
+        "category": "Choosing the Caregiver",
+        "item": "Make sure they know infant CPR",
+        "details": "Or give them a quick refresher before you leave",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-08-004",
+        "category": "Written Instructions",
+        "item": "Feeding schedule and amounts",
+        "details": "Exact times and ounces or nursing routine",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-005",
+        "category": "Written Instructions",
+        "item": "Nap schedule and sleep routine",
+        "details": "Include any sleep cues or rituals",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-006",
+        "category": "Written Instructions",
+        "item": "Bedtime routine step by step",
+        "details": "Bath - bottle - book - bed or whatever your routine is",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-007",
+        "category": "Written Instructions",
+        "item": "Medicine dosages if needed",
+        "details": "Tylenol dosage by weight and when to give",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-008",
+        "category": "Written Instructions",
+        "item": "Comfort techniques that work",
+        "details": "What soothes your specific baby",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-009",
+        "category": "Supplies to Leave",
+        "item": "More diapers than needed",
+        "details": "At least double what you'd use",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-010",
+        "category": "Supplies to Leave",
+        "item": "Extra clothes - 3+ outfits",
+        "details": "More than you think necessary",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-011",
+        "category": "Supplies to Leave",
+        "item": "All feeding supplies",
+        "details": "Bottles and formula or pumped milk with extra",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-012",
+        "category": "Supplies to Leave",
+        "item": "Sleep items",
+        "details": "Sleep sack or swaddle and sound machine",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-013",
+        "category": "Supplies to Leave",
+        "item": "Comfort items",
+        "details": "Favorite pacifier and lovey if using",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-014",
+        "category": "Supplies to Leave",
+        "item": "First aid basics",
+        "details": "Thermometer and infant Tylenol",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-015",
+        "category": "Emergency Info",
+        "item": "Your phone numbers",
+        "details": "Both parents' cells clearly written",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-016",
+        "category": "Emergency Info",
+        "item": "Pediatrician name and number",
+        "details": "Including after-hours line",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-017",
+        "category": "Emergency Info",
+        "item": "Nearest hospital address",
+        "details": "Know where the closest ER is",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-018",
+        "category": "Emergency Info",
+        "item": "Insurance card copy",
+        "details": "Photo or photocopy",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-019",
+        "category": "Emergency Info",
+        "item": "Backup emergency contact",
+        "details": "Another family member or neighbor who can help",
+        "required": true,
+        "action_type": "prepare"
+      },
+      {
+        "item_id": "CL-08-020",
+        "category": "For You",
+        "item": "Leave your phone on",
+        "details": "But set boundaries on how often you'll check in",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-08-021",
+        "category": "For You",
+        "item": "Agree on check-in schedule",
+        "details": "One update at bedtime is usually enough",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-08-022",
+        "category": "For You",
+        "item": "It's okay to feel anxious",
+        "details": "First time is hard - it gets easier",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-08-023",
+        "category": "For You",
+        "item": "Trust your caregiver",
+        "details": "You chose them for a reason - let them handle it",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-08-024",
+        "category": "For You",
+        "item": "Bring breast pump if nursing",
+        "details": "You'll need to pump to stay comfortable",
+        "required": true,
+        "action_type": "bring"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-09",
+    "name": "First Hotel Stay",
+    "description": "How to survive staying in a hotel with a baby",
+    "stage": "post-birth",
+    "week_relevant": "12+",
+    "item_count": 20,
+    "items": [
+      {
+        "item_id": "CL-09-001",
+        "category": "Booking",
+        "item": "Request room away from elevator and ice machine",
+        "details": "Quieter for baby sleep",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-09-002",
+        "category": "Booking",
+        "item": "Ask about cribs in advance",
+        "details": "Most hotels have pack-n-plays available free - request at booking",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-09-003",
+        "category": "Booking",
+        "item": "Request mini-fridge if not standard",
+        "details": "For bottles and milk storage",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-09-004",
+        "category": "Booking",
+        "item": "Consider suite or adjoining rooms",
+        "details": "Separate sleeping space helps everyone sleep better",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-09-005",
+        "category": "Booking",
+        "item": "Check for microwave access",
+        "details": "For warming bottles - or use bottle warmer",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-09-006",
+        "category": "Packing",
+        "item": "Portable crib or travel bassinet",
+        "details": "If you don't trust hotel's crib or they don't have one",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-09-007",
+        "category": "Packing",
+        "item": "White noise machine or app",
+        "details": "Hotels have unfamiliar sounds - white noise helps",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-09-008",
+        "category": "Packing",
+        "item": "Blackout curtains or black trash bags",
+        "details": "Hotel curtains rarely block enough light - tape trash bags over windows",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-09-009",
+        "category": "Packing",
+        "item": "Baby's sleep sack or swaddle",
+        "details": "Familiar sleep items help with strange environment",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-09-010",
+        "category": "Packing",
+        "item": "Outlet covers if mobile baby",
+        "details": "Quick babyproofing for hotel room",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-09-011",
+        "category": "Packing",
+        "item": "Dish soap for washing bottles",
+        "details": "Hotels don't have this - pack a small container",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-09-012",
+        "category": "Packing",
+        "item": "Bottle brush",
+        "details": "For cleaning bottles in hotel sink",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-09-013",
+        "category": "Packing",
+        "item": "Portable bottle warmer or thermos",
+        "details": "For middle of night feeds without going to microwave",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-09-014",
+        "category": "Sleep Setup",
+        "item": "Put crib in bathroom or closet if possible",
+        "details": "Darker and more separate from your movements",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-09-015",
+        "category": "Sleep Setup",
+        "item": "Keep bedtime routine as normal as possible",
+        "details": "Bath book bottle bed - same as home",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-09-016",
+        "category": "Sleep Setup",
+        "item": "Bring something that smells like home",
+        "details": "Fitted crib sheet from home can help",
+        "required": false,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-09-017",
+        "category": "Sleep Setup",
+        "item": "Accept first night might be rough",
+        "details": "Sleep regression in new places is normal",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-09-018",
+        "category": "Safety",
+        "item": "Check crib meets safety standards",
+        "details": "Firm mattress and fitted sheet only - nothing else",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-09-019",
+        "category": "Safety",
+        "item": "Quick scan of room for hazards",
+        "details": "Cords and outlets and sharp corners",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-09-020",
+        "category": "Safety",
+        "item": "Know where nearest hospital is",
+        "details": "Quick Google search on arrival",
+        "required": true,
+        "action_type": "do"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-10",
+    "name": "Daycare Tour Questions",
+    "description": "What to look for and ask when touring daycare facilities",
+    "stage": "pregnancy",
+    "week_relevant": "20-28",
+    "item_count": 25,
+    "items": [
+      {
+        "item_id": "CL-10-001",
+        "category": "Logistics",
+        "item": "What are your hours?",
+        "details": "Make sure they match your work schedule with buffer time",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-002",
+        "category": "Logistics",
+        "item": "What's the waitlist situation?",
+        "details": "Some daycares have 6-12 month waits",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-003",
+        "category": "Logistics",
+        "item": "What's the cost and what's included?",
+        "details": "Diapers and food and sunscreen - or do you provide",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-004",
+        "category": "Logistics",
+        "item": "What's your sick policy?",
+        "details": "How sick is too sick - when must they stay home",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-005",
+        "category": "Logistics",
+        "item": "What's your vacation and closure policy?",
+        "details": "How many days closed per year - do you still pay",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-006",
+        "category": "Safety and Licensing",
+        "item": "Are you licensed by the state?",
+        "details": "Should be yes - ask to see license",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-007",
+        "category": "Safety and Licensing",
+        "item": "What's your teacher to child ratio?",
+        "details": "Infants should be 1:3 or 1:4 maximum",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-008",
+        "category": "Safety and Licensing",
+        "item": "Are staff CPR and first aid certified?",
+        "details": "Should be yes for all staff",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-009",
+        "category": "Safety and Licensing",
+        "item": "What's your security protocol?",
+        "details": "How do you ensure only authorized people pick up",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-010",
+        "category": "Safety and Licensing",
+        "item": "What's your emergency and evacuation plan?",
+        "details": "They should have one and be able to explain it",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-011",
+        "category": "Safety and Licensing",
+        "item": "How do you handle allergies?",
+        "details": "Important even if your baby doesn't have any yet",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-012",
+        "category": "Staff",
+        "item": "What's your staff turnover rate?",
+        "details": "High turnover is a red flag",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-013",
+        "category": "Staff",
+        "item": "What training do teachers receive?",
+        "details": "Ongoing training is important",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-014",
+        "category": "Staff",
+        "item": "Will my baby have a primary caregiver?",
+        "details": "Consistency matters for attachment",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-015",
+        "category": "Staff",
+        "item": "How do you communicate with parents?",
+        "details": "App or email or daily sheets",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-016",
+        "category": "Daily Care",
+        "item": "What's a typical day schedule?",
+        "details": "Should be able to describe routine clearly",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-017",
+        "category": "Daily Care",
+        "item": "How do you handle feeding and bottles?",
+        "details": "Including breastmilk storage and warming",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-018",
+        "category": "Daily Care",
+        "item": "What's your sleep and nap policy?",
+        "details": "Safe sleep practices - back to sleep",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-019",
+        "category": "Daily Care",
+        "item": "Do babies get outdoor time?",
+        "details": "Fresh air and nature are important",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-020",
+        "category": "Daily Care",
+        "item": "How do you handle diapering?",
+        "details": "Sanitation practices and frequency",
+        "required": true,
+        "action_type": "ask"
+      },
+      {
+        "item_id": "CL-10-021",
+        "category": "Red Flags to Watch",
+        "item": "Are children engaged or zoned out?",
+        "details": "Kids should look happy and stimulated",
+        "required": true,
+        "action_type": "observe"
+      },
+      {
+        "item_id": "CL-10-022",
+        "category": "Red Flags to Watch",
+        "item": "Is the facility clean and organized?",
+        "details": "Should smell clean and look tidy",
+        "required": true,
+        "action_type": "observe"
+      },
+      {
+        "item_id": "CL-10-023",
+        "category": "Red Flags to Watch",
+        "item": "Are teachers warm and attentive?",
+        "details": "Watch how they interact with kids",
+        "required": true,
+        "action_type": "observe"
+      },
+      {
+        "item_id": "CL-10-024",
+        "category": "Red Flags to Watch",
+        "item": "Do they discourage drop-in visits?",
+        "details": "Good daycares welcome unannounced visits",
+        "required": true,
+        "action_type": "observe"
+      },
+      {
+        "item_id": "CL-10-025",
+        "category": "Red Flags to Watch",
+        "item": "Do they dismiss your questions?",
+        "details": "Should welcome and thoroughly answer all questions",
+        "required": true,
+        "action_type": "observe"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-11",
+    "name": "Returning to Work",
+    "description": "Everything you need to prepare for going back to work after baby",
+    "stage": "post-birth",
+    "week_relevant": "8-12",
+    "item_count": 20,
+    "items": [
+      {
+        "item_id": "CL-11-001",
+        "category": "Logistics",
+        "item": "Confirm your return date with HR",
+        "details": "Usually 6-12 weeks depending on leave policy",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-002",
+        "category": "Logistics",
+        "item": "Childcare solidified and start date set",
+        "details": "Daycare or nanny confirmed and ready",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-003",
+        "category": "Logistics",
+        "item": "Do a trial run with childcare",
+        "details": "A few hours or half day before your first day back",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-004",
+        "category": "Logistics",
+        "item": "Plan your commute with new timing",
+        "details": "Account for daycare dropoff in your schedule",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-005",
+        "category": "Logistics",
+        "item": "Have backup childcare plan",
+        "details": "What if baby is sick and can't go to daycare",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-006",
+        "category": "Pumping at Work",
+        "item": "Know your legal rights",
+        "details": "Employers must provide time and private space to pump",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-11-007",
+        "category": "Pumping at Work",
+        "item": "Request private pumping space",
+        "details": "Not a bathroom - a clean room with locking door",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-008",
+        "category": "Pumping at Work",
+        "item": "Get a work pump or portable pump",
+        "details": "Leaving pump at work or getting a portable one",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-009",
+        "category": "Pumping at Work",
+        "item": "Stock up on pump supplies",
+        "details": "Extra flanges and valves and milk bags",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-010",
+        "category": "Pumping at Work",
+        "item": "Get insulated cooler bag",
+        "details": "For transporting milk home",
+        "required": true,
+        "action_type": "bring"
+      },
+      {
+        "item_id": "CL-11-011",
+        "category": "Pumping at Work",
+        "item": "Block pumping time on calendar",
+        "details": "Protect that time like meetings",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-012",
+        "category": "Pumping at Work",
+        "item": "Know where to store milk",
+        "details": "Fridge at work or in cooler bag with ice",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-11-013",
+        "category": "Preparation",
+        "item": "Build freezer stash before returning",
+        "details": "Aim for a few days worth as backup",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-014",
+        "category": "Preparation",
+        "item": "Try on work clothes beforehand",
+        "details": "Body may have changed - know what fits",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-015",
+        "category": "Preparation",
+        "item": "Prep bottles and daycare bag night before",
+        "details": "Mornings will be hectic",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-016",
+        "category": "Preparation",
+        "item": "Set realistic expectations with manager",
+        "details": "Ease back in if possible - first week is hard",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-017",
+        "category": "Emotional",
+        "item": "It's normal to feel conflicted",
+        "details": "Guilt and relief and sadness are all normal",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-11-018",
+        "category": "Emotional",
+        "item": "First week is the hardest",
+        "details": "It gets easier after you find your rhythm",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-11-019",
+        "category": "Emotional",
+        "item": "Stay connected during day",
+        "details": "Ask daycare for photos or updates",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-11-020",
+        "category": "Emotional",
+        "item": "Protect evening time with baby",
+        "details": "Resist urge to catch up on work - be present",
+        "required": true,
+        "action_type": "do"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-12",
+    "name": "Babyproofing Home",
+    "description": "Room by room checklist for making your home safe before crawling",
+    "stage": "post-birth",
+    "week_relevant": "20-28",
+    "item_count": 25,
+    "items": [
+      {
+        "item_id": "CL-12-001",
+        "category": "General - All Rooms",
+        "item": "Outlet covers on all unused outlets",
+        "details": "Baby fingers fit perfectly in outlets",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-002",
+        "category": "General - All Rooms",
+        "item": "Secure cords and blind strings",
+        "details": "Strangulation hazard - tie up or cut off",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-003",
+        "category": "General - All Rooms",
+        "item": "Anchor tall furniture to walls",
+        "details": "Bookshelves and dressers can tip - use wall anchors",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-004",
+        "category": "General - All Rooms",
+        "item": "Cover sharp corners on furniture",
+        "details": "Corner guards on coffee tables and hearths",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-005",
+        "category": "General - All Rooms",
+        "item": "Move breakables out of reach",
+        "details": "Anything on low tables needs to go up",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-006",
+        "category": "General - All Rooms",
+        "item": "Check for small objects on floor",
+        "details": "Coins and buttons and anything that fits in toilet paper roll is choking hazard",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-007",
+        "category": "Kitchen",
+        "item": "Cabinet locks on all lower cabinets",
+        "details": "Especially under sink with cleaning supplies",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-008",
+        "category": "Kitchen",
+        "item": "Stove knob covers",
+        "details": "Prevents baby from turning on burners",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-009",
+        "category": "Kitchen",
+        "item": "Oven door lock",
+        "details": "Prevents opening hot oven",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-010",
+        "category": "Kitchen",
+        "item": "Move cleaning supplies up high",
+        "details": "Or lock cabinet they're in",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-011",
+        "category": "Kitchen",
+        "item": "Secure trash can",
+        "details": "Lock lid or put in cabinet",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-012",
+        "category": "Kitchen",
+        "item": "Refrigerator lock if needed",
+        "details": "Some babies figure out how to open fridge",
+        "required": false,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-013",
+        "category": "Bathroom",
+        "item": "Toilet lock",
+        "details": "Drowning hazard - keep lid locked",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-014",
+        "category": "Bathroom",
+        "item": "Medicine cabinet cleared or locked",
+        "details": "Move all medications up high",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-015",
+        "category": "Bathroom",
+        "item": "Non-slip bath mat",
+        "details": "For when baby starts bath time in tub",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-016",
+        "category": "Bathroom",
+        "item": "Hot water heater set to 120F or below",
+        "details": "Prevents scalding",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-017",
+        "category": "Bathroom",
+        "item": "Cabinet locks under sink",
+        "details": "Cleaning supplies are poison",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-018",
+        "category": "Living Room",
+        "item": "Baby gate at stairs",
+        "details": "Top and bottom of stairs once mobile",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-019",
+        "category": "Living Room",
+        "item": "Fireplace gate or hearth padding",
+        "details": "Hard edges are dangerous for new walkers",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-020",
+        "category": "Living Room",
+        "item": "TV secured to wall or stand",
+        "details": "TVs can tip over onto baby",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-021",
+        "category": "Living Room",
+        "item": "Houseplants moved out of reach",
+        "details": "Many are toxic if eaten",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-022",
+        "category": "Bedroom",
+        "item": "Crib meets current safety standards",
+        "details": "No drop sides and slats less than 2 3/8 inches apart",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-023",
+        "category": "Bedroom",
+        "item": "Nothing in crib but fitted sheet",
+        "details": "No bumpers or pillows or blankets or toys",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-024",
+        "category": "Bedroom",
+        "item": "Dresser anchored to wall",
+        "details": "Especially if baby might climb drawers",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-12-025",
+        "category": "Bedroom",
+        "item": "Cords from monitor and blinds out of reach",
+        "details": "Strangulation hazard near crib",
+        "required": true,
+        "action_type": "do"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-13",
+    "name": "Starting Solid Foods",
+    "description": "Everything you need to introduce solid foods safely",
+    "stage": "post-birth",
+    "week_relevant": "20-24",
+    "item_count": 24,
+    "items": [
+      {
+        "item_id": "CL-13-001",
+        "category": "Signs of Readiness",
+        "item": "Baby can sit with support",
+        "details": "Needs core strength to eat safely",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-002",
+        "category": "Signs of Readiness",
+        "item": "Good head control",
+        "details": "Can hold head steady",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-003",
+        "category": "Signs of Readiness",
+        "item": "Shows interest in food",
+        "details": "Watches you eat and reaches for food",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-004",
+        "category": "Signs of Readiness",
+        "item": "Lost tongue thrust reflex",
+        "details": "Doesn't automatically push food out with tongue",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-005",
+        "category": "Signs of Readiness",
+        "item": "Usually around 6 months",
+        "details": "Not before 4 months - check with pediatrician",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-006",
+        "category": "Gear Needed",
+        "item": "High chair",
+        "details": "Sturdy with safety straps - easy to clean",
+        "required": true,
+        "action_type": "buy"
+      },
+      {
+        "item_id": "CL-13-007",
+        "category": "Gear Needed",
+        "item": "Soft-tipped baby spoons",
+        "details": "Gentle on gums if doing purees",
+        "required": true,
+        "action_type": "buy"
+      },
+      {
+        "item_id": "CL-13-008",
+        "category": "Gear Needed",
+        "item": "Bibs - lots of them",
+        "details": "Silicone pocket bibs catch food",
+        "required": true,
+        "action_type": "buy"
+      },
+      {
+        "item_id": "CL-13-009",
+        "category": "Gear Needed",
+        "item": "Splat mat under high chair",
+        "details": "Floor will get destroyed otherwise",
+        "required": false,
+        "action_type": "buy"
+      },
+      {
+        "item_id": "CL-13-010",
+        "category": "Gear Needed",
+        "item": "Baby food storage containers",
+        "details": "If making your own purees",
+        "required": false,
+        "action_type": "buy"
+      },
+      {
+        "item_id": "CL-13-011",
+        "category": "First Foods",
+        "item": "Single ingredient foods first",
+        "details": "One new food at a time to spot allergies",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-012",
+        "category": "First Foods",
+        "item": "Wait 3-5 days between new foods",
+        "details": "Watch for allergic reactions",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-13-013",
+        "category": "First Foods",
+        "item": "Good starter foods",
+        "details": "Iron-fortified cereal or pureed sweet potato or avocado or banana",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-014",
+        "category": "First Foods",
+        "item": "Introduce allergens early",
+        "details": "Peanut and egg and dairy between 6-12 months reduces allergy risk",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-015",
+        "category": "First Foods",
+        "item": "Breast milk or formula still primary",
+        "details": "Solids are practice and exposure - milk is still main nutrition",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-016",
+        "category": "Safety - Choking",
+        "item": "Know infant choking first aid",
+        "details": "Take a class or watch videos before starting",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-13-017",
+        "category": "Safety - Choking",
+        "item": "Avoid choking hazards",
+        "details": "Whole grapes and hot dogs and popcorn and nuts and raw carrots",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-018",
+        "category": "Safety - Choking",
+        "item": "Always supervise eating",
+        "details": "Never leave baby alone with food",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-13-019",
+        "category": "Safety - Choking",
+        "item": "Baby should be upright when eating",
+        "details": "Not reclined - sitting position in high chair",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-13-020",
+        "category": "Safety - Choking",
+        "item": "Gagging is normal - choking is not",
+        "details": "Gagging is loud and coughing - choking is silent",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-021",
+        "category": "Approach Options",
+        "item": "Purees - traditional spoon feeding",
+        "details": "Start thin and gradually thicken",
+        "required": false,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-022",
+        "category": "Approach Options",
+        "item": "Baby Led Weaning - soft finger foods",
+        "details": "Baby feeds themselves from start",
+        "required": false,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-023",
+        "category": "Approach Options",
+        "item": "Combination approach",
+        "details": "Mix of purees and finger foods",
+        "required": false,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-13-024",
+        "category": "Approach Options",
+        "item": "Discuss with pediatrician",
+        "details": "They can recommend approach for your baby",
+        "required": true,
+        "action_type": "do"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-14",
+    "name": "Baby's First Illness",
+    "description": "What to have on hand and when to call the doctor",
+    "stage": "post-birth",
+    "week_relevant": "4+",
+    "item_count": 25,
+    "items": [
+      {
+        "item_id": "CL-14-001",
+        "category": "Medicine Cabinet Essentials",
+        "item": "Infant thermometer",
+        "details": "Rectal is most accurate for babies",
+        "required": true,
+        "action_type": "have"
+      },
+      {
+        "item_id": "CL-14-002",
+        "category": "Medicine Cabinet Essentials",
+        "item": "Infant acetaminophen (Tylenol)",
+        "details": "For 2+ months - know dosage by weight from pediatrician",
+        "required": true,
+        "action_type": "have"
+      },
+      {
+        "item_id": "CL-14-003",
+        "category": "Medicine Cabinet Essentials",
+        "item": "Infant ibuprofen (Motrin)",
+        "details": "For 6+ months - know dosage by weight",
+        "required": true,
+        "action_type": "have"
+      },
+      {
+        "item_id": "CL-14-004",
+        "category": "Medicine Cabinet Essentials",
+        "item": "Nasal aspirator",
+        "details": "NoseFrida or bulb syringe for stuffy nose",
+        "required": true,
+        "action_type": "have"
+      },
+      {
+        "item_id": "CL-14-005",
+        "category": "Medicine Cabinet Essentials",
+        "item": "Saline drops",
+        "details": "Loosens congestion before aspirating",
+        "required": true,
+        "action_type": "have"
+      },
+      {
+        "item_id": "CL-14-006",
+        "category": "Medicine Cabinet Essentials",
+        "item": "Humidifier",
+        "details": "Cool mist helps with congestion",
+        "required": true,
+        "action_type": "have"
+      },
+      {
+        "item_id": "CL-14-007",
+        "category": "Medicine Cabinet Essentials",
+        "item": "Pedialyte or electrolyte solution",
+        "details": "For dehydration with vomiting or diarrhea",
+        "required": true,
+        "action_type": "have"
+      },
+      {
+        "item_id": "CL-14-008",
+        "category": "Medicine Cabinet Essentials",
+        "item": "Medicine syringe",
+        "details": "For accurate dosing of liquid medicine",
+        "required": true,
+        "action_type": "have"
+      },
+      {
+        "item_id": "CL-14-009",
+        "category": "Call Doctor Immediately",
+        "item": "Fever over 100.4F in baby under 3 months",
+        "details": "This is an emergency - call immediately",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-14-010",
+        "category": "Call Doctor Immediately",
+        "item": "Fever over 104F at any age",
+        "details": "High fever needs medical attention",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-14-011",
+        "category": "Call Doctor Immediately",
+        "item": "Difficulty breathing",
+        "details": "Ribs showing with each breath or flaring nostrils",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-14-012",
+        "category": "Call Doctor Immediately",
+        "item": "Refusing to eat or drink",
+        "details": "Dehydration risk especially in infants",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-14-013",
+        "category": "Call Doctor Immediately",
+        "item": "Fewer wet diapers than usual",
+        "details": "Sign of dehydration",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-14-014",
+        "category": "Call Doctor Immediately",
+        "item": "Lethargy or unresponsiveness",
+        "details": "Hard to wake or unusually limp",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-14-015",
+        "category": "Call Doctor Immediately",
+        "item": "Rash that doesn't fade with pressure",
+        "details": "Could indicate serious infection",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-14-016",
+        "category": "Call Doctor Immediately",
+        "item": "Inconsolable crying for hours",
+        "details": "Pain or serious illness possible",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-14-017",
+        "category": "Can Usually Wait for Office Hours",
+        "item": "Low grade fever with cold symptoms",
+        "details": "Monitor and call in morning",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-14-018",
+        "category": "Can Usually Wait for Office Hours",
+        "item": "Runny nose and cough without distress",
+        "details": "Common cold - supportive care at home",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-14-019",
+        "category": "Can Usually Wait for Office Hours",
+        "item": "Mild diarrhea with normal behavior",
+        "details": "Push fluids and monitor",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-14-020",
+        "category": "Can Usually Wait for Office Hours",
+        "item": "Single episode of vomiting",
+        "details": "Monitor for more - could be nothing",
+        "required": true,
+        "action_type": "know"
+      },
+      {
+        "item_id": "CL-14-021",
+        "category": "Home Care Tips",
+        "item": "Push fluids",
+        "details": "Breast milk or formula or pedialyte",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-14-022",
+        "category": "Home Care Tips",
+        "item": "Rest and comfort",
+        "details": "Extra cuddles and quiet time",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-14-023",
+        "category": "Home Care Tips",
+        "item": "Run humidifier",
+        "details": "Helps with congestion",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-14-024",
+        "category": "Home Care Tips",
+        "item": "Saline and suction for stuffy nose",
+        "details": "Before feeds and before sleep",
+        "required": true,
+        "action_type": "do"
+      },
+      {
+        "item_id": "CL-14-025",
+        "category": "Home Care Tips",
+        "item": "Trust your gut",
+        "details": "If something feels wrong call the doctor",
+        "required": true,
+        "action_type": "know"
+      }
+    ]
+  },
+  {
+    "checklist_id": "CL-15",
+    "name": "Emergency Info Sheet",
+    "description": "One page document for babysitters and emergencies",
+    "stage": "pregnancy",
+    "week_relevant": "36+",
+    "item_count": 22,
+    "items": [
+      {
+        "item_id": "CL-15-001",
+        "category": "Parents Info",
+        "item": "Mom's full name and cell phone",
+        "details": "Include if you might be unreachable",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-002",
+        "category": "Parents Info",
+        "item": "Dad's full name and cell phone",
+        "details": "Include if you might be unreachable",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-003",
+        "category": "Parents Info",
+        "item": "Home address",
+        "details": "Full address including zip code",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-004",
+        "category": "Parents Info",
+        "item": "Work addresses and phones",
+        "details": "Where each parent can be reached during work",
+        "required": false,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-005",
+        "category": "Emergency Contacts",
+        "item": "Backup emergency contact",
+        "details": "Grandparent or close friend who can come quickly",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-006",
+        "category": "Emergency Contacts",
+        "item": "Neighbor who has a key",
+        "details": "Someone very close who can help",
+        "required": false,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-007",
+        "category": "Medical Info",
+        "item": "Pediatrician name and phone",
+        "details": "Including after hours number",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-008",
+        "category": "Medical Info",
+        "item": "Nearest emergency room address",
+        "details": "Know which hospital you'd go to",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-009",
+        "category": "Medical Info",
+        "item": "Poison control number",
+        "details": "1-800-222-1222 in US",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-010",
+        "category": "Medical Info",
+        "item": "Baby's date of birth",
+        "details": "For medical providers",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-011",
+        "category": "Medical Info",
+        "item": "Known allergies",
+        "details": "Food or medicine allergies",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-012",
+        "category": "Medical Info",
+        "item": "Current medications",
+        "details": "Any regular medications baby takes",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-013",
+        "category": "Medical Info",
+        "item": "Health insurance info",
+        "details": "Insurance company name and policy number and phone",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-014",
+        "category": "Care Instructions",
+        "item": "Feeding schedule and amounts",
+        "details": "What and when and how much",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-015",
+        "category": "Care Instructions",
+        "item": "Nap schedule",
+        "details": "When and how long typically",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-016",
+        "category": "Care Instructions",
+        "item": "Bedtime routine",
+        "details": "Step by step if caregiver is doing bedtime",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-017",
+        "category": "Care Instructions",
+        "item": "Comfort techniques",
+        "details": "What works to calm your specific baby",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-018",
+        "category": "Location Info",
+        "item": "Where to find diapers and supplies",
+        "details": "So caregiver doesn't have to search",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-019",
+        "category": "Location Info",
+        "item": "Where to find first aid kit",
+        "details": "Quick access in emergency",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-020",
+        "category": "Location Info",
+        "item": "Wifi password",
+        "details": "For caregiver's use",
+        "required": false,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-021",
+        "category": "Authorization",
+        "item": "Medical treatment authorization",
+        "details": "Written permission for emergency care if you can't be reached",
+        "required": true,
+        "action_type": "include"
+      },
+      {
+        "item_id": "CL-15-022",
+        "category": "Authorization",
+        "item": "Copy of insurance card",
+        "details": "Photo or photocopy attached",
+        "required": true,
+        "action_type": "include"
+      }
+    ]
+  }
+]

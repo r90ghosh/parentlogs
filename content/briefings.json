@@ -1,0 +1,1239 @@
+[
+  {
+    "briefing_id": "PREG-W04",
+    "stage": "pregnancy",
+    "week": 4,
+    "days_offset": -252,
+    "timeline_logic": "DD-252 Days",
+    "title": "The Positive Test",
+    "baby_update": "Poppy Seed size. Implantation complete. Neural tube forming.",
+    "mom_update": "Missed period. Potential fatigue and breast tenderness. Emotional shock/joy.",
+    "dad_focus": [
+      "Start the 'Protocol' folder",
+      "Calculate Due Date",
+      "Verify health insurance coverage for prenatal care."
+    ],
+    "relationship_tip": "Don't pressure her to feel 'happy' immediately. Fear is normal.",
+    "coming_up": "First prenatal appointment (Week 8).",
+    "medical_source": "Mayo Clinic",
+    "linked_task_ids": [
+      "PREG-W04-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W05",
+    "stage": "pregnancy",
+    "week": 5,
+    "days_offset": -245,
+    "timeline_logic": "DD-245 Days",
+    "title": "The Circulatory System",
+    "baby_update": "Sesame Seed size. Heart is beginning to form and beat. Circulatory system operational.",
+    "mom_update": "HCG hormone levels doubling every 48 hours. Nausea (Morning Sickness) may begin.",
+    "dad_focus": [
+      "Screen OB-GYNs",
+      "Check hospital ratings",
+      "Buy ginger ale/crackers for the house."
+    ],
+    "relationship_tip": "Ask 'How are you feeling?' and accept 'Terrible' as an answer.",
+    "coming_up": "Heartbeat visualization.",
+    "medical_source": "ACOG",
+    "linked_task_ids": [
+      "PREG-W05-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W06",
+    "stage": "pregnancy",
+    "week": 6,
+    "days_offset": -238,
+    "timeline_logic": "DD-238 Days",
+    "title": "The Facial Features",
+    "baby_update": "Lentil size. Nose/mouth/ears taking shape. Heart beating 100-160bpm.",
+    "mom_update": "Peak nausea zone. Exhaustion is physical and metabolic. Smell aversion likely.",
+    "dad_focus": [
+      "Take over kitchen duty",
+      "Cooking smells may trigger her",
+      "Manage trash/compost."
+    ],
+    "relationship_tip": "Bring her water before she asks. Hydration is critical.",
+    "coming_up": "First Ultrasound window opens.",
+    "medical_source": "AAP",
+    "linked_task_ids": [
+      "PREG-W06-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W07",
+    "stage": "pregnancy",
+    "week": 7,
+    "days_offset": -231,
+    "timeline_logic": "DD-231 Days",
+    "title": "The Limb Buds",
+    "baby_update": "Blueberry size. Arm and leg buds sprouting. Kidneys developing.",
+    "mom_update": "Frequent urination begins (uterus pressing on bladder). Mood swings due to hormones.",
+    "dad_focus": [
+      "Clean the bathroom",
+      "She is spending a lot of time there",
+      "Keep it pristine."
+    ],
+    "relationship_tip": "Don't joke about the mood swings. Just ride the wave.",
+    "coming_up": "Early ultrasound to confirm viability.",
+    "medical_source": "WebMD",
+    "linked_task_ids": [
+      "PREG-W07-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W08",
+    "stage": "pregnancy",
+    "week": 8,
+    "days_offset": -224,
+    "timeline_logic": "DD-224 Days",
+    "title": "The Raspberry",
+    "baby_update": "Raspberry size (1.6cm). Fingers/toes webbed. Taste buds forming.",
+    "mom_update": "Progesterone fatigue. She is metabolically running a marathon while sitting on the couch.",
+    "dad_focus": [
+      "Gatekeeper Duty: Manage family expectations",
+      "Don't announce yet if you prefer safety."
+    ],
+    "relationship_tip": "Watch a movie she picks. Low energy activity is key.",
+    "coming_up": "NIPT (Genetic Testing) decision.",
+    "medical_source": "Mayo Clinic",
+    "linked_task_ids": [
+      "PREG-W08-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W09",
+    "stage": "pregnancy",
+    "week": 9,
+    "days_offset": -217,
+    "timeline_logic": "DD-217 Days",
+    "title": "The Muscle Era",
+    "baby_update": "Cherry size. Muscles forming. Baby starts moving (she can't feel it yet).",
+    "mom_update": "Digestive slowdown. Bloating and gas are common progesterone side effects.",
+    "dad_focus": [
+      "Grocery Ops: High fiber foods",
+      "helping with digestion",
+      "Keep snacks accessible."
+    ],
+    "relationship_tip": "Tell her she's doing a good job growing a human.",
+    "coming_up": "Doppler heartbeat check.",
+    "medical_source": "ACOG",
+    "linked_task_ids": [
+      "PREG-W09-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W10",
+    "stage": "pregnancy",
+    "week": 10,
+    "days_offset": -210,
+    "timeline_logic": "DD-210 Days",
+    "title": "The Strawberry",
+    "baby_update": "Strawberry size. Vital organs functioning. Bones hardening.",
+    "mom_update": "Round Ligament Pain (sharp pains in abdomen) as uterus stretches.",
+    "dad_focus": [
+      "Finance Audit: Check 'Out of Pocket Max' on insurance",
+      "Start saving cash buffer."
+    ],
+    "relationship_tip": "Offer a back rub. Her posture is starting to shift.",
+    "coming_up": "Nuchal Translucency Scan (Week 11-13).",
+    "medical_source": "RadiologyInfo",
+    "linked_task_ids": [
+      "PREG-W10-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W11",
+    "stage": "pregnancy",
+    "week": 11,
+    "days_offset": -203,
+    "timeline_logic": "DD-203 Days",
+    "title": "The Fig",
+    "baby_update": "Fig size. Tooth buds forming. Skin is transparent.",
+    "mom_update": "Blood volume increasing. She may feel warmer or dizzy.",
+    "dad_focus": [
+      "Hydration Ops: Ensure she has a 40oz water bottle",
+      "Dehydration causes headaches."
+    ],
+    "relationship_tip": "Compliment her changes. 'You look glowing' > 'You look big'.",
+    "coming_up": "End of First Trimester approaching.",
+    "medical_source": "CDC",
+    "linked_task_ids": [
+      "PREG-W11-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W12",
+    "stage": "pregnancy",
+    "week": 12,
+    "days_offset": -196,
+    "timeline_logic": "DD-196 Days",
+    "title": "The Safe Zone",
+    "baby_update": "Plum size. Reflexes developing. Miscarriage risk drops significantly.",
+    "mom_update": "Nausea often subsides (placenta takes over). Energy may return slightly.",
+    "dad_focus": [
+      "Announcement Strategy: Plan the social media/family reveal",
+      "Clear the nursery room."
+    ],
+    "relationship_tip": "Celebrate the milestone. Dinner out (if she can eat).",
+    "coming_up": "Second Trimester Energy Surge.",
+    "medical_source": "NIH",
+    "linked_task_ids": [
+      "PREG-W12-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W13",
+    "stage": "pregnancy",
+    "week": 13,
+    "days_offset": -189,
+    "timeline_logic": "DD-189 Days",
+    "title": "The Vocal Cords",
+    "baby_update": "Lemon size. Vocal cords forming. Fingerprints developed.",
+    "mom_update": "Libido may return due to increased blood flow. 'The Glow' appears.",
+    "dad_focus": [
+      "Daycare RFP: Research local daycares",
+      "Waitlists are 9-12 months."
+    ],
+    "relationship_tip": "Intimacy may change. Follow her lead and comfort level.",
+    "coming_up": "Gender Reveal window.",
+    "medical_source": "AAP",
+    "linked_task_ids": [
+      "PREG-W13-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W14",
+    "stage": "pregnancy",
+    "week": 14,
+    "days_offset": -182,
+    "timeline_logic": "DD-182 Days",
+    "title": "The Second Trimester",
+    "baby_update": "Orange size. Kidneys making urine. Lanugo (hair) covers body.",
+    "mom_update": "Round Ligament Pain intensifies. Bump may start showing.",
+    "dad_focus": [
+      "Maternity Clothes Ops: Offer budget/time to shop for clothes that fit."
+    ],
+    "relationship_tip": "Validate her body image. It's a major psychological shift.",
+    "coming_up": "Quad Screen (Week 15-20).",
+    "medical_source": "Mayo Clinic",
+    "linked_task_ids": [
+      "PREG-W14-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W15",
+    "stage": "pregnancy",
+    "week": 15,
+    "days_offset": -175,
+    "timeline_logic": "DD-175 Days",
+    "title": "The Light Sensor",
+    "baby_update": "Apple size. Eyes sense light. Legs growing longer than arms.",
+    "mom_update": "Pregnancy Brain' (forgetfulness) is real. Volume loss in grey matter (temporary).",
+    "dad_focus": [
+      "Dental Audit: Schedule cleaning for her (gingivitis risk)",
+      "Do yours too."
+    ],
+    "relationship_tip": "Write things down for her. Don't mock the forgetfulness.",
+    "coming_up": "16 Week Appointment.",
+    "medical_source": "ACOG",
+    "linked_task_ids": [
+      "PREG-W15-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W16",
+    "stage": "pregnancy",
+    "week": 16,
+    "days_offset": -168,
+    "timeline_logic": "DD-168 Days",
+    "title": "The Quickening",
+    "baby_update": "Avocado size. Heart pumping 25qts blood/day.",
+    "mom_update": "Flutters' (movement) may be felt. Back pain begins.",
+    "dad_focus": [
+      "Registry Ops: Start building",
+      "Focus on utility (Car Seat) over cute (Onesies)."
+    ],
+    "relationship_tip": "Ask to feel the belly. Connect with the physical reality.",
+    "coming_up": "Anatomy Scan (Week 20).",
+    "medical_source": "APA",
+    "linked_task_ids": [
+      "PREG-W16-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W17",
+    "stage": "pregnancy",
+    "week": 17,
+    "days_offset": -161,
+    "timeline_logic": "DD-161 Days",
+    "title": "The Skeleton",
+    "baby_update": "Pear size. Cartilage hardening to bone. Umbilical cord thickening.",
+    "mom_update": "Vivid dreams common. Balance issues as center of gravity shifts.",
+    "dad_focus": [
+      "Nursery Prep: Paint now while she can help/tolerate fumes",
+      "Assemble heavy furniture."
+    ],
+    "relationship_tip": "Listen to her dreams. They are processing anxiety.",
+    "coming_up": "Mid-pregnancy ultrasound.",
+    "medical_source": "Sleep Foundation",
+    "linked_task_ids": [
+      "PREG-W17-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W18",
+    "stage": "pregnancy",
+    "week": 18,
+    "days_offset": -154,
+    "timeline_logic": "DD-154 Days",
+    "title": "The Ears",
+    "baby_update": "Bell Pepper size. Ears in final position. Myelin forming on nerves.",
+    "mom_update": "Blood pressure may drop. Dizziness upon standing.",
+    "dad_focus": [
+      "Talk to the Bump",
+      "Baby can hear low frequency (male) voices well."
+    ],
+    "relationship_tip": "Massage her lower back. Sciatica risk increases.",
+    "coming_up": "Anatomy Scan.",
+    "medical_source": "Mayo Clinic",
+    "linked_task_ids": [
+      "PREG-W18-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W19",
+    "stage": "pregnancy",
+    "week": 19,
+    "days_offset": -147,
+    "timeline_logic": "DD-147 Days",
+    "title": "The Vernix",
+    "baby_update": "Mango size. Vernix (waxy coat) protects skin.",
+    "mom_update": "Leg cramps at night. Heartburn (acid reflux) begins.",
+    "dad_focus": [
+      "Pediatrician RFI: Build list of 3 doctors to interview",
+      "Check weekend hours."
+    ],
+    "relationship_tip": "Cook low-acid meals. Avoid spicy/tomato based dinners.",
+    "coming_up": "Halfway point.",
+    "medical_source": "WebMD",
+    "linked_task_ids": [
+      "PREG-W19-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W20",
+    "stage": "pregnancy",
+    "week": 20,
+    "days_offset": -140,
+    "timeline_logic": "DD-140 Days",
+    "title": "The Anatomy Audit",
+    "baby_update": "Banana size. Swallowing fluid. Gender visible. 50% cooked.",
+    "mom_update": "Belly button may pop out. Skin pigmentation (Line Nigra).",
+    "dad_focus": [
+      "THE SCAN: Do not miss this",
+      "Checks heart chambers/brain structure",
+      "Bring notebook."
+    ],
+    "relationship_tip": "Take a 'Halfway There' photo. Mark the occasion.",
+    "coming_up": "Viability (Week 24).",
+    "medical_source": "RadiologyInfo",
+    "linked_task_ids": [
+      "PREG-W20-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W21",
+    "stage": "pregnancy",
+    "week": 21,
+    "days_offset": -133,
+    "timeline_logic": "DD-133 Days",
+    "title": "The Digestion",
+    "baby_update": "Carrot size. Digestive system maturing.",
+    "mom_update": "Stretch marks may appear. Varicose veins risk.",
+    "dad_focus": [
+      "Furniture Ops: Order crib/glider",
+      "Supply chains lag 8-12 weeks."
+    ],
+    "relationship_tip": "Buy her cocoa butter/bio-oil. Offer to apply it.",
+    "coming_up": "Glucose Test.",
+    "medical_source": "AAD",
+    "linked_task_ids": [
+      "PREG-W21-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W22",
+    "stage": "pregnancy",
+    "week": 22,
+    "days_offset": -126,
+    "timeline_logic": "DD-126 Days",
+    "title": "The Grip",
+    "baby_update": "Spaghetti Squash size. Grip strong. Sense of touch.",
+    "mom_update": "Feet swelling (edema). Rings may not fit.",
+    "dad_focus": [
+      "Life Insurance: Apply now",
+      "You have a dependent."
+    ],
+    "relationship_tip": "Plan a 'Babymoon' weekend. Travel gets hard soon.",
+    "coming_up": "Ear development.",
+    "medical_source": "LegalZoom",
+    "linked_task_ids": [
+      "PREG-W22-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W23",
+    "stage": "pregnancy",
+    "week": 23,
+    "days_offset": -119,
+    "timeline_logic": "DD-119 Days",
+    "title": "The Hearing",
+    "baby_update": "Large Mango size. Can hear loud noises outside womb.",
+    "mom_update": "Braxton Hicks (practice contractions) may start. Mild/irregular.",
+    "dad_focus": [
+      "Hospital Tour: Schedule L&D tour",
+      "Know where to park."
+    ],
+    "relationship_tip": "Get her water if she cramps. Dehydration triggers contractions.",
+    "coming_up": "Viability next week.",
+    "medical_source": "ACOG",
+    "linked_task_ids": [
+      "PREG-W23-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W24",
+    "stage": "pregnancy",
+    "week": 24,
+    "days_offset": -112,
+    "timeline_logic": "DD-112 Days",
+    "title": "Viability Week",
+    "baby_update": "Corn size. VIABLE if born now (NICU). Lungs producing surfactant.",
+    "mom_update": "Glucose Screening Test (Gestational Diabetes).",
+    "dad_focus": [
+      "Driver Duty: Drive her to Glucose test (sugar crash risk)",
+      "Babyproofing Phase 1."
+    ],
+    "relationship_tip": "Rub her feet. Edema is painful.",
+    "coming_up": "3rd Trimester.",
+    "medical_source": "ACOG",
+    "linked_task_ids": [
+      "PREG-W24-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W25",
+    "stage": "pregnancy",
+    "week": 25,
+    "days_offset": -105,
+    "timeline_logic": "DD-105 Days",
+    "title": "The Fat Stores",
+    "baby_update": "Rutabaga size. Adding baby fat. Hair growing.",
+    "mom_update": "Hemorrhoids/Constipation common. Sleep difficult.",
+    "dad_focus": [
+      "Fiber Ops: Ensure high fiber diet",
+      "Buy Tucks pads (don't ask/just buy)."
+    ],
+    "relationship_tip": "Do not mention the hemorrhoids. Just help.",
+    "coming_up": "Tdap Vaccine window.",
+    "medical_source": "Mayo Clinic",
+    "linked_task_ids": [
+      "PREG-W25-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W26",
+    "stage": "pregnancy",
+    "week": 26,
+    "days_offset": -98,
+    "timeline_logic": "DD-98 Days",
+    "title": "The Eye Opener",
+    "baby_update": "Scallion size. Eyes open/close. Blue eyes (pigment later).",
+    "mom_update": "Rib pain (baby kicking ribs). Shortness of breath.",
+    "dad_focus": [
+      "Car Seat Purchase: Buy the bucket seat",
+      "Locate inspection station."
+    ],
+    "relationship_tip": "Help her put on socks/shoes. She can't reach.",
+    "coming_up": "Third Trimester.",
+    "medical_source": "NHTSA",
+    "linked_task_ids": [
+      "PREG-W26-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W27",
+    "stage": "pregnancy",
+    "week": 27,
+    "days_offset": -91,
+    "timeline_logic": "DD-91 Days",
+    "title": "The Brain Wave",
+    "baby_update": "Cauliflower size. Brain activity spikes. Sleep cycles.",
+    "mom_update": "Anxiety about labor may spike.",
+    "dad_focus": [
+      "Pediatrician Interviews: Schedule meet & greets."
+    ],
+    "relationship_tip": "Ask about her labor fears. Just listen.",
+    "coming_up": "Rhogam shot (if blood type negative).",
+    "medical_source": "AAP",
+    "linked_task_ids": [
+      "PREG-W27-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W28",
+    "stage": "pregnancy",
+    "week": 28,
+    "days_offset": -84,
+    "timeline_logic": "DD-84 Days",
+    "title": "The Third Trimester",
+    "baby_update": "Eggplant size. 2.5 lbs. 90% survival rate.",
+    "mom_update": "Fatigue returns. Sciatica possible.",
+    "dad_focus": [
+      "Vaccine: Get Tdap booster (Whooping Cough)",
+      "Car maintenance check."
+    ],
+    "relationship_tip": "Take over floor-level chores (vacuuming).",
+    "coming_up": "Baby Shower.",
+    "medical_source": "CDC",
+    "linked_task_ids": [
+      "PREG-W28-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W29",
+    "stage": "pregnancy",
+    "week": 29,
+    "days_offset": -77,
+    "timeline_logic": "DD-77 Days",
+    "title": "The Thermostat",
+    "baby_update": "Butternut Squash size. Regulating body temp.",
+    "mom_update": "Varicose veins. Frequent urination.",
+    "dad_focus": [
+      "Diaper Stock: Buy 1 box Newborn/1 box Size 1."
+    ],
+    "relationship_tip": "Don't complain about your sleep if she wakes up 4x.",
+    "coming_up": "Growth Scan.",
+    "medical_source": "WebMD",
+    "linked_task_ids": [
+      "PREG-W29-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W30",
+    "stage": "pregnancy",
+    "week": 30,
+    "days_offset": -70,
+    "timeline_logic": "DD-70 Days",
+    "title": "The Memory Foam",
+    "baby_update": "Cabbage size. 3lbs. Brain folding for memory.",
+    "mom_update": "Heartburn severe. Pillow fortress required for sleep.",
+    "dad_focus": [
+      "Hospital Bag: Start packing list",
+      "Emergency numbers on fridge."
+    ],
+    "relationship_tip": "Cook mild food. Late night snacks.",
+    "coming_up": "Fetal position check.",
+    "medical_source": "Sleep Fnd",
+    "linked_task_ids": [
+      "PREG-W30-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W31",
+    "stage": "pregnancy",
+    "week": 31,
+    "days_offset": -63,
+    "timeline_logic": "DD-63 Days",
+    "title": "The Senses",
+    "baby_update": "Coconut size. All 5 senses functional.",
+    "mom_update": "Nesting' instinct kicks in (cleaning frenzy).",
+    "dad_focus": [
+      "Gear Assembly: Crib/Swing",
+      "Break down boxes immediately."
+    ],
+    "relationship_tip": "Support the nesting. Don't fight the cleaning.",
+    "coming_up": "Baby drops soon.",
+    "medical_source": "APA",
+    "linked_task_ids": [
+      "PREG-W31-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W32",
+    "stage": "pregnancy",
+    "week": 32,
+    "days_offset": -56,
+    "timeline_logic": "DD-56 Days",
+    "title": "The Practice Breaths",
+    "baby_update": "Jicama size. Practicing breathing.",
+    "mom_update": "Braxton Hicks intensify. Leaking colostrum.",
+    "dad_focus": [
+      "Hospital Pre-Reg: Complete admin forms online",
+      "Test drive route."
+    ],
+    "relationship_tip": "Buy nursing pads for leaks.",
+    "coming_up": "Pertussis immunity.",
+    "medical_source": "ACOG",
+    "linked_task_ids": [
+      "PREG-W32-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W33",
+    "stage": "pregnancy",
+    "week": 33,
+    "days_offset": -49,
+    "timeline_logic": "DD-49 Days",
+    "title": "The Immune Transfer",
+    "baby_update": "Pineapple size. Receiving antibodies.",
+    "mom_update": "Insomnia. Overheating.",
+    "dad_focus": [
+      "Pet Ops: Arrange dog sitter for hospital stay."
+    ],
+    "relationship_tip": "Keep house cool. She is a radiator.",
+    "coming_up": "GBS Test.",
+    "medical_source": "CDC",
+    "linked_task_ids": [
+      "PREG-W33-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W34",
+    "stage": "pregnancy",
+    "week": 34,
+    "days_offset": -42,
+    "timeline_logic": "DD-42 Days",
+    "title": "The Descent",
+    "baby_update": "Cantaloupe size. Testicles descending (boys).",
+    "mom_update": "Pelvic pressure increases. Vision blurs.",
+    "dad_focus": [
+      "Work Handoff: Document tasks",
+      "Meal Prep (freezer)."
+    ],
+    "relationship_tip": "Massage hips/glutes.",
+    "coming_up": "Late Pre-term.",
+    "medical_source": "Mayo Clinic",
+    "linked_task_ids": [
+      "PREG-W34-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W35",
+    "stage": "pregnancy",
+    "week": 35,
+    "days_offset": -35,
+    "timeline_logic": "DD-35 Days",
+    "title": "The Rapid Gain",
+    "baby_update": "Honeydew size. Gaining 0.5lb/week.",
+    "mom_update": "Clumsiness (center of gravity).",
+    "dad_focus": [
+      "Car Seat Base: Install in car",
+      "Bag Check."
+    ],
+    "relationship_tip": "Encourage rest. Marathon soon.",
+    "coming_up": "GBS Swab.",
+    "medical_source": "NHTSA",
+    "linked_task_ids": [
+      "PREG-W35-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W36",
+    "stage": "pregnancy",
+    "week": 36,
+    "days_offset": -28,
+    "timeline_logic": "DD-28 Days",
+    "title": "The Drop",
+    "baby_update": "Papaya size. Baby drops into pelvis (Lightening).",
+    "mom_update": "Breathing easier/Walking harder (waddle).",
+    "dad_focus": [
+      "Install Car Seat",
+      "Draft 'Baby is Here' texts."
+    ],
+    "relationship_tip": "Discuss labor support role.",
+    "coming_up": "Early Term.",
+    "medical_source": "ACOG",
+    "linked_task_ids": [
+      "PREG-W36-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W37",
+    "stage": "pregnancy",
+    "week": 37,
+    "days_offset": -21,
+    "timeline_logic": "DD-21 Days",
+    "title": "Early Term",
+    "baby_update": "Romaine Lettuce size. Lungs ready.",
+    "mom_update": "Cervix may efface/dilate. Mucus plug.",
+    "dad_focus": [
+      "Logistics: Gas full",
+      "Phone volume ON."
+    ],
+    "relationship_tip": "Be patient. She is done being pregnant.",
+    "coming_up": "Full Term.",
+    "medical_source": "ACOG",
+    "linked_task_ids": [
+      "PREG-W37-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W38",
+    "stage": "pregnancy",
+    "week": 38,
+    "days_offset": -14,
+    "timeline_logic": "DD-14 Days",
+    "title": "The Hand Grip",
+    "baby_update": "Leek size. Grip strong.",
+    "mom_update": "Anxiety. 'Lightning Crotch' (nerve pain).",
+    "dad_focus": [
+      "Final Sweep: Camera batteries",
+      "Snacks packed."
+    ],
+    "relationship_tip": "Distraction duty. Movie/Walk.",
+    "coming_up": "Delivery Day?",
+    "medical_source": "WebMD",
+    "linked_task_ids": [
+      "PREG-W38-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W39",
+    "stage": "pregnancy",
+    "week": 39,
+    "days_offset": -7,
+    "timeline_logic": "DD-7 Days",
+    "title": "Full Term",
+    "baby_update": "Watermelon size. Ready for launch.",
+    "mom_update": "Discomfort maxed. Mental game tough.",
+    "dad_focus": [
+      "Advocacy: Block 'Is baby here?' texts."
+    ],
+    "relationship_tip": "Tell her you trust her strength.",
+    "coming_up": "Due Date.",
+    "medical_source": "Mayo Clinic",
+    "linked_task_ids": [
+      "PREG-W39-01"
+    ]
+  },
+  {
+    "briefing_id": "PREG-W40",
+    "stage": "pregnancy",
+    "week": 40,
+    "days_offset": 0,
+    "timeline_logic": "DD-0 Days",
+    "title": "The Arrival",
+    "baby_update": "Pumpkin size. Bones soft for delivery.",
+    "mom_update": "Labor imminent. 5-1-1 Rule.",
+    "dad_focus": [
+      "Go Time: Execute route",
+      "Support mom."
+    ],
+    "relationship_tip": "You got this.",
+    "coming_up": "Fourth Trimester.",
+    "medical_source": "ACOG",
+    "linked_task_ids": [
+      "PREG-W40-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-W01",
+    "stage": "newborn",
+    "week": 1,
+    "days_offset": 1,
+    "timeline_logic": "BD+1 Day",
+    "title": "Survival Week",
+    "baby_update": "Stomach cherry sized. Needs food q2h.",
+    "mom_update": "Recovery/Baby Blues. Soreness.",
+    "dad_focus": [
+      "Gatekeeper: No visitors",
+      "Admin: Birth Cert/SSN."
+    ],
+    "relationship_tip": "Hydrate her while she feeds.",
+    "coming_up": "Umbilical cord.",
+    "medical_source": "AAP",
+    "linked_task_ids": [
+      "POST-W01-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-W02",
+    "stage": "newborn",
+    "week": 2,
+    "days_offset": 14,
+    "timeline_logic": "BD+14 Days",
+    "title": "Cluster Feed",
+    "baby_update": "Growth spurt. Eating constantly.",
+    "mom_update": "Healing. Exhaustion sets in.",
+    "dad_focus": [
+      "Shift Work: Take 8pm-1am shift",
+      "Insurance add."
+    ],
+    "relationship_tip": "Check HER recovery.",
+    "coming_up": "Peak Crying.",
+    "medical_source": "WIC",
+    "linked_task_ids": [
+      "POST-W02-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-W03",
+    "stage": "newborn",
+    "week": 3,
+    "days_offset": 21,
+    "timeline_logic": "BD+21 Days",
+    "title": "The Awakening",
+    "baby_update": "Awake periods longer.",
+    "mom_update": "Adrenaline gone. Sleep deprivation.",
+    "dad_focus": [
+      "Pediatrician: Book 1mo visit",
+      "PFL claims."
+    ],
+    "relationship_tip": "Bring snacks. Breastfeeding burns 500cal.",
+    "coming_up": "Social Smile.",
+    "medical_source": "Sleep Fnd",
+    "linked_task_ids": [
+      "POST-W03-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-W04",
+    "stage": "newborn",
+    "week": 4,
+    "days_offset": 28,
+    "timeline_logic": "BD+28 Days",
+    "title": "One Month Mark",
+    "baby_update": "Head control improving.",
+    "mom_update": "PPD Risk. Watch for detachment.",
+    "dad_focus": [
+      "Bottles: Introduce bottle (nipple confusion is rare)."
+    ],
+    "relationship_tip": "Encourage her to leave house solo.",
+    "coming_up": "Vaccines.",
+    "medical_source": "Postpartum",
+    "linked_task_ids": [
+      "POST-W04-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-W05",
+    "stage": "newborn",
+    "week": 5,
+    "days_offset": 35,
+    "timeline_logic": "BD+35 Days",
+    "title": "The Peak",
+    "baby_update": "Peak fussiness (Purple Crying).",
+    "mom_update": "Feeling 'touched out'.",
+    "dad_focus": [
+      "Baby Wearing: Wear baby for evening fuss."
+    ],
+    "relationship_tip": "Take baby for a walk so she can shower.",
+    "coming_up": "Smile.",
+    "medical_source": "Happiest Baby",
+    "linked_task_ids": [
+      "POST-W05-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-W06",
+    "stage": "newborn",
+    "week": 6,
+    "days_offset": 42,
+    "timeline_logic": "BD+42 Days",
+    "title": "The Smile",
+    "baby_update": "Social smiles appear. Tracking objects.",
+    "mom_update": "6-Week Checkup (Clearance).",
+    "dad_focus": [
+      "Vaccine Prep: Buy Tylenol",
+      "Discuss intimacy."
+    ],
+    "relationship_tip": "Date Night In.",
+    "coming_up": "2 Month Shots.",
+    "medical_source": "AAP",
+    "linked_task_ids": [
+      "POST-W06-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-W07",
+    "stage": "newborn",
+    "week": 7,
+    "days_offset": 49,
+    "timeline_logic": "BD+49 Days",
+    "title": "The Hands",
+    "baby_update": "Batting at objects. Hands open.",
+    "mom_update": "Routine forming.",
+    "dad_focus": [
+      "Play: Tummy time 5 min/day."
+    ],
+    "relationship_tip": "Take photos of them together.",
+    "coming_up": "Sleep stretches.",
+    "medical_source": "Pathways",
+    "linked_task_ids": [
+      "POST-W07-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-W08",
+    "stage": "newborn",
+    "week": 8,
+    "days_offset": 56,
+    "timeline_logic": "BD+56 Days",
+    "title": "Vaccine Week",
+    "baby_update": "2 Month Shots (fever common).",
+    "mom_update": "Anxiety about daycare/work.",
+    "dad_focus": [
+      "Admin: Check SSN arrived",
+      "Daycare forms."
+    ],
+    "relationship_tip": "Comfort baby post-shots.",
+    "coming_up": "Return to work.",
+    "medical_source": "CDC",
+    "linked_task_ids": [
+      "POST-W08-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-W09",
+    "stage": "newborn",
+    "week": 9,
+    "days_offset": 63,
+    "timeline_logic": "BD+63 Days",
+    "title": "Patterns",
+    "baby_update": "Sleep cycles maturing.",
+    "mom_update": "Hormones leveling out.",
+    "dad_focus": [
+      "Routine: Bath/Book/Bed consistency."
+    ],
+    "relationship_tip": "Ask about her day (adult conversation).",
+    "coming_up": "Rolling over.",
+    "medical_source": "Sleep Fnd",
+    "linked_task_ids": [
+      "POST-W09-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-W10",
+    "stage": "newborn",
+    "week": 10,
+    "days_offset": 70,
+    "timeline_logic": "BD+70 Days",
+    "title": "The Voice",
+    "baby_update": "Cooing/Babbling.",
+    "mom_update": "Hair loss (postpartum shed).",
+    "dad_focus": [
+      "Reading: Read simple books",
+      "Narrate life."
+    ],
+    "relationship_tip": "Tell her she's beautiful (hair loss is hard).",
+    "coming_up": "Grabbing.",
+    "medical_source": "Zero to Three",
+    "linked_task_ids": [
+      "POST-W10-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-W11",
+    "stage": "newborn",
+    "week": 11,
+    "days_offset": 77,
+    "timeline_logic": "BD+77 Days",
+    "title": "The Roll",
+    "baby_update": "Rolling belly to back.",
+    "mom_update": "Work/Life balance struggle.",
+    "dad_focus": [
+      "Safety: Stop swaddling if rolling."
+    ],
+    "relationship_tip": "Plan weekend activity.",
+    "coming_up": "4 Month Regression.",
+    "medical_source": "AAP",
+    "linked_task_ids": [
+      "POST-W11-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-W12",
+    "stage": "newborn",
+    "week": 12,
+    "days_offset": 84,
+    "timeline_logic": "BD+84 Days",
+    "title": "Graduation",
+    "baby_update": "Exiting 4th Trimester. Laughing.",
+    "mom_update": "Feeling more 'human'.",
+    "dad_focus": [
+      "Review Budget",
+      "Plan first trip?"
+    ],
+    "relationship_tip": "Celebrate surviving 3 months.",
+    "coming_up": "Solids soon.",
+    "medical_source": "CDC",
+    "linked_task_ids": [
+      "POST-W12-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-M04",
+    "stage": "infant",
+    "week": 16,
+    "days_offset": 120,
+    "timeline_logic": "BD+120 Days",
+    "title": "Sleep Regression",
+    "baby_update": "Adult sleep cycles. Waking up.",
+    "mom_update": "Sleep deprivation returns.",
+    "dad_focus": [
+      "Sleep Training: Agree on method",
+      "Lower crib."
+    ],
+    "relationship_tip": "Don't fight at 3am.",
+    "coming_up": "Solids (M6).",
+    "medical_source": "Sleep Fnd",
+    "linked_task_ids": [
+      "POST-M04-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-M05",
+    "stage": "infant",
+    "week": 20,
+    "days_offset": 150,
+    "timeline_logic": "BD+150 Days",
+    "title": "The Core",
+    "baby_update": "Sitting with support.",
+    "mom_update": "Back to work reality.",
+    "dad_focus": [
+      "High Chair Research",
+      "Buy bibs."
+    ],
+    "relationship_tip": "Plan a date.",
+    "coming_up": "Teething.",
+    "medical_source": "AAP",
+    "linked_task_ids": [
+      "POST-M05-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-M06",
+    "stage": "infant",
+    "week": 24,
+    "days_offset": 180,
+    "timeline_logic": "BD+180 Days",
+    "title": "Solids Boot",
+    "baby_update": "Sitting up. Tongue thrust gone.",
+    "mom_update": "Excitement/Nerves re: choking.",
+    "dad_focus": [
+      "CPR Refresher",
+      "Buy First Foods."
+    ],
+    "relationship_tip": "Watch for allergies.",
+    "coming_up": "Crawling.",
+    "medical_source": "CDC",
+    "linked_task_ids": [
+      "POST-M06-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-M07",
+    "stage": "infant",
+    "week": 28,
+    "days_offset": 210,
+    "timeline_logic": "BD+210 Days",
+    "title": "Teething",
+    "baby_update": "First tooth? Drooling.",
+    "mom_update": "Broken sleep due to teeth.",
+    "dad_focus": [
+      "Babyproof: Cords/Outlets",
+      "Floor audit."
+    ],
+    "relationship_tip": "Give her a break.",
+    "coming_up": "Mobility.",
+    "medical_source": "ADA",
+    "linked_task_ids": [
+      "POST-M07-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-M08",
+    "stage": "infant",
+    "week": 32,
+    "days_offset": 240,
+    "timeline_logic": "BD+240 Days",
+    "title": "The Crawl",
+    "baby_update": "Scooting/Crawling. Pincer grasp.",
+    "mom_update": "Chasing baby. Physically tiring.",
+    "dad_focus": [
+      "Install Gates",
+      "Lock chemicals."
+    ],
+    "relationship_tip": "Plan family outing.",
+    "coming_up": "Separation Anxiety.",
+    "medical_source": "AAP",
+    "linked_task_ids": [
+      "POST-M08-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-M09",
+    "stage": "infant",
+    "week": 36,
+    "days_offset": 270,
+    "timeline_logic": "BD+270 Days",
+    "title": "Separation",
+    "baby_update": "Object permanence (cries when you leave).",
+    "mom_update": "Guilt about leaving.",
+    "dad_focus": [
+      "Car Seat: Check height limits",
+      "Convertible seat?"
+    ],
+    "relationship_tip": "Play Peek-a-boo.",
+    "coming_up": "Standing.",
+    "medical_source": "Zero to Three",
+    "linked_task_ids": [
+      "POST-M09-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-M10",
+    "stage": "infant",
+    "week": 40,
+    "days_offset": 300,
+    "timeline_logic": "BD+300 Days",
+    "title": "Cruising",
+    "baby_update": "Pulling to stand. Cruising furniture.",
+    "mom_update": "Safety anxiety.",
+    "dad_focus": [
+      "Lower crib mattress",
+      "Anchor furniture."
+    ],
+    "relationship_tip": "Take videos.",
+    "coming_up": "Walking.",
+    "medical_source": "AAP",
+    "linked_task_ids": [
+      "POST-M10-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-M11",
+    "stage": "infant",
+    "week": 44,
+    "days_offset": 330,
+    "timeline_logic": "BD+330 Days",
+    "title": "First Words",
+    "baby_update": "Mama/Dada. Pointing.",
+    "mom_update": "Planning birthday.",
+    "dad_focus": [
+      "First Shoes: Flexible soles",
+      "Party prep."
+    ],
+    "relationship_tip": "Help with party logistics.",
+    "coming_up": "1 Year.",
+    "medical_source": "CDC",
+    "linked_task_ids": [
+      "POST-M11-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-M12",
+    "stage": "toddler",
+    "week": 48,
+    "days_offset": 365,
+    "timeline_logic": "BD+365 Days",
+    "title": "The Toddler",
+    "baby_update": "Walking. Cow's milk transition.",
+    "mom_update": "Emotional: 'My baby is 1'.",
+    "dad_focus": [
+      "Vet Visit 12mo",
+      "Dentist #1",
+      "Purge baby clothes."
+    ],
+    "relationship_tip": "Celebrate HER year.",
+    "coming_up": "Tantrums.",
+    "medical_source": "AAP",
+    "linked_task_ids": [
+      "POST-M12-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-M15",
+    "stage": "toddler",
+    "week": 60,
+    "days_offset": 450,
+    "timeline_logic": "BD+450 Days",
+    "title": "The Climber",
+    "baby_update": "Climbing everything. 5-10 words.",
+    "mom_update": "Exhaustion level: Cardio.",
+    "dad_focus": [
+      "Safety: Window locks",
+      "Falls risk."
+    ],
+    "relationship_tip": "Playground duty.",
+    "coming_up": "18mo check.",
+    "medical_source": "CDC",
+    "linked_task_ids": [
+      "POST-M15-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-M18",
+    "stage": "toddler",
+    "week": 72,
+    "days_offset": 540,
+    "timeline_logic": "BD+540 Days",
+    "title": "The Independence",
+    "baby_update": "Running. 'No'. Tantrums.",
+    "mom_update": "Frustration with behavior.",
+    "dad_focus": [
+      "Discipline: Redirection",
+      "18mo Autism screen."
+    ],
+    "relationship_tip": "Patience.",
+    "coming_up": "Potty Train (M24).",
+    "medical_source": "Zero to Three",
+    "linked_task_ids": [
+      "POST-M18-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-M21",
+    "stage": "toddler",
+    "week": 84,
+    "days_offset": 630,
+    "timeline_logic": "BD+630 Days",
+    "title": "The Mimic",
+    "baby_update": "Copying everything. 20+ words.",
+    "mom_update": "Laughing more.",
+    "dad_focus": [
+      "Watch your language",
+      "Model kindness."
+    ],
+    "relationship_tip": "One-on-one dates.",
+    "coming_up": "2 Year.",
+    "medical_source": "AAP",
+    "linked_task_ids": [
+      "POST-M21-01"
+    ]
+  },
+  {
+    "briefing_id": "POST-M24",
+    "stage": "toddler",
+    "week": 96,
+    "days_offset": 730,
+    "timeline_logic": "BD+730 Days",
+    "title": "The Two Year Old",
+    "baby_update": "2-word sentences. Jumping.",
+    "mom_update": "Potty training readiness?",
+    "dad_focus": [
+      "Potty Ops: Buy potty",
+      "Read 'Oh Crap'."
+    ],
+    "relationship_tip": "Celebrate 2 years.",
+    "coming_up": "Preschool.",
+    "medical_source": "CDC",
+    "linked_task_ids": [
+      "POST-M24-01"
+    ]
+  }
+]

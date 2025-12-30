@@ -1,0 +1,3872 @@
+[
+  {
+    "task_id": "PREG-W10-001",
+    "title": "Verify Prenatal Insurance",
+    "description": "Call insurer to confirm coverage details for prenatal visits, ultrasounds, and delivery. Ask about deductible and out-of-pocket maximums.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 30 Weeks",
+    "due_date_offset_days": -210,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "admin",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W12-001",
+    "title": "Schedule Nuchal Translucency",
+    "description": "Book the NT scan (screening for chromosomal abnormalities) which must occur between weeks 11 and 14.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 28 Weeks",
+    "due_date_offset_days": -196,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W08-001",
+    "title": "Select OB-GYN/Midwife",
+    "description": "Research and select a provider. Confirm they have privileges at your desired delivery hospital or birth center.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 32 Weeks",
+    "due_date_offset_days": -224,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W20-001",
+    "title": "Research Pediatricians",
+    "description": "Compile a list of in-network pediatricians. Check reviews and schedule \"meet-and-greet\" interviews if offered.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 20 Weeks",
+    "due_date_offset_days": -140,
+    "base_date_type": "DD",
+    "assigned_to": "either",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W12-002",
+    "title": "Daycare Waitlist Application",
+    "description": "Identify top 3 daycare centers. Submit deposits and applications immediately as waitlists can exceed 12 months.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 28 Weeks",
+    "due_date_offset_days": -196,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "education",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W16-001",
+    "title": "FSA/HSA Contribution Review",
+    "description": "Review pre-tax health savings accounts. Maximize contributions for upcoming hospital bills and dependent care.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 24 Weeks",
+    "due_date_offset_days": -168,
+    "base_date_type": "DD",
+    "assigned_to": "either",
+    "category": "finance",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W16-002",
+    "title": "Employer Leave Policy Review",
+    "description": "Request FMLA and Paid Parental Leave handbooks from HR. Determine eligibility and notification deadlines.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 24 Weeks",
+    "due_date_offset_days": -168,
+    "base_date_type": "DD",
+    "assigned_to": "either",
+    "category": "admin",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W12-003",
+    "title": "Genetic Screening Decision",
+    "description": "Discuss with OB-GYN whether to proceed with NIPT (Non-Invasive Prenatal Testing) or carrier screening.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 28 Weeks",
+    "due_date_offset_days": -196,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W20-002",
+    "title": "20-Week Anatomy Scan",
+    "description": "Attend the mid-pregnancy ultrasound to check fetal organ development and measurements.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 20 Weeks",
+    "due_date_offset_days": -140,
+    "base_date_type": "DD",
+    "assigned_to": "either",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W20-003",
+    "title": "Dental Cleaning (Mom)",
+    "description": "Schedule a cleaning. Hormonal changes increase risk of pregnancy gingivitis, which is linked to preterm birth.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 20 Weeks",
+    "due_date_offset_days": -140,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W16-003",
+    "title": "Create Baby Registry",
+    "description": "Begin selecting gear. Focus on needs vs. wants to guide shower gifts and personal budgeting.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 24 Weeks",
+    "due_date_offset_days": -168,
+    "base_date_type": "DD",
+    "assigned_to": "either",
+    "category": "gear",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W20-004",
+    "title": "Budget Planning: Post-Baby",
+    "description": "Create a pro-forma monthly budget including estimated diaper, formula, and childcare costs.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 20 Weeks",
+    "due_date_offset_days": -140,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "finance",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W26-001",
+    "title": "Glucose Screening Test",
+    "description": "Complete the 1-hour glucose challenge test to screen for gestational diabetes (standard at 24-28 weeks).",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 14 Weeks",
+    "due_date_offset_days": -98,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W24-001",
+    "title": "Nursery Room Clearance",
+    "description": "Clear the designated nursery room of existing furniture/clutter to prepare for painting and setup.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 16 Weeks",
+    "due_date_offset_days": -112,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W28-001",
+    "title": "Research Cord Blood Banking",
+    "description": "Decide whether to bank cord blood privately, donate to a public bank, or discard. Order kit if banking.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 12 Weeks",
+    "due_date_offset_days": -84,
+    "base_date_type": "DD",
+    "assigned_to": "either",
+    "category": "health",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W28-002",
+    "title": "Purchase Crib",
+    "description": "Buy a crib that meets current CPSC safety standards (no drop sides). Measure room to ensure fit.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 12 Weeks",
+    "due_date_offset_days": -84,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "gear",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W28-003",
+    "title": "Buy Firm Crib Mattress",
+    "description": "Purchase a specifically firm infant mattress. Perform the \"two-finger test\" to ensure snug fit in crib frame.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 12 Weeks",
+    "due_date_offset_days": -84,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "gear",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W20-005",
+    "title": "Research Doula Support",
+    "description": "Decide if a birth doula is desired for labor support. Interview and hire if applicable.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 20 Weeks",
+    "due_date_offset_days": -140,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W20-006",
+    "title": "Maternity Wardrobe Audit",
+    "description": "Purchase essential maternity clothes (jeans, leggings, tops) as regular clothes become restrictive.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 20 Weeks",
+    "due_date_offset_days": -140,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "gear",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W24-002",
+    "title": "Plan Babymoon",
+    "description": "Schedule a final trip or weekend away before travel becomes restricted in the third trimester.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 16 Weeks",
+    "due_date_offset_days": -112,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "magic",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W28-004",
+    "title": "Life Insurance Audit",
+    "description": "Review existing life insurance policies. Determine if coverage needs increasing to protect the new dependent.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 12 Weeks",
+    "due_date_offset_days": -84,
+    "base_date_type": "DD",
+    "assigned_to": "either",
+    "category": "finance",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W28-005",
+    "title": "Update Beneficiaries",
+    "description": "Check 401k/IRA beneficiary designations. Plan to add child as contingent beneficiary post-birth.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 12 Weeks",
+    "due_date_offset_days": -84,
+    "base_date_type": "DD",
+    "assigned_to": "either",
+    "category": "finance",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W28-006",
+    "title": "Pet Behavioral Prep",
+    "description": "Begin training pets to respect nursery boundaries and baby sounds (play recordings of crying).",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 12 Weeks",
+    "due_date_offset_days": -84,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W30-001",
+    "title": "Purchase Glider/Rocker",
+    "description": "Select a comfortable chair for nursing/feeding. Test for back support and ease of standing up.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 10 Weeks",
+    "due_date_offset_days": -70,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "furniture",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W30-002",
+    "title": "Nursery Painting",
+    "description": "Paint nursery early to allow VOCs/fumes to dissipate well before baby arrives.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 10 Weeks",
+    "due_date_offset_days": -70,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W32-001",
+    "title": "TDAP Vaccine (Mom)",
+    "description": "Receive Tdap booster (27-36 weeks) to pass whooping cough antibodies to the fetus.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 8 Weeks",
+    "due_date_offset_days": -56,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W36-001",
+    "title": "TDAP Vaccine (Dad/Partners)",
+    "description": "Dad and close caregivers get Tdap booster to create a \"cocoon\" of immunity around the newborn.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 4 Weeks",
+    "due_date_offset_days": -28,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W36-002",
+    "title": "Flu Shot (Family)",
+    "description": "If in season, all household members should receive the influenza vaccine.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 4 Weeks",
+    "due_date_offset_days": -28,
+    "base_date_type": "DD",
+    "assigned_to": "either",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W36-003",
+    "title": "Install Infant Car Seat",
+    "description": "Install car seat base in primary vehicle using LATCH or seatbelt. Ensure level indicator is correct.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 4 Weeks",
+    "due_date_offset_days": -28,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W37-001",
+    "title": "Car Seat Inspection",
+    "description": "Visit a certified Child Passenger Safety Technician (CPST) to verify installation angle and tightness.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 3 Weeks",
+    "due_date_offset_days": -21,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W35-001",
+    "title": "Pack Hospital Bag (Mom)",
+    "description": "Pack nursing bras, robe, comfortable clothes, toiletries, heavy flow pads, ID, and insurance card.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 5 Weeks",
+    "due_date_offset_days": -35,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "prep",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W35-002",
+    "title": "Pack Hospital Bag (Dad)",
+    "description": "Pack snacks, hydration, change of clothes, pillow/blanket, chargers, and entertainment.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 5 Weeks",
+    "due_date_offset_days": -35,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "prep",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W36-004",
+    "title": "Purchase Postpartum Care Kit",
+    "description": "Buy peri-bottle, witch hazel pads, sitz bath soak, and maxi pads for recovery.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 4 Weeks",
+    "due_date_offset_days": -28,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W36-005",
+    "title": "Wash Baby Clothes",
+    "description": "Wash all newborn and 0-3 month clothes/sheets in fragrance-free, hypoallergenic detergent.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 4 Weeks",
+    "due_date_offset_days": -28,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W34-001",
+    "title": "Breast Pump Acquisition",
+    "description": "Order breast pump through insurance (often free). Sterilize parts upon arrival.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 6 Weeks",
+    "due_date_offset_days": -42,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "feeding",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W38-001",
+    "title": "Bottle Sterilization",
+    "description": "Sterilize a starter set of bottles and nipples (boil or steam) even if breastfeeding, for emergencies.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 2 Weeks",
+    "due_date_offset_days": -14,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "feeding",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W38-002",
+    "title": "Purchase Formula (Emergency)",
+    "description": "Buy 1-2 containers of ready-to-feed newborn formula as a backup supply.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 2 Weeks",
+    "due_date_offset_days": -14,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "feeding",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W36-006",
+    "title": "Pediatrician Registration",
+    "description": "Confirm the selected pediatrician is accepting new patients and note their after-hours line.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 4 Weeks",
+    "due_date_offset_days": -28,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W36-007",
+    "title": "Hospital Pre-Registration",
+    "description": "Complete all admission paperwork online to avoid administrative delays during active labor.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 4 Weeks",
+    "due_date_offset_days": -28,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "admin",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W36-008",
+    "title": "Create Birth Plan",
+    "description": "Draft preferences for pain management, labor movement, and immediate newborn procedures (e.g., Vitamin K).",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 4 Weeks",
+    "due_date_offset_days": -28,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W38-003",
+    "title": "Deep Clean House",
+    "description": "Perform or hire a deep clean (floors, bathrooms, dusting) to prepare a sanitary environment.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 2 Weeks",
+    "due_date_offset_days": -14,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W37-002",
+    "title": "Stock Freezer Meals",
+    "description": "Cook or buy 14 days worth of freezeable dinners to reduce cooking load postpartum.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 3 Weeks",
+    "due_date_offset_days": -21,
+    "base_date_type": "DD",
+    "assigned_to": "either",
+    "category": "food",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W37-003",
+    "title": "Purchase Diapers/Wipes",
+    "description": "Stock 1 box of Newborn and 1 box of Size 1 diapers, plus 4 packs of unscented wipes.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 3 Weeks",
+    "due_date_offset_days": -21,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "supplies",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W38-004",
+    "title": "Setup Safe Sleep Space",
+    "description": "Ensure crib/bassinet is free of bumpers, blankets, pillows, and toys (AAP Safe Sleep guidelines).",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 2 Weeks",
+    "due_date_offset_days": -14,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W38-005",
+    "title": "Plan Hospital Route",
+    "description": "Map the primary and secondary routes to the hospital. Practice the drive if anxious about traffic.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 2 Weeks",
+    "due_date_offset_days": -14,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "logistics",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W38-006",
+    "title": "Arrange Pet Care",
+    "description": "Confirm who will care for pets during the hospital stay. Provide keys and feeding instructions.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 2 Weeks",
+    "due_date_offset_days": -14,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "logistics",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W38-007",
+    "title": "Arrange Sibling Care",
+    "description": "If applicable, confirm who will watch older children during labor/delivery.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 2 Weeks",
+    "due_date_offset_days": -14,
+    "base_date_type": "DD",
+    "assigned_to": "either",
+    "category": "logistics",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W37-004",
+    "title": "Sibling Gift Purchase",
+    "description": "Buy a gift \"from the baby\" to give to the older sibling upon meeting to foster positive association.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 3 Weeks",
+    "due_date_offset_days": -21,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "family",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W38-008",
+    "title": "Install Baby Monitor",
+    "description": "Set up camera and parent unit. Test connectivity and audio levels.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 2 Weeks",
+    "due_date_offset_days": -14,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "gear",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W37-005",
+    "title": "Assemble Baby Gear",
+    "description": "Assemble swing, bouncer, and stroller. Ensure batteries are installed if needed.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 3 Weeks",
+    "due_date_offset_days": -21,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "gear",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W36-009",
+    "title": "Purchase Nursing Supplies",
+    "description": "Buy nursing pads, nipple cream (lanolin), and nursing pillow.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 4 Weeks",
+    "due_date_offset_days": -28,
+    "base_date_type": "DD",
+    "assigned_to": "mom",
+    "category": "feeding",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W39-001",
+    "title": "Work Hand-off Plan",
+    "description": "Finalize transition documents for colleagues. Set Out-of-Office email response.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 1 Week",
+    "due_date_offset_days": -7,
+    "base_date_type": "DD",
+    "assigned_to": "either",
+    "category": "work",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W39-002",
+    "title": "Charge Electronics",
+    "description": "Ensure camera batteries, power banks, and portable speakers are fully charged.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 3 Days",
+    "due_date_offset_days": -3,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "tech",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W39-003",
+    "title": "Final Grocery Run",
+    "description": "Stock fridge with perishables, snacks, and hydration drinks for early labor/postpartum.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 3 Days",
+    "due_date_offset_days": -3,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "food",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "PREG-W39-004",
+    "title": "Download Contraction App",
+    "description": "Install a contraction timer app on Dad's phone to track labor progression.",
+    "stage": "pregnancy",
+    "due_date_logic": "DD - 1 Week",
+    "due_date_offset_days": -7,
+    "base_date_type": "DD",
+    "assigned_to": "dad",
+    "category": "tech",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-001",
+    "title": "Birth Certificate Worksheet",
+    "description": "Complete the official worksheet at the hospital. Verify exact spelling of full names.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Day",
+    "due_date_offset_days": 1,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "admin",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-002",
+    "title": "Request Social Security #",
+    "description": "Check the box on the birth certificate worksheet to auto-request the SSN card.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Day",
+    "due_date_offset_days": 1,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "admin",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-003",
+    "title": "Sign Paternity Affidavit",
+    "description": "(If unmarried) Complete legal paternity acknowledgment forms at the hospital.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Day",
+    "due_date_offset_days": 1,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "legal",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-004",
+    "title": "Add Baby to Insurance",
+    "description": "Contact HR/Insurer to add baby. \"Qualifying Life Event\" window is strictly 30 days.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 5 Days",
+    "due_date_offset_days": 5,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "admin",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-005",
+    "title": "Schedule First Ped Visit",
+    "description": "Call from hospital to book the first checkup (usually 2-5 days after discharge).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Day",
+    "due_date_offset_days": 1,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-006",
+    "title": "Hospital Discharge Plan",
+    "description": "Review discharge instructions. Ensure all prescriptions (pain relief/stool softeners) are filled.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 2 Days",
+    "due_date_offset_days": 2,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-007",
+    "title": "Attend 1st Pediatrician Visit",
+    "description": "Bring hospital discharge papers. Check weight and bilirubin levels.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 4 Days",
+    "due_date_offset_days": 4,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W02-001",
+    "title": "Order Birth Certificates",
+    "description": "Request 3-5 certified copies from County/State Vital Records. Needed for passport/school.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 14 Days",
+    "due_date_offset_days": 14,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "admin",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W02-002",
+    "title": "File PFL/FMLA Claims",
+    "description": "Submit final forms for state/employer paid leave benefits to ensure income continuity.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 14 Days",
+    "due_date_offset_days": 14,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "finance",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W03-001",
+    "title": "Write Thank You Notes",
+    "description": "Begin writing thank yous for gifts. Do 1-2 per day to manage volume.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 21 Days",
+    "due_date_offset_days": 21,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "social",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-008",
+    "title": "Newborn Photo Shoot",
+    "description": "If desired, schedule newborn photography (best done in first 2 weeks).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 10 Days",
+    "due_date_offset_days": 10,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "magic",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-009",
+    "title": "Lactation Consultant",
+    "description": "Schedule appointment if breastfeeding is painful or weight gain is slow.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 7 Days",
+    "due_date_offset_days": 7,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-010",
+    "title": "Vitamin D Drops",
+    "description": "Start administering 400 IU Vitamin D daily if exclusively breastfeeding (AAP guideline).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 5 Days",
+    "due_date_offset_days": 5,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W02-003",
+    "title": "Tummy Time Initiation",
+    "description": "Begin short (1-2 min) sessions 2-3 times a day to strengthen neck muscles.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 14 Days",
+    "due_date_offset_days": 14,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "dev",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W04-001",
+    "title": "Assess Flat Head",
+    "description": "Monitor head shape. Rotate head position during sleep to prevent plagiocephaly.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Month",
+    "due_date_offset_days": 30,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W04-002",
+    "title": "Update W-4",
+    "description": "Adjust tax withholding with employer to account for new dependent (Child Tax Credit).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 30 Days",
+    "due_date_offset_days": 30,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "finance",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W08-001",
+    "title": "Open 529 College Plan",
+    "description": "Open account once SSN arrives. Share contribution link with family.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 60 Days",
+    "due_date_offset_days": 60,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "finance",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W12-001",
+    "title": "Update Estate Plan",
+    "description": "Amend Will/Trust to name a legal guardian for the child. Essential for asset protection.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 90 Days",
+    "due_date_offset_days": 90,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "legal",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W12-002",
+    "title": "Life Insurance Review",
+    "description": "Purchase/increase term life insurance to cover child's expenses to adulthood.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 90 Days",
+    "due_date_offset_days": 90,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "finance",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W12-003",
+    "title": "Freeze Child's Credit",
+    "description": "Contact Equifax, Experian, TransUnion to freeze child's file and prevent identity theft.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 90 Days",
+    "due_date_offset_days": 90,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "security",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W04-003",
+    "title": "Create Child's Email",
+    "description": "Register firstname.lastname@gmail.com to reserve digital identity.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 30 Days",
+    "due_date_offset_days": 30,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "tech",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W12-004",
+    "title": "Bottle Nipple Transition",
+    "description": "Check if baby needs faster flow nipple (Level 1 to 2) if feeding takes >20 mins.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 3 Months",
+    "due_date_offset_days": 90,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "feeding",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W12-005",
+    "title": "Check Pacifier Size",
+    "description": "Upgrade pacifiers to 3m+ size for safety (larger shield prevents choking).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 3 Months",
+    "due_date_offset_days": 90,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W06-001",
+    "title": "Schedule 2-Month Shots",
+    "description": "Book well-baby visit for first major round of vaccinations (DTaP, Hib, Polio, etc.).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Weeks",
+    "due_date_offset_days": 42,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W06-002",
+    "title": "Postpartum Checkup",
+    "description": "Attend 6-week checkup for Mom (healing, mental health, contraception).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Weeks",
+    "due_date_offset_days": 42,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W08-002",
+    "title": "Pelvic Floor Therapy",
+    "description": "Assess need for rehabilitation therapy post-birth. Schedule evaluation.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 8 Weeks",
+    "due_date_offset_days": 56,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W10-001",
+    "title": "Return to Work Plan",
+    "description": "Confirm start date with employer. Arrange trial run of morning routine.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 10 Weeks",
+    "due_date_offset_days": 70,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "work",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W11-001",
+    "title": "Daycare Transition",
+    "description": "Begin transition days (partial hours) to acclimate baby to childcare provider.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 11 Weeks",
+    "due_date_offset_days": 77,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "logistics",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W11-002",
+    "title": "Prepare Bottle Labels",
+    "description": "Label all bottles/milk bags for daycare with name and date (licensing requirement).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 11 Weeks",
+    "due_date_offset_days": 77,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "feeding",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W10-002",
+    "title": "Milk Stash Inventory",
+    "description": "Audit frozen milk supply. Ensure enough reserve for first week of work.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 10 Weeks",
+    "due_date_offset_days": 70,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "feeding",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-001",
+    "title": "4-Month Well Visit",
+    "description": "Schedule checkup: DTaP, Hib, Polio, PCV, Rotavirus doses. Sleep regression discussion.",
+    "stage": "custom",
+    "due_date_logic": "BD + 3.5 Months",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W17-001",
+    "title": "Assess Sleep Regression",
+    "description": "Research sleep training methods if 4-month regression causes sleep disruption.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 4 Months",
+    "due_date_offset_days": 120,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "sleep",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-002",
+    "title": "Stop Swaddling",
+    "description": "Transition to sleep sack if baby shows signs of rolling over (safety hazard).",
+    "stage": "custom",
+    "due_date_logic": "BD + 3.5 Months",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W21-001",
+    "title": "High Chair Research",
+    "description": "Research high chairs with footrests and easy-to-clean surfaces.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 5 Months",
+    "due_date_offset_days": 150,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "gear",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-003",
+    "title": "Purchase High Chair",
+    "description": "Buy chair before solids introduction. Assemble and clean.",
+    "stage": "custom",
+    "due_date_logic": "BD + 5.5 Months",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "gear",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-004",
+    "title": "Solids Readiness Check",
+    "description": "Check signs: sitting up with support, head control, loss of tongue-thrust reflex.",
+    "stage": "custom",
+    "due_date_logic": "BD + 5.5 Months",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "either",
+    "category": "dev",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W25-001",
+    "title": "Solids Introduction",
+    "description": "Begin single-ingredient solids (iron-fortified cereal/puree). Wait 3-5 days between new foods.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Months",
+    "due_date_offset_days": 180,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "feeding",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-005",
+    "title": "6-Month Well Visit",
+    "description": "Schedule checkup: Vaccines, anemia check, lead screening assessment.",
+    "stage": "custom",
+    "due_date_logic": "BD + 5.5 Months",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-006",
+    "title": "Allergen Introduction",
+    "description": "Introduce peanut/egg protein early (check w/ doctor) to reduce allergy risk.",
+    "stage": "custom",
+    "due_date_logic": "BD + 6.5 Months",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "either",
+    "category": "feeding",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W30-001",
+    "title": "Sippy Cup Introduction",
+    "description": "Offer water in a sippy/straw cup with meals to practice oral motor skills.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 7 Months",
+    "due_date_offset_days": 210,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "feeding",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W30-002",
+    "title": "Baby Proofing: Mobility",
+    "description": "Re-evaluate floor safety as baby begins army crawling/scooting.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 7 Months",
+    "due_date_offset_days": 210,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W25-002",
+    "title": "Lower Crib Mattress",
+    "description": "Lower mattress to middle setting as baby begins pushing up on hands/knees.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Months",
+    "due_date_offset_days": 180,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W34-001",
+    "title": "Object Permanence Games",
+    "description": "Play peek-a-boo and hide toys to support cognitive development (finding hidden objects).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 8 Months",
+    "due_date_offset_days": 240,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "dev",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-007",
+    "title": "9-Month Well Visit",
+    "description": "Schedule checkup: Developmental screening (ASQ), catch-up vaccines.",
+    "stage": "custom",
+    "due_date_logic": "BD + 8.5 Months",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W38-001",
+    "title": "Finger Foods Intro",
+    "description": "Transition to dissolvable solids (puffs, soft fruit) to practice pincer grasp.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 9 Months",
+    "due_date_offset_days": 270,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "feeding",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W38-002",
+    "title": "Car Seat Adjustment",
+    "description": "Check harness height (at/below shoulders) and head clearance (1 inch from top).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 9 Months",
+    "due_date_offset_days": 270,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W42-001",
+    "title": "Research Convertible Seat",
+    "description": "Research rear-facing convertible seats as infant seat limits approach (height/weight).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 10 Months",
+    "due_date_offset_days": 300,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "gear",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W47-001",
+    "title": "Buy Convertible Seat",
+    "description": "Purchase next-stage seat. Ensure high rear-facing weight limit (40-50 lbs).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 11 Months",
+    "due_date_offset_days": 330,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "gear",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W47-002",
+    "title": "First Dentist Visit",
+    "description": "Schedule \"happy visit\" upon first tooth eruption or by 1st birthday (AAP guideline).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 11 Months",
+    "due_date_offset_days": 330,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W42-002",
+    "title": "First Birthday Planning",
+    "description": "Plan celebration. Keep it simple; focus on photos and \"smash cake.\"",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 10 Months",
+    "due_date_offset_days": 300,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "magic",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-008",
+    "title": "12-Month Well Visit",
+    "description": "Schedule checkup: MMR, Varicella, Hep A vaccines. Lead/Anemia blood draw.",
+    "stage": "custom",
+    "due_date_logic": "BD + 11.5 Months",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W51-001",
+    "title": "Transition to Cow's Milk",
+    "description": "Begin mixing formula/breastmilk with whole cow's milk (after 1 year).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 12 Months",
+    "due_date_offset_days": 360,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "feeding",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W51-002",
+    "title": "Wean from Bottle",
+    "description": "Aim to discontinue bottle use by 12-15 months to prevent dental decay.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 12 Months",
+    "due_date_offset_days": 360,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "feeding",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W51-003",
+    "title": "Walking Shoes Purchase",
+    "description": "Buy soft-soled, flexible shoes once baby is walking outdoors. Barefoot is best indoors.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 12 Months",
+    "due_date_offset_days": 360,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "gear",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W51-004",
+    "title": "Vision Screening",
+    "description": "Ensure formal vision screening is conducted (often photoscreening) at well-visit.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 12 Months",
+    "due_date_offset_days": 360,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W51-005",
+    "title": "Pacifier Weaning",
+    "description": "Begin limiting pacifier use to sleep times to support speech development.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 12 Months",
+    "due_date_offset_days": 360,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "dev",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-001",
+    "title": "Toy Rotation",
+    "description": "Rotate toys to maintain interest and reduce clutter. Store outgrown items.",
+    "stage": "ongoing",
+    "due_date_logic": "Quarterly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "play",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Quarterly"
+  },
+  {
+    "task_id": "TASK-GEN-002",
+    "title": "Flashlight Test",
+    "description": "Check eyes in photos for \"white reflex\" (rare sign of retinoblastoma).",
+    "stage": "ongoing",
+    "due_date_logic": "Monthly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "health",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Monthly"
+  },
+  {
+    "task_id": "POST-W25-003",
+    "title": "Sun Safety",
+    "description": "Begin using mineral sunscreen (SPF 30+) once baby is >6 months.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Months",
+    "due_date_offset_days": 180,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-003",
+    "title": "Flu Vaccine (Seasonal)",
+    "description": "Schedule annual flu shot (requires 2 doses 1 month apart for first-timers).",
+    "stage": "ongoing",
+    "due_date_logic": "Seasonal",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "either",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Seasonal"
+  },
+  {
+    "task_id": "POST-W01-011",
+    "title": "Set Water Heater Temp",
+    "description": "Lower water heater thermostat to 120Â°F (49Â°C) to prevent accidental scalding.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Week",
+    "due_date_offset_days": 7,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-012",
+    "title": "Smoke/CO Detectors",
+    "description": "Install/test units on every floor and outside every sleeping area. Check dates.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Week",
+    "due_date_offset_days": 7,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-013",
+    "title": "Fire Extinguishers",
+    "description": "Place extinguishers in kitchen and garage. Verify pressure gauge is in green zone.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Week",
+    "due_date_offset_days": 7,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-014",
+    "title": "Poison Control Prep",
+    "description": "Save 1-800-222-1222 in both phones. Post number on fridge/magnet.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Day",
+    "due_date_offset_days": 1,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W04-004",
+    "title": "Fire Escape Plan",
+    "description": "Map exit routes from all rooms. Determine exactly who grabs the baby in a fire.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Month",
+    "due_date_offset_days": 30,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W08-003",
+    "title": "CPR/First Aid Class",
+    "description": "Parents and caregivers take infant-specific refresher course (online or in-person).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 2 Months",
+    "due_date_offset_days": 60,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W21-002",
+    "title": "Anchor Furniture",
+    "description": "Secure dressers, bookshelves, and TVs to walls using anti-tip straps/brackets.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 5 Months",
+    "due_date_offset_days": 150,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W21-003",
+    "title": "Cover Outlets",
+    "description": "Install plug covers or sliding safety plates on all accessible electrical sockets.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 5 Months",
+    "due_date_offset_days": 150,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W25-004",
+    "title": "Manage Cords",
+    "description": "Secure blind cords (cleats) and electrical cords (raceways) out of reach.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Months",
+    "due_date_offset_days": 180,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W25-005",
+    "title": "Cabinet Locks",
+    "description": "Install locks on cabinets containing chemicals (kitchen/bath) and medicines.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Months",
+    "due_date_offset_days": 180,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W25-006",
+    "title": "Stair Gates",
+    "description": "Install hardware-mounted gate at top of stairs (pressure gates are unsafe at top).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Months",
+    "due_date_offset_days": 180,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W34-002",
+    "title": "Toilet Lid Locks",
+    "description": "Install locks to prevent drowning risk and hygiene issues.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 8 Months",
+    "due_date_offset_days": 240,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W38-003",
+    "title": "Appliance Latches",
+    "description": "Secure oven, dishwasher, and fridge doors if accessible.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 9 Months",
+    "due_date_offset_days": 270,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W34-003",
+    "title": "Corner Guards",
+    "description": "Apply cushioning to sharp corners of coffee tables/hearths.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 8 Months",
+    "due_date_offset_days": 240,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W21-004",
+    "title": "Remove Crib Mobile",
+    "description": "Remove mobile when baby can push up on hands/knees to prevent entanglement.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 5 Months",
+    "due_date_offset_days": 150,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W34-004",
+    "title": "Lowest Crib Setting",
+    "description": "Drop mattress to lowest point when baby pulls to stand.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 8 Months",
+    "due_date_offset_days": 240,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W25-007",
+    "title": "Toy Safety Audit",
+    "description": "Purge toys with small parts (use toilet paper tube test) or loose batteries.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Months",
+    "due_date_offset_days": 180,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W42-003",
+    "title": "Window Guards/Stops",
+    "description": "Install stops to prevent windows opening >4 inches (fall prevention).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 10 Months",
+    "due_date_offset_days": 300,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W25-008",
+    "title": "Pool Safety Fence",
+    "description": "If pool exists, ensure 4-sided isolation fence with self-latching gate is installed.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Months",
+    "due_date_offset_days": 180,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W25-009",
+    "title": "Lead Paint Test",
+    "description": "If home built pre-1978, test peeling paint or renovation dust for lead.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Months",
+    "due_date_offset_days": 180,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W08-004",
+    "title": "Radon Test",
+    "description": "Conduct long-term radon test in basement/living areas.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 2 Months",
+    "due_date_offset_days": 60,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W25-010",
+    "title": "Detergent Pod Storage",
+    "description": "Move laundry pods to high shelf; lock container (high poisoning risk).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Months",
+    "due_date_offset_days": 180,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-015",
+    "title": "Unload Firearms",
+    "description": "Ensure all firearms are unloaded and locked in a safe; ammo stored separately.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Day",
+    "due_date_offset_days": 1,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-004",
+    "title": "Car Seat Cleaning",
+    "description": "Clean car seat per manual (no harsh chemicals on straps). Check for crumbs interfering with buckles.",
+    "stage": "ongoing",
+    "due_date_logic": "Quarterly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "maintenance",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Quarterly"
+  },
+  {
+    "task_id": "TASK-GEN-005",
+    "title": "Stroller Maintenance",
+    "description": "Check tire pressure and lubricate wheels of stroller.",
+    "stage": "ongoing",
+    "due_date_logic": "Quarterly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "maintenance",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Quarterly"
+  },
+  {
+    "task_id": "TASK-GEN-006",
+    "title": "Humidifier Cleaning",
+    "description": "Descale and disinfect humidifier weekly to prevent mold growth.",
+    "stage": "ongoing",
+    "due_date_logic": "Weekly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Weekly"
+  },
+  {
+    "task_id": "TASK-GEN-007",
+    "title": "Bath Toy Sanitization",
+    "description": "Bleach/clean bath toys to prevent mold inside squeeze toys.",
+    "stage": "ongoing",
+    "due_date_logic": "Monthly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "hygiene",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Monthly"
+  },
+  {
+    "task_id": "TASK-GEN-008",
+    "title": "Check Recalls",
+    "description": "Search CPSC database for recalls on owned crib, stroller, car seat, and toys.",
+    "stage": "ongoing",
+    "due_date_logic": "Quarterly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Quarterly"
+  },
+  {
+    "task_id": "POST-W25-011",
+    "title": "Medicine Cabinet Audit",
+    "description": "Discard expired infant Tylenol/Motrin. Verify dosing chart for current weight.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Months",
+    "due_date_offset_days": 180,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W04-005",
+    "title": "Emergency Bag Prep",
+    "description": "Pack \"Go Bag\" with diapers/formula for unexpected ER trips or evacuations.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Month",
+    "due_date_offset_days": 30,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "safety",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W77-001",
+    "title": "Research Preschools",
+    "description": "Identify philosophy (Montessori, Reggio, Play-based) and location/cost.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 18 Months",
+    "due_date_offset_days": 540,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "edu",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W85-001",
+    "title": "Schedule School Tours",
+    "description": "Book visits for potential preschools. Ask about ratios, discipline, and turnover.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 20 Months",
+    "due_date_offset_days": 600,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "edu",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W102-001",
+    "title": "Submit Preschool Apps",
+    "description": "Submit applications for the following academic year (deadlines often Jan/Feb).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 24 Months",
+    "due_date_offset_days": 720,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "edu",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W51-006",
+    "title": "Swim Lessons",
+    "description": "Enroll in water safety/survival swim classes (ISR or traditional).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 12 Months",
+    "due_date_offset_days": 360,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "activity",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W51-007",
+    "title": "Library Story Time",
+    "description": "Identify local library schedule for free socialization/literacy events.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 12 Months",
+    "due_date_offset_days": 360,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "social",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W64-001",
+    "title": "Music/Gym Class",
+    "description": "Research toddler activity classes for gross motor skills/socialization.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 15 Months",
+    "due_date_offset_days": 450,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "activity",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-009",
+    "title": "Playdate Scheduling",
+    "description": "Coordinate social time with other parents. Reciprocate invitations.",
+    "stage": "ongoing",
+    "due_date_logic": "Weekly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "either",
+    "category": "social",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Weekly"
+  },
+  {
+    "task_id": "POST-W12-006",
+    "title": "Passport Application",
+    "description": "Apply for baby's passport (both parents must appear or notarize consent).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 3 Months",
+    "due_date_offset_days": 90,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "admin",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W25-012",
+    "title": "Global Entry/TSA Pre",
+    "description": "Enroll child (requires interview) for travel ease.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 6 Months",
+    "due_date_offset_days": 180,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "admin",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W94-001",
+    "title": "Potty Readiness Check",
+    "description": "Assess signs: dry naps, hiding to poop, interest in toilet, communicating urge.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 22 Months",
+    "due_date_offset_days": 660,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "dev",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W94-002",
+    "title": "Buy Small Potty",
+    "description": "Purchase floor potty (easier ergonomics for squatting than seat insert).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 22 Months",
+    "due_date_offset_days": 660,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "gear",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W102-002",
+    "title": "Clear Weekend Schedule",
+    "description": "Block 3 days for \"Oh Crap\" Block 1 (naked time) training. No outings.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 24 Months",
+    "due_date_offset_days": 720,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "logistics",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W102-003",
+    "title": "Stock Potty Supplies",
+    "description": "Buy juice/water (push fluids), cleaning spray, rags, and wine (for parents).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 24 Months",
+    "due_date_offset_days": 720,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "supplies",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W102-004",
+    "title": "Daycare Potty Plan",
+    "description": "Discuss potty plan with teachers. Supply extra clothes/underwear/wet bag.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 24 Months",
+    "due_date_offset_days": 720,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "edu",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W128-001",
+    "title": "Night Training Prep",
+    "description": "Buy waterproof mattress protectors (layer: sheet-protector-sheet-protector).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 30 Months",
+    "due_date_offset_days": 900,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "gear",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-009",
+    "title": "18-Month Well Visit",
+    "description": "Schedule checkup: Autism screening (M-CHAT), Hep A, DTaP vaccines.",
+    "stage": "custom",
+    "due_date_logic": "BD + 17.5 Months",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-010",
+    "title": "2-Year Well Visit",
+    "description": "Schedule checkup: BMI check, lead screen, developmental milestones.",
+    "stage": "custom",
+    "due_date_logic": "BD + 23.5 Months",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W102-005",
+    "title": "Dentist Checkup (2Yr)",
+    "description": "Schedule 6-month cleaning/exam. Fluoride varnish application.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 24 Months",
+    "due_date_offset_days": 720,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "health",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W128-002",
+    "title": "Transition to Bed",
+    "description": "Convert crib to toddler bed if climbing out (or by age 3).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 30 Months",
+    "due_date_offset_days": 900,
+    "base_date_type": "BD",
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W102-006",
+    "title": "Purchase Toddler Pillow",
+    "description": "Introduce small pillow/light blanket once in a bed (safe after age 2).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 24 Months",
+    "due_date_offset_days": 720,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "gear",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-011",
+    "title": "Preschool Health Forms",
+    "description": "Complete immunization/physical forms for school entry.",
+    "stage": "custom",
+    "due_date_logic": "School Start - 1 Mo",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "admin",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-012",
+    "title": "School Supply Shop",
+    "description": "Buy backpack, lunchbox, indoor shoes per school list.",
+    "stage": "custom",
+    "due_date_logic": "School Start - 2 Wks",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "gear",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-013",
+    "title": "Label Everything",
+    "description": "Apply waterproof labels to all school clothes/gear.",
+    "stage": "custom",
+    "due_date_logic": "School Start - 1 Wk",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "prep",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-014",
+    "title": "Emergency Contact Update",
+    "description": "Update school with current work numbers and authorized pickup list.",
+    "stage": "custom",
+    "due_date_logic": "School Start - 1 Wk",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "admin",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-015",
+    "title": "Back-to-School Haircut",
+    "description": "Schedule haircut before first day photos.",
+    "stage": "custom",
+    "due_date_logic": "School Start - 1 Wk",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "hygiene",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-010",
+    "title": "Seasonal Gear Swap",
+    "description": "Check fit of coats/boots/rain gear. Buy next size up.",
+    "stage": "ongoing",
+    "due_date_logic": "Seasonal",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "gear",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Seasonal"
+  },
+  {
+    "task_id": "TASK-GEN-011",
+    "title": "Developmental Activities",
+    "description": "Research age-appropriate crafts/activities (e.g., threading, sorting).",
+    "stage": "ongoing",
+    "due_date_logic": "Monthly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "edu",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Monthly"
+  },
+  {
+    "task_id": "POST-W77-002",
+    "title": "Limit Screen Time",
+    "description": "Audit apps/shows. Set limits per AAP guidelines (high quality, co-viewing).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 18 Months",
+    "due_date_offset_days": 540,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "dev",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-012",
+    "title": "Rotate Books",
+    "description": "Refresh book selection from library to encourage reading interest.",
+    "stage": "ongoing",
+    "due_date_logic": "Monthly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "edu",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Monthly"
+  },
+  {
+    "task_id": "POST-W77-003",
+    "title": "Behavioral Strategy",
+    "description": "Agree on discipline/tantrum strategies (e.g., \"Time-In,\" redirection).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 18 Months",
+    "due_date_offset_days": 540,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "parenting",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-016",
+    "title": "Dishes/Bottles (PM)",
+    "description": "Wash/sterilize all bottles; run dishwasher. Reset kitchen for morning.",
+    "stage": "custom",
+    "due_date_logic": "Daily",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-017",
+    "title": "Diaper Pail Empty",
+    "description": "Empty and replace bag before it overflows/smells.",
+    "stage": "custom",
+    "due_date_logic": "Every 3 Days",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-018",
+    "title": "Baby Laundry",
+    "description": "Wash, fold, put away baby clothes (high turnover). Stain treat.",
+    "stage": "custom",
+    "due_date_logic": "Every 3 Days",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "home",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-019",
+    "title": "Meal Planning",
+    "description": "Decide menu for the week; generate grocery list. Check pantry staples.",
+    "stage": "custom",
+    "due_date_logic": "Weekly (Sun)",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "food",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-020",
+    "title": "Grocery Execution",
+    "description": "Execute the grocery run or manage online delivery. Put food away.",
+    "stage": "custom",
+    "due_date_logic": "Weekly (Mon)",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "food",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-013",
+    "title": "Trash/Recycling",
+    "description": "Gather trash from all bins; take to curb. Return bins.",
+    "stage": "ongoing",
+    "due_date_logic": "Weekly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Weekly"
+  },
+  {
+    "task_id": "TASK-GEN-014",
+    "title": "Bill Pay/Finance",
+    "description": "Review accounts; pay utilities/mortgage/medical bills. File receipts.",
+    "stage": "ongoing",
+    "due_date_logic": "Monthly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "admin",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Monthly"
+  },
+  {
+    "task_id": "TASK-GEN-021",
+    "title": "Sunday Sync",
+    "description": "15-min meeting to review upcoming week's logistics/pickups.",
+    "stage": "custom",
+    "due_date_logic": "Weekly (Sun)",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "either",
+    "category": "admin",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-015",
+    "title": "Digital Photo Backup",
+    "description": "Offload phone photos to cloud/hard drive. Organize into folders.",
+    "stage": "ongoing",
+    "due_date_logic": "Monthly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "tech",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Monthly"
+  },
+  {
+    "task_id": "TASK-GEN-016",
+    "title": "Restock Diapers/Wipes",
+    "description": "Inventory check; order Amazon/Target subscription.",
+    "stage": "ongoing",
+    "due_date_logic": "Monthly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "supplies",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Monthly"
+  },
+  {
+    "task_id": "TASK-GEN-017",
+    "title": "Nail Trimming",
+    "description": "Clip/file baby's nails while sleeping to prevent scratching.",
+    "stage": "ongoing",
+    "due_date_logic": "Weekly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "hygiene",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Weekly"
+  },
+  {
+    "task_id": "TASK-GEN-022",
+    "title": "Bath Routine",
+    "description": "Bathe baby (soap not needed daily, but routine helps sleep).",
+    "stage": "custom",
+    "due_date_logic": "Every 3 Days",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "hygiene",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-023",
+    "title": "Unicorn Space (Dad)",
+    "description": "1 hour of uninterrupted time for hobby/self (no work/chores).",
+    "stage": "custom",
+    "due_date_logic": "Daily",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "self",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-024",
+    "title": "Unicorn Space (Mom)",
+    "description": "1 hour of uninterrupted time for hobby/self (no work/chores).",
+    "stage": "custom",
+    "due_date_logic": "Daily",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "self",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-018",
+    "title": "Relationship Check-in",
+    "description": "Discuss \"State of the Union\" - emotional check-in, no logistics allowed.",
+    "stage": "ongoing",
+    "due_date_logic": "Monthly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "either",
+    "category": "social",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Monthly"
+  },
+  {
+    "task_id": "TASK-GEN-019",
+    "title": "Gift Buying (Family)",
+    "description": "Track birthdays for extended family; buy/ship gifts.",
+    "stage": "ongoing",
+    "due_date_logic": "Relative",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "social",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Relative"
+  },
+  {
+    "task_id": "TASK-GEN-025",
+    "title": "Holiday Planning",
+    "description": "Plan logistics/meals/travel for upcoming major holiday.",
+    "stage": "custom",
+    "due_date_logic": "Holiday - 30 Days",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "magic",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-020",
+    "title": "Vehicle Maintenance",
+    "description": "Oil change, tire rotation, car wash. Vacuum car seat crumbs.",
+    "stage": "ongoing",
+    "due_date_logic": "Quarterly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Quarterly"
+  },
+  {
+    "task_id": "TASK-GEN-021",
+    "title": "HVAC Maintenance",
+    "description": "Replace furnace/AC filters. Check humidifier pads.",
+    "stage": "ongoing",
+    "due_date_logic": "Quarterly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Quarterly"
+  },
+  {
+    "task_id": "TASK-GEN-022",
+    "title": "Declutter/Donation",
+    "description": "Bag up outgrown clothes/toys; donate or store labeled bins.",
+    "stage": "ongoing",
+    "due_date_logic": "Quarterly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "home",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Quarterly"
+  },
+  {
+    "task_id": "TASK-GEN-023",
+    "title": "Smoke Alarm Test",
+    "description": "Test buttons on all alarms. Vacuum dust from sensors.",
+    "stage": "ongoing",
+    "due_date_logic": "Semi-Annual",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Semi-Annual"
+  },
+  {
+    "task_id": "TASK-GEN-024",
+    "title": "Gutter Cleaning",
+    "description": "Clean gutters to prevent water damage (or hire out).",
+    "stage": "ongoing",
+    "due_date_logic": "Semi-Annual",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Semi-Annual"
+  },
+  {
+    "task_id": "TASK-GEN-026",
+    "title": "Lawn/Yard Care",
+    "description": "Mow, rake, or manage landscaping service.",
+    "stage": "custom",
+    "due_date_logic": "Weekly (Season)",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-027",
+    "title": "Tax Prep",
+    "description": "Gather W2s, 1099s, childcare receipts (Daycare tax ID).",
+    "stage": "custom",
+    "due_date_logic": "Annual (Feb)",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "admin",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W04-006",
+    "title": "Apple Legacy Contact",
+    "description": "Set up Legacy Contact in Apple ID to allow access to photos if deceased.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Month",
+    "due_date_offset_days": 30,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "tech",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W04-007",
+    "title": "Google Inactive Acct",
+    "description": "Configure Google Inactive Account Manager to auto-transfer data.",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Month",
+    "due_date_offset_days": 30,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "tech",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W04-008",
+    "title": "Password Sharing",
+    "description": "Ensure partner has access to Master Password (1Password/LastPass).",
+    "stage": "post-birth",
+    "due_date_logic": "BD + 1 Month",
+    "due_date_offset_days": 30,
+    "base_date_type": "BD",
+    "assigned_to": "either",
+    "category": "security",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-025",
+    "title": "Update Emergency Info",
+    "description": "Review/update emergency contacts on phones and fridge.",
+    "stage": "ongoing",
+    "due_date_logic": "Annual",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "either",
+    "category": "safety",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Annual"
+  },
+  {
+    "task_id": "TASK-GEN-026",
+    "title": "Date Night Planning",
+    "description": "Book babysitter and make reservations.",
+    "stage": "ongoing",
+    "due_date_logic": "Monthly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "either",
+    "category": "social",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Monthly"
+  },
+  {
+    "task_id": "TASK-GEN-027",
+    "title": "Book Babysitter",
+    "description": "Secure childcare for specific upcoming adult events.",
+    "stage": "ongoing",
+    "due_date_logic": "Relative",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "logistics",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Relative"
+  },
+  {
+    "task_id": "TASK-GEN-028",
+    "title": "Travel Prep",
+    "description": "Book flights/hotels. Request crib. Pack travel gear.",
+    "stage": "custom",
+    "due_date_logic": "Trip - 30 Days",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "logistics",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-029",
+    "title": "Vacation Hold",
+    "description": "Stop mail/newspapers. Set thermostat/lights for travel.",
+    "stage": "custom",
+    "due_date_logic": "Trip - 2 Days",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-028",
+    "title": "Medical Bill Audit",
+    "description": "Review EOBs against bills. Dispute errors. Pay balances.",
+    "stage": "ongoing",
+    "due_date_logic": "Monthly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "admin",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Monthly"
+  },
+  {
+    "task_id": "TASK-GEN-029",
+    "title": "Deep Clean Appliances",
+    "description": "Run cleaning cycles on dishwasher and washing machine.",
+    "stage": "ongoing",
+    "due_date_logic": "Quarterly",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Quarterly"
+  },
+  {
+    "task_id": "TASK-GEN-030",
+    "title": "Defrost Freezer",
+    "description": "Organize freezer, check dates on breast milk/food.",
+    "stage": "ongoing",
+    "due_date_logic": "Semi-Annual",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "food",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Semi-Annual"
+  },
+  {
+    "task_id": "TASK-GEN-031",
+    "title": "Pet Vet Visits",
+    "description": "Schedule annual vaccinations and checkups for pets.",
+    "stage": "ongoing",
+    "due_date_logic": "Annual",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "home",
+    "priority": "must-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Annual"
+  },
+  {
+    "task_id": "TASK-GEN-032",
+    "title": "Review Subscriptions",
+    "description": "Audit streaming/app subscriptions. Cancel unused services.",
+    "stage": "ongoing",
+    "due_date_logic": "Semi-Annual",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "dad",
+    "category": "finance",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": true,
+    "recurrence_pattern": "Semi-Annual"
+  },
+  {
+    "task_id": "TASK-GEN-030",
+    "title": "Holiday Cards",
+    "description": "Organize family photo, order cards, update address list.",
+    "stage": "custom",
+    "due_date_logic": "Nov 1",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "magic",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "TASK-GEN-031",
+    "title": "Halloween Costumes",
+    "description": "Plan/buy costumes before popular sizes sell out.",
+    "stage": "custom",
+    "due_date_logic": "Oct 1",
+    "due_date_offset_days": null,
+    "base_date_type": null,
+    "assigned_to": "mom",
+    "category": "magic",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  },
+  {
+    "task_id": "POST-W01-016",
+    "title": "Birthday Party Prep",
+    "description": "Book venue, order cake, send invites.",
+    "stage": "post-birth",
+    "due_date_logic": "BD - 6 Weeks",
+    "due_date_offset_days": -42,
+    "base_date_type": "BD",
+    "assigned_to": "mom",
+    "category": "magic",
+    "priority": "good-to-do",
+    "reminder_days_before": [
+      7,
+      1
+    ],
+    "is_recurring": false,
+    "recurrence_pattern": null
+  }
+]
