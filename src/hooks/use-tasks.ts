@@ -96,3 +96,13 @@ export function useDeleteTask() {
     },
   })
 }
+
+/**
+ * Fetch all tasks for timeline display (ignores premium gating)
+ */
+export function useAllTasksForTimeline() {
+  return useQuery({
+    queryKey: ['tasks-timeline'],
+    queryFn: () => taskService.getAllTasksForTimeline(),
+  })
+}

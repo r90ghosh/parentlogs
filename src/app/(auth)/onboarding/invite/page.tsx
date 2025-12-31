@@ -7,50 +7,106 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Copy, Share2, Check, ArrowRight } from 'lucide-react'
+import { Copy, Share2, Check, ArrowRight, Loader2 } from 'lucide-react'
 
+/**
+ * Onboarding Invite Page
+ *
+ * Shows the family invite code for sharing with partner.
+ * Protected by onboarding layout (server-side auth check).
+ */
 export default function OnboardingInvite() {
+  console.log('[OnboardingInvite] ========== RENDER ==========')
+
   const router = useRouter()
-  const { profile } = useAuth()
+  const { user } = useAuth()
   const supabase = createClient()
 
   const [inviteCode, setInviteCode] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  console.log('[OnboardingInvite] Current state:', {
+    userId: user?.id || 'null',
+    inviteCode,
+    isLoading,
+    error
+  })
 
   useEffect(() => {
     const fetchInviteCode = async () => {
-      if (!profile?.family_id) return
+      console.log('[OnboardingInvite] fetchInviteCode called, userId:', user?.id || 'null')
+      if (!user) {
+        console.log('[OnboardingInvite] No user yet, waiting...')
+        return
+      }
 
-      const { data, error } = await supabase
-        .from('families')
-        .select('invite_code')
-        .eq('id', profile.family_id)
-        .single()
+      try {
+        // First get the profile to get family_id
+        console.log('[OnboardingInvite] Fetching profile...')
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('family_id')
+          .eq('id', user.id)
+          .single()
 
-      if (error) {
-        setError(error.message)
-      } else {
-        setInviteCode(data.invite_code)
+        if (profileError) {
+          console.error('[OnboardingInvite] Profile fetch error:', profileError)
+        }
+
+        if (profileError || !profile?.family_id) {
+          console.log('[OnboardingInvite] No family_id found')
+          setError('Family not found')
+          setIsLoading(false)
+          return
+        }
+
+        console.log('[OnboardingInvite] Found family_id:', profile.family_id)
+
+        // Then get the family invite code
+        console.log('[OnboardingInvite] Fetching family invite code...')
+        const { data: family, error: familyError } = await supabase
+          .from('families')
+          .select('invite_code')
+          .eq('id', profile.family_id)
+          .single()
+
+        if (familyError) {
+          console.error('[OnboardingInvite] Family fetch error:', familyError)
+          setError(familyError.message)
+        } else {
+          console.log('[OnboardingInvite] Got invite code:', family.invite_code)
+          setInviteCode(family.invite_code)
+        }
+      } catch (err) {
+        console.error('[OnboardingInvite] Error:', err)
+        setError(err instanceof Error ? err.message : 'Failed to load invite code')
+      } finally {
+        setIsLoading(false)
       }
     }
 
     fetchInviteCode()
-  }, [profile?.family_id, supabase])
+  }, [user, supabase])
 
   const handleCopy = async () => {
+    console.log('[OnboardingInvite] handleCopy called')
     if (!inviteCode) return
 
     try {
       await navigator.clipboard.writeText(inviteCode)
+      console.log('[OnboardingInvite] Code copied to clipboard')
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
-    } catch {
+    } catch (err) {
+      console.error('[OnboardingInvite] Copy failed:', err)
       setError('Failed to copy to clipboard')
     }
   }
 
   const handleShare = async () => {
+    console.log('[OnboardingInvite] handleShare called')
     if (!inviteCode) return
 
     const shareData = {
@@ -61,13 +117,29 @@ export default function OnboardingInvite() {
 
     try {
       if (navigator.share && navigator.canShare(shareData)) {
+        console.log('[OnboardingInvite] Using native share')
         await navigator.share(shareData)
       } else {
+        console.log('[OnboardingInvite] Native share not available, copying instead')
         handleCopy()
       }
-    } catch {
+    } catch (err) {
+      console.log('[OnboardingInvite] Share cancelled or failed:', err)
       // User cancelled share
     }
+  }
+
+  if (isLoading) {
+    console.log('[OnboardingInvite] Showing loading state')
+    return (
+      <Card className="w-full max-w-md bg-surface-900 border-surface-800">
+        <CardContent className="py-8">
+          <div className="flex items-center justify-center">
+            <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+          </div>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (

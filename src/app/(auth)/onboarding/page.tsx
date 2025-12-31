@@ -13,7 +13,9 @@ const features = [
 ]
 
 export default function OnboardingWelcome() {
+  console.log('[OnboardingWelcome] ========== RENDER START ==========')
   const router = useRouter()
+  console.log('[OnboardingWelcome] Router obtained, rendering page')
 
   return (
     <Card className="w-full max-w-md bg-surface-900 border-surface-800">

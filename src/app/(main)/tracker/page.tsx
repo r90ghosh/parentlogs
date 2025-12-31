@@ -48,47 +48,61 @@ export default function TrackerPage() {
   const { data: recentLogs, isLoading: logsLoading } = useTrackerLogs({ limit: 5 })
   const { isPremium } = useRequirePremium()
 
-  // Only show tracker for post-birth families
-  if (family?.stage === 'pregnancy') {
-    return (
-      <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
-        <Card className="bg-surface-900 border-surface-800">
-          <CardContent className="py-12 text-center">
-            <Baby className="h-12 w-12 text-surface-500 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-white mb-2">Baby Tracker</h2>
-            <p className="text-surface-400">
-              The baby tracker will be available after your baby is born.
-              We'll automatically unlock it based on your due date.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
+  // Show preview UI for pregnancy
+  const isPreview = family?.stage === 'pregnancy'
 
   return (
     <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
+      {/* Preview Banner for Pregnancy */}
+      {isPreview && (
+        <Card className="bg-primary-600/20 border-primary-600/30">
+          <CardContent className="py-4 flex items-center gap-3">
+            <Lock className="h-6 w-6 text-primary-400" />
+            <div>
+              <p className="font-medium text-primary-300">Preview Mode</p>
+              <p className="text-sm text-primary-300/70">
+                The baby tracker will unlock after your baby is born. Here's a preview of what you'll be able to track!
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Baby Tracker</h1>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/tracker/history">
-              <History className="h-4 w-4 mr-1" />
-              History
-            </Link>
+          <Button variant="outline" size="sm" disabled={isPreview} asChild={!isPreview}>
+            {isPreview ? (
+              <>
+                <History className="h-4 w-4 mr-1" />
+                History
+              </>
+            ) : (
+              <Link href="/tracker/history">
+                <History className="h-4 w-4 mr-1" />
+                History
+              </Link>
+            )}
           </Button>
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/tracker/summary">
-              <BarChart3 className="h-4 w-4 mr-1" />
-              Summary
-            </Link>
+          <Button variant="outline" size="sm" disabled={isPreview} asChild={!isPreview}>
+            {isPreview ? (
+              <>
+                <BarChart3 className="h-4 w-4 mr-1" />
+                Summary
+              </>
+            ) : (
+              <Link href="/tracker/summary">
+                <BarChart3 className="h-4 w-4 mr-1" />
+                Summary
+              </Link>
+            )}
           </Button>
         </div>
       </div>
 
       {/* Shift Briefing */}
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className={cn("bg-surface-900 border-surface-800", isPreview && "opacity-70")}>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center gap-2">
             <Clock className="h-5 w-5 text-accent-500" />
@@ -96,7 +110,31 @@ export default function TrackerPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {briefingLoading ? (
+          {isPreview ? (
+            <div className="grid grid-cols-3 gap-4">
+              <BriefingStat
+                label="Last Feed"
+                value="2h ago"
+                subValue="6 today"
+                icon={Milk}
+                color="text-blue-400"
+              />
+              <BriefingStat
+                label="Last Diaper"
+                value="45m ago"
+                subValue="4 today"
+                icon={Baby}
+                color="text-amber-400"
+              />
+              <BriefingStat
+                label="Sleep Today"
+                value="12h"
+                subValue="2h ago"
+                icon={Moon}
+                color="text-purple-400"
+              />
+            </div>
+          ) : briefingLoading ? (
             <div className="grid grid-cols-3 gap-4">
               <Skeleton className="h-16" />
               <Skeleton className="h-16" />
@@ -139,12 +177,24 @@ export default function TrackerPage() {
       </Card>
 
       {/* Quick Log Grid - Basic Types */}
-      <div>
+      <div className={cn(isPreview && "opacity-70")}>
         <h2 className="text-lg font-medium text-white mb-3">Quick Log</h2>
         <div className="grid grid-cols-3 gap-3">
           {BASIC_LOG_TYPES.map((type) => {
             const config = LOG_TYPE_CONFIG[type]
-            return (
+            return isPreview ? (
+              <div
+                key={type}
+                className={cn(
+                  "flex flex-col items-center gap-2 p-4 rounded-lg border cursor-not-allowed",
+                  config.bgColor,
+                  "border-surface-700"
+                )}
+              >
+                <config.icon className={cn("h-8 w-8", config.color)} />
+                <span className="text-sm text-surface-200">{config.label}</span>
+              </div>
+            ) : (
               <Link
                 key={type}
                 href={`/tracker/log?type=${type}`}
@@ -163,15 +213,28 @@ export default function TrackerPage() {
       </div>
 
       {/* More Log Types - Premium */}
-      <div>
+      <div className={cn(isPreview && "opacity-70")}>
         <h2 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
           More Logs
-          {!isPremium && <Lock className="h-4 w-4 text-surface-500" />}
+          {(!isPremium || isPreview) && <Lock className="h-4 w-4 text-surface-500" />}
         </h2>
         <div className="grid grid-cols-4 gap-2">
           {PREMIUM_LOG_TYPES.map((type) => {
             const config = LOG_TYPE_CONFIG[type]
-            return (
+            return isPreview ? (
+              <div
+                key={type}
+                className={cn(
+                  "flex flex-col items-center gap-1.5 p-3 rounded-lg border cursor-not-allowed",
+                  "bg-surface-800/50",
+                  "border-surface-700",
+                  "opacity-60"
+                )}
+              >
+                <config.icon className={cn("h-6 w-6", "text-surface-500")} />
+                <span className="text-xs text-surface-300">{config.label}</span>
+              </div>
+            ) : (
               <Link
                 key={type}
                 href={isPremium ? `/tracker/log?type=${type}` : '/settings/subscription'}
@@ -191,14 +254,47 @@ export default function TrackerPage() {
       </div>
 
       {/* Recent Logs */}
-      <div>
+      <div className={cn(isPreview && "opacity-70")}>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-medium text-white">Recent Activity</h2>
-          <Link href="/tracker/history" className="text-sm text-accent-500">
-            View All
-          </Link>
+          {isPreview ? (
+            <span className="text-sm text-surface-500 cursor-not-allowed">View All</span>
+          ) : (
+            <Link href="/tracker/history" className="text-sm text-accent-500">
+              View All
+            </Link>
+          )}
         </div>
-        {logsLoading ? (
+        {isPreview ? (
+          <div className="space-y-2">
+            {[
+              { type: 'feeding', time: '2:30 PM', notes: 'Bottle - 4oz' },
+              { type: 'diaper', time: '1:15 PM', notes: 'Wet' },
+              { type: 'sleep', time: '12:00 PM', notes: 'Nap - 45 mins' },
+            ].map((log, idx) => {
+              const config = LOG_TYPE_CONFIG[log.type as LogType]
+              return (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 p-3 rounded-lg bg-surface-900 border border-surface-800"
+                >
+                  <div className={cn("p-2 rounded-lg", config?.bgColor)}>
+                    {config && <config.icon className={cn("h-4 w-4", config.color)} />}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-white capitalize">
+                      {log.type.replace('_', ' ')}
+                    </p>
+                    <p className="text-xs text-surface-400">
+                      {log.time}
+                      {log.notes && ` - ${log.notes}`}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        ) : logsLoading ? (
           <div className="space-y-2">
             <Skeleton className="h-14" />
             <Skeleton className="h-14" />

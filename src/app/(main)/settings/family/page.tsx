@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useFamily, useFamilyMembers, useUpdateFamily } from '@/hooks/use-family'
 import { familyService } from '@/services/family-service'
-import { useAuth } from '@/lib/auth/auth-context'
+import { useUser } from '@/components/user-provider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -47,7 +47,7 @@ export default function FamilySettingsPage() {
   const router = useRouter()
   const { toast } = useToast()
   const queryClient = useQueryClient()
-  const { profile } = useAuth()
+  const { profile } = useUser()
   const { data: family, isLoading: familyLoading } = useFamily()
   const { data: members, isLoading: membersLoading } = useFamilyMembers()
   const updateFamily = useUpdateFamily()

@@ -173,4 +173,30 @@ export const taskService = {
 
     return { error: error as Error | null }
   },
+
+  /**
+   * Get all tasks for timeline display (ignores premium gating)
+   * Used to show the complete journey timeline bar
+   */
+  async getAllTasksForTimeline(): Promise<FamilyTask[]> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return []
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('family_id')
+      .eq('id', user.id)
+      .maybeSingle()
+
+    if (!profile?.family_id) return []
+
+    const { data, error } = await supabase
+      .from('family_tasks')
+      .select('*')
+      .eq('family_id', profile.family_id)
+      .order('due_date', { ascending: true })
+
+    if (error) return []
+    return data as FamilyTask[]
+  },
 }

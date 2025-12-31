@@ -165,7 +165,7 @@ export function usePartnerPresence() {
         // Handle presence state changes
         console.log('Presence state:', state)
       })
-      .on('presence', { event: 'join' }, ({ key, newPresences }) => {
+      .on('presence', { event: 'join' }, ({ key: _key, newPresences }: { key: string; newPresences: { user_id?: string }[] }) => {
         const joiner = newPresences[0]
         if (joiner?.user_id !== user.id) {
           const member = members?.find(m => m.id === joiner?.user_id)
@@ -173,10 +173,10 @@ export function usePartnerPresence() {
           toast.info(`${name} is now online`)
         }
       })
-      .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
+      .on('presence', { event: 'leave' }, ({ key: _key, leftPresences: _leftPresences }: { key: string; leftPresences: unknown[] }) => {
         // Partner went offline
       })
-      .subscribe(async (status) => {
+      .subscribe(async (status: string) => {
         if (status === 'SUBSCRIBED') {
           await channel.track({
             user_id: user.id,

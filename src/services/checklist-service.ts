@@ -35,7 +35,7 @@ export const checklistService = {
       .from('profiles')
       .select('family_id, subscription_tier')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
 
     if (!profile?.family_id) return []
 
@@ -94,7 +94,7 @@ export const checklistService = {
       .from('profiles')
       .select('family_id, subscription_tier')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
 
     if (!profile?.family_id) return null
 
@@ -110,7 +110,7 @@ export const checklistService = {
       .from('checklist_templates')
       .select('*')
       .eq('checklist_id', checklistId)
-      .single()
+      .maybeSingle()
 
     if (!checklist) return null
 
@@ -161,7 +161,7 @@ export const checklistService = {
       .from('profiles')
       .select('family_id')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
 
     if (!profile?.family_id) return { error: new Error('No family found') }
 
@@ -190,7 +190,7 @@ export const checklistService = {
       .from('profiles')
       .select('family_id')
       .eq('id', user.id)
-      .single()
+      .maybeSingle()
 
     if (!profile?.family_id) return { error: new Error('No family found') }
 

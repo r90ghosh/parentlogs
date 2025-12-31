@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth/auth-context'
-import { createClient } from '@/lib/supabase/client'
+import { useCompleteOnboarding } from '@/hooks/use-profile'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CheckCircle, Rocket, Calendar, Users, ListTodo } from 'lucide-react'
+import { CheckCircle, Rocket, Calendar, Users, ListTodo, Loader2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 const setupItems = [
@@ -15,27 +15,50 @@ const setupItems = [
   { icon: ListTodo, label: '200+ tasks loaded', delay: 0.2 },
 ]
 
+/**
+ * Onboarding Complete Page
+ *
+ * Final step - marks onboarding as complete and redirects to dashboard.
+ * Protected by onboarding layout (server-side auth check).
+ */
 export default function OnboardingComplete() {
+  console.log('[OnboardingComplete] ========== RENDER ==========')
+
   const router = useRouter()
-  const { user, refreshProfile } = useAuth()
-  const supabase = createClient()
-  const [isCompleting, setIsCompleting] = useState(true)
+  const { user } = useAuth()
+  const completeOnboarding = useCompleteOnboarding()
+  const [error, setError] = useState<string | null>(null)
+  const [isCompleted, setIsCompleted] = useState(false)
 
+  console.log('[OnboardingComplete] Current state:', {
+    userId: user?.id || 'null',
+    isCompleted,
+    isPending: completeOnboarding.isPending,
+    error
+  })
+
+  // Complete onboarding when user is available
   useEffect(() => {
-    const completeOnboarding = async () => {
-      if (!user) return
+    const complete = async () => {
+      console.log('[OnboardingComplete] complete() called:', { userId: user?.id, isCompleted })
+      if (!user || isCompleted) {
+        console.log('[OnboardingComplete] Skipping - no user or already completed')
+        return
+      }
 
-      await supabase
-        .from('profiles')
-        .update({ onboarding_completed: true })
-        .eq('id', user.id)
-
-      await refreshProfile()
-      setIsCompleting(false)
+      try {
+        console.log('[OnboardingComplete] Calling completeOnboarding.mutateAsync...')
+        await completeOnboarding.mutateAsync(user.id)
+        console.log('[OnboardingComplete] Onboarding completed successfully!')
+        setIsCompleted(true)
+      } catch (err) {
+        console.error('[OnboardingComplete] Error:', err)
+        setError(err instanceof Error ? err.message : 'Failed to complete onboarding')
+      }
     }
 
-    completeOnboarding()
-  }, [user, supabase, refreshProfile])
+    complete()
+  }, [user, isCompleted, completeOnboarding])
 
   return (
     <Card className="w-full max-w-md bg-surface-900 border-surface-800">
@@ -52,8 +75,12 @@ export default function OnboardingComplete() {
         <CardDescription>Your parenting command center is ready</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {error && (
+          <div className="text-red-500 text-sm text-center">{error}</div>
+        )}
+
         <div className="space-y-3">
-          {setupItems.map((item, index) => (
+          {setupItems.map((item) => (
             <motion.div
               key={item.label}
               initial={{ opacity: 0, x: -20 }}
@@ -78,9 +105,16 @@ export default function OnboardingComplete() {
             className="w-full"
             size="lg"
             onClick={() => router.push('/dashboard')}
-            disabled={isCompleting}
+            disabled={completeOnboarding.isPending}
           >
-            Go to Dashboard
+            {completeOnboarding.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Completing setup...
+              </>
+            ) : (
+              'Go to Dashboard'
+            )}
           </Button>
         </motion.div>
       </CardContent>

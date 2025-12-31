@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useCurrentBriefing, useBriefingByWeek } from '@/hooks/use-briefings'
 import { useFamily } from '@/hooks/use-family'
 import { useRequirePremium } from '@/hooks/use-require-auth'
@@ -21,6 +22,7 @@ import {
 import Link from 'next/link'
 
 export default function BriefingPage() {
+  const searchParams = useSearchParams()
   const { data: family } = useFamily()
   const { data: currentBriefing, isLoading } = useCurrentBriefing()
   const { isPremium } = useRequirePremium()
@@ -28,6 +30,18 @@ export default function BriefingPage() {
   const [viewingWeek, setViewingWeek] = useState<number | null>(null)
   const stage = family?.stage || 'pregnancy'
   const currentWeek = family?.current_week || 0
+
+  // Handle URL params for week navigation from archive
+  useEffect(() => {
+    const weekParam = searchParams.get('week')
+    if (weekParam) {
+      const week = parseInt(weekParam, 10)
+      if (!isNaN(week) && week !== currentWeek) {
+        setViewingWeek(week)
+      }
+    }
+  }, [searchParams, currentWeek])
+
   const weekToView = viewingWeek ?? currentWeek
 
   const { data: briefing } = useBriefingByWeek(stage, weekToView)

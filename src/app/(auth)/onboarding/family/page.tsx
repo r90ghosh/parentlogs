@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth/auth-context'
 import { createClient } from '@/lib/supabase/client'
@@ -13,9 +13,17 @@ import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Loader2, Baby, Calendar } from 'lucide-react'
 
+/**
+ * Onboarding Family Setup Page
+ *
+ * Protected by onboarding layout (server-side auth check).
+ * Creates family, updates profile, and generates tasks.
+ */
 export default function OnboardingFamily() {
+  console.log('[OnboardingFamily] ========== RENDER ==========')
+
   const router = useRouter()
-  const { user, refreshProfile } = useAuth()
+  const { user } = useAuth()
   const supabase = createClient()
 
   const [stage, setStage] = useState<'pregnancy' | 'post-birth'>('pregnancy')
@@ -27,43 +35,70 @@ export default function OnboardingFamily() {
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
 
+  console.log('[OnboardingFamily] Current state:', {
+    userId: user?.id || 'null',
+    stage,
+    dueDate,
+    birthDate,
+    isLoading,
+    isGenerating
+  })
+
+  // Wait for client-side auth state to sync
+  const [isReady, setIsReady] = useState(false)
+  useEffect(() => {
+    console.log('[OnboardingFamily] useEffect - user changed:', user?.id || 'null')
+    if (user) {
+      console.log('[OnboardingFamily] User available, setting isReady=true')
+      setIsReady(true)
+    }
+  }, [user])
+
   const handleCreateFamily = async () => {
-    if (!user) return
+    console.log('[OnboardingFamily] handleCreateFamily called')
+    if (!user) {
+      console.log('[OnboardingFamily] No user, returning')
+      return
+    }
 
     const referenceDate = stage === 'pregnancy' ? dueDate : birthDate
     if (!referenceDate) {
+      console.log('[OnboardingFamily] No date selected')
       setError('Please select a date')
       return
     }
 
+    console.log('[OnboardingFamily] Creating family:', { stage, dueDate, birthDate, babyName })
     setIsLoading(true)
     setError(null)
 
     try {
-      // Create family
+      // Create family using SECURITY DEFINER function (bypasses RLS issues)
+      console.log('[OnboardingFamily] Calling create_family_for_user RPC...')
       const { data: family, error: familyError } = await supabase
-        .from('families')
-        .insert({
-          owner_id: user.id,
-          stage,
-          due_date: stage === 'pregnancy' ? dueDate : null,
-          birth_date: stage === 'post-birth' ? birthDate : null,
-          baby_name: babyName || null,
+        .rpc('create_family_for_user', {
+          p_stage: stage,
+          p_due_date: stage === 'pregnancy' ? dueDate : undefined,
+          p_birth_date: stage === 'post-birth' ? birthDate : undefined,
+          p_baby_name: babyName || undefined,
         })
-        .select()
-        .single()
 
-      if (familyError) throw familyError
+      if (familyError) {
+        console.error('[OnboardingFamily] Family creation error:', familyError)
+        throw familyError
+      }
 
-      // Update profile with family_id
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ family_id: family.id })
-        .eq('id', user.id)
+      // Type the family response
+      const familyData = family as { id: string; [key: string]: unknown } | null
+      if (!familyData || !familyData.id) {
+        throw new Error('Family creation failed - no ID returned')
+      }
 
-      if (profileError) throw profileError
+      console.log('[OnboardingFamily] Family created:', familyData)
+      console.log('[OnboardingFamily] Profile automatically updated with family_id')
 
       // Generate tasks
+      console.log('[OnboardingFamily] Generating family tasks...')
       setIsGenerating(true)
       setProgress(10)
 
@@ -71,32 +106,52 @@ export default function OnboardingFamily() {
         setProgress((prev) => Math.min(prev + 15, 90))
       }, 500)
 
-      const { data: taskCount, error: taskError } = await supabase
+      const { error: taskError } = await supabase
         .rpc('generate_family_tasks', {
-          p_family_id: family.id,
+          p_family_id: familyData.id,
           p_due_date: stage === 'pregnancy' ? dueDate : undefined,
           p_birth_date: stage === 'post-birth' ? birthDate : undefined,
         })
 
       clearInterval(progressInterval)
 
-      if (taskError) throw taskError
+      if (taskError) {
+        console.error('[OnboardingFamily] Task generation error:', taskError)
+        throw taskError
+      }
+      console.log('[OnboardingFamily] Tasks generated successfully')
 
       setProgress(100)
-      await refreshProfile()
 
       // Small delay to show 100% progress
+      console.log('[OnboardingFamily] Navigating to /onboarding/invite...')
       setTimeout(() => {
         router.push('/onboarding/invite')
       }, 500)
     } catch (err) {
+      console.error('[OnboardingFamily] Error:', err)
       setError(err instanceof Error ? err.message : 'Something went wrong')
       setIsLoading(false)
       setIsGenerating(false)
     }
   }
 
+  // Brief wait for client-side auth sync
+  if (!isReady) {
+    console.log('[OnboardingFamily] Not ready yet, showing loader')
+    return (
+      <Card className="w-full max-w-md bg-surface-900 border-surface-800">
+        <CardContent className="py-8">
+          <div className="flex items-center justify-center">
+            <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   if (isGenerating) {
+    console.log('[OnboardingFamily] Showing generating progress UI')
     return (
       <Card className="w-full max-w-md bg-surface-900 border-surface-800">
         <CardHeader className="text-center">

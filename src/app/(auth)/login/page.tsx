@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useState } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -26,34 +26,44 @@ function LoginContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/dashboard'
+  const urlError = searchParams.get('error')
   const { signIn, signInWithGoogle } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(urlError ? decodeURIComponent(urlError) : null)
 
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   })
 
   const onSubmit = async (data: LoginForm) => {
+    console.log('[LoginPage] onSubmit called for:', data.email)
     setIsLoading(true)
     setError(null)
 
     const { error } = await signIn(data.email, data.password)
 
     if (error) {
+      console.error('[LoginPage] Sign in error:', error.message)
       setError(error.message)
       setIsLoading(false)
     } else {
+      console.log('[LoginPage] Sign in successful, redirecting to:', redirect)
       router.push(redirect)
     }
   }
 
   const handleGoogleSignIn = async () => {
+    console.log('[LoginPage] handleGoogleSignIn called')
     setIsLoading(true)
+    setError(null)
+
     const { error } = await signInWithGoogle()
     if (error) {
+      console.error('[LoginPage] Google sign in error:', error.message)
       setError(error.message)
       setIsLoading(false)
+    } else {
+      console.log('[LoginPage] Google sign in initiated - redirecting to Google...')
     }
   }
 
@@ -103,6 +113,7 @@ function LoginContent() {
               id="email"
               type="email"
               placeholder="you@example.com"
+              autoComplete="email"
               {...register('email')}
               className="bg-surface-800 border-surface-700"
             />
@@ -121,6 +132,7 @@ function LoginContent() {
             <Input
               id="password"
               type="password"
+              autoComplete="current-password"
               {...register('password')}
               className="bg-surface-800 border-surface-700"
             />
@@ -157,6 +169,10 @@ function LoginContent() {
 }
 
 export default function LoginPage() {
+  useEffect(() => {
+    console.log('[LoginPage] Page loaded')
+  }, [])
+
   return (
     <Suspense fallback={
       <Card className="bg-surface-900 border-surface-800">

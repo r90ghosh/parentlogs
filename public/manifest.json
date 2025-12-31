@@ -14,68 +14,9 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/icons/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable any"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshots/dashboard.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Dashboard view"
-    },
-    {
-      "src": "/screenshots/mobile.png",
-      "sizes": "750x1334",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Mobile view"
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
     }
   ],
   "shortcuts": [
@@ -83,31 +24,20 @@
       "name": "Tasks",
       "short_name": "Tasks",
       "description": "View your parenting tasks",
-      "url": "/tasks",
-      "icons": [{ "src": "/icons/tasks-96x96.png", "sizes": "96x96" }]
+      "url": "/tasks"
     },
     {
       "name": "Tracker",
       "short_name": "Tracker",
       "description": "Log baby activities",
-      "url": "/tracker",
-      "icons": [{ "src": "/icons/tracker-96x96.png", "sizes": "96x96" }]
+      "url": "/tracker"
     },
     {
       "name": "Briefing",
       "short_name": "Briefing",
       "description": "Weekly briefing",
-      "url": "/briefing",
-      "icons": [{ "src": "/icons/briefing-96x96.png", "sizes": "96x96" }]
+      "url": "/briefing"
     }
   ],
-  "related_applications": [],
-  "handle_links": "preferred",
-  "launch_handler": {
-    "client_mode": "navigate-existing"
-  },
-  "display_override": ["standalone", "minimal-ui"],
-  "edge_side_panel": {
-    "preferred_width": 400
-  }
+  "display_override": ["standalone", "minimal-ui"]
 }

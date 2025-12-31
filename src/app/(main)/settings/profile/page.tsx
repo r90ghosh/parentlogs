@@ -1,7 +1,9 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '@/lib/auth/auth-context'
+import { useUser } from '@/components/user-provider'
+import { useUpdateProfile } from '@/hooks/use-profile'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,7 +11,6 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Skeleton } from '@/components/ui/skeleton'
 import {
   Select,
   SelectContent,
@@ -37,55 +38,45 @@ import { UserRole } from '@/types'
 export default function ProfileSettingsPage() {
   const router = useRouter()
   const { toast } = useToast()
-  const { user, profile, isLoading: authLoading, refreshProfile, signOut } = useAuth()
+  const { signOut } = useAuth()
+  const { user, profile } = useUser()
+  const updateProfile = useUpdateProfile()
   const supabase = createClient()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [fullName, setFullName] = useState(profile?.full_name || '')
-  const [role, setRole] = useState<UserRole>(profile?.role || 'mom')
-  const [isSaving, setIsSaving] = useState(false)
+  const [fullName, setFullName] = useState(profile.full_name || '')
+  const [role, setRole] = useState<UserRole>(profile.role)
   const [isUploading, setIsUploading] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Sync state when profile loads
-  useState(() => {
-    if (profile) {
-      setFullName(profile.full_name)
-      setRole(profile.role)
-    }
-  })
+  // Keep local state in sync with profile data
+  useEffect(() => {
+    setFullName(profile.full_name)
+    setRole(profile.role)
+  }, [profile])
 
   const handleSave = async () => {
-    if (!user) return
-    setIsSaving(true)
     setError(null)
 
     try {
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({
+      await updateProfile.mutateAsync({
+        userId: user.id,
+        updates: {
           full_name: fullName,
           role,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', user.id)
-
-      if (updateError) throw updateError
-
-      await refreshProfile()
+        },
+      })
       toast({ title: 'Profile updated successfully' })
     } catch (err) {
       setError('Failed to update profile')
       console.error(err)
-    } finally {
-      setIsSaving(false)
     }
   }
 
   const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
-    if (!file || !user) return
+    if (!file) return
 
     // Validate file
     if (!file.type.startsWith('image/')) {
@@ -118,17 +109,11 @@ export default function ProfileSettingsPage() {
         .getPublicUrl(fileName)
 
       // Update profile
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({
-          avatar_url: publicUrl,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', user.id)
+      await updateProfile.mutateAsync({
+        userId: user.id,
+        updates: { avatar_url: publicUrl },
+      })
 
-      if (updateError) throw updateError
-
-      await refreshProfile()
       toast({ title: 'Avatar updated successfully' })
     } catch (err) {
       setError('Failed to upload avatar')
@@ -139,7 +124,6 @@ export default function ProfileSettingsPage() {
   }
 
   const handleDeleteAccount = async () => {
-    if (!user) return
     setIsDeleting(true)
 
     try {
@@ -161,18 +145,6 @@ export default function ProfileSettingsPage() {
     } finally {
       setIsDeleting(false)
     }
-  }
-
-  if (authLoading) {
-    return (
-      <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-10 w-10" />
-          <Skeleton className="h-8 w-32" />
-        </div>
-        <Skeleton className="h-64 w-full" />
-      </div>
-    )
   }
 
   return (
@@ -204,9 +176,9 @@ export default function ProfileSettingsPage() {
           <div className="flex items-center gap-6">
             <div className="relative">
               <Avatar className="h-24 w-24">
-                <AvatarImage src={profile?.avatar_url} alt={profile?.full_name || ''} />
+                <AvatarImage src={profile.avatar_url} alt={profile.full_name || ''} />
                 <AvatarFallback className="text-2xl">
-                  {profile?.full_name?.charAt(0).toUpperCase() || 'U'}
+                  {profile.full_name?.charAt(0).toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
               <button
@@ -246,7 +218,7 @@ export default function ProfileSettingsPage() {
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
-              value={profile?.email || ''}
+              value={profile.email}
               disabled
               className="bg-surface-800 border-surface-700 text-surface-400"
             />
@@ -283,10 +255,10 @@ export default function ProfileSettingsPage() {
 
           <Button
             onClick={handleSave}
-            disabled={isSaving}
+            disabled={updateProfile.isPending}
             className="w-full bg-accent-500 hover:bg-accent-600"
           >
-            {isSaving ? (
+            {updateProfile.isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Saving...

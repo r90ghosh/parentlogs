@@ -67,6 +67,12 @@ function OnlineStatusTracker() {
 }
 
 export function Providers({ children }: { children: ReactNode }) {
+  console.log('[Providers] Rendering Providers component')
+
+  useEffect(() => {
+    console.log('[Providers] Providers component mounted')
+  }, [])
+
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {

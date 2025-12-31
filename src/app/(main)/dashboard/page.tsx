@@ -1,6 +1,6 @@
 'use client'
 
-import { useAuth } from '@/lib/auth/auth-context'
+import { useUser } from '@/components/user-provider'
 import { useFamily } from '@/hooks/use-family'
 import { useTasks } from '@/hooks/use-tasks'
 import { useCurrentBriefing } from '@/hooks/use-briefings'
@@ -22,7 +22,7 @@ import {
 import { format, isToday, isTomorrow, isPast } from 'date-fns'
 
 export default function DashboardPage() {
-  const { profile } = useAuth()
+  const { profile } = useUser()
   const { data: family, isLoading: familyLoading } = useFamily()
   const { data: tasks, isLoading: tasksLoading } = useTasks({ limit: 5, status: 'pending' })
   const { data: briefing, isLoading: briefingLoading } = useCurrentBriefing()

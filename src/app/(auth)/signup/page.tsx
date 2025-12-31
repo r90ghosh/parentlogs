@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -41,6 +41,7 @@ export default function SignupPage() {
   })
 
   const onSubmit = async (data: SignupForm) => {
+    console.log('[SignupPage] onSubmit called for:', data.email)
     setIsLoading(true)
     setError(null)
 
@@ -50,24 +51,33 @@ export default function SignupPage() {
     })
 
     if (error) {
+      console.error('[SignupPage] Sign up error:', error.message)
       setError(error.message)
       setIsLoading(false)
     } else {
+      console.log('[SignupPage] Sign up successful, showing confirmation message')
       setSuccess(true)
       setIsLoading(false)
     }
   }
 
   const handleGoogleSignIn = async () => {
+    console.log('[SignupPage] handleGoogleSignIn called')
     setIsLoading(true)
+    setError(null)
+
     const { error } = await signInWithGoogle()
     if (error) {
+      console.error('[SignupPage] Google sign in error:', error.message)
       setError(error.message)
       setIsLoading(false)
+    } else {
+      console.log('[SignupPage] Google sign in initiated - redirecting to Google...')
     }
   }
 
   if (success) {
+    console.log('[SignupPage] Rendering: Success message')
     return (
       <Card className="bg-surface-900 border-surface-800">
         <CardHeader className="text-center">
@@ -91,6 +101,8 @@ export default function SignupPage() {
       </Card>
     )
   }
+
+  console.log('[SignupPage] Rendering: Sign up form')
 
   return (
     <Card className="bg-surface-900 border-surface-800">
@@ -138,6 +150,7 @@ export default function SignupPage() {
               id="full_name"
               type="text"
               placeholder="John Smith"
+              autoComplete="name"
               {...register('full_name')}
               className="bg-surface-800 border-surface-700"
             />
@@ -152,6 +165,7 @@ export default function SignupPage() {
               id="email"
               type="email"
               placeholder="you@example.com"
+              autoComplete="email"
               {...register('email')}
               className="bg-surface-800 border-surface-700"
             />
@@ -162,7 +176,10 @@ export default function SignupPage() {
 
           <div className="space-y-2">
             <Label htmlFor="role">Your Role</Label>
-            <Select onValueChange={(value) => setValue('role', value as 'dad' | 'mom' | 'other')}>
+            <Select onValueChange={(value) => {
+              console.log('[SignupPage] Role selected:', value)
+              setValue('role', value as 'dad' | 'mom' | 'other')
+            }}>
               <SelectTrigger className="bg-surface-800 border-surface-700">
                 <SelectValue placeholder="Select your role" />
               </SelectTrigger>
@@ -182,6 +199,7 @@ export default function SignupPage() {
             <Input
               id="password"
               type="password"
+              autoComplete="new-password"
               {...register('password')}
               className="bg-surface-800 border-surface-700"
             />
@@ -195,6 +213,7 @@ export default function SignupPage() {
             <Input
               id="confirm_password"
               type="password"
+              autoComplete="new-password"
               {...register('confirm_password')}
               className="bg-surface-800 border-surface-700"
             />

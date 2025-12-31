@@ -1,9 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useBudgetSummary, useAddToBudget, useMarkAsPurchased, useRemoveBudgetItem, useAddCustomBudgetItem } from '@/hooks/use-budget'
 import { useFamily } from '@/hooks/use-family'
+import { useRequirePremium } from '@/hooks/use-require-auth'
+import Link from 'next/link'
 import { budgetService } from '@/services/budget-service'
+import { BudgetTimelineBar } from '@/components/shared/budget-timeline-bar'
+import {
+  BudgetTimelineCategory,
+  getBudgetStatsByCategory,
+  getCurrentBudgetCategory,
+  getBudgetTimelineCategory,
+} from '@/lib/budget-timeline'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -50,6 +59,14 @@ import {
   Monitor,
   FileText,
   Shirt,
+  Sparkles,
+  Users,
+  Briefcase,
+  Camera,
+  BookOpen,
+  PersonStanding,
+  Lock,
+  Crown,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -65,6 +82,12 @@ const CATEGORY_ICONS: Record<string, React.ElementType> = {
   'Tech': Monitor,
   'Safety': Shield,
   'Clothing': Shirt,
+  'Baby Care': Sparkles,
+  'Childcare': Users,
+  'Travel': Briefcase,
+  'Maternity': PersonStanding,
+  'Memories': Camera,
+  'Books': BookOpen,
 }
 
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
@@ -77,11 +100,21 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string
   'Tech': { bg: 'bg-indigo-500/20', text: 'text-indigo-400', border: 'border-indigo-500/30' },
   'Safety': { bg: 'bg-orange-500/20', text: 'text-orange-400', border: 'border-orange-500/30' },
   'Clothing': { bg: 'bg-pink-500/20', text: 'text-pink-400', border: 'border-pink-500/30' },
+  'Baby Care': { bg: 'bg-teal-500/20', text: 'text-teal-400', border: 'border-teal-500/30' },
+  'Childcare': { bg: 'bg-violet-500/20', text: 'text-violet-400', border: 'border-violet-500/30' },
+  'Travel': { bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/30' },
+  'Maternity': { bg: 'bg-rose-500/20', text: 'text-rose-400', border: 'border-rose-500/30' },
+  'Memories': { bg: 'bg-fuchsia-500/20', text: 'text-fuchsia-400', border: 'border-fuchsia-500/30' },
+  'Books': { bg: 'bg-lime-500/20', text: 'text-lime-400', border: 'border-lime-500/30' },
 }
+
+// Number of free items to show per category
+const FREE_ITEMS_PER_CATEGORY = 2
 
 export default function BudgetPage() {
   const { data: summary, isLoading } = useBudgetSummary()
   const { data: family } = useFamily()
+  const { isPremium } = useRequirePremium()
   const addToBudget = useAddToBudget()
   const markAsPurchased = useMarkAsPurchased()
   const removeBudgetItem = useRemoveBudgetItem()
@@ -93,6 +126,22 @@ export default function BudgetPage() {
   const [showAddCustomDialog, setShowAddCustomDialog] = useState(false)
   const [customItem, setCustomItem] = useState({ item: '', category: 'Other', price: '' })
   const [stageFilter, setStageFilter] = useState<'all' | 'pregnancy' | 'post-birth'>('all')
+  const [selectedTimelineCategory, setSelectedTimelineCategory] = useState<BudgetTimelineCategory | null>(null)
+
+  // Calculate budget stats by timeline category
+  const budgetStats = useMemo(() => {
+    if (!summary?.categories) {
+      return getBudgetStatsByCategory([])
+    }
+    const allTemplates = summary.categories.flatMap(c => c.items)
+    return getBudgetStatsByCategory(allTemplates)
+  }, [summary])
+
+  // Get current budget category based on family stage
+  const currentBudgetCategory = useMemo(() => {
+    if (!family) return 'pregnancy' as BudgetTimelineCategory
+    return getCurrentBudgetCategory(family)
+  }, [family])
 
   const addedTemplateIds = new Set(
     summary?.familyItems
@@ -161,14 +210,26 @@ export default function BudgetPage() {
   }
 
   const filteredCategories = summary?.categories.filter(category => {
-    if (stageFilter === 'all') return true
-    return category.items.some(item => item.stage === stageFilter)
-  }).map(category => ({
-    ...category,
-    items: stageFilter === 'all'
-      ? category.items
-      : category.items.filter(item => item.stage === stageFilter)
-  }))
+    // First filter by stage
+    let items = category.items
+    if (stageFilter !== 'all') {
+      items = items.filter(item => item.stage === stageFilter)
+    }
+    // Then filter by timeline category if selected
+    if (selectedTimelineCategory) {
+      items = items.filter(item => getBudgetTimelineCategory(item) === selectedTimelineCategory)
+    }
+    return items.length > 0
+  }).map(category => {
+    let items = category.items
+    if (stageFilter !== 'all') {
+      items = items.filter(item => item.stage === stageFilter)
+    }
+    if (selectedTimelineCategory) {
+      items = items.filter(item => getBudgetTimelineCategory(item) === selectedTimelineCategory)
+    }
+    return { ...category, items }
+  })
 
   const pendingItems = summary?.familyItems.filter(i => !i.is_purchased) || []
   const purchasedItems = summary?.familyItems.filter(i => i.is_purchased) || []
@@ -202,6 +263,16 @@ export default function BudgetPage() {
           Add Custom
         </Button>
       </div>
+
+      {/* Budget Timeline Bar */}
+      {summary && summary.categories.length > 0 && (
+        <BudgetTimelineBar
+          stats={budgetStats}
+          currentCategory={currentBudgetCategory}
+          selectedCategory={selectedTimelineCategory}
+          onCategoryClick={setSelectedTimelineCategory}
+        />
+      )}
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -343,6 +414,32 @@ export default function BudgetPage() {
 
         {/* Browse Items Tab */}
         <TabsContent value="browse" className="space-y-4">
+          {/* Premium Upgrade Banner for free users */}
+          {!isPremium && (
+            <Card className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border-amber-500/30">
+              <CardContent className="py-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-amber-500/20">
+                      <Crown className="h-5 w-5 text-amber-400" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-white">Unlock Full Budget Planner</p>
+                      <p className="text-sm text-surface-400">
+                        See all {summary?.categories.reduce((sum, c) => sum + c.items.length, 0) || 0} items with detailed descriptions, notes, and price ranges
+                      </p>
+                    </div>
+                  </div>
+                  <Button asChild className="bg-amber-500 hover:bg-amber-600 text-black shrink-0">
+                    <Link href="/settings/subscription">
+                      Upgrade
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Stage Filter */}
           <div className="flex items-center gap-2">
             <span className="text-sm text-surface-400">Show:</span>
@@ -362,6 +459,7 @@ export default function BudgetPage() {
             {filteredCategories?.map((category) => {
               const Icon = CATEGORY_ICONS[category.name] || DollarSign
               const colors = CATEGORY_COLORS[category.name] || CATEGORY_COLORS['Admin']
+              const lockedCount = isPremium ? 0 : Math.max(0, category.items.length - FREE_ITEMS_PER_CATEGORY)
 
               return (
                 <AccordionItem
@@ -379,6 +477,12 @@ export default function BudgetPage() {
                         <span className="text-xs text-surface-400 ml-2">
                           ({category.items.length} items)
                         </span>
+                        {lockedCount > 0 && (
+                          <span className="text-xs text-amber-400 ml-2">
+                            <Lock className="h-3 w-3 inline mr-1" />
+                            {lockedCount} locked
+                          </span>
+                        )}
                       </div>
                       <span className="text-sm text-surface-400 mr-4">
                         {budgetService.formatPriceRange(category.totalLow, category.totalHigh)}
@@ -387,66 +491,102 @@ export default function BudgetPage() {
                   </AccordionTrigger>
                   <AccordionContent className="px-4 pb-4">
                     <div className="space-y-2 pt-2">
-                      {category.items.map((template) => {
+                      {category.items.map((template, index) => {
                         const isAdded = addedTemplateIds.has(template.budget_id)
+                        const isLocked = !isPremium && index >= FREE_ITEMS_PER_CATEGORY
+
+                        // For locked items, truncate item name and hide details
+                        const displayName = isLocked
+                          ? template.item.slice(0, Math.floor(template.item.length * 0.4)) + '...'
+                          : template.item
 
                         return (
                           <div
                             key={template.budget_id}
                             className={cn(
-                              "flex items-start justify-between p-3 rounded-lg border transition-colors",
-                              isAdded
-                                ? "bg-accent-500/10 border-accent-500/30"
-                                : "bg-surface-800/50 border-surface-700 hover:border-surface-600"
+                              "flex items-start justify-between p-3 rounded-lg border transition-colors relative",
+                              isLocked
+                                ? "bg-surface-800/30 border-surface-700/50"
+                                : isAdded
+                                  ? "bg-accent-500/10 border-accent-500/30"
+                                  : "bg-surface-800/50 border-surface-700 hover:border-surface-600"
                             )}
                           >
                             <div className="flex-1 min-w-0 pr-4">
                               <div className="flex items-center gap-2 mb-1">
-                                <span className="font-medium text-white text-sm">
-                                  {template.item}
+                                <span className={cn(
+                                  "font-medium text-sm",
+                                  isLocked ? "text-surface-500" : "text-white"
+                                )}>
+                                  {displayName}
                                 </span>
-                                {template.priority === 'must-have' && (
+                                {isLocked && (
+                                  <Lock className="h-3 w-3 text-surface-500" />
+                                )}
+                                {!isLocked && template.priority === 'must-have' && (
                                   <Badge variant="outline" className="text-xs border-red-500/50 text-red-400">
                                     Must-have
                                   </Badge>
                                 )}
-                                {isAdded && (
+                                {!isLocked && isAdded && (
                                   <Badge className="text-xs bg-accent-500/20 text-accent-400 border-0">
                                     Added
                                   </Badge>
                                 )}
                               </div>
-                              {template.description && (
-                                <p className="text-xs text-surface-400 line-clamp-2 mb-1">
-                                  {template.description}
+                              {isLocked ? (
+                                <p className="text-xs text-surface-600 italic">
+                                  Upgrade to see details
                                 </p>
-                              )}
-                              <div className="flex items-center gap-3 text-xs text-surface-500">
-                                <span>
-                                  Week {template.week_start}-{template.week_end}
-                                </span>
-                                <span>
-                                  {budgetService.formatPriceRange(template.price_low, template.price_high)}
-                                </span>
-                              </div>
-                              {template.notes && (
-                                <p className="text-xs text-amber-400/80 mt-1 italic">
-                                  {template.notes}
-                                </p>
+                              ) : (
+                                <>
+                                  {template.description && (
+                                    <p className="text-xs text-surface-400 line-clamp-2 mb-1">
+                                      {template.description}
+                                    </p>
+                                  )}
+                                  <div className="flex items-center gap-3 text-xs text-surface-500">
+                                    <span>
+                                      Week {template.week_start}-{template.week_end}
+                                    </span>
+                                    <span>
+                                      {budgetService.formatPriceRange(template.price_low, template.price_high)}
+                                    </span>
+                                  </div>
+                                  {template.notes && (
+                                    <p className="text-xs text-amber-400/80 mt-1 italic">
+                                      {template.notes}
+                                    </p>
+                                  )}
+                                </>
                               )}
                             </div>
-                            <Button
-                              size="sm"
-                              variant={isAdded ? "ghost" : "outline"}
-                              disabled={isAdded || addToBudget.isPending}
-                              onClick={() => setSelectedTemplate(template)}
-                            >
-                              {isAdded ? (
-                                <Check className="h-4 w-4 text-accent-500" />
-                              ) : (
-                                <Plus className="h-4 w-4" />
-                              )}
-                            </Button>
+                            {isLocked ? (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
+                                asChild
+                              >
+                                <Link href="/settings/subscription">
+                                  <Lock className="h-3 w-3 mr-1" />
+                                  Unlock
+                                </Link>
+                              </Button>
+                            ) : (
+                              <Button
+                                size="sm"
+                                variant={isAdded ? "ghost" : "outline"}
+                                disabled={isAdded || addToBudget.isPending}
+                                onClick={() => setSelectedTemplate(template)}
+                              >
+                                {isAdded ? (
+                                  <Check className="h-4 w-4 text-accent-500" />
+                                ) : (
+                                  <Plus className="h-4 w-4" />
+                                )}
+                              </Button>
+                            )}
                           </div>
                         )
                       })}

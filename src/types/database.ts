@@ -755,6 +755,15 @@ export type Database = {
         Args: { p_birth_date?: string; p_due_date: string }
         Returns: number
       }
+      create_family_for_user: {
+        Args: {
+          p_baby_name?: string
+          p_birth_date?: string
+          p_due_date?: string
+          p_stage: string
+        }
+        Returns: Json
+      }
       generate_family_tasks: {
         Args: {
           p_birth_date?: string
@@ -764,6 +773,7 @@ export type Database = {
         Returns: number
       }
       get_shift_briefing: { Args: { p_family_id: string }; Returns: Json }
+      get_user_family_id: { Args: { user_uuid: string }; Returns: string }
       is_family_member: { Args: { family_uuid: string }; Returns: boolean }
       is_premium_user: { Args: Record<PropertyKey, never>; Returns: boolean }
       regenerate_invite_code: { Args: { p_family_id: string }; Returns: string }

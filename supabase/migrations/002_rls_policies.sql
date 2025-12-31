@@ -16,6 +16,12 @@ ALTER TABLE budget_templates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE checklist_templates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE checklist_item_templates ENABLE ROW LEVEL SECURITY;
 
+-- Helper function: Get user's family_id (bypasses RLS to avoid recursion)
+CREATE OR REPLACE FUNCTION get_user_family_id(user_uuid UUID)
+RETURNS UUID AS $$
+  SELECT family_id FROM public.profiles WHERE id = user_uuid;
+$$ LANGUAGE sql SECURITY DEFINER STABLE;
+
 -- Helper function: Check if user is family member
 CREATE OR REPLACE FUNCTION is_family_member(family_uuid UUID)
 RETURNS BOOLEAN AS $$
@@ -43,9 +49,12 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- Profiles policies
 CREATE POLICY "Users can view own profile" ON profiles FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
+-- Use helper function to avoid infinite recursion (policy can't query same table directly)
 CREATE POLICY "Users can view family members" ON profiles FOR SELECT USING (
-  family_id IN (SELECT family_id FROM profiles WHERE id = auth.uid())
+  family_id IS NOT NULL AND family_id = get_user_family_id(auth.uid())
 );
+-- Allow system/trigger to insert profiles
+CREATE POLICY "System can insert profiles" ON profiles FOR INSERT WITH CHECK (true);
 
 -- Families policies
 CREATE POLICY "Users can view own family" ON families FOR SELECT USING (is_family_member(id));

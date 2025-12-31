@@ -1,6 +1,6 @@
 'use client'
 
-import { useAuth } from '@/lib/auth/auth-context'
+import { useUser } from '@/components/user-provider'
 import { useIsPremium } from '@/hooks/use-subscription'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -51,12 +51,10 @@ const settingsItems = [
 ]
 
 export default function SettingsPage() {
-  const { profile, isLoading: authLoading } = useAuth()
+  const { profile } = useUser()
   const { isPremium, tier, isLoading: premiumLoading } = useIsPremium()
 
-  const isLoading = authLoading || premiumLoading
-
-  if (isLoading) {
+  if (premiumLoading) {
     return (
       <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
         <Skeleton className="h-24 w-full" />
@@ -82,15 +80,15 @@ export default function SettingsPage() {
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16">
-              <AvatarImage src={profile?.avatar_url} alt={profile?.full_name || ''} />
+              <AvatarImage src={profile.avatar_url} alt={profile.full_name || ''} />
               <AvatarFallback className="text-xl">
-                {profile?.full_name?.charAt(0).toUpperCase() || 'U'}
+                {profile.full_name?.charAt(0).toUpperCase() || 'U'}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-semibold text-white truncate">
-                  {profile?.full_name || 'User'}
+                  {profile.full_name || 'User'}
                 </h2>
                 {isPremium && (
                   <Badge className="bg-accent-500/20 text-accent-400 border-accent-500/30">
@@ -99,8 +97,8 @@ export default function SettingsPage() {
                   </Badge>
                 )}
               </div>
-              <p className="text-sm text-surface-400 truncate">{profile?.email}</p>
-              <p className="text-xs text-surface-500 capitalize">{profile?.role || 'Parent'}</p>
+              <p className="text-sm text-surface-400 truncate">{profile.email}</p>
+              <p className="text-xs text-surface-500 capitalize">{profile.role || 'Parent'}</p>
             </div>
           </div>
         </CardContent>

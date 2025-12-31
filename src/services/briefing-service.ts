@@ -44,7 +44,7 @@ export const briefingService = {
       .from('briefing_templates')
       .select('*')
       .eq('briefing_id', briefingId)
-      .single()
+      .maybeSingle()
 
     return briefing as BriefingTemplate | null
   },
@@ -66,7 +66,7 @@ export const briefingService = {
       .from('briefing_templates')
       .select('*')
       .eq('briefing_id', briefingId)
-      .single()
+      .maybeSingle()
 
     return briefing as BriefingTemplate | null
   },

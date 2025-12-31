@@ -1,8 +1,11 @@
 -- Function: Handle new user signup
+-- NOTE: Must use fully qualified table names (public.xxx) because this trigger
+-- runs in the auth schema context when triggered by auth.users
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO profiles (id, email, full_name, avatar_url)
+  -- Insert into public.profiles with explicit schema reference
+  INSERT INTO public.profiles (id, email, full_name, avatar_url)
   VALUES (
     NEW.id,
     NEW.email,
@@ -11,14 +14,22 @@ BEGIN
   );
 
   -- Create default notification preferences
-  INSERT INTO notification_preferences (user_id)
+  INSERT INTO public.notification_preferences (user_id)
   VALUES (NEW.id);
 
   -- Create default subscription (free tier)
-  INSERT INTO subscriptions (user_id, tier, status)
+  INSERT INTO public.subscriptions (user_id, tier, status)
   VALUES (NEW.id, 'free', 'active');
 
   RETURN NEW;
+EXCEPTION
+  WHEN unique_violation THEN
+    -- User already exists, just return
+    RETURN NEW;
+  WHEN OTHERS THEN
+    -- Log error but don't fail the user creation
+    RAISE WARNING 'Error in handle_new_user: %', SQLERRM;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

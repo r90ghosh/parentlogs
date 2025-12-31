@@ -18,7 +18,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { ArrowLeft, RotateCcw, CheckCircle, ExternalLink } from 'lucide-react'
+import { ArrowLeft, RotateCcw, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
@@ -168,26 +168,15 @@ export default function ChecklistDetailPage() {
                     "text-sm font-medium",
                     item.completed ? "text-surface-500 line-through" : "text-white"
                   )}>
-                    {item.name}
+                    {item.item}
                   </p>
-                  {item.description && (
+                  {item.details && (
                     <p className="text-xs text-surface-400 mt-1">
-                      {item.description}
+                      {item.details}
                     </p>
                   )}
-                  {item.link && (
-                    <a
-                      href={item.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs text-accent-500 hover:text-accent-400 mt-1"
-                    >
-                      Learn more
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
-                  )}
                 </div>
-                {item.is_essential && (
+                {item.required && (
                   <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded">
                     Essential
                   </span>
