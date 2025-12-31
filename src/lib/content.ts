@@ -1,5 +1,4 @@
-import articlesData from '@/../content/articles.json'
-import videosData from '@/../content/videos.json'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 export interface Article {
   slug: string
@@ -53,71 +52,116 @@ export const stageConfig: Record<string, { label: string; order: number }> = {
   '18-24-months': { label: '18-24 Months', order: 9 },
 }
 
-// Transform JSON data to match our interfaces
-function transformArticle(data: (typeof articlesData)[0]): Article {
+// Transform database row to Article interface
+function transformArticle(row: Record<string, unknown>): Article {
   return {
-    slug: data.slug,
-    title: data.title,
-    stage: data.stage,
-    stageLabel: data.stage_label,
-    week: data.week,
-    excerpt: data.excerpt,
-    readTime: data.read_time,
-    isFree: data.is_free,
-    reviewedBy: data.reviewed_by,
-    content: data.content,
-    sources: data.sources,
+    slug: row.slug as string,
+    title: row.title as string,
+    stage: row.stage as string,
+    stageLabel: row.stage_label as string,
+    week: row.week as number | null,
+    excerpt: (row.excerpt as string) || '',
+    readTime: row.read_time as number,
+    isFree: row.is_free as boolean,
+    reviewedBy: row.reviewed_by as string | null,
+    content: row.content as string,
+    sources: (row.sources as string[]) || [],
   }
 }
 
-function transformVideo(data: (typeof videosData)[0]): Video {
+// Transform database row to Video interface
+function transformVideo(row: Record<string, unknown>): Video {
   return {
-    slug: data.slug,
-    title: data.title,
-    source: data.source,
-    description: data.description,
-    url: data.url,
-    youtubeId: data.youtube_id,
-    stage: data.stage,
-    stageLabel: data.stage_label,
-    duration: data.duration,
-    thumbnail: data.thumbnail,
+    slug: row.slug as string,
+    title: row.title as string,
+    source: row.source as string,
+    description: (row.description as string) || '',
+    url: row.url as string,
+    youtubeId: row.youtube_id as string | null,
+    stage: row.stage as string,
+    stageLabel: row.stage_label as string,
+    duration: row.duration as number | null,
+    thumbnail: row.thumbnail as string | null,
   }
 }
-
-// Cache transformed data
-let articlesCache: Article[] | null = null
-let videosCache: Video[] | null = null
 
 export async function getArticles(): Promise<Article[]> {
-  if (!articlesCache) {
-    articlesCache = articlesData.map(transformArticle)
+  const supabase = await createServerSupabaseClient()
+
+  const { data, error } = await supabase
+    .from('articles')
+    .select('*')
+    .order('week', { ascending: true, nullsFirst: false })
+
+  if (error) {
+    console.error('Error fetching articles:', error)
+    return []
   }
-  return articlesCache
+
+  return (data || []).map(transformArticle)
 }
 
 export async function getVideos(): Promise<Video[]> {
-  if (!videosCache) {
-    videosCache = videosData.map(transformVideo)
+  const supabase = await createServerSupabaseClient()
+
+  const { data, error } = await supabase
+    .from('videos')
+    .select('*')
+    .order('stage', { ascending: true })
+
+  if (error) {
+    console.error('Error fetching videos:', error)
+    return []
   }
-  return videosCache
+
+  return (data || []).map(transformVideo)
 }
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
-  const articles = await getArticles()
-  return articles.find((a) => a.slug === slug) || null
+  const supabase = await createServerSupabaseClient()
+
+  const { data, error } = await supabase
+    .from('articles')
+    .select('*')
+    .eq('slug', slug)
+    .single()
+
+  if (error || !data) {
+    console.error('Error fetching article:', error)
+    return null
+  }
+
+  return transformArticle(data)
 }
 
 export async function getVideoBySlug(slug: string): Promise<Video | null> {
-  const videos = await getVideos()
-  return videos.find((v) => v.slug === slug) || null
+  const supabase = await createServerSupabaseClient()
+
+  const { data, error } = await supabase
+    .from('videos')
+    .select('*')
+    .eq('slug', slug)
+    .single()
+
+  if (error || !data) {
+    console.error('Error fetching video:', error)
+    return null
+  }
+
+  return transformVideo(data)
 }
 
 export async function getContentCounts(): Promise<ContentCounts> {
-  const [articles, videos] = await Promise.all([getArticles(), getVideos()])
+  const supabase = await createServerSupabaseClient()
+
+  const [articlesResult, videosResult] = await Promise.all([
+    supabase.from('articles').select('*', { count: 'exact', head: true }),
+    supabase.from('videos').select('*', { count: 'exact', head: true }),
+  ])
+
   return {
-    articles: articles.length,
-    videos: videos.length,
+    articles: articlesResult.count || 0,
+    videos: videosResult.count || 0,
   }
 }
 
@@ -126,25 +170,46 @@ export async function getRelatedArticles(
   stage: string,
   limit: number = 3
 ): Promise<Article[]> {
-  const articles = await getArticles()
-  return articles.filter((a) => a.slug !== currentSlug && a.stage === stage).slice(0, limit)
+  const supabase = await createServerSupabaseClient()
+
+  const { data, error } = await supabase
+    .from('articles')
+    .select('*')
+    .eq('stage', stage)
+    .neq('slug', currentSlug)
+    .limit(limit)
+
+  if (error) {
+    console.error('Error fetching related articles:', error)
+    return []
+  }
+
+  return (data || []).map(transformArticle)
 }
 
 export async function getStages(): Promise<StageInfo[]> {
-  const [articles, videos] = await Promise.all([getArticles(), getVideos()])
+  const supabase = await createServerSupabaseClient()
+
+  // Get counts by stage for both articles and videos
+  const [articlesResult, videosResult] = await Promise.all([
+    supabase.from('articles').select('stage'),
+    supabase.from('videos').select('stage'),
+  ])
 
   const stageCounts = new Map<string, { articles: number; videos: number }>()
 
-  for (const article of articles) {
-    const current = stageCounts.get(article.stage) || { articles: 0, videos: 0 }
+  // Count articles per stage
+  for (const row of articlesResult.data || []) {
+    const current = stageCounts.get(row.stage) || { articles: 0, videos: 0 }
     current.articles++
-    stageCounts.set(article.stage, current)
+    stageCounts.set(row.stage, current)
   }
 
-  for (const video of videos) {
-    const current = stageCounts.get(video.stage) || { articles: 0, videos: 0 }
+  // Count videos per stage
+  for (const row of videosResult.data || []) {
+    const current = stageCounts.get(row.stage) || { articles: 0, videos: 0 }
     current.videos++
-    stageCounts.set(video.stage, current)
+    stageCounts.set(row.stage, current)
   }
 
   return Object.entries(stageConfig)
@@ -160,26 +225,25 @@ export async function getStages(): Promise<StageInfo[]> {
 export async function searchContent(
   query: string
 ): Promise<{ articles: Article[]; videos: Video[] }> {
-  const [articles, videos] = await Promise.all([getArticles(), getVideos()])
+  const supabase = await createServerSupabaseClient()
 
-  const lowerQuery = query.toLowerCase()
+  const [articlesResult, videosResult] = await Promise.all([
+    supabase
+      .from('articles')
+      .select('*')
+      .or(`title.ilike.%${query}%,excerpt.ilike.%${query}%`)
+      .limit(20),
+    supabase
+      .from('videos')
+      .select('*')
+      .or(`title.ilike.%${query}%,description.ilike.%${query}%,source.ilike.%${query}%`)
+      .limit(20),
+  ])
 
-  const matchedArticles = articles.filter(
-    (a) =>
-      a.title.toLowerCase().includes(lowerQuery) ||
-      a.excerpt.toLowerCase().includes(lowerQuery) ||
-      a.stageLabel.toLowerCase().includes(lowerQuery)
-  )
-
-  const matchedVideos = videos.filter(
-    (v) =>
-      v.title.toLowerCase().includes(lowerQuery) ||
-      v.description.toLowerCase().includes(lowerQuery) ||
-      v.source.toLowerCase().includes(lowerQuery) ||
-      v.stageLabel.toLowerCase().includes(lowerQuery)
-  )
-
-  return { articles: matchedArticles, videos: matchedVideos }
+  return {
+    articles: (articlesResult.data || []).map(transformArticle),
+    videos: (videosResult.data || []).map(transformVideo),
+  }
 }
 
 export async function getFilteredContent(options: {
@@ -194,48 +258,81 @@ export async function getFilteredContent(options: {
   totalArticles: number
   totalVideos: number
 }> {
-  let [articles, videos] = await Promise.all([getArticles(), getVideos()])
+  const supabase = await createServerSupabaseClient()
+
+  // Build article query
+  let articleQuery = supabase.from('articles').select('*', { count: 'exact' })
+  let videoQuery = supabase.from('videos').select('*', { count: 'exact' })
 
   // Filter by stage
   if (options.stage && options.stage !== 'all') {
-    articles = articles.filter((a) => a.stage === options.stage)
-    videos = videos.filter((v) => v.stage === options.stage)
+    articleQuery = articleQuery.eq('stage', options.stage)
+    videoQuery = videoQuery.eq('stage', options.stage)
   }
 
   // Filter by search
   if (options.search) {
-    const lowerSearch = options.search.toLowerCase()
-    articles = articles.filter(
-      (a) =>
-        a.title.toLowerCase().includes(lowerSearch) ||
-        a.excerpt.toLowerCase().includes(lowerSearch)
-    )
-    videos = videos.filter(
-      (v) =>
-        v.title.toLowerCase().includes(lowerSearch) ||
-        v.description.toLowerCase().includes(lowerSearch) ||
-        v.source.toLowerCase().includes(lowerSearch)
-    )
+    const search = options.search
+    articleQuery = articleQuery.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%`)
+    videoQuery = videoQuery.or(`title.ilike.%${search}%,description.ilike.%${search}%,source.ilike.%${search}%`)
   }
 
-  // Filter by format
-  if (options.format === 'articles') {
-    videos = []
-  } else if (options.format === 'videos') {
-    articles = []
+  // Order
+  articleQuery = articleQuery.order('week', { ascending: true, nullsFirst: false })
+  videoQuery = videoQuery.order('stage', { ascending: true })
+
+  // Execute queries based on format
+  let articles: Article[] = []
+  let videos: Video[] = []
+  let totalArticles = 0
+  let totalVideos = 0
+
+  if (options.format !== 'videos') {
+    const { data, count, error } = await articleQuery
+
+    if (!error) {
+      articles = (data || []).map(transformArticle)
+      totalArticles = count || 0
+    }
   }
 
-  const totalArticles = articles.length
-  const totalVideos = videos.length
+  if (options.format !== 'articles') {
+    const { data, count, error } = await videoQuery
 
-  // Apply pagination
-  if (options.offset !== undefined && options.limit !== undefined) {
-    articles = articles.slice(options.offset, options.offset + options.limit)
-    videos = videos.slice(options.offset, options.offset + options.limit)
-  } else if (options.limit !== undefined) {
-    articles = articles.slice(0, options.limit)
-    videos = videos.slice(0, options.limit)
+    if (!error) {
+      videos = (data || []).map(transformVideo)
+      totalVideos = count || 0
+    }
   }
 
   return { articles, videos, totalArticles, totalVideos }
+}
+
+// Get article metadata only (for listing pages - more efficient)
+export async function getArticlesList(): Promise<Omit<Article, 'content'>[]> {
+  const supabase = await createServerSupabaseClient()
+
+  const { data, error } = await supabase
+    .from('articles')
+    .select('slug, title, stage, stage_label, week, excerpt, read_time, is_free, reviewed_by, sources')
+    .order('week', { ascending: true, nullsFirst: false })
+
+  if (error) {
+    console.error('Error fetching articles list:', error)
+    return []
+  }
+
+  return (data || []).map((row) => ({
+    slug: row.slug,
+    title: row.title,
+    stage: row.stage,
+    stageLabel: row.stage_label,
+    week: row.week,
+    excerpt: row.excerpt || '',
+    readTime: row.read_time,
+    isFree: row.is_free,
+    reviewedBy: row.reviewed_by,
+    sources: row.sources || [],
+    content: '', // Not fetched for list
+  }))
 }

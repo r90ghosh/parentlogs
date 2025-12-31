@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      articles: {
+        Row: {
+          content: string
+          created_at: string
+          excerpt: string | null
+          id: string
+          is_free: boolean
+          read_time: number
+          reviewed_by: string | null
+          slug: string
+          sources: string[] | null
+          stage: string
+          stage_label: string
+          title: string
+          updated_at: string
+          week: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          is_free?: boolean
+          read_time?: number
+          reviewed_by?: string | null
+          slug: string
+          sources?: string[] | null
+          stage: string
+          stage_label: string
+          title: string
+          updated_at?: string
+          week?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          is_free?: boolean
+          read_time?: number
+          reviewed_by?: string | null
+          slug?: string
+          sources?: string[] | null
+          stage?: string
+          stage_label?: string
+          title?: string
+          updated_at?: string
+          week?: number | null
+        }
+        Relationships: []
+      }
       baby_logs: {
         Row: {
           created_at: string | null
@@ -746,6 +797,54 @@ export type Database = {
         }
         Relationships: []
       }
+      videos: {
+        Row: {
+          created_at: string
+          description: string | null
+          duration: number | null
+          id: string
+          slug: string
+          source: string
+          stage: string
+          stage_label: string
+          thumbnail: string | null
+          title: string
+          updated_at: string
+          url: string
+          youtube_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          duration?: number | null
+          id?: string
+          slug: string
+          source: string
+          stage: string
+          stage_label: string
+          thumbnail?: string | null
+          title: string
+          updated_at?: string
+          url: string
+          youtube_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          duration?: number | null
+          id?: string
+          slug?: string
+          source?: string
+          stage?: string
+          stage_label?: string
+          thumbnail?: string | null
+          title?: string
+          updated_at?: string
+          url?: string
+          youtube_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -775,7 +874,7 @@ export type Database = {
       get_shift_briefing: { Args: { p_family_id: string }; Returns: Json }
       get_user_family_id: { Args: { user_uuid: string }; Returns: string }
       is_family_member: { Args: { family_uuid: string }; Returns: boolean }
-      is_premium_user: { Args: Record<PropertyKey, never>; Returns: boolean }
+      is_premium_user: { Args: never; Returns: boolean }
       regenerate_invite_code: { Args: { p_family_id: string }; Returns: string }
     }
     Enums: {

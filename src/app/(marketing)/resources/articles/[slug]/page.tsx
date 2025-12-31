@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Clock, BookOpen, CheckCircle, ArrowRight } from 'lucide-react'
-import { getArticleBySlug, getRelatedArticles, getArticles } from '@/lib/content'
+import { getArticleBySlug, getRelatedArticles } from '@/lib/content'
 import { ArticleContent } from '@/components/marketing/ArticleContent'
 import { PaywallGate } from '@/components/marketing/PaywallGate'
 import { RelatedContent } from '@/components/marketing/RelatedContent'
@@ -13,13 +13,9 @@ interface PageProps {
   }>
 }
 
-// Generate static paths for all articles
-export async function generateStaticParams() {
-  const articles = await getArticles()
-  return articles.map((article) => ({
-    slug: article.slug,
-  }))
-}
+// Dynamic rendering - articles are fetched on each request
+// This enables real-time content updates without redeploy
+export const dynamic = 'force-dynamic'
 
 // Generate metadata for each article
 export async function generateMetadata({ params }: PageProps) {
