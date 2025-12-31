@@ -1,5 +1,15 @@
 import { redirect } from 'next/navigation'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { Hero } from '@/components/marketing/Hero'
+import { ProblemSolution } from '@/components/marketing/ProblemSolution'
+import { Features } from '@/components/marketing/Features'
+import { ContentPreview } from '@/components/marketing/ContentPreview'
+import { HowItWorks } from '@/components/marketing/HowItWorks'
+import { Testimonials } from '@/components/marketing/Testimonials'
+import { Pricing } from '@/components/marketing/Pricing'
+import { FinalCTA } from '@/components/marketing/FinalCTA'
+import { Header } from '@/components/marketing/Header'
+import { Footer } from '@/components/marketing/Footer'
 
 export default async function Home() {
   const supabase = await createServerSupabaseClient()
@@ -20,6 +30,21 @@ export default async function Home() {
     }
   }
 
-  // Not logged in - show landing page or redirect to login
-  redirect('/login')
+  // Not logged in - show landing page
+  return (
+    <div className="min-h-screen flex flex-col bg-slate-950">
+      <Header />
+      <main className="flex-1">
+        <Hero />
+        <ProblemSolution />
+        <Features />
+        <ContentPreview />
+        <HowItWorks />
+        <Testimonials />
+        <Pricing />
+        <FinalCTA />
+      </main>
+      <Footer />
+    </div>
+  )
 }
