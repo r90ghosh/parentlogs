@@ -21,15 +21,17 @@ export interface TimelineCategoryInfo {
 }
 
 export const TIMELINE_CATEGORIES: TimelineCategoryInfo[] = [
-  { id: 'first-trimester', label: 'T1', color: '#9b6b80', bgColor: 'bg-rose-950/60' },
-  { id: 'second-trimester', label: 'T2', color: '#8b5a6a', bgColor: 'bg-rose-900/60' },
-  { id: 'third-trimester', label: 'T3', color: '#7d4a5a', bgColor: 'bg-rose-800/60' },
-  { id: 'delivery', label: 'Delivery', color: '#8b4d5c', bgColor: 'bg-rose-700/60' },
-  { id: '0-3 months', label: '0-3 mo', color: '#6b5270', bgColor: 'bg-fuchsia-900/50' },
-  { id: '3-6 months', label: '3-6 mo', color: '#5c5680', bgColor: 'bg-violet-900/50' },
-  { id: '6-12 months', label: '6-12 mo', color: '#4d5a87', bgColor: 'bg-indigo-900/50' },
-  { id: '12-18 months', label: '12-18 mo', color: '#4a6085', bgColor: 'bg-blue-900/50' },
-  { id: '18-24 months', label: '18-24 mo', color: '#4b6580', bgColor: 'bg-slate-700/60' },
+  // Pregnancy phases - warm rose/blush tones (subtle gradient from light to deeper)
+  { id: 'first-trimester', label: 'Trimester 1', color: 'rgba(244, 163, 177, 0.35)', bgColor: 'bg-rose-400/20' },
+  { id: 'second-trimester', label: 'Trimester 2', color: 'rgba(236, 132, 155, 0.4)', bgColor: 'bg-rose-400/25' },
+  { id: 'third-trimester', label: 'Trimester 3', color: 'rgba(219, 112, 147, 0.45)', bgColor: 'bg-rose-500/30' },
+  { id: 'delivery', label: 'Delivery', color: 'rgba(199, 95, 138, 0.5)', bgColor: 'bg-pink-500/35' },
+  // Post-birth phases - cool violet/indigo tones (elegant transition)
+  { id: '0-3 months', label: '0-3 mo', color: 'rgba(167, 139, 250, 0.4)', bgColor: 'bg-violet-400/25' },
+  { id: '3-6 months', label: '3-6 mo', color: 'rgba(139, 128, 245, 0.42)', bgColor: 'bg-indigo-400/28' },
+  { id: '6-12 months', label: '6-12 mo', color: 'rgba(115, 137, 245, 0.44)', bgColor: 'bg-indigo-400/30' },
+  { id: '12-18 months', label: '12-18 mo', color: 'rgba(99, 149, 238, 0.46)', bgColor: 'bg-blue-400/32' },
+  { id: '18-24 months', label: '18-24 mo', color: 'rgba(96, 165, 230, 0.48)', bgColor: 'bg-sky-400/35' },
 ]
 
 /**

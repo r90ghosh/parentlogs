@@ -32,19 +32,21 @@ export function TaskTimelineBar({
   return (
     <div className="space-y-3">
       {/* Label */}
-      <div className="flex items-center justify-between text-xs text-surface-500">
-        <span>Tasks by Phase</span>
-        <span className="italic">Click to filter</span>
+      <div className="flex items-center justify-between text-xs text-surface-400">
+        <span className="font-medium">Tasks by Phase</span>
+        <span className="italic text-surface-500">Click to filter</span>
       </div>
 
-      {/* Timeline Bar */}
+      {/* Timeline Bar - Glassmorphism container */}
       <div className="relative">
-        <div className="flex h-12 rounded-lg overflow-hidden border border-surface-700">
-          {TIMELINE_CATEGORIES.map((category) => {
+        <div className="flex h-14 rounded-xl overflow-hidden backdrop-blur-md bg-white/[0.03] border border-white/10 shadow-lg shadow-black/20">
+          {TIMELINE_CATEGORIES.map((category, index) => {
             const stat = stats[category.id]
             const isSelected = selectedCategory === category.id
             const isCurrent = currentCategory === category.id
             const hasNoTasks = stat.total === 0
+            const isFirst = index === 0
+            const isLast = index === TIMELINE_CATEGORIES.length - 1
 
             return (
               <button
@@ -56,25 +58,29 @@ export function TaskTimelineBar({
                 }}
                 disabled={hasNoTasks}
                 className={cn(
-                  "relative flex-1 flex flex-col items-center justify-center transition-all border-r border-surface-700/50 last:border-r-0",
-                  hasNoTasks ? "cursor-default" : "hover:brightness-110 cursor-pointer",
-                  isSelected && "ring-2 ring-white ring-inset z-10",
-                  isCurrent && !isSelected && "ring-2 ring-accent-400 ring-inset"
+                  "relative flex-1 flex flex-col items-center justify-center transition-all duration-200",
+                  "border-r border-white/[0.06] last:border-r-0",
+                  "backdrop-blur-sm",
+                  hasNoTasks ? "cursor-default opacity-60" : "hover:bg-white/[0.08] cursor-pointer",
+                  isSelected && "ring-1 ring-white/60 ring-inset z-10 bg-white/[0.12]",
+                  isCurrent && !isSelected && "ring-1 ring-accent-400/50 ring-inset",
+                  isFirst && "rounded-l-xl",
+                  isLast && "rounded-r-xl"
                 )}
                 style={{
-                  backgroundColor: hasNoTasks ? `${category.color}40` : category.color,
+                  backgroundColor: hasNoTasks ? undefined : category.color,
                 }}
                 title={`${category.label}: ${stat.completed}/${stat.total} tasks completed`}
               >
                 <span className={cn(
-                  "text-sm font-bold drop-shadow-sm",
-                  hasNoTasks ? "text-white/50" : "text-white"
+                  "text-sm font-semibold",
+                  hasNoTasks ? "text-white/40" : "text-white drop-shadow-sm"
                 )}>
                   {stat.total}
                 </span>
                 <span className={cn(
-                  "text-[10px] drop-shadow-sm",
-                  hasNoTasks ? "text-white/40" : "text-white/80"
+                  "text-[10px]",
+                  hasNoTasks ? "text-white/30" : "text-white/70"
                 )}>
                   {stat.completed}/{stat.total}
                 </span>
@@ -91,13 +97,13 @@ export function TaskTimelineBar({
             transform: 'translateX(-50%)',
           }}
         >
-          <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-b-[6px] border-l-transparent border-r-transparent border-b-accent-500" />
-          <span className="text-[10px] text-accent-500 font-medium mt-0.5">NOW</span>
+          <div className="w-0 h-0 border-l-[5px] border-r-[5px] border-b-[5px] border-l-transparent border-r-transparent border-b-accent-400" />
+          <span className="text-[9px] text-accent-400 font-semibold mt-0.5 tracking-wide">NOW</span>
         </div>
       </div>
 
       {/* Legend with labels */}
-      <div className="flex justify-between text-[10px] text-surface-500 px-1 mt-4">
+      <div className="flex justify-between text-[10px] text-surface-500 px-0.5 mt-4">
         {TIMELINE_CATEGORIES.map((category) => {
           const stat = stats[category.id]
           const isSelected = selectedCategory === category.id
@@ -113,10 +119,10 @@ export function TaskTimelineBar({
               }}
               disabled={stat.total === 0}
               className={cn(
-                "flex-1 text-center transition-all py-1 rounded",
-                stat.total > 0 && "hover:bg-surface-800 cursor-pointer",
-                stat.total === 0 && "opacity-50 cursor-default",
-                isSelected && "bg-surface-700 ring-1 ring-white",
+                "flex-1 text-center transition-all py-1 rounded-md",
+                stat.total > 0 && "hover:bg-white/5 cursor-pointer",
+                stat.total === 0 && "opacity-40 cursor-default",
+                isSelected && "bg-white/10 ring-1 ring-white/30 text-white",
                 isCurrent && !isSelected && "text-accent-400"
               )}
             >
@@ -131,7 +137,7 @@ export function TaskTimelineBar({
         <div className="flex items-center justify-center gap-2 text-sm text-surface-400 pt-1">
           <span>Showing:</span>
           <span
-            className="px-2 py-0.5 rounded text-white text-xs font-medium"
+            className="px-3 py-1 rounded-full text-white text-xs font-medium backdrop-blur-sm border border-white/20"
             style={{
               backgroundColor: TIMELINE_CATEGORIES.find(c => c.id === selectedCategory)?.color
             }}
@@ -140,7 +146,7 @@ export function TaskTimelineBar({
           </span>
           <button
             onClick={() => onCategoryClick(null)}
-            className="text-accent-500 hover:text-accent-400 text-xs underline"
+            className="text-accent-400 hover:text-accent-300 text-xs font-medium hover:underline transition-colors"
           >
             Show all
           </button>
@@ -150,7 +156,7 @@ export function TaskTimelineBar({
       {/* Total tasks summary */}
       {!selectedCategory && (
         <div className="text-center text-xs text-surface-500">
-          Total: <span className="text-white font-medium">{totalStats.completed}/{totalStats.total}</span> tasks completed
+          Total: <span className="text-white/90 font-medium">{totalStats.completed}/{totalStats.total}</span> tasks completed
         </div>
       )}
     </div>
