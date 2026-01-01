@@ -878,7 +878,7 @@ export type Database = {
       regenerate_invite_code: { Args: { p_family_id: string }; Returns: string }
     }
     Enums: {
-      family_stage: "pregnancy" | "post-birth"
+      family_stage: "pregnancy" | "first-trimester" | "second-trimester" | "third-trimester" | "post-birth"
       log_type:
         | "feeding"
         | "diaper"
@@ -1023,7 +1023,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      family_stage: ["pregnancy", "post-birth"],
+      family_stage: ["pregnancy", "first-trimester", "second-trimester", "third-trimester", "post-birth"],
       log_type: [
         "feeding",
         "diaper",

@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import Link from 'next/link'
 import { BookOpen, Video, ArrowRight, Sparkles } from 'lucide-react'
 import { getFilteredContent, getStages, getContentCounts } from '@/lib/content'
+import { getServerAuth } from '@/lib/supabase/server-auth'
 import { ContentFilters } from '@/components/marketing/ContentFilters'
 import { ResourceLibrary } from '@/components/marketing/ResourceLibrary'
 import { Button } from '@/components/ui/button'
@@ -60,7 +61,13 @@ async function ResourcesContent({ searchParams }: PageProps) {
 }
 
 export default async function ResourcesPage(props: PageProps) {
-  const counts = await getContentCounts()
+  const [counts, { user, profile }] = await Promise.all([
+    getContentCounts(),
+    getServerAuth(),
+  ])
+
+  const isAuthenticated = !!user
+  const isPremium = profile?.subscription_tier === 'premium' || profile?.subscription_tier === 'lifetime'
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -136,48 +143,54 @@ export default async function ResourcesPage(props: PageProps) {
         <ResourcesContent searchParams={props.searchParams} />
       </Suspense>
 
-      {/* Bottom CTA */}
-      <section className="relative py-20 bg-slate-900">
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900" />
+      {/* Bottom CTA - only show for non-premium users */}
+      {!isPremium && (
+        <section className="relative py-20 bg-slate-900">
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900" />
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="p-8 md:p-12 rounded-2xl bg-gradient-to-br from-amber-500/10 to-slate-900 border border-amber-500/20">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              Unlock All Content
-            </h2>
-            <p className="text-slate-400 mb-8 max-w-xl mx-auto">
-              Get access to all {counts.articles} articles, personalized weekly briefings, task
-              management, budget tracking, and partner sync.
-            </p>
+          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="p-8 md:p-12 rounded-2xl bg-gradient-to-br from-amber-500/10 to-slate-900 border border-amber-500/20">
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                {isAuthenticated ? 'Upgrade to Premium' : 'Unlock All Content'}
+              </h2>
+              <p className="text-slate-400 mb-8 max-w-xl mx-auto">
+                Get access to all {counts.articles} articles, personalized weekly briefings, task
+                management, budget tracking, and partner sync.
+              </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button
-                asChild
-                size="lg"
-                className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold"
-              >
-                <Link href="/signup">
-                  Start Free Trial
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Button
+                  asChild
+                  size="lg"
+                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold"
+                >
+                  <Link href={isAuthenticated ? '/upgrade' : '/signup'}>
+                    {isAuthenticated ? 'Upgrade Now' : 'Start Free Trial'}
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
 
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
-              >
-                <Link href="/#pricing">See Pricing</Link>
-              </Button>
+                {!isAuthenticated && (
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="lg"
+                    className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
+                  >
+                    <Link href="/#pricing">See Pricing</Link>
+                  </Button>
+                )}
+              </div>
+
+              {!isAuthenticated && (
+                <p className="mt-6 text-sm text-slate-500">
+                  14-day free trial. No credit card required.
+                </p>
+              )}
             </div>
-
-            <p className="mt-6 text-sm text-slate-500">
-              14-day free trial. No credit card required.
-            </p>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   )
 }

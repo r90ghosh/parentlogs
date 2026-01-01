@@ -151,3 +151,32 @@ export function useCompleteOnboarding() {
     },
   })
 }
+
+/**
+ * Get the current user's profile
+ * Fetches the authenticated user and their profile data
+ */
+export function useCurrentProfile() {
+  const supabase = createClient()
+
+  return useQuery({
+    queryKey: ['current-profile'],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return null
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single()
+
+      if (error) {
+        console.error('[useCurrentProfile] Error fetching profile:', error.message)
+        return null
+      }
+      return data as AppUser
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}

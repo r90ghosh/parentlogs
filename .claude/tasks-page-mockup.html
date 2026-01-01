@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParentLogs - Tasks with Smart Catch-Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0a0f;
+      color: #e4e4e7;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: linear-gradient(180deg, #111118 0%, #0d0d12 100%);
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 12px;
+      margin-bottom: 32px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .logo-text {
+      font-weight: 700;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .week-badge {
+      background: rgba(20, 184, 166, 0.15);
+      color: #14b8a6;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: #a1a1aa;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: 4px;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.04);
+      color: #e4e4e7;
+    }
+
+    .nav-item.active {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+
+    .nav-item .icon {
+      font-size: 18px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .nav-item .badge {
+      margin-left: auto;
+      background: #f59e0b;
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 240px;
+      min-height: 100vh;
+      padding: 32px 40px;
+    }
+
+    /* Header */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .header-left h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .header-subtitle {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: #71717a;
+      font-size: 14px;
+    }
+
+    .header-subtitle .divider {
+      width: 4px;
+      height: 4px;
+      background: #3f3f46;
+      border-radius: 50%;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      color: #e4e4e7;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+
+    /* Catch-Up Banner */
+    .catchup-banner {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .catchup-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .catchup-content {
+      flex: 1;
+    }
+
+    .catchup-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .catchup-description {
+      font-size: 14px;
+      color: #a1a1aa;
+      line-height: 1.5;
+    }
+
+    .catchup-progress {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .catchup-stats {
+      text-align: center;
+    }
+
+    .catchup-stats-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .catchup-stats-label {
+      font-size: 12px;
+      color: #a1a1aa;
+    }
+
+    .catchup-bar {
+      width: 120px;
+    }
+
+    .catchup-bar-bg {
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .catchup-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .catchup-bar-label {
+      font-size: 11px;
+      color: #71717a;
+      text-align: center;
+    }
+
+    .catchup-action {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s ease;
+    }
+
+    .catchup-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #18181b 0%, #1f1f26 100%);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .stat-card:hover {
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    .stat-card.active {
+      border-color: rgba(245, 158, 11, 0.5);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(234, 88, 12, 0.05) 100%);
+    }
+
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .stat-icon.focus { background: rgba(245, 158, 11, 0.15); }
+    .stat-icon.today { background: rgba(239, 68, 68, 0.15); }
+    .stat-icon.week { background: rgba(59, 130, 246, 0.15); }
+    .stat-icon.completed { background: rgba(34, 197, 94, 0.15); }
+    .stat-icon.partner { background: rgba(168, 85, 247, 0.15); }
+
+    .stat-info {
+      flex: 1;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .stat-value.warning { color: #f59e0b; }
+    .stat-value.danger { color: #ef4444; }
+    .stat-value.success { color: #22c55e; }
+
+    .stat-label {
+      font-size: 12px;
+      color: #71717a;
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .filter-tabs {
+      display: flex;
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px;
+      padding: 4px;
+    }
+
+    .filter-tab {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #71717a;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .filter-tab:hover {
+      color: #a1a1aa;
+    }
+
+    .filter-tab.active {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+
+    .filter-divider {
+      width: 1px;
+      height: 32px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .category-filters {
+      display: flex;
+      gap: 8px;
+    }
+
+    .category-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+    }
+
+    .category-chip.all {
+      background: rgba(255,255,255,0.08);
+      color: #e4e4e7;
+    }
+
+    .category-chip.medical {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .category-chip.shopping {
+      background: rgba(59, 130, 246, 0.1);
+      color: #3b82f6;
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .category-chip.planning {
+      background: rgba(168, 85, 247, 0.1);
+      color: #a855f7;
+      border-color: rgba(168, 85, 247, 0.2);
+    }
+
+    .category-chip.financial {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+      border-color: rgba(34, 197, 94, 0.2);
+    }
+
+    .search-box {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+
+    .search-box input {
+      background: none;
+      border: none;
+      color: #e4e4e7;
+      font-size: 13px;
+      width: 180px;
+      outline: none;
+    }
+
+    .search-box input::placeholder {
+      color: #52525b;
+    }
+
+    /* Content Layout */
+    .content-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+    }
+
+    /* Task Lists */
+    .task-sections {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .task-section {
+      background: linear-gradient(135deg, #18181b 0%, #1f1f26 100%);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .task-section.catchup {
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .section-header.catchup {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .section-count {
+      font-size: 12px;
+      color: #71717a;
+      background: rgba(255,255,255,0.06);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .section-subtitle {
+      font-size: 12px;
+      color: #71717a;
+      margin-left: 28px;
+      margin-top: 4px;
+    }
+
+    .section-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .section-action {
+      font-size: 12px;
+      color: #71717a;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .section-action:hover {
+      background: rgba(255,255,255,0.08);
+      color: #a1a1aa;
+    }
+
+    .section-action.primary {
+      background: rgba(99, 102, 241, 0.15);
+      color: #818cf8;
+    }
+
+    .section-action.primary:hover {
+      background: rgba(99, 102, 241, 0.25);
+    }
+
+    .section-action.success {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+    }
+
+    /* Task Items */
+    .task-list {
+      padding: 8px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .task-item:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .task-item.highlight {
+      background: rgba(245, 158, 11, 0.05);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .task-checkbox {
+      width: 22px;
+      height: 22px;
+      border: 2px solid #52525b;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .task-checkbox:hover {
+      border-color: #22c55e;
+      background: rgba(34, 197, 94, 0.1);
+    }
+
+    .task-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .task-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    .task-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #e4e4e7;
+    }
+
+    .task-badges {
+      display: flex;
+      gap: 6px;
+    }
+
+    .task-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .task-badge.must-do {
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+
+    .task-badge.nice-to-have {
+      background: rgba(59, 130, 246, 0.15);
+      color: #3b82f6;
+    }
+
+    .task-badge.time-sensitive {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+    }
+
+    .task-badge.expired {
+      background: rgba(113, 113, 122, 0.15);
+      color: #a1a1aa;
+    }
+
+    .task-badge.still-relevant {
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+    }
+
+    .task-description {
+      font-size: 13px;
+      color: #71717a;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .task-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .task-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #52525b;
+    }
+
+    .task-meta-item .icon {
+      font-size: 14px;
+    }
+
+    .category-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .category-tag.medical {
+      background: rgba(239, 68, 68, 0.1);
+      color: #f87171;
+    }
+
+    .category-tag.shopping {
+      background: rgba(59, 130, 246, 0.1);
+      color: #60a5fa;
+    }
+
+    .category-tag.planning {
+      background: rgba(168, 85, 247, 0.1);
+      color: #c084fc;
+    }
+
+    .category-tag.financial {
+      background: rgba(34, 197, 94, 0.1);
+      color: #4ade80;
+    }
+
+    .task-assignee {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .assignee-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .assignee-avatar.you {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    }
+
+    .assignee-avatar.partner {
+      background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+    }
+
+    .assignee-avatar.both {
+      background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+    }
+
+    /* Quick Triage Actions */
+    .task-quick-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .quick-action-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .quick-action-btn.done {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+    }
+
+    .quick-action-btn.done:hover {
+      background: rgba(34, 197, 94, 0.25);
+    }
+
+    .quick-action-btn.add {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+    }
+
+    .quick-action-btn.add:hover {
+      background: rgba(59, 130, 246, 0.25);
+    }
+
+    .quick-action-btn.skip {
+      background: rgba(255,255,255,0.06);
+      color: #71717a;
+    }
+
+    .quick-action-btn.skip:hover {
+      background: rgba(255,255,255,0.1);
+      color: #a1a1aa;
+    }
+
+    /* Expired Task Style */
+    .task-item.expired {
+      opacity: 0.6;
+    }
+
+    .task-item.expired .task-title {
+      color: #71717a;
+    }
+
+    /* Right Panel */
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Focus Card */
+    .focus-card {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(234, 88, 12, 0.05) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .focus-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .focus-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #f59e0b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .focus-time {
+      font-size: 12px;
+      color: #71717a;
+    }
+
+    .focus-task-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .focus-task-desc {
+      font-size: 14px;
+      color: #a1a1aa;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .focus-why {
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+    }
+
+    .focus-why-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #f59e0b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .focus-why-text {
+      font-size: 13px;
+      color: #a1a1aa;
+      line-height: 1.5;
+    }
+
+    .focus-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .focus-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: none;
+    }
+
+    .focus-btn.done {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      color: white;
+    }
+
+    .focus-btn.done:hover {
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    }
+
+    .focus-btn.snooze {
+      background: rgba(255,255,255,0.06);
+      color: #a1a1aa;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .focus-btn.snooze:hover {
+      background: rgba(255,255,255,0.1);
+      color: #e4e4e7;
+    }
+
+    /* Week Summary Card */
+    .week-summary {
+      background: linear-gradient(135deg, #18181b 0%, #1f1f26 100%);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .week-summary-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .week-summary-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .week-summary-nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    .week-nav-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.06);
+      color: #71717a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .week-nav-btn:hover {
+      background: rgba(255,255,255,0.1);
+      color: #a1a1aa;
+    }
+
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .week-day {
+      text-align: center;
+      padding: 8px 4px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .week-day:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .week-day.today {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .week-day.has-tasks {
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .week-day-label {
+      font-size: 10px;
+      color: #52525b;
+      margin-bottom: 4px;
+    }
+
+    .week-day-num {
+      font-size: 14px;
+      font-weight: 600;
+      color: #a1a1aa;
+    }
+
+    .week-day.today .week-day-num {
+      color: #f59e0b;
+    }
+
+    .week-day-tasks {
+      font-size: 10px;
+      color: #52525b;
+      margin-top: 4px;
+    }
+
+    .week-legend {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #52525b;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .legend-dot.today { background: #f59e0b; }
+    .legend-dot.tasks { background: #3b82f6; }
+
+    /* Progress Card */
+    .progress-card {
+      background: linear-gradient(135deg, #18181b 0%, #1f1f26 100%);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .progress-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+
+    .progress-ring-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .progress-ring {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+
+    .progress-ring svg {
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring-bg {
+      fill: none;
+      stroke: rgba(255,255,255,0.1);
+      stroke-width: 8;
+    }
+
+    .progress-ring-fill {
+      fill: none;
+      stroke: url(#progressGradient);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 314;
+      stroke-dashoffset: 220;
+      transition: stroke-dashoffset 0.5s ease;
+    }
+
+    .progress-ring-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .progress-ring-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .progress-ring-label {
+      font-size: 11px;
+      color: #71717a;
+    }
+
+    .progress-details {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .progress-detail {
+      text-align: center;
+    }
+
+    .progress-detail-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .progress-detail-value.success { color: #22c55e; }
+
+    .progress-detail-label {
+      font-size: 11px;
+      color: #52525b;
+    }
+
+    /* Streak Banner */
+    .streak-banner {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(234, 88, 12, 0.1) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .streak-icon {
+      font-size: 28px;
+    }
+
+    .streak-info {
+      flex: 1;
+    }
+
+    .streak-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f59e0b;
+    }
+
+    .streak-label {
+      font-size: 12px;
+      color: #a1a1aa;
+    }
+
+    /* Empty State for Sections */
+    .empty-state {
+      padding: 32px;
+      text-align: center;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .empty-state-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .empty-state-desc {
+      font-size: 13px;
+      color: #71717a;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">👶</div>
+        <span class="logo-text">ParentLogs</span>
+        <span class="week-badge">Week 20</span>
+      </div>
+
+      <nav>
+        <div class="nav-item">
+          <span class="icon">🏠</span>
+          Home
+        </div>
+        <div class="nav-item active">
+          <span class="icon">✅</span>
+          Tasks
+          <span class="badge">8</span>
+        </div>
+        <div class="nav-item">
+          <span class="icon">📅</span>
+          Calendar
+        </div>
+        <div class="nav-item">
+          <span class="icon">⏱️</span>
+          Tracker
+        </div>
+        <div class="nav-item">
+          <span class="icon">📖</span>
+          Briefings
+        </div>
+        <div class="nav-item">
+          <span class="icon">📚</span>
+          Resources
+        </div>
+        <div class="nav-item">
+          <span class="icon">💰</span>
+          Budget
+        </div>
+        <div class="nav-item">
+          <span class="icon">📋</span>
+          Checklists
+        </div>
+        <div class="nav-item">
+          <span class="icon">⚙️</span>
+          Settings
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <div class="page-header">
+        <div class="header-left">
+          <h1>Tasks</h1>
+          <div class="header-subtitle">
+            <span>Week 20 of 40 — Halfway there! 🎉</span>
+            <span class="divider"></span>
+            <span>140 days to go</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary">📅 Calendar</button>
+          <button class="btn btn-primary">+ Add Task</button>
+        </div>
+      </div>
+
+      <!-- Catch-Up Banner (Shows for late signups until backlog is cleared) -->
+      <div class="catchup-banner">
+        <div class="catchup-icon">🚀</div>
+        <div class="catchup-content">
+          <div class="catchup-title">Let's get you caught up!</div>
+          <div class="catchup-description">
+            You joined at Week 20 — we've identified 34 tasks from earlier weeks that may still be relevant. 
+            Take 5 minutes to quickly triage them so we can focus on what matters now.
+          </div>
+        </div>
+        <div class="catchup-progress">
+          <div class="catchup-stats">
+            <div class="catchup-stats-value">34</div>
+            <div class="catchup-stats-label">to review</div>
+          </div>
+          <div class="catchup-bar">
+            <div class="catchup-bar-bg">
+              <div class="catchup-bar-fill" style="width: 25%;"></div>
+            </div>
+            <div class="catchup-bar-label">25% done</div>
+          </div>
+        </div>
+        <button class="catchup-action">Continue Triage →</button>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-card active">
+          <div class="stat-icon focus">🎯</div>
+          <div class="stat-info">
+            <div class="stat-value warning">3</div>
+            <div class="stat-label">Due Today</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon week">📅</div>
+          <div class="stat-info">
+            <div class="stat-value">8</div>
+            <div class="stat-label">This Week</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon completed">✅</div>
+          <div class="stat-info">
+            <div class="stat-value success">12</div>
+            <div class="stat-label">Completed</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon partner">👥</div>
+          <div class="stat-info">
+            <div class="stat-value">5</div>
+            <div class="stat-label">Partner's</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(99, 102, 241, 0.15);">📥</div>
+          <div class="stat-info">
+            <div class="stat-value" style="color: #818cf8;">34</div>
+            <div class="stat-label">Catch-Up Queue</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="filter-tabs">
+          <div class="filter-tab active">Active</div>
+          <div class="filter-tab">Catch-Up</div>
+          <div class="filter-tab">My Tasks</div>
+          <div class="filter-tab">Partner's</div>
+          <div class="filter-tab">Completed</div>
+        </div>
+
+        <div class="filter-divider"></div>
+
+        <div class="category-filters">
+          <div class="category-chip all">All</div>
+          <div class="category-chip medical">🏥 Medical</div>
+          <div class="category-chip shopping">🛒 Shopping</div>
+          <div class="category-chip planning">📋 Planning</div>
+          <div class="category-chip financial">💰 Financial</div>
+        </div>
+
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" placeholder="Search tasks...">
+        </div>
+      </div>
+
+      <!-- Content Layout -->
+      <div class="content-layout">
+        <!-- Task Lists -->
+        <div class="task-sections">
+          
+          <!-- Catch-Up Section (Tasks from before signup) -->
+          <div class="task-section catchup">
+            <div class="section-header catchup">
+              <div class="section-title">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <span>📥</span>
+                    <h3>Catch-Up Queue</h3>
+                    <span class="section-count">34 tasks</span>
+                  </div>
+                  <div class="section-subtitle">Tasks from Weeks 1-19 • Review and triage quickly</div>
+                </div>
+              </div>
+              <div class="section-actions">
+                <span class="section-action success">✓ Mark All Done</span>
+                <span class="section-action">Skip All</span>
+                <span class="section-action primary">Quick Triage Mode</span>
+              </div>
+            </div>
+            <div class="task-list">
+              <!-- Expired Task (Time-sensitive, window passed) -->
+              <div class="task-item expired">
+                <div class="task-content">
+                  <div class="task-header">
+                    <span class="task-title">Schedule 12-week OB appointment</span>
+                    <div class="task-badges">
+                      <span class="task-badge expired">Window Passed</span>
+                    </div>
+                  </div>
+                  <div class="task-description">This was a time-sensitive task for Week 10-12. The window has passed.</div>
+                  <div class="task-meta">
+                    <span class="category-tag medical">🏥 Medical</span>
+                    <div class="task-meta-item">
+                      <span class="icon">📅</span>
+                      <span>Was due Week 11</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="task-quick-actions">
+                  <button class="quick-action-btn done">✓ Already did</button>
+                  <button class="quick-action-btn skip">Skip</button>
+                </div>
+              </div>
+
+              <!-- Still Relevant Task -->
+              <div class="task-item">
+                <div class="task-content">
+                  <div class="task-header">
+                    <span class="task-title">Research pediatricians in your area</span>
+                    <div class="task-badges">
+                      <span class="task-badge still-relevant">Still Relevant</span>
+                    </div>
+                  </div>
+                  <div class="task-description">Interview at least 3 pediatricians before baby arrives. You still have time for this!</div>
+                  <div class="task-meta">
+                    <span class="category-tag planning">📋 Planning</span>
+                    <div class="task-meta-item">
+                      <span class="icon">📅</span>
+                      <span>Originally Week 14</span>
+                    </div>
+                    <div class="task-meta-item">
+                      <span class="icon">⏱️</span>
+                      <span>2 hours</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="task-quick-actions">
+                  <button class="quick-action-btn done">✓ Already did</button>
+                  <button class="quick-action-btn add">+ Add to list</button>
+                  <button class="quick-action-btn skip">Skip</button>
+                </div>
+              </div>
+
+              <!-- Common Task - Probably Done -->
+              <div class="task-item">
+                <div class="task-content">
+                  <div class="task-header">
+                    <span class="task-title">Start taking prenatal vitamins</span>
+                    <div class="task-badges">
+                      <span class="task-badge" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;">Probably Done?</span>
+                    </div>
+                  </div>
+                  <div class="task-description">Most people do this early. Just confirming you've got this covered!</div>
+                  <div class="task-meta">
+                    <span class="category-tag medical">🏥 Medical</span>
+                    <div class="task-meta-item">
+                      <span class="icon">📅</span>
+                      <span>Originally Week 4</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="task-quick-actions">
+                  <button class="quick-action-btn done">✓ Yes, done</button>
+                  <button class="quick-action-btn add">+ Need to do</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- This Week Section -->
+          <div class="task-section">
+            <div class="section-header">
+              <div class="section-title">
+                <span>📅</span>
+                <h3>This Week</h3>
+                <span class="section-count">8 tasks</span>
+              </div>
+              <div class="section-actions">
+                <span class="section-action">Sort by priority</span>
+              </div>
+            </div>
+            <div class="task-list">
+              <div class="task-item highlight">
+                <div class="task-checkbox"></div>
+                <div class="task-content">
+                  <div class="task-header">
+                    <span class="task-title">Schedule anatomy scan (20-week ultrasound)</span>
+                    <div class="task-badges">
+                      <span class="task-badge must-do">Must Do</span>
+                      <span class="task-badge time-sensitive">Time Sensitive</span>
+                    </div>
+                  </div>
+                  <div class="task-description">This is the big one! Book the detailed ultrasound between weeks 18-22. Most clinics need 2+ weeks notice.</div>
+                  <div class="task-meta">
+                    <span class="category-tag medical">🏥 Medical</span>
+                    <div class="task-meta-item">
+                      <span class="icon">⏱️</span>
+                      <span>15 min</span>
+                    </div>
+                    <div class="task-meta-item">
+                      <span class="icon">📅</span>
+                      <span>Due today</span>
+                    </div>
+                    <div class="task-assignee">
+                      <div class="assignee-avatar both">B</div>
+                      <span>Both</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="task-item">
+                <div class="task-checkbox"></div>
+                <div class="task-content">
+                  <div class="task-header">
+                    <span class="task-title">Start baby registry research</span>
+                    <div class="task-badges">
+                      <span class="task-badge nice-to-have">Nice to Have</span>
+                    </div>
+                  </div>
+                  <div class="task-description">Compare Amazon, Target, and BuyBuyBaby registries. Look at completion discounts and return policies.</div>
+                  <div class="task-meta">
+                    <span class="category-tag shopping">🛒 Shopping</span>
+                    <div class="task-meta-item">
+                      <span class="icon">⏱️</span>
+                      <span>1 hour</span>
+                    </div>
+                    <div class="task-meta-item">
+                      <span class="icon">📅</span>
+                      <span>Due Fri</span>
+                    </div>
+                    <div class="task-assignee">
+                      <div class="assignee-avatar you">A</div>
+                      <span>You</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="task-item">
+                <div class="task-checkbox"></div>
+                <div class="task-content">
+                  <div class="task-header">
+                    <span class="task-title">Discuss baby names with partner</span>
+                    <div class="task-badges">
+                      <span class="task-badge nice-to-have">Nice to Have</span>
+                    </div>
+                  </div>
+                  <div class="task-description">Now that you might learn the sex soon, start the name conversation. Create a shared list.</div>
+                  <div class="task-meta">
+                    <span class="category-tag" style="background: rgba(236, 72, 153, 0.1); color: #f472b6;">💬 Partner</span>
+                    <div class="task-meta-item">
+                      <span class="icon">⏱️</span>
+                      <span>Ongoing</span>
+                    </div>
+                    <div class="task-meta-item">
+                      <span class="icon">📅</span>
+                      <span>Due Sun</span>
+                    </div>
+                    <div class="task-assignee">
+                      <div class="assignee-avatar both">B</div>
+                      <span>Both</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coming Up -->
+          <div class="task-section">
+            <div class="section-header">
+              <div class="section-title">
+                <span>🔮</span>
+                <h3>Coming Up</h3>
+                <span class="section-count">Week 21-24</span>
+              </div>
+              <div class="section-actions">
+                <span class="section-action">View all 47 →</span>
+              </div>
+            </div>
+            <div class="task-list">
+              <div class="task-item" style="opacity: 0.7;">
+                <div class="task-checkbox" style="opacity: 0.5;"></div>
+                <div class="task-content">
+                  <div class="task-header">
+                    <span class="task-title">Start interviewing pediatricians</span>
+                  </div>
+                  <div class="task-meta">
+                    <span class="category-tag planning">📋 Planning</span>
+                    <div class="task-meta-item">
+                      <span class="icon">📅</span>
+                      <span>Week 22</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="task-item" style="opacity: 0.7;">
+                <div class="task-checkbox" style="opacity: 0.5;"></div>
+                <div class="task-content">
+                  <div class="task-header">
+                    <span class="task-title">Research childbirth classes</span>
+                  </div>
+                  <div class="task-meta">
+                    <span class="category-tag planning">📋 Planning</span>
+                    <div class="task-meta-item">
+                      <span class="icon">📅</span>
+                      <span>Week 24</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+          <!-- Today's Focus -->
+          <div class="focus-card">
+            <div class="focus-header">
+              <div class="focus-label">
+                <span>🎯</span>
+                Today's Focus
+              </div>
+              <div class="focus-time">⏱️ ~15 min</div>
+            </div>
+            <h3 class="focus-task-title">Schedule anatomy scan</h3>
+            <p class="focus-task-desc">Book the 20-week detailed ultrasound. This is when you can learn the baby's sex if you want!</p>
+            <div class="focus-why">
+              <div class="focus-why-label">💡 Why now?</div>
+              <div class="focus-why-text">The anatomy scan window is weeks 18-22. At week 20, you're right in the sweet spot. Most clinics book 2+ weeks out, so don't wait.</div>
+            </div>
+            <div class="focus-actions">
+              <button class="focus-btn done">✓ Done</button>
+              <button class="focus-btn snooze">→ Tomorrow</button>
+            </div>
+          </div>
+
+          <!-- Week Calendar -->
+          <div class="week-summary">
+            <div class="week-summary-header">
+              <div class="week-summary-title">📅 This Week</div>
+              <div class="week-summary-nav">
+                <div class="week-nav-btn">←</div>
+                <div class="week-nav-btn">→</div>
+              </div>
+            </div>
+            <div class="week-grid">
+              <div class="week-day">
+                <div class="week-day-label">Mon</div>
+                <div class="week-day-num">30</div>
+                <div class="week-day-tasks">1</div>
+              </div>
+              <div class="week-day">
+                <div class="week-day-label">Tue</div>
+                <div class="week-day-num">31</div>
+                <div class="week-day-tasks">0</div>
+              </div>
+              <div class="week-day today has-tasks">
+                <div class="week-day-label">Wed</div>
+                <div class="week-day-num">1</div>
+                <div class="week-day-tasks">3</div>
+              </div>
+              <div class="week-day">
+                <div class="week-day-label">Thu</div>
+                <div class="week-day-num">2</div>
+                <div class="week-day-tasks">1</div>
+              </div>
+              <div class="week-day has-tasks">
+                <div class="week-day-label">Fri</div>
+                <div class="week-day-num">3</div>
+                <div class="week-day-tasks">2</div>
+              </div>
+              <div class="week-day">
+                <div class="week-day-label">Sat</div>
+                <div class="week-day-num">4</div>
+                <div class="week-day-tasks">0</div>
+              </div>
+              <div class="week-day has-tasks">
+                <div class="week-day-label">Sun</div>
+                <div class="week-day-num">5</div>
+                <div class="week-day-tasks">1</div>
+              </div>
+            </div>
+            <div class="week-legend">
+              <div class="legend-item">
+                <div class="legend-dot today"></div>
+                <span>Today</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot tasks"></div>
+                <span>Has tasks</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress -->
+          <div class="progress-card">
+            <div class="progress-title">📊 Your Progress</div>
+            <div class="progress-ring-container">
+              <div class="progress-ring">
+                <svg width="120" height="120" viewBox="0 0 120 120">
+                  <defs>
+                    <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#22c55e"/>
+                      <stop offset="100%" stop-color="#14b8a6"/>
+                    </linearGradient>
+                  </defs>
+                  <circle class="progress-ring-bg" cx="60" cy="60" r="50"/>
+                  <circle class="progress-ring-fill" cx="60" cy="60" r="50"/>
+                </svg>
+                <div class="progress-ring-center">
+                  <div class="progress-ring-value">30%</div>
+                  <div class="progress-ring-label">complete</div>
+                </div>
+              </div>
+            </div>
+            <div class="progress-details">
+              <div class="progress-detail">
+                <div class="progress-detail-value success">12</div>
+                <div class="progress-detail-label">Done</div>
+              </div>
+              <div class="progress-detail">
+                <div class="progress-detail-value">28</div>
+                <div class="progress-detail-label">Active</div>
+              </div>
+              <div class="progress-detail">
+                <div class="progress-detail-value" style="color: #818cf8;">34</div>
+                <div class="progress-detail-label">To Triage</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Streak -->
+          <div class="streak-banner">
+            <div class="streak-icon">🔥</div>
+            <div class="streak-info">
+              <div class="streak-value">3 Day Streak!</div>
+              <div class="streak-label">Complete 1 task daily to keep it going</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

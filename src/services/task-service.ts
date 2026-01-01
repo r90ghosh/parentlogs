@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/client'
-import { FamilyTask, TaskStatus, TaskAssignee } from '@/types'
+import { FamilyTask, TaskStatus, TaskAssignee, TriageAction } from '@/types'
 
 const supabase = createClient()
 
@@ -10,6 +10,7 @@ export interface TaskFilters {
   search?: string
   limit?: number
   offset?: number
+  includeBacklog?: boolean
 }
 
 export const taskService = {
@@ -198,5 +199,130 @@ export const taskService = {
 
     if (error) return []
     return data as FamilyTask[]
+  },
+
+  /**
+   * Get backlog tasks (tasks from before signup week that need triage)
+   * Note: Requires the catch-up migration to be applied for full functionality
+   */
+  async getBacklogTasks(): Promise<FamilyTask[]> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return []
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('family_id')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile?.family_id) return []
+
+    // Query backlog tasks - fields may not exist until migration is applied
+    const { data, error } = await supabase
+      .from('family_tasks')
+      .select('*')
+      .eq('family_id', profile.family_id)
+      .order('due_date', { ascending: true })
+
+    if (error) return []
+
+    // Filter for backlog tasks (is_backlog = true, backlog_status = 'pending')
+    // If is_backlog field doesn't exist, return empty array
+    const backlogTasks = (data || []).filter((task: Record<string, unknown>) =>
+      task.is_backlog === true && task.backlog_status === 'pending'
+    )
+
+    return backlogTasks as FamilyTask[]
+  },
+
+  /**
+   * Triage a single backlog task
+   */
+  async triageTask(id: string, action: TriageAction): Promise<{ error: Error | null }> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: new Error('Not authenticated') }
+
+    const updates: Record<string, unknown> = {
+      backlog_status: 'triaged',
+      triage_action: action,
+      triage_date: new Date().toISOString()
+    }
+
+    if (action === 'completed') {
+      updates.status = 'completed'
+      updates.completed_at = new Date().toISOString()
+      updates.completed_by = user.id
+    } else if (action === 'added') {
+      updates.is_backlog = false
+    }
+    // 'skipped' just marks as triaged, stays hidden
+
+    const { error } = await supabase
+      .from('family_tasks')
+      .update(updates)
+      .eq('id', id)
+
+    return { error: error as Error | null }
+  },
+
+  /**
+   * Bulk triage multiple tasks with the same action
+   */
+  async bulkTriageTasks(ids: string[], action: TriageAction): Promise<{ error: Error | null }> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: new Error('Not authenticated') }
+
+    const updates: Record<string, unknown> = {
+      backlog_status: 'triaged',
+      triage_action: action,
+      triage_date: new Date().toISOString()
+    }
+
+    if (action === 'completed') {
+      updates.status = 'completed'
+      updates.completed_at = new Date().toISOString()
+      updates.completed_by = user.id
+    } else if (action === 'added') {
+      updates.is_backlog = false
+    }
+
+    const { error } = await supabase
+      .from('family_tasks')
+      .update(updates)
+      .in('id', ids)
+
+    return { error: error as Error | null }
+  },
+
+  /**
+   * Get count of pending backlog tasks
+   * Note: Requires the catch-up migration to be applied for full functionality
+   */
+  async getBacklogCount(): Promise<number> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return 0
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('family_id')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile?.family_id) return 0
+
+    // Get all tasks and count backlog ones
+    const { data, error } = await supabase
+      .from('family_tasks')
+      .select('*')
+      .eq('family_id', profile.family_id)
+
+    if (error) return 0
+
+    // Count backlog tasks - if field doesn't exist, return 0
+    const count = (data || []).filter((task: Record<string, unknown>) =>
+      task.is_backlog === true && task.backlog_status === 'pending'
+    ).length
+
+    return count
   },
 }

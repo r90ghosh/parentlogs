@@ -1,7 +1,10 @@
 import { BudgetTemplate, Family } from '@/types'
+import { isPregnancyStage } from './pregnancy-utils'
 
 export type BudgetTimelineCategory =
-  | 'pregnancy'
+  | 'first-trimester'
+  | 'second-trimester'
+  | 'third-trimester'
   | 'delivery'
   | '0-3 months'
   | '3-6 months'
@@ -16,7 +19,9 @@ export interface BudgetTimelineCategoryInfo {
 }
 
 export const BUDGET_TIMELINE_CATEGORIES: BudgetTimelineCategoryInfo[] = [
-  { id: 'pregnancy', label: 'Pregnancy', color: '#7d5a6a' },
+  { id: 'first-trimester', label: 'T1', color: '#9b6b80' },
+  { id: 'second-trimester', label: 'T2', color: '#8b5a6a' },
+  { id: 'third-trimester', label: 'T3', color: '#7d4a5a' },
   { id: 'delivery', label: 'Delivery', color: '#8b4d5c' },
   { id: '0-3 months', label: '0-3 mo', color: '#6b5270' },
   { id: '3-6 months', label: '3-6 mo', color: '#5c5680' },
@@ -33,10 +38,17 @@ export function getBudgetTimelineCategory(
 ): BudgetTimelineCategory {
   const { stage, week_end } = template
 
-  if (stage === 'pregnancy') {
-    // Pregnancy stage items
-    if (week_end <= 28) return 'pregnancy'
-    return 'delivery' // Week 29-42 is close to delivery
+  if (isPregnancyStage(stage)) {
+    // Handle trimester stages directly
+    if (stage === 'first-trimester') return 'first-trimester'
+    if (stage === 'second-trimester') return 'second-trimester'
+    if (stage === 'third-trimester') return 'third-trimester'
+
+    // Legacy 'pregnancy' stage - determine by week_end
+    if (week_end <= 13) return 'first-trimester'
+    if (week_end <= 27) return 'second-trimester'
+    if (week_end <= 38) return 'third-trimester'
+    return 'delivery' // Week 39-42 is close to delivery
   } else {
     // Post-birth stage items
     if (week_end <= 12) return '0-3 months'
@@ -53,8 +65,20 @@ export function getBudgetTimelineCategory(
 export function getCurrentBudgetCategory(family: Family): BudgetTimelineCategory {
   const { stage, current_week } = family
 
-  if (stage === 'pregnancy') {
-    if (current_week <= 28) return 'pregnancy'
+  if (isPregnancyStage(stage)) {
+    // Handle trimester stages directly
+    if (stage === 'first-trimester') return 'first-trimester'
+    if (stage === 'second-trimester') return 'second-trimester'
+    if (stage === 'third-trimester') {
+      // Check if close to delivery
+      if (current_week >= 39) return 'delivery'
+      return 'third-trimester'
+    }
+
+    // Legacy 'pregnancy' stage - determine by week
+    if (current_week <= 13) return 'first-trimester'
+    if (current_week <= 27) return 'second-trimester'
+    if (current_week <= 38) return 'third-trimester'
     return 'delivery'
   } else {
     if (current_week <= 12) return '0-3 months'
@@ -77,7 +101,9 @@ export function getBudgetStatsByCategory(
   templates: BudgetTemplate[]
 ): Record<BudgetTimelineCategory, BudgetCategoryStats> {
   const stats: Record<BudgetTimelineCategory, BudgetCategoryStats> = {
-    'pregnancy': { itemCount: 0, medianTotal: 0 },
+    'first-trimester': { itemCount: 0, medianTotal: 0 },
+    'second-trimester': { itemCount: 0, medianTotal: 0 },
+    'third-trimester': { itemCount: 0, medianTotal: 0 },
     'delivery': { itemCount: 0, medianTotal: 0 },
     '0-3 months': { itemCount: 0, medianTotal: 0 },
     '3-6 months': { itemCount: 0, medianTotal: 0 },

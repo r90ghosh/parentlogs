@@ -16,27 +16,63 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { BriefingTemplate } from '@/types'
+import { BriefingTemplate, FamilyStage } from '@/types'
+import { isPregnancyStage, getTrimesterLabel, getTrimesterFromWeek } from '@/lib/pregnancy-utils'
 
 export default function BriefingArchivePage() {
   const { data: briefings, isLoading } = useBriefings()
   const { data: family } = useFamily()
 
   const currentWeek = family?.current_week || 0
-  const currentStage = family?.stage || 'pregnancy'
+  const currentStage = family?.stage || 'first-trimester'
 
-  // Group briefings by stage
-  const { pregnancyBriefings, postBirthBriefings } = useMemo(() => {
-    if (!briefings) return { pregnancyBriefings: [], postBirthBriefings: [] }
+  // Determine which tab should be active based on current stage
+  const defaultTab = useMemo(() => {
+    if (!isPregnancyStage(currentStage)) return 'post-birth'
+    if (currentStage === 'first-trimester') return 'first-trimester'
+    if (currentStage === 'second-trimester') return 'second-trimester'
+    if (currentStage === 'third-trimester') return 'third-trimester'
+    // Legacy 'pregnancy' - determine by week
+    return getTrimesterFromWeek(currentWeek)
+  }, [currentStage, currentWeek])
 
-    return {
-      pregnancyBriefings: briefings
-        .filter(b => b.stage === 'pregnancy')
-        .sort((a, b) => a.week - b.week),
-      postBirthBriefings: briefings
-        .filter(b => b.stage === 'post-birth')
-        .sort((a, b) => a.week - b.week),
+  // Group briefings by trimester
+  const groupedBriefings = useMemo(() => {
+    if (!briefings) return {
+      'first-trimester': [],
+      'second-trimester': [],
+      'third-trimester': [],
+      'post-birth': [],
     }
+
+    const groups: Record<string, BriefingTemplate[]> = {
+      'first-trimester': [],
+      'second-trimester': [],
+      'third-trimester': [],
+      'post-birth': [],
+    }
+
+    briefings.forEach(b => {
+      if (b.stage === 'post-birth') {
+        groups['post-birth'].push(b)
+      } else if (isPregnancyStage(b.stage as FamilyStage)) {
+        // Handle both new trimester stages and legacy 'pregnancy' stage
+        if (b.stage === 'first-trimester' || (b.stage === 'pregnancy' && b.week <= 13)) {
+          groups['first-trimester'].push(b)
+        } else if (b.stage === 'second-trimester' || (b.stage === 'pregnancy' && b.week <= 27)) {
+          groups['second-trimester'].push(b)
+        } else {
+          groups['third-trimester'].push(b)
+        }
+      }
+    })
+
+    // Sort each group by week
+    Object.keys(groups).forEach(key => {
+      groups[key].sort((a, b) => a.week - b.week)
+    })
+
+    return groups
   }, [briefings])
 
   if (isLoading) {
@@ -77,7 +113,7 @@ export default function BriefingArchivePage() {
           <span className="text-surface-200">
             You are currently at{' '}
             <strong className="text-accent-400">
-              {currentStage === 'pregnancy' ? 'Pregnancy' : 'Post-Birth'} Week {currentWeek}
+              {getTrimesterLabel(currentStage)} Week {currentWeek}
             </strong>
           </span>
         </CardContent>
@@ -89,28 +125,50 @@ export default function BriefingArchivePage() {
         Only your current week shows full content. Other weeks show a preview.
       </p>
 
-      {/* Tabs for Stage */}
-      <Tabs defaultValue={currentStage} className="w-full">
-        <TabsList className="bg-surface-900 w-full justify-start">
-          <TabsTrigger value="pregnancy" className="flex-1 max-w-[200px]">
-            Pregnancy ({pregnancyBriefings.length})
+      {/* Tabs for Trimester/Stage */}
+      <Tabs defaultValue={defaultTab} className="w-full">
+        <TabsList className="bg-surface-900 w-full justify-start gap-1 p-1">
+          <TabsTrigger value="first-trimester" className="flex-1">
+            T1 ({groupedBriefings['first-trimester'].length})
           </TabsTrigger>
-          <TabsTrigger value="post-birth" className="flex-1 max-w-[200px]">
-            Post-Birth ({postBirthBriefings.length})
+          <TabsTrigger value="second-trimester" className="flex-1">
+            T2 ({groupedBriefings['second-trimester'].length})
+          </TabsTrigger>
+          <TabsTrigger value="third-trimester" className="flex-1">
+            T3 ({groupedBriefings['third-trimester'].length})
+          </TabsTrigger>
+          <TabsTrigger value="post-birth" className="flex-1">
+            Post-Birth ({groupedBriefings['post-birth'].length})
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="pregnancy" className="mt-6">
+        <TabsContent value="first-trimester" className="mt-6">
           <BriefingGrid
-            briefings={pregnancyBriefings}
-            currentWeek={currentStage === 'pregnancy' ? currentWeek : 999}
-            stage="pregnancy"
+            briefings={groupedBriefings['first-trimester']}
+            currentWeek={defaultTab === 'first-trimester' ? currentWeek : 999}
+            stage="first-trimester"
+          />
+        </TabsContent>
+
+        <TabsContent value="second-trimester" className="mt-6">
+          <BriefingGrid
+            briefings={groupedBriefings['second-trimester']}
+            currentWeek={defaultTab === 'second-trimester' ? currentWeek : 999}
+            stage="second-trimester"
+          />
+        </TabsContent>
+
+        <TabsContent value="third-trimester" className="mt-6">
+          <BriefingGrid
+            briefings={groupedBriefings['third-trimester']}
+            currentWeek={defaultTab === 'third-trimester' ? currentWeek : 999}
+            stage="third-trimester"
           />
         </TabsContent>
 
         <TabsContent value="post-birth" className="mt-6">
           <BriefingGrid
-            briefings={postBirthBriefings}
+            briefings={groupedBriefings['post-birth']}
             currentWeek={currentStage === 'post-birth' ? currentWeek : -1}
             stage="post-birth"
           />

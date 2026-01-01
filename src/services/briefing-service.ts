@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
-import { BriefingTemplate } from '@/types'
+import { BriefingTemplate, FamilyStage } from '@/types'
+import { isPregnancyStage } from '@/lib/pregnancy-utils'
 
 const supabase = createClient()
 
@@ -28,7 +29,7 @@ export const briefingService = {
 
     // Build briefing_id based on stage and week
     let briefingId: string
-    if (family.stage === 'pregnancy') {
+    if (isPregnancyStage(family.stage as FamilyStage)) {
       briefingId = `PREG-W${String(currentWeek).padStart(2, '0')}`
     } else {
       // Post-birth: weeks 1-12 use W format, after that use month format
@@ -51,7 +52,8 @@ export const briefingService = {
 
   async getBriefingByWeek(stage: string, week: number): Promise<BriefingTemplate | null> {
     let briefingId: string
-    if (stage === 'pregnancy') {
+    // Check if stage is any pregnancy stage (first/second/third-trimester or legacy 'pregnancy')
+    if (isPregnancyStage(stage as FamilyStage)) {
       briefingId = `PREG-W${String(week).padStart(2, '0')}`
     } else {
       if (week <= 12) {

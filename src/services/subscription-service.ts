@@ -115,9 +115,19 @@ export const subscriptionService = {
   // Create checkout session
   async createCheckoutSession(plan: PricingPlan): Promise<{ url: string | null; error: string | null }> {
     try {
+      // Get the current session to pass the access token
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session?.access_token) {
+        return { url: null, error: 'You must be logged in to purchase a subscription' }
+      }
+
       const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ plan }),
       })
 
@@ -136,9 +146,19 @@ export const subscriptionService = {
   // Create customer portal session
   async createPortalSession(): Promise<{ url: string | null; error: string | null }> {
     try {
+      // Get the current session to pass the access token
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session?.access_token) {
+        return { url: null, error: 'You must be logged in to access the portal' }
+      }
+
       const response = await fetch('/api/stripe/portal', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
       })
 
       const data = await response.json()

@@ -12,12 +12,20 @@ export interface User {
   subscription_tier: SubscriptionTier
   subscription_expires_at?: string
   onboarding_completed?: boolean
+  signup_week?: number
   created_at: string
   updated_at: string
 }
 
 // Family Types
-export type FamilyStage = 'pregnancy' | 'post-birth'
+export type FamilyStage =
+  | 'pregnancy'           // Legacy - kept for backward compatibility
+  | 'first-trimester'
+  | 'second-trimester'
+  | 'third-trimester'
+  | 'post-birth'
+
+export type PregnancyTrimester = 'first-trimester' | 'second-trimester' | 'third-trimester'
 
 export interface Family {
   id: string
@@ -40,18 +48,30 @@ export interface FamilyMember extends User {
 export type TaskStatus = 'pending' | 'completed' | 'skipped' | 'snoozed'
 export type TaskPriority = 'must-do' | 'good-to-do'
 export type TaskAssignee = 'mom' | 'dad' | 'both' | 'either'
+export type TaskCategory = 'medical' | 'shopping' | 'planning' | 'financial' | 'partner' | 'self_care'
+export type BacklogStatus = 'pending' | 'triaged'
+export type TriageAction = 'completed' | 'added' | 'skipped'
+export type BacklogCategory = 'still_relevant' | 'window_passed' | 'probably_done'
 
 export interface TaskTemplate {
   task_id: string
   title: string
   description: string
   stage: FamilyStage
+  week?: number
   due_date_offset_days: number
   default_assignee: TaskAssignee
   category: string
   priority: TaskPriority
   is_premium: boolean
   sort_order: number
+  time_estimate_minutes?: number
+  related_article_slug?: string
+  // Catch-up fields
+  is_time_sensitive?: boolean
+  window_weeks?: number
+  commonly_completed_early?: boolean
+  why_it_matters?: string
 }
 
 export interface FamilyTask {
@@ -61,6 +81,7 @@ export interface FamilyTask {
   title: string
   description: string
   due_date: string
+  week_due?: number
   assigned_to: TaskAssignee
   status: TaskStatus
   priority: TaskPriority
@@ -70,8 +91,28 @@ export interface FamilyTask {
   snoozed_until?: string
   notes?: string
   is_custom: boolean
+  time_estimate_minutes?: number
+  related_article_slug?: string
+  why_it_matters?: string
+  // Catch-up fields
+  is_backlog?: boolean
+  backlog_status?: BacklogStatus
+  triage_action?: TriageAction
+  triage_date?: string
+  // Joined from template (for catch-up logic)
+  is_time_sensitive?: boolean
+  window_weeks?: number
+  commonly_completed_early?: boolean
   created_at: string
   updated_at: string
+}
+
+export interface TaskStats {
+  dueToday: number
+  thisWeek: number
+  completed: number
+  partnerTasks: number
+  catchUpQueue: number
 }
 
 // Briefing Types

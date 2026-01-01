@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Clock, BookOpen, CheckCircle, ArrowRight } from 'lucide-react'
 import { getArticleBySlug, getRelatedArticles } from '@/lib/content'
+import { getServerAuth } from '@/lib/supabase/server-auth'
 import { ArticleContent } from '@/components/marketing/ArticleContent'
 import { PaywallGate } from '@/components/marketing/PaywallGate'
 import { RelatedContent } from '@/components/marketing/RelatedContent'
@@ -73,7 +74,10 @@ const stageColors: Record<string, { bg: string; text: string }> = {
 
 export default async function ArticlePage({ params }: PageProps) {
   const { slug } = await params
-  const article = await getArticleBySlug(slug)
+  const [article, { user, profile }] = await Promise.all([
+    getArticleBySlug(slug),
+    getServerAuth(),
+  ])
 
   if (!article) {
     notFound()
@@ -82,9 +86,12 @@ export default async function ArticlePage({ params }: PageProps) {
   const relatedArticles = await getRelatedArticles(slug, article.stage, 3)
   const colors = stageColors[article.stage] || { bg: 'bg-slate-500/10', text: 'text-slate-400' }
 
-  // For now, show full content for free articles, truncated for locked
-  // In production, you'd check auth state here
-  const isLocked = !article.isFree
+  // Check if user is authenticated and has premium access
+  const isAuthenticated = !!user
+  const isPremium = profile?.subscription_tier === 'premium' || profile?.subscription_tier === 'lifetime'
+
+  // Premium users and free articles get full content
+  const isLocked = !article.isFree && !isPremium
   const displayContent = isLocked ? truncateContent(article.content) : article.content
 
   return (
@@ -146,7 +153,12 @@ export default async function ArticlePage({ params }: PageProps) {
         <ArticleContent content={displayContent} />
 
         {/* Paywall gate for locked articles */}
-        {isLocked && <PaywallGate title={article.title} />}
+        {isLocked && (
+          <PaywallGate
+            title={article.title}
+            isAuthenticated={isAuthenticated}
+          />
+        )}
 
         {/* Sources */}
         {article.sources && article.sources.length > 0 && !isLocked && (
@@ -162,8 +174,8 @@ export default async function ArticlePage({ params }: PageProps) {
           </div>
         )}
 
-        {/* Bottom CTA for free articles */}
-        {!isLocked && (
+        {/* Bottom CTA for free articles - only show for unauthenticated users */}
+        {!isLocked && !isAuthenticated && (
           <div className="mt-12 p-8 rounded-2xl bg-slate-900/50 border border-slate-800 text-center">
             <h3 className="text-xl font-bold text-white mb-3">
               Want personalized weekly briefings?

@@ -29,6 +29,7 @@ import {
   DollarSign,
   ClipboardList,
   Bell,
+  BookOpen,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Logo } from '@/components/ui/logo'
@@ -42,6 +43,7 @@ const mainNavItems = [
 
 const moreNavItems = [
   { href: '/briefing', label: 'Briefings', icon: FileText },
+  { href: '/resources', label: 'Resources', icon: BookOpen },
   { href: '/budget', label: 'Budget', icon: DollarSign },
   { href: '/checklists', label: 'Checklists', icon: ClipboardList },
   { href: '/settings', label: 'Settings', icon: Settings },
