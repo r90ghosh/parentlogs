@@ -153,26 +153,48 @@ export function ContentPreview() {
           })}
         </div>
 
-        {/* Timeline preview */}
-        <div className="relative p-8 rounded-2xl bg-slate-900/50 border border-slate-800 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5" />
-
+        {/* Timeline preview - Glassmorphism */}
+        <div className="relative p-8 rounded-2xl backdrop-blur-md bg-white/[0.02] border border-white/10 overflow-hidden shadow-lg">
           <div className="relative">
-            <h3 className="text-xl font-semibold text-white mb-6">Coverage Timeline</h3>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-semibold text-white">Coverage Timeline</h3>
+              <span className="text-xs text-slate-500 italic">From pregnancy to toddler</span>
+            </div>
 
-            {/* Timeline */}
-            <div className="flex flex-wrap gap-3">
+            {/* Timeline Bar - matches the actual app style */}
+            <div className="flex h-14 rounded-xl overflow-hidden backdrop-blur-md bg-white/[0.03] border border-white/10 mb-6">
               {[
-                { label: 'First Trimester', weeks: 'Weeks 5-13', articles: 9 },
-                { label: 'Second Trimester', weeks: 'Weeks 14-27', articles: 14 },
-                { label: 'Third Trimester', weeks: 'Weeks 28-40', articles: 12 },
-                { label: 'Delivery & Week 1', weeks: 'Birth', articles: 2 },
-                { label: 'Fourth Trimester', weeks: '0-3 months', articles: 4 },
-                { label: 'Months 3-24', weeks: '3-24 months', articles: 6 },
+                { label: 'Trimester 1', color: 'rgba(244, 163, 177, 0.35)', articles: 9 },
+                { label: 'Trimester 2', color: 'rgba(236, 132, 155, 0.4)', articles: 14 },
+                { label: 'Trimester 3', color: 'rgba(219, 112, 147, 0.45)', articles: 12 },
+                { label: 'Delivery', color: 'rgba(199, 95, 138, 0.5)', articles: 2 },
+                { label: '0-3 mo', color: 'rgba(167, 139, 250, 0.4)', articles: 4 },
+                { label: '3-24 mo', color: 'rgba(139, 128, 245, 0.42)', articles: 6 },
               ].map((stage, i) => (
                 <div
                   key={i}
-                  className="flex-1 min-w-[140px] p-4 rounded-xl bg-slate-800/50 border border-slate-700/50"
+                  className="flex-1 flex flex-col items-center justify-center border-r border-white/[0.06] last:border-r-0 transition-all hover:bg-white/[0.05]"
+                  style={{ backgroundColor: stage.color }}
+                >
+                  <span className="text-sm font-semibold text-white drop-shadow-sm">{stage.articles}</span>
+                  <span className="text-[9px] text-white/70">{stage.label}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Stage cards */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+              {[
+                { label: 'First Trimester', weeks: 'Weeks 5-13', articles: 9, color: 'rose' },
+                { label: 'Second Trimester', weeks: 'Weeks 14-27', articles: 14, color: 'rose' },
+                { label: 'Third Trimester', weeks: 'Weeks 28-40', articles: 12, color: 'pink' },
+                { label: 'Delivery', weeks: 'Birth', articles: 2, color: 'pink' },
+                { label: 'Fourth Trimester', weeks: '0-3 months', articles: 4, color: 'violet' },
+                { label: 'Toddler', weeks: '3-24 months', articles: 6, color: 'indigo' },
+              ].map((stage, i) => (
+                <div
+                  key={i}
+                  className="p-4 rounded-xl backdrop-blur-sm bg-white/[0.03] border border-white/[0.08] hover:border-white/20 transition-all"
                 >
                   <p className="text-sm font-medium text-white mb-1">{stage.label}</p>
                   <p className="text-xs text-slate-500 mb-2">{stage.weeks}</p>
