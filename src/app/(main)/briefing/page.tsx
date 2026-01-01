@@ -20,7 +20,6 @@ import {
   BriefingSection,
   HighlightBox,
   QuickStats,
-  RelatedTasks,
   DadFocusList,
 } from '@/components/briefings'
 
@@ -215,7 +214,6 @@ export default function BriefingPage() {
                 dueDate={family?.due_date}
               />
             )}
-            <RelatedTasks linkedTaskIds={displayBriefing.linked_task_ids} />
           </div>
         </div>
 
