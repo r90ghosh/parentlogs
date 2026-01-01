@@ -4,39 +4,53 @@ import { cn } from '@/lib/utils'
 import {
   TIMELINE_CATEGORIES,
   TimelineCategory,
+  TaskCategoryStats,
 } from '@/lib/task-timeline'
 
 interface TaskTimelineBarProps {
-  counts: Record<TimelineCategory, number>
+  stats: Record<TimelineCategory, TaskCategoryStats>
   currentCategory: TimelineCategory
   selectedCategory: TimelineCategory | null
   onCategoryClick: (category: TimelineCategory | null) => void
 }
 
 export function TaskTimelineBar({
-  counts,
+  stats,
   currentCategory,
   selectedCategory,
   onCategoryClick,
 }: TaskTimelineBarProps) {
-  const totalTasks = Object.values(counts).reduce((sum, count) => sum + count, 0)
+  const totalStats = Object.values(stats).reduce(
+    (sum, stat) => ({
+      total: sum.total + stat.total,
+      completed: sum.completed + stat.completed,
+      pending: sum.pending + stat.pending,
+    }),
+    { total: 0, completed: 0, pending: 0 }
+  )
 
   return (
     <div className="space-y-3">
-      {/* Timeline Bar - Shows ALL categories */}
+      {/* Label */}
+      <div className="flex items-center justify-between text-xs text-surface-500">
+        <span>Tasks by Phase</span>
+        <span className="italic">Click to filter</span>
+      </div>
+
+      {/* Timeline Bar */}
       <div className="relative">
-        <div className="flex h-10 rounded-lg overflow-hidden border border-surface-700">
+        <div className="flex h-12 rounded-lg overflow-hidden border border-surface-700">
           {TIMELINE_CATEGORIES.map((category) => {
-            const count = counts[category.id] || 0
+            const stat = stats[category.id]
             const isSelected = selectedCategory === category.id
             const isCurrent = currentCategory === category.id
-            const hasNoTasks = count === 0
+            const hasNoTasks = stat.total === 0
 
             return (
               <button
                 key={category.id}
                 onClick={() => {
-                  if (count > 0) {
+                  if (stat.total > 0) {
                     onCategoryClick(isSelected ? null : category.id)
                   }
                 }}
@@ -50,20 +64,26 @@ export function TaskTimelineBar({
                 style={{
                   backgroundColor: hasNoTasks ? `${category.color}40` : category.color,
                 }}
-                title={`${category.label}: ${count} tasks`}
+                title={`${category.label}: ${stat.completed}/${stat.total} tasks completed`}
               >
                 <span className={cn(
-                  "text-xs font-bold drop-shadow-sm",
+                  "text-sm font-bold drop-shadow-sm",
                   hasNoTasks ? "text-white/50" : "text-white"
                 )}>
-                  {count}
+                  {stat.total}
+                </span>
+                <span className={cn(
+                  "text-[10px] drop-shadow-sm",
+                  hasNoTasks ? "text-white/40" : "text-white/80"
+                )}>
+                  {stat.completed}/{stat.total}
                 </span>
               </button>
             )
           })}
         </div>
 
-        {/* Current stage indicator - arrow pointing up */}
+        {/* Current stage indicator */}
         <div
           className="absolute -bottom-3 flex flex-col items-center"
           style={{
@@ -79,7 +99,7 @@ export function TaskTimelineBar({
       {/* Legend with labels */}
       <div className="flex justify-between text-[10px] text-surface-500 px-1 mt-4">
         {TIMELINE_CATEGORIES.map((category) => {
-          const count = counts[category.id] || 0
+          const stat = stats[category.id]
           const isSelected = selectedCategory === category.id
           const isCurrent = currentCategory === category.id
 
@@ -87,15 +107,15 @@ export function TaskTimelineBar({
             <button
               key={category.id}
               onClick={() => {
-                if (count > 0) {
+                if (stat.total > 0) {
                   onCategoryClick(isSelected ? null : category.id)
                 }
               }}
-              disabled={count === 0}
+              disabled={stat.total === 0}
               className={cn(
                 "flex-1 text-center transition-all py-1 rounded",
-                count > 0 && "hover:bg-surface-800 cursor-pointer",
-                count === 0 && "opacity-50 cursor-default",
+                stat.total > 0 && "hover:bg-surface-800 cursor-pointer",
+                stat.total === 0 && "opacity-50 cursor-default",
                 isSelected && "bg-surface-700 ring-1 ring-white",
                 isCurrent && !isSelected && "text-accent-400"
               )}
@@ -109,14 +129,14 @@ export function TaskTimelineBar({
       {/* Selected filter indicator */}
       {selectedCategory && (
         <div className="flex items-center justify-center gap-2 text-sm text-surface-400 pt-1">
-          <span>Filtered:</span>
+          <span>Showing:</span>
           <span
             className="px-2 py-0.5 rounded text-white text-xs font-medium"
             style={{
               backgroundColor: TIMELINE_CATEGORIES.find(c => c.id === selectedCategory)?.color
             }}
           >
-            {TIMELINE_CATEGORIES.find(c => c.id === selectedCategory)?.label} ({counts[selectedCategory]} tasks)
+            {TIMELINE_CATEGORIES.find(c => c.id === selectedCategory)?.label} ({stats[selectedCategory].completed}/{stats[selectedCategory].total} done)
           </span>
           <button
             onClick={() => onCategoryClick(null)}
@@ -130,7 +150,7 @@ export function TaskTimelineBar({
       {/* Total tasks summary */}
       {!selectedCategory && (
         <div className="text-center text-xs text-surface-500">
-          {totalTasks} total tasks across your journey
+          Total: <span className="text-white font-medium">{totalStats.completed}/{totalStats.total}</span> tasks completed
         </div>
       )}
     </div>

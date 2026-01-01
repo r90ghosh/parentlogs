@@ -139,6 +139,48 @@ export function getCurrentTimelineCategory(family: Family): TimelineCategory {
   }
 }
 
+export interface TaskCategoryStats {
+  total: number
+  completed: number
+  pending: number
+}
+
+/**
+ * Get task stats by timeline category
+ */
+export function getTaskStatsByCategory(
+  tasks: FamilyTask[],
+  family: Family
+): Record<TimelineCategory, TaskCategoryStats> {
+  const stats: Record<TimelineCategory, TaskCategoryStats> = {
+    'first-trimester': { total: 0, completed: 0, pending: 0 },
+    'second-trimester': { total: 0, completed: 0, pending: 0 },
+    'third-trimester': { total: 0, completed: 0, pending: 0 },
+    'delivery': { total: 0, completed: 0, pending: 0 },
+    '0-3 months': { total: 0, completed: 0, pending: 0 },
+    '3-6 months': { total: 0, completed: 0, pending: 0 },
+    '6-12 months': { total: 0, completed: 0, pending: 0 },
+    '12-18 months': { total: 0, completed: 0, pending: 0 },
+    '18-24 months': { total: 0, completed: 0, pending: 0 },
+  }
+
+  tasks.forEach(task => {
+    // Skip backlog tasks that are pending triage
+    if (task.is_backlog && task.backlog_status === 'pending') return
+
+    const category = getTaskTimelineCategory(task.due_date, family)
+    stats[category].total++
+
+    if (task.status === 'completed') {
+      stats[category].completed++
+    } else if (task.status === 'pending' || task.status === 'snoozed') {
+      stats[category].pending++
+    }
+  })
+
+  return stats
+}
+
 /**
  * Group tasks by timeline category and count them
  */

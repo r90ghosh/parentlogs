@@ -22,7 +22,17 @@ import {
   useBacklogTasks,
   useTriageTask,
   useBulkTriageTasks,
+  useAllTasksForTimeline,
 } from '@/hooks/use-tasks'
+import { useFamily } from '@/hooks/use-family'
+import { TaskTimelineBar } from '@/components/shared/task-timeline-bar'
+import {
+  TimelineCategory,
+  TIMELINE_CATEGORIES,
+  getTaskStatsByCategory,
+  getCurrentTimelineCategory,
+  getTaskTimelineCategory,
+} from '@/lib/task-timeline'
 
 interface TasksPageClientProps {
   currentWeek: number
@@ -40,10 +50,13 @@ export function TasksPageClient({
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [activeStatCard, setActiveStatCard] = useState<string | null>('dueToday')
+  const [selectedTimelineCategory, setSelectedTimelineCategory] = useState<TimelineCategory | null>(null)
 
-  // Fetch tasks
+  // Fetch tasks and family data
   const { data: tasks = [], isLoading: isLoadingTasks } = useTasks()
+  const { data: allTasks = [] } = useAllTasksForTimeline()
   const { data: backlogTasks = [] } = useBacklogTasks()
+  const { data: family } = useFamily()
   const triageTask = useTriageTask()
   const bulkTriageTasks = useBulkTriageTasks()
 
@@ -94,8 +107,20 @@ export function TasksPageClient({
     }
   }, [tasks, backlogTasks, currentWeek])
 
+  // Calculate timeline stats for the phase filter bar
+  const timelineStats = useMemo(() => {
+    if (!family) return null
+    return getTaskStatsByCategory(allTasks, family)
+  }, [allTasks, family])
+
+  // Get current timeline category
+  const currentTimelineCategory = useMemo(() => {
+    if (!family) return 'first-trimester' as TimelineCategory
+    return getCurrentTimelineCategory(family)
+  }, [family])
+
   // Filter and sort tasks
-  const { thisWeekTasks, comingUpTasks, focusTask, filteredTasks } = useMemo(() => {
+  const { thisWeekTasks, comingUpTasks, focusTask, filteredTasks, phaseTasks } = useMemo(() => {
     let filtered = tasks.filter(t => t.status === 'pending' && !t.is_backlog)
 
     // Apply tab filter
@@ -121,7 +146,32 @@ export function TasksPageClient({
       )
     }
 
-    // Separate by week
+    // Apply timeline category filter
+    if (selectedTimelineCategory && family) {
+      filtered = filtered.filter(t => {
+        const taskCategory = getTaskTimelineCategory(t.due_date, family)
+        return taskCategory === selectedTimelineCategory
+      })
+    }
+
+    // When a timeline category is selected, show all tasks from that phase
+    // Otherwise, separate by week as usual
+    if (selectedTimelineCategory) {
+      // Sort by due date
+      const sortedFiltered = [...filtered].sort((a, b) =>
+        new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+      )
+
+      return {
+        thisWeekTasks: [],
+        comingUpTasks: [],
+        focusTask: null,
+        filteredTasks: sortedFiltered,
+        phaseTasks: sortedFiltered, // All tasks for the selected phase
+      }
+    }
+
+    // Separate by week (normal view)
     const thisWeek = filtered.filter(t => t.week_due === currentWeek)
     const comingUp = filtered.filter(t => t.week_due && t.week_due > currentWeek && t.week_due <= currentWeek + 4)
 
@@ -133,8 +183,9 @@ export function TasksPageClient({
       comingUpTasks: comingUp,
       focusTask: focus,
       filteredTasks: filtered,
+      phaseTasks: [],
     }
-  }, [tasks, activeTab, activeCategory, searchQuery, currentWeek])
+  }, [tasks, activeTab, activeCategory, searchQuery, currentWeek, selectedTimelineCategory, family])
 
   // Calculate triage progress
   const triageProgress = useMemo(() => {
@@ -177,6 +228,18 @@ export function TasksPageClient({
       {/* Header */}
       <TasksHeader currentWeek={currentWeek} daysToGo={daysToGo} />
 
+      {/* Timeline bar - Phase filter */}
+      {timelineStats && allTasks.length > 0 && (
+        <div className="mb-6">
+          <TaskTimelineBar
+            stats={timelineStats}
+            currentCategory={currentTimelineCategory}
+            selectedCategory={selectedTimelineCategory}
+            onCategoryClick={setSelectedTimelineCategory}
+          />
+        </div>
+      )}
+
       {/* Catch-up banner */}
       {backlogTasks.length > 0 && (
         <CatchUpBanner
@@ -208,8 +271,8 @@ export function TasksPageClient({
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
         {/* Left: Task sections */}
         <div className="space-y-6">
-          {/* Catch-up section */}
-          {activeTab === 'active' && backlogTasks.length > 0 && (
+          {/* Catch-up section - only show when no phase filter is active */}
+          {activeTab === 'active' && backlogTasks.length > 0 && !selectedTimelineCategory && (
             <CatchUpSection
               tasks={backlogTasks}
               currentWeek={currentWeek}
@@ -219,8 +282,40 @@ export function TasksPageClient({
             />
           )}
 
-          {/* This week section */}
-          {thisWeekTasks.length > 0 && (
+          {/* Phase tasks section - show when a phase filter is active */}
+          {selectedTimelineCategory && phaseTasks.length > 0 && (
+            <TaskSection
+              icon="📋"
+              title={TIMELINE_CATEGORIES.find(c => c.id === selectedTimelineCategory)?.label || 'Phase Tasks'}
+              count={phaseTasks.length}
+              actions={
+                <SectionAction>Sort by priority</SectionAction>
+              }
+            >
+              {phaseTasks.map(task => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  isHighlighted={task.priority === 'must-do'}
+                  onComplete={() => handleComplete(task.id)}
+                />
+              ))}
+            </TaskSection>
+          )}
+
+          {/* Phase tasks empty state */}
+          {selectedTimelineCategory && phaseTasks.length === 0 && (
+            <div className="text-center py-16">
+              <div className="text-5xl mb-4">📭</div>
+              <h3 className="text-lg font-semibold text-white mb-2">No tasks in this phase</h3>
+              <p className="text-sm text-zinc-500">
+                There are no pending tasks for {TIMELINE_CATEGORIES.find(c => c.id === selectedTimelineCategory)?.label}.
+              </p>
+            </div>
+          )}
+
+          {/* This week section - only show when no phase filter is active */}
+          {!selectedTimelineCategory && thisWeekTasks.length > 0 && (
             <TaskSection
               icon="📅"
               title="This Week"
@@ -240,8 +335,8 @@ export function TasksPageClient({
             </TaskSection>
           )}
 
-          {/* Coming up section */}
-          {comingUpTasks.length > 0 && (
+          {/* Coming up section - only show when no phase filter is active */}
+          {!selectedTimelineCategory && comingUpTasks.length > 0 && (
             <TaskSection
               icon="🔮"
               title="Coming Up"
@@ -261,8 +356,8 @@ export function TasksPageClient({
             </TaskSection>
           )}
 
-          {/* Empty state */}
-          {thisWeekTasks.length === 0 && comingUpTasks.length === 0 && activeTab !== 'catchup' && (
+          {/* Empty state - only show when no phase filter is active */}
+          {!selectedTimelineCategory && thisWeekTasks.length === 0 && comingUpTasks.length === 0 && activeTab !== 'catchup' && (
             <div className="text-center py-16">
               <div className="text-5xl mb-4">🎉</div>
               <h3 className="text-lg font-semibold text-white mb-2">All caught up!</h3>
