@@ -10,6 +10,15 @@ export const metadata: Metadata = {
   title: 'ParentLogs - Your Parenting Command Center',
   description: 'Expert-curated tasks, weekly briefings, and partner sync for pregnancy through early parenthood.',
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/images/logo.png' },
+      { url: '/favicon.ico', sizes: '48x48' },
+    ],
+    apple: [
+      { url: '/images/logo.png', sizes: '180x180' },
+    ],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',

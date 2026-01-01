@@ -31,6 +31,7 @@ import {
   Bell,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Logo } from '@/components/ui/logo'
 
 const mainNavItems = [
   { href: '/dashboard', label: 'Home', icon: Home },
@@ -59,9 +60,7 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-50 bg-surface-900 border-b border-surface-800">
         <div className="flex items-center justify-between px-4 h-14">
           <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="font-bold text-lg text-white">
-              ParentLogs
-            </Link>
+            <Logo size="sm" href="/dashboard" variant="dark" />
             {weekDisplay && (
               <span className="text-xs bg-accent-600/20 text-accent-400 px-2 py-1 rounded-full">
                 {weekDisplay}

@@ -7,6 +7,7 @@ import { Menu, X, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
+import { Logo } from '@/components/ui/logo'
 
 const navLinks = [
   { href: '#features', label: 'Features' },
@@ -62,14 +63,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">PL</span>
-            </div>
-            <span className="text-xl font-bold text-white group-hover:text-amber-400 transition-colors">
-              ParentLogs
-            </span>
-          </Link>
+          <Logo size="md" variant="dark" />
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Twitter, Linkedin, Instagram, Mail } from 'lucide-react'
+import { Logo } from '@/components/ui/logo'
 
 const footerLinks = {
   product: [
@@ -43,12 +44,9 @@ export function Footer() {
         <div className="py-12 md:py-16 grid grid-cols-2 md:grid-cols-6 gap-8">
           {/* Brand column */}
           <div className="col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">PL</span>
-              </div>
-              <span className="text-xl font-bold text-white">ParentLogs</span>
-            </Link>
+            <div className="mb-4">
+              <Logo size="md" variant="dark" />
+            </div>
             <p className="text-slate-400 text-sm mb-6 max-w-xs">
               The operating system for modern fatherhood. Built by dads, for dads who refuse to wing it.
             </p>

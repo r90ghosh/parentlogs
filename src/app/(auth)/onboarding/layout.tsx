@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import { redirect } from 'next/navigation'
 import { getServerAuth } from '@/lib/supabase/server-auth'
+import { Logo } from '@/components/ui/logo'
 
 /**
  * Onboarding Layout - Server Component
@@ -41,8 +42,8 @@ export default async function OnboardingLayout({ children }: { children: ReactNo
 
   return (
     <div className="min-h-screen bg-surface-950 flex flex-col">
-      <header className="p-4 text-center">
-        <h1 className="text-xl font-bold text-white">ParentLogs</h1>
+      <header className="p-4 flex justify-center">
+        <Logo size="md" variant="dark" />
       </header>
       <main className="flex-1 flex items-center justify-center p-4">
         {children}
