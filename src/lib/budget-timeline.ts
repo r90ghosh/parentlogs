@@ -41,10 +41,14 @@ export function getBudgetTimelineCategory(
   const { stage, week_end } = template
 
   if (isPregnancyStage(stage)) {
-    // Handle trimester stages directly
+    // Handle trimester stages - check week_end for delivery categorization
     if (stage === 'first-trimester') return 'first-trimester'
     if (stage === 'second-trimester') return 'second-trimester'
-    if (stage === 'third-trimester') return 'third-trimester'
+    if (stage === 'third-trimester') {
+      // Items due close to delivery (week 39+) go in delivery bucket
+      if (week_end >= 39) return 'delivery'
+      return 'third-trimester'
+    }
 
     // Legacy 'pregnancy' stage - determine by week_end
     if (week_end <= 13) return 'first-trimester'
@@ -100,7 +104,8 @@ export interface BudgetCategoryStats {
  * Get budget stats by timeline category
  */
 export function getBudgetStatsByCategory(
-  templates: BudgetTemplate[]
+  templates: BudgetTemplate[],
+  tier: 'budget' | 'premium' = 'budget'
 ): Record<BudgetTimelineCategory, BudgetCategoryStats> {
   const stats: Record<BudgetTimelineCategory, BudgetCategoryStats> = {
     'first-trimester': { itemCount: 0, medianTotal: 0 },
@@ -114,10 +119,12 @@ export function getBudgetStatsByCategory(
     '18-24 months': { itemCount: 0, medianTotal: 0 },
   }
 
-  templates.forEach(template => {
+  // Filter out Admin items
+  templates.filter(t => t.category !== 'Admin').forEach(template => {
     const category = getBudgetTimelineCategory(template)
     stats[category].itemCount++
-    stats[category].medianTotal += template.price_mid
+    // Use tier-specific price
+    stats[category].medianTotal += tier === 'budget' ? template.price_low : template.price_high
   })
 
   return stats

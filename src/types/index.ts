@@ -181,6 +181,15 @@ export interface SleepLogData {
 }
 
 // Budget Types
+export type BudgetTier = 'budget' | 'premium'
+
+export interface ProductExample {
+  brand: string
+  product: string
+  price: number // in cents
+  url?: string
+}
+
 export interface BudgetTemplate {
   budget_id: string
   category: string
@@ -197,6 +206,7 @@ export interface BudgetTemplate {
   price_currency: string
   notes?: string
   is_premium: boolean
+  product_examples?: ProductExample[]
 }
 
 export interface FamilyBudgetItem {

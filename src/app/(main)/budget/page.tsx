@@ -7,6 +7,8 @@ import { useRequirePremium } from '@/hooks/use-require-auth'
 import Link from 'next/link'
 import { budgetService } from '@/services/budget-service'
 import { BudgetTimelineBar } from '@/components/shared/budget-timeline-bar'
+import { TierFilter } from '@/components/budget/TierFilter'
+import { ProductExamplesDrawer } from '@/components/budget/ProductExamplesDrawer'
 import {
   BudgetTimelineCategory,
   getBudgetStatsByCategory,
@@ -67,10 +69,11 @@ import {
   PersonStanding,
   Lock,
   Crown,
+  Info,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
-import { BudgetTemplate, FamilyBudgetItem } from '@/types'
+import { BudgetTemplate, FamilyBudgetItem, BudgetTier } from '@/types'
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
   'Admin': FileText,
@@ -127,21 +130,40 @@ export default function BudgetPage() {
   const [customItem, setCustomItem] = useState({ item: '', category: 'Other', price: '' })
   const [stageFilter, setStageFilter] = useState<'all' | 'pregnancy' | 'post-birth'>('all')
   const [selectedTimelineCategory, setSelectedTimelineCategory] = useState<BudgetTimelineCategory | null>(null)
+  const [selectedTier, setSelectedTier] = useState<BudgetTier>('budget')
+  const [selectedItemForDetails, setSelectedItemForDetails] = useState<BudgetTemplate | null>(null)
 
   // Calculate budget stats by timeline category
   const budgetStats = useMemo(() => {
     if (!summary?.categories) {
-      return getBudgetStatsByCategory([])
+      return getBudgetStatsByCategory([], selectedTier)
     }
     const allTemplates = summary.categories.flatMap(c => c.items)
-    return getBudgetStatsByCategory(allTemplates)
-  }, [summary])
+    return getBudgetStatsByCategory(allTemplates, selectedTier)
+  }, [summary, selectedTier])
 
   // Get current budget category based on family stage
   const currentBudgetCategory = useMemo(() => {
     if (!family) return 'pregnancy' as BudgetTimelineCategory
     return getCurrentBudgetCategory(family)
   }, [family])
+
+  // Get all templates for tier filter
+  const allTemplates = useMemo(() => {
+    if (!summary?.categories) return []
+    return summary.categories.flatMap(c => c.items)
+  }, [summary])
+
+  // Helper to get price based on tier
+  const getPriceForTier = (template: BudgetTemplate, tier: BudgetTier): number => {
+    if (tier === 'budget') return template.price_low
+    return template.price_high // premium
+  }
+
+  // Format single price
+  const formatPrice = (cents: number): string => {
+    return `$${(cents / 100).toFixed(0)}`
+  }
 
   const addedTemplateIds = new Set(
     summary?.familyItems
@@ -210,8 +232,9 @@ export default function BudgetPage() {
   }
 
   const filteredCategories = summary?.categories.filter(category => {
-    // First filter by stage
-    let items = category.items
+    // Always filter out Admin items
+    let items = category.items.filter(item => item.category !== 'Admin')
+    // Then filter by stage
     if (stageFilter !== 'all') {
       items = items.filter(item => item.stage === stageFilter)
     }
@@ -221,7 +244,8 @@ export default function BudgetPage() {
     }
     return items.length > 0
   }).map(category => {
-    let items = category.items
+    // Always filter out Admin items
+    let items = category.items.filter(item => item.category !== 'Admin')
     if (stageFilter !== 'all') {
       items = items.filter(item => item.stage === stageFilter)
     }
@@ -264,6 +288,15 @@ export default function BudgetPage() {
         </Button>
       </div>
 
+      {/* Tier Filter */}
+      {allTemplates.length > 0 && (
+        <TierFilter
+          templates={allTemplates}
+          selectedTier={selectedTier}
+          onTierChange={setSelectedTier}
+        />
+      )}
+
       {/* Budget Timeline Bar */}
       {summary && summary.categories.length > 0 && (
         <BudgetTimelineBar
@@ -274,59 +307,67 @@ export default function BudgetPage() {
         />
       )}
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-surface-900 border-surface-800">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="p-3 rounded-lg bg-blue-500/20">
-                <TrendingUp className="h-5 w-5 text-blue-400" />
-              </div>
-              <div>
-                <p className="text-xs text-surface-400">Estimated Total</p>
-                <p className="text-xl font-bold text-white">
-                  {budgetService.formatPriceRange(
-                    summary?.grandTotalLow || 0,
-                    summary?.grandTotalHigh || 0
-                  )}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Summary Cards - Now showing single tier price */}
+      {(() => {
+        // Calculate totals for current tier (always exclude Admin)
+        const tierTotal = allTemplates
+          .filter(t => t.category !== 'Admin')
+          .reduce((sum, t) => sum + getPriceForTier(t, selectedTier), 0)
 
-        <Card className="bg-surface-900 border-surface-800">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="p-3 rounded-lg bg-green-500/20">
-                <ShoppingCart className="h-5 w-5 text-green-400" />
-              </div>
-              <div>
-                <p className="text-xs text-surface-400">Purchased</p>
-                <p className="text-xl font-bold text-white">
-                  {budgetService.formatPrice(summary?.purchasedTotal || 0)}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="bg-surface-900 border-surface-800">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 rounded-lg bg-blue-500/20">
+                    <TrendingUp className="h-5 w-5 text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-surface-400">
+                      {selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1)} Estimate
+                    </p>
+                    <p className="text-xl font-bold text-white">
+                      {formatPrice(tierTotal)}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-        <Card className="bg-surface-900 border-surface-800">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3">
-              <div className="p-3 rounded-lg bg-amber-500/20">
-                <Wallet className="h-5 w-5 text-amber-400" />
-              </div>
-              <div>
-                <p className="text-xs text-surface-400">Remaining</p>
-                <p className="text-xl font-bold text-white">
-                  {budgetService.formatPrice(summary?.remainingTotal || 0)}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            <Card className="bg-surface-900 border-surface-800">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 rounded-lg bg-green-500/20">
+                    <ShoppingCart className="h-5 w-5 text-green-400" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-surface-400">Purchased</p>
+                    <p className="text-xl font-bold text-white">
+                      {budgetService.formatPrice(summary?.purchasedTotal || 0)}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-surface-900 border-surface-800">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 rounded-lg bg-amber-500/20">
+                    <Wallet className="h-5 w-5 text-amber-400" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-surface-400">Remaining</p>
+                    <p className="text-xl font-bold text-white">
+                      {formatPrice(Math.max(0, tierTotal - (summary?.purchasedTotal || 0)))}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )
+      })()}
 
       {/* Progress */}
       {summary && summary.familyItems.length > 0 && (
@@ -460,6 +501,11 @@ export default function BudgetPage() {
               const Icon = CATEGORY_ICONS[category.name] || DollarSign
               const colors = CATEGORY_COLORS[category.name] || CATEGORY_COLORS['Admin']
               const lockedCount = isPremium ? 0 : Math.max(0, category.items.length - FREE_ITEMS_PER_CATEGORY)
+              // Calculate category total based on selected tier
+              const categoryTierTotal = category.items.reduce(
+                (sum, item) => sum + getPriceForTier(item, selectedTier),
+                0
+              )
 
               return (
                 <AccordionItem
@@ -485,7 +531,7 @@ export default function BudgetPage() {
                         )}
                       </div>
                       <span className="text-sm text-surface-400 mr-4">
-                        {budgetService.formatPriceRange(category.totalLow, category.totalHigh)}
+                        {formatPrice(categoryTierTotal)}
                       </span>
                     </div>
                   </AccordionTrigger>
@@ -494,6 +540,8 @@ export default function BudgetPage() {
                       {category.items.map((template, index) => {
                         const isAdded = addedTemplateIds.has(template.budget_id)
                         const isLocked = !isPremium && index >= FREE_ITEMS_PER_CATEGORY
+                        const itemPrice = getPriceForTier(template, selectedTier)
+                        const hasProductExamples = template.product_examples && template.product_examples.length > 0
 
                         // For locked items, truncate item name and hide details
                         const displayName = isLocked
@@ -509,8 +557,10 @@ export default function BudgetPage() {
                                 ? "bg-surface-800/30 border-surface-700/50"
                                 : isAdded
                                   ? "bg-accent-500/10 border-accent-500/30"
-                                  : "bg-surface-800/50 border-surface-700 hover:border-surface-600"
+                                  : "bg-surface-800/50 border-surface-700 hover:border-surface-600",
+                              !isLocked && "cursor-pointer"
                             )}
+                            onClick={!isLocked ? () => setSelectedItemForDetails(template) : undefined}
                           >
                             <div className="flex-1 min-w-0 pr-4">
                               <div className="flex items-center gap-2 mb-1">
@@ -533,6 +583,9 @@ export default function BudgetPage() {
                                     Added
                                   </Badge>
                                 )}
+                                {!isLocked && hasProductExamples && (
+                                  <Info className="h-3 w-3 text-amber-400" />
+                                )}
                               </div>
                               {isLocked ? (
                                 <p className="text-xs text-surface-600 italic">
@@ -549,8 +602,8 @@ export default function BudgetPage() {
                                     <span>
                                       Week {template.week_start}-{template.week_end}
                                     </span>
-                                    <span>
-                                      {budgetService.formatPriceRange(template.price_low, template.price_high)}
+                                    <span className={selectedTier === 'budget' ? 'text-emerald-400' : 'text-amber-400'}>
+                                      {formatPrice(itemPrice)}
                                     </span>
                                   </div>
                                   {template.notes && (
@@ -578,7 +631,10 @@ export default function BudgetPage() {
                                 size="sm"
                                 variant={isAdded ? "ghost" : "outline"}
                                 disabled={isAdded || addToBudget.isPending}
-                                onClick={() => setSelectedTemplate(template)}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  setSelectedTemplate(template)
+                                }}
                               >
                                 {isAdded ? (
                                   <Check className="h-4 w-4 text-accent-500" />
@@ -761,6 +817,14 @@ export default function BudgetPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Product Examples Drawer */}
+      <ProductExamplesDrawer
+        template={selectedItemForDetails}
+        selectedTier={selectedTier}
+        isOpen={!!selectedItemForDetails}
+        onClose={() => setSelectedItemForDetails(null)}
+      />
     </div>
   )
 }
