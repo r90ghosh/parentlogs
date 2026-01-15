@@ -57,7 +57,7 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
   const weekDisplay = family ? `Week ${family.current_week}` : ''
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-surface-950 flex flex-col overflow-x-hidden">
+    <div className="min-h-screen min-h-[100dvh] bg-surface-950">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-surface-900 border-b border-surface-800">
         <div className="flex items-center justify-between px-4 h-14">
@@ -120,7 +120,7 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 pb-24 md:pb-4 md:ml-64 overflow-y-auto">
+      <main className="pb-24 md:pb-4 md:ml-64">
         {children}
       </main>
 
