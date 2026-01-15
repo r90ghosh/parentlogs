@@ -59,7 +59,7 @@ export function ContentFilters({
   const hasActiveFilters = currentStage !== 'all' || currentFormat !== 'all' || searchQuery !== ''
 
   return (
-    <div className="sticky top-16 md:top-20 z-40 bg-slate-950/95 backdrop-blur-md border-b border-slate-800/50 py-4">
+    <div className="md:sticky md:top-20 z-40 bg-slate-950 md:bg-slate-950/95 md:backdrop-blur-md border-b border-slate-800/50 py-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4">
           {/* Stage filters */}
