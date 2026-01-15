@@ -72,10 +72,7 @@ export function StatsBar({ stats, activeCard, onCardClick }: StatsBarProps) {
   )
 
   return (
-    <div className={cn(
-      'grid gap-4 mb-6',
-      visibleCards.length === 5 ? 'grid-cols-5' : 'grid-cols-4'
-    )}>
+    <div className="flex gap-3 mb-6 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 md:overflow-visible md:grid md:gap-4 md:grid-cols-4 lg:grid-cols-5">
       {visibleCards.map(card => {
         const value = getValue(card.id)
         const isActive = activeCard === card.id
@@ -85,25 +82,25 @@ export function StatsBar({ stats, activeCard, onCardClick }: StatsBarProps) {
             key={card.id}
             onClick={() => onCardClick(card.id)}
             className={cn(
-              'flex items-center gap-4 p-4 pr-5 rounded-xl cursor-pointer transition-all text-left',
+              'flex items-center gap-3 p-3 md:p-4 md:pr-5 rounded-xl cursor-pointer transition-all text-left flex-shrink-0',
               'bg-gradient-to-br from-zinc-800 to-zinc-900',
-              'border',
+              'border min-w-[140px] md:min-w-0',
               isActive
                 ? 'border-amber-500/50 bg-gradient-to-br from-amber-500/10 to-orange-600/5'
                 : 'border-white/[0.06] hover:border-white/15'
             )}
           >
             <div className={cn(
-              'w-11 h-11 rounded-xl flex items-center justify-center text-xl',
+              'w-9 h-9 md:w-11 md:h-11 rounded-xl flex items-center justify-center text-lg md:text-xl',
               card.iconBg
             )}>
               {card.icon}
             </div>
             <div>
-              <div className={cn('text-2xl font-bold', card.valueColor)}>
+              <div className={cn('text-xl md:text-2xl font-bold', card.valueColor)}>
                 {value}
               </div>
-              <div className="text-xs text-zinc-500">{card.label}</div>
+              <div className="text-[10px] md:text-xs text-zinc-500">{card.label}</div>
             </div>
           </button>
         )

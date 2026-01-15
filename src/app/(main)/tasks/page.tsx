@@ -29,8 +29,8 @@ export default function TasksPage() {
   }
 
   return (
-    <div className="min-h-screen pb-24 md:pb-8">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 md:ml-64 py-6">
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 overflow-x-hidden">
         <TasksPageClient
           currentWeek={currentWeek}
           signupWeek={signupWeek}

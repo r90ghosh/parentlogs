@@ -38,8 +38,8 @@ export function TaskTimelineBar({
       </div>
 
       {/* Timeline Bar - Glassmorphism container */}
-      <div className="relative">
-        <div className="flex h-14 rounded-xl overflow-hidden backdrop-blur-md bg-white/[0.03] border border-white/10 shadow-lg shadow-black/20">
+      <div className="relative overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 md:overflow-visible">
+        <div className="flex h-14 rounded-xl overflow-hidden md:backdrop-blur-md bg-slate-800/90 md:bg-white/[0.03] border border-white/10 shadow-lg shadow-black/20 min-w-[500px] md:min-w-0">
           {TIMELINE_CATEGORIES.map((category, index) => {
             const stat = stats[category.id]
             const isSelected = selectedCategory === category.id
@@ -103,7 +103,7 @@ export function TaskTimelineBar({
       </div>
 
       {/* Legend with labels */}
-      <div className="flex justify-between text-[10px] text-surface-500 px-0.5 mt-4">
+      <div className="flex justify-between text-[10px] text-surface-500 px-0.5 mt-4 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0.5 md:overflow-visible min-w-0">
         {TIMELINE_CATEGORIES.map((category) => {
           const stat = stats[category.id]
           const isSelected = selectedCategory === category.id
