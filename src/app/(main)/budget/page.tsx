@@ -496,7 +496,7 @@ export default function BudgetPage() {
             </Select>
           </div>
 
-          <Accordion type="multiple" defaultValue={filteredCategories?.map(c => c.name)} className="space-y-2">
+          <Accordion type="multiple" key={`accordion-${selectedTimelineCategory || 'all'}-${stageFilter}`} defaultValue={filteredCategories?.map(c => c.name)} className="space-y-2">
             {filteredCategories?.map((category) => {
               const Icon = CATEGORY_ICONS[category.name] || DollarSign
               const colors = CATEGORY_COLORS[category.name] || CATEGORY_COLORS['Admin']

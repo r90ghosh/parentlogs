@@ -31,9 +31,9 @@ export function BudgetTimelineBar({
         <span className="italic text-surface-500">Median prices shown</span>
       </div>
 
-      {/* Timeline Bar - Glassmorphism container */}
-      <div className="relative">
-        <div className="flex h-14 rounded-xl overflow-hidden backdrop-blur-md bg-white/[0.03] border border-white/10 shadow-lg shadow-black/20">
+      {/* Timeline Bar - Glassmorphism container with horizontal scroll on mobile */}
+      <div className="relative overflow-x-auto overflow-y-hidden -mx-4 px-4 md:mx-0 md:px-0 md:overflow-visible" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className="flex h-14 rounded-xl overflow-hidden backdrop-blur-md bg-white/[0.03] border border-white/10 shadow-lg shadow-black/20 min-w-[500px] md:min-w-0">
           {BUDGET_TIMELINE_CATEGORIES.map((category, index) => {
             const stat = stats[category.id]
             const isSelected = selectedCategory === category.id
@@ -83,9 +83,9 @@ export function BudgetTimelineBar({
           })}
         </div>
 
-        {/* Current stage indicator */}
+        {/* Current stage indicator - hidden on mobile scroll */}
         <div
-          className="absolute -bottom-3 flex flex-col items-center"
+          className="absolute -bottom-3 flex-col items-center hidden md:flex"
           style={{
             left: `${getCategoryCenter(currentCategory)}%`,
             transform: 'translateX(-50%)',
@@ -96,8 +96,8 @@ export function BudgetTimelineBar({
         </div>
       </div>
 
-      {/* Legend with labels */}
-      <div className="flex justify-between text-[10px] text-surface-500 px-0.5 mt-4">
+      {/* Legend with labels - horizontally scrollable on mobile */}
+      <div className="flex text-[10px] text-surface-500 px-0.5 mt-4 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0.5 md:overflow-visible md:justify-between" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {BUDGET_TIMELINE_CATEGORIES.map((category) => {
           const stat = stats[category.id]
           const isSelected = selectedCategory === category.id
@@ -113,14 +113,14 @@ export function BudgetTimelineBar({
               }}
               disabled={stat.itemCount === 0}
               className={cn(
-                "flex-1 text-center transition-all py-1 rounded-md",
+                "flex-shrink-0 min-w-[80px] md:min-w-0 md:flex-1 text-center transition-all py-1 px-2 md:px-0.5 rounded-md",
                 stat.itemCount > 0 && "hover:bg-white/5 cursor-pointer",
                 stat.itemCount === 0 && "opacity-40 cursor-default",
                 isSelected && "bg-white/10 ring-1 ring-white/30 text-white",
                 isCurrent && !isSelected && "text-accent-400"
               )}
             >
-              <div className="truncate px-0.5">{category.label}</div>
+              <div className="truncate">{category.label}</div>
             </button>
           )
         })}
