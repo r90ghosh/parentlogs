@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
-import Link from 'next/link'
 
 interface DashboardHeaderProps {
   userName: string
@@ -51,28 +50,6 @@ export function DashboardHeader({ userName, overdueCount }: DashboardHeaderProps
             </span>
           )}
         </div>
-      </div>
-      <div className="flex gap-3">
-        <Link
-          href="/calendar"
-          className={cn(
-            'px-5 py-2.5 rounded-[10px] text-sm font-semibold flex items-center gap-2',
-            'bg-white/[0.06] text-zinc-200 border border-white/10',
-            'hover:bg-white/[0.08] transition-colors'
-          )}
-        >
-          📅 Calendar
-        </Link>
-        <Link
-          href="/tasks/new"
-          className={cn(
-            'px-5 py-2.5 rounded-[10px] text-sm font-semibold flex items-center gap-2',
-            'bg-gradient-to-r from-amber-500 to-orange-600 text-white',
-            'hover:opacity-90 transition-opacity'
-          )}
-        >
-          + Quick Add
-        </Link>
       </div>
     </header>
   )
