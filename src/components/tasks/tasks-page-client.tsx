@@ -121,7 +121,11 @@ export function TasksPageClient({
 
   // Filter and sort tasks
   const { thisWeekTasks, comingUpTasks, focusTask, filteredTasks, phaseTasks } = useMemo(() => {
-    let filtered = tasks.filter(t => t.status === 'pending' && !t.is_backlog)
+    // When a timeline category is selected, use ALL tasks (including future) from allTasks
+    // Otherwise use the regular tasks list
+    let baseList = selectedTimelineCategory ? allTasks : tasks
+
+    let filtered = baseList.filter(t => t.status === 'pending' && !t.is_backlog)
 
     // Apply tab filter
     if (activeTab === 'my-tasks') {
@@ -129,7 +133,7 @@ export function TasksPageClient({
     } else if (activeTab === 'partner') {
       filtered = filtered.filter(t => t.assigned_to === 'mom' || t.assigned_to === 'both' || t.assigned_to === 'either')
     } else if (activeTab === 'completed') {
-      filtered = tasks.filter(t => t.status === 'completed')
+      filtered = baseList.filter(t => t.status === 'completed')
     }
 
     // Apply category filter
@@ -157,10 +161,13 @@ export function TasksPageClient({
     // When a timeline category is selected, show all tasks from that phase
     // Otherwise, separate by week as usual
     if (selectedTimelineCategory) {
-      // Sort by due date
-      const sortedFiltered = [...filtered].sort((a, b) =>
-        new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
-      )
+      // Sort by week/due date
+      const sortedFiltered = [...filtered].sort((a, b) => {
+        // First by week
+        if (a.week_due !== b.week_due) return (a.week_due || 0) - (b.week_due || 0)
+        // Then by due date
+        return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+      })
 
       return {
         thisWeekTasks: [],
@@ -185,7 +192,7 @@ export function TasksPageClient({
       filteredTasks: filtered,
       phaseTasks: [],
     }
-  }, [tasks, activeTab, activeCategory, searchQuery, currentWeek, selectedTimelineCategory, family])
+  }, [tasks, allTasks, activeTab, activeCategory, searchQuery, currentWeek, selectedTimelineCategory, family])
 
   // Calculate triage progress
   const triageProgress = useMemo(() => {
