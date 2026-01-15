@@ -50,9 +50,9 @@ const colorClasses = {
 export function HowItWorks() {
   return (
     <section id="how-it-works" className="relative py-24 md:py-32 bg-slate-900 overflow-hidden">
-      {/* Background elements */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-[100px]" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px]" />
+      {/* Background elements - hidden on mobile for performance */}
+      <div className="hidden md:block absolute top-0 left-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-[100px]" />
+      <div className="hidden md:block absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px]" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}

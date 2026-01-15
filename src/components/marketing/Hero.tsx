@@ -17,15 +17,15 @@ export function Hero() {
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950" />
 
-      {/* Subtle grid pattern */}
+      {/* Subtle grid pattern - hidden on mobile for performance */}
       <div
-        className="absolute inset-0 opacity-[0.02]"
+        className="hidden md:block absolute inset-0 opacity-[0.02]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}
       />
 
-      {/* Ambient glow */}
+      {/* Ambient glow - simplified on mobile via CSS */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-amber-500/10 rounded-full blur-[120px]" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
@@ -96,9 +96,9 @@ export function Hero() {
                 <div className="mb-6">
                   <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
                     <span className="font-medium">Tasks by Phase</span>
-                    <span className="italic text-slate-500">Click to filter</span>
+                    <span className="italic text-slate-500 hidden sm:inline">Click to filter</span>
                   </div>
-                  <div className="flex h-12 rounded-xl overflow-hidden backdrop-blur-md bg-white/[0.03] border border-white/10">
+                  <div className="flex h-12 rounded-xl overflow-hidden md:backdrop-blur-md bg-slate-800/90 md:bg-white/[0.03] border border-white/10">
                     {[
                       { label: 'Trimester 1', color: 'rgba(244, 163, 177, 0.35)', count: 8 },
                       { label: 'Trimester 2', color: 'rgba(236, 132, 155, 0.4)', count: 12, current: true },
@@ -122,7 +122,7 @@ export function Hero() {
                 {/* Two column layout */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   {/* Baby Development Card */}
-                  <div className="p-5 rounded-2xl backdrop-blur-md bg-white/[0.03] border border-white/10">
+                  <div className="p-5 rounded-2xl md:backdrop-blur-md bg-slate-800/80 md:bg-white/[0.03] border border-white/10">
                     <div className="flex items-start gap-4">
                       <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-400/20 to-orange-500/20 flex items-center justify-center text-2xl">
                         🍋
@@ -139,7 +139,7 @@ export function Hero() {
                   </div>
 
                   {/* Mom Status Card */}
-                  <div className="p-5 rounded-2xl backdrop-blur-md bg-white/[0.03] border border-white/10">
+                  <div className="p-5 rounded-2xl md:backdrop-blur-md bg-slate-800/80 md:bg-white/[0.03] border border-white/10">
                     <div className="flex items-center gap-2 mb-3">
                       <span className="text-lg">💝</span>
                       <span className="text-sm font-medium text-white">What Mom's Experiencing</span>
@@ -158,7 +158,7 @@ export function Hero() {
                 </div>
 
                 {/* Priority Tasks */}
-                <div className="p-5 rounded-2xl backdrop-blur-md bg-white/[0.03] border border-white/10">
+                <div className="p-5 rounded-2xl md:backdrop-blur-md bg-slate-800/80 md:bg-white/[0.03] border border-white/10">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-sm font-medium text-white">Priority Tasks</h3>
                     <span className="text-xs text-amber-400">3 this week</span>

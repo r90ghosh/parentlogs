@@ -138,7 +138,7 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="py-6 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-slate-500" suppressHydrationWarning>
             © {new Date().getFullYear()} ParentLogs. All rights reserved.
           </p>
           <p className="text-sm text-slate-600">

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useTasks } from '@/hooks/use-tasks'
 import { useBriefings } from '@/hooks/use-briefings'
 import { useBudgetItems } from '@/hooks/use-budget'
@@ -37,7 +37,13 @@ type ViewType = 'month' | 'week' | 'agenda'
 type DataFilter = 'all' | 'tasks' | 'briefings' | 'budget' | 'logs'
 
 export default function CalendarPage() {
-  const [currentDate, setCurrentDate] = useState(new Date())
+  const [currentDate, setCurrentDate] = useState<Date | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    setCurrentDate(new Date())
+  }, [])
   const [view, setView] = useState<ViewType>('month')
   const [filters, setFilters] = useState<DataFilter[]>(['all'])
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
@@ -46,6 +52,18 @@ export default function CalendarPage() {
   const { data: briefings } = useBriefings()
   const { data: budgetItems } = useBudgetItems()
   const { data: logs } = useTrackerLogs()
+
+  // Show loading state until mounted
+  if (!mounted || !currentDate) {
+    return (
+      <div className="p-4 md:ml-64 space-y-4 max-w-4xl">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-white">Calendar</h1>
+        </div>
+        <div className="h-96 bg-surface-900 rounded-lg border border-surface-800 animate-pulse" />
+      </div>
+    )
+  }
 
   const monthStart = startOfMonth(currentDate)
   const monthEnd = endOfMonth(currentDate)

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
@@ -9,16 +10,22 @@ interface DashboardHeaderProps {
   overdueCount: number
 }
 
-function getGreeting(): string {
-  const hour = new Date().getHours()
+function getGreeting(hour: number): string {
   if (hour < 12) return 'Good morning'
   if (hour < 17) return 'Good afternoon'
   return 'Good evening'
 }
 
 export function DashboardHeader({ userName, overdueCount }: DashboardHeaderProps) {
-  const today = new Date()
-  const greeting = getGreeting()
+  const [mounted, setMounted] = useState(false)
+  const [today, setToday] = useState<Date | null>(null)
+
+  useEffect(() => {
+    setMounted(true)
+    setToday(new Date())
+  }, [])
+
+  const greeting = mounted && today ? getGreeting(today.getHours()) : 'Hello'
 
   return (
     <header className="flex justify-between items-start mb-8">
@@ -31,7 +38,9 @@ export function DashboardHeader({ userName, overdueCount }: DashboardHeaderProps
           <span className="inline-block">👋</span>
         </h1>
         <div className="flex items-center gap-4 text-sm text-zinc-500">
-          <span>{format(today, 'EEEE, MMMM d, yyyy')}</span>
+          <span suppressHydrationWarning>
+            {today ? format(today, 'EEEE, MMMM d, yyyy') : ''}
+          </span>
           {overdueCount > 0 && (
             <span className={cn(
               'flex items-center gap-1.5 px-3 py-1 rounded-full text-[13px] font-medium',

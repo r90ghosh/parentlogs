@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { format, startOfWeek, endOfWeek, addWeeks } from 'date-fns'
 import { ChevronDown, Calendar } from 'lucide-react'
@@ -20,9 +20,8 @@ interface WeekGroup {
   tasks: FamilyTask[]
 }
 
-function groupTasksByWeek(tasks: FamilyTask[]): WeekGroup[] {
-  const now = new Date()
-  const thisWeekEnd = endOfWeek(now, { weekStartsOn: 1 })
+function groupTasksByWeek(tasks: FamilyTask[], referenceDate: Date): WeekGroup[] {
+  const thisWeekEnd = endOfWeek(referenceDate, { weekStartsOn: 1 })
 
   // Filter to only tasks after this week
   const futureTasks = tasks.filter((t) => new Date(t.due_date) > thisWeekEnd)
@@ -56,7 +55,20 @@ function groupTasksByWeek(tasks: FamilyTask[]): WeekGroup[] {
 
 export function ComingUpPreview({ tasks, className }: ComingUpPreviewProps) {
   const [isExpanded, setIsExpanded] = useState(false)
-  const weekGroups = groupTasksByWeek(tasks)
+  const [mounted, setMounted] = useState(false)
+  const [now, setNow] = useState<Date | null>(null)
+
+  useEffect(() => {
+    setMounted(true)
+    setNow(new Date())
+  }, [])
+
+  // Don't render until mounted to avoid hydration mismatch
+  if (!mounted || !now) {
+    return null
+  }
+
+  const weekGroups = groupTasksByWeek(tasks, now)
 
   if (weekGroups.length === 0) {
     return null

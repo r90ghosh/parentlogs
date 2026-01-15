@@ -57,9 +57,9 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
   const weekDisplay = family ? `Week ${family.current_week}` : ''
 
   return (
-    <div className="min-h-screen bg-surface-950 flex flex-col">
+    <div className="min-h-screen min-h-[100dvh] bg-surface-950 flex flex-col overflow-x-hidden">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-surface-900 border-b border-surface-800">
+      <header className="sticky top-0 z-40 bg-surface-900 border-b border-surface-800">
         <div className="flex items-center justify-between px-4 h-14">
           <div className="flex items-center gap-3">
             <Logo size="sm" href="/dashboard" variant="dark" />
@@ -120,12 +120,12 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 pb-20 md:pb-4">
+      <main className="flex-1 pb-24 md:pb-4 md:ml-64 overflow-y-auto">
         {children}
       </main>
 
       {/* Bottom Navigation - Mobile */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-surface-900 border-t border-surface-800 md:hidden safe-area-bottom">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-surface-900/95 backdrop-blur-sm border-t border-surface-800 md:hidden safe-area-bottom">
         <div className="flex items-center justify-around h-16">
           {mainNavItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
@@ -147,21 +147,22 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
           {/* More menu */}
           <Sheet>
             <SheetTrigger asChild>
-              <button className="flex flex-col items-center justify-center w-full h-full gap-1 text-xs text-surface-400">
+              <button className="flex flex-col items-center justify-center w-full h-full gap-1 text-xs text-surface-400 active:text-accent-400 transition-colors">
                 <Menu className="h-5 w-5" />
                 <span>More</span>
               </button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="bg-surface-900 border-surface-800">
-              <div className="grid grid-cols-4 gap-4 py-4">
+            <SheetContent side="bottom" className="bg-surface-900 border-surface-800 rounded-t-2xl max-h-[70vh] overflow-y-auto">
+              <div className="w-12 h-1 bg-surface-700 rounded-full mx-auto mb-4" />
+              <div className="grid grid-cols-3 gap-3 pb-6 safe-area-bottom">
                 {moreNavItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-surface-800"
+                    className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-surface-800/50 hover:bg-surface-800 active:bg-surface-700 transition-colors min-h-[80px]"
                   >
                     <item.icon className="h-6 w-6 text-surface-300" />
-                    <span className="text-xs text-surface-300">{item.label}</span>
+                    <span className="text-xs text-surface-300 text-center">{item.label}</span>
                   </Link>
                 ))}
               </div>

@@ -153,8 +153,8 @@ export function ContentPreview() {
           })}
         </div>
 
-        {/* Timeline preview - Glassmorphism */}
-        <div className="relative p-8 rounded-2xl backdrop-blur-md bg-white/[0.02] border border-white/10 overflow-hidden shadow-lg">
+        {/* Timeline preview - Glassmorphism (simplified on mobile) */}
+        <div className="relative p-8 rounded-2xl md:backdrop-blur-md bg-slate-900/80 md:bg-white/[0.02] border border-white/10 overflow-hidden shadow-lg">
           <div className="relative">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold text-white">Coverage Timeline</h3>
@@ -162,7 +162,7 @@ export function ContentPreview() {
             </div>
 
             {/* Timeline Bar - matches the actual app style */}
-            <div className="flex h-14 rounded-xl overflow-hidden backdrop-blur-md bg-white/[0.03] border border-white/10 mb-6">
+            <div className="flex h-14 rounded-xl overflow-hidden md:backdrop-blur-md bg-slate-800/90 md:bg-white/[0.03] border border-white/10 mb-6">
               {[
                 { label: 'Trimester 1', color: 'rgba(244, 163, 177, 0.35)', articles: 9 },
                 { label: 'Trimester 2', color: 'rgba(236, 132, 155, 0.4)', articles: 14 },
@@ -194,7 +194,7 @@ export function ContentPreview() {
               ].map((stage, i) => (
                 <div
                   key={i}
-                  className="p-4 rounded-xl backdrop-blur-sm bg-white/[0.03] border border-white/[0.08] hover:border-white/20 transition-all"
+                  className="p-4 rounded-xl bg-slate-800/60 md:backdrop-blur-sm md:bg-white/[0.03] border border-white/[0.08] hover:border-white/20 transition-all"
                 >
                   <p className="text-sm font-medium text-white mb-1">{stage.label}</p>
                   <p className="text-xs text-slate-500 mb-2">{stage.weeks}</p>

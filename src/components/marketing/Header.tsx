@@ -19,7 +19,7 @@ const navLinks = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -27,17 +27,33 @@ export function Header() {
       setIsScrolled(window.scrollY > 10)
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   useEffect(() => {
+    // Non-blocking auth check with timeout
+    const controller = new AbortController()
     const checkAuth = async () => {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      setIsLoggedIn(!!user)
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!controller.signal.aborted) {
+          setIsLoggedIn(!!user)
+        }
+      } catch {
+        if (!controller.signal.aborted) {
+          setIsLoggedIn(false)
+        }
+      }
     }
-    checkAuth()
+
+    // Small delay to not block initial render
+    const timeout = setTimeout(checkAuth, 100)
+    return () => {
+      controller.abort()
+      clearTimeout(timeout)
+    }
   }, [])
 
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -81,7 +97,7 @@ export function Header() {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            {isLoggedIn ? (
+            {isLoggedIn === true ? (
               <Button asChild className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold">
                 <Link href="/dashboard">
                   Go to Dashboard
