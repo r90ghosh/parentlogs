@@ -58,17 +58,18 @@ export function CatchUpSection({
       {/* Section header */}
       <div
         className={cn(
-          'flex items-center justify-between px-5 py-4 cursor-pointer',
+          'px-4 md:px-5 py-3 md:py-4 cursor-pointer',
           'border-b border-white/[0.06]',
           'bg-gradient-to-r from-indigo-500/10 to-purple-500/5'
         )}
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div>
-          <div className="flex items-center gap-2.5">
-            <span className="text-lg">📥</span>
-            <h3 className="text-[15px] font-semibold text-white">Catch-Up Queue</h3>
-            <span className="text-xs text-zinc-500 bg-white/[0.06] px-2 py-0.5 rounded-[10px]">
+        {/* Title row */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-base md:text-lg">📥</span>
+            <h3 className="text-sm md:text-[15px] font-semibold text-white">Catch-Up Queue</h3>
+            <span className="text-[10px] md:text-xs text-zinc-500 bg-white/[0.06] px-1.5 md:px-2 py-0.5 rounded-[10px]">
               {tasks.length} tasks
             </span>
             <ChevronDown
@@ -78,12 +79,15 @@ export function CatchUpSection({
               )}
             />
           </div>
-          <p className="text-xs text-zinc-500 ml-7 mt-1">
-            Tasks from Weeks {earliestWeek}-{currentWeek - 1} • Review and triage quickly
-          </p>
         </div>
 
-        <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+        {/* Subtitle */}
+        <p className="text-[10px] md:text-xs text-zinc-500 mt-1 ml-6 md:ml-7">
+          Tasks from Weeks {earliestWeek}-{currentWeek - 1} • Review and triage quickly
+        </p>
+
+        {/* Action buttons - below on mobile */}
+        <div className="flex flex-wrap gap-2 mt-3" onClick={(e) => e.stopPropagation()}>
           <SectionAction onClick={handleMarkAllDone} variant="success">
             ✓ Mark All Done
           </SectionAction>

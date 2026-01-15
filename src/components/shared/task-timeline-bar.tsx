@@ -38,7 +38,7 @@ export function TaskTimelineBar({
       </div>
 
       {/* Timeline Bar - Glassmorphism container */}
-      <div className="relative overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 md:overflow-visible">
+      <div className="relative overflow-x-auto overflow-y-hidden -mx-4 px-4 md:mx-0 md:px-0 md:overflow-visible">
         <div className="flex h-14 rounded-xl overflow-hidden md:backdrop-blur-md bg-slate-800/90 md:bg-white/[0.03] border border-white/10 shadow-lg shadow-black/20 min-w-[500px] md:min-w-0">
           {TIMELINE_CATEGORIES.map((category, index) => {
             const stat = stats[category.id]
