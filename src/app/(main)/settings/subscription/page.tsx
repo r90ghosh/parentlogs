@@ -34,7 +34,7 @@ function SubscriptionContent() {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:ml-64 flex items-center justify-center min-h-[400px]">
+      <div className="p-4 flex items-center justify-center min-h-[400px]">
         <Loader2 className="h-8 w-8 animate-spin text-accent-500" />
       </div>
     )
@@ -46,7 +46,7 @@ function SubscriptionContent() {
   }
 
   return (
-    <div className="p-4 md:ml-64 space-y-6 max-w-3xl">
+    <div className="p-4 space-y-6 max-w-3xl">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white">Subscription</h1>
@@ -254,7 +254,7 @@ function SubscriptionContent() {
 export default function SubscriptionSettingsPage() {
   return (
     <Suspense fallback={
-      <div className="p-4 md:ml-64 flex items-center justify-center min-h-[400px]">
+      <div className="p-4 flex items-center justify-center min-h-[400px]">
         <Loader2 className="h-8 w-8 animate-spin text-accent-500" />
       </div>
     }>

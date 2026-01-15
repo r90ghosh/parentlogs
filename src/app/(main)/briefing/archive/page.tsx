@@ -77,7 +77,7 @@ export default function BriefingArchivePage() {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:ml-64 space-y-4 max-w-4xl">
+      <div className="p-4 space-y-4 max-w-4xl">
         <Skeleton className="h-8 w-48" />
         <div className="grid gap-4 md:grid-cols-2">
           {[...Array(8)].map((_, i) => (
@@ -89,7 +89,7 @@ export default function BriefingArchivePage() {
   }
 
   return (
-    <div className="p-4 md:ml-64 space-y-6 max-w-4xl">
+    <div className="p-4 space-y-6 max-w-4xl">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link

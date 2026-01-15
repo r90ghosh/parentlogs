@@ -65,7 +65,7 @@ export default function BriefingPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen md:ml-64">
+      <div className="min-h-screen">
         <div className="p-6 md:p-12 space-y-6">
           <Skeleton className="h-[300px] w-full rounded-2xl" />
           <Skeleton className="h-8 w-48" />
@@ -88,7 +88,7 @@ export default function BriefingPage() {
   // Locked content
   if (isPremiumLocked) {
     return (
-      <div className="min-h-screen md:ml-64 flex items-center justify-center p-6">
+      <div className="min-h-screen flex items-center justify-center p-6">
         <PaywallOverlay feature="briefings_beyond_4_weeks" />
       </div>
     )
@@ -97,7 +97,7 @@ export default function BriefingPage() {
   // No briefing available
   if (!displayBriefing) {
     return (
-      <div className="min-h-screen md:ml-64">
+      <div className="min-h-screen">
         {/* Hero with navigation only */}
         <div className="bg-gradient-to-br from-teal-500/[0.15] via-cyan-500/[0.08] to-transparent border-b border-white/[0.06] px-6 md:px-12 py-10">
           <div className="flex items-center justify-center gap-4">
@@ -147,7 +147,7 @@ export default function BriefingPage() {
       />
 
       {/* Content Area */}
-      <div className="px-4 md:px-12 py-6 max-w-7xl mx-auto md:ml-64">
+      <div className="px-4 md:px-12 py-6 max-w-7xl mx-auto">
         {/* Back to current week button */}
         {viewingWeek !== null && viewingWeek !== currentWeek && (
           <button

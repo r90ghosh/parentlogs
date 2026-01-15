@@ -48,7 +48,7 @@ export default function ChecklistDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:ml-64 space-y-4 max-w-2xl">
+      <div className="p-4 space-y-4 max-w-2xl">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-64 w-full" />
@@ -58,7 +58,7 @@ export default function ChecklistDetailPage() {
 
   if (!checklist) {
     return (
-      <div className="p-4 md:ml-64 space-y-4 max-w-2xl">
+      <div className="p-4 space-y-4 max-w-2xl">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/checklists">
@@ -84,7 +84,7 @@ export default function ChecklistDetailPage() {
   const isComplete = checklist.progress.percentage === 100
 
   return (
-    <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
+    <div className="p-4 space-y-6 max-w-2xl">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>

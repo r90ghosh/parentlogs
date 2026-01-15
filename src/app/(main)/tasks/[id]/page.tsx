@@ -44,7 +44,7 @@ export default function TaskDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:ml-64 space-y-4 max-w-2xl">
+      <div className="p-4 space-y-4 max-w-2xl">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-48 w-full" />
       </div>
@@ -53,7 +53,7 @@ export default function TaskDetailPage() {
 
   if (!task) {
     return (
-      <div className="p-4 md:ml-64">
+      <div className="p-4">
         <p className="text-surface-400">Task not found</p>
       </div>
     )
@@ -83,7 +83,7 @@ export default function TaskDetailPage() {
   }
 
   return (
-    <div className="p-4 md:ml-64 space-y-4 max-w-2xl">
+    <div className="p-4 space-y-4 max-w-2xl">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>

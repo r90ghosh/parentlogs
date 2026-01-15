@@ -56,7 +56,7 @@ export default function SettingsPage() {
 
   if (premiumLoading) {
     return (
-      <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
+      <div className="p-4 space-y-6 max-w-2xl">
         <Skeleton className="h-24 w-full" />
         <div className="space-y-2">
           {[1, 2, 3, 4, 5].map((i) => (
@@ -68,7 +68,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
+    <div className="p-4 space-y-6 max-w-2xl">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white">Settings</h1>

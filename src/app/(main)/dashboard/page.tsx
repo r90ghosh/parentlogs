@@ -47,7 +47,7 @@ export default function DashboardPage() {
   const partnerName = 'Partner'
 
   return (
-    <div className="min-h-screen pb-24 md:pb-8 md:ml-64">
+    <div className="min-h-screen pb-24 md:pb-8">
       <DashboardClient
         userId={user.id}
         familyId={profile.family_id}

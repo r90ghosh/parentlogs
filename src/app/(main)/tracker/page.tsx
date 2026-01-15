@@ -52,7 +52,7 @@ export default function TrackerPage() {
   const isPreview = family?.stage === 'pregnancy'
 
   return (
-    <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
+    <div className="p-4 space-y-6 max-w-2xl overflow-x-hidden">
       {/* Preview Banner for Pregnancy */}
       {isPreview && (
         <Card className="bg-primary-600/20 border-primary-600/30">

@@ -148,7 +148,7 @@ export default function ProfileSettingsPage() {
   }
 
   return (
-    <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
+    <div className="p-4 space-y-6 max-w-2xl">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>

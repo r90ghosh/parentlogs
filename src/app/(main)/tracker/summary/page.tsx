@@ -35,7 +35,7 @@ export default function TrackerSummaryPage() {
 
   if (!isPremium) {
     return (
-      <div className="p-4 md:ml-64 space-y-4 max-w-2xl">
+      <div className="p-4 space-y-4 max-w-2xl">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/tracker">
@@ -101,7 +101,7 @@ export default function TrackerSummaryPage() {
   const maxSleep = Math.max(...dailyStats.map(d => d.sleepMinutes), 1)
 
   return (
-    <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
+    <div className="p-4 space-y-6 max-w-2xl">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>

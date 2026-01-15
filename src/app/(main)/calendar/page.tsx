@@ -56,7 +56,7 @@ export default function CalendarPage() {
   // Show loading state until mounted
   if (!mounted || !currentDate) {
     return (
-      <div className="p-4 md:ml-64 space-y-4 max-w-4xl">
+      <div className="p-4 space-y-4 max-w-4xl">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-white">Calendar</h1>
         </div>
@@ -106,7 +106,7 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="p-4 md:ml-64 space-y-4 max-w-4xl">
+    <div className="p-4 space-y-4 max-w-4xl">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white">Calendar</h1>

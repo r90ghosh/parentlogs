@@ -153,7 +153,7 @@ function LogEntryContent() {
   }
 
   return (
-    <div className="p-4 md:ml-64 space-y-4 max-w-lg">
+    <div className="p-4 space-y-4 max-w-lg">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>
@@ -493,7 +493,7 @@ function LogEntryContent() {
 export default function LogEntryPage() {
   return (
     <Suspense fallback={
-      <div className="p-4 md:ml-64 flex items-center justify-center">
+      <div className="p-4 flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
       </div>
     }>

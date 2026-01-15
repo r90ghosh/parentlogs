@@ -140,7 +140,7 @@ export default function FamilySettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
+      <div className="p-4 space-y-6 max-w-2xl">
         <div className="flex items-center gap-4">
           <Skeleton className="h-10 w-10" />
           <Skeleton className="h-8 w-32" />
@@ -153,7 +153,7 @@ export default function FamilySettingsPage() {
 
   if (!family) {
     return (
-      <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
+      <div className="p-4 space-y-6 max-w-2xl">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link href="/settings">
@@ -177,7 +177,7 @@ export default function FamilySettingsPage() {
   }
 
   return (
-    <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
+    <div className="p-4 space-y-6 max-w-2xl">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>

@@ -260,7 +260,7 @@ export default function BudgetPage() {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:ml-64 space-y-6 max-w-4xl">
+      <div className="p-4 space-y-6 max-w-4xl">
         <Skeleton className="h-8 w-48" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[...Array(3)].map((_, i) => (
@@ -273,7 +273,7 @@ export default function BudgetPage() {
   }
 
   return (
-    <div className="p-4 md:ml-64 space-y-6 max-w-4xl">
+    <div className="p-4 space-y-6 max-w-4xl">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
