@@ -117,12 +117,6 @@ export const trackerService = {
 
     if (!profile?.family_id) return { log: null, error: new Error('No family found') }
 
-    // Premium gating for advanced log types
-    const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
-    if (!isPremium && PREMIUM_LOG_TYPES.includes(log.log_type)) {
-      return { log: null, error: new Error('Premium feature: Upgrade to log this type') }
-    }
-
     const { data, error } = await supabase
       .from('baby_logs')
       .insert({

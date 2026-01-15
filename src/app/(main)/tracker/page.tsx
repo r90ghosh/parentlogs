@@ -2,7 +2,6 @@
 
 import { useFamily } from '@/hooks/use-family'
 import { useShiftBriefing, useTrackerLogs } from '@/hooks/use-tracker'
-import { useRequirePremium } from '@/hooks/use-require-auth'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -46,7 +45,6 @@ export default function TrackerPage() {
   const { data: family } = useFamily()
   const { data: shiftBriefing, isLoading: briefingLoading } = useShiftBriefing()
   const { data: recentLogs, isLoading: logsLoading } = useTrackerLogs({ limit: 5 })
-  const { isPremium } = useRequirePremium()
 
   // Show preview UI for pregnancy
   const isPreview = family?.stage === 'pregnancy'
@@ -212,12 +210,9 @@ export default function TrackerPage() {
         </div>
       </div>
 
-      {/* More Log Types - Premium */}
+      {/* More Log Types */}
       <div className={cn(isPreview && "opacity-70")}>
-        <h2 className="text-lg font-medium text-white mb-3 flex items-center gap-2">
-          More Logs
-          {(!isPremium || isPreview) && <Lock className="h-4 w-4 text-surface-500" />}
-        </h2>
+        <h2 className="text-lg font-medium text-white mb-3">More Logs</h2>
         <div className="grid grid-cols-4 gap-2">
           {PREMIUM_LOG_TYPES.map((type) => {
             const config = LOG_TYPE_CONFIG[type]
@@ -226,26 +221,25 @@ export default function TrackerPage() {
                 key={type}
                 className={cn(
                   "flex flex-col items-center gap-1.5 p-3 rounded-lg border cursor-not-allowed",
-                  "bg-surface-800/50",
+                  config.bgColor,
                   "border-surface-700",
                   "opacity-60"
                 )}
               >
-                <config.icon className={cn("h-6 w-6", "text-surface-500")} />
+                <config.icon className={cn("h-6 w-6", config.color)} />
                 <span className="text-xs text-surface-300">{config.label}</span>
               </div>
             ) : (
               <Link
                 key={type}
-                href={isPremium ? `/tracker/log?type=${type}` : '/settings/subscription'}
+                href={`/tracker/log?type=${type}`}
                 className={cn(
                   "flex flex-col items-center gap-1.5 p-3 rounded-lg border transition-colors",
-                  isPremium ? config.bgColor : "bg-surface-800/50",
-                  "border-surface-700",
-                  isPremium ? "hover:border-surface-600" : "opacity-60"
+                  config.bgColor,
+                  "border-surface-700 hover:border-surface-600"
                 )}
               >
-                <config.icon className={cn("h-6 w-6", isPremium ? config.color : "text-surface-500")} />
+                <config.icon className={cn("h-6 w-6", config.color)} />
                 <span className="text-xs text-surface-300">{config.label}</span>
               </Link>
             )
