@@ -3,7 +3,6 @@
 import { useState, useMemo } from 'react'
 import { useBudgetSummary, useAddToBudget, useMarkAsPurchased, useRemoveBudgetItem, useAddCustomBudgetItem } from '@/hooks/use-budget'
 import { useFamily } from '@/hooks/use-family'
-import { useRequirePremium } from '@/hooks/use-require-auth'
 import Link from 'next/link'
 import { budgetService } from '@/services/budget-service'
 import { BudgetTimelineBar } from '@/components/shared/budget-timeline-bar'
@@ -67,8 +66,6 @@ import {
   Camera,
   BookOpen,
   PersonStanding,
-  Lock,
-  Crown,
   Info,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -111,13 +108,9 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string
   'Books': { bg: 'bg-lime-500/20', text: 'text-lime-400', border: 'border-lime-500/30' },
 }
 
-// Number of free items to show per category
-const FREE_ITEMS_PER_CATEGORY = 2
-
 export default function BudgetPage() {
   const { data: summary, isLoading } = useBudgetSummary()
   const { data: family } = useFamily()
-  const { isPremium } = useRequirePremium()
   const addToBudget = useAddToBudget()
   const markAsPurchased = useMarkAsPurchased()
   const removeBudgetItem = useRemoveBudgetItem()
@@ -455,32 +448,6 @@ export default function BudgetPage() {
 
         {/* Browse Items Tab */}
         <TabsContent value="browse" className="space-y-4">
-          {/* Premium Upgrade Banner for free users */}
-          {!isPremium && (
-            <Card className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border-amber-500/30">
-              <CardContent className="py-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-amber-500/20">
-                      <Crown className="h-5 w-5 text-amber-400" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-white">Unlock Full Budget Planner</p>
-                      <p className="text-sm text-surface-400">
-                        See all {summary?.categories.reduce((sum, c) => sum + c.items.length, 0) || 0} items with detailed descriptions, notes, and price ranges
-                      </p>
-                    </div>
-                  </div>
-                  <Button asChild className="bg-amber-500 hover:bg-amber-600 text-black shrink-0">
-                    <Link href="/settings/subscription">
-                      Upgrade
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
           {/* Stage Filter */}
           <div className="flex items-center gap-2">
             <span className="text-sm text-surface-400">Show:</span>
@@ -500,7 +467,6 @@ export default function BudgetPage() {
             {filteredCategories?.map((category) => {
               const Icon = CATEGORY_ICONS[category.name] || DollarSign
               const colors = CATEGORY_COLORS[category.name] || CATEGORY_COLORS['Admin']
-              const lockedCount = isPremium ? 0 : Math.max(0, category.items.length - FREE_ITEMS_PER_CATEGORY)
               // Calculate category total based on selected tier
               const categoryTierTotal = category.items.reduce(
                 (sum, item) => sum + getPriceForTier(item, selectedTier),
@@ -523,12 +489,6 @@ export default function BudgetPage() {
                         <span className="text-xs text-surface-400 ml-2">
                           ({category.items.length} items)
                         </span>
-                        {lockedCount > 0 && (
-                          <span className="text-xs text-amber-400 ml-2">
-                            <Lock className="h-3 w-3 inline mr-1" />
-                            {lockedCount} locked
-                          </span>
-                        )}
                       </div>
                       <span className="text-sm text-surface-400 mr-4">
                         {formatPrice(categoryTierTotal)}
@@ -537,112 +497,75 @@ export default function BudgetPage() {
                   </AccordionTrigger>
                   <AccordionContent className="px-4 pb-4">
                     <div className="space-y-2 pt-2">
-                      {category.items.map((template, index) => {
+                      {category.items.map((template) => {
                         const isAdded = addedTemplateIds.has(template.budget_id)
-                        const isLocked = !isPremium && index >= FREE_ITEMS_PER_CATEGORY
                         const itemPrice = getPriceForTier(template, selectedTier)
                         const hasProductExamples = template.product_examples && template.product_examples.length > 0
-
-                        // For locked items, truncate item name and hide details
-                        const displayName = isLocked
-                          ? template.item.slice(0, Math.floor(template.item.length * 0.4)) + '...'
-                          : template.item
 
                         return (
                           <div
                             key={template.budget_id}
                             className={cn(
-                              "flex items-start justify-between p-3 rounded-lg border transition-colors relative",
-                              isLocked
-                                ? "bg-surface-800/30 border-surface-700/50"
-                                : isAdded
-                                  ? "bg-accent-500/10 border-accent-500/30"
-                                  : "bg-surface-800/50 border-surface-700 hover:border-surface-600",
-                              !isLocked && "cursor-pointer"
+                              "flex items-start justify-between p-3 rounded-lg border transition-colors relative cursor-pointer",
+                              isAdded
+                                ? "bg-accent-500/10 border-accent-500/30"
+                                : "bg-surface-800/50 border-surface-700 hover:border-surface-600"
                             )}
-                            onClick={!isLocked ? () => setSelectedItemForDetails(template) : undefined}
+                            onClick={() => setSelectedItemForDetails(template)}
                           >
                             <div className="flex-1 min-w-0 pr-4">
                               <div className="flex items-center gap-2 mb-1">
-                                <span className={cn(
-                                  "font-medium text-sm",
-                                  isLocked ? "text-surface-500" : "text-white"
-                                )}>
-                                  {displayName}
+                                <span className="font-medium text-sm text-white">
+                                  {template.item}
                                 </span>
-                                {isLocked && (
-                                  <Lock className="h-3 w-3 text-surface-500" />
-                                )}
-                                {!isLocked && template.priority === 'must-have' && (
+                                {template.priority === 'must-have' && (
                                   <Badge variant="outline" className="text-xs border-red-500/50 text-red-400">
                                     Must-have
                                   </Badge>
                                 )}
-                                {!isLocked && isAdded && (
+                                {isAdded && (
                                   <Badge className="text-xs bg-accent-500/20 text-accent-400 border-0">
                                     Added
                                   </Badge>
                                 )}
-                                {!isLocked && hasProductExamples && (
+                                {hasProductExamples && (
                                   <Info className="h-3 w-3 text-amber-400" />
                                 )}
                               </div>
-                              {isLocked ? (
-                                <p className="text-xs text-surface-600 italic">
-                                  Upgrade to see details
+                              {template.description && (
+                                <p className="text-xs text-surface-400 line-clamp-2 mb-1">
+                                  {template.description}
                                 </p>
-                              ) : (
-                                <>
-                                  {template.description && (
-                                    <p className="text-xs text-surface-400 line-clamp-2 mb-1">
-                                      {template.description}
-                                    </p>
-                                  )}
-                                  <div className="flex items-center gap-3 text-xs text-surface-500">
-                                    <span>
-                                      Week {template.week_start}-{template.week_end}
-                                    </span>
-                                    <span className={selectedTier === 'budget' ? 'text-emerald-400' : 'text-amber-400'}>
-                                      {formatPrice(itemPrice)}
-                                    </span>
-                                  </div>
-                                  {template.notes && (
-                                    <p className="text-xs text-amber-400/80 mt-1 italic">
-                                      {template.notes}
-                                    </p>
-                                  )}
-                                </>
+                              )}
+                              <div className="flex items-center gap-3 text-xs text-surface-500">
+                                <span>
+                                  Week {template.week_start}-{template.week_end}
+                                </span>
+                                <span className={selectedTier === 'budget' ? 'text-emerald-400' : 'text-amber-400'}>
+                                  {formatPrice(itemPrice)}
+                                </span>
+                              </div>
+                              {template.notes && (
+                                <p className="text-xs text-amber-400/80 mt-1 italic">
+                                  {template.notes}
+                                </p>
                               )}
                             </div>
-                            {isLocked ? (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="border-amber-500/50 text-amber-400 hover:bg-amber-500/10"
-                                asChild
-                              >
-                                <Link href="/settings/subscription">
-                                  <Lock className="h-3 w-3 mr-1" />
-                                  Unlock
-                                </Link>
-                              </Button>
-                            ) : (
-                              <Button
-                                size="sm"
-                                variant={isAdded ? "ghost" : "outline"}
-                                disabled={isAdded || addToBudget.isPending}
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  setSelectedTemplate(template)
-                                }}
-                              >
-                                {isAdded ? (
-                                  <Check className="h-4 w-4 text-accent-500" />
-                                ) : (
-                                  <Plus className="h-4 w-4" />
-                                )}
-                              </Button>
-                            )}
+                            <Button
+                              size="sm"
+                              variant={isAdded ? "ghost" : "outline"}
+                              disabled={isAdded || addToBudget.isPending}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setSelectedTemplate(template)
+                              }}
+                            >
+                              {isAdded ? (
+                                <Check className="h-4 w-4 text-accent-500" />
+                              ) : (
+                                <Plus className="h-4 w-4" />
+                              )}
+                            </Button>
                           </div>
                         )
                       })}
