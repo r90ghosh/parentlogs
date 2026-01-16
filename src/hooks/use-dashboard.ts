@@ -179,7 +179,7 @@ export function useDashboardData(familyId: string | undefined, currentWeek: numb
           .from('briefing_templates')
           .select('title, baby_update')
           .eq('stage', 'pregnancy')
-          .eq('week_number', currentWeek)
+          .eq('week', currentWeek)
           .single()
 
         if (briefingData) {
