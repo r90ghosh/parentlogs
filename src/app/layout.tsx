@@ -7,7 +7,7 @@ import { Toaster } from '@/components/ui/sonner'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'ParentLogs - Your Parenting Command Center',
+  title: 'The Dad Center - Your Parenting Command Center',
   description: 'Expert-curated tasks, weekly briefings, and partner sync for pregnancy through early parenthood.',
   manifest: '/manifest.json',
   icons: {
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'ParentLogs',
+    title: 'The Dad Center',
   },
 }
 

@@ -39,7 +39,7 @@ export function ProblemSolution() {
             </span>.
           </h2>
           <p className="text-lg text-slate-400">
-            Stop piecing together information from a dozen sources. ParentLogs gives you
+            Stop piecing together information from a dozen sources. The Dad Center gives you
             everything you need in one place.
           </p>
         </div>

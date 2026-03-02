@@ -108,7 +108,7 @@ export default function SignupPage() {
     <Card className="bg-surface-900 border-surface-800">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl text-white">Create an account</CardTitle>
-        <CardDescription>Start your parenting journey with ParentLogs</CardDescription>
+        <CardDescription>Start your parenting journey with The Dad Center</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {error && (

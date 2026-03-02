@@ -110,8 +110,8 @@ export default function OnboardingInvite() {
     if (!inviteCode) return
 
     const shareData = {
-      title: 'Join me on ParentLogs',
-      text: `Join my family on ParentLogs! Use invite code: ${inviteCode}`,
+      title: 'Join me on The Dad Center',
+      text: `Join my family on The Dad Center! Use invite code: ${inviteCode}`,
       url: `${window.location.origin}/onboarding/join?code=${inviteCode}`,
     }
 

@@ -30,10 +30,10 @@ const footerLinks = {
 }
 
 const socialLinks = [
-  { icon: Twitter, href: 'https://twitter.com/parentlogs', label: 'Twitter' },
-  { icon: Linkedin, href: 'https://linkedin.com/company/parentlogs', label: 'LinkedIn' },
-  { icon: Instagram, href: 'https://instagram.com/parentlogs', label: 'Instagram' },
-  { icon: Mail, href: 'mailto:hello@parentlogs.com', label: 'Email' },
+  { icon: Twitter, href: 'https://twitter.com/thedadcenter', label: 'Twitter' },
+  { icon: Linkedin, href: 'https://linkedin.com/company/thedadcenter', label: 'LinkedIn' },
+  { icon: Instagram, href: 'https://instagram.com/thedadcenter', label: 'Instagram' },
+  { icon: Mail, href: 'mailto:hello@thedadcenter.com', label: 'Email' },
 ]
 
 export function Footer() {
@@ -139,7 +139,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="py-6 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-slate-500" suppressHydrationWarning>
-            © {new Date().getFullYear()} ParentLogs. All rights reserved.
+            © {new Date().getFullYear()} The Dad Center. All rights reserved.
           </p>
           <p className="text-sm text-slate-600">
             Made with ❤️ for dads everywhere

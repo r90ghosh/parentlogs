@@ -70,8 +70,8 @@ function LoginContent() {
   return (
     <Card className="bg-surface-900 border-surface-800">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl text-white">Welcome to ParentLogs</CardTitle>
-        <CardDescription>Sign in to your ParentLogs account</CardDescription>
+        <CardTitle className="text-2xl text-white">Welcome to The Dad Center</CardTitle>
+        <CardDescription>Sign in to your account</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {error && (

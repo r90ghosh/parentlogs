@@ -8,7 +8,7 @@ import { ResourceLibrary } from '@/components/marketing/ResourceLibrary'
 import { Button } from '@/components/ui/button'
 
 export const metadata = {
-  title: 'Parenting Resources for Dads | ParentLogs',
+  title: 'Parenting Resources for Dads | The Dad Center',
   description:
     'Expert-reviewed articles and curated videos covering pregnancy through toddlerhood. Written for dads, by dads.',
 }

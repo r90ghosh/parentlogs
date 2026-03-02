@@ -128,7 +128,7 @@ export default function SettingsPage() {
 
       {/* App Info */}
       <div className="text-center text-sm text-surface-500 pt-4">
-        <p>ParentLogs v1.0.0</p>
+        <p>The Dad Center v1.0.0</p>
         <p className="mt-1">
           <Link href="/terms" className="hover:text-surface-300">Terms</Link>
           {' · '}

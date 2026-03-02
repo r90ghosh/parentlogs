@@ -62,7 +62,7 @@ export default function NotificationSettingsPage() {
 
   const handleTestNotification = () => {
     showTestNotification('Test Notification', {
-      body: 'This is a test notification from ParentLogs!',
+      body: 'This is a test notification from The Dad Center!',
       tag: 'test',
     })
   }

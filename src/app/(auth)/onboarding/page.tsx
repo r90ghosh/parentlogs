@@ -20,7 +20,7 @@ export default function OnboardingWelcome() {
   return (
     <Card className="w-full max-w-md bg-surface-900 border-surface-800">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl text-white">Welcome to ParentLogs</CardTitle>
+        <CardTitle className="text-2xl text-white">Welcome to The Dad Center</CardTitle>
         <CardDescription>Your parenting command center</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">

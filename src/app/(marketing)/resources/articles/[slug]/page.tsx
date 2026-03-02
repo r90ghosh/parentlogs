@@ -25,12 +25,12 @@ export async function generateMetadata({ params }: PageProps) {
 
   if (!article) {
     return {
-      title: 'Article Not Found | ParentLogs',
+      title: 'Article Not Found | The Dad Center',
     }
   }
 
   return {
-    title: `${article.title} | ParentLogs`,
+    title: `${article.title} | The Dad Center`,
     description: article.excerpt,
     openGraph: {
       title: article.title,

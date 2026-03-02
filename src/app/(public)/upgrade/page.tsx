@@ -77,7 +77,7 @@ function UpgradeContent() {
           </Link>
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-accent-500" />
-            <span className="font-semibold text-white">ParentLogs Premium</span>
+            <span className="font-semibold text-white">The Dad Center Premium</span>
           </div>
           <div className="w-16" />
         </div>

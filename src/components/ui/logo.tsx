@@ -48,7 +48,7 @@ export function Logo({
       <div className={cn('relative flex-shrink-0 rounded-lg overflow-hidden', sizeClasses[size])}>
         <Image
           src={logoSrc}
-          alt="ParentLogs"
+          alt="The Dad Center"
           fill
           className="object-contain"
           priority
@@ -63,7 +63,7 @@ export function Logo({
             href && 'group-hover:text-amber-400'
           )}
         >
-          ParentLogs
+          The Dad Center
         </span>
       )}
     </div>
@@ -96,7 +96,7 @@ export function LogoIcon({
     <div className={cn('relative flex-shrink-0 rounded-lg overflow-hidden', sizeClasses[size], className)}>
       <Image
         src={logoSrc}
-        alt="ParentLogs"
+        alt="The Dad Center"
         fill
         className="object-contain"
         priority

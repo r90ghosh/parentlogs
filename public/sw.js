@@ -1,5 +1,5 @@
-// ParentLogs Service Worker - PWA with Push Notifications
-const CACHE_NAME = 'parentlogs-v1';
+// The Dad Center Service Worker - PWA with Push Notifications
+const CACHE_NAME = 'thedadcenter-v1';
 const OFFLINE_URL = '/offline';
 
 // Assets to precache on install
@@ -138,7 +138,7 @@ self.addEventListener('push', (event) => {
     };
 
     event.waitUntil(
-      self.registration.showNotification(data.title || 'ParentLogs', options)
+      self.registration.showNotification(data.title || 'The Dad Center', options)
     );
   } catch (error) {
     console.error('[SW] Push notification error:', error);
