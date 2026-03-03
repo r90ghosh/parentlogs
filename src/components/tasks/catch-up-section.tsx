@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { FamilyTask, TriageAction } from '@/types'
 import { CatchUpTaskItem } from './catch-up-task-item'
 import { SectionAction } from './task-section'
-import { sortBacklogTasks } from '@/lib/task-utils'
+import { categorizeBacklogTask, sortBacklogTasks } from '@/lib/task-utils'
 import { cn } from '@/lib/utils'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, CheckCircle2 } from 'lucide-react'
 
 interface CatchUpSectionProps {
   tasks: FamilyTask[]
@@ -26,105 +26,203 @@ export function CatchUpSection({
   isPending = false,
   maxVisible = 5,
 }: CatchUpSectionProps) {
-  const [isExpanded, setIsExpanded] = useState(true)
-  const [showAll, setShowAll] = useState(false)
+  const [isCatchUpExpanded, setIsCatchUpExpanded] = useState(true)
+  const [isAutoHandledExpanded, setIsAutoHandledExpanded] = useState(false)
+  const [autoHandledDismissed, setAutoHandledDismissed] = useState(false)
+  const [showAllCatchUp, setShowAllCatchUp] = useState(false)
+
+  // Split into 2 buckets based on backlog category
+  const { autoHandledTasks, catchUpTasks } = useMemo(() => {
+    const auto: FamilyTask[] = []
+    const catchUp: FamilyTask[] = []
+
+    tasks.forEach(task => {
+      const category = categorizeBacklogTask(task, currentWeek)
+      if (category === 'window_passed' || category === 'probably_done') {
+        auto.push(task)
+      } else {
+        catchUp.push(task)
+      }
+    })
+
+    return {
+      autoHandledTasks: auto,
+      catchUpTasks: sortBacklogTasks(catchUp, currentWeek),
+    }
+  }, [tasks, currentWeek])
 
   if (tasks.length === 0) return null
 
-  // Sort tasks for optimal triage order
-  const sortedTasks = sortBacklogTasks(tasks, currentWeek)
-  const visibleTasks = showAll ? sortedTasks : sortedTasks.slice(0, maxVisible)
-  const hasMore = sortedTasks.length > maxVisible
-
-  // Get earliest week for context
-  const earliestWeek = Math.min(...tasks.map(t => t.week_due || 0))
+  const visibleCatchUp = showAllCatchUp ? catchUpTasks : catchUpTasks.slice(0, maxVisible)
+  const hasMoreCatchUp = catchUpTasks.length > maxVisible
 
   const handleMarkAllDone = () => {
-    onBulkTriage(tasks.map(t => t.id), 'completed')
+    onBulkTriage(catchUpTasks.map(t => t.id), 'completed')
   }
 
-  const handleSkipAll = () => {
-    onBulkTriage(tasks.map(t => t.id), 'skipped')
+  const handleDismissAutoHandled = () => {
+    // Mark all auto-handled as skipped and dismiss the section
+    onBulkTriage(autoHandledTasks.map(t => t.id), 'skipped')
+    setAutoHandledDismissed(true)
   }
 
   return (
-    <div
-      className={cn(
-        'rounded-2xl overflow-hidden',
-        'bg-gradient-to-br from-zinc-800 to-zinc-900',
-        'border border-indigo-500/30'
-      )}
-    >
-      {/* Section header */}
-      <div
-        className={cn(
-          'px-4 md:px-5 py-3 md:py-4 cursor-pointer',
-          'border-b border-white/[0.06]',
-          'bg-gradient-to-r from-indigo-500/10 to-purple-500/5'
-        )}
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        {/* Title row */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-base md:text-lg">📥</span>
-            <h3 className="text-sm md:text-[15px] font-semibold text-white">Catch-Up Queue</h3>
-            <span className="text-[10px] md:text-xs text-zinc-500 bg-white/[0.06] px-1.5 md:px-2 py-0.5 rounded-[10px]">
-              {tasks.length} tasks
-            </span>
-            <ChevronDown
-              className={cn(
-                'w-4 h-4 text-zinc-500 transition-transform',
-                !isExpanded && '-rotate-90'
-              )}
-            />
+    <div className="space-y-4">
+      {/* Auto-Handled Bucket */}
+      {autoHandledTasks.length > 0 && !autoHandledDismissed && (
+        <div
+          className={cn(
+            'rounded-2xl overflow-hidden',
+            'bg-gradient-to-br from-zinc-800/60 to-zinc-900/60',
+            'border border-zinc-700/50'
+          )}
+        >
+          {/* Auto-handled header */}
+          <div
+            className="px-4 md:px-5 py-3 md:py-4 cursor-pointer border-b border-white/[0.04]"
+            onClick={() => setIsAutoHandledExpanded(!isAutoHandledExpanded)}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-zinc-500" />
+                <h3 className="text-sm font-semibold text-zinc-400">
+                  {autoHandledTasks.length} tasks auto-sorted
+                </h3>
+                <ChevronDown
+                  className={cn(
+                    'w-4 h-4 text-zinc-600 transition-transform',
+                    !isAutoHandledExpanded && '-rotate-90'
+                  )}
+                />
+              </div>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleDismissAutoHandled()
+                }}
+                disabled={isPending}
+                className={cn(
+                  'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all',
+                  'bg-white/[0.06] text-zinc-400 hover:bg-white/10 hover:text-zinc-300',
+                  isPending && 'opacity-50 cursor-not-allowed'
+                )}
+              >
+                Looks right
+              </button>
+            </div>
+
+            <p className="text-[10px] text-zinc-600 mt-1 ml-6">
+              Expired or likely completed tasks — expand to review individually
+            </p>
           </div>
+
+          {/* Auto-handled task list (collapsed by default) */}
+          {isAutoHandledExpanded && (
+            <div className="p-2">
+              {autoHandledTasks.map(task => (
+                <div
+                  key={task.id}
+                  className="flex items-center justify-between p-3 rounded-xl opacity-50"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-sm text-zinc-500 line-through truncate">{task.title}</span>
+                    <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-zinc-700/50 text-zinc-500 uppercase tracking-wide flex-shrink-0">
+                      {categorizeBacklogTask(task, currentWeek) === 'window_passed' ? 'Expired' : 'Likely done'}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => onTriage(task.id, 'added')}
+                    disabled={isPending}
+                    className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors flex-shrink-0 ml-2"
+                  >
+                    Un-skip
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
+      )}
 
-        {/* Subtitle */}
-        <p className="text-[10px] md:text-xs text-zinc-500 mt-1 ml-6 md:ml-7">
-          Tasks from Weeks {earliestWeek}-{currentWeek - 1} • Review and triage quickly
-        </p>
+      {/* Catch-Up Bucket */}
+      {catchUpTasks.length > 0 && (
+        <div
+          className={cn(
+            'rounded-2xl overflow-hidden',
+            'bg-gradient-to-br from-amber-900/20 to-zinc-900',
+            'border border-amber-500/20'
+          )}
+        >
+          {/* Catch-up header */}
+          <div
+            className={cn(
+              'px-4 md:px-5 py-3 md:py-4 cursor-pointer',
+              'border-b border-white/[0.06]',
+              'bg-gradient-to-r from-amber-500/10 to-orange-500/5'
+            )}
+            onClick={() => setIsCatchUpExpanded(!isCatchUpExpanded)}
+          >
+            {/* Title row */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-base md:text-lg">📋</span>
+                <h3 className="text-sm md:text-[15px] font-semibold text-white">Catch Up</h3>
+                <span className="text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 uppercase tracking-wide">
+                  {catchUpTasks.length} tasks
+                </span>
+                <ChevronDown
+                  className={cn(
+                    'w-4 h-4 text-zinc-500 transition-transform',
+                    !isCatchUpExpanded && '-rotate-90'
+                  )}
+                />
+              </div>
+            </div>
 
-        {/* Action buttons - below on mobile */}
-        <div className="flex flex-wrap gap-2 mt-3" onClick={(e) => e.stopPropagation()}>
-          <SectionAction onClick={handleMarkAllDone} variant="success">
-            ✓ Mark All Done
-          </SectionAction>
-          <SectionAction onClick={handleSkipAll}>
-            Skip All
-          </SectionAction>
-          <Link href="/tasks/triage">
-            <SectionAction variant="primary">
-              Quick Triage Mode
-            </SectionAction>
-          </Link>
-        </div>
-      </div>
+            {/* Subtitle */}
+            <p className="text-[10px] md:text-xs text-zinc-500 mt-1 ml-7">
+              These tasks are still actionable — complete them when you&apos;re ready
+            </p>
 
-      {/* Task list */}
-      {isExpanded && (
-        <div className="p-2">
-          {visibleTasks.map(task => (
-            <CatchUpTaskItem
-              key={task.id}
-              task={task}
-              currentWeek={currentWeek}
-              onTriage={onTriage}
-              isPending={isPending}
-            />
-          ))}
+            {/* Action buttons */}
+            <div className="flex flex-wrap gap-2 mt-3" onClick={(e) => e.stopPropagation()}>
+              <SectionAction onClick={handleMarkAllDone} variant="success">
+                ✓ Mark All Done
+              </SectionAction>
+              <Link href="/tasks/triage">
+                <SectionAction variant="primary">
+                  Quick Triage Mode
+                </SectionAction>
+              </Link>
+            </div>
+          </div>
 
-          {/* Show more/less button */}
-          {hasMore && (
-            <button
-              onClick={() => setShowAll(!showAll)}
-              className="w-full py-3 text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
-            >
-              {showAll
-                ? 'Show less'
-                : `Show ${sortedTasks.length - maxVisible} more tasks`}
-            </button>
+          {/* Catch-up task list */}
+          {isCatchUpExpanded && (
+            <div className="p-2">
+              {visibleCatchUp.map(task => (
+                <CatchUpTaskItem
+                  key={task.id}
+                  task={task}
+                  currentWeek={currentWeek}
+                  onTriage={onTriage}
+                  isPending={isPending}
+                />
+              ))}
+
+              {/* Show more/less button */}
+              {hasMoreCatchUp && (
+                <button
+                  onClick={() => setShowAllCatchUp(!showAllCatchUp)}
+                  className="w-full py-3 text-sm text-amber-400 hover:text-amber-300 transition-colors"
+                >
+                  {showAllCatchUp
+                    ? 'Show less'
+                    : `Show ${catchUpTasks.length - maxVisible} more tasks`}
+                </button>
+              )}
+            </div>
           )}
         </div>
       )}

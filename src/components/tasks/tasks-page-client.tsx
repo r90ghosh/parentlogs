@@ -1,6 +1,20 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  eachDayOfInterval,
+  isSameMonth,
+  isSameDay,
+  addMonths,
+  subMonths,
+  isToday,
+} from 'date-fns'
 import { FamilyTask, TriageAction } from '@/types'
 import {
   TasksHeader,
@@ -33,18 +47,36 @@ import {
   getCurrentTimelineCategory,
   getTaskTimelineCategory,
 } from '@/lib/task-timeline'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { PaywallOverlay } from '@/components/shared/paywall-overlay'
+import { cn } from '@/lib/utils'
+import { List, CalendarDays, ChevronLeft, ChevronRight, Lock, CheckSquare } from 'lucide-react'
+import Link from 'next/link'
 
 interface TasksPageClientProps {
   currentWeek: number
   signupWeek: number
   daysToGo: number
+  initialView?: 'list' | 'calendar'
+  isPremium?: boolean
 }
 
 export function TasksPageClient({
   currentWeek,
   signupWeek,
   daysToGo,
+  initialView = 'list',
+  isPremium = false,
 }: TasksPageClientProps) {
+  const router = useRouter()
+
+  // View toggle state
+  const [view, setView] = useState<'list' | 'calendar'>(initialView)
+
+  // Calendar state
+  const [calendarDate, setCalendarDate] = useState<Date>(new Date())
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+
   // State
   const [activeTab, setActiveTab] = useState('active')
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
@@ -59,6 +91,12 @@ export function TasksPageClient({
   const { data: family } = useFamily()
   const triageTask = useTriageTask()
   const bulkTriageTasks = useBulkTriageTasks()
+
+  // Sync URL with view toggle
+  const handleViewChange = useCallback((newView: 'list' | 'calendar') => {
+    setView(newView)
+    router.replace(newView === 'calendar' ? '/tasks?view=calendar' : '/tasks', { scroll: false })
+  }, [router])
 
   // Handle triage actions
   const handleTriage = useCallback((taskId: string, action: TriageAction) => {
@@ -75,11 +113,19 @@ export function TasksPageClient({
     console.log('Complete task:', taskId)
   }, [])
 
-  // Handle snooze
+  // Handle snooze — premium only
   const handleSnooze = useCallback((taskId: string) => {
+    if (!isPremium) return
     // TODO: Implement snooze mutation
     console.log('Snooze task:', taskId)
-  }, [])
+  }, [isPremium])
+
+  // 30-day free window: compute which tasks are visible for free users
+  const freeWindowCutoff = useMemo(() => {
+    if (isPremium) return null
+    // Free users see tasks within 30 days of their current week
+    return currentWeek + Math.ceil(30 / 7)
+  }, [isPremium, currentWeek])
 
   // Computed stats
   const stats = useMemo(() => {
@@ -126,6 +172,11 @@ export function TasksPageClient({
     let baseList = selectedTimelineCategory ? allTasks : tasks
 
     let filtered = baseList.filter(t => t.status === 'pending' && !t.is_backlog)
+
+    // Apply 30-day free window filter for non-premium users
+    if (freeWindowCutoff !== null) {
+      filtered = filtered.filter(t => !t.week_due || t.week_due <= freeWindowCutoff)
+    }
 
     // Apply tab filter
     if (activeTab === 'my-tasks') {
@@ -192,7 +243,7 @@ export function TasksPageClient({
       filteredTasks: filtered,
       phaseTasks: [],
     }
-  }, [tasks, allTasks, activeTab, activeCategory, searchQuery, currentWeek, selectedTimelineCategory, family])
+  }, [tasks, allTasks, activeTab, activeCategory, searchQuery, currentWeek, selectedTimelineCategory, family, freeWindowCutoff])
 
   // Calculate triage progress
   const triageProgress = useMemo(() => {
@@ -221,6 +272,29 @@ export function TasksPageClient({
     return Math.round((stats.completed / total) * 100)
   }, [tasks, stats.completed])
 
+  // Calendar view computations
+  const calendarDays = useMemo(() => {
+    const monthStart = startOfMonth(calendarDate)
+    const monthEnd = endOfMonth(calendarDate)
+    const calStart = startOfWeek(monthStart)
+    const calEnd = endOfWeek(monthEnd)
+    return eachDayOfInterval({ start: calStart, end: calEnd })
+  }, [calendarDate])
+
+  const getTasksForDate = useCallback((date: Date) => {
+    return tasks.filter(t =>
+      t.due_date && t.status === 'pending' && !t.is_backlog && isSameDay(new Date(t.due_date), date)
+    )
+  }, [tasks])
+
+  const selectedDateTasks = selectedDate ? getTasksForDate(selectedDate) : []
+
+  // Check for tasks beyond free window (for showing upgrade prompt)
+  const hasLockedTasks = useMemo(() => {
+    if (isPremium) return false
+    return allTasks.some(t => t.week_due && freeWindowCutoff !== null && t.week_due > freeWindowCutoff)
+  }, [allTasks, isPremium, freeWindowCutoff])
+
   // Loading state
   if (isLoadingTasks) {
     return (
@@ -232,171 +306,347 @@ export function TasksPageClient({
 
   return (
     <div>
-      {/* Header */}
-      <TasksHeader currentWeek={currentWeek} daysToGo={daysToGo} />
+      {/* Header with view toggle */}
+      <div className="flex items-center justify-between mb-4">
+        <TasksHeader currentWeek={currentWeek} daysToGo={daysToGo} />
+        <div className="flex items-center gap-1 bg-surface-900 border border-surface-800 rounded-xl p-1">
+          <button
+            onClick={() => handleViewChange('list')}
+            className={cn(
+              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
+              view === 'list'
+                ? 'bg-accent-500/15 text-accent-400'
+                : 'text-zinc-500 hover:text-zinc-300'
+            )}
+          >
+            <List className="h-4 w-4" />
+            List
+          </button>
+          <button
+            onClick={() => handleViewChange('calendar')}
+            className={cn(
+              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
+              view === 'calendar'
+                ? 'bg-accent-500/15 text-accent-400'
+                : 'text-zinc-500 hover:text-zinc-300'
+            )}
+          >
+            <CalendarDays className="h-4 w-4" />
+            Calendar
+          </button>
+        </div>
+      </div>
 
-      {/* Timeline bar - Phase filter */}
-      {timelineStats && allTasks.length > 0 && (
-        <div className="mb-6">
-          <TaskTimelineBar
-            stats={timelineStats}
-            currentCategory={currentTimelineCategory}
-            selectedCategory={selectedTimelineCategory}
-            onCategoryClick={setSelectedTimelineCategory}
-          />
+      {/* Calendar View */}
+      {view === 'calendar' && (
+        <div className="space-y-4 mb-6">
+          {/* Month navigation */}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => setCalendarDate(subMonths(calendarDate, 1))}
+              className="p-2 rounded-lg hover:bg-surface-800 text-zinc-500 transition-colors"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <h2 className="text-lg font-semibold text-white">
+              {format(calendarDate, 'MMMM yyyy')}
+            </h2>
+            <button
+              onClick={() => setCalendarDate(addMonths(calendarDate, 1))}
+              className="p-2 rounded-lg hover:bg-surface-800 text-zinc-500 transition-colors"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Calendar grid */}
+          <div className="bg-surface-900 rounded-xl border border-surface-800 overflow-hidden">
+            {/* Day headers */}
+            <div className="grid grid-cols-7 border-b border-surface-800">
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                <div key={day} className="p-2 text-center text-xs text-surface-400 font-medium">
+                  {day}
+                </div>
+              ))}
+            </div>
+
+            {/* Calendar days */}
+            <div className="grid grid-cols-7">
+              {calendarDays.map((day, i) => {
+                const dayTasks = getTasksForDate(day)
+                const isCurrentMonth = isSameMonth(day, calendarDate)
+
+                return (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedDate(day)}
+                    className={cn(
+                      'min-h-[80px] p-2 border-b border-r border-surface-800 text-left transition-colors hover:bg-surface-800',
+                      !isCurrentMonth && 'bg-surface-950/50',
+                      selectedDate && isSameDay(day, selectedDate) && 'bg-accent-500/10'
+                    )}
+                  >
+                    <span className={cn(
+                      'text-sm',
+                      isToday(day) && 'bg-accent-500 text-white rounded-full w-6 h-6 flex items-center justify-center',
+                      !isCurrentMonth && 'text-surface-600'
+                    )}>
+                      {format(day, 'd')}
+                    </span>
+
+                    {/* Task indicators */}
+                    <div className="mt-1 space-y-0.5">
+                      {dayTasks.slice(0, 3).map((task, j) => (
+                        <div
+                          key={j}
+                          className="text-xs truncate px-1 rounded bg-accent-500/20 text-accent-400"
+                        >
+                          {task.title}
+                        </div>
+                      ))}
+                      {dayTasks.length > 3 && (
+                        <div className="text-xs text-surface-400">+{dayTasks.length - 3} more</div>
+                      )}
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Day detail sheet */}
+          <Sheet open={!!selectedDate} onOpenChange={() => setSelectedDate(null)}>
+            <SheetContent className="bg-surface-900 border-surface-800">
+              <SheetHeader>
+                <SheetTitle className="text-white">
+                  {selectedDate && format(selectedDate, 'EEEE, MMMM d')}
+                </SheetTitle>
+              </SheetHeader>
+              <div className="mt-6 space-y-3">
+                {selectedDateTasks.length > 0 ? (
+                  selectedDateTasks.map(task => (
+                    <Link
+                      key={task.id}
+                      href={`/tasks/${task.id}`}
+                      className="flex items-center gap-3 p-3 rounded-lg bg-surface-800 hover:bg-surface-700 transition-colors"
+                    >
+                      <CheckSquare className="h-4 w-4 text-accent-500 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <div className="text-sm text-white truncate">{task.title}</div>
+                        <div className="text-xs text-surface-400 capitalize">{task.category}</div>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <p className="text-surface-400 text-center py-8">No tasks on this day</p>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       )}
 
-      {/* Catch-up banner */}
-      {backlogTasks.length > 0 && (
-        <CatchUpBanner
-          tasksToReview={backlogTasks.length}
-          percentDone={triageProgress}
-          signupWeek={signupWeek}
-        />
-      )}
+      {/* List View */}
+      {view === 'list' && (
+        <>
+          {/* Timeline bar - Phase filter */}
+          {timelineStats && allTasks.length > 0 && (
+            <div className="mb-6">
+              <TaskTimelineBar
+                stats={timelineStats}
+                currentCategory={currentTimelineCategory}
+                selectedCategory={selectedTimelineCategory}
+                onCategoryClick={setSelectedTimelineCategory}
+              />
+            </div>
+          )}
 
-      {/* Stats bar */}
-      <StatsBar
-        stats={stats}
-        activeCard={activeStatCard}
-        onCardClick={setActiveStatCard}
-      />
-
-      {/* Filter bar */}
-      <FilterBar
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        activeCategory={activeCategory}
-        onCategoryChange={setActiveCategory}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        hasCatchUp={backlogTasks.length > 0}
-      />
-
-      {/* Main content layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
-        {/* Left: Task sections */}
-        <div className="space-y-6">
-          {/* Catch-up section - only show when no phase filter is active */}
-          {activeTab === 'active' && backlogTasks.length > 0 && !selectedTimelineCategory && (
-            <CatchUpSection
-              tasks={backlogTasks}
-              currentWeek={currentWeek}
-              onTriage={handleTriage}
-              onBulkTriage={handleBulkTriage}
-              isPending={triageTask.isPending || bulkTriageTasks.isPending}
+          {/* Catch-up banner */}
+          {backlogTasks.length > 0 && (
+            <CatchUpBanner
+              tasksToReview={backlogTasks.length}
+              percentDone={triageProgress}
+              signupWeek={signupWeek}
             />
           )}
 
-          {/* Phase tasks section - show when a phase filter is active */}
-          {selectedTimelineCategory && phaseTasks.length > 0 && (
-            <TaskSection
-              icon="📋"
-              title={TIMELINE_CATEGORIES.find(c => c.id === selectedTimelineCategory)?.label || 'Phase Tasks'}
-              count={phaseTasks.length}
-              actions={
-                <SectionAction>Sort by priority</SectionAction>
-              }
-            >
-              {phaseTasks.map(task => (
-                <TaskItem
-                  key={task.id}
-                  task={task}
-                  isHighlighted={task.priority === 'must-do'}
-                  onComplete={() => handleComplete(task.id)}
-                />
-              ))}
-            </TaskSection>
-          )}
+          {/* Stats bar */}
+          <StatsBar
+            stats={stats}
+            activeCard={activeStatCard}
+            onCardClick={setActiveStatCard}
+          />
 
-          {/* Phase tasks empty state */}
-          {selectedTimelineCategory && phaseTasks.length === 0 && (
-            <div className="text-center py-16">
-              <div className="text-5xl mb-4">📭</div>
-              <h3 className="text-lg font-semibold text-white mb-2">No tasks in this phase</h3>
-              <p className="text-sm text-zinc-500">
-                There are no pending tasks for {TIMELINE_CATEGORIES.find(c => c.id === selectedTimelineCategory)?.label}.
-              </p>
+          {/* Filter bar */}
+          <FilterBar
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            activeCategory={activeCategory}
+            onCategoryChange={setActiveCategory}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            hasCatchUp={backlogTasks.length > 0}
+          />
+
+          {/* 30-day free window upgrade prompt */}
+          {hasLockedTasks && (
+            <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/5 border border-amber-500/20">
+              <div className="flex items-center gap-3">
+                <Lock className="h-5 w-5 text-amber-400 flex-shrink-0" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-white">
+                    You&apos;re seeing your 30-day task window
+                  </p>
+                  <p className="text-xs text-zinc-400 mt-0.5">
+                    Upgrade to see your full timeline from pregnancy through 24 months.
+                  </p>
+                </div>
+                <Link
+                  href="/upgrade?source=tasks"
+                  className="px-4 py-2 rounded-lg bg-amber-500 text-black text-sm font-semibold hover:bg-amber-400 transition-colors flex-shrink-0"
+                >
+                  Upgrade
+                </Link>
+              </div>
             </div>
           )}
 
-          {/* This week section - only show when no phase filter is active */}
-          {!selectedTimelineCategory && thisWeekTasks.length > 0 && (
-            <TaskSection
-              icon="📅"
-              title="This Week"
-              count={thisWeekTasks.length}
-              actions={
-                <SectionAction>Sort by priority</SectionAction>
-              }
-            >
-              {thisWeekTasks.map(task => (
-                <TaskItem
-                  key={task.id}
-                  task={task}
-                  isHighlighted={task.priority === 'must-do'}
-                  onComplete={() => handleComplete(task.id)}
+          {/* Main content layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
+            {/* Left: Task sections */}
+            <div className="space-y-6">
+              {/* Catch-up section - only show when no phase filter is active */}
+              {activeTab === 'active' && backlogTasks.length > 0 && !selectedTimelineCategory && (
+                <CatchUpSection
+                  tasks={backlogTasks}
+                  currentWeek={currentWeek}
+                  onTriage={handleTriage}
+                  onBulkTriage={handleBulkTriage}
+                  isPending={triageTask.isPending || bulkTriageTasks.isPending}
                 />
-              ))}
-            </TaskSection>
-          )}
+              )}
 
-          {/* Coming up section - only show when no phase filter is active */}
-          {!selectedTimelineCategory && comingUpTasks.length > 0 && (
-            <TaskSection
-              icon="🔮"
-              title="Coming Up"
-              count={`Week ${currentWeek + 1}-${currentWeek + 4}`}
-              actions={
-                <SectionAction>View all {comingUpTasks.length} →</SectionAction>
-              }
-            >
-              {comingUpTasks.slice(0, 3).map(task => (
-                <TaskItem
-                  key={task.id}
-                  task={task}
-                  isDimmed
-                  onComplete={() => handleComplete(task.id)}
-                />
-              ))}
-            </TaskSection>
-          )}
+              {/* Phase tasks section - show when a phase filter is active */}
+              {selectedTimelineCategory && phaseTasks.length > 0 && (
+                <TaskSection
+                  icon="📋"
+                  title={TIMELINE_CATEGORIES.find(c => c.id === selectedTimelineCategory)?.label || 'Phase Tasks'}
+                  count={phaseTasks.length}
+                  actions={
+                    <SectionAction>Sort by priority</SectionAction>
+                  }
+                >
+                  {phaseTasks.map(task => (
+                    <TaskItem
+                      key={task.id}
+                      task={task}
+                      isHighlighted={task.priority === 'must-do'}
+                      onComplete={() => handleComplete(task.id)}
+                    />
+                  ))}
+                </TaskSection>
+              )}
 
-          {/* Empty state - only show when no phase filter is active */}
-          {!selectedTimelineCategory && thisWeekTasks.length === 0 && comingUpTasks.length === 0 && activeTab !== 'catchup' && (
-            <div className="text-center py-16">
-              <div className="text-5xl mb-4">🎉</div>
-              <h3 className="text-lg font-semibold text-white mb-2">All caught up!</h3>
-              <p className="text-sm text-zinc-500">No pending tasks for now. Great job!</p>
+              {/* Phase tasks empty state */}
+              {selectedTimelineCategory && phaseTasks.length === 0 && (
+                <div className="text-center py-16">
+                  <div className="text-5xl mb-4">📭</div>
+                  <h3 className="text-lg font-semibold text-white mb-2">No tasks in this phase</h3>
+                  <p className="text-sm text-zinc-500">
+                    There are no pending tasks for {TIMELINE_CATEGORIES.find(c => c.id === selectedTimelineCategory)?.label}.
+                  </p>
+                </div>
+              )}
+
+              {/* This week section - only show when no phase filter is active */}
+              {!selectedTimelineCategory && thisWeekTasks.length > 0 && (
+                <TaskSection
+                  icon="📅"
+                  title="This Week"
+                  count={thisWeekTasks.length}
+                  actions={
+                    <SectionAction>Sort by priority</SectionAction>
+                  }
+                >
+                  {thisWeekTasks.map(task => (
+                    <TaskItem
+                      key={task.id}
+                      task={task}
+                      isHighlighted={task.priority === 'must-do'}
+                      onComplete={() => handleComplete(task.id)}
+                    />
+                  ))}
+                </TaskSection>
+              )}
+
+              {/* Coming up section - only show when no phase filter is active */}
+              {!selectedTimelineCategory && comingUpTasks.length > 0 && (
+                <TaskSection
+                  icon="🔮"
+                  title="Coming Up"
+                  count={`Week ${currentWeek + 1}-${currentWeek + 4}`}
+                  actions={
+                    <SectionAction>View all {comingUpTasks.length} →</SectionAction>
+                  }
+                >
+                  {comingUpTasks.slice(0, 3).map(task => (
+                    <TaskItem
+                      key={task.id}
+                      task={task}
+                      isDimmed
+                      onComplete={() => handleComplete(task.id)}
+                    />
+                  ))}
+                </TaskSection>
+              )}
+
+              {/* Empty state - only show when no phase filter is active */}
+              {!selectedTimelineCategory && thisWeekTasks.length === 0 && comingUpTasks.length === 0 && activeTab !== 'catchup' && (
+                <div className="text-center py-16">
+                  <div className="text-5xl mb-4">🎉</div>
+                  <h3 className="text-lg font-semibold text-white mb-2">All caught up!</h3>
+                  <p className="text-sm text-zinc-500">No pending tasks for now. Great job!</p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        {/* Right: Panel */}
-        <div className="space-y-5">
-          {/* Focus card */}
-          <FocusCard
-            task={focusTask}
-            onDone={() => focusTask && handleComplete(focusTask.id)}
-            onSnooze={() => focusTask && handleSnooze(focusTask.id)}
-          />
+            {/* Right: Panel */}
+            <div className="space-y-5">
+              {/* Focus card */}
+              <FocusCard
+                task={focusTask}
+                onDone={() => focusTask && handleComplete(focusTask.id)}
+                onSnooze={() => {
+                  if (!isPremium) return
+                  if (focusTask) handleSnooze(focusTask.id)
+                }}
+              />
 
-          {/* Week calendar */}
-          <WeekCalendarCard days={weekDays} />
+              {/* Snooze premium badge */}
+              {!isPremium && (
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-900 border border-surface-800">
+                  <Lock className="h-3.5 w-3.5 text-zinc-500" />
+                  <span className="text-xs text-zinc-500">Snooze & reschedule are premium features</span>
+                </div>
+              )}
 
-          {/* Progress */}
-          <ProgressCard
-            percentComplete={progressPercent}
-            done={stats.completed}
-            active={stats.thisWeek}
-            toTriage={stats.catchUpQueue}
-          />
+              {/* Week calendar */}
+              <WeekCalendarCard days={weekDays} />
 
-          {/* Streak banner */}
-          <StreakBanner days={3} />
-        </div>
-      </div>
+              {/* Progress */}
+              <ProgressCard
+                percentComplete={progressPercent}
+                done={stats.completed}
+                active={stats.thisWeek}
+                toTriage={stats.catchUpQueue}
+              />
+
+              {/* Streak banner */}
+              <StreakBanner days={3} />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }

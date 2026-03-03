@@ -2,8 +2,27 @@
 
 import { FamilyTask, BacklogCategory, TriageAction } from '@/types'
 import { categorizeBacklogTask } from '@/lib/task-utils'
-import { categoryConfig, backlogCategoryConfig } from '@/lib/design-tokens'
+import { categoryConfig } from '@/lib/design-tokens'
 import { cn } from '@/lib/utils'
+
+// Yellow-themed badge config for catch-up items
+const catchUpBadgeConfig: Record<BacklogCategory, { label: string; bgClass: string; textClass: string }> = {
+  window_passed: {
+    label: 'Expired',
+    bgClass: 'bg-zinc-500/15',
+    textClass: 'text-zinc-400',
+  },
+  still_relevant: {
+    label: 'Catch up',
+    bgClass: 'bg-amber-500/15',
+    textClass: 'text-amber-400',
+  },
+  probably_done: {
+    label: 'Likely done',
+    bgClass: 'bg-zinc-500/15',
+    textClass: 'text-zinc-400',
+  },
+}
 
 interface CatchUpTaskItemProps {
   task: FamilyTask
@@ -20,7 +39,7 @@ export function CatchUpTaskItem({
 }: CatchUpTaskItemProps) {
   const backlogCategory = categorizeBacklogTask(task, currentWeek)
   const category = categoryConfig[task.category] || categoryConfig.planning
-  const backlogConfig = backlogCategoryConfig[backlogCategory]
+  const badgeConfig = catchUpBadgeConfig[backlogCategory]
 
   const isExpired = backlogCategory === 'window_passed'
   const isProbablyDone = backlogCategory === 'probably_done'
@@ -55,11 +74,11 @@ export function CatchUpTaskItem({
             {task.title}
           </span>
           <span className={cn(
-            'text-[9px] md:text-[10px] font-semibold px-1.5 md:px-2 py-0.5 rounded-[10px] uppercase tracking-wide flex-shrink-0',
-            backlogConfig.bgClass,
-            backlogConfig.textClass
+            'text-[9px] md:text-[10px] font-semibold px-1.5 md:px-2 py-0.5 rounded-full uppercase tracking-wide flex-shrink-0',
+            badgeConfig.bgClass,
+            badgeConfig.textClass
           )}>
-            {backlogConfig.label}
+            {badgeConfig.label}
           </span>
         </div>
 
@@ -125,7 +144,7 @@ export function CatchUpTaskItem({
               className={cn(
                 'px-3 py-1.5 md:px-3.5 md:py-2 rounded-lg text-[11px] md:text-xs font-semibold transition-all',
                 'flex items-center gap-1',
-                'bg-blue-500/15 text-blue-400 hover:bg-blue-500/25',
+                'bg-amber-500/15 text-amber-400 hover:bg-amber-500/25',
                 isPending && 'opacity-50 cursor-not-allowed'
               )}
             >
