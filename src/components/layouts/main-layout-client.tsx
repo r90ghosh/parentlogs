@@ -19,17 +19,19 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import {
   Home,
   CheckSquare,
-  Calendar,
   Baby,
   Menu,
   Settings,
   LogOut,
   CreditCard,
-  FileText,
   DollarSign,
   ClipboardList,
   Bell,
   BookOpen,
+  UserPlus,
+  Users,
+  Crown,
+  HelpCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Logo } from '@/components/ui/logo'
@@ -37,16 +39,24 @@ import { Logo } from '@/components/ui/logo'
 const mainNavItems = [
   { href: '/dashboard', label: 'Home', icon: Home },
   { href: '/tasks', label: 'Tasks', icon: CheckSquare },
-  { href: '/calendar', label: 'Calendar', icon: Calendar },
+  { href: '/briefing', label: 'Briefing', icon: BookOpen },
   { href: '/tracker', label: 'Tracker', icon: Baby },
 ]
 
-const moreNavItems = [
-  { href: '/briefing', label: 'Briefings', icon: FileText },
-  { href: '/resources', label: 'Resources', icon: BookOpen },
-  { href: '/budget', label: 'Budget', icon: DollarSign },
+const moreToolItems = [
   { href: '/checklists', label: 'Checklists', icon: ClipboardList },
+  { href: '/budget', label: 'Budget', icon: DollarSign },
+]
+
+const moreFamilyItems = [
+  { href: '/settings/family', label: 'Invite Partner', icon: UserPlus },
+  { href: '/settings/family', label: 'Family Settings', icon: Users },
+]
+
+const moreAccountItems = [
   { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/upgrade', label: 'Upgrade to Premium', icon: Crown },
+  { href: '/help', label: 'Help & Support', icon: HelpCircle },
 ]
 
 export function MainLayoutClient({ children }: { children: ReactNode }) {
@@ -154,17 +164,78 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
             </SheetTrigger>
             <SheetContent side="bottom" className="bg-surface-900 border-surface-800 rounded-t-2xl max-h-[70vh] overflow-y-auto">
               <div className="w-12 h-1 bg-surface-700 rounded-full mx-auto mb-4" />
-              <div className="grid grid-cols-3 gap-3 pb-6 safe-area-bottom">
-                {moreNavItems.map((item) => (
+
+              <div className="pb-6 safe-area-bottom space-y-1">
+                {/* Tools Section */}
+                <p className="text-xs uppercase tracking-wider text-surface-500 px-3 py-2">
+                  Tools
+                </p>
+                {moreToolItems.map((item) => (
                   <Link
-                    key={item.href}
+                    key={item.href + item.label}
                     href={item.href}
-                    className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-surface-800/50 hover:bg-surface-800 active:bg-surface-700 transition-colors min-h-[80px]"
+                    className={cn(
+                      'flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-colors w-full',
+                      pathname === item.href || pathname.startsWith(item.href + '/')
+                        ? 'bg-accent-600/20 text-accent-400'
+                        : 'text-surface-300 hover:bg-surface-800 active:bg-surface-700'
+                    )}
                   >
-                    <item.icon className="h-6 w-6 text-surface-300" />
-                    <span className="text-xs text-surface-300 text-center">{item.label}</span>
+                    <item.icon className="h-5 w-5 flex-shrink-0" />
+                    <span>{item.label}</span>
                   </Link>
                 ))}
+
+                <div className="border-t border-surface-800 my-2" />
+
+                {/* Family Section */}
+                <p className="text-xs uppercase tracking-wider text-surface-500 px-3 py-2">
+                  Family
+                </p>
+                {moreFamilyItems.map((item) => (
+                  <Link
+                    key={item.href + item.label}
+                    href={item.href}
+                    className={cn(
+                      'flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-colors w-full',
+                      pathname === item.href || pathname.startsWith(item.href + '/')
+                        ? 'bg-accent-600/20 text-accent-400'
+                        : 'text-surface-300 hover:bg-surface-800 active:bg-surface-700'
+                    )}
+                  >
+                    <item.icon className="h-5 w-5 flex-shrink-0" />
+                    <span>{item.label}</span>
+                  </Link>
+                ))}
+
+                <div className="border-t border-surface-800 my-2" />
+
+                {/* Account Section */}
+                <p className="text-xs uppercase tracking-wider text-surface-500 px-3 py-2">
+                  Account
+                </p>
+                {moreAccountItems.map((item) => (
+                  <Link
+                    key={item.href + item.label}
+                    href={item.href}
+                    className={cn(
+                      'flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-colors w-full',
+                      pathname === item.href || pathname.startsWith(item.href + '/')
+                        ? 'bg-accent-600/20 text-accent-400'
+                        : 'text-surface-300 hover:bg-surface-800 active:bg-surface-700'
+                    )}
+                  >
+                    <item.icon className="h-5 w-5 flex-shrink-0" />
+                    <span>{item.label}</span>
+                  </Link>
+                ))}
+                <button
+                  onClick={() => signOut()}
+                  className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-colors w-full text-red-400 hover:bg-surface-800 active:bg-surface-700"
+                >
+                  <LogOut className="h-5 w-5 flex-shrink-0" />
+                  <span>Sign Out</span>
+                </button>
               </div>
             </SheetContent>
           </Sheet>
@@ -172,9 +243,9 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
       </nav>
 
       {/* Sidebar Navigation - Desktop */}
-      <aside className="hidden md:flex fixed left-0 top-14 bottom-0 w-64 bg-surface-900 border-r border-surface-800 flex-col p-4">
+      <aside className="hidden md:flex fixed left-0 top-14 bottom-0 w-64 bg-surface-900 border-r border-surface-800 flex-col p-4 overflow-y-auto">
         <nav className="space-y-1">
-          {[...mainNavItems, ...moreNavItems].map((item) => {
+          {mainNavItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
             return (
               <Link
@@ -193,6 +264,91 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
             )
           })}
         </nav>
+
+        <div className="border-t border-surface-800 my-3" />
+
+        <div className="space-y-1">
+          <p className="text-xs uppercase tracking-wider text-surface-500 px-3 py-2">
+            Tools
+          </p>
+          {moreToolItems.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+            return (
+              <Link
+                key={item.href + item.label}
+                href={item.href}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
+                  isActive
+                    ? 'bg-accent-600/20 text-accent-400'
+                    : 'text-surface-300 hover:bg-surface-800'
+                )}
+              >
+                <item.icon className="h-5 w-5" />
+                {item.label}
+              </Link>
+            )
+          })}
+        </div>
+
+        <div className="border-t border-surface-800 my-3" />
+
+        <div className="space-y-1">
+          <p className="text-xs uppercase tracking-wider text-surface-500 px-3 py-2">
+            Family
+          </p>
+          {moreFamilyItems.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+            return (
+              <Link
+                key={item.href + item.label}
+                href={item.href}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
+                  isActive
+                    ? 'bg-accent-600/20 text-accent-400'
+                    : 'text-surface-300 hover:bg-surface-800'
+                )}
+              >
+                <item.icon className="h-5 w-5" />
+                {item.label}
+              </Link>
+            )
+          })}
+        </div>
+
+        <div className="border-t border-surface-800 my-3" />
+
+        <div className="space-y-1">
+          <p className="text-xs uppercase tracking-wider text-surface-500 px-3 py-2">
+            Account
+          </p>
+          {moreAccountItems.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+            return (
+              <Link
+                key={item.href + item.label}
+                href={item.href}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
+                  isActive
+                    ? 'bg-accent-600/20 text-accent-400'
+                    : 'text-surface-300 hover:bg-surface-800'
+                )}
+              >
+                <item.icon className="h-5 w-5" />
+                {item.label}
+              </Link>
+            )
+          })}
+          <button
+            onClick={() => signOut()}
+            className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors w-full text-red-400 hover:bg-surface-800"
+          >
+            <LogOut className="h-5 w-5" />
+            Sign Out
+          </button>
+        </div>
       </aside>
     </div>
   )

@@ -1,7 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,7 +9,6 @@ import { useAuth } from '@/lib/auth/auth-context'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Separator } from '@/components/ui/separator'
@@ -21,7 +19,6 @@ const signupSchema = z.object({
   email: z.string().email('Please enter a valid email'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   confirm_password: z.string(),
-  role: z.enum(['dad', 'mom', 'other'], { message: 'Please select your role' }),
 }).refine((data) => data.password === data.confirm_password, {
   message: 'Passwords do not match',
   path: ['confirm_password'],
@@ -30,54 +27,44 @@ const signupSchema = z.object({
 type SignupForm = z.infer<typeof signupSchema>
 
 export default function SignupPage() {
-  const router = useRouter()
   const { signUp, signInWithGoogle } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<SignupForm>({
+  const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>({
     resolver: zodResolver(signupSchema),
   })
 
   const onSubmit = async (data: SignupForm) => {
-    console.log('[SignupPage] onSubmit called for:', data.email)
     setIsLoading(true)
     setError(null)
 
     const { error } = await signUp(data.email, data.password, {
       full_name: data.full_name,
-      role: data.role,
     })
 
     if (error) {
-      console.error('[SignupPage] Sign up error:', error.message)
       setError(error.message)
       setIsLoading(false)
     } else {
-      console.log('[SignupPage] Sign up successful, showing confirmation message')
       setSuccess(true)
       setIsLoading(false)
     }
   }
 
   const handleGoogleSignIn = async () => {
-    console.log('[SignupPage] handleGoogleSignIn called')
     setIsLoading(true)
     setError(null)
 
     const { error } = await signInWithGoogle()
     if (error) {
-      console.error('[SignupPage] Google sign in error:', error.message)
       setError(error.message)
       setIsLoading(false)
-    } else {
-      console.log('[SignupPage] Google sign in initiated - redirecting to Google...')
     }
   }
 
   if (success) {
-    console.log('[SignupPage] Rendering: Success message')
     return (
       <Card className="bg-surface-900 border-surface-800">
         <CardHeader className="text-center">
@@ -102,13 +89,11 @@ export default function SignupPage() {
     )
   }
 
-  console.log('[SignupPage] Rendering: Sign up form')
-
   return (
     <Card className="bg-surface-900 border-surface-800">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl text-white">Create an account</CardTitle>
-        <CardDescription>Start your parenting journey with The Dad Center</CardDescription>
+        <CardDescription>Built for dads. Works for both.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {error && (
@@ -171,26 +156,6 @@ export default function SignupPage() {
             />
             {errors.email && (
               <p className="text-sm text-red-500">{errors.email.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="role">Your Role</Label>
-            <Select onValueChange={(value) => {
-              console.log('[SignupPage] Role selected:', value)
-              setValue('role', value as 'dad' | 'mom' | 'other')
-            }}>
-              <SelectTrigger className="bg-surface-800 border-surface-700">
-                <SelectValue placeholder="Select your role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="dad">Dad</SelectItem>
-                <SelectItem value="mom">Mom</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.role && (
-              <p className="text-sm text-red-500">{errors.role.message}</p>
             )}
           </div>
 
