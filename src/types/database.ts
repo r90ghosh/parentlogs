@@ -175,6 +175,7 @@ export type Database = {
           price_low: number | null
           price_mid: number | null
           priority: string | null
+          product_examples: Json | null
           stage: Database["public"]["Enums"]["family_stage"]
           subcategory: string | null
           week_end: number | null
@@ -193,6 +194,7 @@ export type Database = {
           price_low?: number | null
           price_mid?: number | null
           priority?: string | null
+          product_examples?: Json | null
           stage: Database["public"]["Enums"]["family_stage"]
           subcategory?: string | null
           week_end?: number | null
@@ -211,6 +213,7 @@ export type Database = {
           price_low?: number | null
           price_mid?: number | null
           priority?: string | null
+          product_examples?: Json | null
           stage?: Database["public"]["Enums"]["family_stage"]
           subcategory?: string | null
           week_end?: number | null
@@ -357,6 +360,101 @@ export type Database = {
         }
         Relationships: []
       }
+      dad_challenge_content: {
+        Row: {
+          action_items: Json
+          created_at: string | null
+          dad_quotes: Json
+          headline: string
+          icon: string
+          id: string
+          is_premium: boolean
+          narrative: string
+          phase: string
+          pillar: Database["public"]["Enums"]["dad_challenge_pillar"]
+          preview: string
+          sort_order: number
+          updated_at: string | null
+        }
+        Insert: {
+          action_items?: Json
+          created_at?: string | null
+          dad_quotes?: Json
+          headline: string
+          icon: string
+          id?: string
+          is_premium?: boolean
+          narrative: string
+          phase: string
+          pillar: Database["public"]["Enums"]["dad_challenge_pillar"]
+          preview: string
+          sort_order?: number
+          updated_at?: string | null
+        }
+        Update: {
+          action_items?: Json
+          created_at?: string | null
+          dad_quotes?: Json
+          headline?: string
+          icon?: string
+          id?: string
+          is_premium?: boolean
+          narrative?: string
+          phase?: string
+          pillar?: Database["public"]["Enums"]["dad_challenge_pillar"]
+          preview?: string
+          sort_order?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      dad_profiles: {
+        Row: {
+          concerns: string[] | null
+          created_at: string | null
+          family_nearby: boolean | null
+          has_friend_support: boolean | null
+          id: string
+          is_first_time_dad: boolean | null
+          partner_relationship: string | null
+          updated_at: string | null
+          user_id: string
+          work_situation: string | null
+        }
+        Insert: {
+          concerns?: string[] | null
+          created_at?: string | null
+          family_nearby?: boolean | null
+          has_friend_support?: boolean | null
+          id?: string
+          is_first_time_dad?: boolean | null
+          partner_relationship?: string | null
+          updated_at?: string | null
+          user_id: string
+          work_situation?: string | null
+        }
+        Update: {
+          concerns?: string[] | null
+          created_at?: string | null
+          family_nearby?: boolean | null
+          has_friend_support?: boolean | null
+          id?: string
+          is_first_time_dad?: boolean | null
+          partner_relationship?: string | null
+          updated_at?: string | null
+          user_id?: string
+          work_situation?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dad_profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       families: {
         Row: {
           baby_name: string | null
@@ -473,6 +571,7 @@ export type Database = {
       family_tasks: {
         Row: {
           assigned_to: Database["public"]["Enums"]["task_assignee"] | null
+          backlog_status: string | null
           category: string | null
           completed_at: string | null
           completed_by: string | null
@@ -481,17 +580,25 @@ export type Database = {
           due_date: string
           family_id: string
           id: string
+          is_backlog: boolean | null
           is_custom: boolean | null
           notes: string | null
           priority: Database["public"]["Enums"]["task_priority"] | null
+          related_article_slug: string | null
           snoozed_until: string | null
           status: Database["public"]["Enums"]["task_status"] | null
           task_template_id: string | null
+          time_estimate_minutes: number | null
           title: string
+          triage_action: string | null
+          triage_date: string | null
           updated_at: string | null
+          week_due: number | null
+          why_it_matters: string | null
         }
         Insert: {
           assigned_to?: Database["public"]["Enums"]["task_assignee"] | null
+          backlog_status?: string | null
           category?: string | null
           completed_at?: string | null
           completed_by?: string | null
@@ -500,17 +607,25 @@ export type Database = {
           due_date: string
           family_id: string
           id?: string
+          is_backlog?: boolean | null
           is_custom?: boolean | null
           notes?: string | null
           priority?: Database["public"]["Enums"]["task_priority"] | null
+          related_article_slug?: string | null
           snoozed_until?: string | null
           status?: Database["public"]["Enums"]["task_status"] | null
           task_template_id?: string | null
+          time_estimate_minutes?: number | null
           title: string
+          triage_action?: string | null
+          triage_date?: string | null
           updated_at?: string | null
+          week_due?: number | null
+          why_it_matters?: string | null
         }
         Update: {
           assigned_to?: Database["public"]["Enums"]["task_assignee"] | null
+          backlog_status?: string | null
           category?: string | null
           completed_at?: string | null
           completed_by?: string | null
@@ -519,14 +634,21 @@ export type Database = {
           due_date?: string
           family_id?: string
           id?: string
+          is_backlog?: boolean | null
           is_custom?: boolean | null
           notes?: string | null
           priority?: Database["public"]["Enums"]["task_priority"] | null
+          related_article_slug?: string | null
           snoozed_until?: string | null
           status?: Database["public"]["Enums"]["task_status"] | null
           task_template_id?: string | null
+          time_estimate_minutes?: number | null
           title?: string
+          triage_action?: string | null
+          triage_date?: string | null
           updated_at?: string | null
+          week_due?: number | null
+          why_it_matters?: string | null
         }
         Relationships: [
           {
@@ -549,6 +671,57 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "task_templates"
             referencedColumns: ["task_id"]
+          },
+        ]
+      }
+      mood_checkins: {
+        Row: {
+          checked_in_at: string
+          created_at: string | null
+          family_id: string
+          id: string
+          mood: string
+          note: string | null
+          phase: string | null
+          situation_flags: string[] | null
+          user_id: string
+        }
+        Insert: {
+          checked_in_at?: string
+          created_at?: string | null
+          family_id: string
+          id?: string
+          mood: string
+          note?: string | null
+          phase?: string | null
+          situation_flags?: string[] | null
+          user_id: string
+        }
+        Update: {
+          checked_in_at?: string
+          created_at?: string | null
+          family_id?: string
+          id?: string
+          mood?: string
+          note?: string | null
+          phase?: string | null
+          situation_flags?: string[] | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mood_checkins_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mood_checkins_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -624,6 +797,7 @@ export type Database = {
           id: string
           onboarding_completed: boolean | null
           role: Database["public"]["Enums"]["user_role"] | null
+          signup_week: number | null
           subscription_expires_at: string | null
           subscription_tier:
             | Database["public"]["Enums"]["subscription_tier"]
@@ -639,6 +813,7 @@ export type Database = {
           id: string
           onboarding_completed?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          signup_week?: number | null
           subscription_expires_at?: string | null
           subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
@@ -654,6 +829,7 @@ export type Database = {
           id?: string
           onboarding_completed?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          signup_week?: number | null
           subscription_expires_at?: string | null
           subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
@@ -757,43 +933,67 @@ export type Database = {
       }
       task_templates: {
         Row: {
+          catch_up_behavior: string | null
           category: string | null
+          commonly_completed_early: boolean | null
           created_at: string | null
           default_assignee: Database["public"]["Enums"]["task_assignee"] | null
           description: string | null
           due_date_offset_days: number
           is_premium: boolean | null
+          is_time_sensitive: boolean | null
           priority: Database["public"]["Enums"]["task_priority"] | null
+          related_article_slug: string | null
           sort_order: number | null
           stage: Database["public"]["Enums"]["family_stage"]
           task_id: string
+          time_estimate_minutes: number | null
           title: string
+          week: number | null
+          why_it_matters: string | null
+          window_weeks: number | null
         }
         Insert: {
+          catch_up_behavior?: string | null
           category?: string | null
+          commonly_completed_early?: boolean | null
           created_at?: string | null
           default_assignee?: Database["public"]["Enums"]["task_assignee"] | null
           description?: string | null
           due_date_offset_days: number
           is_premium?: boolean | null
+          is_time_sensitive?: boolean | null
           priority?: Database["public"]["Enums"]["task_priority"] | null
+          related_article_slug?: string | null
           sort_order?: number | null
           stage: Database["public"]["Enums"]["family_stage"]
           task_id: string
+          time_estimate_minutes?: number | null
           title: string
+          week?: number | null
+          why_it_matters?: string | null
+          window_weeks?: number | null
         }
         Update: {
+          catch_up_behavior?: string | null
           category?: string | null
+          commonly_completed_early?: boolean | null
           created_at?: string | null
           default_assignee?: Database["public"]["Enums"]["task_assignee"] | null
           description?: string | null
           due_date_offset_days?: number
           is_premium?: boolean | null
+          is_time_sensitive?: boolean | null
           priority?: Database["public"]["Enums"]["task_priority"] | null
+          related_article_slug?: string | null
           sort_order?: number | null
           stage?: Database["public"]["Enums"]["family_stage"]
           task_id?: string
+          time_estimate_minutes?: number | null
           title?: string
+          week?: number | null
+          why_it_matters?: string | null
+          window_weeks?: number | null
         }
         Relationships: []
       }
@@ -872,13 +1072,34 @@ export type Database = {
         Returns: number
       }
       get_shift_briefing: { Args: { p_family_id: string }; Returns: Json }
+      get_trimester_from_week: {
+        Args: { pregnancy_week: number }
+        Returns: Database["public"]["Enums"]["family_stage"]
+      }
       get_user_family_id: { Args: { user_uuid: string }; Returns: string }
+      initialize_family_tasks_with_catchup: {
+        Args: { p_due_date: string; p_family_id: string; p_signup_week: number }
+        Returns: number
+      }
       is_family_member: { Args: { family_uuid: string }; Returns: boolean }
       is_premium_user: { Args: never; Returns: boolean }
       regenerate_invite_code: { Args: { p_family_id: string }; Returns: string }
     }
     Enums: {
-      family_stage: "pregnancy" | "first-trimester" | "second-trimester" | "third-trimester" | "post-birth"
+      dad_challenge_pillar:
+        | "knowledge"
+        | "planning"
+        | "finances"
+        | "anxiety"
+        | "baby_bonding"
+        | "relationship"
+        | "extended_family"
+      family_stage:
+        | "pregnancy"
+        | "post-birth"
+        | "first-trimester"
+        | "second-trimester"
+        | "third-trimester"
       log_type:
         | "feeding"
         | "diaper"
@@ -1023,7 +1244,22 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      family_stage: ["pregnancy", "first-trimester", "second-trimester", "third-trimester", "post-birth"],
+      dad_challenge_pillar: [
+        "knowledge",
+        "planning",
+        "finances",
+        "anxiety",
+        "baby_bonding",
+        "relationship",
+        "extended_family",
+      ],
+      family_stage: [
+        "pregnancy",
+        "post-birth",
+        "first-trimester",
+        "second-trimester",
+        "third-trimester",
+      ],
       log_type: [
         "feeding",
         "diaper",

@@ -34,7 +34,7 @@ export const budgetService = {
     }
 
     const { data } = await query
-    return (data || []) as BudgetTemplate[]
+    return (data || []) as unknown as BudgetTemplate[]
   },
 
   async getBudgetSummary(): Promise<BudgetSummary | null> {
@@ -69,7 +69,7 @@ export const budgetService = {
     const categoryMap = new Map<string, BudgetTemplate[]>()
     templates?.forEach(t => {
       const existing = categoryMap.get(t.category) || []
-      existing.push(t as BudgetTemplate)
+      existing.push(t as unknown as BudgetTemplate)
       categoryMap.set(t.category, existing)
     })
 
