@@ -4,34 +4,24 @@ import { Subscription, SubscriptionTier, PremiumFeature } from '@/types'
 const supabase = createClient()
 
 // Define which features are available for each tier
+const PREMIUM_FEATURES: PremiumFeature[] = [
+  'tasks_beyond_14_days', // Legacy key — now means 30-day window
+  'briefings_beyond_4_weeks',
+  'tracker_history',
+  'tracker_summaries',
+  'tracker_advanced_logs',
+  'budget_full_access',
+  'budget_edit',
+  'premium_checklists',
+  'partner_sync',
+  'push_notifications',
+  'export_data',
+]
+
 const TIER_FEATURES: Record<SubscriptionTier, PremiumFeature[]> = {
   free: [],
-  premium: [
-    'tasks_beyond_14_days',
-    'briefings_beyond_4_weeks',
-    'tracker_history',
-    'tracker_summaries',
-    'tracker_advanced_logs',
-    'budget_full_access',
-    'budget_edit',
-    'premium_checklists',
-    'partner_sync',
-    'push_notifications',
-    'export_data',
-  ],
-  lifetime: [
-    'tasks_beyond_14_days',
-    'briefings_beyond_4_weeks',
-    'tracker_history',
-    'tracker_summaries',
-    'tracker_advanced_logs',
-    'budget_full_access',
-    'budget_edit',
-    'premium_checklists',
-    'partner_sync',
-    'push_notifications',
-    'export_data',
-  ],
+  premium: PREMIUM_FEATURES,
+  lifetime: PREMIUM_FEATURES,
 }
 
 // Pricing configuration
@@ -176,17 +166,21 @@ export const subscriptionService = {
   // Get feature list for display
   getFeatureList(): Array<{ name: string; free: boolean; premium: boolean }> {
     return [
-      { name: 'Weekly briefings (first 4 weeks)', free: true, premium: true },
-      { name: 'Task management (14-day view)', free: true, premium: true },
-      { name: 'Basic baby tracker', free: true, premium: true },
-      { name: 'Hospital bag checklist', free: true, premium: true },
-      { name: 'Full task timeline', free: false, premium: true },
-      { name: 'All weekly briefings', free: false, premium: true },
-      { name: 'Advanced tracker logs', free: false, premium: true },
-      { name: 'Tracker history & summaries', free: false, premium: true },
+      { name: 'Weekly briefings (4 weeks from signup)', free: true, premium: true },
+      { name: 'Task management (30-day rolling window)', free: true, premium: true },
+      { name: 'Basic baby tracker (3 log types)', free: true, premium: true },
+      { name: 'All checklists', free: true, premium: true },
+      { name: 'Mood check-ins & 7-day history', free: true, premium: true },
+      { name: 'Dad Journey challenge tiles (current phase)', free: true, premium: true },
+      { name: 'Full task timeline (pregnancy → 24 months)', free: false, premium: true },
+      { name: 'All weekly briefings (40+ weeks)', free: false, premium: true },
+      { name: 'Push notifications & reminders', free: false, premium: true },
+      { name: 'Partner sync & coordination', free: false, premium: true },
+      { name: 'Advanced tracker + full history', free: false, premium: true },
+      { name: 'Mood trends & insights', free: false, premium: true },
       { name: 'Complete budget planner', free: false, premium: true },
-      { name: 'All premium checklists', free: false, premium: true },
-      { name: 'Partner sync & notifications', free: false, premium: true },
+      { name: 'Task snooze & reschedule', free: false, premium: true },
+      { name: 'Full catch-up backlog triage', free: false, premium: true },
       { name: 'Data export', free: false, premium: true },
     ]
   },

@@ -177,58 +177,69 @@ function SubscriptionContent() {
         )}
       </Card>
 
-      {/* Features List */}
+      {/* Features Comparison */}
       <Card className="bg-surface-900 border-surface-800">
         <CardHeader>
-          <CardTitle className="text-white">Your Features</CardTitle>
-          <CardDescription>What&apos;s included in your plan</CardDescription>
+          <CardTitle className="text-white">Feature Comparison</CardTitle>
+          <CardDescription>
+            {isPremium ? 'You have access to all features' : 'Free vs Premium — see what you\'re missing'}
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-2">
-            {features.map((feature, index) => {
-              const hasAccess = isPremium || feature.free
-              return (
-                <div
-                  key={index}
-                  className={`flex items-center gap-3 p-2 rounded-lg ${
-                    hasAccess ? '' : 'opacity-50'
-                  }`}
-                >
-                  <div
-                    className={`h-6 w-6 rounded-full flex items-center justify-center ${
-                      hasAccess
-                        ? 'bg-accent-500/20'
-                        : 'bg-surface-800'
-                    }`}
-                  >
-                    {hasAccess ? (
-                      <Check className="h-4 w-4 text-accent-500" />
-                    ) : (
-                      <Crown className="h-3 w-3 text-surface-500" />
-                    )}
-                  </div>
-                  <span className={hasAccess ? 'text-white' : 'text-surface-500'}>
-                    {feature.name}
-                  </span>
-                  {!feature.free && !isPremium && (
-                    <Badge variant="outline" className="ml-auto text-xs border-surface-700 text-surface-500">
-                      Premium
-                    </Badge>
-                  )}
-                </div>
-              )
-            })}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-surface-800">
+                  <th className="text-left py-3 px-3 text-surface-400 font-medium text-sm">Feature</th>
+                  <th className="text-center py-3 px-3 text-surface-400 font-medium text-sm w-24">Free</th>
+                  <th className="text-center py-3 px-3 text-accent-400 font-medium text-sm w-24">Premium</th>
+                </tr>
+              </thead>
+              <tbody className="text-sm">
+                {features.map((feature, index) => {
+                  const hasAccess = isPremium || feature.free
+                  return (
+                    <tr key={index} className="border-b border-surface-800/50">
+                      <td className={`py-2.5 px-3 ${hasAccess ? 'text-white' : 'text-surface-500'}`}>
+                        {feature.name}
+                      </td>
+                      <td className="text-center py-2.5 px-3">
+                        {feature.free ? (
+                          <Check className="h-4 w-4 text-green-500 mx-auto" />
+                        ) : (
+                          <span className="text-surface-600">—</span>
+                        )}
+                      </td>
+                      <td className="text-center py-2.5 px-3">
+                        <Check className="h-4 w-4 text-accent-500 mx-auto" />
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
           </div>
+
+          {!isPremium && (
+            <div className="mt-4 p-3 rounded-lg bg-accent-500/10 border border-accent-500/20 text-center">
+              <p className="text-sm text-accent-400 font-medium">
+                One subscription per family — both partners share access
+              </p>
+            </div>
+          )}
         </CardContent>
 
         {!isPremium && (
-          <CardFooter>
+          <CardFooter className="flex-col gap-2">
             <Button asChild className="w-full bg-accent-500 hover:bg-accent-600">
               <Link href="/upgrade">
                 <Sparkles className="mr-2 h-4 w-4" />
-                Unlock All Features
+                Upgrade — $39.99/yr ($3.33/mo)
               </Link>
             </Button>
+            <p className="text-xs text-surface-500">
+              Or $4.99/month · $99.99 lifetime · 30-day money-back guarantee
+            </p>
           </CardFooter>
         )}
       </Card>
@@ -240,8 +251,8 @@ function SubscriptionContent() {
             <p>Need help with your subscription?</p>
             <p className="mt-1">
               Contact us at{' '}
-              <a href="mailto:support@parentlogs.com" className="text-accent-500 hover:text-accent-400">
-                support@parentlogs.com
+              <a href="mailto:support@thedadcenter.com" className="text-accent-500 hover:text-accent-400">
+                support@thedadcenter.com
               </a>
             </p>
           </div>

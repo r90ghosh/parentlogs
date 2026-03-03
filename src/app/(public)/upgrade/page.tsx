@@ -111,6 +111,9 @@ function UpgradeContent() {
           <p className="text-lg text-surface-400 max-w-2xl mx-auto">
             Get complete access to all features, unlimited history, and premium content to support your parenting journey.
           </p>
+          <p className="text-sm text-surface-500 mt-2">
+            One subscription per family — both partners share access.
+          </p>
         </div>
 
         {/* Pricing Cards */}
@@ -170,7 +173,7 @@ function UpgradeContent() {
                 <span className="text-surface-400">/year</span>
               </div>
               <div className="mb-4 p-2 bg-accent-500/10 rounded-lg text-center">
-                <span className="text-accent-400 font-medium">Save 33% vs monthly</span>
+                <span className="text-accent-400 font-medium">Just $3.33/mo — Save 33%</span>
               </div>
               <ul className="space-y-2 text-sm text-surface-300">
                 <li className="flex items-center gap-2">
@@ -291,7 +294,7 @@ function UpgradeContent() {
 
         {/* FAQ or Trust Signals */}
         <div className="mt-12 text-center text-surface-500 text-sm">
-          <p>Questions? Contact us at support@parentlogs.com</p>
+          <p>Questions? Contact us at support@thedadcenter.com</p>
           <p className="mt-2">30-day money-back guarantee on all plans</p>
         </div>
       </div>
