@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useCurrentBriefing, useBriefingByWeek } from '@/hooks/use-briefings'
 import { useFamily } from '@/hooks/use-family'
 import { useRequirePremium } from '@/hooks/use-require-auth'
+import { useUser } from '@/components/user-provider'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PaywallOverlay } from '@/components/shared/paywall-overlay'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -21,6 +22,7 @@ import {
   HighlightBox,
   QuickStats,
   DadFocusList,
+  BriefingLinkedTasks,
 } from '@/components/briefings'
 
 export default function BriefingPage() {
@@ -28,6 +30,7 @@ export default function BriefingPage() {
   const { data: family } = useFamily()
   const { data: currentBriefing, isLoading } = useCurrentBriefing()
   const { isPremium } = useRequirePremium()
+  const { profile, family: userFamily } = useUser()
 
   const [viewingWeek, setViewingWeek] = useState<number | null>(null)
   const stage = family?.stage || 'first-trimester'
@@ -54,8 +57,13 @@ export default function BriefingPage() {
   // Get baby size for pregnancy weeks
   const babySize = isPregnancy ? getBabySize(weekToView) : undefined
 
-  // Premium check: Free users get 4 weeks from their current week
-  const isPremiumLocked = !isPremium && Math.abs(weekToView - currentWeek) > 4
+  // Premium check: Free users get 4 weeks from their signup week
+  // If signup_week is available, use that; otherwise fall back to current week proximity
+  const freeWindowAnchor = profile.signup_week ?? currentWeek
+  const isPremiumLocked = !isPremium && Math.abs(weekToView - freeWindowAnchor) > 4
+
+  // Family ID for linked tasks
+  const familyId = userFamily?.id ?? profile.family_id
 
   const handleNavigate = (week: number) => {
     if (week >= 1 && week <= maxWeek) {
@@ -186,6 +194,14 @@ export default function BriefingPage() {
               <p className="mb-4">Here's what to focus on this week:</p>
               <DadFocusList items={displayBriefing.dad_focus} />
             </BriefingSection>
+
+            {/* Inline task completion for this briefing week */}
+            {familyId && (
+              <BriefingLinkedTasks
+                weekNumber={weekToView}
+                familyId={familyId}
+              />
+            )}
 
             {/* Relationship Tip */}
             <BriefingSection type="relationship" title="Relationship Check-In" icon="💜">

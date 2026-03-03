@@ -151,6 +151,59 @@ export const notificationService = {
     })
   },
 
+  // Check if user is within the 30-day free push notification window
+  async isPushWindowActive(): Promise<boolean> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return false
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('subscription_tier, created_at')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile) return false
+
+    // Premium users always have push access
+    if (profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime') {
+      return true
+    }
+
+    // Free users: 30-day window from signup
+    if (!profile.created_at) return true // If no signup date, grant access
+    const signupDate = new Date(profile.created_at)
+    const now = new Date()
+    const daysSinceSignup = Math.floor((now.getTime() - signupDate.getTime()) / (1000 * 60 * 60 * 24))
+
+    return daysSinceSignup <= 30
+  },
+
+  // Get detailed push notification window status
+  async getPushWindowStatus(): Promise<{ isActive: boolean; daysRemaining: number | null; isPremium: boolean }> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { isActive: false, daysRemaining: null, isPremium: false }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('subscription_tier, created_at')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile) return { isActive: false, daysRemaining: null, isPremium: false }
+
+    const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
+    if (isPremium) return { isActive: true, daysRemaining: null, isPremium: true }
+
+    if (!profile.created_at) return { isActive: true, daysRemaining: 30, isPremium: false }
+
+    const signupDate = new Date(profile.created_at)
+    const now = new Date()
+    const daysSinceSignup = Math.floor((now.getTime() - signupDate.getTime()) / (1000 * 60 * 60 * 24))
+    const daysRemaining = Math.max(0, 30 - daysSinceSignup)
+
+    return { isActive: daysRemaining > 0, daysRemaining, isPremium: false }
+  },
+
   // Helper: Convert VAPID key
   urlBase64ToUint8Array(base64String: string): ArrayBuffer {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4)

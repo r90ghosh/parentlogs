@@ -101,3 +101,11 @@ export function useLocalNotification() {
 
   return { show }
 }
+
+export function usePushWindowStatus() {
+  return useQuery({
+    queryKey: ['push-window-status'],
+    queryFn: () => notificationService.getPushWindowStatus(),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  })
+}
