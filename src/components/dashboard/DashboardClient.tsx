@@ -16,6 +16,7 @@ import { InvitePartnerCard } from './InvitePartnerCard'
 import { BudgetSnapshotCard } from './BudgetSnapshotCard'
 import { ChecklistProgressCard } from './ChecklistProgressCard'
 import { PartnerActivityCard } from './PartnerActivityCard'
+import { UpgradePromptCard } from './UpgradePromptCard'
 import { Skeleton } from '@/components/ui/skeleton'
 
 interface DashboardClientProps {
@@ -31,7 +32,7 @@ interface DashboardClientProps {
 const FULL_WIDTH_CARDS = ['mood', 'partner-activity', 'shift-briefing']
 
 // Left column card IDs
-const LEFT_COLUMN_CARDS = ['briefing-teaser', 'on-your-mind', 'invite-partner', 'personalize']
+const LEFT_COLUMN_CARDS = ['briefing-teaser', 'on-your-mind', 'upgrade-prompt', 'invite-partner', 'personalize']
 
 // Right column card IDs
 const RIGHT_COLUMN_CARDS = ['tasks-due', 'quick-actions', 'budget-snapshot', 'checklist-progress']
@@ -58,6 +59,7 @@ export function DashboardClient({
     'tasks-due': <TasksDueCard />,
     'on-your-mind': <OnYourMindCard />,
     'quick-actions': <QuickActionsBar />,
+    'upgrade-prompt': <UpgradePromptCard />,
     'personalize': <PersonalizeCard />,
     'invite-partner': <InvitePartnerCard />,
     'budget-snapshot': <BudgetSnapshotCard />,

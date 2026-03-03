@@ -27,6 +27,8 @@ export function useDashboardCards(): DashboardCard[] {
   // Suppress unused variable warning — hasCheckedIn drives mood card behavior
   void hasCheckedIn
 
+  const isFree = profile.subscription_tier === 'free' || !profile.subscription_tier
+
   return [
     { id: 'mood', priority: 1, visible: isDad },
     { id: 'partner-activity', priority: 1, visible: !isDad }, // Mom sees this instead of mood
@@ -35,6 +37,7 @@ export function useDashboardCards(): DashboardCard[] {
     { id: 'tasks-due', priority: 4, visible: true },
     { id: 'on-your-mind', priority: 5, visible: isDad },
     { id: 'quick-actions', priority: 6, visible: true },
+    { id: 'upgrade-prompt', priority: 6.5, visible: isFree },
     { id: 'personalize', priority: 7, visible: isDad && !hasCompletedProfile },
     { id: 'invite-partner', priority: 7, visible: !hasPartner },
     { id: 'budget-snapshot', priority: 8, visible: true },
