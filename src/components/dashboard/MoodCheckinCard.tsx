@@ -111,30 +111,30 @@ export function MoodCheckinCard() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        'rounded-[20px] p-5',
+        'rounded-[20px] px-4 py-3',
         'bg-gradient-to-br from-zinc-800 to-zinc-900',
         'border border-white/[0.06]'
       )}
     >
-      <div className="text-sm font-semibold text-zinc-300 mb-4">
+      <div className="text-sm font-semibold text-zinc-300 mb-2.5">
         How are you feeling today?
       </div>
 
       {/* Mood emoji buttons */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between">
         {MOOD_CONFIG.map(({ level, emoji, label }) => (
           <button
             key={level}
             onClick={() => handleMoodSelect(level)}
             className={cn(
-              'flex flex-col items-center gap-1.5 px-3 py-2 rounded-xl transition-all',
+              'flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all',
               'hover:bg-white/[0.06]',
               selectedMood === level
                 ? 'bg-white/[0.08] ring-1 ring-white/20 scale-110'
                 : 'opacity-70 hover:opacity-100'
             )}
           >
-            <span className="text-2xl">{emoji}</span>
+            <span className="text-xl">{emoji}</span>
             <span className="text-[10px] text-zinc-400">{label}</span>
           </button>
         ))}
@@ -147,10 +147,10 @@ export function MoodCheckinCard() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden"
+            className="overflow-hidden mt-2.5"
           >
-            <div className="text-xs text-zinc-500 mb-2">Anything going on? (optional)</div>
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="text-xs text-zinc-500 mb-1.5">Anything going on? (optional)</div>
+            <div className="flex flex-wrap gap-1.5 mb-3">
               {SITUATION_FLAGS.map(({ key, emoji, label }) => (
                 <button
                   key={key}
@@ -172,7 +172,7 @@ export function MoodCheckinCard() {
               onClick={handleSubmit}
               disabled={isSubmitting}
               className={cn(
-                'w-full py-2.5 rounded-xl text-sm font-semibold transition-all',
+                'w-full py-2 rounded-xl text-sm font-semibold transition-all',
                 'bg-amber-500 text-black hover:bg-amber-400',
                 'disabled:opacity-50 disabled:cursor-not-allowed'
               )}

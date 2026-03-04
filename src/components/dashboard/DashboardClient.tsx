@@ -71,7 +71,7 @@ export function DashboardClient({
   const rightCards = cards.filter(c => RIGHT_COLUMN_CARDS.includes(c.id))
 
   return (
-    <main className="flex-1 py-8 px-6 md:px-10 max-w-[1600px] mx-auto">
+    <div className="max-w-[1600px] mx-auto px-6 md:px-10 py-8">
       {/* Header */}
       <DashboardHeader
         userName={userName}
@@ -151,6 +151,6 @@ export function DashboardClient({
           )}
         </div>
       </div>
-    </main>
+    </div>
   )
 }

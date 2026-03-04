@@ -261,20 +261,15 @@ export interface NotificationPreferences {
   user_id: string
   push_enabled: boolean
   email_enabled: boolean
-  task_reminders?: boolean
-  task_reminders_7_day?: boolean
-  task_reminders_3_day?: boolean
-  task_reminders_1_day?: boolean
-  due_date_reminders?: boolean
-  overdue_alerts?: boolean
+  task_reminders_7_day: boolean
+  task_reminders_3_day: boolean
+  task_reminders_1_day: boolean
   partner_activity: boolean
-  shift_reminders?: boolean
   weekly_briefing: boolean
   weekly_briefing_day: number
   weekly_briefing_time: string
-  quiet_hours_enabled?: boolean
-  quiet_hours_start?: string
-  quiet_hours_end?: string
+  quiet_hours_start?: string | null
+  quiet_hours_end?: string | null
 }
 
 // Subscription Types

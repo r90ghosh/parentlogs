@@ -33,12 +33,15 @@ export function UpgradePromptCard() {
 
   const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
 
+  // Use family creation date (when user completed onboarding), not profile.created_at
+  // (which is when the auth account was created — could be weeks before onboarding)
   const daysSinceSignup = useMemo(() => {
-    if (!profile.created_at) return 0
-    const signupDate = new Date(profile.created_at)
+    const startDate = family?.created_at || profile.created_at
+    if (!startDate) return 0
+    const date = new Date(startDate)
     const now = new Date()
-    return Math.floor((now.getTime() - signupDate.getTime()) / (1000 * 60 * 60 * 24))
-  }, [profile.created_at])
+    return Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
+  }, [family?.created_at, profile.created_at])
 
   const phase = getUpgradePhase(daysSinceSignup)
 

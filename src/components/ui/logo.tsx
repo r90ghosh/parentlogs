@@ -71,7 +71,7 @@ export function Logo({
 
   if (href) {
     return (
-      <Link href={href} className="group">
+      <Link href={href} className="group inline-flex">
         {content}
       </Link>
     )

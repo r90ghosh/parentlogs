@@ -57,11 +57,11 @@ Deno.serve(async (req: Request) => {
 });
 
 async function sendDailyDigest() {
-  // Get all users with task_reminders enabled
+  // Get all users with task reminders enabled (any interval)
   const { data: preferences } = await supabase
     .from("notification_preferences")
     .select("user_id")
-    .eq("task_reminders", true);
+    .or("task_reminders_7_day.eq.true,task_reminders_3_day.eq.true,task_reminders_1_day.eq.true");
 
   if (!preferences) return;
 
@@ -132,14 +132,14 @@ async function sendTaskReminders() {
     if (!members) continue;
 
     for (const member of members) {
-      // Check preferences
+      // Check preferences — 1-day reminder for tasks due tomorrow
       const { data: pref } = await supabase
         .from("notification_preferences")
-        .select("due_date_reminders")
+        .select("task_reminders_1_day")
         .eq("user_id", member.id)
         .single();
 
-      if (!pref?.due_date_reminders) continue;
+      if (!pref?.task_reminders_1_day) continue;
       if (await isInQuietHours(member.id)) continue;
 
       await sendPushNotification(member.id, {
@@ -183,11 +183,11 @@ async function sendOverdueAlerts() {
     for (const member of members) {
       const { data: pref } = await supabase
         .from("notification_preferences")
-        .select("overdue_alerts")
+        .select("task_reminders_1_day")
         .eq("user_id", member.id)
         .single();
 
-      if (!pref?.overdue_alerts) continue;
+      if (!pref?.task_reminders_1_day) continue;
       if (await isInQuietHours(member.id)) continue;
 
       await sendPushNotification(member.id, {
@@ -237,11 +237,11 @@ async function sendWeeklyBriefingAlerts() {
 async function isInQuietHours(userId: string): Promise<boolean> {
   const { data: pref } = await supabase
     .from("notification_preferences")
-    .select("quiet_hours_enabled, quiet_hours_start, quiet_hours_end")
+    .select("quiet_hours_start, quiet_hours_end")
     .eq("user_id", userId)
     .single();
 
-  if (!pref?.quiet_hours_enabled) return false;
+  if (!pref?.quiet_hours_start) return false;
 
   const now = new Date();
   const currentHour = now.getHours();

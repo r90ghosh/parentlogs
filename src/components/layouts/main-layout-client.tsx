@@ -74,7 +74,7 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
           <div className="flex items-center gap-3">
             <Logo size="sm" href="/dashboard" variant="dark" />
             {weekDisplay && (
-              <span className="text-xs bg-accent-600/20 text-accent-400 px-2 py-1 rounded-full">
+              <span className="text-xs font-medium bg-accent-600/20 text-accent-400 px-2 py-0.5 rounded-full leading-none">
                 {weekDisplay}
               </span>
             )}

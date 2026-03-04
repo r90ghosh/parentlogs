@@ -35,12 +35,16 @@ export const familyService = {
 
     if (profileError) return { family: null, error: profileError as Error }
 
-    // Generate tasks
-    await supabase.rpc('generate_family_tasks', {
-      p_family_id: family.id,
-      p_due_date: data.due_date,
-      p_birth_date: data.birth_date,
-    })
+    // Generate tasks with proper week_due and catch-up handling
+    const referenceDate = data.due_date || data.birth_date
+    if (referenceDate) {
+      const currentWeek = family.current_week || 1
+      await supabase.rpc('initialize_family_tasks_with_catchup', {
+        p_family_id: family.id,
+        p_due_date: referenceDate,
+        p_signup_week: currentWeek,
+      })
+    }
 
     return { family: family as Family, error: null }
   },

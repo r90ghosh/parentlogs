@@ -10,7 +10,8 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { DateSelect } from '@/components/ui/date-select'
+import { cn } from '@/lib/utils'
 import { Loader2, Baby, Calendar } from 'lucide-react'
 
 /**
@@ -46,8 +47,9 @@ export default function OnboardingFamily() {
     if (!user) return
 
     const referenceDate = stage === 'pregnancy' ? dueDate : birthDate
-    if (!referenceDate) {
-      setError('Please select a date')
+    // Validate complete date (YYYY-MM-DD with no empty parts)
+    if (!referenceDate || !/^\d{4}-\d{2}-\d{2}$/.test(referenceDate)) {
+      setError('Please select a complete date')
       return
     }
 
@@ -69,9 +71,17 @@ export default function OnboardingFamily() {
       }
 
       // Type the family response
-      const familyData = family as { id: string; [key: string]: unknown } | null
+      const familyData = family as { id: string; current_week?: number; [key: string]: unknown } | null
       if (!familyData || !familyData.id) {
         throw new Error('Family creation failed - no ID returned')
+      }
+
+      // Set signup_week on profile so free windows are calculated correctly
+      if (familyData.current_week) {
+        await supabase
+          .from('profiles')
+          .update({ signup_week: familyData.current_week })
+          .eq('id', user.id)
       }
 
       // Generate tasks
@@ -83,10 +93,10 @@ export default function OnboardingFamily() {
       }, 500)
 
       const { error: taskError } = await supabase
-        .rpc('generate_family_tasks', {
+        .rpc('initialize_family_tasks_with_catchup', {
           p_family_id: familyData.id,
-          p_due_date: stage === 'pregnancy' ? dueDate : undefined,
-          p_birth_date: stage === 'post-birth' ? birthDate : undefined,
+          p_due_date: stage === 'pregnancy' ? dueDate : (birthDate || dueDate),
+          p_signup_week: familyData.current_week || 1,
         })
 
       clearInterval(progressInterval)
@@ -156,50 +166,62 @@ export default function OnboardingFamily() {
           </Alert>
         )}
 
-        <Tabs value={stage} onValueChange={(v) => setStage(v as 'pregnancy' | 'post-birth')}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="pregnancy" className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Expecting
-            </TabsTrigger>
-            <TabsTrigger value="post-birth" className="flex items-center gap-2">
-              <Baby className="h-4 w-4" />
-              Baby Born
-            </TabsTrigger>
-          </TabsList>
+        {/* Stage toggle */}
+        <div className="grid grid-cols-2 gap-1 rounded-lg bg-surface-800 p-1">
+          <button
+            type="button"
+            onClick={() => setStage('pregnancy')}
+            className={cn(
+              'flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+              stage === 'pregnancy'
+                ? 'bg-surface-700 text-white shadow-sm'
+                : 'text-surface-400 hover:text-surface-300'
+            )}
+          >
+            <Calendar className="h-4 w-4" />
+            Expecting
+          </button>
+          <button
+            type="button"
+            onClick={() => setStage('post-birth')}
+            className={cn(
+              'flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+              stage === 'post-birth'
+                ? 'bg-surface-700 text-white shadow-sm'
+                : 'text-surface-400 hover:text-surface-300'
+            )}
+          >
+            <Baby className="h-4 w-4" />
+            Baby Born
+          </button>
+        </div>
 
-          <TabsContent value="pregnancy" className="space-y-4 mt-4">
-            <div className="space-y-2">
-              <Label htmlFor="dueDate">Due Date</Label>
-              <Input
-                id="dueDate"
-                type="date"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-                className="bg-surface-800 border-surface-700"
-              />
-              <p className="text-xs text-surface-400">
-                We&apos;ll calculate your current week and schedule tasks accordingly
-              </p>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="post-birth" className="space-y-4 mt-4">
-            <div className="space-y-2">
-              <Label htmlFor="birthDate">Birth Date</Label>
-              <Input
-                id="birthDate"
-                type="date"
-                value={birthDate}
-                onChange={(e) => setBirthDate(e.target.value)}
-                className="bg-surface-800 border-surface-700"
-              />
-              <p className="text-xs text-surface-400">
-                Tasks will be scheduled based on your baby&apos;s age
-              </p>
-            </div>
-          </TabsContent>
-        </Tabs>
+        {/* Date input — only render the active one */}
+        {stage === 'pregnancy' ? (
+          <div className="space-y-2">
+            <Label>Due Date</Label>
+            <DateSelect
+              value={dueDate}
+              onChange={setDueDate}
+              mode="future"
+            />
+            <p className="text-xs text-surface-400">
+              We&apos;ll calculate your current week and schedule tasks accordingly
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <Label>Birth Date</Label>
+            <DateSelect
+              value={birthDate}
+              onChange={setBirthDate}
+              mode="past"
+            />
+            <p className="text-xs text-surface-400">
+              Tasks will be scheduled based on your baby&apos;s age
+            </p>
+          </div>
+        )}
 
         <div className="space-y-2">
           <Label htmlFor="babyName">Baby&apos;s Name (optional)</Label>
@@ -216,7 +238,7 @@ export default function OnboardingFamily() {
         <Button
           className="w-full"
           onClick={handleCreateFamily}
-          disabled={isLoading || (!dueDate && !birthDate)}
+          disabled={isLoading || !(stage === 'pregnancy' ? /^\d{4}-\d{2}-\d{2}$/.test(dueDate) : /^\d{4}-\d{2}-\d{2}$/.test(birthDate))}
         >
           {isLoading ? (
             <>

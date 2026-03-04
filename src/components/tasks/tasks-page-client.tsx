@@ -127,6 +127,16 @@ export function TasksPageClient({
     return currentWeek + Math.ceil(30 / 7)
   }, [isPremium, currentWeek])
 
+  // Compute effective week for a task (fallback to due_date calculation if week_due is null)
+  const getEffectiveWeek = useCallback((task: FamilyTask): number | null => {
+    if (task.week_due != null) return task.week_due
+    if (!task.due_date || !family?.due_date) return null
+    const dueDate = new Date(family.due_date)
+    const taskDate = new Date(task.due_date)
+    const daysDiff = Math.floor((dueDate.getTime() - taskDate.getTime()) / (1000 * 60 * 60 * 24))
+    return 40 - Math.floor(daysDiff / 7)
+  }, [family?.due_date])
+
   // Computed stats
   const stats = useMemo(() => {
     const activeTasks = tasks.filter(t => t.status === 'pending' && !t.is_backlog)
@@ -140,7 +150,7 @@ export function TasksPageClient({
       return dueDate.getTime() === today.getTime()
     }).length
 
-    const thisWeek = activeTasks.filter(t => t.week_due === currentWeek).length
+    const thisWeek = activeTasks.filter(t => getEffectiveWeek(t) === currentWeek).length
     const completed = tasks.filter(t => t.status === 'completed').length
     const partnerTasks = activeTasks.filter(t => t.assigned_to === 'mom').length
 
@@ -151,7 +161,7 @@ export function TasksPageClient({
       partnerTasks,
       catchUpQueue: backlogTasks.length,
     }
-  }, [tasks, backlogTasks, currentWeek])
+  }, [tasks, backlogTasks, currentWeek, getEffectiveWeek])
 
   // Calculate timeline stats for the phase filter bar
   const timelineStats = useMemo(() => {
@@ -175,7 +185,10 @@ export function TasksPageClient({
 
     // Apply 30-day free window filter for non-premium users
     if (freeWindowCutoff !== null) {
-      filtered = filtered.filter(t => !t.week_due || t.week_due <= freeWindowCutoff)
+      filtered = filtered.filter(t => {
+        const week = getEffectiveWeek(t)
+        return !week || week <= freeWindowCutoff
+      })
     }
 
     // Apply tab filter
@@ -215,7 +228,9 @@ export function TasksPageClient({
       // Sort by week/due date
       const sortedFiltered = [...filtered].sort((a, b) => {
         // First by week
-        if (a.week_due !== b.week_due) return (a.week_due || 0) - (b.week_due || 0)
+        const weekA = getEffectiveWeek(a) || 0
+        const weekB = getEffectiveWeek(b) || 0
+        if (weekA !== weekB) return weekA - weekB
         // Then by due date
         return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
       })
@@ -229,9 +244,12 @@ export function TasksPageClient({
       }
     }
 
-    // Separate by week (normal view)
-    const thisWeek = filtered.filter(t => t.week_due === currentWeek)
-    const comingUp = filtered.filter(t => t.week_due && t.week_due > currentWeek && t.week_due <= currentWeek + 4)
+    // Separate by week (normal view) — use effective week to handle null week_due
+    const thisWeek = filtered.filter(t => getEffectiveWeek(t) === currentWeek)
+    const comingUp = filtered.filter(t => {
+      const week = getEffectiveWeek(t)
+      return week != null && week > currentWeek && week <= currentWeek + 4
+    })
 
     // Get focus task (highest priority due today or this week)
     const focus = thisWeek.find(t => t.priority === 'must-do') || thisWeek[0] || null
@@ -243,7 +261,7 @@ export function TasksPageClient({
       filteredTasks: filtered,
       phaseTasks: [],
     }
-  }, [tasks, allTasks, activeTab, activeCategory, searchQuery, currentWeek, selectedTimelineCategory, family, freeWindowCutoff])
+  }, [tasks, allTasks, activeTab, activeCategory, searchQuery, currentWeek, selectedTimelineCategory, family, freeWindowCutoff, getEffectiveWeek])
 
   // Calculate triage progress
   const triageProgress = useMemo(() => {

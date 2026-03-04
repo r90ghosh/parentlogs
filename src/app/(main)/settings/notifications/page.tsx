@@ -186,34 +186,34 @@ export default function NotificationSettingsPage() {
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Daily task digest</Label>
-                  <p className="text-xs text-surface-400">Get a morning summary of today's tasks</p>
+                  <Label>7-day reminder</Label>
+                  <p className="text-xs text-surface-400">Get a heads up a week before tasks are due</p>
                 </div>
                 <Switch
-                  checked={preferences?.task_reminders ?? true}
-                  onCheckedChange={(checked) => handleTogglePreference('task_reminders', checked)}
+                  checked={preferences?.task_reminders_7_day ?? true}
+                  onCheckedChange={(checked) => handleTogglePreference('task_reminders_7_day', checked)}
                 />
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Due date reminders</Label>
-                  <p className="text-xs text-surface-400">Remind me when tasks are due</p>
+                  <Label>3-day reminder</Label>
+                  <p className="text-xs text-surface-400">Remind me 3 days before tasks are due</p>
                 </div>
                 <Switch
-                  checked={preferences?.due_date_reminders ?? true}
-                  onCheckedChange={(checked) => handleTogglePreference('due_date_reminders', checked)}
+                  checked={preferences?.task_reminders_3_day ?? true}
+                  onCheckedChange={(checked) => handleTogglePreference('task_reminders_3_day', checked)}
                 />
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Overdue alerts</Label>
-                  <p className="text-xs text-surface-400">Alert me about overdue tasks</p>
+                  <Label>1-day reminder</Label>
+                  <p className="text-xs text-surface-400">Last chance reminder the day before</p>
                 </div>
                 <Switch
-                  checked={preferences?.overdue_alerts ?? true}
-                  onCheckedChange={(checked) => handleTogglePreference('overdue_alerts', checked)}
+                  checked={preferences?.task_reminders_1_day ?? true}
+                  onCheckedChange={(checked) => handleTogglePreference('task_reminders_1_day', checked)}
                 />
               </div>
             </CardContent>
@@ -233,17 +233,6 @@ export default function NotificationSettingsPage() {
                 <Switch
                   checked={preferences?.partner_activity ?? true}
                   onCheckedChange={(checked) => handleTogglePreference('partner_activity', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label>Shift change reminder</Label>
-                  <p className="text-xs text-surface-400">Remind to do shift handoff</p>
-                </div>
-                <Switch
-                  checked={preferences?.shift_reminders ?? false}
-                  onCheckedChange={(checked) => handleTogglePreference('shift_reminders', checked)}
                 />
               </div>
             </CardContent>
@@ -282,12 +271,19 @@ export default function NotificationSettingsPage() {
                   <Label>Enable quiet hours</Label>
                 </div>
                 <Switch
-                  checked={preferences?.quiet_hours_enabled ?? false}
-                  onCheckedChange={(checked) => handleTogglePreference('quiet_hours_enabled', checked)}
+                  checked={!!preferences?.quiet_hours_start}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      handleQuietHoursChange('quiet_hours_start', '22:00')
+                      handleQuietHoursChange('quiet_hours_end', '07:00')
+                    } else {
+                      updatePreferences.mutateAsync({ quiet_hours_start: null as unknown as string, quiet_hours_end: null as unknown as string })
+                    }
+                  }}
                 />
               </div>
 
-              {preferences?.quiet_hours_enabled && (
+              {!!preferences?.quiet_hours_start && (
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Start time</Label>

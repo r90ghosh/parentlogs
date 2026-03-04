@@ -43,7 +43,7 @@ export function BriefingHero({
   }
 
   return (
-    <div className="relative bg-gradient-to-br from-teal-500/[0.15] via-cyan-500/[0.08] to-transparent border-b border-white/[0.06] px-6 md:px-12 py-5 md:ml-64 overflow-hidden">
+    <div className="relative bg-gradient-to-br from-teal-500/[0.15] via-cyan-500/[0.08] to-transparent border-b border-white/[0.06] px-6 md:px-12 py-5 overflow-hidden">
       {/* Radial gradient overlay */}
       <div className="absolute top-[-50%] right-[-10%] w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(20,184,166,0.1)_0%,transparent_70%)] pointer-events-none" />
 

@@ -56,12 +56,12 @@ export const taskService = {
       query = query.range(filters.offset, filters.offset + (filters.limit || 10) - 1)
     }
 
-    // Premium gating: free users only see 14-day window
+    // Premium gating: free users only see 30-day rolling window
     const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
     if (!isPremium) {
       const today = new Date()
-      const twoWeeksFromNow = new Date(today.getTime() + 14 * 24 * 60 * 60 * 1000)
-      query = query.lte('due_date', twoWeeksFromNow.toISOString().split('T')[0])
+      const thirtyDaysFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
+      query = query.lte('due_date', thirtyDaysFromNow.toISOString().split('T')[0])
     }
 
     const { data, error } = await query
