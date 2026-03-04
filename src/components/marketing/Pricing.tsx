@@ -140,7 +140,7 @@ export function Pricing() {
                     asChild
                     className={`w-full font-ui font-semibold text-[13px] uppercase tracking-[0.06em] ${
                       plan.highlighted
-                        ? 'bg-gold hover:bg-gold-hover text-[--bg] shadow-gold'
+                        ? 'btn-glow-hover bg-gold hover:bg-gold-hover text-[--bg] shadow-gold'
                         : 'bg-[--card-hover] hover:bg-[--dim] text-[--cream] border border-[--border-hover]'
                     }`}
                     size="default"

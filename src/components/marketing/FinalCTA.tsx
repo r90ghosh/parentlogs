@@ -49,7 +49,7 @@ export function FinalCTA() {
             ))}
 
             <MagneticButton maxOffset={6}>
-              <Button asChild size="lg" className="relative z-[1] bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-sm uppercase tracking-[0.08em] px-10 py-4 h-auto shadow-copper">
+              <Button asChild size="lg" className="btn-glow-hover relative z-[1] bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-sm uppercase tracking-[0.08em] px-10 py-4 h-auto shadow-copper">
                 <Link href="/signup">
                   Start Your Journey Free
                   <ArrowRight className="ml-2 h-5 w-5" />

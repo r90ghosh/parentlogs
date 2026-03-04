@@ -271,7 +271,7 @@ export function Hero() {
           <RevealOnScroll delay={240}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
               <MagneticButton maxOffset={6}>
-                <Button asChild size="lg" className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] px-7 py-3.5 h-auto shadow-copper">
+                <Button asChild size="lg" className="btn-glow-hover bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] px-7 py-3.5 h-auto shadow-copper">
                   <Link href="/signup">
                     Start Free
                     <ArrowRight className="ml-2 h-5 w-5" />

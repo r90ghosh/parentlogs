@@ -394,7 +394,7 @@ export function SnakeTimeline() {
               <Button
                 asChild
                 size="lg"
-                className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] px-7 py-3.5 h-auto shadow-copper"
+                className="btn-glow-hover bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] px-7 py-3.5 h-auto shadow-copper"
               >
                 <Link href="/signup">
                   Get Started Free

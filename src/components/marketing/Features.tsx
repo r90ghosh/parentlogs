@@ -97,7 +97,7 @@ export function Features() {
         {/* CTA */}
         <RevealOnScroll delay={600} className="mt-16 text-center">
           <MagneticButton>
-            <Button asChild size="lg" className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] shadow-copper">
+            <Button asChild size="lg" className="btn-glow-hover bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] shadow-copper">
               <Link href="/signup">
                 Start Your Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />

@@ -70,14 +70,21 @@ export function Header() {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        'fixed top-0 left-0 right-0 z-50',
         isScrolled
           ? 'bg-[--bg]/88 backdrop-blur-[20px] border-b border-[--border] shadow-card'
           : 'bg-transparent'
       )}
+      style={{ transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div
+          className={cn(
+            'flex items-center justify-between',
+            isScrolled ? 'h-12 md:h-14' : 'h-16 md:h-20'
+          )}
+          style={{ transition: 'height 0.6s cubic-bezier(0.16, 1, 0.3, 1)' }}
+        >
           {/* Logo */}
           <div className="font-display font-bold text-[18px] tracking-tight text-[--cream]">
             <Logo size="md" variant="dark" />
@@ -90,7 +97,7 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleSmoothScroll(e, link.href)}
-                className="relative font-ui text-[13px] font-medium text-[--muted] hover:text-[--cream] transition-colors after:content-[''] after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-px after:bg-[--cream] after:transition-[width] after:duration-300 hover:after:w-full"
+                className="nav-underline-flip font-ui text-[13px] font-medium text-[--muted] hover:text-[--cream] transition-colors"
               >
                 {link.label}
               </a>
