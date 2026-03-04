@@ -97,7 +97,7 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleSmoothScroll(e, link.href)}
-                className="nav-underline-flip font-ui text-[13px] font-medium text-[--muted] hover:text-[--cream] transition-colors"
+                className="nav-underline-flip font-ui text-sm font-medium text-[--cream]/70 hover:text-[--cream] transition-colors"
               >
                 {link.label}
               </a>
@@ -115,7 +115,7 @@ export function Header() {
               </Button>
             ) : (
               <>
-                <Button asChild variant="ghost" className="font-ui text-[--muted] hover:text-[--cream] hover:bg-[--card]">
+                <Button asChild variant="ghost" className="font-ui text-sm text-[--cream]/70 hover:text-[--cream] hover:bg-[--card]">
                   <Link href="/login">Log In</Link>
                 </Button>
                 <Button asChild className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper">
