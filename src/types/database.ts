@@ -360,6 +360,42 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_messages: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          message: string
+          name: string
+          status: string
+          subject: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          message: string
+          name: string
+          status?: string
+          subject: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          status?: string
+          subject?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       dad_challenge_content: {
         Row: {
           action_items: Json
@@ -931,77 +967,6 @@ export type Database = {
           },
         ]
       }
-      timeline_dots: {
-        Row: {
-          id: string
-          milestone_id: string
-          title: string
-          description: string
-          domain: string
-          sort_order: number
-          is_active: boolean
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          milestone_id: string
-          title: string
-          description: string
-          domain: string
-          sort_order?: number
-          is_active?: boolean
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          milestone_id?: string
-          title?: string
-          description?: string
-          domain?: string
-          sort_order?: number
-          is_active?: boolean
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "timeline_dots_milestone_id_fkey"
-            columns: ["milestone_id"]
-            isOneToOne: false
-            referencedRelation: "timeline_milestones"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      timeline_milestones: {
-        Row: {
-          id: string
-          slug: string
-          label: string
-          sub_label: string
-          sort_order: number
-          direction: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          slug: string
-          label: string
-          sub_label: string
-          sort_order: number
-          direction?: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          slug?: string
-          label?: string
-          sub_label?: string
-          sort_order?: number
-          direction?: string
-          created_at?: string
-        }
-        Relationships: []
-      }
       task_templates: {
         Row: {
           catch_up_behavior: string | null
@@ -1065,6 +1030,77 @@ export type Database = {
           week?: number | null
           why_it_matters?: string | null
           window_weeks?: number | null
+        }
+        Relationships: []
+      }
+      timeline_dots: {
+        Row: {
+          created_at: string | null
+          description: string
+          domain: string
+          id: string
+          is_active: boolean
+          milestone_id: string | null
+          sort_order: number
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          domain: string
+          id?: string
+          is_active?: boolean
+          milestone_id?: string | null
+          sort_order?: number
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          domain?: string
+          id?: string
+          is_active?: boolean
+          milestone_id?: string | null
+          sort_order?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "timeline_dots_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "timeline_milestones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      timeline_milestones: {
+        Row: {
+          created_at: string | null
+          direction: string
+          id: string
+          label: string
+          slug: string
+          sort_order: number
+          sub_label: string
+        }
+        Insert: {
+          created_at?: string | null
+          direction?: string
+          id?: string
+          label: string
+          slug: string
+          sort_order: number
+          sub_label: string
+        }
+        Update: {
+          created_at?: string | null
+          direction?: string
+          id?: string
+          label?: string
+          slug?: string
+          sort_order?: number
+          sub_label?: string
         }
         Relationships: []
       }

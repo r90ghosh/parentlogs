@@ -25,9 +25,10 @@ async function fetchTimeline(): Promise<TimelineMilestone[]> {
 
   const dotsByMilestone = new Map<string, TimelineDot[]>()
   for (const dot of (dots || [])) {
-    const list = dotsByMilestone.get(dot.milestone_id) || []
+    const key = dot.milestone_id ?? ''
+    const list = dotsByMilestone.get(key) || []
     list.push(dot as TimelineDot)
-    dotsByMilestone.set(dot.milestone_id, list)
+    dotsByMilestone.set(key, list)
   }
 
   return milestones.map((m) => ({
