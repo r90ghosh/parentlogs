@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Tasks</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    /* ─────────────────────────────────────────
+       CSS VARIABLES
+    ───────────────────────────────────────── */
+    :root {
+      --bg: #f2f2f0;
+      --surface: #ffffff;
+      --primary: #ff4d00;
+      --black: #000000;
+      --yellow: #ffd000;
+      --muted: #888888;
+      --success: #00c853;
+      --border: #000000;
+      --border-w: 2px;
+      --border-w-thick: 3px;
+      --font-display: 'Space Mono', monospace;
+      --font-body: 'Work Sans', sans-serif;
+      --font-accent: 'Bebas Neue', sans-serif;
+    }
+
+    /* ─────────────────────────────────────────
+       RESET & BASE
+    ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 16px; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--black);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Dot grid texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.04) 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Large decorative "04" watermark */
+    body::after {
+      content: '04';
+      font-family: var(--font-accent);
+      font-size: 400px;
+      color: rgba(0,0,0,0.03);
+      position: fixed;
+      right: -60px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: 0;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* ─────────────────────────────────────────
+       LAYOUT WRAPPER
+    ───────────────────────────────────────── */
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-bottom: 72px; /* bottom nav height */
+    }
+
+    /* Left margin label */
+    .margin-label {
+      position: fixed;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+      font-family: var(--font-display);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: rgba(0,0,0,0.18);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 0;
+      user-select: none;
+    }
+
+    /* ─────────────────────────────────────────
+       HEADER BAR
+    ───────────────────────────────────────── */
+    .header-bar {
+      background: var(--surface);
+      border-bottom: var(--border-w-thick) solid var(--border);
+      padding: 0 24px;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border: var(--border-w) solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      transition: transform 0.08s cubic-bezier(0.16,1,0.3,1), box-shadow 0.08s;
+      color: var(--black);
+      flex-shrink: 0;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 4px 4px 0px var(--black);
+    }
+
+    .back-btn svg { display: block; }
+
+    .header-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .header-right {
+      font-family: var(--font-display);
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .header-right span {
+      color: var(--black);
+      font-weight: 700;
+    }
+
+    /* ─────────────────────────────────────────
+       PHASE TICKER
+    ───────────────────────────────────────── */
+    .phase-ticker-wrap {
+      border-bottom: var(--border-w) solid var(--border);
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .phase-ticker-inner {
+      display: flex;
+      width: max-content;
+      animation: ticker-scroll 20s linear infinite;
+    }
+
+    .phase-ticker-inner:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .phase-set {
+      display: flex;
+      flex-shrink: 0;
+    }
+
+    .phase-pill {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      padding: 8px 18px;
+      border-right: 1px solid var(--border);
+      white-space: nowrap;
+      color: var(--black);
+      background: var(--bg);
+      cursor: pointer;
+      transition: background 0.08s, color 0.08s;
+    }
+
+    .phase-pill:hover:not(.active) {
+      background: #e8e8e6;
+    }
+
+    .phase-pill.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* ─────────────────────────────────────────
+       STATS STRIP
+    ───────────────────────────────────────── */
+    .stats-strip {
+      background: var(--surface);
+      border-bottom: var(--border-w-thick) solid var(--border);
+      border-top: none;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .stat-item {
+      padding: 20px 24px;
+      border-right: var(--border-w-thick) solid var(--border);
+      cursor: pointer;
+      transition: background 0.08s cubic-bezier(0.16,1,0.3,1);
+      position: relative;
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-item:hover { background: var(--bg); }
+
+    .stat-item.active-filter::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--primary);
+    }
+
+    .stat-number {
+      font-family: var(--font-accent);
+      font-size: 72px;
+      line-height: 1;
+      display: block;
+    }
+
+    .stat-label {
+      font-family: var(--font-display);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      margin-top: 4px;
+      display: block;
+    }
+
+    .stat-item.orange .stat-number { color: var(--primary); }
+    .stat-item.black .stat-number  { color: var(--black); }
+    .stat-item.green .stat-number  { color: var(--success); }
+    .stat-item.yellow .stat-number { color: #b38600; }
+    .stat-item.orange .stat-label  { color: var(--primary); }
+    .stat-item.black .stat-label   { color: var(--black); }
+    .stat-item.green .stat-label   { color: var(--success); }
+    .stat-item.yellow .stat-label  { color: #b38600; }
+
+    /* Airport flip animation */
+    @keyframes digit-flip {
+      0%   { opacity: 0; transform: translateY(-8px); }
+      20%  { opacity: 1; transform: translateY(2px); }
+      40%  { opacity: 0; transform: translateY(-5px); }
+      60%  { opacity: 1; transform: translateY(1px); }
+      80%  { opacity: 0; transform: translateY(-3px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .stat-number {
+      animation: digit-flip 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .stat-item:nth-child(1) .stat-number { animation-delay: 0.1s; }
+    .stat-item:nth-child(2) .stat-number { animation-delay: 0.25s; }
+    .stat-item:nth-child(3) .stat-number { animation-delay: 0.4s; }
+    .stat-item:nth-child(4) .stat-number { animation-delay: 0.55s; }
+
+    /* ─────────────────────────────────────────
+       CONTROLS ROW (toggle + filters + search)
+    ───────────────────────────────────────── */
+    .controls-row {
+      background: var(--surface);
+      border-bottom: var(--border-w) solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      min-height: 52px;
+    }
+
+    /* View toggle */
+    .view-toggle {
+      display: flex;
+      border: var(--border-w) solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .view-btn {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.08s, color 0.08s;
+    }
+
+    .view-btn.active  { background: var(--black); color: #fff; }
+    .view-btn.inactive { background: var(--surface); color: var(--black); }
+    .view-btn.inactive:hover { background: var(--bg); }
+
+    /* Filter tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 0;
+      flex-shrink: 0;
+    }
+
+    .filter-tab {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      color: var(--muted);
+      transition: color 0.08s, border-color 0.08s;
+    }
+
+    .filter-tab.active {
+      color: var(--black);
+      border-bottom-color: var(--black);
+    }
+
+    .filter-tab:hover:not(.active) { color: var(--black); }
+
+    /* Search */
+    .search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .search-input {
+      font-family: var(--font-display);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      border: var(--border-w) solid var(--border);
+      background: var(--surface);
+      color: var(--black);
+      padding: 7px 12px;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.1s;
+    }
+
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus { border-color: var(--primary); }
+
+    /* Sort */
+    .sort-select {
+      font-family: var(--font-display);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      border: var(--border-w) solid var(--border);
+      background: var(--surface);
+      color: var(--black);
+      padding: 7px 12px;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 28px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      flex-shrink: 0;
+    }
+
+    .sort-select:focus { border-color: var(--primary); }
+
+    /* ─────────────────────────────────────────
+       MAIN CONTENT AREA
+    ───────────────────────────────────────── */
+    .content-area {
+      display: grid;
+      grid-template-columns: 65% 35%;
+      border-bottom: var(--border-w) solid var(--border);
+    }
+
+    .task-column {
+      border-right: var(--border-w-thick) solid var(--border);
+      min-width: 0;
+    }
+
+    .sidebar-column {
+      min-width: 0;
+    }
+
+    /* ─────────────────────────────────────────
+       CATCH-UP BANNER
+    ───────────────────────────────────────── */
+    .catchup-banner {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: var(--yellow);
+      border-bottom: var(--border-w) solid var(--border);
+      overflow: hidden;
+    }
+
+    .catchup-stripe {
+      width: 20px;
+      flex-shrink: 0;
+      align-self: stretch;
+      background: repeating-linear-gradient(
+        45deg,
+        #000 0px,
+        #000 10px,
+        var(--yellow) 10px,
+        var(--yellow) 20px
+      );
+    }
+
+    .catchup-content {
+      flex: 1;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .catchup-text-wrap {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .catchup-headline {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      color: var(--black);
+      display: block;
+    }
+
+    .catchup-sub {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: rgba(0,0,0,0.65);
+      margin-top: 2px;
+      display: block;
+    }
+
+    .catchup-btn {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      background: var(--black);
+      color: var(--yellow);
+      border: var(--border-w) solid var(--black);
+      padding: 8px 16px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.08s cubic-bezier(0.16,1,0.3,1), box-shadow 0.08s;
+      flex-shrink: 0;
+    }
+
+    .catchup-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 4px 4px 0px var(--black);
+    }
+
+    /* ─────────────────────────────────────────
+       SECTION LABEL ABOVE LIST
+    ───────────────────────────────────────── */
+    .section-header {
+      padding: 16px 24px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .section-label {
+      font-family: var(--font-display);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .section-count {
+      font-family: var(--font-accent);
+      font-size: 18px;
+      color: var(--black);
+    }
+
+    /* ─────────────────────────────────────────
+       TASK CARDS
+    ───────────────────────────────────────── */
+    .task-list {
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .task-card {
+      background: var(--surface);
+      border: var(--border-w) solid var(--border);
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      transition: transform 0.08s cubic-bezier(0.16,1,0.3,1), box-shadow 0.08s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .task-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 4px 4px 0px var(--black);
+    }
+
+    .task-card.completing {
+      animation: task-slide-out 0.35s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    @keyframes task-slide-out {
+      0%   { transform: translateX(0); opacity: 1; max-height: 80px; margin-bottom: 8px; }
+      60%  { transform: translateX(-100%); opacity: 0; max-height: 80px; margin-bottom: 8px; }
+      100% { transform: translateX(-100%); opacity: 0; max-height: 0; margin-bottom: 0; padding: 0; border: none; }
+    }
+
+    .task-card.done {
+      opacity: 0.55;
+      background: #fafafa;
+    }
+
+    /* Checkbox */
+    .task-checkbox {
+      width: 24px;
+      height: 24px;
+      border: var(--border-w) solid var(--border);
+      border-radius: 0;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.08s;
+      background: transparent;
+      margin-top: 1px;
+    }
+
+    .task-checkbox:hover { border-color: var(--primary); }
+
+    .task-checkbox.checked {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .task-checkbox.checked svg { display: block; }
+    .task-checkbox svg { display: none; }
+
+    @keyframes checkbox-thunk {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.3); }
+      70%  { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+
+    .task-checkbox.thunk {
+      animation: checkbox-thunk 0.25s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    /* Task body */
+    .task-body { flex: 1; min-width: 0; }
+
+    .task-main-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .task-name {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 1.3;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .task-card.done .task-name {
+      text-decoration: line-through;
+      text-decoration-color: var(--primary);
+      text-decoration-thickness: 2px;
+    }
+
+    .task-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 7px;
+      flex-wrap: wrap;
+    }
+
+    .task-right-col {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    /* Priority pill */
+    .priority-pill {
+      font-family: var(--font-accent);
+      font-size: 15px;
+      padding: 2px 8px;
+      letter-spacing: 0.05em;
+      line-height: 1.4;
+      flex-shrink: 0;
+    }
+
+    .priority-pill.p1 { background: var(--primary); color: #fff; }
+    .priority-pill.p2 { background: var(--black); color: #fff; }
+    .priority-pill.p3 { background: #e0e0e0; color: #555; }
+
+    /* Due */
+    .task-due {
+      font-family: var(--font-display);
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .task-due.urgent { color: var(--primary); font-weight: 700; }
+
+    /* Category + assignee pills */
+    .meta-pill {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border: 1px solid currentColor;
+    }
+
+    .meta-pill.cat-knowledge { color: #1a73e8; }
+    .meta-pill.cat-planning   { color: var(--primary); }
+    .meta-pill.cat-health     { color: #00c853; }
+    .meta-pill.cat-finance    { color: #00897b; }
+    .meta-pill.cat-anxiety    { color: #8e24aa; }
+    .meta-pill.cat-relationship { color: #e91e63; }
+
+    .assignee-pill {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+    }
+
+    .assignee-pill.dad  { background: var(--primary); color: #fff; }
+    .assignee-pill.mom  { background: var(--black);   color: #fff; }
+    .assignee-pill.both {
+      background: repeating-linear-gradient(
+        45deg,
+        var(--black) 0px, var(--black) 4px,
+        #fff 4px, #fff 8px
+      );
+      color: var(--black);
+      border: 1px solid var(--black);
+    }
+
+    /* Catch-up tag */
+    .catchup-tag {
+      font-family: var(--font-display);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--yellow);
+      color: #7a5c00;
+      padding: 2px 6px;
+      border: 1px solid #b38600;
+    }
+
+    /* ─────────────────────────────────────────
+       SIDEBAR
+    ───────────────────────────────────────── */
+    .sidebar-column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Progress Block ── */
+    .sidebar-block {
+      border-bottom: var(--border-w) solid var(--border);
+      padding: 20px;
+    }
+
+    .sidebar-block-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sidebar-block-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .progress-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .progress-ring-wrap {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+
+    .progress-ring-wrap svg {
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring-track {
+      fill: none;
+      stroke: #e0e0e0;
+      stroke-width: 10;
+    }
+
+    .progress-ring-fill {
+      fill: none;
+      stroke: var(--primary);
+      stroke-width: 10;
+      stroke-linecap: square;
+      stroke-dasharray: 339.29;
+      stroke-dashoffset: 135.72; /* 60% filled: 339.29 * 0.4 */
+      transition: stroke-dashoffset 0.8s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .progress-ring-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-accent);
+      font-size: 42px;
+      color: var(--black);
+      line-height: 1;
+    }
+
+    /* Category breakdown bar */
+    .category-bar-wrap { width: 100%; }
+
+    .category-bar {
+      display: flex;
+      height: 16px;
+      border: var(--border-w) solid var(--border);
+      overflow: hidden;
+    }
+
+    .cat-seg {
+      height: 100%;
+      transition: width 0.6s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .cat-seg.knowledge { background: #1a73e8; width: 30%; }
+    .cat-seg.planning  { background: var(--primary); width: 25%; }
+    .cat-seg.health    { background: var(--success); width: 25%; }
+    .cat-seg.finance   { background: #00897b; width: 20%; }
+
+    .category-legend {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-body);
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      flex-shrink: 0;
+    }
+
+    .legend-dot.knowledge { background: #1a73e8; }
+    .legend-dot.planning  { background: var(--primary); }
+    .legend-dot.health    { background: var(--success); }
+    .legend-dot.finance   { background: #00897b; }
+
+    /* ── Calendar Mini ── */
+    .calendar-grid {
+      width: 100%;
+    }
+
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .calendar-month {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+    }
+
+    .cal-nav-btn {
+      width: 28px;
+      height: 28px;
+      border: var(--border-w) solid var(--border);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.08s cubic-bezier(0.16,1,0.3,1), box-shadow 0.08s;
+    }
+
+    .cal-nav-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 3px 3px 0px var(--black);
+    }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      margin-bottom: 4px;
+    }
+
+    .cal-wd {
+      font-family: var(--font-display);
+      font-size: 9px;
+      text-align: center;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      padding: 2px 0;
+    }
+
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    }
+
+    .cal-day {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 11px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.06s;
+    }
+
+    .cal-day:hover:not(.today) { background: rgba(0,0,0,0.05); }
+
+    .cal-day.today {
+      background: var(--black);
+      color: #fff;
+    }
+
+    .cal-day.today .task-dot { background: var(--yellow); }
+
+    .cal-day.other-month { color: #ccc; }
+
+    .task-dot {
+      width: 4px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 3px;
+    }
+
+    /* ── Quick Add ── */
+    .quick-add-form {
+      display: flex;
+      gap: 0;
+    }
+
+    .quick-add-input {
+      flex: 1;
+      font-family: var(--font-display);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      background: var(--black);
+      color: #fff;
+      border: var(--border-w) solid var(--black);
+      padding: 10px 12px;
+      outline: none;
+      min-width: 0;
+      transition: border-color 0.1s;
+    }
+
+    .quick-add-input::placeholder { color: rgba(255,255,255,0.4); }
+    .quick-add-input:focus { border-color: var(--primary); }
+
+    .quick-add-btn {
+      width: 44px;
+      background: var(--primary);
+      border: var(--border-w) solid var(--primary);
+      color: #fff;
+      font-family: var(--font-accent);
+      font-size: 28px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: transform 0.08s cubic-bezier(0.16,1,0.3,1), box-shadow 0.08s;
+      flex-shrink: 0;
+    }
+
+    .quick-add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 3px 3px 0px var(--black);
+    }
+
+    /* ─────────────────────────────────────────
+       BOTTOM NAV
+    ───────────────────────────────────────── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top: var(--border-w-thick) solid var(--border);
+      height: 64px;
+      display: flex;
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.08s;
+      border-right: 1px solid rgba(0,0,0,0.1);
+      padding: 6px 0;
+    }
+
+    .nav-item:last-child { border-right: none; }
+
+    .nav-item:hover { background: var(--bg); }
+
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--primary);
+    }
+
+    .nav-icon {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2.5;
+    }
+
+    .nav-label {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .nav-item.active .nav-label { color: var(--primary); }
+    .nav-item.active .nav-icon  { color: var(--primary); }
+    .nav-item:not(.active) .nav-label { color: var(--black); }
+    .nav-item:not(.active) .nav-icon  { color: var(--black); }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────── */
+    @media (max-width: 768px) {
+      body::after { display: none; }
+      .margin-label { display: none; }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(3) { border-right: var(--border-w-thick) solid var(--border); border-top: var(--border-w-thick) solid var(--border); }
+      .stat-item:nth-child(4) { border-right: none; border-top: var(--border-w-thick) solid var(--border); }
+
+      .content-area {
+        grid-template-columns: 1fr;
+      }
+
+      .task-column { border-right: none; border-bottom: var(--border-w-thick) solid var(--border); }
+
+      .controls-row { gap: 12px; }
+
+      .header-title { font-size: 22px; }
+
+      .stat-number { font-size: 56px; }
+    }
+
+    @media (max-width: 480px) {
+      .controls-row { padding: 8px 12px; }
+      .task-list { padding: 8px; }
+      .header-bar { padding: 0 16px; }
+    }
+
+    /* ─────────────────────────────────────────
+       UTILITY CLASSES
+    ───────────────────────────────────────── */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Left margin label (decorative, rotated) -->
+  <div class="margin-label" aria-hidden="true">THE DAD CENTER — TASKS MODULE — V2.0</div>
+
+  <!-- ───────────────────────────────────────────
+       HEADER BAR
+  ─────────────────────────────────────────── -->
+  <header class="header-bar">
+    <div class="header-inner">
+      <div class="header-left">
+        <button class="back-btn" aria-label="Back">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"/>
+          </svg>
+        </button>
+        <h1 class="header-title">TASKS</h1>
+      </div>
+      <div class="header-right">
+        <span>WEEK 24</span> / DAY 168
+      </div>
+    </div>
+  </header>
+
+  <!-- ───────────────────────────────────────────
+       PHASE TICKER
+  ─────────────────────────────────────────── -->
+  <div class="phase-ticker-wrap" role="navigation" aria-label="Pregnancy phases">
+    <div class="phase-ticker-inner">
+      <!-- Duplicate set for seamless loop -->
+      <div class="phase-set">
+        <span class="phase-pill">PRE</span>
+        <span class="phase-pill">T1</span>
+        <span class="phase-pill active">T2</span>
+        <span class="phase-pill">T3</span>
+        <span class="phase-pill">0-3M</span>
+        <span class="phase-pill">3-6M</span>
+        <span class="phase-pill">6-12M</span>
+        <span class="phase-pill">12M+</span>
+      </div>
+      <div class="phase-set" aria-hidden="true">
+        <span class="phase-pill">PRE</span>
+        <span class="phase-pill">T1</span>
+        <span class="phase-pill active">T2</span>
+        <span class="phase-pill">T3</span>
+        <span class="phase-pill">0-3M</span>
+        <span class="phase-pill">3-6M</span>
+        <span class="phase-pill">6-12M</span>
+        <span class="phase-pill">12M+</span>
+      </div>
+      <div class="phase-set" aria-hidden="true">
+        <span class="phase-pill">PRE</span>
+        <span class="phase-pill">T1</span>
+        <span class="phase-pill active">T2</span>
+        <span class="phase-pill">T3</span>
+        <span class="phase-pill">0-3M</span>
+        <span class="phase-pill">3-6M</span>
+        <span class="phase-pill">6-12M</span>
+        <span class="phase-pill">12M+</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────────────────────
+       STATS STRIP
+  ─────────────────────────────────────────── -->
+  <div class="stats-strip" role="region" aria-label="Task statistics">
+    <div class="stats-grid">
+      <button class="stat-item orange active-filter" onclick="filterByType('today')" aria-label="Filter: due today">
+        <span class="stat-number">02</span>
+        <span class="stat-label">Due Today</span>
+      </button>
+      <button class="stat-item black" onclick="filterByType('week')" aria-label="Filter: this week">
+        <span class="stat-number">05</span>
+        <span class="stat-label">This Week</span>
+      </button>
+      <button class="stat-item green" onclick="filterByType('done')" aria-label="Filter: completed">
+        <span class="stat-number">12</span>
+        <span class="stat-label">Completed</span>
+      </button>
+      <button class="stat-item yellow" onclick="filterByType('catchup')" aria-label="Filter: catch up">
+        <span class="stat-number">03</span>
+        <span class="stat-label">Catch Up</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────────────────────
+       CONTROLS ROW
+  ─────────────────────────────────────────── -->
+  <div class="controls-row">
+    <!-- View toggle -->
+    <div class="view-toggle" role="group" aria-label="View mode">
+      <button class="view-btn active" onclick="setView('list')" id="view-list">LIST</button>
+      <button class="view-btn inactive" onclick="setView('calendar')" id="view-cal">CALENDAR</button>
+    </div>
+
+    <!-- Filter tabs -->
+    <nav class="filter-tabs" aria-label="Task filters">
+      <button class="filter-tab active" onclick="setFilter(this, 'all')">All</button>
+      <button class="filter-tab" onclick="setFilter(this, 'mine')">Mine</button>
+      <button class="filter-tab" onclick="setFilter(this, 'partner')">Partner</button>
+      <button class="filter-tab" onclick="setFilter(this, 'done')">Done</button>
+    </nav>
+
+    <!-- Search -->
+    <div class="search-wrap">
+      <input
+        type="search"
+        class="search-input"
+        placeholder="SEARCH TASKS..."
+        aria-label="Search tasks"
+      />
+    </div>
+
+    <!-- Sort -->
+    <select class="sort-select" aria-label="Sort tasks">
+      <option>SORT: DUE DATE</option>
+      <option>SORT: PRIORITY</option>
+      <option>SORT: CATEGORY</option>
+      <option>SORT: ASSIGNEE</option>
+    </select>
+  </div>
+
+  <!-- ───────────────────────────────────────────
+       MAIN CONTENT: TASK LIST + SIDEBAR
+  ─────────────────────────────────────────── -->
+  <div class="content-area">
+
+    <!-- ─── TASK COLUMN ─────────────────────── -->
+    <main class="task-column" role="main">
+
+      <!-- Catch-Up Banner -->
+      <div class="catchup-banner" role="alert">
+        <div class="catchup-stripe" aria-hidden="true"></div>
+        <div class="catchup-content">
+          <div class="catchup-text-wrap">
+            <span class="catchup-headline">3 EARLIER TASKS NEED ATTENTION</span>
+            <span class="catchup-sub">Not overdue — just catch-up. Still worth doing.</span>
+          </div>
+          <button class="catchup-btn">REVIEW &rarr;</button>
+        </div>
+      </div>
+
+      <!-- Section header -->
+      <div class="section-header">
+        <span class="section-label">Week 24 &mdash; Second Trimester</span>
+        <span class="section-count">8 TASKS</span>
+      </div>
+
+      <!-- Task list -->
+      <div class="task-list" id="task-list" role="list">
+
+        <!-- Task 1 — P1, due today, DAD, Knowledge -->
+        <article class="task-card" role="listitem">
+          <button class="task-checkbox" onclick="toggleTask(this)" aria-label="Mark complete">
+            <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1.5 5.5L5.5 9.5L12.5 1.5" stroke="white" stroke-width="2.5" stroke-linecap="square"/>
+            </svg>
+          </button>
+          <div class="task-body">
+            <div class="task-main-row">
+              <span class="task-name">Research childbirth classes in your area</span>
+              <div class="task-right-col">
+                <span class="priority-pill p1">P1</span>
+                <span class="task-due urgent">TODAY</span>
+              </div>
+            </div>
+            <div class="task-meta-row">
+              <span class="meta-pill cat-knowledge">Knowledge</span>
+              <span class="assignee-pill dad">DAD</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Task 2 — P1, due today, BOTH, Planning -->
+        <article class="task-card" role="listitem">
+          <button class="task-checkbox" onclick="toggleTask(this)" aria-label="Mark complete">
+            <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1.5 5.5L5.5 9.5L12.5 1.5" stroke="white" stroke-width="2.5" stroke-linecap="square"/>
+            </svg>
+          </button>
+          <div class="task-body">
+            <div class="task-main-row">
+              <span class="task-name">Tour the hospital labor &amp; delivery unit</span>
+              <div class="task-right-col">
+                <span class="priority-pill p1">P1</span>
+                <span class="task-due urgent">TODAY</span>
+              </div>
+            </div>
+            <div class="task-meta-row">
+              <span class="meta-pill cat-planning">Planning</span>
+              <span class="assignee-pill both">BOTH</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Task 3 — P2, 2 days, DAD, Finance -->
+        <article class="task-card" role="listitem">
+          <button class="task-checkbox" onclick="toggleTask(this)" aria-label="Mark complete">
+            <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1.5 5.5L5.5 9.5L12.5 1.5" stroke="white" stroke-width="2.5" stroke-linecap="square"/>
+            </svg>
+          </button>
+          <div class="task-body">
+            <div class="task-main-row">
+              <span class="task-name">Review health insurance coverage for newborn add-on</span>
+              <div class="task-right-col">
+                <span class="priority-pill p2">P2</span>
+                <span class="task-due">2d</span>
+              </div>
+            </div>
+            <div class="task-meta-row">
+              <span class="meta-pill cat-finance">Finance</span>
+              <span class="assignee-pill dad">DAD</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Task 4 — P2, 3 days, MOM, Health -->
+        <article class="task-card" role="listitem">
+          <button class="task-checkbox" onclick="toggleTask(this)" aria-label="Mark complete">
+            <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1.5 5.5L5.5 9.5L12.5 1.5" stroke="white" stroke-width="2.5" stroke-linecap="square"/>
+            </svg>
+          </button>
+          <div class="task-body">
+            <div class="task-main-row">
+              <span class="task-name">Schedule glucose screening test appointment</span>
+              <div class="task-right-col">
+                <span class="priority-pill p2">P2</span>
+                <span class="task-due">3d</span>
+              </div>
+            </div>
+            <div class="task-meta-row">
+              <span class="meta-pill cat-health">Health</span>
+              <span class="assignee-pill mom">MOM</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Task 5 — P2, 5 days, BOTH, Planning — catch-up badge -->
+        <article class="task-card" role="listitem">
+          <button class="task-checkbox" onclick="toggleTask(this)" aria-label="Mark complete">
+            <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1.5 5.5L5.5 9.5L12.5 1.5" stroke="white" stroke-width="2.5" stroke-linecap="square"/>
+            </svg>
+          </button>
+          <div class="task-body">
+            <div class="task-main-row">
+              <span class="task-name">Start building the birth plan document</span>
+              <div class="task-right-col">
+                <span class="priority-pill p2">P2</span>
+                <span class="task-due">5d</span>
+              </div>
+            </div>
+            <div class="task-meta-row">
+              <span class="meta-pill cat-planning">Planning</span>
+              <span class="assignee-pill both">BOTH</span>
+              <span class="catchup-tag">CATCH-UP</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Task 6 — P3, 6 days, DAD, Knowledge -->
+        <article class="task-card" role="listitem">
+          <button class="task-checkbox" onclick="toggleTask(this)" aria-label="Mark complete">
+            <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1.5 5.5L5.5 9.5L12.5 1.5" stroke="white" stroke-width="2.5" stroke-linecap="square"/>
+            </svg>
+          </button>
+          <div class="task-body">
+            <div class="task-main-row">
+              <span class="task-name">Watch a video on newborn skin-to-skin contact</span>
+              <div class="task-right-col">
+                <span class="priority-pill p3">P3</span>
+                <span class="task-due">6d</span>
+              </div>
+            </div>
+            <div class="task-meta-row">
+              <span class="meta-pill cat-knowledge">Knowledge</span>
+              <span class="assignee-pill dad">DAD</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Task 7 — P2, 7 days, BOTH, Finance — catch-up badge -->
+        <article class="task-card" role="listitem">
+          <button class="task-checkbox" onclick="toggleTask(this)" aria-label="Mark complete">
+            <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1.5 5.5L5.5 9.5L12.5 1.5" stroke="white" stroke-width="2.5" stroke-linecap="square"/>
+            </svg>
+          </button>
+          <div class="task-body">
+            <div class="task-main-row">
+              <span class="task-name">Open a 529 college savings account</span>
+              <div class="task-right-col">
+                <span class="priority-pill p2">P2</span>
+                <span class="task-due">7d</span>
+              </div>
+            </div>
+            <div class="task-meta-row">
+              <span class="meta-pill cat-finance">Finance</span>
+              <span class="assignee-pill both">BOTH</span>
+              <span class="catchup-tag">CATCH-UP</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Task 8 — P1, 7 days, MOM, Health — done -->
+        <article class="task-card done" role="listitem" aria-label="Completed task">
+          <button class="task-checkbox checked" onclick="toggleTask(this)" aria-label="Mark incomplete" aria-pressed="true">
+            <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1.5 5.5L5.5 9.5L12.5 1.5" stroke="white" stroke-width="2.5" stroke-linecap="square"/>
+            </svg>
+          </button>
+          <div class="task-body">
+            <div class="task-main-row">
+              <span class="task-name">Take prenatal vitamin (daily)</span>
+              <div class="task-right-col">
+                <span class="priority-pill p1">P1</span>
+                <span class="task-due">DONE</span>
+              </div>
+            </div>
+            <div class="task-meta-row">
+              <span class="meta-pill cat-health">Health</span>
+              <span class="assignee-pill mom">MOM</span>
+            </div>
+          </div>
+        </article>
+
+      </div><!-- /task-list -->
+
+    </main><!-- /task-column -->
+
+    <!-- ─── SIDEBAR COLUMN ───────────────────── -->
+    <aside class="sidebar-column" aria-label="Task overview">
+
+      <!-- 6a: Progress Block -->
+      <div class="sidebar-block">
+        <h2 class="sidebar-block-title">Mission Progress</h2>
+        <div class="progress-center">
+          <div class="progress-ring-wrap" role="img" aria-label="60% complete">
+            <svg width="120" height="120" viewBox="0 0 120 120">
+              <circle class="progress-ring-track" cx="60" cy="60" r="54"/>
+              <circle class="progress-ring-fill"  cx="60" cy="60" r="54"/>
+            </svg>
+            <div class="progress-ring-label" aria-hidden="true">60%</div>
+          </div>
+
+          <div class="category-bar-wrap">
+            <div class="category-bar" role="img" aria-label="Category breakdown">
+              <div class="cat-seg knowledge" aria-label="Knowledge 30%"></div>
+              <div class="cat-seg planning"  aria-label="Planning 25%"></div>
+              <div class="cat-seg health"    aria-label="Health 25%"></div>
+              <div class="cat-seg finance"   aria-label="Finance 20%"></div>
+            </div>
+            <div class="category-legend">
+              <span class="legend-item"><span class="legend-dot knowledge"></span>Knowledge</span>
+              <span class="legend-item"><span class="legend-dot planning"></span>Planning</span>
+              <span class="legend-item"><span class="legend-dot health"></span>Health</span>
+              <span class="legend-item"><span class="legend-dot finance"></span>Finance</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6b: Calendar Mini -->
+      <div class="sidebar-block">
+        <h2 class="sidebar-block-title">Calendar</h2>
+        <div class="calendar-grid">
+          <div class="calendar-header">
+            <button class="cal-nav-btn" aria-label="Previous month">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M8 2L4 6L8 10" stroke="black" stroke-width="2" stroke-linecap="square"/>
+              </svg>
+            </button>
+            <span class="calendar-month">MARCH 2026</span>
+            <button class="cal-nav-btn" aria-label="Next month">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M4 2L8 6L4 10" stroke="black" stroke-width="2" stroke-linecap="square"/>
+              </svg>
+            </button>
+          </div>
+          <div class="calendar-weekdays">
+            <span class="cal-wd">S</span>
+            <span class="cal-wd">M</span>
+            <span class="cal-wd">T</span>
+            <span class="cal-wd">W</span>
+            <span class="cal-wd">T</span>
+            <span class="cal-wd">F</span>
+            <span class="cal-wd">S</span>
+          </div>
+          <div class="calendar-days" id="calendar-days">
+            <!-- Days populated by JS below -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 6c: Quick Add -->
+      <div class="sidebar-block">
+        <h2 class="sidebar-block-title">Quick Add</h2>
+        <form class="quick-add-form" onsubmit="quickAddTask(event)">
+          <input
+            type="text"
+            class="quick-add-input"
+            placeholder="NEW TASK..."
+            aria-label="New task name"
+            id="quick-add-input"
+          />
+          <button type="submit" class="quick-add-btn" aria-label="Add task">+</button>
+        </form>
+      </div>
+
+    </aside><!-- /sidebar-column -->
+
+  </div><!-- /content-area -->
+
+  <!-- ───────────────────────────────────────────
+       BOTTOM NAV
+  ─────────────────────────────────────────── -->
+  <nav class="bottom-nav" aria-label="Main navigation">
+
+    <!-- Home -->
+    <a class="nav-item" href="#" role="link" aria-label="Home">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 10.5L12 3l9 7.5V21H15v-5h-6v5H3V10.5Z" stroke-linecap="square" stroke-linejoin="miter"/>
+        </svg>
+      </span>
+      <span class="nav-label">Home</span>
+    </a>
+
+    <!-- Tasks (active) -->
+    <a class="nav-item active" href="#" role="link" aria-label="Tasks" aria-current="page">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <rect x="5" y="3" width="14" height="18" rx="0" stroke-linecap="square"/>
+          <path d="M9 9h6M9 13h6M9 17h4" stroke-linecap="square"/>
+          <path d="M7 9l0 0" stroke-linecap="square"/>
+        </svg>
+      </span>
+      <span class="nav-label">Tasks</span>
+    </a>
+
+    <!-- Briefing -->
+    <a class="nav-item" href="#" role="link" aria-label="Briefing">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L2 7l10 5 10-5-10-5Z" stroke-linecap="square" stroke-linejoin="miter"/>
+          <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="square" stroke-linejoin="miter"/>
+        </svg>
+      </span>
+      <span class="nav-label">Briefing</span>
+    </a>
+
+    <!-- Tracker -->
+    <a class="nav-item" href="#" role="link" aria-label="Tracker">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v5l3 3" stroke-linecap="square"/>
+        </svg>
+      </span>
+      <span class="nav-label">Tracker</span>
+    </a>
+
+    <!-- More -->
+    <a class="nav-item" href="#" role="link" aria-label="More options">
+      <span class="nav-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="5"  cy="12" r="1.5" fill="currentColor" stroke="none"/>
+          <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+          <circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+        </svg>
+      </span>
+      <span class="nav-label">More</span>
+    </a>
+
+  </nav>
+
+  <!-- ───────────────────────────────────────────
+       JAVASCRIPT
+  ─────────────────────────────────────────── -->
+  <script>
+    /* ── Toggle task checkbox ── */
+    function toggleTask(checkbox) {
+      const card = checkbox.closest('.task-card');
+
+      // Trigger thunk animation
+      checkbox.classList.remove('thunk');
+      void checkbox.offsetWidth; // reflow
+      checkbox.classList.add('thunk');
+
+      if (checkbox.classList.contains('checked')) {
+        // Uncheck
+        checkbox.classList.remove('checked');
+        card.classList.remove('done');
+        checkbox.setAttribute('aria-pressed', 'false');
+        checkbox.setAttribute('aria-label', 'Mark complete');
+      } else {
+        // Check — mark done + slide out
+        checkbox.classList.add('checked');
+        checkbox.setAttribute('aria-pressed', 'true');
+        checkbox.setAttribute('aria-label', 'Mark incomplete');
+
+        setTimeout(() => {
+          card.classList.add('completing');
+          card.addEventListener('animationend', () => {
+            card.classList.remove('completing');
+            card.classList.add('done');
+          }, { once: true });
+        }, 200);
+      }
+    }
+
+    /* ── View toggle ── */
+    function setView(view) {
+      const listBtn = document.getElementById('view-list');
+      const calBtn  = document.getElementById('view-cal');
+      if (view === 'list') {
+        listBtn.classList.replace('inactive', 'active');
+        calBtn.classList.replace('active',   'inactive');
+      } else {
+        calBtn.classList.replace('inactive', 'active');
+        listBtn.classList.replace('active',  'inactive');
+      }
+    }
+
+    /* ── Filter tabs ── */
+    function setFilter(btn, filter) {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    /* ── Stat filter buttons ── */
+    function filterByType(type) {
+      document.querySelectorAll('.stat-item').forEach(s => s.classList.remove('active-filter'));
+      const map = { today: 0, week: 1, done: 2, catchup: 3 };
+      const items = document.querySelectorAll('.stat-item');
+      if (items[map[type]]) items[map[type]].classList.add('active-filter');
+    }
+
+    /* ── Quick add ── */
+    function quickAddTask(e) {
+      e.preventDefault();
+      const input = document.getElementById('quick-add-input');
+      const val   = input.value.trim();
+      if (!val) return;
+
+      const list = document.getElementById('task-list');
+      const card = document.createElement('article');
+      card.className = 'task-card';
+      card.setAttribute('role', 'listitem');
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(12px)';
+      card.innerHTML = `
+        <button class="task-checkbox" onclick="toggleTask(this)" aria-label="Mark complete">
+          <svg width="14" height="11" viewBox="0 0 14 11" fill="none">
+            <path d="M1.5 5.5L5.5 9.5L12.5 1.5" stroke="white" stroke-width="2.5" stroke-linecap="square"/>
+          </svg>
+        </button>
+        <div class="task-body">
+          <div class="task-main-row">
+            <span class="task-name">${escapeHtml(val)}</span>
+            <div class="task-right-col">
+              <span class="priority-pill p3">P3</span>
+              <span class="task-due">7d</span>
+            </div>
+          </div>
+          <div class="task-meta-row">
+            <span class="meta-pill cat-planning">Planning</span>
+            <span class="assignee-pill dad">DAD</span>
+          </div>
+        </div>
+      `;
+
+      list.insertBefore(card, list.firstChild);
+
+      requestAnimationFrame(() => {
+        card.style.transition = 'opacity 0.25s cubic-bezier(0.16,1,0.3,1), transform 0.25s cubic-bezier(0.16,1,0.3,1)';
+        card.style.opacity    = '1';
+        card.style.transform  = 'translateY(0)';
+      });
+
+      input.value = '';
+    }
+
+    function escapeHtml(str) {
+      const d = document.createElement('div');
+      d.appendChild(document.createTextNode(str));
+      return d.innerHTML;
+    }
+
+    /* ── Build calendar ── */
+    (function buildCalendar() {
+      const container = document.getElementById('calendar-days');
+      if (!container) return;
+
+      // March 2026: starts Saturday (index 6), 31 days
+      const firstDay  = 6; // 0=Sun … 6=Sat
+      const totalDays = 31;
+      const today     = 3; // March 3rd (matches env date 2026-03-03)
+
+      // Days with tasks (orange dots)
+      const taskDays = new Set([3, 5, 7, 10, 14, 17, 21, 24, 28]);
+
+      // Empty leading cells
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('span');
+        empty.className = 'cal-day other-month';
+        container.appendChild(empty);
+      }
+
+      for (let d = 1; d <= totalDays; d++) {
+        const cell = document.createElement('span');
+        cell.className = 'cal-day' + (d === today ? ' today' : '');
+        cell.textContent = d;
+        cell.setAttribute('role', 'button');
+        cell.setAttribute('tabindex', '0');
+        cell.setAttribute('aria-label', `March ${d}${d === today ? ' (today)' : ''}`);
+
+        if (taskDays.has(d)) {
+          const dot = document.createElement('span');
+          dot.className = 'task-dot';
+          dot.setAttribute('aria-hidden', 'true');
+          cell.appendChild(dot);
+        }
+
+        container.appendChild(cell);
+      }
+
+      // Fill trailing cells to complete the grid row
+      const totalCells = firstDay + totalDays;
+      const remainder  = totalCells % 7;
+      if (remainder !== 0) {
+        for (let i = 0; i < 7 - remainder; i++) {
+          const empty = document.createElement('span');
+          empty.className = 'cal-day other-month';
+          container.appendChild(empty);
+        }
+      }
+    })();
+
+    /* ── Phase ticker hover pause ── */
+    const ticker = document.querySelector('.phase-ticker-inner');
+    if (ticker) {
+      ticker.addEventListener('mouseenter', () => {
+        ticker.style.animationPlayState = 'paused';
+      });
+      ticker.addEventListener('mouseleave', () => {
+        ticker.style.animationPlayState = 'running';
+      });
+    }
+
+    /* ── Stat number flip on load ── */
+    /* The CSS animation handles this automatically on page load */
+  </script>
+
+</body>
+</html>

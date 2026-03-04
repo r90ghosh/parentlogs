@@ -91,13 +91,13 @@ const CATEGORY_ICONS: Record<string, React.ElementType> = {
 }
 
 const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  'Admin': { bg: 'bg-slate-500/20', text: 'text-slate-400', border: 'border-slate-500/30' },
+  'Admin': { bg: 'bg-[--dim]/20', text: 'text-[--muted]', border: 'border-[--border-hover]' },
   'Nursery': { bg: 'bg-purple-500/20', text: 'text-purple-400', border: 'border-purple-500/30' },
   'Gear': { bg: 'bg-blue-500/20', text: 'text-blue-400', border: 'border-blue-500/30' },
   'Health': { bg: 'bg-coral/20', text: 'text-coral', border: 'border-coral/30' },
   'Feeding': { bg: 'bg-gold/20', text: 'text-gold', border: 'border-gold/30' },
-  'Diapering': { bg: 'bg-cyan-500/20', text: 'text-cyan-400', border: 'border-cyan-500/30' },
-  'Tech': { bg: 'bg-indigo-500/20', text: 'text-indigo-400', border: 'border-indigo-500/30' },
+  'Diapering': { bg: 'bg-sky/20', text: 'text-sky', border: 'border-sky/30' },
+  'Tech': { bg: 'bg-sky/20', text: 'text-sky', border: 'border-sky/30' },
   'Safety': { bg: 'bg-orange-500/20', text: 'text-orange-400', border: 'border-orange-500/30' },
   'Clothing': { bg: 'bg-pink-500/20', text: 'text-pink-400', border: 'border-pink-500/30' },
   'Baby Care': { bg: 'bg-sage/20', text: 'text-sage', border: 'border-sage/30' },
@@ -312,8 +312,8 @@ export default function BudgetPage() {
             <Card className="bg-[--surface] border-[--border] card-gold-top">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
-                  <div className="p-3 rounded-lg bg-blue-500/20">
-                    <TrendingUp className="h-5 w-5 text-blue-400" />
+                  <div className="p-3 rounded-lg bg-sky/20">
+                    <TrendingUp className="h-5 w-5 text-sky" />
                   </div>
                   <div>
                     <p className="text-xs text-[--muted] font-ui">

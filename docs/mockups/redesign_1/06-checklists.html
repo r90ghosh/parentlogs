@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checklists — The Dad Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    body {
+      background-color: #0a0a0f;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    /* Progress bar animation */
+    @keyframes grow-width {
+      from { width: 0%; }
+      to { width: var(--target-width); }
+    }
+    .progress-fill {
+      animation: grow-width 0.7s ease-out forwards;
+    }
+    /* Card hover */
+    .checklist-card {
+      transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .checklist-card:hover {
+      border-color: rgba(255,255,255,0.15) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    /* Locked card overlay */
+    .locked-card {
+      opacity: 0.72;
+    }
+    /* Line clamp */
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    /* Nav active underline */
+    .nav-active::after {
+      content: '';
+      display: block;
+      height: 2px;
+      width: 20px;
+      background: #6366f1;
+      border-radius: 2px;
+      margin: 3px auto 0;
+    }
+    /* Subtle scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #0a0a0f; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+    /* Upgrade banner gradient animation */
+    @keyframes shimmer {
+      0% { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+    .upgrade-shimmer {
+      background: linear-gradient(
+        105deg,
+        rgba(251,191,36,0.08) 0%,
+        rgba(251,191,36,0.18) 40%,
+        rgba(245,158,11,0.12) 60%,
+        rgba(251,191,36,0.08) 100%
+      );
+      background-size: 200% auto;
+      animation: shimmer 4s linear infinite;
+    }
+    /* Section divider label */
+    .section-label {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              950: '#0a0a0f',
+              900: '#111117',
+              800: '#18181f',
+              700: '#27272f',
+              600: '#3f3f47',
+              500: '#71717a',
+              400: '#a1a1aa',
+              300: '#d4d4d8',
+            },
+            accent: {
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen text-white">
+
+  <!-- App Shell -->
+  <div class="flex flex-col min-h-screen max-w-[430px] mx-auto relative">
+
+    <!-- Status bar placeholder (mobile feel) -->
+    <div class="flex justify-between items-center px-5 pt-3 pb-1">
+      <span class="text-xs text-zinc-500 font-medium">9:41</span>
+      <div class="flex items-center gap-1.5">
+        <!-- Signal -->
+        <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+          <rect x="0" y="6" width="3" height="4" rx="0.5" fill="#71717a"/>
+          <rect x="4.5" y="4" width="3" height="6" rx="0.5" fill="#71717a"/>
+          <rect x="9" y="2" width="3" height="8" rx="0.5" fill="#a1a1aa"/>
+          <rect x="13.5" y="0" width="2.5" height="10" rx="0.5" fill="#a1a1aa"/>
+        </svg>
+        <!-- Battery -->
+        <svg width="22" height="11" viewBox="0 0 22 11" fill="none">
+          <rect x="0.5" y="0.5" width="18" height="10" rx="2.5" stroke="#71717a"/>
+          <rect x="2" y="2" width="13" height="7" rx="1.5" fill="#a1a1aa"/>
+          <path d="M20 3.5V7.5C20.8 7.17 21.5 6.18 21.5 5.5C21.5 4.82 20.8 3.83 20 3.5Z" fill="#71717a"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Page header -->
+    <header class="px-5 pt-3 pb-5 bg-surface-950 border-b border-white/[0.04]">
+      <div class="flex items-start justify-between">
+        <div>
+          <h1 class="text-[22px] font-bold text-white tracking-tight">Checklists</h1>
+          <p class="text-sm text-zinc-400 mt-0.5 leading-snug">
+            Track your preparation progress across every category
+          </p>
+        </div>
+        <!-- Filter/Search affordance -->
+        <button class="mt-0.5 p-2 rounded-xl bg-white/[0.05] border border-white/[0.07] text-zinc-400 hover:text-white transition-colors">
+          <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Overall progress pill -->
+      <div class="mt-4 flex items-center gap-3 px-3 py-2.5 rounded-2xl bg-white/[0.04] border border-white/[0.06]">
+        <div class="flex items-center justify-center w-8 h-8 rounded-xl bg-teal-500/20">
+          <i data-lucide="list-checks" class="w-4 h-4 text-teal-400"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-medium text-white">Overall progress</span>
+            <span class="text-xs font-semibold text-teal-400">27 of 53 items</span>
+          </div>
+          <div class="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
+            <div class="progress-fill h-full rounded-full bg-teal-500" style="--target-width: 51%;"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Scrollable content -->
+    <main class="flex-1 overflow-y-auto pb-24">
+      <div class="px-4 pt-5 space-y-6">
+
+        <!-- ── FREE CHECKLISTS SECTION ── -->
+        <div>
+          <div class="section-label mb-3">
+            <span class="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest whitespace-nowrap">Free Checklists</span>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+
+            <!-- Card 1: Hospital Bag -->
+            <a href="#" class="checklist-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-blue-500/15">
+                  <i data-lucide="baby" class="w-5 h-5 text-blue-400"></i>
+                </div>
+                <!-- No lock, no check — in progress -->
+              </div>
+              <div>
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Hospital Bag</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Everything you need packed and ready for delivery day</div>
+              </div>
+              <div class="space-y-1.5 mt-auto">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-zinc-500">8 of 15 items</span>
+                  <span class="text-blue-400 font-medium">53%</span>
+                </div>
+                <div class="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
+                  <div class="progress-fill h-full rounded-full bg-blue-500" style="--target-width: 53%;"></div>
+                </div>
+              </div>
+            </a>
+
+            <!-- Card 2: Nursery Setup -->
+            <a href="#" class="checklist-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-purple-500/15">
+                  <i data-lucide="home" class="w-5 h-5 text-purple-400"></i>
+                </div>
+              </div>
+              <div>
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Nursery Setup</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Create the perfect space for your baby's arrival</div>
+              </div>
+              <div class="space-y-1.5 mt-auto">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-zinc-500">6 of 12 items</span>
+                  <span class="text-purple-400 font-medium">50%</span>
+                </div>
+                <div class="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
+                  <div class="progress-fill h-full rounded-full bg-purple-500" style="--target-width: 50%;"></div>
+                </div>
+              </div>
+            </a>
+
+            <!-- Card 3: Baby Essentials -->
+            <a href="#" class="checklist-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-teal-500/15">
+                  <i data-lucide="shopping-bag" class="w-5 h-5 text-teal-400"></i>
+                </div>
+              </div>
+              <div>
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Baby Essentials</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">The must-have items for your newborn's first weeks</div>
+              </div>
+              <div class="space-y-1.5 mt-auto">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-zinc-500">10 of 18 items</span>
+                  <span class="text-teal-400 font-medium">56%</span>
+                </div>
+                <div class="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
+                  <div class="progress-fill h-full rounded-full bg-teal-500" style="--target-width: 56%;"></div>
+                </div>
+              </div>
+            </a>
+
+            <!-- Card 4: Documents & Legal -->
+            <a href="#" class="checklist-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-slate-500/15">
+                  <i data-lucide="file-text" class="w-5 h-5 text-slate-400"></i>
+                </div>
+              </div>
+              <div>
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Documents & Legal</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Important paperwork and legal preparations before birth</div>
+              </div>
+              <div class="space-y-1.5 mt-auto">
+                <div class="flex items-center justify-between text-[11px]">
+                  <span class="text-zinc-500">3 of 8 items</span>
+                  <span class="text-slate-400 font-medium">38%</span>
+                </div>
+                <div class="h-1.5 rounded-full bg-white/[0.07] overflow-hidden">
+                  <div class="progress-fill h-full rounded-full bg-slate-400" style="--target-width: 38%;"></div>
+                </div>
+              </div>
+            </a>
+
+          </div>
+        </div>
+
+        <!-- ── UPGRADE BANNER ── -->
+        <div class="relative overflow-hidden rounded-2xl border border-amber-500/20 upgrade-shimmer">
+          <div class="relative z-10 flex items-center gap-4 p-4">
+            <!-- Icon cluster -->
+            <div class="relative flex-shrink-0">
+              <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                <i data-lucide="lock-open" class="w-6 h-6 text-amber-400"></i>
+              </div>
+              <div class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center">
+                <span class="text-[10px] font-bold text-black">11</span>
+              </div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-semibold text-white leading-snug">Unlock 11 more checklists</div>
+              <div class="text-[11px] text-zinc-400 mt-0.5">Baby proofing, car safety, travel, milestones &amp; more</div>
+            </div>
+            <a href="/upgrade" class="flex-shrink-0 px-3.5 py-2 rounded-xl bg-amber-500 text-black text-xs font-bold hover:bg-amber-400 transition-colors whitespace-nowrap">
+              Upgrade
+            </a>
+          </div>
+          <!-- Decorative orbs -->
+          <div class="absolute top-1/2 right-16 -translate-y-1/2 w-24 h-24 rounded-full bg-amber-500/10 blur-2xl pointer-events-none"></div>
+          <div class="absolute -bottom-4 left-8 w-20 h-20 rounded-full bg-amber-500/8 blur-xl pointer-events-none"></div>
+        </div>
+
+        <!-- ── PREMIUM CHECKLISTS SECTION ── -->
+        <div>
+          <div class="section-label mb-3">
+            <span class="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest whitespace-nowrap flex items-center gap-1.5">
+              <i data-lucide="crown" class="w-3 h-3 text-amber-500"></i>
+              Premium Checklists
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+
+            <!-- Card 5: Baby Proofing -->
+            <a href="/upgrade" class="checklist-card locked-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-amber-500/15">
+                  <i data-lucide="shield" class="w-5 h-5 text-amber-400"></i>
+                </div>
+                <div class="p-1.5 rounded-lg bg-white/[0.05]">
+                  <i data-lucide="lock" class="w-3.5 h-3.5 text-zinc-500"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Baby Proofing</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Make your home safe for a mobile and curious baby</div>
+              </div>
+              <div class="mt-auto">
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-500/80 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                  <i data-lucide="crown" class="w-2.5 h-2.5"></i>
+                  Premium checklist
+                </span>
+              </div>
+            </a>
+
+            <!-- Card 6: Pediatrician Prep -->
+            <a href="/upgrade" class="checklist-card locked-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-green-500/15">
+                  <i data-lucide="stethoscope" class="w-5 h-5 text-green-400"></i>
+                </div>
+                <div class="p-1.5 rounded-lg bg-white/[0.05]">
+                  <i data-lucide="lock" class="w-3.5 h-3.5 text-zinc-500"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Pediatrician Prep</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Questions and checklists for every doctor visit</div>
+              </div>
+              <div class="mt-auto">
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-500/80 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                  <i data-lucide="crown" class="w-2.5 h-2.5"></i>
+                  Premium checklist
+                </span>
+              </div>
+            </a>
+
+            <!-- Card 7: Car Safety -->
+            <a href="/upgrade" class="checklist-card locked-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-red-500/15">
+                  <i data-lucide="car" class="w-5 h-5 text-red-400"></i>
+                </div>
+                <div class="p-1.5 rounded-lg bg-white/[0.05]">
+                  <i data-lucide="lock" class="w-3.5 h-3.5 text-zinc-500"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Car Safety</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Car seat installation and vehicle prep for the ride home</div>
+              </div>
+              <div class="mt-auto">
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-500/80 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                  <i data-lucide="crown" class="w-2.5 h-2.5"></i>
+                  Premium checklist
+                </span>
+              </div>
+            </a>
+
+            <!-- Card 8: Baby Shower -->
+            <a href="/upgrade" class="checklist-card locked-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-pink-500/15">
+                  <i data-lucide="gift" class="w-5 h-5 text-pink-400"></i>
+                </div>
+                <div class="p-1.5 rounded-lg bg-white/[0.05]">
+                  <i data-lucide="lock" class="w-3.5 h-3.5 text-zinc-500"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Baby Shower</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Planning the perfect celebration for your growing family</div>
+              </div>
+              <div class="mt-auto">
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-500/80 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                  <i data-lucide="crown" class="w-2.5 h-2.5"></i>
+                  Premium checklist
+                </span>
+              </div>
+            </a>
+
+            <!-- Card 9: Travel with Baby -->
+            <a href="/upgrade" class="checklist-card locked-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-sky-500/15">
+                  <i data-lucide="plane" class="w-5 h-5 text-sky-400"></i>
+                </div>
+                <div class="p-1.5 rounded-lg bg-white/[0.05]">
+                  <i data-lucide="lock" class="w-3.5 h-3.5 text-zinc-500"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Travel with Baby</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Everything you need for traveling with an infant</div>
+              </div>
+              <div class="mt-auto">
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-500/80 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                  <i data-lucide="crown" class="w-2.5 h-2.5"></i>
+                  Premium checklist
+                </span>
+              </div>
+            </a>
+
+            <!-- Card 10: Photo Milestones -->
+            <a href="/upgrade" class="checklist-card locked-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-violet-500/15">
+                  <i data-lucide="camera" class="w-5 h-5 text-violet-400"></i>
+                </div>
+                <div class="p-1.5 rounded-lg bg-white/[0.05]">
+                  <i data-lucide="lock" class="w-3.5 h-3.5 text-zinc-500"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Photo Milestones</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Capture every precious moment — a shot guide by week</div>
+              </div>
+              <div class="mt-auto">
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-500/80 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                  <i data-lucide="crown" class="w-2.5 h-2.5"></i>
+                  Premium checklist
+                </span>
+              </div>
+            </a>
+
+            <!-- Card 11: Partner Prep -->
+            <a href="/upgrade" class="checklist-card locked-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-orange-500/15">
+                  <i data-lucide="users" class="w-5 h-5 text-orange-400"></i>
+                </div>
+                <div class="p-1.5 rounded-lg bg-white/[0.05]">
+                  <i data-lucide="lock" class="w-3.5 h-3.5 text-zinc-500"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Partner Prep</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Prepare together as a team for the arrival of parenthood</div>
+              </div>
+              <div class="mt-auto">
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-500/80 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                  <i data-lucide="crown" class="w-2.5 h-2.5"></i>
+                  Premium checklist
+                </span>
+              </div>
+            </a>
+
+            <!-- Card 12: Self-Care -->
+            <a href="/upgrade" class="checklist-card locked-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-emerald-500/15">
+                  <i data-lucide="heart" class="w-5 h-5 text-emerald-400"></i>
+                </div>
+                <div class="p-1.5 rounded-lg bg-white/[0.05]">
+                  <i data-lucide="lock" class="w-3.5 h-3.5 text-zinc-500"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Self-Care</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Taking care of yourself is part of taking care of baby</div>
+              </div>
+              <div class="mt-auto">
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-500/80 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                  <i data-lucide="crown" class="w-2.5 h-2.5"></i>
+                  Premium checklist
+                </span>
+              </div>
+            </a>
+
+            <!-- Card 13: Return to Work -->
+            <a href="/upgrade" class="checklist-card locked-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-indigo-500/15">
+                  <i data-lucide="briefcase" class="w-5 h-5 text-indigo-400"></i>
+                </div>
+                <div class="p-1.5 rounded-lg bg-white/[0.05]">
+                  <i data-lucide="lock" class="w-3.5 h-3.5 text-zinc-500"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Return to Work</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Planning your transition back to work with a new baby</div>
+              </div>
+              <div class="mt-auto">
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-500/80 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                  <i data-lucide="crown" class="w-2.5 h-2.5"></i>
+                  Premium checklist
+                </span>
+              </div>
+            </a>
+
+            <!-- Card 14: Postpartum Home -->
+            <a href="/upgrade" class="checklist-card locked-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-rose-500/15">
+                  <i data-lucide="sofa" class="w-5 h-5 text-rose-400"></i>
+                </div>
+                <div class="p-1.5 rounded-lg bg-white/[0.05]">
+                  <i data-lucide="lock" class="w-3.5 h-3.5 text-zinc-500"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-sm text-white leading-snug mb-1">Postpartum Home</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Preparing your home for the postpartum recovery period</div>
+              </div>
+              <div class="mt-auto">
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-500/80 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                  <i data-lucide="crown" class="w-2.5 h-2.5"></i>
+                  Premium checklist
+                </span>
+              </div>
+            </a>
+
+            <!-- Card 15: First Year Firsts -->
+            <a href="/upgrade" class="checklist-card locked-card rounded-2xl p-4 bg-zinc-900 border border-white/[0.06] flex flex-col gap-3 relative">
+              <div class="flex items-start justify-between">
+                <div class="p-2.5 rounded-xl bg-yellow-500/15">
+                  <i data-lucide="sparkles" class="w-5 h-5 text-yellow-400"></i>
+                </div>
+                <div class="p-1.5 rounded-lg bg-white/[0.05]">
+                  <i data-lucide="lock" class="w-3.5 h-3.5 text-zinc-500"></i>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-sm text-white leading-snug mb-1">First Year Firsts</div>
+                <div class="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">Track all the milestone moments of baby's first year</div>
+              </div>
+              <div class="mt-auto">
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-500/80 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                  <i data-lucide="crown" class="w-2.5 h-2.5"></i>
+                  Premium checklist
+                </span>
+              </div>
+            </a>
+
+          </div>
+        </div>
+
+        <!-- Pricing nudge at very bottom of content -->
+        <div class="pb-2 text-center space-y-1">
+          <p class="text-xs text-zinc-600">Premium from <span class="text-zinc-500 font-medium">$4.99/mo</span></p>
+          <p class="text-[11px] text-zinc-700">$39.99/yr &bull; $99.99 lifetime</p>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ── BOTTOM NAVIGATION ── -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] border-t border-white/[0.06] bg-surface-950/95 backdrop-blur-xl px-2 pt-2 pb-5">
+      <div class="flex items-start justify-around">
+
+        <!-- Home -->
+        <a href="/dashboard" class="flex flex-col items-center gap-1 px-3 py-1 group">
+          <div class="p-1.5 rounded-xl group-hover:bg-white/[0.05] transition-colors">
+            <i data-lucide="home" class="w-5 h-5 text-zinc-500"></i>
+          </div>
+          <span class="text-[10px] font-medium text-zinc-600">Home</span>
+        </a>
+
+        <!-- Tasks -->
+        <a href="/tasks" class="flex flex-col items-center gap-1 px-3 py-1 group">
+          <div class="p-1.5 rounded-xl group-hover:bg-white/[0.05] transition-colors">
+            <i data-lucide="check-square" class="w-5 h-5 text-zinc-500"></i>
+          </div>
+          <span class="text-[10px] font-medium text-zinc-600">Tasks</span>
+        </a>
+
+        <!-- Briefing -->
+        <a href="/briefing" class="flex flex-col items-center gap-1 px-3 py-1 group">
+          <div class="p-1.5 rounded-xl group-hover:bg-white/[0.05] transition-colors">
+            <i data-lucide="newspaper" class="w-5 h-5 text-zinc-500"></i>
+          </div>
+          <span class="text-[10px] font-medium text-zinc-600">Briefing</span>
+        </a>
+
+        <!-- Tracker -->
+        <a href="/tracker" class="flex flex-col items-center gap-1 px-3 py-1 group">
+          <div class="p-1.5 rounded-xl group-hover:bg-white/[0.05] transition-colors">
+            <i data-lucide="activity" class="w-5 h-5 text-zinc-500"></i>
+          </div>
+          <span class="text-[10px] font-medium text-zinc-600">Tracker</span>
+        </a>
+
+        <!-- More (active, since Checklists is under More) -->
+        <a href="#" class="flex flex-col items-center gap-1 px-3 py-1 group">
+          <div class="p-1.5 rounded-xl bg-accent-500/10 transition-colors">
+            <i data-lucide="menu" class="w-5 h-5 text-accent-400"></i>
+          </div>
+          <span class="text-[10px] font-semibold text-accent-400">More</span>
+        </a>
+
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- ── WIDE-SCREEN VARIANT (shown on desktop alongside mobile frame) ── -->
+  <!-- Hidden on narrow screens, visible as a complementary 3-col grid on lg+ -->
+  <div class="hidden lg:block fixed inset-0 pointer-events-none" aria-hidden="true">
+    <!-- Subtle grid lines to hint at desktop layout -->
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Stagger card entrance animation
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.checklist-card');
+      cards.forEach((card, i) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(16px)';
+        card.style.transition = `opacity 0.32s ease ${i * 0.06}s, transform 0.32s ease ${i * 0.06}s, border-color 0.18s ease, box-shadow 0.18s ease`;
+        // Re-apply locked card opacity for premium cards after animation
+        const isLocked = card.classList.contains('locked-card');
+        setTimeout(() => {
+          card.style.opacity = isLocked ? '0.72' : '1';
+          card.style.transform = 'translateY(0)';
+        }, 60 + i * 60);
+      });
+
+      // Stagger banner
+      const banner = document.querySelector('.upgrade-shimmer');
+      if (banner) {
+        banner.style.opacity = '0';
+        banner.style.transform = 'scale(0.97)';
+        banner.style.transition = 'opacity 0.4s ease 0.28s, transform 0.4s ease 0.28s';
+        setTimeout(() => {
+          banner.style.opacity = '1';
+          banner.style.transform = 'scale(1)';
+        }, 120);
+      }
+    });
+  </script>
+</body>
+</html>

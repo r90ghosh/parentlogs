@@ -11,12 +11,12 @@ interface PriorityTasksCardProps {
 }
 
 const categoryStyles: Record<string, { bg: string; text: string; icon: string }> = {
-  medical: { bg: 'bg-red-500/15', text: 'text-red-400', icon: '🏥' },
+  medical: { bg: 'bg-coral/15', text: 'text-coral', icon: '🏥' },
   planning: { bg: 'bg-purple-500/15', text: 'text-purple-400', icon: '📋' },
-  shopping: { bg: 'bg-blue-500/15', text: 'text-blue-400', icon: '🛒' },
-  financial: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', icon: '💰' },
-  partner: { bg: 'bg-pink-500/15', text: 'text-pink-400', icon: '💑' },
-  self_care: { bg: 'bg-amber-500/15', text: 'text-amber-400', icon: '🧘' },
+  shopping: { bg: 'bg-sky/15', text: 'text-sky', icon: '🛒' },
+  financial: { bg: 'bg-sage/15', text: 'text-sage', icon: '💰' },
+  partner: { bg: 'bg-rose/15', text: 'text-rose', icon: '💑' },
+  self_care: { bg: 'bg-gold/15', text: 'text-gold', icon: '🧘' },
 }
 
 export function PriorityTasksCard({ tasks, onComplete, onSnooze }: PriorityTasksCardProps) {
@@ -24,8 +24,8 @@ export function PriorityTasksCard({ tasks, onComplete, onSnooze }: PriorityTasks
     <div
       className={cn(
         'rounded-[20px] p-6',
-        'bg-gradient-to-br from-zinc-800 to-zinc-900',
-        'border border-white/[0.06]'
+        'bg-gradient-to-br from-[--card] to-[--surface]',
+        'border border-[--border]'
       )}
     >
       {/* Header */}
@@ -34,7 +34,7 @@ export function PriorityTasksCard({ tasks, onComplete, onSnooze }: PriorityTasks
           🎯 Today's Priorities
         </div>
         {tasks.length > 0 && (
-          <span className="px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-500 text-xs font-semibold">
+          <span className="px-2.5 py-1 rounded-full bg-gold/15 text-gold text-xs font-semibold">
             {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
           </span>
         )}
@@ -60,18 +60,18 @@ export function PriorityTasksCard({ tasks, onComplete, onSnooze }: PriorityTasks
                 <button
                   onClick={() => onComplete(task.id)}
                   className={cn(
-                    'w-6 h-6 rounded-lg border-2 border-zinc-600 flex-shrink-0',
+                    'w-6 h-6 rounded-lg border-2 border-[--border-hover] flex-shrink-0',
                     'flex items-center justify-center transition-all',
-                    'hover:border-green-500 hover:bg-green-500/10'
+                    'hover:border-sage hover:bg-sage/10'
                   )}
                 />
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="text-[15px] font-semibold text-zinc-200 mb-1 truncate">
+                  <div className="text-[15px] font-semibold text-[--cream] mb-1 truncate">
                     {task.title}
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-zinc-500">
+                  <div className="flex items-center gap-3 text-xs text-[--dim]">
                     <span className={cn('px-2 py-0.5 rounded-md text-[11px] font-medium', style.bg, style.text)}>
                       {style.icon} {task.category.replace('_', ' ')}
                     </span>
@@ -88,8 +88,8 @@ export function PriorityTasksCard({ tasks, onComplete, onSnooze }: PriorityTasks
                     onClick={() => onComplete(task.id)}
                     className={cn(
                       'w-9 h-9 rounded-[10px] flex items-center justify-center text-base',
-                      'bg-white/[0.06] text-zinc-500 transition-all',
-                      'hover:bg-green-500/15 hover:text-green-500'
+                      'bg-[--card-hover] text-[--dim] transition-all',
+                      'hover:bg-sage/15 hover:text-sage'
                     )}
                   >
                     ✓
@@ -98,8 +98,8 @@ export function PriorityTasksCard({ tasks, onComplete, onSnooze }: PriorityTasks
                     onClick={() => onSnooze(task.id)}
                     className={cn(
                       'w-9 h-9 rounded-[10px] flex items-center justify-center text-base',
-                      'bg-white/[0.06] text-zinc-500 transition-all',
-                      'hover:bg-white/10 hover:text-zinc-300'
+                      'bg-[--card-hover] text-[--dim] transition-all',
+                      'hover:bg-[--border-hover] hover:text-[--cream]'
                     )}
                   >
                     →
@@ -112,7 +112,7 @@ export function PriorityTasksCard({ tasks, onComplete, onSnooze }: PriorityTasks
       ) : (
         <div className="text-center py-8">
           <div className="text-4xl mb-3">🎉</div>
-          <div className="text-sm text-zinc-400">All caught up for today!</div>
+          <div className="text-sm text-[--muted]">All caught up for today!</div>
         </div>
       )}
 
@@ -121,9 +121,9 @@ export function PriorityTasksCard({ tasks, onComplete, onSnooze }: PriorityTasks
         href="/tasks"
         className={cn(
           'flex items-center justify-center gap-2 pt-3.5 mt-3',
-          'border-t border-white/[0.04]',
-          'text-sm text-zinc-500 font-medium',
-          'hover:text-amber-500 transition-colors'
+          'border-t border-[--border]',
+          'text-sm text-[--dim] font-medium',
+          'hover:text-gold transition-colors'
         )}
       >
         View all tasks →

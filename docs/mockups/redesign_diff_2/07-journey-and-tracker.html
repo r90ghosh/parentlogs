@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Journey & Tracker — The Dad Center</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700&family=Nunito+Sans:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --bg:            #0d1b0e;
+      --surface:       #142318;
+      --card-bg:       rgba(124, 179, 128, 0.04);
+      --card-border:   rgba(124, 179, 128, 0.10);
+      --card-hover:    rgba(124, 179, 128, 0.08);
+      --primary:       #7cb380;
+      --primary-dim:   rgba(124, 179, 128, 0.3);
+      --secondary:     #c9a96e;
+      --sky:           #5b9bd5;
+      --coral:         #e07c56;
+      --text:          #e4ece5;
+      --text-muted:    #5a7d5c;
+      --text-med:      #9ab89c;
+      --shadow-warm:   0 4px 24px rgba(13, 27, 14, 0.5);
+      --shadow-deep:   0 8px 40px rgba(13, 27, 14, 0.7);
+      --font-display:  'Bitter', Georgia, serif;
+      --font-body:     'Nunito Sans', sans-serif;
+      --font-mono:     'Fira Code', monospace;
+    }
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 400;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+      /* Topographic contour line texture */
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Cpath d='M0 150 Q200 100 400 160 Q600 220 800 140' stroke='%237cb380' stroke-width='1' fill='none' opacity='0.025'/%3E%3Cpath d='M0 250 Q150 200 350 270 Q550 340 800 250' stroke='%237cb380' stroke-width='1' fill='none' opacity='0.025'/%3E%3Cpath d='M0 350 Q250 280 450 360 Q650 440 800 360' stroke='%237cb380' stroke-width='1' fill='none' opacity='0.025'/%3E%3Cpath d='M0 450 Q180 390 380 460 Q580 530 800 460' stroke='%237cb380' stroke-width='1' fill='none' opacity='0.02'/%3E%3Cpath d='M0 80 Q300 30 500 90 Q700 150 800 80' stroke='%237cb380' stroke-width='0.8' fill='none' opacity='0.02'/%3E%3Cpath d='M0 500 Q220 440 420 510 Q620 580 800 500' stroke='%237cb380' stroke-width='0.8' fill='none' opacity='0.02'/%3E%3C/svg%3E");
+      background-size: 800px 600px;
+      background-attachment: fixed;
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(124,179,128,0.2); border-radius: 4px; }
+
+    /* ===== TYPOGRAPHY ===== */
+    .font-display { font-family: var(--font-display); }
+    .font-body    { font-family: var(--font-body); }
+    .font-mono    { font-family: var(--font-mono); }
+
+    /* ===== CARD ===== */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: var(--shadow-warm);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(124,179,128,0.02) 0%, transparent 60%);
+      pointer-events: none;
+      border-radius: inherit;
+    }
+    .card:hover {
+      border-color: rgba(124,179,128,0.16);
+      transform: scale(1.005);
+      transition: all 0.4s ease;
+    }
+
+    /* ===== TOP BAR ===== */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 27, 14, 0.92);
+      border-bottom: 1px solid rgba(124,179,128,0.08);
+      padding: 0 20px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(12px);
+    }
+    .brand {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--primary);
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-leaf {
+      width: 16px;
+      height: 16px;
+      opacity: 0.9;
+    }
+    .week-pill {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      background: rgba(124,179,128,0.06);
+      border: 1px solid rgba(124,179,128,0.12);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .avatar {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--primary), #5a9e5e);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--bg);
+    }
+
+    /* ===== MAIN LAYOUT ===== */
+    .page-container {
+      max-width: 430px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* ===== PAGE SECTION ===== */
+    .page-section {
+      padding-top: 28px;
+    }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+      margin-bottom: 24px;
+    }
+    .page-header-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 32px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      line-height: 1.1;
+    }
+    .page-header-sub {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ===== WAVY DIVIDER ===== */
+    .wavy-divider {
+      width: 100%;
+      height: 32px;
+      margin: 32px 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .wavy-divider svg {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      transform: translateY(-50%);
+    }
+    .wavy-leaf-center {
+      position: relative;
+      z-index: 2;
+      background: var(--bg);
+      padding: 0 12px;
+    }
+
+    /* ===== MOOD HISTORY — THE VINE ===== */
+    .vine-chart-wrap {
+      padding: 24px;
+      margin-bottom: 20px;
+      border-radius: 24px 20px 24px 20px;
+    }
+    .vine-chart-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--secondary);
+      margin-bottom: 4px;
+    }
+    .vine-chart-subtitle {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .vine-svg-wrap {
+      width: 100%;
+      overflow: visible;
+      position: relative;
+    }
+    .vine-svg-wrap svg {
+      width: 100%;
+      height: 110px;
+      overflow: visible;
+    }
+    /* Vine path animation */
+    .vine-path {
+      stroke-dasharray: 600;
+      stroke-dashoffset: 600;
+      animation: vine-grow 2.2s ease-out 0.6s forwards;
+    }
+    @keyframes vine-grow {
+      to { stroke-dashoffset: 0; }
+    }
+    /* Stone circles animation */
+    .stone {
+      transform-origin: center;
+      animation: stone-sprout 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      opacity: 0;
+    }
+    .stone:nth-child(1)  { animation-delay: 0.7s; }
+    .stone:nth-child(2)  { animation-delay: 0.85s; }
+    .stone:nth-child(3)  { animation-delay: 1.0s; }
+    .stone:nth-child(4)  { animation-delay: 1.15s; }
+    .stone:nth-child(5)  { animation-delay: 1.3s; }
+    .stone:nth-child(6)  { animation-delay: 1.45s; }
+    .stone:nth-child(7)  { animation-delay: 1.6s; }
+    @keyframes stone-sprout {
+      0%   { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .vine-day-labels {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 2px;
+      margin-top: 8px;
+    }
+    .vine-day-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-muted);
+      text-align: center;
+      width: 32px;
+    }
+    .vine-day-label.today {
+      color: var(--secondary);
+    }
+    .vine-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+    }
+    .streak-badge {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--primary);
+      background: rgba(124,179,128,0.1);
+      border: 1px solid rgba(124,179,128,0.2);
+      padding: 6px 14px;
+      border-radius: 20px 6px 20px 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .avg-mood {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ===== MOOD CHECK-IN WIDGET ===== */
+    .checkin-card {
+      padding: 24px;
+      margin-bottom: 20px;
+      border-radius: 20px 24px 20px 24px;
+    }
+    .checkin-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .checkin-desc {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .mood-options {
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .mood-option {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .mood-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%;
+      border: 2px solid rgba(124,179,128,0.15);
+      background: rgba(124,179,128,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+    .mood-option:hover .mood-circle {
+      transform: scale(1.1);
+    }
+    .mood-option.selected .mood-circle {
+      transform: scale(1.2);
+      border-width: 2.5px;
+    }
+    .mood-option[data-mood="stormy"] .mood-circle  { border-color: rgba(224,124,86,0.3); }
+    .mood-option[data-mood="cloudy"] .mood-circle  { border-color: rgba(201,169,110,0.3); }
+    .mood-option[data-mood="overcast"] .mood-circle { border-color: rgba(160,160,160,0.3); }
+    .mood-option[data-mood="clear"] .mood-circle   { border-color: rgba(124,179,128,0.4); }
+    .mood-option[data-mood="summit"] .mood-circle  { border-color: rgba(201,169,110,0.5); }
+
+    .mood-option[data-mood="stormy"].selected .mood-circle  { background: rgba(224,124,86,0.15); border-color: var(--coral); box-shadow: 0 0 16px rgba(224,124,86,0.3); }
+    .mood-option[data-mood="cloudy"].selected .mood-circle  { background: rgba(201,169,110,0.15); border-color: var(--secondary); box-shadow: 0 0 16px rgba(201,169,110,0.3); }
+    .mood-option[data-mood="overcast"].selected .mood-circle { background: rgba(160,160,160,0.1); border-color: #888; box-shadow: 0 0 16px rgba(160,160,160,0.2); }
+    .mood-option[data-mood="clear"].selected .mood-circle   { background: rgba(124,179,128,0.15); border-color: var(--primary); box-shadow: 0 0 16px rgba(124,179,128,0.35); }
+    .mood-option[data-mood="summit"].selected .mood-circle  { background: rgba(201,169,110,0.2); border-color: var(--secondary); box-shadow: 0 0 20px rgba(201,169,110,0.45); }
+
+    .mood-label {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .mood-option.selected .mood-label {
+      color: var(--text-med);
+      font-weight: 500;
+    }
+
+    /* Sprout animation for mood circles on load */
+    .mood-option {
+      opacity: 0;
+      transform: scale(0.5);
+      animation: mood-sprout 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .mood-option:nth-child(1) { animation-delay: 0.1s; }
+    .mood-option:nth-child(2) { animation-delay: 0.18s; }
+    .mood-option:nth-child(3) { animation-delay: 0.26s; }
+    .mood-option:nth-child(4) { animation-delay: 0.34s; }
+    .mood-option:nth-child(5) { animation-delay: 0.42s; }
+    @keyframes mood-sprout {
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Flags section */
+    .flags-section {
+      border-top: 1px solid rgba(124,179,128,0.08);
+      padding-top: 16px;
+      margin-top: 4px;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+    .flags-section.visible {
+      opacity: 1;
+      max-height: 200px;
+    }
+    .flags-label {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--text-med);
+      margin-bottom: 10px;
+    }
+    .flags-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .flag-pill {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 12px;
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid rgba(201,169,110,0.2);
+      padding: 6px 14px;
+      border-radius: 16px 6px 14px 8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .flag-pill:hover {
+      border-color: rgba(201,169,110,0.4);
+      color: var(--secondary);
+    }
+    .flag-pill.selected {
+      background: rgba(201,169,110,0.15);
+      border-color: var(--secondary);
+      color: var(--secondary);
+      font-weight: 500;
+    }
+
+    .checkin-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: var(--bg);
+      border: none;
+      border-radius: 14px 10px 14px 10px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.02em;
+    }
+    .checkin-btn:hover {
+      background: #8fc993;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(124,179,128,0.25);
+    }
+    .checkin-btn:active {
+      transform: translateY(0);
+    }
+
+    /* ===== CHALLENGE TILES ===== */
+    .challenges-section {
+      margin-bottom: 24px;
+    }
+    .challenges-header {
+      margin-bottom: 20px;
+    }
+    .challenges-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 26px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .challenges-sub {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .challenge-tile {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-left-width: 4px;
+      border-radius: 0 16px 16px 0;
+      box-shadow: var(--shadow-warm);
+      margin-bottom: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      /* Scroll reveal initial state */
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .challenge-tile.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .challenge-tile:hover {
+      border-right-color: rgba(124,179,128,0.18);
+      background: rgba(124,179,128,0.05);
+    }
+
+    .tile-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+    }
+    .tile-icon-wrap {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .tile-meta { flex: 1; min-width: 0; }
+    .tile-name {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tile-desc {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tile-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .phase-badge {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-muted);
+      background: rgba(90,125,92,0.12);
+      border: 1px solid rgba(90,125,92,0.2);
+      padding: 3px 8px;
+      border-radius: 10px;
+    }
+    .active-badge {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--coral);
+      background: rgba(224,124,86,0.1);
+      border: 1px solid rgba(224,124,86,0.25);
+      padding: 3px 8px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .active-dot {
+      width: 5px;
+      height: 5px;
+      background: var(--coral);
+      border-radius: 50%;
+      animation: pulse-dot 1.4s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+    .chevron {
+      font-size: 12px;
+      color: var(--text-muted);
+      transition: transform 0.3s ease;
+      margin-top: 2px;
+    }
+    .challenge-tile.open .chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Expanded content */
+    .tile-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .challenge-tile.open .tile-body {
+      max-height: 320px;
+    }
+    .tile-body-inner {
+      padding: 0 16px 18px 66px;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: all 0.3s ease 0.1s;
+    }
+    .challenge-tile.open .tile-body-inner {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .tile-article-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .tile-excerpt {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .tile-quote {
+      border-left: 2px solid;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      background: rgba(0,0,0,0.15);
+      border-radius: 0 8px 8px 0;
+    }
+    .tile-quote p {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-style: italic;
+      font-size: 12px;
+      color: var(--text-med);
+      line-height: 1.5;
+    }
+    .tile-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .read-more-link {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 12px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: gap 0.2s ease;
+    }
+    .read-more-link:hover { gap: 8px; }
+    .task-chip {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 11px;
+      color: var(--text-muted);
+      background: rgba(90,125,92,0.1);
+      border: 1px solid rgba(90,125,92,0.15);
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
+
+    /* Pillar colors */
+    .pillar-knowledge  { border-left-color: #3b82f6; }
+    .pillar-planning   { border-left-color: #7cb380; }
+    .pillar-finances   { border-left-color: #c9a96e; }
+    .pillar-anxiety    { border-left-color: #e07c56; }
+    .pillar-bonding    { border-left-color: #5b9bd5; }
+    .pillar-relationship { border-left-color: #c47a8f; }
+    .pillar-family     { border-left-color: #8b7d6b; }
+
+    .icon-knowledge  { background: rgba(59,130,246,0.12); }
+    .icon-planning   { background: rgba(124,179,128,0.12); }
+    .icon-finances   { background: rgba(201,169,110,0.12); }
+    .icon-anxiety    { background: rgba(224,124,86,0.12); }
+    .icon-bonding    { background: rgba(91,155,213,0.12); }
+    .icon-relationship { background: rgba(196,122,143,0.12); }
+    .icon-family     { background: rgba(139,125,107,0.12); }
+
+    .quote-knowledge  { border-color: #3b82f6; }
+    .quote-planning   { border-color: #7cb380; }
+    .quote-finances   { border-color: #c9a96e; }
+    .quote-anxiety    { border-color: #e07c56; }
+    .quote-bonding    { border-color: #5b9bd5; }
+    .quote-relationship { border-color: #c47a8f; }
+    .quote-family     { border-color: #8b7d6b; }
+
+    .link-knowledge  { color: #3b82f6; }
+    .link-planning   { color: #7cb380; }
+    .link-finances   { color: #c9a96e; }
+    .link-anxiety    { color: #e07c56; }
+    .link-bonding    { color: #5b9bd5; }
+    .link-relationship { color: #c47a8f; }
+    .link-family     { color: #8b7d6b; }
+
+    /* ===== TRACKER SECTION ===== */
+    .tracker-header {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .tracker-title-group { flex: 1; }
+    .tracker-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 32px;
+      color: var(--sky);
+      line-height: 1.1;
+    }
+    .tracker-sub {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .premium-badge {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--secondary);
+      background: rgba(201,169,110,0.12);
+      border: 1px solid rgba(201,169,110,0.25);
+      padding: 5px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.08em;
+      margin-top: 6px;
+    }
+
+    /* Premium banner */
+    .premium-banner {
+      padding: 24px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 22px 18px 22px 18px;
+      border-image: none;
+    }
+    .premium-banner::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(120deg, #7cb380, #c9a96e, #5b9bd5, #7cb380);
+      background-size: 300% 300%;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: border-shift 5s ease infinite;
+      pointer-events: none;
+    }
+    @keyframes border-shift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .premium-lock {
+      width: 44px;
+      height: 44px;
+      background: rgba(201,169,110,0.1);
+      border: 1px solid rgba(201,169,110,0.2);
+      border-radius: 14px 10px 14px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 14px;
+    }
+    .premium-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .premium-desc {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .feature-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .feature-chip {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 14px 8px 14px 8px;
+      border: 1px solid;
+    }
+    .chip-sage   { color: var(--primary); background: rgba(124,179,128,0.1); border-color: rgba(124,179,128,0.25); }
+    .chip-wood   { color: var(--secondary); background: rgba(201,169,110,0.1); border-color: rgba(201,169,110,0.25); }
+    .chip-sky    { color: var(--sky); background: rgba(91,155,213,0.1); border-color: rgba(91,155,213,0.25); }
+    .chip-coral  { color: var(--coral); background: rgba(224,124,86,0.1); border-color: rgba(224,124,86,0.25); }
+
+    .unlock-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--secondary);
+      color: var(--bg);
+      border: none;
+      border-radius: 14px 10px 14px 10px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.02em;
+    }
+    .unlock-btn:hover {
+      background: #d8ba85;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(201,169,110,0.3);
+    }
+
+    /* Dimmed stats preview */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+      opacity: 0.45;
+      animation: breathe 3s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%, 100% { opacity: 0.40; }
+      50%       { opacity: 0.58; }
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px 10px 14px 10px;
+      padding: 12px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin: 0 auto 6px;
+      animation: icon-bounce 2.5s ease-in-out infinite;
+    }
+    .stat-card:nth-child(2) .stat-icon { animation-delay: 0.4s; }
+    .stat-card:nth-child(3) .stat-icon { animation-delay: 0.8s; }
+    @keyframes icon-bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-3px); }
+    }
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text);
+      display: block;
+    }
+    .stat-label {
+      font-family: var(--font-body);
+      font-size: 9px;
+      color: var(--text-muted);
+    }
+
+    /* Quick log grid dimmed */
+    .quick-log-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+      opacity: 0.45;
+    }
+    .log-tile {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px 12px 18px 12px;
+      padding: 18px 12px;
+      text-align: center;
+      cursor: not-allowed;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .log-tile:hover {
+      opacity: 1;
+    }
+    .log-tile:hover .lock-badge {
+      opacity: 1;
+    }
+    .lock-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      font-size: 10px;
+      background: rgba(201,169,110,0.15);
+      border: 1px solid rgba(201,169,110,0.25);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .log-tile-icon {
+      font-size: 28px;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .log-tile-label {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Activity log */
+    .activity-section {
+      margin-bottom: 20px;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .section-title-sm {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text-med);
+    }
+    .view-all-link {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .activity-log { display: flex; flex-direction: column; gap: 8px; }
+    .log-entry {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .log-entry-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .log-entry-body { flex: 1; }
+    .log-entry-type {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--text);
+    }
+    .log-entry-note {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .log-entry-time {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* Heartbeat line */
+    .heartbeat-wrap {
+      width: 100%;
+      height: 28px;
+      margin-bottom: 20px;
+      overflow: visible;
+    }
+    .heartbeat-line {
+      stroke-dasharray: 8 4;
+      animation: heartbeat-pulse 2s ease-in-out infinite;
+    }
+    @keyframes heartbeat-pulse {
+      0%, 100% { stroke-opacity: 0.25; }
+      50%       { stroke-opacity: 0.65; }
+    }
+
+    /* ===== BOTTOM NAV ===== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: rgba(20, 35, 24, 0.96);
+      border-top: 1px solid rgba(124,179,128,0.10);
+      backdrop-filter: blur(16px);
+      padding: 10px 0 16px;
+    }
+    .nav-inner {
+      max-width: 430px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 0 8px;
+      position: relative;
+      text-decoration: none;
+    }
+    .nav-icon-wrap {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      position: relative;
+    }
+    .nav-label {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 10px;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+    .nav-item.active .nav-label {
+      color: var(--primary);
+    }
+    /* Leaf indicator above active item */
+    .nav-leaf-indicator {
+      display: none;
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .nav-item.active .nav-leaf-indicator {
+      display: block;
+    }
+
+    /* ===== SCROLL REVEAL ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger delays for reveal */
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
+
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(124,179,128,0.15), transparent);
+    }
+
+    /* ===== DECORATIVE BOTANICAL ===== */
+    .botanical-corner {
+      position: fixed;
+      pointer-events: none;
+      opacity: 0.04;
+    }
+    .botanical-tl {
+      top: 60px;
+      left: -20px;
+      width: 120px;
+      transform: rotate(-15deg);
+    }
+    .botanical-br {
+      bottom: 90px;
+      right: -20px;
+      width: 100px;
+      transform: rotate(160deg) scaleX(-1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Decorative botanical overlays -->
+  <svg class="botanical-corner botanical-tl" viewBox="0 0 120 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60 180 Q55 140 40 120 Q20 100 10 70 Q5 50 20 40 Q35 30 50 50 Q65 70 60 100" stroke="#7cb380" stroke-width="2" fill="none"/>
+    <path d="M60 140 Q80 120 90 100 Q100 80 85 65 Q70 55 60 70" stroke="#7cb380" stroke-width="1.5" fill="none"/>
+    <path d="M60 110 Q45 95 35 80 Q28 65 38 55" stroke="#7cb380" stroke-width="1.2" fill="none"/>
+    <path d="M60 80 Q75 65 80 50 Q82 38 72 32" stroke="#7cb380" stroke-width="1" fill="none"/>
+  </svg>
+  <svg class="botanical-corner botanical-br" viewBox="0 0 120 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60 180 Q55 140 40 120 Q20 100 10 70 Q5 50 20 40 Q35 30 50 50 Q65 70 60 100" stroke="#7cb380" stroke-width="2" fill="none"/>
+    <path d="M60 140 Q80 120 90 100 Q100 80 85 65 Q70 55 60 70" stroke="#7cb380" stroke-width="1.5" fill="none"/>
+  </svg>
+
+  <!-- TOP BAR -->
+  <header class="top-bar">
+    <div class="brand">
+      <svg class="brand-leaf" viewBox="0 0 20 20" fill="none">
+        <path d="M10 18 Q8 14 5 11 Q2 8 3 5 Q4 2 7 2 Q10 2 12 5 Q14 8 13 12 Q12 15 10 18Z" fill="#7cb380" opacity="0.8"/>
+        <path d="M10 18 Q10 14 10 10" stroke="#142318" stroke-width="1.2"/>
+      </svg>
+      The Dad Center
+    </div>
+    <span class="week-pill">Week 24</span>
+    <div class="avatar">M</div>
+  </header>
+
+  <!-- PAGE CONTAINER -->
+  <div class="page-container">
+
+    <!-- ===================== PAGE 1: DAD JOURNEY ===================== -->
+    <section class="page-section">
+      <div class="page-header reveal reveal-d1">
+        <div class="page-header-title">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M14 26 Q12 20 8 16 Q4 12 5 8 Q6 4 10 4 Q14 4 16 8 Q18 12 16 18 Q15 21 14 26Z" fill="#7cb380" opacity="0.7"/>
+            <path d="M14 26 Q14 20 14 14" stroke="#0d1b0e" stroke-width="1.5"/>
+          </svg>
+          Your Journey
+        </div>
+        <div class="page-header-sub">Week 24 · Growing Every Day</div>
+      </div>
+
+      <!-- Wavy intro divider -->
+      <div style="margin-bottom:4px;">
+        <svg width="100%" height="12" viewBox="0 0 360 12" preserveAspectRatio="none">
+          <path d="M0 6 Q45 0 90 6 Q135 12 180 6 Q225 0 270 6 Q315 12 360 6" stroke="#7cb380" stroke-width="1" fill="none" stroke-opacity="0.2"/>
+        </svg>
+      </div>
+
+      <!-- ── VINE CHART ── -->
+      <div class="section-label reveal reveal-d1">Mood History</div>
+      <div class="card vine-chart-wrap reveal reveal-d2">
+        <div class="vine-chart-title">This Week's Terrain</div>
+        <div class="vine-chart-subtitle">Your emotional landscape, day by day</div>
+
+        <div class="vine-svg-wrap">
+          <svg viewBox="0 0 340 110" preserveAspectRatio="xMidYMid meet">
+            <!-- Gradient for vine -->
+            <defs>
+              <linearGradient id="vineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#5a9e5e" stop-opacity="0.4"/>
+                <stop offset="50%" stop-color="#7cb380" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#8fc993" stop-opacity="0.6"/>
+              </linearGradient>
+              <radialGradient id="glowToday" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#c9a96e" stop-opacity="0.4"/>
+                <stop offset="100%" stop-color="#c9a96e" stop-opacity="0"/>
+              </radialGradient>
+              <filter id="glow">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+                <feComposite in="blur" in2="SourceGraphic" operator="over"/>
+              </filter>
+            </defs>
+
+            <!-- The Vine path: organic curves through stone centers -->
+            <!-- Days: Mon=20, Tue=67, Wed=114, Thu=161, Fri=208, Sat=255, Sun(today)=302 -->
+            <!-- Mood heights (lower y = higher mood): rough=80, okay=65, good=45, great=28, okay=65, good=45, clear=38 -->
+            <path class="vine-path"
+              d="M20,80 C35,80 50,65 67,65 C82,65 96,45 114,45 C130,45 144,28 161,28 C176,28 192,45 208,45 C224,45 238,38 255,38 C271,38 285,35 302,32"
+              stroke="url(#vineGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+            <!-- Day stones group (animated individually) -->
+            <g class="stone"><!-- Mon: rough -->
+              <circle cx="20" cy="80" r="16" fill="rgba(20,35,24,0.8)" stroke="rgba(201,169,110,0.3)" stroke-width="1.5" rx="12"/>
+              <circle cx="20" cy="80" r="16" fill="rgba(20,35,24,0.8)" stroke="rgba(201,169,110,0.3)" stroke-width="1.5"/>
+              <text x="20" y="85" text-anchor="middle" font-size="14">😕</text>
+            </g>
+            <g class="stone"><!-- Tue: okay -->
+              <circle cx="67" cy="65" r="16" fill="rgba(20,35,24,0.8)" stroke="rgba(124,179,128,0.2)" stroke-width="1.5"/>
+              <text x="67" y="70" text-anchor="middle" font-size="14">😐</text>
+            </g>
+            <g class="stone"><!-- Wed: good -->
+              <circle cx="114" cy="45" r="16" fill="rgba(20,35,24,0.8)" stroke="rgba(124,179,128,0.3)" stroke-width="1.5"/>
+              <text x="114" y="50" text-anchor="middle" font-size="14">😊</text>
+            </g>
+            <g class="stone"><!-- Thu: great -->
+              <circle cx="161" cy="28" r="16" fill="rgba(20,35,24,0.8)" stroke="rgba(124,179,128,0.4)" stroke-width="1.5"/>
+              <text x="161" y="33" text-anchor="middle" font-size="14">🔥</text>
+            </g>
+            <g class="stone"><!-- Fri: okay -->
+              <circle cx="208" cy="45" r="16" fill="rgba(20,35,24,0.8)" stroke="rgba(124,179,128,0.25)" stroke-width="1.5"/>
+              <text x="208" y="50" text-anchor="middle" font-size="14">😊</text>
+            </g>
+            <g class="stone"><!-- Sat: empty/dashed -->
+              <circle cx="255" cy="38" r="15" fill="rgba(20,35,24,0.5)" stroke="rgba(90,125,92,0.2)" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <text x="255" y="43" text-anchor="middle" font-size="12" opacity="0.4">·</text>
+            </g>
+            <g class="stone"><!-- Sun today: larger, glowing -->
+              <circle cx="302" cy="32" r="5" fill="url(#glowToday)" opacity="0.5"/>
+              <circle cx="302" cy="32" r="19" fill="rgba(20,35,24,0.9)" stroke="#c9a96e" stroke-width="2.5"/>
+              <text x="302" y="38" text-anchor="middle" font-size="16">😊</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="vine-day-labels">
+          <span class="vine-day-label">MON</span>
+          <span class="vine-day-label">TUE</span>
+          <span class="vine-day-label">WED</span>
+          <span class="vine-day-label">THU</span>
+          <span class="vine-day-label">FRI</span>
+          <span class="vine-day-label">SAT</span>
+          <span class="vine-day-label today">SUN</span>
+        </div>
+
+        <div class="vine-meta">
+          <div class="streak-badge">
+            <span>🌿</span> 5-day streak
+          </div>
+          <div class="avg-mood">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="#7cb380" opacity="0.7">
+              <path d="M6 11 Q5.2 8.5 3.5 7 Q2 5.5 2.3 3.8 Q2.6 2 4.2 2 Q6 2 6.8 3.8 Q7.6 5.5 6.8 8 Q6.4 9.5 6 11Z"/>
+            </svg>
+            Avg mood: Good
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MOOD CHECK-IN ── -->
+      <div class="section-label reveal reveal-d1">Today's Check-In</div>
+      <div class="card checkin-card reveal reveal-d2" id="checkinCard">
+        <div class="checkin-title">How's the Trail Today?</div>
+        <div class="checkin-desc">A quick read on your terrain — no right answers.</div>
+
+        <div class="mood-options" id="moodOptions">
+          <div class="mood-option" data-mood="stormy" onclick="selectMood(this)">
+            <div class="mood-circle">😫</div>
+            <span class="mood-label">Stormy</span>
+          </div>
+          <div class="mood-option" data-mood="cloudy" onclick="selectMood(this)">
+            <div class="mood-circle">😕</div>
+            <span class="mood-label">Cloudy</span>
+          </div>
+          <div class="mood-option" data-mood="overcast" onclick="selectMood(this)">
+            <div class="mood-circle">😐</div>
+            <span class="mood-label">Overcast</span>
+          </div>
+          <div class="mood-option" data-mood="clear" onclick="selectMood(this)">
+            <div class="mood-circle">😊</div>
+            <span class="mood-label">Clear</span>
+          </div>
+          <div class="mood-option" data-mood="summit" onclick="selectMood(this)">
+            <div class="mood-circle">🔥</div>
+            <span class="mood-label">Summit</span>
+          </div>
+        </div>
+
+        <div class="flags-section" id="flagsSection">
+          <div class="flags-label">What's on the trail?</div>
+          <div class="flags-grid">
+            <span class="flag-pill" onclick="toggleFlag(this)">Sleep</span>
+            <span class="flag-pill" onclick="toggleFlag(this)">Work stress</span>
+            <span class="flag-pill" onclick="toggleFlag(this)">Partner tension</span>
+            <span class="flag-pill" onclick="toggleFlag(this)">Anxiety</span>
+            <span class="flag-pill" onclick="toggleFlag(this)">Physical health</span>
+            <span class="flag-pill" onclick="toggleFlag(this)">Money</span>
+          </div>
+          <button class="checkin-btn" onclick="submitCheckin()">Check In</button>
+        </div>
+      </div>
+
+      <!-- ── CHALLENGE TILES ── -->
+      <div class="challenges-section">
+        <div class="challenges-header reveal reveal-d1">
+          <div class="challenges-title">Explore Your Terrain</div>
+          <div class="challenges-sub">7 areas to strengthen your journey</div>
+        </div>
+
+        <!-- Knowledge -->
+        <div class="challenge-tile pillar-knowledge" id="tile-knowledge" onclick="toggleTile('knowledge')">
+          <div class="tile-header">
+            <div class="tile-icon-wrap icon-knowledge">🧭</div>
+            <div class="tile-meta">
+              <div class="tile-name">Knowledge</div>
+              <div class="tile-desc">Understand pregnancy stages</div>
+            </div>
+            <div class="tile-right">
+              <span class="phase-badge">Trimester 2</span>
+              <span class="chevron">▾</span>
+            </div>
+          </div>
+          <div class="tile-body">
+            <div class="tile-body-inner">
+              <div class="tile-article-title">What's Happening in Week 24</div>
+              <div class="tile-excerpt">Your baby is now the size of an ear of corn — about 30cm and developing rapid lung growth. Viability week is a milestone worth understanding.</div>
+              <div class="tile-quote quote-knowledge">
+                <p>"Like a navigator learning to read the stars, understanding what's happening helps you lead the way for your partner."</p>
+              </div>
+              <div class="tile-footer">
+                <a href="#" class="read-more-link link-knowledge">Read article →</a>
+                <span class="task-chip">+ Related task</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Planning -->
+        <div class="challenge-tile pillar-planning" id="tile-planning" onclick="toggleTile('planning')">
+          <div class="tile-header">
+            <div class="tile-icon-wrap icon-planning">🗺️</div>
+            <div class="tile-meta">
+              <div class="tile-name">Planning</div>
+              <div class="tile-desc">Build your preparation plan</div>
+            </div>
+            <div class="tile-right">
+              <span class="phase-badge">Trimester 2</span>
+              <span class="chevron">▾</span>
+            </div>
+          </div>
+          <div class="tile-body">
+            <div class="tile-body-inner">
+              <div class="tile-article-title">The Nursery Planning Timeline</div>
+              <div class="tile-excerpt">Third trimester arrives faster than expected. A 12-week planning window with checkpoints keeps the pressure manageable.</div>
+              <div class="tile-quote quote-planning">
+                <p>"A trail map doesn't eliminate the climb — it makes every step intentional."</p>
+              </div>
+              <div class="tile-footer">
+                <a href="#" class="read-more-link link-planning">Read article →</a>
+                <span class="task-chip">+ Related task</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Finances -->
+        <div class="challenge-tile pillar-finances" id="tile-finances" onclick="toggleTile('finances')">
+          <div class="tile-header">
+            <div class="tile-icon-wrap icon-finances">🌰</div>
+            <div class="tile-meta">
+              <div class="tile-name">Finances</div>
+              <div class="tile-desc">Grow your financial readiness</div>
+            </div>
+            <div class="tile-right">
+              <span class="phase-badge">Trimester 2</span>
+              <span class="chevron">▾</span>
+            </div>
+          </div>
+          <div class="tile-body">
+            <div class="tile-body-inner">
+              <div class="tile-article-title">Building the Emergency Nest</div>
+              <div class="tile-excerpt">3 months of expenses. That's the seed number. Where you are today and a path to get there — no shame, just direction.</div>
+              <div class="tile-quote quote-finances">
+                <p>"An acorn doesn't become an oak overnight. Small, consistent actions compound into real security."</p>
+              </div>
+              <div class="tile-footer">
+                <a href="#" class="read-more-link link-finances">Read article →</a>
+                <span class="task-chip">+ Related task</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Anxiety — pre-expanded, Active Now -->
+        <div class="challenge-tile pillar-anxiety open" id="tile-anxiety" onclick="toggleTile('anxiety')">
+          <div class="tile-header">
+            <div class="tile-icon-wrap icon-anxiety">⛰️</div>
+            <div class="tile-meta">
+              <div class="tile-name">
+                Anxiety
+                <span class="active-badge"><span class="active-dot"></span>Active</span>
+              </div>
+              <div class="tile-desc">Navigate worries</div>
+            </div>
+            <div class="tile-right">
+              <span class="phase-badge">Trimester 2</span>
+              <span class="chevron" style="transform:rotate(180deg)">▾</span>
+            </div>
+          </div>
+          <div class="tile-body">
+            <div class="tile-body-inner" style="opacity:1;transform:translateY(0);">
+              <div class="tile-article-title">When the Summit Feels Unreachable</div>
+              <div class="tile-excerpt">Pre-birth anxiety in dads is real and common but rarely discussed. The worry isn't weakness — it's investment. Here's how to navigate it.</div>
+              <div class="tile-quote quote-anxiety">
+                <p>"Every mountain looks impassable until you're halfway up. The path reveals itself through motion, not planning."</p>
+              </div>
+              <div class="tile-footer">
+                <a href="#" class="read-more-link link-anxiety">Read article →</a>
+                <span class="task-chip">+ Related task</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Baby Bonding -->
+        <div class="challenge-tile pillar-bonding" id="tile-bonding" onclick="toggleTile('bonding')">
+          <div class="tile-header">
+            <div class="tile-icon-wrap icon-bonding">🌅</div>
+            <div class="tile-meta">
+              <div class="tile-name">Baby Bonding</div>
+              <div class="tile-desc">Connect before arrival</div>
+            </div>
+            <div class="tile-right">
+              <span class="phase-badge">Trimester 2</span>
+              <span class="chevron">▾</span>
+            </div>
+          </div>
+          <div class="tile-body">
+            <div class="tile-body-inner">
+              <div class="tile-article-title">Talking to Your Baby Before Birth</div>
+              <div class="tile-excerpt">Babies recognize voices by week 25. A consistent bedtime voice ritual — even 60 seconds — builds the foundation of recognition.</div>
+              <div class="tile-quote quote-bonding">
+                <p>"The first sunrise you share might be before they can see it. Your voice is the light they already know."</p>
+              </div>
+              <div class="tile-footer">
+                <a href="#" class="read-more-link link-bonding">Read article →</a>
+                <span class="task-chip">+ Related task</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Relationship -->
+        <div class="challenge-tile pillar-relationship" id="tile-relationship" onclick="toggleTile('relationship')">
+          <div class="tile-header">
+            <div class="tile-icon-wrap icon-relationship">🔥</div>
+            <div class="tile-meta">
+              <div class="tile-name">Relationship</div>
+              <div class="tile-desc">Tend the partnership</div>
+            </div>
+            <div class="tile-right">
+              <span class="phase-badge">Trimester 2</span>
+              <span class="chevron">▾</span>
+            </div>
+          </div>
+          <div class="tile-body">
+            <div class="tile-body-inner">
+              <div class="tile-article-title">The Campfire Check-In</div>
+              <div class="tile-excerpt">A weekly 15-minute conversation with a single question: "What do you need from me this week?" Changes the dynamic more than any grand gesture.</div>
+              <div class="tile-quote quote-relationship" style="border-left-color:#c47a8f;">
+                <p>"A campfire needs tending — small logs, regular attention. The relationship you build now is the warmth you'll both lean into."</p>
+              </div>
+              <div class="tile-footer">
+                <a href="#" class="read-more-link link-relationship">Read article →</a>
+                <span class="task-chip">+ Related task</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Extended Family -->
+        <div class="challenge-tile pillar-family" id="tile-family" onclick="toggleTile('family')">
+          <div class="tile-header">
+            <div class="tile-icon-wrap icon-family">🌲</div>
+            <div class="tile-meta">
+              <div class="tile-name">Extended Family</div>
+              <div class="tile-desc">Manage the wider circle</div>
+            </div>
+            <div class="tile-right">
+              <span class="phase-badge">Trimester 2</span>
+              <span class="chevron">▾</span>
+            </div>
+          </div>
+          <div class="tile-body">
+            <div class="tile-body-inner">
+              <div class="tile-article-title">Navigating the In-Law Dynamic</div>
+              <div class="tile-excerpt">Grandparent enthusiasm is real — and so is the overwhelm it can bring. Establishing gentle, clear expectations now prevents larger friction later.</div>
+              <div class="tile-quote quote-family" style="border-left-color:#8b7d6b;">
+                <p>"A forest is stronger when each tree has room to grow. Protecting your new family's space is an act of respect, not rejection."</p>
+              </div>
+              <div class="tile-footer">
+                <a href="#" class="read-more-link link-family">Read article →</a>
+                <span class="task-chip">+ Related task</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /challenges-section -->
+    </section>
+
+    <!-- ===================== ORGANIC DIVIDER ===================== -->
+    <div class="wavy-divider">
+      <svg viewBox="0 0 380 24" preserveAspectRatio="none">
+        <path d="M0 12 Q47.5 4 95 12 Q142.5 20 190 12 Q237.5 4 285 12 Q332.5 20 380 12" stroke="rgba(124,179,128,0.18)" stroke-width="1.5" fill="none"/>
+        <path d="M0 12 Q47.5 8 95 12 Q142.5 16 190 12 Q237.5 8 285 12 Q332.5 16 380 12" stroke="rgba(124,179,128,0.08)" stroke-width="2.5" fill="none"/>
+      </svg>
+      <div class="wavy-leaf-center">
+        <svg width="18" height="22" viewBox="0 0 18 22" fill="none">
+          <path d="M9 21 Q7.5 16 5 13 Q2 10 3 7 Q4 4 7 4 Q10 4 11.5 7 Q13 10 12 15 Q11 18 9 21Z" fill="#7cb380" opacity="0.6"/>
+          <line x1="9" y1="21" x2="9" y2="12" stroke="#142318" stroke-width="1"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ===================== PAGE 2: BABY TRACKER ===================== -->
+    <section class="page-section">
+
+      <!-- Tracker Header -->
+      <div class="tracker-header reveal reveal-d1">
+        <div class="tracker-title-group">
+          <div class="tracker-title">Baby Tracker</div>
+          <div class="tracker-sub">Monitor, log, and share</div>
+        </div>
+        <div class="premium-badge">PREMIUM</div>
+      </div>
+
+      <!-- Heartbeat line -->
+      <svg class="heartbeat-wrap" viewBox="0 0 380 28" preserveAspectRatio="none">
+        <path class="heartbeat-line"
+          d="M0 14 L60 14 L70 14 L80 4 L90 24 L100 10 L110 14 L170 14 L180 14 L190 5 L200 23 L210 14 L380 14"
+          stroke="#5b9bd5" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+
+      <!-- Premium Banner -->
+      <div class="section-label reveal reveal-d1">Unlock Tracking</div>
+      <div class="card premium-banner reveal reveal-d2">
+        <div class="premium-lock">🔒</div>
+        <div class="premium-title">Track every moment</div>
+        <div class="premium-desc">Log feeds, diapers, sleep, and growth. Share live updates with your partner and get insight into patterns.</div>
+        <div class="feature-chips">
+          <span class="feature-chip chip-sage">🍼 Feedings</span>
+          <span class="feature-chip chip-wood">🧷 Diapers</span>
+          <span class="feature-chip chip-sky">🌙 Sleep</span>
+          <span class="feature-chip chip-coral">📏 Growth</span>
+        </div>
+        <button class="unlock-btn">Unlock with Premium · $4.99/mo</button>
+      </div>
+
+      <!-- Dimmed Shift Stats -->
+      <div class="section-label reveal reveal-d1">Shift Overview</div>
+      <div class="stats-row reveal reveal-d2">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(91,155,213,0.12);">🍼</div>
+          <span class="stat-value">2h ago</span>
+          <span class="stat-label">Last Feed</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(201,169,110,0.12);">🧷</div>
+          <span class="stat-value">4 today</span>
+          <span class="stat-label">Diapers</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(124,179,128,0.12);">🌙</div>
+          <span class="stat-value">6h total</span>
+          <span class="stat-label">Sleep</span>
+        </div>
+      </div>
+
+      <!-- Quick Log Grid (dimmed) -->
+      <div class="section-label reveal reveal-d1">Quick Log</div>
+      <div class="quick-log-grid reveal reveal-d2">
+        <div class="log-tile">
+          <div class="lock-badge">🔒</div>
+          <span class="log-tile-icon">🍼</span>
+          <span class="log-tile-label">Feeding</span>
+        </div>
+        <div class="log-tile">
+          <div class="lock-badge">🔒</div>
+          <span class="log-tile-icon">🧷</span>
+          <span class="log-tile-label">Diaper</span>
+        </div>
+        <div class="log-tile">
+          <div class="lock-badge">🔒</div>
+          <span class="log-tile-icon">🌙</span>
+          <span class="log-tile-label">Sleep</span>
+        </div>
+      </div>
+
+      <!-- Mini Activity Log -->
+      <div class="activity-section reveal reveal-d3">
+        <div class="section-head">
+          <span class="section-title-sm">Recent Activity</span>
+          <a href="#" class="view-all-link">View All →</a>
+        </div>
+        <div class="activity-log">
+          <div class="log-entry">
+            <div class="log-entry-icon" style="background:rgba(91,155,213,0.12);">🍼</div>
+            <div class="log-entry-body">
+              <div class="log-entry-type">Feeding — Left breast</div>
+              <div class="log-entry-note">12 min · logged by Sarah</div>
+            </div>
+            <span class="log-entry-time">2:14 PM</span>
+          </div>
+          <div class="log-entry">
+            <div class="log-entry-icon" style="background:rgba(201,169,110,0.12);">🧷</div>
+            <div class="log-entry-body">
+              <div class="log-entry-type">Diaper — Wet</div>
+              <div class="log-entry-note">logged by you</div>
+            </div>
+            <span class="log-entry-time">1:38 PM</span>
+          </div>
+          <div class="log-entry">
+            <div class="log-entry-icon" style="background:rgba(124,179,128,0.12);">🌙</div>
+            <div class="log-entry-body">
+              <div class="log-entry-type">Nap — 47 min</div>
+              <div class="log-entry-note">in bassinet · logged by Sarah</div>
+            </div>
+            <span class="log-entry-time">12:05 PM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom spacing -->
+      <div style="height:12px;"></div>
+
+    </section>
+  </div><!-- /page-container -->
+
+  <!-- ===================== BOTTOM NAV ===================== -->
+  <nav class="bottom-nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-item">
+        <div class="nav-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#5a7d5c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9.5L11 3L19 9.5V19a1 1 0 01-1 1H14v-5H8v5H4a1 1 0 01-1-1V9.5z"/>
+          </svg>
+        </div>
+        <span class="nav-label">Home</span>
+      </a>
+      <a href="#" class="nav-item">
+        <div class="nav-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#5a7d5c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="5" width="16" height="14" rx="2"/>
+            <path d="M16 3v4M8 3v4M3 9h16"/>
+            <path d="M7 13h4M7 16h2"/>
+          </svg>
+        </div>
+        <span class="nav-label">Tasks</span>
+      </a>
+      <a href="#" class="nav-item">
+        <div class="nav-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#5a7d5c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 3H3a1 1 0 00-1 1v14a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1z"/>
+            <path d="M7 7h8M7 11h8M7 15h4"/>
+          </svg>
+        </div>
+        <span class="nav-label">Briefing</span>
+      </a>
+      <a href="#" class="nav-item active">
+        <!-- Leaf indicator above -->
+        <div class="nav-leaf-indicator">
+          <svg width="10" height="13" viewBox="0 0 10 13" fill="none">
+            <path d="M5 12.5 Q4 9.5 2.5 8 Q0.5 6.5 1 4.5 Q1.5 2 3.5 2 Q5.5 2 6.5 4 Q7.5 6 6.5 9 Q6 11 5 12.5Z" fill="#7cb380"/>
+          </svg>
+        </div>
+        <div class="nav-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#7cb380" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z"/>
+            <path d="M11 7v4l3 3"/>
+          </svg>
+        </div>
+        <span class="nav-label">Tracker</span>
+      </a>
+      <a href="#" class="nav-item">
+        <div class="nav-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#5a7d5c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="1.5" fill="#5a7d5c"/>
+            <circle cx="5" cy="11" r="1.5" fill="#5a7d5c"/>
+            <circle cx="17" cy="11" r="1.5" fill="#5a7d5c"/>
+          </svg>
+        </div>
+        <span class="nav-label">More</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ===================== JAVASCRIPT ===================== -->
+  <script>
+    // ── Mood selection ──
+    function selectMood(el) {
+      document.querySelectorAll('.mood-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      // Show flags
+      const flags = document.getElementById('flagsSection');
+      setTimeout(() => {
+        flags.classList.add('visible');
+      }, 100);
+    }
+
+    // ── Flag toggles ──
+    function toggleFlag(el) {
+      el.classList.toggle('selected');
+    }
+
+    // ── Checkin submit ──
+    function submitCheckin() {
+      const btn = event.currentTarget;
+      const card = document.getElementById('checkinCard');
+      btn.textContent = 'Trail logged ✓';
+      btn.style.background = 'rgba(124,179,128,0.2)';
+      btn.style.color = '#7cb380';
+      btn.style.border = '1px solid rgba(124,179,128,0.3)';
+      btn.disabled = true;
+    }
+
+    // ── Challenge tile accordion ──
+    function toggleTile(id) {
+      const tile = document.getElementById('tile-' + id);
+      const isOpen = tile.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.challenge-tile').forEach(t => {
+        t.classList.remove('open');
+        const chev = t.querySelector('.chevron');
+        if (chev) chev.style.transform = '';
+      });
+      // Open clicked if it was closed
+      if (!isOpen) {
+        tile.classList.add('open');
+        const chev = tile.querySelector('.chevron');
+        if (chev) chev.style.transform = 'rotate(180deg)';
+      }
+    }
+
+    // ── Scroll reveal ──
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ── Challenge tile staggered reveal on scroll ──
+    const tileObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          const tiles = Array.from(document.querySelectorAll('.challenge-tile'));
+          let idx = tiles.indexOf(entry.target);
+          if (idx < 0) idx = 0;
+          setTimeout(() => {
+            entry.target.classList.add('revealed');
+          }, idx * 80);
+          tileObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.challenge-tile').forEach(tile => {
+      tileObserver.observe(tile);
+    });
+
+    // Trigger initial reveals for tiles already in view
+    setTimeout(() => {
+      document.querySelectorAll('.challenge-tile').forEach((tile, idx) => {
+        const rect = tile.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+          setTimeout(() => tile.classList.add('revealed'), idx * 90 + 200);
+        }
+      });
+    }, 300);
+  </script>
+
+</body>
+</html>

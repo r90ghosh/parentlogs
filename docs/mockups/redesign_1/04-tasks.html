@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Tasks</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background: #0a0a0f;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+
+    /* Phase pill scroll */
+    .phase-scroll { scrollbar-width: none; }
+    .phase-scroll::-webkit-scrollbar { display: none; }
+
+    /* Circular progress ring */
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.6s ease;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+    /* Checkbox animation */
+    .task-checkbox {
+      transition: all 0.15s ease;
+    }
+    .task-checkbox:hover {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.08);
+    }
+    .task-row {
+      transition: background 0.12s ease;
+    }
+    .task-row:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* Catch-up banner shimmer */
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    /* Filter tab underline */
+    .filter-tab-active::after {
+      content: '';
+      display: block;
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #3b82f6;
+      border-radius: 1px;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              950: '#0a0a0f',
+              900: '#111118',
+              800: '#1a1a24',
+              700: '#242433',
+            },
+            accent: {
+              500: '#3b82f6',
+              600: '#2563eb',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#0a0a0f] text-white">
+
+  <!-- App Shell -->
+  <div class="max-w-[1100px] mx-auto flex flex-col min-h-screen pb-20 lg:pb-0">
+
+    <!-- ─── HEADER ─── -->
+    <header class="sticky top-0 z-30 bg-[#0a0a0f]/90 backdrop-blur-xl border-b border-white/[0.05] px-4 lg:px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-xl font-bold text-white tracking-tight">Tasks</h1>
+          <p class="text-xs text-zinc-500 mt-0.5 flex items-center gap-1.5">
+            <span id="icon-calendar-days-header" class="inline-block w-3 h-3"></span>
+            Week 24 &bull; 112 days to go
+          </p>
+        </div>
+        <!-- View Toggle -->
+        <div class="flex items-center gap-1 bg-zinc-900 border border-white/[0.06] rounded-xl p-1">
+          <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#3b82f6] text-white text-xs font-medium transition-all">
+            <span id="icon-list-header" class="inline-block w-3.5 h-3.5"></span>
+            List
+          </button>
+          <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:text-white transition-all">
+            <span id="icon-calendar-header" class="inline-block w-3.5 h-3.5"></span>
+            Calendar
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ─── PHASE TIMELINE FILTER ─── -->
+    <div class="border-b border-white/[0.04] bg-[#0a0a0f]">
+      <div class="phase-scroll flex items-center gap-2 px-4 lg:px-6 py-3 overflow-x-auto">
+        <button class="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-all whitespace-nowrap">
+          Planning
+        </button>
+        <button class="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-all whitespace-nowrap">
+          Trimester 1
+        </button>
+        <!-- Active phase -->
+        <button class="flex-shrink-0 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/30 whitespace-nowrap">
+          Trimester 2
+        </button>
+        <button class="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-all whitespace-nowrap">
+          Trimester 3
+        </button>
+        <button class="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-all whitespace-nowrap">
+          0–3 months
+        </button>
+        <button class="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-all whitespace-nowrap">
+          3–6 months
+        </button>
+        <button class="flex-shrink-0 px-3 py-1 rounded-full text-xs font-medium text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-all whitespace-nowrap">
+          6–12 months
+        </button>
+      </div>
+    </div>
+
+    <!-- ─── MAIN CONTENT AREA ─── -->
+    <div class="flex-1 px-4 lg:px-6 py-4 space-y-4">
+
+      <!-- ─── CATCH-UP BANNER ─── -->
+      <div class="relative flex items-center justify-between gap-4 bg-amber-950/30 border border-amber-500/20 rounded-2xl px-4 py-3.5 overflow-hidden">
+        <!-- Left accent bar -->
+        <div class="absolute left-0 top-0 bottom-0 w-1 bg-amber-500 rounded-l-2xl"></div>
+        <div class="pl-2 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center flex-shrink-0">
+            <span id="icon-clock-banner" class="text-amber-400 w-4 h-4 inline-block"></span>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-amber-300">3 tasks from earlier weeks</p>
+            <p class="text-xs text-amber-600 mt-0.5">These are still worth doing — not overdue, just catch-up</p>
+          </div>
+        </div>
+        <button class="flex-shrink-0 px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 rounded-xl text-amber-300 text-xs font-semibold transition-all whitespace-nowrap">
+          Review & Catch Up
+        </button>
+      </div>
+
+      <!-- ─── STATS ROW ─── -->
+      <div class="grid grid-cols-4 gap-2.5">
+        <!-- Due Today -->
+        <div class="bg-zinc-900 border border-white/[0.06] rounded-2xl p-3.5 flex flex-col gap-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-zinc-500 font-medium">Due Today</span>
+            <div class="w-6 h-6 rounded-lg bg-blue-500/15 flex items-center justify-center">
+              <span id="icon-zap-stat" class="w-3 h-3 inline-block text-blue-400"></span>
+            </div>
+          </div>
+          <p class="text-2xl font-bold text-white">2</p>
+          <p class="text-xs text-zinc-600">tasks</p>
+        </div>
+        <!-- This Week -->
+        <div class="bg-zinc-900 border border-white/[0.06] rounded-2xl p-3.5 flex flex-col gap-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-zinc-500 font-medium">This Week</span>
+            <div class="w-6 h-6 rounded-lg bg-amber-500/15 flex items-center justify-center">
+              <span id="icon-calendar-stat" class="w-3 h-3 inline-block text-amber-400"></span>
+            </div>
+          </div>
+          <p class="text-2xl font-bold text-white">5</p>
+          <p class="text-xs text-zinc-600">tasks</p>
+        </div>
+        <!-- Completed -->
+        <div class="bg-zinc-900 border border-white/[0.06] rounded-2xl p-3.5 flex flex-col gap-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-zinc-500 font-medium">Completed</span>
+            <div class="w-6 h-6 rounded-lg bg-emerald-500/15 flex items-center justify-center">
+              <span id="icon-check-stat" class="w-3 h-3 inline-block text-emerald-400"></span>
+            </div>
+          </div>
+          <p class="text-2xl font-bold text-white">12</p>
+          <p class="text-xs text-zinc-600">tasks</p>
+        </div>
+        <!-- Partner Tasks -->
+        <div class="bg-zinc-900 border border-white/[0.06] rounded-2xl p-3.5 flex flex-col gap-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-zinc-500 font-medium">Partner</span>
+            <div class="w-6 h-6 rounded-lg bg-pink-500/15 flex items-center justify-center">
+              <span id="icon-users-stat" class="w-3 h-3 inline-block text-pink-400"></span>
+            </div>
+          </div>
+          <p class="text-2xl font-bold text-white">3</p>
+          <p class="text-xs text-zinc-600">tasks</p>
+        </div>
+      </div>
+
+      <!-- ─── FILTER TABS + SEARCH ─── -->
+      <div class="flex items-center gap-3">
+        <!-- Filter tabs -->
+        <div class="flex items-center border-b border-white/[0.06] flex-1 min-w-0">
+          <button class="relative pb-2.5 px-1 mr-4 text-sm font-semibold text-white filter-tab-active">Active</button>
+          <button class="pb-2.5 px-1 mr-4 text-sm font-medium text-zinc-500 hover:text-zinc-300 transition-colors">My Tasks</button>
+          <button class="pb-2.5 px-1 mr-4 text-sm font-medium text-zinc-500 hover:text-zinc-300 transition-colors">Partner</button>
+          <button class="pb-2.5 px-1 mr-4 text-sm font-medium text-zinc-500 hover:text-zinc-300 transition-colors">Completed</button>
+        </div>
+        <!-- Search -->
+        <div class="flex items-center gap-1.5 bg-zinc-900 border border-white/[0.06] rounded-xl px-3 py-1.5 flex-shrink-0">
+          <span id="icon-search-filter" class="w-3.5 h-3.5 text-zinc-500 inline-block"></span>
+          <input type="text" placeholder="Search..." class="bg-transparent text-xs text-zinc-300 placeholder-zinc-600 outline-none w-28" />
+        </div>
+      </div>
+
+      <!-- ─── TWO-COLUMN LAYOUT ─── -->
+      <div class="flex gap-5 items-start">
+
+        <!-- ─── LEFT COLUMN ─── -->
+        <div class="flex-1 min-w-0 space-y-5">
+
+          <!-- THIS WEEK section -->
+          <section>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <h2 class="text-sm font-bold text-white uppercase tracking-wider">This Week</h2>
+                <span class="px-2 py-0.5 bg-blue-500/15 text-blue-400 rounded-full text-xs font-semibold">5</span>
+              </div>
+              <span class="text-xs text-zinc-600">Mar 3 – Mar 9</span>
+            </div>
+
+            <div class="bg-zinc-900 border border-white/[0.06] rounded-2xl overflow-hidden divide-y divide-white/[0.04]">
+
+              <!-- Task row 1 — Due Today, high priority -->
+              <div class="task-row flex items-center gap-3.5 px-4 py-3.5 group">
+                <button class="task-checkbox w-5 h-5 rounded-full border-2 border-blue-500/60 flex-shrink-0 flex items-center justify-center hover:border-blue-400 transition-all"></button>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <p class="text-sm font-semibold text-white">Research childbirth classes</p>
+                    <span class="px-1.5 py-0.5 rounded-md bg-violet-500/15 text-violet-400 text-xs font-medium border border-violet-500/20">Education</span>
+                    <span class="px-1.5 py-0.5 rounded-md bg-blue-500/15 text-blue-400 text-xs font-medium border border-blue-500/20">Dad</span>
+                  </div>
+                  <div class="flex items-center gap-3 mt-1">
+                    <span class="text-xs text-blue-400 font-semibold flex items-center gap-1">
+                      <span id="icon-zap-task1" class="w-3 h-3 inline-block"></span>
+                      Due Today
+                    </span>
+                    <span class="text-xs text-zinc-600">Trimester 2 &bull; Week 24</span>
+                  </div>
+                </div>
+                <button class="opacity-0 group-hover:opacity-100 transition-opacity w-7 h-7 rounded-lg hover:bg-zinc-800 flex items-center justify-center">
+                  <span id="icon-chevron-task1" class="w-4 h-4 text-zinc-500 inline-block"></span>
+                </button>
+              </div>
+
+              <!-- Task row 2 — Due Today, medical -->
+              <div class="task-row flex items-center gap-3.5 px-4 py-3.5 group">
+                <button class="task-checkbox w-5 h-5 rounded-full border-2 border-blue-500/60 flex-shrink-0 flex items-center justify-center hover:border-blue-400 transition-all"></button>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <p class="text-sm font-semibold text-white">Schedule glucose test appointment</p>
+                    <span class="px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 text-xs font-medium border border-emerald-500/20">Medical</span>
+                    <span class="px-1.5 py-0.5 rounded-md bg-zinc-700/60 text-zinc-300 text-xs font-medium border border-white/[0.08]">Both</span>
+                  </div>
+                  <div class="flex items-center gap-3 mt-1">
+                    <span class="text-xs text-blue-400 font-semibold flex items-center gap-1">
+                      <span id="icon-zap-task2" class="w-3 h-3 inline-block"></span>
+                      Due Today
+                    </span>
+                    <span class="text-xs text-zinc-600">Trimester 2 &bull; Week 24</span>
+                  </div>
+                </div>
+                <button class="opacity-0 group-hover:opacity-100 transition-opacity w-7 h-7 rounded-lg hover:bg-zinc-800 flex items-center justify-center">
+                  <span id="icon-chevron-task2" class="w-4 h-4 text-zinc-500 inline-block"></span>
+                </button>
+              </div>
+
+              <!-- Task row 3 — Due Thu -->
+              <div class="task-row flex items-center gap-3.5 px-4 py-3.5 group">
+                <button class="task-checkbox w-5 h-5 rounded-full border-2 border-zinc-700 flex-shrink-0 flex items-center justify-center hover:border-blue-400 transition-all"></button>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <p class="text-sm font-medium text-white">Start baby registry</p>
+                    <span class="px-1.5 py-0.5 rounded-md bg-amber-500/15 text-amber-400 text-xs font-medium border border-amber-500/20">Shopping</span>
+                    <span class="px-1.5 py-0.5 rounded-md bg-zinc-700/60 text-zinc-300 text-xs font-medium border border-white/[0.08]">Both</span>
+                  </div>
+                  <div class="flex items-center gap-3 mt-1">
+                    <span class="text-xs text-zinc-500 flex items-center gap-1">
+                      <span id="icon-calendar-task3" class="w-3 h-3 inline-block"></span>
+                      Due Fri, Mar 7
+                    </span>
+                    <span class="text-xs text-zinc-600">Trimester 2 &bull; Week 24</span>
+                  </div>
+                </div>
+                <button class="opacity-0 group-hover:opacity-100 transition-opacity w-7 h-7 rounded-lg hover:bg-zinc-800 flex items-center justify-center">
+                  <span id="icon-chevron-task3" class="w-4 h-4 text-zinc-500 inline-block"></span>
+                </button>
+              </div>
+
+              <!-- Task row 4 — Due Sat, Financial -->
+              <div class="task-row flex items-center gap-3.5 px-4 py-3.5 group">
+                <button class="task-checkbox w-5 h-5 rounded-full border-2 border-zinc-700 flex-shrink-0 flex items-center justify-center hover:border-blue-400 transition-all"></button>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <p class="text-sm font-medium text-white">Review life insurance options</p>
+                    <span class="px-1.5 py-0.5 rounded-md bg-cyan-500/15 text-cyan-400 text-xs font-medium border border-cyan-500/20">Financial</span>
+                    <span class="px-1.5 py-0.5 rounded-md bg-blue-500/15 text-blue-400 text-xs font-medium border border-blue-500/20">Dad</span>
+                  </div>
+                  <div class="flex items-center gap-3 mt-1">
+                    <span class="text-xs text-zinc-500 flex items-center gap-1">
+                      <span id="icon-calendar-task4" class="w-3 h-3 inline-block"></span>
+                      Due Sat, Mar 8
+                    </span>
+                    <span class="text-xs text-zinc-600">Trimester 2 &bull; Week 24</span>
+                  </div>
+                </div>
+                <button class="opacity-0 group-hover:opacity-100 transition-opacity w-7 h-7 rounded-lg hover:bg-zinc-800 flex items-center justify-center">
+                  <span id="icon-chevron-task4" class="w-4 h-4 text-zinc-500 inline-block"></span>
+                </button>
+              </div>
+
+              <!-- Task row 5 — completed appearance -->
+              <div class="task-row flex items-center gap-3.5 px-4 py-3.5 group opacity-50">
+                <button class="w-5 h-5 rounded-full border-2 border-emerald-500 bg-emerald-500/20 flex-shrink-0 flex items-center justify-center">
+                  <span id="icon-check-done" class="w-3 h-3 text-emerald-400 inline-block"></span>
+                </button>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <p class="text-sm font-medium text-zinc-500 line-through">Tour hospital maternity ward</p>
+                    <span class="px-1.5 py-0.5 rounded-md bg-zinc-800 text-zinc-500 text-xs font-medium">Medical</span>
+                    <span class="px-1.5 py-0.5 rounded-md bg-zinc-800 text-zinc-500 text-xs font-medium">Both</span>
+                  </div>
+                  <span class="text-xs text-zinc-600">Completed Mon, Mar 3</span>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- COMING UP section -->
+          <section>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <h2 class="text-sm font-bold text-zinc-500 uppercase tracking-wider">Coming Up</h2>
+                <span class="px-2 py-0.5 bg-zinc-800 text-zinc-500 rounded-full text-xs font-semibold">3</span>
+              </div>
+              <span class="text-xs text-zinc-600">Next week</span>
+            </div>
+
+            <div class="bg-zinc-900/60 border border-white/[0.04] rounded-2xl overflow-hidden divide-y divide-white/[0.03]">
+
+              <div class="task-row flex items-center gap-3.5 px-4 py-3.5 group opacity-70">
+                <button class="task-checkbox w-5 h-5 rounded-full border-2 border-zinc-700 flex-shrink-0 flex items-center justify-center hover:border-blue-400 transition-all"></button>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <p class="text-sm font-medium text-zinc-300">Write birth plan draft</p>
+                    <span class="px-1.5 py-0.5 rounded-md bg-violet-500/10 text-violet-500 text-xs font-medium border border-violet-500/15">Planning</span>
+                    <span class="px-1.5 py-0.5 rounded-md bg-zinc-800 text-zinc-400 text-xs font-medium border border-white/[0.05]">Both</span>
+                  </div>
+                  <span class="text-xs text-zinc-600 mt-1 inline-block">Due Mar 12</span>
+                </div>
+              </div>
+
+              <div class="task-row flex items-center gap-3.5 px-4 py-3.5 group opacity-70">
+                <button class="task-checkbox w-5 h-5 rounded-full border-2 border-zinc-700 flex-shrink-0 flex items-center justify-center hover:border-blue-400 transition-all"></button>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <p class="text-sm font-medium text-zinc-300">Set up a college savings account</p>
+                    <span class="px-1.5 py-0.5 rounded-md bg-cyan-500/10 text-cyan-500 text-xs font-medium border border-cyan-500/15">Financial</span>
+                    <span class="px-1.5 py-0.5 rounded-md bg-blue-500/10 text-blue-400 text-xs font-medium border border-blue-500/15">Dad</span>
+                  </div>
+                  <span class="text-xs text-zinc-600 mt-1 inline-block">Due Mar 14</span>
+                </div>
+              </div>
+
+              <div class="task-row flex items-center gap-3.5 px-4 py-3.5 group opacity-70">
+                <button class="task-checkbox w-5 h-5 rounded-full border-2 border-zinc-700 flex-shrink-0 flex items-center justify-center hover:border-blue-400 transition-all"></button>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <p class="text-sm font-medium text-zinc-300">Research pediatricians in your area</p>
+                    <span class="px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500 text-xs font-medium border border-emerald-500/15">Medical</span>
+                    <span class="px-1.5 py-0.5 rounded-md bg-zinc-800 text-zinc-400 text-xs font-medium border border-white/[0.05]">Both</span>
+                  </div>
+                  <span class="text-xs text-zinc-600 mt-1 inline-block">Due Mar 16</span>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ─── FREE TIER UPGRADE PROMPT ─── -->
+          <div class="relative bg-zinc-900 border border-white/[0.06] rounded-2xl px-4 py-4 overflow-hidden">
+            <!-- Gradient background -->
+            <div class="absolute inset-0 bg-gradient-to-br from-amber-950/20 via-transparent to-transparent pointer-events-none"></div>
+            <div class="relative flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
+                  <span id="icon-lock-upgrade" class="w-5 h-5 text-amber-400 inline-block"></span>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-white">Unlock tasks beyond your 30-day window</p>
+                  <p class="text-xs text-zinc-500 mt-0.5">Trimester 3 tasks are ready for you &bull; 86 tasks total</p>
+                </div>
+              </div>
+              <button class="flex-shrink-0 px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold rounded-xl transition-all whitespace-nowrap shadow-lg shadow-amber-500/20">
+                Upgrade
+              </button>
+            </div>
+          </div>
+
+        </div><!-- end left column -->
+
+        <!-- ─── RIGHT SIDEBAR ─── -->
+        <div class="hidden lg:flex flex-col gap-4" style="width: 340px; flex-shrink: 0;">
+
+          <!-- Focus Card — Priority task -->
+          <div class="relative bg-zinc-900 border border-amber-500/20 rounded-2xl overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-amber-950/30 via-transparent to-transparent pointer-events-none"></div>
+            <div class="relative p-4">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-5 h-5 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                  <span id="icon-target-focus" class="w-3 h-3 text-amber-400 inline-block"></span>
+                </div>
+                <p class="text-xs font-semibold text-amber-400 uppercase tracking-wider">Your top priority this week</p>
+              </div>
+              <p class="text-base font-bold text-white leading-snug mb-3">Research childbirth classes</p>
+              <p class="text-xs text-zinc-400 leading-relaxed mb-4">
+                This week is a great time to explore options. Many classes fill up fast — aim to book 8–10 weeks before your due date.
+              </p>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-1 rounded-lg bg-violet-500/15 text-violet-400 text-xs font-medium border border-violet-500/20">Education</span>
+                <span class="px-2 py-1 rounded-lg bg-blue-500/15 text-blue-400 text-xs font-medium border border-blue-500/20">Dad</span>
+                <span class="ml-auto text-xs text-amber-400 font-semibold flex items-center gap-1">
+                  <span id="icon-zap-focus" class="w-3 h-3 inline-block"></span>
+                  Due Today
+                </span>
+              </div>
+              <button class="mt-3 w-full py-2 bg-white/[0.06] hover:bg-white/[0.10] border border-white/[0.08] rounded-xl text-sm font-medium text-white transition-all">
+                Start Task
+              </button>
+            </div>
+          </div>
+
+          <!-- Mini Week Calendar Card -->
+          <div class="bg-zinc-900 border border-white/[0.06] rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <p class="text-xs font-semibold text-white">Week of Mar 3</p>
+              <div class="flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>
+                <span class="text-xs text-zinc-500">Tasks due</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-7 gap-1">
+              <!-- Day headers -->
+              <div class="text-center text-xs text-zinc-600 pb-1">M</div>
+              <div class="text-center text-xs text-zinc-600 pb-1">T</div>
+              <div class="text-center text-xs text-zinc-600 pb-1">W</div>
+              <div class="text-center text-xs text-zinc-600 pb-1">T</div>
+              <div class="text-center text-xs text-zinc-600 pb-1">F</div>
+              <div class="text-center text-xs text-zinc-600 pb-1">S</div>
+              <div class="text-center text-xs text-zinc-600 pb-1">S</div>
+              <!-- Day cells -->
+              <!-- Mon 3 - today, tasks due -->
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-xl bg-blue-500 flex items-center justify-center">
+                  <span class="text-xs font-bold text-white">3</span>
+                </div>
+                <div class="flex gap-0.5">
+                  <div class="w-1 h-1 rounded-full bg-blue-400"></div>
+                  <div class="w-1 h-1 rounded-full bg-blue-400"></div>
+                </div>
+              </div>
+              <!-- Tue 4 -->
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-zinc-800 cursor-pointer transition-all">
+                  <span class="text-xs text-zinc-400">4</span>
+                </div>
+              </div>
+              <!-- Wed 5 -->
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-zinc-800 cursor-pointer transition-all">
+                  <span class="text-xs text-zinc-400">5</span>
+                </div>
+                <div class="flex gap-0.5">
+                  <div class="w-1 h-1 rounded-full bg-zinc-500"></div>
+                </div>
+              </div>
+              <!-- Thu 6 -->
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-zinc-800 cursor-pointer transition-all">
+                  <span class="text-xs text-zinc-400">6</span>
+                </div>
+                <div class="flex gap-0.5">
+                  <div class="w-1 h-1 rounded-full bg-zinc-500"></div>
+                </div>
+              </div>
+              <!-- Fri 7 -->
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-zinc-800 cursor-pointer transition-all">
+                  <span class="text-xs text-zinc-400">7</span>
+                </div>
+                <div class="flex gap-0.5">
+                  <div class="w-1 h-1 rounded-full bg-amber-500"></div>
+                  <div class="w-1 h-1 rounded-full bg-amber-500"></div>
+                </div>
+              </div>
+              <!-- Sat 8 -->
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-zinc-800 cursor-pointer transition-all">
+                  <span class="text-xs text-zinc-400">8</span>
+                </div>
+                <div class="flex gap-0.5">
+                  <div class="w-1 h-1 rounded-full bg-zinc-500"></div>
+                </div>
+              </div>
+              <!-- Sun 9 -->
+              <div class="flex flex-col items-center gap-1">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-zinc-800 cursor-pointer transition-all">
+                  <span class="text-xs text-zinc-400">9</span>
+                </div>
+              </div>
+            </div>
+            <!-- Legend -->
+            <div class="flex items-center gap-3 mt-3 pt-3 border-t border-white/[0.04]">
+              <div class="flex items-center gap-1.5">
+                <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                <span class="text-xs text-zinc-600">Today's tasks</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <div class="w-2 h-2 rounded-full bg-amber-500"></div>
+                <span class="text-xs text-zinc-600">Upcoming</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <div class="w-2 h-2 rounded-full bg-zinc-600"></div>
+                <span class="text-xs text-zinc-600">Other</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Card — Circular ring -->
+          <div class="bg-zinc-900 border border-white/[0.06] rounded-2xl p-4">
+            <p class="text-xs font-semibold text-zinc-400 mb-3">Trimester 2 Progress</p>
+            <div class="flex items-center gap-4">
+              <!-- Ring -->
+              <div class="relative flex-shrink-0">
+                <svg width="80" height="80" viewBox="0 0 80 80">
+                  <!-- Track -->
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="6"/>
+                  <!-- Progress (12/20 = 60%) -->
+                  <!-- Circumference = 2 * pi * 32 = ~201.06 -->
+                  <!-- Filled = 201.06 * 0.60 = ~120.64, offset = 201.06 - 120.64 = 80.42 -->
+                  <circle
+                    cx="40" cy="40" r="32"
+                    fill="none"
+                    stroke="#3b82f6"
+                    stroke-width="6"
+                    stroke-linecap="round"
+                    stroke-dasharray="201.06"
+                    stroke-dashoffset="80.42"
+                    class="progress-ring-circle"
+                    style="transform: rotate(-90deg); transform-origin: 40px 40px;"
+                  />
+                  <!-- Center text -->
+                  <text x="40" y="36" text-anchor="middle" fill="white" font-size="16" font-weight="700" font-family="system-ui">12</text>
+                  <text x="40" y="50" text-anchor="middle" fill="rgba(113,113,122,1)" font-size="9" font-family="system-ui">of 20</text>
+                </svg>
+              </div>
+              <!-- Stats -->
+              <div class="flex-1 space-y-2">
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-xs text-zinc-500">Completed</span>
+                    <span class="text-xs font-semibold text-emerald-400">12</span>
+                  </div>
+                  <div class="h-1.5 rounded-full bg-zinc-800">
+                    <div class="h-1.5 rounded-full bg-emerald-500" style="width: 60%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-xs text-zinc-500">In Progress</span>
+                    <span class="text-xs font-semibold text-blue-400">5</span>
+                  </div>
+                  <div class="h-1.5 rounded-full bg-zinc-800">
+                    <div class="h-1.5 rounded-full bg-blue-500" style="width: 25%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-xs text-zinc-500">Remaining</span>
+                    <span class="text-xs font-semibold text-zinc-400">3</span>
+                  </div>
+                  <div class="h-1.5 rounded-full bg-zinc-800">
+                    <div class="h-1.5 rounded-full bg-zinc-600" style="width: 15%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-white/[0.04]">
+              <p class="text-xs text-zinc-600 text-center">60% complete &bull; 3 tasks remaining this phase</p>
+            </div>
+          </div>
+
+          <!-- Streak Banner -->
+          <div class="bg-zinc-900 border border-white/[0.06] rounded-2xl px-4 py-3.5 flex items-center gap-3">
+            <div class="text-2xl">&#128293;</div>
+            <div class="flex-1">
+              <p class="text-sm font-bold text-white">5-day streak!</p>
+              <p class="text-xs text-zinc-500 mt-0.5">You've completed tasks every day this week</p>
+            </div>
+            <div class="text-right">
+              <p class="text-lg font-black text-amber-400">5</p>
+              <p class="text-xs text-zinc-600">days</p>
+            </div>
+          </div>
+
+          <!-- Quick actions -->
+          <div class="bg-zinc-900 border border-white/[0.06] rounded-2xl p-4">
+            <p class="text-xs font-semibold text-zinc-400 mb-3">Quick Actions</p>
+            <div class="space-y-2">
+              <button class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 border border-white/[0.04] text-left transition-all">
+                <div class="w-6 h-6 rounded-lg bg-blue-500/15 flex items-center justify-center">
+                  <span id="icon-plus-qa" class="w-3 h-3 text-blue-400 inline-block"></span>
+                </div>
+                <span class="text-xs font-medium text-zinc-300">Add custom task</span>
+              </button>
+              <button class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 border border-white/[0.04] text-left transition-all">
+                <div class="w-6 h-6 rounded-lg bg-pink-500/15 flex items-center justify-center">
+                  <span id="icon-share-qa" class="w-3 h-3 text-pink-400 inline-block"></span>
+                </div>
+                <span class="text-xs font-medium text-zinc-300">Share tasks with partner</span>
+              </button>
+              <button class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-zinc-800/50 hover:bg-zinc-800 border border-white/[0.04] text-left transition-all">
+                <div class="w-6 h-6 rounded-lg bg-violet-500/15 flex items-center justify-center">
+                  <span id="icon-filter-qa" class="w-3 h-3 text-violet-400 inline-block"></span>
+                </div>
+                <span class="text-xs font-medium text-zinc-300">Filter by category</span>
+              </button>
+            </div>
+          </div>
+
+        </div><!-- end right sidebar -->
+
+      </div><!-- end two-column layout -->
+    </div><!-- end main content -->
+
+    <!-- ─── BOTTOM NAVIGATION (mobile) ─── -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-[#0a0a0f]/95 backdrop-blur-xl border-t border-white/[0.06]">
+      <div class="flex items-center justify-around px-2 py-2 pb-safe">
+
+        <!-- Home -->
+        <button class="flex flex-col items-center gap-1 py-1.5 px-3">
+          <span id="icon-home-nav" class="w-5 h-5 text-zinc-500 inline-block"></span>
+          <span class="text-[10px] text-zinc-500 font-medium">Home</span>
+        </button>
+
+        <!-- Tasks (active) -->
+        <button class="flex flex-col items-center gap-1 py-1.5 px-3">
+          <div class="relative">
+            <span id="icon-check-square-nav" class="w-5 h-5 text-blue-500 inline-block"></span>
+            <div class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-blue-500 border border-[#0a0a0f]"></div>
+          </div>
+          <span class="text-[10px] text-blue-500 font-semibold">Tasks</span>
+        </button>
+
+        <!-- Briefing -->
+        <button class="flex flex-col items-center gap-1 py-1.5 px-3">
+          <span id="icon-newspaper-nav" class="w-5 h-5 text-zinc-500 inline-block"></span>
+          <span class="text-[10px] text-zinc-500 font-medium">Briefing</span>
+        </button>
+
+        <!-- Tracker -->
+        <button class="flex flex-col items-center gap-1 py-1.5 px-3">
+          <span id="icon-activity-nav" class="w-5 h-5 text-zinc-500 inline-block"></span>
+          <span class="text-[10px] text-zinc-500 font-medium">Tracker</span>
+        </button>
+
+        <!-- More -->
+        <button class="flex flex-col items-center gap-1 py-1.5 px-3">
+          <span id="icon-more-nav" class="w-5 h-5 text-zinc-500 inline-block"></span>
+          <span class="text-[10px] text-zinc-500 font-medium">More</span>
+        </button>
+
+      </div>
+    </nav>
+
+  </div><!-- end app shell -->
+
+  <!-- ─── LUCIDE ICON INIT ─── -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const icons = {
+        // Header
+        'icon-calendar-days-header': ['calendar-days', '#71717a'],
+        'icon-list-header':          ['list', '#ffffff'],
+        'icon-calendar-header':      ['calendar', '#71717a'],
+        // Banner
+        'icon-clock-banner':         ['clock', '#f59e0b'],
+        // Stats
+        'icon-zap-stat':             ['zap', '#60a5fa'],
+        'icon-calendar-stat':        ['calendar', '#f59e0b'],
+        'icon-check-stat':           ['check-circle', '#34d399'],
+        'icon-users-stat':           ['users', '#f472b6'],
+        // Search
+        'icon-search-filter':        ['search', '#71717a'],
+        // Task icons
+        'icon-zap-task1':            ['zap', '#60a5fa'],
+        'icon-zap-task2':            ['zap', '#60a5fa'],
+        'icon-calendar-task3':       ['calendar', '#71717a'],
+        'icon-calendar-task4':       ['calendar', '#71717a'],
+        'icon-check-done':           ['check', '#34d399'],
+        'icon-chevron-task1':        ['chevron-right', '#71717a'],
+        'icon-chevron-task2':        ['chevron-right', '#71717a'],
+        'icon-chevron-task3':        ['chevron-right', '#71717a'],
+        'icon-chevron-task4':        ['chevron-right', '#71717a'],
+        // Upgrade
+        'icon-lock-upgrade':         ['lock', '#f59e0b'],
+        // Sidebar Focus card
+        'icon-target-focus':         ['target', '#f59e0b'],
+        'icon-zap-focus':            ['zap', '#f59e0b'],
+        // Quick actions
+        'icon-plus-qa':              ['plus', '#60a5fa'],
+        'icon-share-qa':             ['share-2', '#f472b6'],
+        'icon-filter-qa':            ['sliders-horizontal', '#a78bfa'],
+        // Bottom nav
+        'icon-home-nav':             ['home', '#71717a'],
+        'icon-check-square-nav':     ['check-square', '#3b82f6'],
+        'icon-newspaper-nav':        ['newspaper', '#71717a'],
+        'icon-activity-nav':         ['activity', '#71717a'],
+        'icon-more-nav':             ['more-horizontal', '#71717a'],
+      };
+
+      Object.entries(icons).forEach(([elemId, [iconName, color]]) => {
+        const el = document.getElementById(elemId);
+        if (!el) return;
+        const svg = lucide.createElement(lucide[toCamelCase(iconName)]);
+        if (!svg) return;
+        // Determine size from class list (handle Tailwind dot-escaped classes)
+        const classList = el.className || '';
+        let size = '20';
+        if (/\bw-3\b/.test(classList) || /w-3\.5/.test(classList)) size = '12';
+        else if (/\bw-4\b/.test(classList)) size = '16';
+        svg.setAttribute('width', size);
+        svg.setAttribute('height', size);
+        svg.setAttribute('stroke', color);
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke-width', '2');
+        svg.setAttribute('stroke-linecap', 'round');
+        svg.setAttribute('stroke-linejoin', 'round');
+        el.appendChild(svg);
+      });
+
+      function toCamelCase(str) {
+        return str.replace(/-./g, m => m[1].toUpperCase());
+      }
+    });
+  </script>
+
+</body>
+</html>

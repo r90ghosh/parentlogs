@@ -14,9 +14,9 @@ const stageColors: Record<string, { bg: string; text: string }> = {
   'third-trimester': { bg: 'bg-blue-500/10', text: 'text-blue-400' },
   'delivery': { bg: 'bg-copper/10', text: 'text-copper' },
   'fourth-trimester': { bg: 'bg-sage/10', text: 'text-sage' },
-  '3-6-months': { bg: 'bg-teal-500/10', text: 'text-teal-400' },
-  '6-12-months': { bg: 'bg-cyan-500/10', text: 'text-cyan-400' },
-  '12-18-months': { bg: 'bg-indigo-500/10', text: 'text-indigo-400' },
+  '3-6-months': { bg: 'bg-sky/10', text: 'text-sky' },
+  '6-12-months': { bg: 'bg-sky/10', text: 'text-sky' },
+  '12-18-months': { bg: 'bg-copper/10', text: 'text-copper' },
   '18-24-months': { bg: 'bg-violet-500/10', text: 'text-violet-400' },
 }
 

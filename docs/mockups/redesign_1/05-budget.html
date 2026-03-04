@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Budget Planner — The Dad Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --card: #16161f;
+      --border: rgba(255,255,255,0.06);
+      --border-subtle: rgba(255,255,255,0.04);
+      --text-muted: #71717a;
+      --text-secondary: #a1a1aa;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg);
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    /* Timeline scroll */
+    .timeline-scroll {
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .timeline-scroll::-webkit-scrollbar { display: none; }
+
+    /* Tab underline active */
+    .tab-active {
+      color: #22c55e;
+      border-bottom: 2px solid #22c55e;
+    }
+    .tab-inactive {
+      color: #71717a;
+      border-bottom: 2px solid transparent;
+    }
+
+    /* Tier pill active */
+    .tier-active {
+      background: #22c55e;
+      color: #000000;
+      font-weight: 600;
+    }
+    .tier-inactive {
+      background: transparent;
+      color: #a1a1aa;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Timeline pill active */
+    .phase-active {
+      background: rgba(34,197,94,0.15);
+      color: #22c55e;
+      border: 1px solid rgba(34,197,94,0.3);
+    }
+    .phase-inactive {
+      background: rgba(255,255,255,0.04);
+      color: #71717a;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* Progress bar */
+    .progress-track {
+      background: rgba(255,255,255,0.06);
+      border-radius: 9999px;
+      height: 8px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: linear-gradient(90deg, #16a34a, #22c55e);
+      border-radius: 9999px;
+      height: 100%;
+      transition: width 0.6s ease;
+    }
+
+    /* Category dot colors */
+    .dot-gear    { background: #22c55e; }
+    .dot-nursery { background: #3b82f6; }
+    .dot-tech    { background: #a855f7; }
+    .dot-clothing{ background: #f97316; }
+    .dot-health  { background: #ec4899; }
+    .dot-feeding { background: #eab308; }
+
+    /* Card base */
+    .card {
+      background: #16161f;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+    }
+
+    /* Item row hover */
+    .item-row {
+      transition: background 0.15s ease;
+      border-radius: 12px;
+    }
+    .item-row:hover { background: rgba(255,255,255,0.03); }
+
+    /* Purchased item */
+    .purchased-name {
+      text-decoration: line-through;
+      color: #52525b;
+    }
+
+    /* Priority badge */
+    .badge-essential {
+      background: rgba(34,197,94,0.12);
+      color: #4ade80;
+      border: 1px solid rgba(34,197,94,0.2);
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .badge-nice {
+      background: rgba(161,161,170,0.1);
+      color: #71717a;
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 9999px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* Button styles */
+    .btn-purchase {
+      background: rgba(34,197,94,0.1);
+      color: #4ade80;
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .btn-purchase:hover {
+      background: rgba(34,197,94,0.2);
+      border-color: rgba(34,197,94,0.35);
+    }
+
+    .btn-remove {
+      background: transparent;
+      color: #52525b;
+      border: none;
+      padding: 4px 6px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .btn-remove:hover {
+      color: #ef4444;
+      background: rgba(239,68,68,0.08);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #a1a1aa;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.25);
+      color: #ffffff;
+    }
+
+    /* Section header */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #52525b;
+    }
+
+    /* Accordion */
+    .accordion-header {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: color 0.15s;
+    }
+    .accordion-header:hover .accordion-title { color: #ffffff; }
+    .accordion-title { color: #d4d4d8; font-weight: 500; font-size: 14px; }
+    .accordion-count {
+      background: rgba(255,255,255,0.06);
+      color: #71717a;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 9999px;
+      padding: 2px 7px;
+    }
+    .accordion-body {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.3s ease;
+    }
+    .accordion-body.open { max-height: 600px; }
+
+    /* Browse item row */
+    .browse-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .browse-item:last-child { border-bottom: none; }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(17,17,24,0.97);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      height: 64px;
+      display: flex;
+      align-items: center;
+      z-index: 50;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      height: 100%;
+      color: #52525b;
+      font-size: 10px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.15s;
+      text-decoration: none;
+    }
+    .nav-item:hover { color: #a1a1aa; }
+    .nav-item.active { color: #22c55e; }
+
+    /* Summary card mini */
+    .summary-card {
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .summary-icon-wrap {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Shimmer animation for numbers */
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .count-animate { animation: countUp 0.4s ease forwards; }
+
+    /* Tooltip on price */
+    .price-tooltip { position: relative; }
+    .price-tooltip .tooltip-text {
+      display: none;
+      position: absolute;
+      bottom: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #27272a;
+      color: #a1a1aa;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      pointer-events: none;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .price-tooltip:hover .tooltip-text { display: block; }
+
+    /* Dropdown */
+    .dropdown {
+      background: #1c1c27;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #a1a1aa;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+    }
+
+    /* Responsive grid for summary cards */
+    @media (max-width: 480px) {
+      .summary-grid { grid-template-columns: 1fr; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== TOP HEADER ===== -->
+<header style="background:#111118; border-bottom:1px solid rgba(255,255,255,0.06);" class="sticky top-0 z-40">
+  <div class="flex items-center justify-between px-4 h-14">
+    <!-- Logo + wordmark -->
+    <div class="flex items-center gap-2">
+      <div style="width:28px;height:28px;background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="6" r="3" fill="white" opacity="0.9"/>
+          <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+        </svg>
+      </div>
+      <span style="font-size:15px;font-weight:700;color:#ffffff;letter-spacing:-0.02em;">The Dad Center</span>
+    </div>
+    <!-- Week badge -->
+    <div style="background:rgba(34,197,94,0.12);color:#4ade80;font-size:11px;font-weight:600;padding:3px 10px;border-radius:9999px;border:1px solid rgba(34,197,94,0.2);">
+      Week 24
+    </div>
+  </div>
+</header>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main style="padding-bottom:88px;">
+  <div class="px-4 pt-5 pb-2">
+
+    <!-- PAGE HEADER -->
+    <div class="flex items-center justify-between mb-5">
+      <div>
+        <h1 style="font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-0.03em;margin:0 0 3px 0;">Budget Planner</h1>
+        <p style="font-size:13px;color:#71717a;margin:0;">Trimester 2 &bull; Mid-Range tier</p>
+      </div>
+      <button class="btn-outline" onclick="showAddModal()">
+        <span id="add-icon" style="display:flex;align-items:center;"></span>
+        Add Custom
+      </button>
+    </div>
+
+    <!-- TIER FILTER -->
+    <div style="display:flex;gap:6px;margin-bottom:18px;">
+      <button class="tier-inactive" onclick="selectTier(this,'budget')" style="border-radius:9999px;padding:6px 16px;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s;">
+        Budget
+      </button>
+      <button class="tier-active" onclick="selectTier(this,'midrange')" style="border-radius:9999px;padding:6px 16px;font-size:12px;cursor:pointer;transition:all 0.15s;">
+        Mid-Range
+      </button>
+      <button class="tier-inactive" onclick="selectTier(this,'premium')" style="border-radius:9999px;padding:6px 16px;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s;">
+        Premium
+      </button>
+    </div>
+
+    <!-- TIMELINE BAR -->
+    <div class="timeline-scroll mb-5" style="padding-bottom:2px;">
+      <div style="display:flex;gap:8px;width:max-content;padding-right:16px;">
+        <button class="phase-inactive" style="border-radius:9999px;padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">
+          Planning
+        </button>
+        <button class="phase-inactive" style="border-radius:9999px;padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">
+          Trimester 1
+        </button>
+        <button class="phase-active" style="border-radius:9999px;padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">
+          Trimester 2
+        </button>
+        <button class="phase-inactive" style="border-radius:9999px;padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">
+          Trimester 3
+        </button>
+        <button class="phase-inactive" style="border-radius:9999px;padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">
+          0–3 months
+        </button>
+        <button class="phase-inactive" style="border-radius:9999px;padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">
+          3–6 months
+        </button>
+        <button class="phase-inactive" style="border-radius:9999px;padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;">
+          6–12 months
+        </button>
+      </div>
+    </div>
+
+    <!-- SUMMARY CARDS — 3 column -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+
+      <!-- Estimated Total -->
+      <div class="summary-card" style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.15);">
+        <div class="summary-icon-wrap" style="background:rgba(59,130,246,0.15);">
+          <span id="icon-trending" style="display:flex;color:#60a5fa;"></span>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#60a5fa;font-weight:500;margin-bottom:3px;letter-spacing:0.03em;text-transform:uppercase;">Estimated</div>
+          <div style="font-size:18px;font-weight:700;color:#ffffff;letter-spacing:-0.02em;" class="count-animate">$2,847</div>
+        </div>
+        <div style="font-size:10px;color:#3b82f680;">28 items total</div>
+      </div>
+
+      <!-- Purchased -->
+      <div class="summary-card" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.15);">
+        <div class="summary-icon-wrap" style="background:rgba(34,197,94,0.15);">
+          <span id="icon-cart" style="display:flex;color:#4ade80;"></span>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#4ade80;font-weight:500;margin-bottom:3px;letter-spacing:0.03em;text-transform:uppercase;">Purchased</div>
+          <div style="font-size:18px;font-weight:700;color:#ffffff;letter-spacing:-0.02em;" class="count-animate">$1,234</div>
+        </div>
+        <div style="font-size:10px;color:#22c55e80;">12 items</div>
+      </div>
+
+      <!-- Remaining -->
+      <div class="summary-card" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.15);">
+        <div class="summary-icon-wrap" style="background:rgba(245,158,11,0.15);">
+          <span id="icon-wallet" style="display:flex;color:#fbbf24;"></span>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#fbbf24;font-weight:500;margin-bottom:3px;letter-spacing:0.03em;text-transform:uppercase;">Remaining</div>
+          <div style="font-size:18px;font-weight:700;color:#ffffff;letter-spacing:-0.02em;" class="count-animate">$1,613</div>
+        </div>
+        <div style="font-size:10px;color:#f59e0b80;">16 items</div>
+      </div>
+
+    </div>
+
+    <!-- SHOPPING PROGRESS CARD -->
+    <div class="card" style="padding:18px;margin-bottom:14px;">
+      <div class="flex items-center justify-between mb-3">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span id="icon-check-circle" style="color:#4ade80;display:flex;"></span>
+          <span style="font-size:14px;font-weight:600;color:#ffffff;">Shopping Progress</span>
+        </div>
+        <span style="font-size:13px;font-weight:700;color:#4ade80;">43%</span>
+      </div>
+
+      <div class="progress-track" style="margin-bottom:10px;">
+        <div class="progress-fill" style="width:43%;"></div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:12px;color:#71717a;">12 of 28 items purchased</span>
+        <span style="font-size:11px;color:#52525b;">16 remaining</span>
+      </div>
+
+      <!-- Mini breakdown bars -->
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:11px;color:#71717a;width:72px;flex-shrink:0;">Gear</span>
+          <div style="flex:1;background:rgba(255,255,255,0.06);border-radius:9999px;height:5px;overflow:hidden;">
+            <div style="width:60%;background:#22c55e;height:100%;border-radius:9999px;"></div>
+          </div>
+          <span style="font-size:11px;color:#52525b;width:28px;text-align:right;">60%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:11px;color:#71717a;width:72px;flex-shrink:0;">Nursery</span>
+          <div style="flex:1;background:rgba(255,255,255,0.06);border-radius:9999px;height:5px;overflow:hidden;">
+            <div style="width:40%;background:#3b82f6;height:100%;border-radius:9999px;"></div>
+          </div>
+          <span style="font-size:11px;color:#52525b;width:28px;text-align:right;">40%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:11px;color:#71717a;width:72px;flex-shrink:0;">Tech</span>
+          <div style="flex:1;background:rgba(255,255,255,0.06);border-radius:9999px;height:5px;overflow:hidden;">
+            <div style="width:25%;background:#a855f7;height:100%;border-radius:9999px;"></div>
+          </div>
+          <span style="font-size:11px;color:#52525b;width:28px;text-align:right;">25%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:11px;color:#71717a;width:72px;flex-shrink:0;">Health</span>
+          <div style="flex:1;background:rgba(255,255,255,0.06);border-radius:9999px;height:5px;overflow:hidden;">
+            <div style="width:50%;background:#ec4899;height:100%;border-radius:9999px;"></div>
+          </div>
+          <span style="font-size:11px;color:#52525b;width:28px;text-align:right;">50%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN TAB CARD -->
+    <div class="card" style="padding:0;overflow:hidden;">
+
+      <!-- Tabs -->
+      <div style="display:flex;border-bottom:1px solid rgba(255,255,255,0.06);padding:0 20px;">
+        <button id="tab-my" class="tab-active" onclick="switchTab('my')"
+          style="padding:14px 0;font-size:13px;font-weight:600;margin-right:24px;background:none;border:none;cursor:pointer;transition:color 0.15s;">
+          My Budget <span style="color:inherit;opacity:0.7;">(12)</span>
+        </button>
+        <button id="tab-browse" class="tab-inactive" onclick="switchTab('browse')"
+          style="padding:14px 0;font-size:13px;font-weight:500;background:none;border:none;cursor:pointer;transition:color 0.15s;">
+          Browse Items
+        </button>
+      </div>
+
+      <!-- MY BUDGET TAB -->
+      <div id="panel-my" style="padding:0 20px 20px;">
+
+        <!-- Pending Section -->
+        <div style="margin-top:18px;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:14px;">
+            <span id="icon-alert" style="display:flex;color:#f59e0b;"></span>
+            <span style="font-size:12px;font-weight:600;color:#d4d4d8;letter-spacing:0.02em;">PENDING ITEMS</span>
+            <span style="background:rgba(245,158,11,0.12);color:#f59e0b;font-size:10px;font-weight:700;padding:2px 7px;border-radius:9999px;border:1px solid rgba(245,158,11,0.2);">16</span>
+          </div>
+
+          <!-- Car Seat -->
+          <div class="item-row" style="display:flex;align-items:center;gap:10px;padding:10px 8px;margin-bottom:2px;">
+            <div class="dot-gear" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;"></div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+                <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Car Seat</span>
+                <span class="badge-essential">Essential</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:2px;">
+                <span style="font-size:11px;color:#52525b;">Gear</span>
+                <span style="font-size:11px;color:#52525b;">&bull;</span>
+                <span style="font-size:11px;color:#52525b;">Wk 24–32</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+              <span style="font-size:14px;font-weight:700;color:#ffffff;">$199</span>
+              <button class="btn-purchase" onclick="markPurchased(this, 'Car Seat', 199)">Mark Purchased</button>
+              <button class="btn-remove" onclick="removeItem(this)" title="Remove">
+                <span id="icon-x-remove" style="display:flex;align-items:center;"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Crib -->
+          <div class="item-row" style="display:flex;align-items:center;gap:10px;padding:10px 8px;margin-bottom:2px;">
+            <div class="dot-nursery" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;"></div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+                <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Crib</span>
+                <span class="badge-essential">Essential</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:2px;">
+                <span style="font-size:11px;color:#52525b;">Nursery</span>
+                <span style="font-size:11px;color:#52525b;">&bull;</span>
+                <span style="font-size:11px;color:#52525b;">Wk 20–32</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+              <span style="font-size:14px;font-weight:700;color:#ffffff;">$249</span>
+              <button class="btn-purchase" onclick="markPurchased(this, 'Crib', 249)">Mark Purchased</button>
+              <button class="btn-remove" onclick="removeItem(this)" title="Remove">
+                <span style="display:flex;align-items:center;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Baby Monitor -->
+          <div class="item-row" style="display:flex;align-items:center;gap:10px;padding:10px 8px;margin-bottom:2px;">
+            <div class="dot-tech" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;"></div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+                <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Baby Monitor</span>
+                <span class="badge-nice">Nice-to-Have</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:2px;">
+                <span style="font-size:11px;color:#52525b;">Tech</span>
+                <span style="font-size:11px;color:#52525b;">&bull;</span>
+                <span style="font-size:11px;color:#52525b;">Wk 30+</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+              <span style="font-size:14px;font-weight:700;color:#ffffff;">$89</span>
+              <button class="btn-purchase" onclick="markPurchased(this, 'Baby Monitor', 89)">Mark Purchased</button>
+              <button class="btn-remove" onclick="removeItem(this)" title="Remove">
+                <span style="display:flex;align-items:center;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Diaper Bag -->
+          <div class="item-row" style="display:flex;align-items:center;gap:10px;padding:10px 8px;margin-bottom:2px;">
+            <div class="dot-gear" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;"></div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+                <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Diaper Bag</span>
+                <span class="badge-essential">Essential</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:2px;">
+                <span style="font-size:11px;color:#52525b;">Gear</span>
+                <span style="font-size:11px;color:#52525b;">&bull;</span>
+                <span style="font-size:11px;color:#52525b;">Wk 30+</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+              <span style="font-size:14px;font-weight:700;color:#ffffff;">$65</span>
+              <button class="btn-purchase" onclick="markPurchased(this, 'Diaper Bag', 65)">Mark Purchased</button>
+              <button class="btn-remove" onclick="removeItem(this)" title="Remove">
+                <span style="display:flex;align-items:center;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Nursing Pillow -->
+          <div class="item-row" style="display:flex;align-items:center;gap:10px;padding:10px 8px;margin-bottom:2px;">
+            <div class="dot-feeding" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;"></div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+                <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Nursing Pillow</span>
+                <span class="badge-nice">Nice-to-Have</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:2px;">
+                <span style="font-size:11px;color:#52525b;">Feeding</span>
+                <span style="font-size:11px;color:#52525b;">&bull;</span>
+                <span style="font-size:11px;color:#52525b;">Wk 34+</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+              <span style="font-size:14px;font-weight:700;color:#ffffff;">$45</span>
+              <button class="btn-purchase" onclick="markPurchased(this, 'Nursing Pillow', 45)">Mark Purchased</button>
+              <button class="btn-remove" onclick="removeItem(this)" title="Remove">
+                <span style="display:flex;align-items:center;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Divider -->
+        <div style="height:1px;background:rgba(255,255,255,0.05);margin:18px 0;"></div>
+
+        <!-- Purchased Section -->
+        <div id="purchased-section">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:14px;">
+            <span id="icon-check-bought" style="display:flex;color:#4ade80;"></span>
+            <span style="font-size:12px;font-weight:600;color:#d4d4d8;letter-spacing:0.02em;">PURCHASED</span>
+            <span style="background:rgba(34,197,94,0.1);color:#4ade80;font-size:10px;font-weight:700;padding:2px 7px;border-radius:9999px;border:1px solid rgba(34,197,94,0.2);">12</span>
+          </div>
+
+          <!-- Stroller (purchased) -->
+          <div class="item-row" style="display:flex;align-items:center;gap:10px;padding:10px 8px;margin-bottom:2px;opacity:0.7;">
+            <div class="dot-gear" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;opacity:0.4;"></div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+                <span class="purchased-name" style="font-size:13px;font-weight:500;">Stroller</span>
+                <span class="badge-essential" style="opacity:0.5;">Essential</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:2px;">
+                <span style="font-size:11px;color:#3f3f46;">Gear</span>
+                <span style="font-size:11px;color:#3f3f46;">&bull;</span>
+                <span style="font-size:11px;color:#22c55e;font-weight:500;">Saved $70</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+              <div style="text-align:right;">
+                <div style="font-size:14px;font-weight:700;color:#4ade80;">$329</div>
+                <div style="font-size:10px;color:#52525b;text-decoration:line-through;">est. $399</div>
+              </div>
+              <div style="width:28px;height:28px;background:rgba(34,197,94,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(34,197,94,0.2);">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Changing Table (purchased) -->
+          <div class="item-row" style="display:flex;align-items:center;gap:10px;padding:10px 8px;margin-bottom:2px;opacity:0.7;">
+            <div class="dot-nursery" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;opacity:0.4;"></div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+                <span class="purchased-name" style="font-size:13px;font-weight:500;">Changing Table</span>
+                <span class="badge-nice" style="opacity:0.5;">Nice-to-Have</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:2px;">
+                <span style="font-size:11px;color:#3f3f46;">Nursery</span>
+                <span style="font-size:11px;color:#3f3f46;">&bull;</span>
+                <span style="font-size:11px;color:#52525b;">Paid full price</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+              <div style="text-align:right;">
+                <div style="font-size:14px;font-weight:700;color:#4ade80;">$149</div>
+              </div>
+              <div style="width:28px;height:28px;background:rgba(34,197,94,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(34,197,94,0.2);">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Breast Pump (purchased) -->
+          <div class="item-row" style="display:flex;align-items:center;gap:10px;padding:10px 8px;margin-bottom:2px;opacity:0.7;">
+            <div class="dot-health" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;opacity:0.4;"></div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;">
+                <span class="purchased-name" style="font-size:13px;font-weight:500;">Breast Pump</span>
+                <span class="badge-essential" style="opacity:0.5;">Essential</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:2px;">
+                <span style="font-size:11px;color:#3f3f46;">Health</span>
+                <span style="font-size:11px;color:#3f3f46;">&bull;</span>
+                <span style="font-size:11px;color:#22c55e;font-weight:500;">Covered by insurance</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+              <div style="text-align:right;">
+                <div style="font-size:14px;font-weight:700;color:#4ade80;">$0</div>
+                <div style="font-size:10px;color:#52525b;text-decoration:line-through;">est. $179</div>
+              </div>
+              <div style="width:28px;height:28px;background:rgba(34,197,94,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(34,197,94,0.2);">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Show More -->
+          <button onclick="toggleMore(this)" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:12px;padding:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;color:#71717a;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s;" data-expanded="false">
+            <span>Show 9 more purchased items</span>
+            <svg id="chevron-more" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- BROWSE ITEMS TAB (hidden by default) -->
+      <div id="panel-browse" style="display:none;padding:0 20px 20px;">
+
+        <!-- Stage filter + search -->
+        <div style="display:flex;align-items:center;gap:10px;margin-top:18px;margin-bottom:16px;">
+          <div style="flex:1;position:relative;">
+            <div style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#52525b;display:flex;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <input type="text" placeholder="Search items..." style="width:100%;background:#1c1c27;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:7px 10px 7px 30px;font-size:12px;color:#e4e4e7;outline:none;" />
+          </div>
+          <select class="dropdown">
+            <option>All Stages</option>
+            <option>Planning</option>
+            <option selected>Trimester 2</option>
+            <option>Trimester 3</option>
+            <option>0–3 months</option>
+          </select>
+        </div>
+
+        <!-- Category legend -->
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:5px;"><div class="dot-nursery" style="width:7px;height:7px;border-radius:50%;"></div><span style="font-size:11px;color:#71717a;">Nursery</span></div>
+          <div style="display:flex;align-items:center;gap:5px;"><div class="dot-gear" style="width:7px;height:7px;border-radius:50%;"></div><span style="font-size:11px;color:#71717a;">Gear</span></div>
+          <div style="display:flex;align-items:center;gap:5px;"><div class="dot-clothing" style="width:7px;height:7px;border-radius:50%;"></div><span style="font-size:11px;color:#71717a;">Clothing</span></div>
+          <div style="display:flex;align-items:center;gap:5px;"><div class="dot-health" style="width:7px;height:7px;border-radius:50%;"></div><span style="font-size:11px;color:#71717a;">Health</span></div>
+          <div style="display:flex;align-items:center;gap:5px;"><div class="dot-tech" style="width:7px;height:7px;border-radius:50%;"></div><span style="font-size:11px;color:#71717a;">Tech</span></div>
+        </div>
+
+        <!-- Accordion: Nursery Essentials -->
+        <div style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="dot-nursery" style="width:8px;height:8px;border-radius:50%;"></div>
+              <span class="accordion-title">Nursery Essentials</span>
+              <span class="accordion-count">6 items</span>
+            </div>
+            <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;transform:rotate(-90deg);flex-shrink:0;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+          <div class="accordion-body">
+            <div style="padding:6px 0 14px 18px;">
+
+              <!-- Crib browse item -->
+              <div class="browse-item">
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
+                    <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Crib</span>
+                    <span class="badge-essential">Essential</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:11px;color:#71717a;">$149–$499</span>
+                    <span style="font-size:11px;color:#3f3f46;">&bull;</span>
+                    <span style="font-size:11px;color:#52525b;">Wk 20–32</span>
+                  </div>
+                </div>
+                <button onclick="addToList(this, 'Crib')" style="background:rgba(34,197,94,0.08);color:#4ade80;border:1px solid rgba(34,197,94,0.15);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all 0.15s;" onmouseover="this.style.background='rgba(34,197,94,0.18)'" onmouseout="this.style.background='rgba(34,197,94,0.08)'">
+                  + Add
+                </button>
+              </div>
+
+              <!-- Mattress browse item -->
+              <div class="browse-item">
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
+                    <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Crib Mattress</span>
+                    <span class="badge-essential">Essential</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:11px;color:#71717a;">$49–$199</span>
+                    <span style="font-size:11px;color:#3f3f46;">&bull;</span>
+                    <span style="font-size:11px;color:#52525b;">Wk 20–32</span>
+                  </div>
+                </div>
+                <button onclick="addToList(this, 'Crib Mattress')" style="background:rgba(34,197,94,0.08);color:#4ade80;border:1px solid rgba(34,197,94,0.15);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all 0.15s;" onmouseover="this.style.background='rgba(34,197,94,0.18)'" onmouseout="this.style.background='rgba(34,197,94,0.08)'">
+                  + Add
+                </button>
+              </div>
+
+              <!-- Dresser browse item -->
+              <div class="browse-item">
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
+                    <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Dresser / Changing Topper</span>
+                    <span class="badge-nice">Nice-to-Have</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:11px;color:#71717a;">$99–$349</span>
+                    <span style="font-size:11px;color:#3f3f46;">&bull;</span>
+                    <span style="font-size:11px;color:#52525b;">Wk 24–36</span>
+                  </div>
+                </div>
+                <button onclick="addToList(this, 'Dresser')" style="background:rgba(34,197,94,0.08);color:#4ade80;border:1px solid rgba(34,197,94,0.15);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all 0.15s;" onmouseover="this.style.background='rgba(34,197,94,0.18)'" onmouseout="this.style.background='rgba(34,197,94,0.08)'">
+                  + Add
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion: Gear & Transport -->
+        <div style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="dot-gear" style="width:8px;height:8px;border-radius:50%;"></div>
+              <span class="accordion-title">Gear &amp; Transport</span>
+              <span class="accordion-count">8 items</span>
+            </div>
+            <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;transform:rotate(-90deg);flex-shrink:0;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+          <div class="accordion-body">
+            <div style="padding:6px 0 14px 18px;">
+              <div class="browse-item">
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
+                    <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Stroller</span>
+                    <span class="badge-essential">Essential</span>
+                    <span style="background:rgba(34,197,94,0.1);color:#4ade80;font-size:10px;padding:1px 6px;border-radius:9999px;border:1px solid rgba(34,197,94,0.2);">Purchased</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:11px;color:#71717a;">$149–$899</span>
+                    <span style="font-size:11px;color:#3f3f46;">&bull;</span>
+                    <span style="font-size:11px;color:#52525b;">Wk 24–36</span>
+                  </div>
+                </div>
+                <div style="width:32px;height:32px;background:rgba(34,197,94,0.08);border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid rgba(34,197,94,0.2);">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+              </div>
+              <div class="browse-item">
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
+                    <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Car Seat (Infant)</span>
+                    <span class="badge-essential">Essential</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:11px;color:#71717a;">$99–$399</span>
+                    <span style="font-size:11px;color:#3f3f46;">&bull;</span>
+                    <span style="font-size:11px;color:#52525b;">Wk 24–36</span>
+                  </div>
+                </div>
+                <button onclick="addToList(this, 'Car Seat')" style="background:rgba(34,197,94,0.08);color:#4ade80;border:1px solid rgba(34,197,94,0.15);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='rgba(34,197,94,0.18)'" onmouseout="this.style.background='rgba(34,197,94,0.08)'">
+                  + Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion: Clothing & Basics -->
+        <div style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="dot-clothing" style="width:8px;height:8px;border-radius:50%;"></div>
+              <span class="accordion-title">Clothing &amp; Basics</span>
+              <span class="accordion-count">12 items</span>
+            </div>
+            <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;transform:rotate(-90deg);flex-shrink:0;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+          <div class="accordion-body">
+            <div style="padding:6px 0 14px 18px;">
+              <div class="browse-item">
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
+                    <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Onesies (newborn + 0–3m)</span>
+                    <span class="badge-essential">Essential</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:11px;color:#71717a;">$20–$80</span>
+                    <span style="font-size:11px;color:#3f3f46;">&bull;</span>
+                    <span style="font-size:11px;color:#52525b;">Wk 30+</span>
+                  </div>
+                </div>
+                <button onclick="addToList(this, 'Onesies')" style="background:rgba(34,197,94,0.08);color:#4ade80;border:1px solid rgba(34,197,94,0.15);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='rgba(34,197,94,0.18)'" onmouseout="this.style.background='rgba(34,197,94,0.08)'">
+                  + Add
+                </button>
+              </div>
+              <div class="browse-item">
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
+                    <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Sleep Sacks (2-pack)</span>
+                    <span class="badge-essential">Essential</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:11px;color:#71717a;">$25–$65</span>
+                    <span style="font-size:11px;color:#3f3f46;">&bull;</span>
+                    <span style="font-size:11px;color:#52525b;">Wk 30+</span>
+                  </div>
+                </div>
+                <button onclick="addToList(this, 'Sleep Sacks')" style="background:rgba(34,197,94,0.08);color:#4ade80;border:1px solid rgba(34,197,94,0.15);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='rgba(34,197,94,0.18)'" onmouseout="this.style.background='rgba(34,197,94,0.08)'">
+                  + Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion: Health & Safety -->
+        <div>
+          <div class="accordion-header" onclick="toggleAccordion(this)" style="border-bottom:none;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div class="dot-health" style="width:8px;height:8px;border-radius:50%;"></div>
+              <span class="accordion-title">Health &amp; Safety</span>
+              <span class="accordion-count">7 items</span>
+            </div>
+            <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.2s;transform:rotate(-90deg);flex-shrink:0;"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+          <div class="accordion-body">
+            <div style="padding:6px 0 14px 18px;">
+              <div class="browse-item">
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
+                    <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Baby First Aid Kit</span>
+                    <span class="badge-essential">Essential</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:11px;color:#71717a;">$25–$65</span>
+                    <span style="font-size:11px;color:#3f3f46;">&bull;</span>
+                    <span style="font-size:11px;color:#52525b;">Wk 34+</span>
+                  </div>
+                </div>
+                <button onclick="addToList(this, 'First Aid Kit')" style="background:rgba(34,197,94,0.08);color:#4ade80;border:1px solid rgba(34,197,94,0.15);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='rgba(34,197,94,0.18)'" onmouseout="this.style.background='rgba(34,197,94,0.08)'">
+                  + Add
+                </button>
+              </div>
+              <div class="browse-item" style="border-bottom:none;">
+                <div style="flex:1;">
+                  <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
+                    <span style="font-size:13px;font-weight:500;color:#e4e4e7;">Baby Thermometer</span>
+                    <span class="badge-essential">Essential</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:11px;color:#71717a;">$15–$50</span>
+                    <span style="font-size:11px;color:#3f3f46;">&bull;</span>
+                    <span style="font-size:11px;color:#52525b;">Wk 34+</span>
+                  </div>
+                </div>
+                <button onclick="addToList(this, 'Thermometer')" style="background:rgba(34,197,94,0.08);color:#4ade80;border:1px solid rgba(34,197,94,0.15);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer;white-space:nowrap;" onmouseover="this.style.background='rgba(34,197,94,0.18)'" onmouseout="this.style.background='rgba(34,197,94,0.08)'">
+                  + Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- INSIGHT BANNER -->
+    <div style="margin-top:14px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:16px;padding:16px;display:flex;gap:12px;align-items:flex-start;">
+      <div style="width:32px;height:32px;background:rgba(34,197,94,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#4ade80;margin-bottom:4px;">Great timing on the Stroller</div>
+        <div style="font-size:12px;color:#71717a;line-height:1.5;">Most families buy gear between weeks 20–28. You saved $70 on your stroller — that's 18% off estimated. Car seats are on sale this month at several major retailers.</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ===== BOTTOM NAV ===== -->
+<nav class="bottom-nav">
+  <a class="nav-item" href="#">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    Home
+  </a>
+  <a class="nav-item" href="#">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+    Tasks
+  </a>
+  <a class="nav-item" href="#">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+    Briefing
+  </a>
+  <a class="nav-item" href="#">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+    Tracker
+  </a>
+  <a class="nav-item" href="#">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+    More
+  </a>
+</nav>
+
+<!-- ===== ADD CUSTOM MODAL ===== -->
+<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;backdrop-filter:blur(4px);" onclick="hideAddModal(event)">
+  <div id="modal-box" style="position:absolute;bottom:0;left:0;right:0;background:#16161f;border-top-left-radius:24px;border-top-right-radius:24px;border:1px solid rgba(255,255,255,0.08);padding:24px;max-height:90vh;overflow-y:auto;" onclick="event.stopPropagation()">
+    <div style="width:40px;height:4px;background:rgba(255,255,255,0.12);border-radius:9999px;margin:0 auto 20px;"></div>
+    <h2 style="font-size:17px;font-weight:700;color:#ffffff;margin:0 0 18px;">Add Custom Item</h2>
+
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div>
+        <label style="font-size:12px;color:#71717a;display:block;margin-bottom:5px;font-weight:500;">Item Name</label>
+        <input type="text" placeholder="e.g. White noise machine" style="width:100%;background:#1c1c27;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px;font-size:14px;color:#e4e4e7;outline:none;" />
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div>
+          <label style="font-size:12px;color:#71717a;display:block;margin-bottom:5px;font-weight:500;">Category</label>
+          <select style="width:100%;background:#1c1c27;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px;font-size:13px;color:#e4e4e7;outline:none;appearance:none;">
+            <option>Gear</option>
+            <option>Nursery</option>
+            <option>Tech</option>
+            <option>Clothing</option>
+            <option>Health</option>
+            <option>Feeding</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px;color:#71717a;display:block;margin-bottom:5px;font-weight:500;">Priority</label>
+          <select style="width:100%;background:#1c1c27;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px;font-size:13px;color:#e4e4e7;outline:none;appearance:none;">
+            <option>Essential</option>
+            <option>Nice-to-Have</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div>
+          <label style="font-size:12px;color:#71717a;display:block;margin-bottom:5px;font-weight:500;">Estimated Price</label>
+          <input type="number" placeholder="$0" style="width:100%;background:#1c1c27;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px;font-size:14px;color:#e4e4e7;outline:none;" />
+        </div>
+        <div>
+          <label style="font-size:12px;color:#71717a;display:block;margin-bottom:5px;font-weight:500;">Target Week</label>
+          <input type="number" placeholder="e.g. 28" style="width:100%;background:#1c1c27;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:10px 12px;font-size:14px;color:#e4e4e7;outline:none;" />
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button onclick="hideAddModal()" style="flex:1;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:#a1a1aa;font-size:14px;font-weight:500;cursor:pointer;">
+        Cancel
+      </button>
+      <button onclick="hideAddModal()" style="flex:2;padding:12px;background:#22c55e;border:none;border-radius:12px;color:#000000;font-size:14px;font-weight:700;cursor:pointer;">
+        Add Item
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div id="toast" style="display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#27272a;border:1px solid rgba(255,255,255,0.1);color:#e4e4e7;font-size:13px;font-weight:500;padding:10px 20px;border-radius:12px;z-index:200;box-shadow:0 4px 24px rgba(0,0,0,0.4);white-space:nowrap;"></div>
+
+<script>
+  // ====== ICON INJECTION ======
+  // We inject inline SVG for Lucide icons used in the JS-rendered elements.
+  // These static SVGs match the Lucide icon style.
+  const ICONS = {
+    TrendingUp: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>`,
+    ShoppingCart: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>`,
+    Wallet: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4z"></path></svg>`,
+    CheckCircle: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`,
+    AlertCircle: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`,
+    CheckBought: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+    Plus: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`,
+    X: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
+  };
+
+  document.getElementById('icon-trending').innerHTML = ICONS.TrendingUp;
+  document.getElementById('icon-cart').innerHTML = ICONS.ShoppingCart;
+  document.getElementById('icon-wallet').innerHTML = ICONS.Wallet;
+  document.getElementById('icon-check-circle').innerHTML = ICONS.CheckCircle;
+  document.getElementById('icon-alert').innerHTML = ICONS.AlertCircle;
+  document.getElementById('icon-check-bought').innerHTML = ICONS.CheckBought;
+  document.getElementById('add-icon').innerHTML = ICONS.Plus;
+  document.getElementById('icon-x-remove').innerHTML = ICONS.X;
+
+  // ====== TIER SELECTION ======
+  const tierData = {
+    budget:   { total: '$1,890', remaining: '$1,089', estimated: '$1,890', items: '28' },
+    midrange: { total: '$2,847', remaining: '$1,613', estimated: '$2,847', items: '28' },
+    premium:  { total: '$5,240', remaining: '$4,006', estimated: '$5,240', items: '28' },
+  };
+
+  function selectTier(btn, tier) {
+    document.querySelectorAll('[onclick^="selectTier"]').forEach(b => {
+      b.className = 'tier-inactive';
+      b.style.cssText = 'border-radius:9999px;padding:6px 16px;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s;';
+    });
+    btn.className = 'tier-active';
+    btn.style.cssText = 'border-radius:9999px;padding:6px 16px;font-size:12px;cursor:pointer;transition:all 0.15s;';
+    const d = tierData[tier];
+    // Update summary cards
+    const cards = document.querySelectorAll('.count-animate');
+    cards[0].textContent = d.total;
+    cards[2].textContent = d.remaining;
+    showToast('Switched to ' + btn.textContent.trim() + ' tier');
+  }
+
+  // ====== TAB SWITCHING ======
+  function switchTab(tab) {
+    const panelMy = document.getElementById('panel-my');
+    const panelBrowse = document.getElementById('panel-browse');
+    const tabMy = document.getElementById('tab-my');
+    const tabBrowse = document.getElementById('tab-browse');
+
+    if (tab === 'my') {
+      panelMy.style.display = 'block';
+      panelBrowse.style.display = 'none';
+      tabMy.className = 'tab-active';
+      tabMy.style.cssText = 'padding:14px 0;font-size:13px;font-weight:600;margin-right:24px;background:none;border:none;cursor:pointer;transition:color 0.15s;';
+      tabBrowse.className = 'tab-inactive';
+      tabBrowse.style.cssText = 'padding:14px 0;font-size:13px;font-weight:500;background:none;border:none;cursor:pointer;transition:color 0.15s;';
+    } else {
+      panelMy.style.display = 'none';
+      panelBrowse.style.display = 'block';
+      tabBrowse.className = 'tab-active';
+      tabBrowse.style.cssText = 'padding:14px 0;font-size:13px;font-weight:600;background:none;border:none;cursor:pointer;transition:color 0.15s;';
+      tabMy.className = 'tab-inactive';
+      tabMy.style.cssText = 'padding:14px 0;font-size:13px;font-weight:500;margin-right:24px;background:none;border:none;cursor:pointer;transition:color 0.15s;';
+    }
+  }
+
+  // ====== ACCORDION ======
+  function toggleAccordion(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.accordion-chevron');
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open');
+    chevron.style.transform = isOpen ? 'rotate(-90deg)' : 'rotate(0deg)';
+  }
+
+  // ====== MARK PURCHASED ======
+  function markPurchased(btn, name, price) {
+    const row = btn.closest('.item-row');
+    row.style.transition = 'opacity 0.3s, transform 0.3s';
+    row.style.opacity = '0';
+    row.style.transform = 'translateX(10px)';
+    setTimeout(() => {
+      row.remove();
+      showToast(name + ' marked as purchased');
+    }, 300);
+  }
+
+  // ====== REMOVE ITEM ======
+  function removeItem(btn) {
+    const row = btn.closest('.item-row');
+    row.style.transition = 'opacity 0.3s, transform 0.3s';
+    row.style.opacity = '0';
+    row.style.transform = 'translateX(-10px)';
+    setTimeout(() => row.remove(), 300);
+  }
+
+  // ====== ADD TO LIST (from Browse) ======
+  function addToList(btn, name) {
+    btn.textContent = 'Added';
+    btn.style.background = 'rgba(34,197,94,0.2)';
+    btn.style.cursor = 'default';
+    btn.disabled = true;
+    showToast(name + ' added to your budget list');
+  }
+
+  // ====== SHOW MORE ======
+  function toggleMore(btn) {
+    const expanded = btn.dataset.expanded === 'true';
+    const chevron = btn.querySelector('#chevron-more, svg');
+    if (expanded) {
+      btn.querySelector('span').textContent = 'Show 9 more purchased items';
+      chevron.style.transform = '';
+      btn.dataset.expanded = 'false';
+    } else {
+      btn.querySelector('span').textContent = 'Show fewer items';
+      chevron.style.transform = 'rotate(180deg)';
+      btn.dataset.expanded = 'true';
+    }
+  }
+
+  // ====== MODAL ======
+  function showAddModal() {
+    document.getElementById('modal-overlay').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    // Animate in
+    const box = document.getElementById('modal-box');
+    box.style.transform = 'translateY(100%)';
+    box.style.transition = 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        box.style.transform = 'translateY(0)';
+      });
+    });
+  }
+
+  function hideAddModal(event) {
+    if (event && event.target !== document.getElementById('modal-overlay')) return;
+    const box = document.getElementById('modal-box');
+    box.style.transform = 'translateY(100%)';
+    setTimeout(() => {
+      document.getElementById('modal-overlay').style.display = 'none';
+      document.body.style.overflow = '';
+    }, 300);
+  }
+
+  // Allow cancel button to close
+  document.querySelector('[onclick="hideAddModal()"]')?.addEventListener('click', () => {
+    const box = document.getElementById('modal-box');
+    box.style.transform = 'translateY(100%)';
+    setTimeout(() => {
+      document.getElementById('modal-overlay').style.display = 'none';
+      document.body.style.overflow = '';
+    }, 300);
+  });
+
+  // ====== TOAST ======
+  let toastTimer;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.style.display = 'block';
+    toast.style.opacity = '1';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.style.transition = 'opacity 0.3s';
+      toast.style.opacity = '0';
+      setTimeout(() => { toast.style.display = 'none'; toast.style.opacity = '1'; }, 300);
+    }, 2200);
+  }
+
+  // ====== PHASE PILLS INTERACTION ======
+  document.querySelectorAll('[class^="phase-"]').forEach(pill => {
+    pill.addEventListener('click', function() {
+      document.querySelectorAll('[class^="phase-"]').forEach(p => {
+        p.className = 'phase-inactive';
+        p.style.cssText = 'border-radius:9999px;padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;';
+      });
+      this.className = 'phase-active';
+      this.style.cssText = 'border-radius:9999px;padding:6px 14px;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;';
+    });
+  });
+</script>
+
+</body>
+</html>

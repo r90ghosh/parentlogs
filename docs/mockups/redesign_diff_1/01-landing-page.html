@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Elevate Your Fatherhood Journey</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            indigo: {
+              300: '#a5b4fc',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            rose: {
+              300: '#fda4af',
+              400: '#fb7185',
+              500: '#f43f5e',
+              600: '#e11d48',
+            },
+            violet: {
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+            },
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', 'Inter', 'Segoe UI', 'sans-serif'],
+          },
+          animation: {
+            'float-slow': 'float-slow 8s ease-in-out infinite',
+            'float-medium': 'float-medium 6s ease-in-out infinite',
+            'float-fast': 'float-fast 4.5s ease-in-out infinite',
+            'spin-slow': 'spin-slow 20s linear infinite',
+            'dash': 'dash 3s linear infinite',
+            'glow-pulse': 'glow-pulse 2.5s ease-in-out infinite',
+            'fade-up': 'fade-up 0.7s ease-out forwards',
+            'rotate-border': 'rotate-border 4s linear infinite',
+            'emoji-glow': 'emoji-glow 2s ease-in-out infinite',
+          },
+          keyframes: {
+            'float-slow': {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-24px) rotate(3deg)' },
+            },
+            'float-medium': {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-16px) rotate(-4deg)' },
+            },
+            'float-fast': {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-10px) rotate(6deg)' },
+            },
+            'spin-slow': {
+              from: { transform: 'rotate(0deg)' },
+              to: { transform: 'rotate(360deg)' },
+            },
+            'dash': {
+              from: { strokeDashoffset: '0' },
+              to: { strokeDashoffset: '-40' },
+            },
+            'glow-pulse': {
+              '0%, 100%': { boxShadow: '0 0 20px 4px rgba(99,102,241,0.4), 0 0 60px 10px rgba(244,63,94,0.2)' },
+              '50%': { boxShadow: '0 0 40px 8px rgba(99,102,241,0.6), 0 0 100px 20px rgba(244,63,94,0.3)' },
+            },
+            'fade-up': {
+              from: { opacity: '0', transform: 'translateY(30px)' },
+              to: { opacity: '1', transform: 'translateY(0)' },
+            },
+            'rotate-border': {
+              from: { '--border-angle': '0deg' },
+              to: { '--border-angle': '360deg' },
+            },
+            'emoji-glow': {
+              '0%, 100%': { filter: 'drop-shadow(0 0 4px rgba(99,102,241,0.3))' },
+              '50%': { filter: 'drop-shadow(0 0 12px rgba(99,102,241,0.8))' },
+            },
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    /* Root */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; background: #030303; }
+
+    body {
+      background: #030303;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #030303; }
+    ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.5); }
+
+    /* ── Gradient utilities ── */
+    .text-gradient-hero {
+      background: linear-gradient(135deg, #a5b4fc 0%, rgba(255,255,255,0.9) 40%, #fda4af 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .text-gradient-accent {
+      background: linear-gradient(135deg, #818cf8 0%, #f43f5e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .text-gradient-violet {
+      background: linear-gradient(135deg, #c4b5fd 0%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Dot pattern overlay ── */
+    .dot-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
+      background-size: 28px 28px;
+      -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* ── Glassmorphism card ── */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 -20px 80px -20px rgba(255,255,255,0.05) inset,
+                  0 4px 40px rgba(0,0,0,0.4);
+    }
+
+    .glass-card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .glass-card-hover:hover {
+      transform: translateY(-4px);
+      border-color: rgba(99,102,241,0.2);
+      box-shadow: 0 -20px 80px -20px rgba(255,255,255,0.08) inset,
+                  0 20px 60px rgba(99,102,241,0.12),
+                  0 4px 40px rgba(0,0,0,0.5);
+    }
+
+    /* ── Header glass ── */
+    .header-glass {
+      background: rgba(3,3,3,0.75);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* ── Gradient button ── */
+    .btn-gradient {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 40%, #f43f5e 100%);
+      box-shadow: 0 0 20px rgba(99,102,241,0.4), 0 0 60px rgba(244,63,94,0.15);
+      transition: box-shadow 0.3s ease, transform 0.2s ease, opacity 0.2s ease;
+    }
+    .btn-gradient:hover {
+      box-shadow: 0 0 32px rgba(99,102,241,0.6), 0 0 80px rgba(244,63,94,0.25);
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+    .btn-gradient:active { transform: translateY(0); }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-1px);
+    }
+
+    /* ── Floating shapes ── */
+    .shape {
+      position: absolute;
+      border-radius: 40px;
+      pointer-events: none;
+    }
+
+    @keyframes float-1 {
+      0%, 100% { transform: translateY(0px) rotate(12deg) scale(1); }
+      33%       { transform: translateY(-22px) rotate(15deg) scale(1.02); }
+      66%       { transform: translateY(-10px) rotate(9deg) scale(0.98); }
+    }
+    @keyframes float-2 {
+      0%, 100% { transform: translateY(0px) rotate(-20deg) scale(1); }
+      50%       { transform: translateY(-30px) rotate(-16deg) scale(1.03); }
+    }
+    @keyframes float-3 {
+      0%, 100% { transform: translateY(0px) rotate(35deg) scale(1); }
+      50%       { transform: translateY(-18px) rotate(40deg) scale(0.97); }
+    }
+    @keyframes float-4 {
+      0%, 100% { transform: translateY(0px) rotate(-8deg) scale(1); }
+      40%       { transform: translateY(-14px) rotate(-12deg) scale(1.01); }
+      80%       { transform: translateY(-6px) rotate(-5deg) scale(0.99); }
+    }
+    @keyframes float-5 {
+      0%, 100% { transform: translateY(0px) rotate(55deg) scale(1); }
+      50%       { transform: translateY(-20px) rotate(60deg) scale(1.02); }
+    }
+    @keyframes float-6 {
+      0%, 100% { transform: translateY(0px) rotate(-42deg) scale(1); }
+      50%       { transform: translateY(-16px) rotate(-38deg) scale(0.98); }
+    }
+
+    .shape-1 { animation: float-1 9s ease-in-out infinite; }
+    .shape-2 { animation: float-2 7s ease-in-out infinite 1s; }
+    .shape-3 { animation: float-3 11s ease-in-out infinite 0.5s; }
+    .shape-4 { animation: float-4 6.5s ease-in-out infinite 2s; }
+    .shape-5 { animation: float-5 8.5s ease-in-out infinite 1.5s; }
+    .shape-6 { animation: float-6 10s ease-in-out infinite 3s; }
+
+    /* ── Glow rings ── */
+    .glow-indigo {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .glow-rose {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(244,63,94,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── CTA glow ring ── */
+    @keyframes ring-pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50%       { transform: scale(1.12); opacity: 0; }
+    }
+    .glow-ring {
+      position: absolute;
+      inset: -12px;
+      border-radius: 9999px;
+      border: 1px solid rgba(99,102,241,0.5);
+      animation: ring-pulse 2.5s ease-in-out infinite;
+    }
+    .glow-ring-2 {
+      position: absolute;
+      inset: -22px;
+      border-radius: 9999px;
+      border: 1px solid rgba(244,63,94,0.3);
+      animation: ring-pulse 2.5s ease-in-out infinite 0.8s;
+    }
+
+    /* ── Pricing animated border ── */
+    @property --border-angle {
+      syntax: '<angle>';
+      inherits: true;
+      initial-value: 0deg;
+    }
+
+    @keyframes rotate-border-anim {
+      to { --border-angle: 360deg; }
+    }
+
+    .pricing-featured-wrapper {
+      position: relative;
+      border-radius: 20px;
+      padding: 1px;
+      background: conic-gradient(
+        from var(--border-angle, 0deg),
+        transparent 0deg,
+        rgba(99,102,241,0.8) 60deg,
+        rgba(139,92,246,0.9) 120deg,
+        rgba(244,63,94,0.8) 180deg,
+        transparent 240deg
+      );
+      animation: rotate-border-anim 4s linear infinite;
+    }
+
+    .pricing-featured-inner {
+      background: rgba(12, 12, 20, 0.95);
+      border-radius: 19px;
+      height: 100%;
+    }
+
+    /* ── Bento card special treatments ── */
+    .bento-card-large {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 -20px 80px -20px rgba(99,102,241,0.08) inset;
+    }
+
+    /* ── Dashed connecting line ── */
+    @keyframes dash-move {
+      to { stroke-dashoffset: -40; }
+    }
+    .animated-dash { animation: dash-move 2s linear infinite; }
+
+    /* ── Step number gradient border ── */
+    .step-circle {
+      background: linear-gradient(#030303, #030303) padding-box,
+                  linear-gradient(135deg, #6366f1, #f43f5e) border-box;
+      border: 1.5px solid transparent;
+    }
+
+    /* ── Mini task preview animations ── */
+    @keyframes task-slide-in {
+      0%   { transform: translateX(-10px); opacity: 0; }
+      100% { transform: translateX(0);    opacity: 1; }
+    }
+    .task-item:nth-child(1) { animation: task-slide-in 0.5s 0.2s ease-out both; }
+    .task-item:nth-child(2) { animation: task-slide-in 0.5s 0.4s ease-out both; }
+    .task-item:nth-child(3) { animation: task-slide-in 0.5s 0.6s ease-out both; }
+
+    /* ── Week number slide ── */
+    @keyframes week-slide {
+      0%   { transform: translateX(0); }
+      20%  { transform: translateX(-100%); opacity: 0; }
+      21%  { transform: translateX(100%); opacity: 0; }
+      40%  { transform: translateX(0); opacity: 1; }
+      100% { transform: translateX(0); }
+    }
+    .week-number { animation: week-slide 4s ease-in-out infinite; }
+
+    /* ── Emoji selected glow ── */
+    @keyframes emoji-pulse {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(99,102,241,0.5)) brightness(1.2); transform: scale(1.15); }
+      50%       { filter: drop-shadow(0 0 14px rgba(99,102,241,0.9)) brightness(1.4); transform: scale(1.25); }
+    }
+    .emoji-active { animation: emoji-pulse 2s ease-in-out infinite; }
+
+    /* ── Partner line animation ── */
+    @keyframes line-draw {
+      from { stroke-dashoffset: 100; }
+      to   { stroke-dashoffset: 0; }
+    }
+    .partner-line { animation: line-draw 2s ease-in-out infinite alternate; }
+
+    /* ── Fade-up for sections ── */
+    .animate-fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .animate-fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Feature icon gradient bg ── */
+    .icon-gradient-bg {
+      background: linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(244,63,94,0.1) 100%);
+      border: 1px solid rgba(99,102,241,0.2);
+    }
+
+    /* ── Logo icon ── */
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      position: relative;
+    }
+
+    /* ── Gradient separator ── */
+    .gradient-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(99,102,241,0.4) 30%, rgba(244,63,94,0.4) 70%, transparent);
+    }
+
+    /* ── Pillar dots ── */
+    .pillar-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    /* ── Glass preview card (hero dashboard) ── */
+    .preview-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.09);
+      box-shadow:
+        0 -20px 80px -20px rgba(255,255,255,0.06) inset,
+        0 30px 100px rgba(0,0,0,0.5),
+        0 0 0 1px rgba(99,102,241,0.08);
+      backdrop-filter: blur(24px);
+    }
+
+    /* ── Responsive tweaks ── */
+    @media (max-width: 768px) {
+      .hero-heading { font-size: 3.5rem !important; }
+      .bento-grid { grid-template-columns: 1fr !important; }
+      .bento-grid > * { grid-column: span 1 !important; grid-row: span 1 !important; }
+      .steps-container { flex-direction: column; }
+      .step-connector { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════════════════════ -->
+<header class="header-glass fixed top-0 left-0 right-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="#" class="flex items-center gap-2.5 group">
+      <!-- Overlapping circles icon -->
+      <div class="logo-icon flex-shrink-0">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <circle cx="10" cy="14" r="9" fill="url(#logo-grad-1)" opacity="0.9"/>
+          <circle cx="18" cy="14" r="9" fill="url(#logo-grad-2)" opacity="0.75"/>
+          <defs>
+            <radialGradient id="logo-grad-1" cx="40%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#818cf8"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </radialGradient>
+            <radialGradient id="logo-grad-2" cx="60%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#fb7185"/>
+              <stop offset="100%" stop-color="#f43f5e"/>
+            </radialGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="font-bold text-[15px] tracking-tight text-white group-hover:opacity-90 transition-opacity">
+        The Dad Center
+      </span>
+    </a>
+
+    <!-- Nav -->
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="#features" class="text-sm text-white/60 hover:text-white transition-colors duration-200">Features</a>
+      <a href="#how-it-works" class="text-sm text-white/60 hover:text-white transition-colors duration-200">How It Works</a>
+      <a href="#pricing" class="text-sm text-white/60 hover:text-white transition-colors duration-200">Pricing</a>
+    </nav>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-4">
+      <a href="/login" class="hidden md:block text-sm text-white/60 hover:text-white transition-colors duration-200">
+        Log In
+      </a>
+      <a href="/signup"
+         class="btn-gradient text-white text-sm font-semibold px-5 py-2 rounded-full inline-flex items-center gap-1.5">
+        Get Started
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" class="opacity-80">
+          <path d="M3 7h8M8 4l3 3-3 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════════ -->
+<section class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-16">
+
+  <!-- Background glows -->
+  <div class="glow-indigo" style="width:700px;height:700px;top:-200px;left:50%;transform:translateX(-50%);"></div>
+  <div class="glow-rose"   style="width:500px;height:500px;bottom:-100px;right:-150px;"></div>
+  <div class="glow-indigo" style="width:400px;height:400px;bottom:-50px;left:-100px;opacity:0.6;"></div>
+
+  <!-- Dot pattern -->
+  <div class="dot-pattern" style="z-index:1;"></div>
+
+  <!-- Floating geometric shapes -->
+  <!-- Shape 1: large pill, indigo/violet, top-left -->
+  <div class="shape shape-1" style="
+    width:280px; height:110px;
+    top:12%; left:4%;
+    background: linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(139,92,246,0.08) 100%);
+    border: 1px solid rgba(99,102,241,0.12);
+  "></div>
+
+  <!-- Shape 2: medium pill, rose, top-right -->
+  <div class="shape shape-2" style="
+    width:200px; height:80px;
+    top:8%; right:6%;
+    background: linear-gradient(135deg, rgba(244,63,94,0.10) 0%, rgba(251,113,133,0.06) 100%);
+    border: 1px solid rgba(244,63,94,0.10);
+    border-radius: 60px;
+  "></div>
+
+  <!-- Shape 3: small square-ish, violet, middle-left -->
+  <div class="shape shape-3" style="
+    width:140px; height:140px;
+    top:40%; left:2%;
+    background: linear-gradient(135deg, rgba(139,92,246,0.09) 0%, rgba(99,102,241,0.05) 100%);
+    border: 1px solid rgba(139,92,246,0.10);
+    border-radius: 32px;
+  "></div>
+
+  <!-- Shape 4: wide thin pill, rose/violet, bottom-left -->
+  <div class="shape shape-4" style="
+    width:220px; height:70px;
+    bottom:15%; left:5%;
+    background: linear-gradient(135deg, rgba(244,63,94,0.08) 0%, rgba(139,92,246,0.06) 100%);
+    border: 1px solid rgba(244,63,94,0.09);
+    border-radius: 50px;
+  "></div>
+
+  <!-- Shape 5: tall pill, indigo, right-center -->
+  <div class="shape shape-5" style="
+    width:90px; height:200px;
+    top:30%; right:3%;
+    background: linear-gradient(180deg, rgba(99,102,241,0.11) 0%, rgba(139,92,246,0.07) 100%);
+    border: 1px solid rgba(99,102,241,0.10);
+    border-radius: 50px;
+  "></div>
+
+  <!-- Shape 6: small circle-ish, rose, bottom-right -->
+  <div class="shape shape-6" style="
+    width:160px; height:100px;
+    bottom:20%; right:8%;
+    background: linear-gradient(135deg, rgba(244,63,94,0.09) 0%, rgba(251,113,133,0.05) 100%);
+    border: 1px solid rgba(244,63,94,0.09);
+    border-radius: 30px;
+  "></div>
+
+  <!-- Content -->
+  <div class="relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto" style="margin-top:-20px;">
+
+    <!-- Badge pill -->
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8"
+         style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);">
+      <div style="width:7px;height:7px;border-radius:50%;background:#f43f5e;box-shadow:0 0 8px rgba(244,63,94,0.7);animation:ring-pulse 1.5s ease-in-out infinite;"></div>
+      <span class="text-sm font-medium" style="color:rgba(255,255,255,0.75);">The Parenting OS for Dads</span>
+    </div>
+
+    <!-- Hero heading -->
+    <h1 class="hero-heading font-bold leading-[0.95] tracking-tighter mb-6" style="font-size:clamp(3.2rem,8vw,6.5rem);">
+      <span class="text-gradient-hero" style="display:block;">Elevate Your</span>
+      <span style="display:block;background:linear-gradient(135deg,#818cf8 0%,#c4b5fd 35%,#fb7185 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+        Fatherhood Journey
+      </span>
+    </h1>
+
+    <!-- Subtitle -->
+    <p class="text-xl max-w-xl mb-10 leading-relaxed" style="color:rgba(255,255,255,0.38);">
+      Weekly briefings, smart tasks, mood tracking, and real talk
+      about the challenges of becoming a dad.
+    </p>
+
+    <!-- CTA buttons -->
+    <div class="flex flex-wrap items-center justify-center gap-4 mb-16">
+      <div class="relative">
+        <div class="glow-ring"></div>
+        <div class="glow-ring-2"></div>
+        <a href="/signup"
+           class="btn-gradient relative z-10 text-white font-semibold text-base px-8 py-3.5 rounded-full inline-flex items-center gap-2">
+          Start Free
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M4 8h8M9 5l3 3-3 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+      <a href="#"
+         class="btn-ghost text-white/70 hover:text-white font-medium text-base px-8 py-3.5 rounded-full inline-flex items-center gap-2">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="6" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+          <path d="M6.5 5.5l4 2.5-4 2.5V5.5z" fill="rgba(255,255,255,0.6)"/>
+        </svg>
+        Watch Demo
+      </a>
+    </div>
+
+    <!-- Dashboard preview card -->
+    <div class="preview-card rounded-2xl w-full max-w-2xl mx-auto overflow-hidden">
+      <!-- Preview header bar -->
+      <div class="flex items-center gap-2 px-4 py-3" style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <div style="width:8px;height:8px;border-radius:50%;background:rgba(244,63,94,0.5);"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:rgba(251,191,36,0.4);"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:rgba(52,211,153,0.4);"></div>
+        <div class="flex-1 mx-3">
+          <div style="height:5px;border-radius:3px;background:rgba(255,255,255,0.06);width:60%;margin:0 auto;"></div>
+        </div>
+      </div>
+
+      <!-- Preview body: schematic dashboard -->
+      <div class="p-5 space-y-3">
+        <!-- Top row: 2 cards side by side -->
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Mood card -->
+          <div class="rounded-xl p-3.5" style="background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.12);">
+            <div class="flex items-center gap-1.5 mb-2.5">
+              <div style="width:7px;height:7px;border-radius:50%;background:#818cf8;box-shadow:0 0 6px #818cf8;"></div>
+              <div style="height:5px;border-radius:3px;background:rgba(255,255,255,0.2);width:70px;"></div>
+            </div>
+            <div class="flex gap-1.5 justify-center py-1">
+              <span style="font-size:1.4rem;">😤</span>
+              <span style="font-size:1.4rem;">😐</span>
+              <span style="font-size:1.6rem;" class="emoji-active">😊</span>
+              <span style="font-size:1.4rem;">🤩</span>
+            </div>
+          </div>
+          <!-- Briefing card -->
+          <div class="rounded-xl p-3.5" style="background:rgba(244,63,94,0.06);border:1px solid rgba(244,63,94,0.10);">
+            <div class="flex items-center gap-1.5 mb-2">
+              <div style="width:7px;height:7px;border-radius:50%;background:#fb7185;box-shadow:0 0 6px #fb7185;"></div>
+              <div style="height:5px;border-radius:3px;background:rgba(255,255,255,0.2);width:60px;"></div>
+            </div>
+            <div style="height:5px;border-radius:3px;background:rgba(255,255,255,0.1);width:100%;margin-bottom:6px;"></div>
+            <div style="height:5px;border-radius:3px;background:rgba(255,255,255,0.07);width:80%;margin-bottom:6px;"></div>
+            <div class="flex items-center gap-1.5 mt-2.5">
+              <div style="height:5px;border-radius:3px;background:rgba(244,63,94,0.5);width:40px;"></div>
+              <div style="height:4px;border-radius:2px;background:rgba(244,63,94,0.2);flex:1;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tasks row -->
+        <div class="rounded-xl p-3.5" style="background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.10);">
+          <div class="flex items-center justify-between mb-2.5">
+            <div style="height:5px;border-radius:3px;background:rgba(255,255,255,0.2);width:90px;"></div>
+            <div style="height:4px;border-radius:2px;background:rgba(139,92,246,0.4);width:40px;"></div>
+          </div>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2.5 task-item">
+              <div style="width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(52,211,153,0.7);background:rgba(52,211,153,0.15);flex-shrink:0;"></div>
+              <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.15);flex:1;"></div>
+              <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.08);width:30px;"></div>
+            </div>
+            <div class="flex items-center gap-2.5 task-item">
+              <div style="width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(99,102,241,0.5);flex-shrink:0;"></div>
+              <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.1);flex:1;"></div>
+              <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.06);width:45px;"></div>
+            </div>
+            <div class="flex items-center gap-2.5 task-item">
+              <div style="width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(99,102,241,0.3);flex-shrink:0;"></div>
+              <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.08);width:75%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom mini bar: nav -->
+        <div class="flex justify-around items-center pt-1.5 pb-0.5" style="border-top:1px solid rgba(255,255,255,0.05);">
+          <div class="flex flex-col items-center gap-1">
+            <div style="width:16px;height:4px;border-radius:2px;background:rgba(99,102,241,0.7);"></div>
+            <div style="height:3px;border-radius:2px;background:rgba(255,255,255,0.15);width:22px;"></div>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <div style="width:14px;height:4px;border-radius:2px;background:rgba(255,255,255,0.2);"></div>
+            <div style="height:3px;border-radius:2px;background:rgba(255,255,255,0.1);width:18px;"></div>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <div style="width:14px;height:4px;border-radius:2px;background:rgba(255,255,255,0.2);"></div>
+            <div style="height:3px;border-radius:2px;background:rgba(255,255,255,0.1);width:20px;"></div>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <div style="width:14px;height:4px;border-radius:2px;background:rgba(255,255,255,0.2);"></div>
+            <div style="height:3px;border-radius:2px;background:rgba(255,255,255,0.1);width:16px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <!-- Floating stats bar below preview -->
+  <div class="relative z-10 mt-6 mb-12">
+    <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm"
+         style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);color:rgba(255,255,255,0.35);">
+      <span class="font-medium" style="color:rgba(255,255,255,0.55);">47 Briefings</span>
+      <span style="color:rgba(255,255,255,0.15);">·</span>
+      <span class="font-medium" style="color:rgba(255,255,255,0.55);">200+ Tasks</span>
+      <span style="color:rgba(255,255,255,0.15);">·</span>
+      <span class="font-medium" style="color:rgba(255,255,255,0.55);">7 Challenge Pillars</span>
+    </div>
+  </div>
+
+  <!-- Bottom edge gradient -->
+  <div style="position:absolute;bottom:0;left:0;right:0;height:160px;background:linear-gradient(to bottom, transparent, #030303);pointer-events:none;z-index:5;"></div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     FEATURES — BENTO GRID
+════════════════════════════════════════════════════════════ -->
+<section id="features" class="relative py-28 px-6 overflow-hidden">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Section header -->
+    <div class="text-center mb-16 animate-fade-up">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5"
+           style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);">
+        <span class="text-xs font-semibold tracking-widest uppercase" style="color:#c4b5fd;">What's Inside</span>
+      </div>
+      <h2 class="font-bold tracking-tighter mb-4" style="font-size:clamp(2rem,4vw,3rem);">
+        <span class="text-white">Everything </span>
+        <span class="text-gradient-accent">You Need</span>
+      </h2>
+      <!-- Gradient underline -->
+      <div style="width:80px;height:2px;background:linear-gradient(90deg,#6366f1,#f43f5e);border-radius:2px;margin:0 auto;"></div>
+    </div>
+
+    <!-- Bento grid -->
+    <div class="bento-grid" style="
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      grid-auto-rows:22rem;
+      gap:16px;
+    ">
+
+      <!-- Card 1: Weekly Briefings (2 cols wide) -->
+      <div class="glass-card glass-card-hover rounded-2xl p-7 relative overflow-hidden animate-fade-up"
+           style="grid-column:span 2;">
+        <!-- Glow accent -->
+        <div style="position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.15) 0%,transparent 70%);pointer-events:none;"></div>
+
+        <div class="flex items-start justify-between mb-5">
+          <div>
+            <div class="icon-gradient-bg rounded-xl w-10 h-10 flex items-center justify-center mb-3">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <rect x="2" y="3" width="14" height="12" rx="2.5" stroke="url(#feat1-grad)" stroke-width="1.4"/>
+                <path d="M5 7h8M5 10h5" stroke="url(#feat1-grad)" stroke-width="1.2" stroke-linecap="round"/>
+                <defs>
+                  <linearGradient id="feat1-grad" x1="2" y1="3" x2="16" y2="15" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#818cf8"/>
+                    <stop offset="1" stop-color="#f43f5e"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <h3 class="font-bold text-lg text-white">Weekly Briefings</h3>
+            <p class="text-sm mt-1" style="color:rgba(255,255,255,0.4);">Personalised weekly summaries that meet you where you are in the journey.</p>
+          </div>
+        </div>
+
+        <!-- Mini week animation -->
+        <div class="flex items-center gap-3 mt-auto">
+          <div class="flex-1 rounded-xl overflow-hidden" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);">
+            <div class="px-4 py-3" style="border-bottom:1px solid rgba(255,255,255,0.06);">
+              <div class="flex items-center gap-2">
+                <div class="week-number font-bold text-2xl text-gradient-accent">Week 18</div>
+                <div style="height:5px;border-radius:3px;background:rgba(99,102,241,0.2);flex:1;"></div>
+              </div>
+            </div>
+            <div class="px-4 py-3 space-y-2">
+              <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.12);width:90%;"></div>
+              <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.08);width:70%;"></div>
+              <div style="height:4px;border-radius:2px;background:rgba(255,255,255,0.06);width:80%;"></div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <div class="rounded-lg px-3 py-2 text-xs font-semibold" style="background:rgba(99,102,241,0.12);color:#a5b4fc;">
+              Week 19
+            </div>
+            <div class="rounded-lg px-3 py-2 text-xs" style="background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.3);">
+              Week 20
+            </div>
+            <div class="rounded-lg px-3 py-2 text-xs" style="background:rgba(255,255,255,0.02);color:rgba(255,255,255,0.2);">
+              Week 21
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Smart Task Management (spans 2 rows, right col) -->
+      <div class="glass-card glass-card-hover rounded-2xl p-7 relative overflow-hidden animate-fade-up"
+           style="grid-column:span 1;grid-row:span 2;">
+        <div style="position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.12) 0%,transparent 70%);pointer-events:none;"></div>
+
+        <div class="icon-gradient-bg rounded-xl w-10 h-10 flex items-center justify-center mb-3">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M3 5h12M3 9h8M3 13h10" stroke="url(#feat2-grad)" stroke-width="1.4" stroke-linecap="round"/>
+            <circle cx="14" cy="13" r="3" stroke="url(#feat2-grad)" stroke-width="1.2"/>
+            <path d="M13 13l.8.8 1.4-1.4" stroke="#a5b4fc" stroke-width="1" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="feat2-grad" x1="3" y1="5" x2="16" y2="16" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#818cf8"/>
+                <stop offset="1" stop-color="#c4b5fd"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <h3 class="font-bold text-lg text-white">Smart Task Management</h3>
+        <p class="text-sm mt-1.5 mb-5" style="color:rgba(255,255,255,0.4);">30-day rolling window. Never feel behind, just catch up.</p>
+
+        <!-- Task list preview -->
+        <div class="space-y-2.5 flex-1">
+          <!-- Task items -->
+          <div class="task-item flex items-center gap-3 rounded-xl px-3 py-2.5" style="background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.12);">
+            <div style="width:16px;height:16px;border-radius:50%;background:rgba(52,211,153,0.2);border:1.5px solid rgba(52,211,153,0.6);flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+              <svg width="8" height="8" viewBox="0 0 8 8"><path d="M1.5 4l2 2 3-3.5" stroke="rgba(52,211,153,0.9)" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>
+            </div>
+            <span class="text-xs" style="color:rgba(255,255,255,0.5);text-decoration:line-through;">Hospital bag packed</span>
+          </div>
+          <div class="task-item flex items-center gap-3 rounded-xl px-3 py-2.5" style="background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.12);">
+            <div style="width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(99,102,241,0.5);flex-shrink:0;"></div>
+            <span class="text-xs text-white/70">Birth plan reviewed</span>
+          </div>
+          <div class="task-item flex items-center gap-3 rounded-xl px-3 py-2.5" style="background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);">
+            <div style="width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);flex-shrink:0;"></div>
+            <span class="text-xs" style="color:rgba(255,255,255,0.4);">Pediatrician shortlist</span>
+          </div>
+          <div class="flex items-center gap-3 rounded-xl px-3 py-2.5" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);">
+            <div style="width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.15);flex-shrink:0;"></div>
+            <span class="text-xs" style="color:rgba(255,255,255,0.3);">Car seat installed</span>
+          </div>
+          <div class="flex items-center gap-3 rounded-xl px-3 py-2.5" style="background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.05);">
+            <div style="width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.1);flex-shrink:0;"></div>
+            <span class="text-xs" style="color:rgba(255,255,255,0.25);">Insurance updated</span>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-4" style="border-top:1px solid rgba(255,255,255,0.06);">
+          <div class="flex items-center justify-between text-xs">
+            <span style="color:rgba(255,255,255,0.3);">30-day window</span>
+            <span class="font-semibold text-gradient-violet">2 of 5 done</span>
+          </div>
+          <!-- Progress bar -->
+          <div class="mt-2 h-1 rounded-full" style="background:rgba(255,255,255,0.08);">
+            <div style="width:40%;height:100%;border-radius:9999px;background:linear-gradient(90deg,#818cf8,#c4b5fd);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Mood Check-ins -->
+      <div class="glass-card glass-card-hover rounded-2xl p-7 relative overflow-hidden animate-fade-up">
+        <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(244,63,94,0.12) 0%,transparent 70%);pointer-events:none;"></div>
+
+        <div class="icon-gradient-bg rounded-xl w-10 h-10 flex items-center justify-center mb-3">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <circle cx="9" cy="9" r="6.5" stroke="url(#feat3-grad)" stroke-width="1.4"/>
+            <circle cx="6.5" cy="7.5" r="1" fill="#fb7185"/>
+            <circle cx="11.5" cy="7.5" r="1" fill="#fb7185"/>
+            <path d="M6 11.5c.8 1 5 1 6 0" stroke="url(#feat3-grad)" stroke-width="1.2" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="feat3-grad" x1="2.5" y1="2.5" x2="15.5" y2="15.5" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#818cf8"/>
+                <stop offset="1" stop-color="#f43f5e"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <h3 class="font-bold text-lg text-white">Mood Check-ins</h3>
+        <p class="text-sm mt-1 mb-5" style="color:rgba(255,255,255,0.4);">Track how you're feeling each day. Streaks &amp; insights over time.</p>
+
+        <div class="flex items-center justify-around py-2">
+          <span class="text-2xl cursor-pointer hover:scale-110 transition-transform" title="Struggling">😤</span>
+          <span class="text-2xl cursor-pointer hover:scale-110 transition-transform" title="Rough">😞</span>
+          <span class="text-3xl emoji-active" title="Good">😊</span>
+          <span class="text-2xl cursor-pointer hover:scale-110 transition-transform" title="Great">🤩</span>
+          <span class="text-2xl cursor-pointer hover:scale-110 transition-transform" title="Amazing">🥳</span>
+        </div>
+
+        <div class="mt-4 rounded-xl px-4 py-2.5 text-xs" style="background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.1);">
+          <span style="color:rgba(255,255,255,0.4);">Current streak </span>
+          <span class="font-bold text-gradient-accent">7 days</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Dad Journey -->
+      <div class="glass-card glass-card-hover rounded-2xl p-7 relative overflow-hidden animate-fade-up">
+        <div style="position:absolute;bottom:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.12) 0%,transparent 70%);pointer-events:none;"></div>
+
+        <div class="icon-gradient-bg rounded-xl w-10 h-10 flex items-center justify-center mb-3">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M9 2L11 7H16L12 10.5L13.5 15.5L9 12.5L4.5 15.5L6 10.5L2 7H7L9 2Z" stroke="url(#feat4-grad)" stroke-width="1.3" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="feat4-grad" x1="2" y1="2" x2="16" y2="16" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#c4b5fd"/>
+                <stop offset="1" stop-color="#f43f5e"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <h3 class="font-bold text-lg text-white">Dad Journey</h3>
+        <p class="text-sm mt-1 mb-5" style="color:rgba(255,255,255,0.4);">7 challenge pillars to grow through across the full parenting journey.</p>
+
+        <!-- 7 pillar dots -->
+        <div class="grid grid-cols-4 gap-2.5 mt-auto">
+          <div class="rounded-lg py-2 px-1.5 flex flex-col items-center gap-1.5"
+               style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.15);">
+            <div class="pillar-dot" style="background:#818cf8;box-shadow:0 0 6px rgba(99,102,241,0.7);"></div>
+            <span class="text-[9px] text-center leading-tight" style="color:rgba(255,255,255,0.45);">Know&shy;ledge</span>
+          </div>
+          <div class="rounded-lg py-2 px-1.5 flex flex-col items-center gap-1.5"
+               style="background:rgba(52,211,153,0.07);border:1px solid rgba(52,211,153,0.12);">
+            <div class="pillar-dot" style="background:#34d399;box-shadow:0 0 6px rgba(52,211,153,0.6);"></div>
+            <span class="text-[9px] text-center leading-tight" style="color:rgba(255,255,255,0.45);">Plan&shy;ning</span>
+          </div>
+          <div class="rounded-lg py-2 px-1.5 flex flex-col items-center gap-1.5"
+               style="background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.12);">
+            <div class="pillar-dot" style="background:#fbbf24;box-shadow:0 0 6px rgba(251,191,36,0.6);"></div>
+            <span class="text-[9px] text-center leading-tight" style="color:rgba(255,255,255,0.45);">Fin&shy;ances</span>
+          </div>
+          <div class="rounded-lg py-2 px-1.5 flex flex-col items-center gap-1.5"
+               style="background:rgba(244,63,94,0.07);border:1px solid rgba(244,63,94,0.12);">
+            <div class="pillar-dot" style="background:#f43f5e;box-shadow:0 0 6px rgba(244,63,94,0.6);"></div>
+            <span class="text-[9px] text-center leading-tight" style="color:rgba(255,255,255,0.45);">Anx&shy;iety</span>
+          </div>
+          <div class="rounded-lg py-2 px-1.5 flex flex-col items-center gap-1.5"
+               style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.13);">
+            <div class="pillar-dot" style="background:#8b5cf6;box-shadow:0 0 6px rgba(139,92,246,0.6);"></div>
+            <span class="text-[9px] text-center leading-tight" style="color:rgba(255,255,255,0.45);">Bonding</span>
+          </div>
+          <div class="rounded-lg py-2 px-1.5 flex flex-col items-center gap-1.5"
+               style="background:rgba(236,72,153,0.07);border:1px solid rgba(236,72,153,0.12);">
+            <div class="pillar-dot" style="background:#ec4899;box-shadow:0 0 6px rgba(236,72,153,0.6);"></div>
+            <span class="text-[9px] text-center leading-tight" style="color:rgba(255,255,255,0.45);">Rela&shy;tion</span>
+          </div>
+          <div class="rounded-lg py-2 px-1.5 flex flex-col items-center gap-1.5 col-span-2"
+               style="background:rgba(20,184,166,0.07);border:1px solid rgba(20,184,166,0.12);">
+            <div class="pillar-dot" style="background:#14b8a6;box-shadow:0 0 6px rgba(20,184,166,0.6);"></div>
+            <span class="text-[9px] text-center leading-tight" style="color:rgba(255,255,255,0.45);">Extended Family</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5: Partner Sync (2 cols wide) -->
+      <div class="glass-card glass-card-hover rounded-2xl p-7 relative overflow-hidden animate-fade-up"
+           style="grid-column:span 2;">
+        <div style="position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:300px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(244,63,94,0.08) 0%,transparent 70%);pointer-events:none;"></div>
+
+        <div class="flex items-start gap-6 h-full">
+          <div class="flex-1">
+            <div class="icon-gradient-bg rounded-xl w-10 h-10 flex items-center justify-center mb-3">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <circle cx="5.5" cy="6" r="3" stroke="url(#feat5-grad)" stroke-width="1.3"/>
+                <circle cx="12.5" cy="6" r="3" stroke="url(#feat5-grad)" stroke-width="1.3"/>
+                <path d="M2 15c0-2 1.6-3.5 3.5-3.5" stroke="url(#feat5-grad)" stroke-width="1.3" stroke-linecap="round"/>
+                <path d="M9 15c0-2 1.6-3.5 3.5-3.5s3.5 1.5 3.5 3.5" stroke="url(#feat5-grad)" stroke-width="1.3" stroke-linecap="round"/>
+                <defs>
+                  <linearGradient id="feat5-grad" x1="2" y1="3" x2="16" y2="15" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#818cf8"/>
+                    <stop offset="1" stop-color="#f43f5e"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <h3 class="font-bold text-lg text-white">Partner Sync</h3>
+            <p class="text-sm mt-1" style="color:rgba(255,255,255,0.4);">One subscription, two views. Stay aligned without the conflict.</p>
+          </div>
+
+          <!-- Visual: two avatars + connection -->
+          <div class="flex items-center justify-center gap-4 flex-shrink-0" style="padding-top:8px;">
+            <!-- Dad avatar -->
+            <div class="flex flex-col items-center gap-2">
+              <div class="w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg"
+                   style="background:linear-gradient(135deg,rgba(99,102,241,0.3),rgba(139,92,246,0.2));border:1.5px solid rgba(99,102,241,0.35);color:#a5b4fc;">
+                D
+              </div>
+              <span class="text-xs" style="color:rgba(255,255,255,0.35);">Dad's View</span>
+            </div>
+
+            <!-- Connecting visual -->
+            <div style="position:relative;width:80px;height:30px;">
+              <svg width="80" height="30" viewBox="0 0 80 30" overflow="visible">
+                <path d="M8 15 C 25 5, 55 5, 72 15" stroke="url(#sync-line-up)" stroke-width="1" fill="none" stroke-dasharray="4 3" class="partner-line"/>
+                <path d="M8 15 C 25 25, 55 25, 72 15" stroke="url(#sync-line-down)" stroke-width="1" fill="none" stroke-dasharray="4 3" class="partner-line" style="animation-direction:alternate-reverse;"/>
+                <circle cx="40" cy="15" r="4" fill="url(#sync-center)"/>
+                <defs>
+                  <linearGradient id="sync-line-up" x1="8" y1="15" x2="72" y2="15" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#818cf8" stop-opacity="0.6"/>
+                    <stop offset="1" stop-color="#f43f5e" stop-opacity="0.6"/>
+                  </linearGradient>
+                  <linearGradient id="sync-line-down" x1="8" y1="15" x2="72" y2="15" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#f43f5e" stop-opacity="0.4"/>
+                    <stop offset="1" stop-color="#818cf8" stop-opacity="0.4"/>
+                  </linearGradient>
+                  <radialGradient id="sync-center">
+                    <stop offset="0%" stop-color="#a5b4fc"/>
+                    <stop offset="100%" stop-color="#f43f5e"/>
+                  </radialGradient>
+                </defs>
+              </svg>
+            </div>
+
+            <!-- Mom avatar -->
+            <div class="flex flex-col items-center gap-2">
+              <div class="w-14 h-14 rounded-full flex items-center justify-center font-bold text-lg"
+                   style="background:linear-gradient(135deg,rgba(244,63,94,0.25),rgba(251,113,133,0.15));border:1.5px solid rgba(244,63,94,0.3);color:#fda4af;">
+                M
+              </div>
+              <span class="text-xs" style="color:rgba(255,255,255,0.35);">Partner's View</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /bento grid -->
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════════════════════════ -->
+<section id="how-it-works" class="relative py-28 px-6 overflow-hidden">
+
+  <!-- Background accent -->
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.05) 0%,transparent 70%);pointer-events:none;"></div>
+
+  <div class="max-w-5xl mx-auto">
+
+    <!-- Section header -->
+    <div class="text-center mb-20 animate-fade-up">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5"
+           style="background:rgba(244,63,94,0.08);border:1px solid rgba(244,63,94,0.15);">
+        <span class="text-xs font-semibold tracking-widest uppercase" style="color:#fda4af;">Simple Start</span>
+      </div>
+      <h2 class="font-bold tracking-tighter" style="font-size:clamp(2rem,4vw,3rem);">
+        <span class="text-white">How It </span>
+        <span class="text-gradient-accent">Works</span>
+      </h2>
+    </div>
+
+    <!-- Steps row -->
+    <div class="steps-container flex items-start justify-center gap-0 relative">
+
+      <!-- Dashed connecting lines (desktop only) -->
+      <div class="step-connector absolute top-8 left-0 right-0 flex items-center justify-center pointer-events-none"
+           style="z-index:0;">
+        <svg width="520" height="2" viewBox="0 0 520 2" style="overflow:visible;">
+          <line x1="160" y1="1" x2="360" y2="1"
+                stroke="url(#step-line-grad)"
+                stroke-width="1.5"
+                stroke-dasharray="8 5"
+                class="animated-dash"/>
+          <defs>
+            <linearGradient id="step-line-grad" x1="0" y1="0" x2="520" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#6366f1" stop-opacity="0.5"/>
+              <stop offset="50%" stop-color="#8b5cf6" stop-opacity="0.7"/>
+              <stop offset="100%" stop-color="#f43f5e" stop-opacity="0.5"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="flex flex-col items-center text-center max-w-[240px] px-4 relative z-10 animate-fade-up">
+        <div class="step-circle w-16 h-16 rounded-full flex items-center justify-center font-bold text-xl mb-6"
+             style="color:#a5b4fc;">
+          1
+        </div>
+        <div class="glass-card rounded-2xl p-5 w-full">
+          <div class="icon-gradient-bg rounded-lg w-9 h-9 flex items-center justify-center mx-auto mb-3">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
+              <path d="M8.5 2a6.5 6.5 0 100 13 6.5 6.5 0 000-13z" stroke="url(#step1-i)" stroke-width="1.3"/>
+              <path d="M5.5 8.5l2 2 4-4" stroke="#a5b4fc" stroke-width="1.2" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="step1-i" x1="2" y1="2" x2="15" y2="15" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#818cf8"/><stop offset="1" stop-color="#c4b5fd"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h3 class="font-bold text-white text-[15px] mb-1.5">Sign Up in 30 Seconds</h3>
+          <p class="text-xs leading-relaxed" style="color:rgba(255,255,255,0.4);">
+            Answer 4 quick questions about your stage and role. No lengthy setup.
+          </p>
+        </div>
+      </div>
+
+      <!-- Spacer -->
+      <div class="w-16 flex-shrink-0 step-connector"></div>
+
+      <!-- Step 2 -->
+      <div class="flex flex-col items-center text-center max-w-[240px] px-4 relative z-10 animate-fade-up" style="transition-delay:0.15s;">
+        <div class="step-circle w-16 h-16 rounded-full flex items-center justify-center font-bold text-xl mb-6"
+             style="background:linear-gradient(#030303,#030303) padding-box, linear-gradient(135deg,#8b5cf6,#f43f5e) border-box;border:1.5px solid transparent;color:#c4b5fd;">
+          2
+        </div>
+        <div class="glass-card rounded-2xl p-5 w-full">
+          <div class="icon-gradient-bg rounded-lg w-9 h-9 flex items-center justify-center mx-auto mb-3">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
+              <rect x="2.5" y="3.5" width="12" height="10" rx="2" stroke="url(#step2-i)" stroke-width="1.3"/>
+              <path d="M5 7h7M5 10h4" stroke="#c4b5fd" stroke-width="1.1" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="step2-i" x1="2.5" y1="3.5" x2="14.5" y2="13.5" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#f43f5e"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h3 class="font-bold text-white text-[15px] mb-1.5">Get Your First Briefing</h3>
+          <p class="text-xs leading-relaxed" style="color:rgba(255,255,255,0.4);">
+            Personalised weekly briefing delivered instantly. Relevant tasks &amp; tips for your exact stage.
+          </p>
+        </div>
+      </div>
+
+      <!-- Spacer -->
+      <div class="w-16 flex-shrink-0 step-connector"></div>
+
+      <!-- Step 3 -->
+      <div class="flex flex-col items-center text-center max-w-[240px] px-4 relative z-10 animate-fade-up" style="transition-delay:0.3s;">
+        <div class="step-circle w-16 h-16 rounded-full flex items-center justify-center font-bold text-xl mb-6"
+             style="background:linear-gradient(#030303,#030303) padding-box, linear-gradient(135deg,#f43f5e,#818cf8) border-box;border:1.5px solid transparent;color:#fda4af;">
+          3
+        </div>
+        <div class="glass-card rounded-2xl p-5 w-full">
+          <div class="icon-gradient-bg rounded-lg w-9 h-9 flex items-center justify-center mx-auto mb-3">
+            <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
+              <path d="M8.5 3v10M5 5.5l3.5-2.5L12 5.5M5 11.5l3.5 2L12 11.5" stroke="url(#step3-i)" stroke-width="1.3" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="step3-i" x1="5" y1="3" x2="12" y2="14" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#f43f5e"/><stop offset="1" stop-color="#818cf8"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h3 class="font-bold text-white text-[15px] mb-1.5">Track Your Journey</h3>
+          <p class="text-xs leading-relaxed" style="color:rgba(255,255,255,0.4);">
+            Mood check-ins, challenge progress, and a timeline that grows with your family.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PRICING
+════════════════════════════════════════════════════════════ -->
+<section id="pricing" class="relative py-28 px-6 overflow-hidden">
+  <!-- Background -->
+  <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.07) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <div class="max-w-5xl mx-auto">
+
+    <!-- Section header -->
+    <div class="text-center mb-16 animate-fade-up">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5"
+           style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.15);">
+        <span class="text-xs font-semibold tracking-widest uppercase" style="color:#a5b4fc;">Simple Pricing</span>
+      </div>
+      <h2 class="font-bold tracking-tighter" style="font-size:clamp(2rem,4vw,3rem);">
+        <span class="text-white">Choose Your </span>
+        <span class="text-gradient-accent">Plan</span>
+      </h2>
+      <p class="mt-3 text-base" style="color:rgba(255,255,255,0.35);">One subscription covers both partners</p>
+    </div>
+
+    <!-- Cards row -->
+    <div class="flex flex-col md:flex-row items-stretch justify-center gap-6 animate-fade-up">
+
+      <!-- Free plan -->
+      <div class="glass-card glass-card-hover rounded-2xl p-7 flex-1 max-w-[300px] mx-auto md:mx-0 flex flex-col">
+        <div>
+          <span class="text-xs font-semibold tracking-widest uppercase" style="color:rgba(255,255,255,0.35);">Free</span>
+          <div class="mt-2 flex items-end gap-1">
+            <span class="font-bold text-4xl text-white">$0</span>
+            <span class="text-sm mb-1.5" style="color:rgba(255,255,255,0.35);">forever</span>
+          </div>
+          <p class="text-sm mt-1.5 mb-6" style="color:rgba(255,255,255,0.35);">Start your journey with the essentials</p>
+        </div>
+
+        <ul class="space-y-3 flex-1">
+          <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.6);">
+            <span style="color:#34d399;flex-shrink:0;">
+              <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+            </span>
+            4 weeks of briefings
+          </li>
+          <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.6);">
+            <span style="color:#34d399;flex-shrink:0;">
+              <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+            </span>
+            30-day task window
+          </li>
+          <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.6);">
+            <span style="color:#34d399;flex-shrink:0;">
+              <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+            </span>
+            Mood check-ins
+          </li>
+          <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.4);">
+            <span style="color:rgba(255,255,255,0.2);flex-shrink:0;">
+              <svg width="15" height="15" viewBox="0 0 15 15"><path d="M4 4l7 7M11 4l-7 7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </span>
+            Push notifications
+          </li>
+          <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.4);">
+            <span style="color:rgba(255,255,255,0.2);flex-shrink:0;">
+              <svg width="15" height="15" viewBox="0 0 15 15"><path d="M4 4l7 7M11 4l-7 7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </span>
+            Full Dad Journey
+          </li>
+          <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.4);">
+            <span style="color:rgba(255,255,255,0.2);flex-shrink:0;">
+              <svg width="15" height="15" viewBox="0 0 15 15"><path d="M4 4l7 7M11 4l-7 7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </span>
+            Partner sync
+          </li>
+        </ul>
+
+        <div class="mt-6">
+          <a href="/signup"
+             class="btn-ghost w-full py-2.5 rounded-full text-sm font-semibold text-center block" style="color:rgba(255,255,255,0.65);">
+            Get Started Free
+          </a>
+        </div>
+      </div>
+
+      <!-- Yearly plan (featured, center elevated) -->
+      <div class="pricing-featured-wrapper flex-1 max-w-[320px] mx-auto md:mx-0" style="transform:scale(1.05);z-index:10;">
+        <div class="pricing-featured-inner flex flex-col h-full p-7">
+          <div>
+            <div class="flex items-start justify-between mb-1">
+              <span class="text-xs font-semibold tracking-widest uppercase" style="color:#a5b4fc;">Yearly</span>
+              <span class="text-xs font-bold px-2.5 py-1 rounded-full"
+                    style="background:linear-gradient(135deg,rgba(99,102,241,0.25),rgba(244,63,94,0.15));border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;">
+                Most Popular
+              </span>
+            </div>
+            <div class="mt-2 flex items-end gap-1.5">
+              <span class="font-bold text-4xl text-white">$39.99</span>
+              <span class="text-sm mb-1.5" style="color:rgba(255,255,255,0.4);">/year</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5">
+              <span class="text-sm font-semibold text-gradient-accent">$3.33/mo</span>
+              <span class="text-xs line-through" style="color:rgba(255,255,255,0.25);">$59.88</span>
+              <span class="text-xs px-1.5 py-0.5 rounded-full font-semibold"
+                    style="background:rgba(52,211,153,0.12);color:#34d399;">Save 33%</span>
+            </div>
+            <p class="text-sm mt-1.5 mb-6" style="color:rgba(255,255,255,0.35);">Full access for the whole journey</p>
+          </div>
+
+          <ul class="space-y-3 flex-1">
+            <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.75);">
+              <span style="color:#34d399;flex-shrink:0;">
+                <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+              </span>
+              All briefings, forever
+            </li>
+            <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.75);">
+              <span style="color:#34d399;flex-shrink:0;">
+                <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+              </span>
+              Full 30-day task window
+            </li>
+            <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.75);">
+              <span style="color:#34d399;flex-shrink:0;">
+                <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+              </span>
+              Push notifications
+            </li>
+            <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.75);">
+              <span style="color:#34d399;flex-shrink:0;">
+                <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+              </span>
+              Full Dad Journey (7 pillars)
+            </li>
+            <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.75);">
+              <span style="color:#34d399;flex-shrink:0;">
+                <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+              </span>
+              Partner sync (both views)
+            </li>
+            <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.75);">
+              <span style="color:#34d399;flex-shrink:0;">
+                <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+              </span>
+              Mood insights &amp; history
+            </li>
+          </ul>
+
+          <div class="mt-6">
+            <a href="/signup?plan=yearly"
+               class="btn-gradient w-full py-3 rounded-full text-sm font-semibold text-white text-center block">
+              Start for $39.99/yr
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lifetime plan -->
+      <div class="glass-card glass-card-hover rounded-2xl p-7 flex-1 max-w-[300px] mx-auto md:mx-0 flex flex-col">
+        <div>
+          <span class="text-xs font-semibold tracking-widest uppercase" style="color:rgba(255,255,255,0.35);">Lifetime</span>
+          <div class="mt-2 flex items-end gap-1">
+            <span class="font-bold text-4xl text-white">$99.99</span>
+          </div>
+          <span class="text-sm" style="color:rgba(255,255,255,0.3);">one-time payment</span>
+          <p class="text-sm mt-1.5 mb-6" style="color:rgba(255,255,255,0.35);">Pay once, access forever</p>
+        </div>
+
+        <ul class="space-y-3 flex-1">
+          <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.6);">
+            <span style="color:#34d399;flex-shrink:0;">
+              <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+            </span>
+            Everything in Yearly
+          </li>
+          <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.6);">
+            <span style="color:#34d399;flex-shrink:0;">
+              <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+            </span>
+            Lifetime access, all updates
+          </li>
+          <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.6);">
+            <span style="color:#34d399;flex-shrink:0;">
+              <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+            </span>
+            Priority support
+          </li>
+          <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.6);">
+            <span style="color:#34d399;flex-shrink:0;">
+              <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+            </span>
+            Early access to new features
+          </li>
+          <li class="flex items-center gap-2.5 text-sm" style="color:rgba(255,255,255,0.6);">
+            <span style="color:#34d399;flex-shrink:0;">
+              <svg width="15" height="15" viewBox="0 0 15 15"><path d="M3 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" fill="none"/></svg>
+            </span>
+            No renewals, ever
+          </li>
+        </ul>
+
+        <div class="mt-6">
+          <a href="/signup?plan=lifetime"
+             class="w-full py-2.5 rounded-full text-sm font-semibold text-center block transition-all duration-200"
+             style="background:linear-gradient(135deg,rgba(244,63,94,0.15),rgba(139,92,246,0.12));border:1px solid rgba(244,63,94,0.25);color:rgba(255,255,255,0.75);"
+             onmouseover="this.style.borderColor='rgba(244,63,94,0.45)';this.style.color='rgba(255,255,255,0.9)';"
+             onmouseout="this.style.borderColor='rgba(244,63,94,0.25)';this.style.color='rgba(255,255,255,0.75)';">
+            Get Lifetime Access
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Trust line -->
+    <p class="text-center text-sm mt-10" style="color:rgba(255,255,255,0.25);">
+      No credit card needed · 30-day guarantee · Cancel anytime
+    </p>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     FINAL CTA
+════════════════════════════════════════════════════════════ -->
+<section class="relative py-32 px-6 overflow-hidden">
+
+  <!-- Decorative background blobs -->
+  <div style="position:absolute;top:50%;left:30%;transform:translate(-50%,-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.1) 0%,transparent 65%);pointer-events:none;"></div>
+  <div style="position:absolute;top:50%;right:20%;transform:translate(50%,-50%);width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(244,63,94,0.08) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <!-- Dot pattern -->
+  <div class="dot-pattern" style="opacity:0.5;"></div>
+
+  <div class="max-w-3xl mx-auto text-center relative z-10 animate-fade-up">
+
+    <!-- Social proof -->
+    <div class="inline-flex items-center gap-3 mb-8">
+      <!-- Avatar stack -->
+      <div class="flex -space-x-2">
+        <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold"
+             style="background:linear-gradient(135deg,#6366f1,#8b5cf6);border-color:#030303;color:#e0e7ff;">J</div>
+        <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold"
+             style="background:linear-gradient(135deg,#f43f5e,#fb7185);border-color:#030303;color:#fff1f2;">M</div>
+        <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold"
+             style="background:linear-gradient(135deg,#8b5cf6,#c4b5fd);border-color:#030303;color:#f5f3ff;">R</div>
+        <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold"
+             style="background:linear-gradient(135deg,#14b8a6,#34d399);border-color:#030303;color:#f0fdf4;">T</div>
+      </div>
+      <span class="text-sm" style="color:rgba(255,255,255,0.45);">
+        Join <span class="font-semibold" style="color:rgba(255,255,255,0.75);">2,400+ dads</span> already on the journey
+      </span>
+    </div>
+
+    <!-- Heading -->
+    <h2 class="font-bold tracking-tighter mb-4 leading-[1.05]" style="font-size:clamp(2.5rem,5vw,4rem);">
+      <span class="text-white">Ready to </span>
+      <span style="background:linear-gradient(135deg,#818cf8 0%,#c4b5fd 40%,#fb7185 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+        Level Up?
+      </span>
+    </h2>
+
+    <p class="text-lg mb-10" style="color:rgba(255,255,255,0.38);">
+      Start free. Upgrade when you're ready. The journey begins with one step.
+    </p>
+
+    <!-- CTA button with glow ring -->
+    <div class="inline-block relative">
+      <div class="glow-ring"></div>
+      <div class="glow-ring-2"></div>
+      <a href="/signup"
+         class="btn-gradient relative z-10 text-white font-bold text-base px-10 py-4 rounded-full inline-flex items-center gap-2.5">
+        Start Your Journey Free
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M4 9h10M10 5l4 4-4 4" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+    <p class="mt-5 text-sm" style="color:rgba(255,255,255,0.25);">No credit card required</p>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════ -->
+<footer style="background:#030303;">
+  <!-- Gradient separator line -->
+  <div class="gradient-line"></div>
+
+  <div class="max-w-6xl mx-auto px-6 py-12">
+    <div class="flex flex-col md:flex-row items-start justify-between gap-10">
+
+      <!-- Brand -->
+      <div class="max-w-[260px]">
+        <div class="flex items-center gap-2 mb-3">
+          <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
+            <circle cx="10" cy="14" r="9" fill="url(#footer-logo-1)" opacity="0.9"/>
+            <circle cx="18" cy="14" r="9" fill="url(#footer-logo-2)" opacity="0.7"/>
+            <defs>
+              <radialGradient id="footer-logo-1" cx="40%" cy="40%" r="60%">
+                <stop offset="0%" stop-color="#818cf8"/><stop offset="100%" stop-color="#6366f1"/>
+              </radialGradient>
+              <radialGradient id="footer-logo-2" cx="60%" cy="40%" r="60%">
+                <stop offset="0%" stop-color="#fb7185"/><stop offset="100%" stop-color="#f43f5e"/>
+              </radialGradient>
+            </defs>
+          </svg>
+          <span class="font-bold text-[14px] text-white">The Dad Center</span>
+        </div>
+        <p class="text-xs leading-relaxed" style="color:rgba(255,255,255,0.3);">
+          The parenting OS for modern dads. From pregnancy to toddlerhood and beyond.
+        </p>
+        <p class="text-xs mt-3" style="color:rgba(255,255,255,0.2);">thedadcenter.com</p>
+      </div>
+
+      <!-- Links -->
+      <div class="flex gap-16">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest mb-4" style="color:rgba(255,255,255,0.3);">Product</p>
+          <ul class="space-y-3">
+            <li><a href="#features" class="text-sm transition-colors duration-200" style="color:rgba(255,255,255,0.4);" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Features</a></li>
+            <li><a href="#pricing" class="text-sm transition-colors duration-200" style="color:rgba(255,255,255,0.4);" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Pricing</a></li>
+            <li><a href="#how-it-works" class="text-sm transition-colors duration-200" style="color:rgba(255,255,255,0.4);" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">How It Works</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest mb-4" style="color:rgba(255,255,255,0.3);">Legal</p>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-sm transition-colors duration-200" style="color:rgba(255,255,255,0.4);" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Privacy</a></li>
+            <li><a href="#" class="text-sm transition-colors duration-200" style="color:rgba(255,255,255,0.4);" onmouseover="this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="gradient-line mt-10 mb-6"></div>
+
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-xs" style="color:rgba(255,255,255,0.2);">
+        &copy; 2026 The Dad Center. All rights reserved.
+      </p>
+      <p class="text-xs" style="color:rgba(255,255,255,0.15);">
+        Built for dads, by people who get it.
+      </p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     SCROLL ANIMATION OBSERVER
+════════════════════════════════════════════════════════════ -->
+<script>
+  // Intersection observer for fade-up animations
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    },
+    { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+  );
+
+  document.querySelectorAll('.animate-fade-up').forEach((el) => {
+    observer.observe(el);
+  });
+
+  // Add staggered delay to children of observed containers
+  document.querySelectorAll('.bento-grid > .animate-fade-up').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.08}s`;
+  });
+
+  // Navbar active state on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('header nav a');
+
+  const navObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          navLinks.forEach((link) => {
+            link.style.color = link.getAttribute('href') === `#${id}`
+              ? 'rgba(255,255,255,0.9)'
+              : 'rgba(255,255,255,0.5)';
+          });
+        }
+      });
+    },
+    { threshold: 0.4 }
+  );
+
+  sections.forEach((section) => navObserver.observe(section));
+</script>
+
+</body>
+</html>

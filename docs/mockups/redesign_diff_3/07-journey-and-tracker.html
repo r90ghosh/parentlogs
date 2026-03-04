@@ -1,0 +1,2409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Dad Journey &amp; Baby Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Jost:wght@300;400;500;600&family=Karla:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ===================================================
+       DESIGN SYSTEM — WARM LUXURY EDITORIAL
+       =================================================== */
+    :root {
+      --bg:           #12100e;
+      --surface:      #1a1714;
+      --card:         #201c18;
+      --card-hover:   #282420;
+      --border:       rgba(237, 230, 220, 0.08);
+      --border-hover: rgba(237, 230, 220, 0.15);
+      --copper:       #c4703f;
+      --copper-dim:   rgba(196, 112, 63, 0.15);
+      --copper-glow:  rgba(196, 112, 63, 0.25);
+      --gold:         #d4a853;
+      --gold-dim:     rgba(212, 168, 83, 0.15);
+      --gold-glow:    rgba(212, 168, 83, 0.25);
+      --cream:        #ede6dc;
+      --muted:        #7a6f62;
+      --dim:          #4a4239;
+      --sage:         #6b8f71;
+      --sage-dim:     rgba(107, 143, 113, 0.15);
+      --sky:          #5b9bd5;
+      --sky-dim:      rgba(91, 155, 213, 0.15);
+      --coral:        #d4836b;
+      --coral-dim:    rgba(212, 131, 107, 0.15);
+      --rose:         #c47a8f;
+      --rose-dim:     rgba(196, 122, 143, 0.15);
+      --white:        #faf6f0;
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Jost', system-ui, sans-serif;
+      --font-ui:      'Karla', system-ui, sans-serif;
+
+      --radius:       12px;
+      --radius-sm:    8px;
+      --radius-lg:    16px;
+
+      --shadow-card:   0 2px 16px rgba(0,0,0,0.35), 0 1px 4px rgba(0,0,0,0.2);
+      --shadow-hover:  0 6px 28px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
+      --shadow-copper: 0 4px 20px rgba(196,112,63,0.18);
+      --shadow-gold:   0 4px 20px rgba(212,168,83,0.18);
+    }
+
+    /* ===================================================
+       RESET & BASE
+       =================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-weight: 400;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 100px;
+    }
+
+    /* Warm radial gradient */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% -10%, rgba(196,112,63,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 90% 60%, rgba(212,168,83,0.04) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Noise texture overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ===================================================
+       TYPOGRAPHY HELPERS
+       =================================================== */
+    .font-display { font-family: var(--font-display); }
+    .font-body    { font-family: var(--font-body); }
+    .font-ui      { font-family: var(--font-ui); }
+
+    /* ===================================================
+       LAYOUT WRAPPERS
+       =================================================== */
+    .app-shell {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .page-content {
+      padding: 0 16px 24px;
+    }
+
+    /* ===================================================
+       STICKY HEADER
+       =================================================== */
+    .top-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-brand {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      color: var(--cream);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .notif-btn {
+      position: relative;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: var(--copper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .notif-btn:hover { color: var(--gold); transform: scale(1.1); }
+    .notif-btn svg { width: 22px; height: 22px; }
+
+    .notif-dot {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 8px;
+      height: 8px;
+      background: var(--copper);
+      border-radius: 50%;
+      border: 2px solid var(--surface);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%       { transform: scale(1.3); opacity: 0.7; }
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--copper), var(--gold));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 12px;
+      color: #12100e;
+      letter-spacing: 0.04em;
+      box-shadow: 0 2px 8px var(--copper-glow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .user-chip:hover .user-avatar {
+      transform: scale(1.05);
+      box-shadow: 0 4px 14px var(--copper-glow);
+    }
+
+    /* ===================================================
+       SECTION TABS (Journey / Tracker toggle)
+       =================================================== */
+    .section-tabs {
+      display: flex;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 57px;
+      z-index: 90;
+    }
+
+    .section-tab {
+      flex: 1;
+      padding: 13px 0;
+      text-align: center;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      cursor: pointer;
+      border: none;
+      background: none;
+      position: relative;
+      transition: color 0.25s ease;
+    }
+
+    .section-tab::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--copper);
+      transition: width 0.3s ease;
+    }
+
+    .section-tab.active {
+      color: var(--cream);
+    }
+
+    .section-tab.active::after {
+      width: 100%;
+    }
+
+    .section-tab:hover:not(.active) {
+      color: var(--cream);
+    }
+
+    /* ===================================================
+       PAGE SECTIONS (toggled by JS)
+       =================================================== */
+    .page-section {
+      display: none;
+    }
+
+    .page-section.active {
+      display: block;
+    }
+
+    /* ===================================================
+       SCROLL REVEAL ANIMATIONS
+       =================================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-1  { transition-delay: 0ms; }
+    .reveal-2  { transition-delay: 80ms; }
+    .reveal-3  { transition-delay: 160ms; }
+    .reveal-4  { transition-delay: 240ms; }
+    .reveal-5  { transition-delay: 320ms; }
+    .reveal-6  { transition-delay: 400ms; }
+    .reveal-7  { transition-delay: 480ms; }
+    .reveal-8  { transition-delay: 560ms; }
+    .reveal-9  { transition-delay: 640ms; }
+
+    /* ===================================================
+       CARD BASE
+       =================================================== */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--border-hover);
+    }
+
+    /* Copper top accent line */
+    .card-copper::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--copper), rgba(196,112,63,0.4));
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    /* Gold top accent line */
+    .card-gold::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), rgba(212,168,83,0.4));
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    /* Card title */
+    .card-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 19px;
+      color: var(--cream);
+      margin-bottom: 18px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .card-title::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 24px;
+      height: 1.5px;
+      background: var(--copper);
+      transition: width 0.3s ease;
+    }
+
+    .card:hover .card-title::after {
+      width: 100%;
+    }
+
+    /* Link style */
+    .card-link {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--copper);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      position: relative;
+      display: inline-block;
+      transition: color 0.2s ease;
+    }
+
+    .card-link::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--copper);
+      transition: width 0.3s ease;
+    }
+
+    .card-link:hover { color: var(--gold); }
+    .card-link:hover::after { width: 100%; }
+
+    /* Progress bar */
+    .progress-track {
+      height: 3px;
+      background: var(--dim);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 1s ease-out;
+    }
+
+    .progress-fill-copper { background: linear-gradient(90deg, var(--copper), #d4824f); }
+    .progress-fill-gold   { background: linear-gradient(90deg, var(--gold), #e0bc72); }
+
+    /* ===================================================
+       PAGE HEADER (section titles)
+       =================================================== */
+    .page-header {
+      padding: 28px 16px 20px;
+    }
+
+    .page-heading {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 1.2;
+      color: var(--cream);
+      margin-bottom: 6px;
+    }
+
+    .page-subheading {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 15px;
+      color: var(--muted);
+      letter-spacing: 0.01em;
+    }
+
+    .page-divider {
+      margin-top: 18px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--copper) 0%, rgba(196,112,63,0.3) 60%, transparent 100%);
+      width: 0;
+      animation: expand-line 1s ease-out forwards;
+    }
+
+    @keyframes expand-line {
+      from { width: 0; }
+      to   { width: 100%; }
+    }
+
+    /* ===================================================
+       MOOD HISTORY CHART
+       =================================================== */
+    .mood-history-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .mood-history-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 19px;
+      color: var(--cream);
+    }
+
+    .streak-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(196, 112, 63, 0.12);
+      border: 1px solid rgba(196, 112, 63, 0.25);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--copper);
+      letter-spacing: 0.03em;
+    }
+
+    .mood-chart-wrapper {
+      position: relative;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+    }
+
+    /* SVG connecting line */
+    .mood-line-svg {
+      position: absolute;
+      top: 22px;
+      left: 22px;
+      right: 22px;
+      height: 44px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .mood-days-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mood-day-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .mood-day-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      user-select: none;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .mood-day-circle.today {
+      width: 48px;
+      height: 48px;
+      border-color: var(--copper);
+      box-shadow: 0 0 0 3px rgba(196,112,63,0.18), 0 0 16px rgba(196,112,63,0.15);
+      font-size: 22px;
+    }
+
+    .mood-day-circle.empty {
+      border-style: dashed;
+      border-color: var(--dim);
+      background: rgba(32,28,24,0.5);
+    }
+
+    .mood-day-label {
+      font-family: var(--font-ui);
+      font-weight: 400;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    .mood-day-item.today-col .mood-day-label {
+      color: var(--copper);
+    }
+
+    .mood-chart-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .mood-avg-text {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--cream);
+    }
+
+    .mood-log-count {
+      font-family: var(--font-ui);
+      font-weight: 400;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Animated line path */
+    .mood-path {
+      stroke: var(--copper);
+      stroke-width: 1.5;
+      fill: none;
+      stroke-dasharray: 400;
+      stroke-dashoffset: 400;
+      animation: draw-line 1.5s ease-out 0.3s forwards;
+    }
+
+    @keyframes draw-line {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* ===================================================
+       MOOD CHECK-IN WIDGET
+       =================================================== */
+    .checkin-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 19px;
+      color: var(--cream);
+      margin-bottom: 18px;
+    }
+
+    .mood-emojis {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .mood-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .mood-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  border-color 0.3s ease,
+                  background 0.3s ease,
+                  box-shadow 0.3s ease;
+      user-select: none;
+    }
+
+    .mood-item:hover .mood-circle {
+      transform: scale(1.12);
+      border-color: var(--copper);
+      box-shadow: 0 4px 16px var(--copper-glow);
+    }
+
+    .mood-item.selected .mood-circle {
+      background: var(--copper-dim);
+      border-color: var(--copper);
+      box-shadow: 0 4px 16px var(--copper-glow);
+      transform: scale(1.12);
+    }
+
+    .mood-label {
+      font-family: var(--font-ui);
+      font-weight: 400;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+      text-align: center;
+    }
+
+    .mood-item.selected .mood-label {
+      color: var(--copper);
+    }
+
+    /* Flags section */
+    .mood-flags {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      animation: fade-in-up 0.35s ease-out forwards;
+    }
+
+    .mood-flags.visible {
+      display: flex;
+    }
+
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .flags-label {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.01em;
+    }
+
+    .flags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .flag-pill {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      user-select: none;
+    }
+
+    .flag-pill:hover {
+      border-color: var(--border-hover);
+      color: var(--cream);
+      transform: scale(1.03);
+    }
+
+    .flag-pill.selected {
+      background: var(--copper);
+      border-color: var(--copper);
+      color: #12100e;
+    }
+
+    .checkin-btn {
+      align-self: flex-start;
+      background: var(--copper);
+      color: #12100e;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      padding: 10px 24px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .checkin-btn:hover {
+      background: #d4824f;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-copper);
+    }
+
+    .checkin-btn:active { transform: scale(0.97); }
+
+    /* ===================================================
+       SECTION TITLE WITH COPPER LINE
+       =================================================== */
+    .section-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .section-heading {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--cream);
+      white-space: nowrap;
+    }
+
+    .section-heading-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--copper) 0%, rgba(196,112,63,0.2) 100%);
+    }
+
+    .section-subtitle {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      letter-spacing: 0.01em;
+    }
+
+    /* ===================================================
+       CHALLENGE TILES — ACCORDION
+       =================================================== */
+    .challenge-tile {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      overflow: hidden;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+      box-shadow: var(--shadow-card);
+    }
+
+    .challenge-tile:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* Pillar-colored left border */
+    .challenge-tile::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: var(--radius) 0 0 var(--radius);
+    }
+
+    /* We use inline style for the border color via CSS var per tile */
+    .challenge-tile {
+      position: relative;
+      padding-left: 4px;
+    }
+
+    .challenge-tile-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 16px 16px 16px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .pillar-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .challenge-tile:hover .pillar-icon-wrap {
+      transform: scale(1.05);
+    }
+
+    .pillar-icon-wrap svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .challenge-tile-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pillar-name {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 15px;
+      color: var(--cream);
+      margin-bottom: 4px;
+    }
+
+    .phase-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(74, 66, 57, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2px 9px;
+      font-family: var(--font-ui);
+      font-weight: 400;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    .active-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--coral-dim);
+      border: 1px solid rgba(212,131,107,0.3);
+      border-radius: 20px;
+      padding: 2px 9px;
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 11px;
+      color: var(--coral);
+      letter-spacing: 0.02em;
+    }
+
+    .active-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--coral);
+      animation: pulse-dot 1.8s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    .tile-badges {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .chevron-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .chevron-wrap svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--muted);
+    }
+
+    .challenge-tile.open .chevron-wrap {
+      transform: rotate(180deg);
+    }
+
+    /* Expanded content */
+    .challenge-tile-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+
+    .challenge-tile.open .challenge-tile-body {
+      max-height: 600px;
+    }
+
+    .challenge-tile-inner {
+      padding: 0 16px 20px 16px;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    .tile-article-title {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 15px;
+      color: var(--cream);
+      margin-bottom: 8px;
+    }
+
+    .tile-excerpt {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .tile-blockquote {
+      border-left: 3px solid var(--copper);
+      padding-left: 14px;
+      margin-bottom: 16px;
+    }
+
+    .tile-blockquote p {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--cream);
+      line-height: 1.6;
+    }
+
+    .tile-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tile-read-link {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--copper);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.2s ease;
+    }
+
+    .tile-read-link:hover {
+      color: var(--gold);
+    }
+
+    .tile-task-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-ui);
+      font-weight: 400;
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 10px;
+      white-space: nowrap;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .tile-task-chip:hover {
+      border-color: var(--border-hover);
+      color: var(--cream);
+    }
+
+    .tile-task-chip svg {
+      width: 12px;
+      height: 12px;
+      stroke: var(--muted);
+    }
+
+    /* ===================================================
+       COPPER DIAMOND DIVIDER
+       =================================================== */
+    .copper-divider {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 32px 16px;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--copper) 40%, var(--copper) 60%, transparent);
+    }
+
+    .divider-diamond {
+      font-size: 10px;
+      color: var(--copper);
+      margin: 0 8px;
+      opacity: 0.8;
+    }
+
+    /* ===================================================
+       TRACKER — PREMIUM PREVIEW BANNER
+       =================================================== */
+    .tracker-header-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .tracker-heading {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 1.2;
+      color: var(--cream);
+    }
+
+    .premium-badge {
+      display: inline-flex;
+      align-items: center;
+      background: var(--gold);
+      color: #12100e;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      padding: 4px 9px;
+      border-radius: 4px;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Premium banner card */
+    .premium-banner {
+      background: linear-gradient(135deg, rgba(212,168,83,0.04) 0%, var(--card) 60%);
+      border: 1px solid rgba(212,168,83,0.18);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Shimmer diagonal streak */
+    .premium-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 80%;
+      height: 200%;
+      background: linear-gradient(
+        105deg,
+        transparent 40%,
+        rgba(212,168,83,0.04) 50%,
+        rgba(212,168,83,0.07) 55%,
+        rgba(212,168,83,0.04) 60%,
+        transparent 70%
+      );
+      animation: shimmer 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0%   { transform: translateX(-30%) skewX(-15deg); }
+      50%  { transform: translateX(180%) skewX(-15deg); }
+      100% { transform: translateX(-30%) skewX(-15deg); }
+    }
+
+    .banner-lock-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(212,168,83,0.1);
+      border: 1px solid rgba(212,168,83,0.2);
+      margin-bottom: 14px;
+    }
+
+    .banner-lock-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--gold);
+    }
+
+    .banner-heading {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--cream);
+      margin-bottom: 14px;
+      line-height: 1.25;
+    }
+
+    .banner-features-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .feature-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 12px;
+      padding: 5px 11px;
+      border-radius: 20px;
+      border: 1px solid;
+    }
+
+    .feature-pill-sage  { color: var(--sage);  border-color: rgba(107,143,113,0.35); background: var(--sage-dim); }
+    .feature-pill-gold  { color: var(--gold);  border-color: rgba(212,168,83,0.35);  background: var(--gold-dim); }
+    .feature-pill-sky   { color: var(--sky);   border-color: rgba(91,155,213,0.35);  background: var(--sky-dim); }
+    .feature-pill-coral { color: var(--coral); border-color: rgba(212,131,107,0.35); background: var(--coral-dim); }
+
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: #12100e;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      padding: 12px 22px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-gold:hover {
+      background: #dfb65a;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-gold);
+    }
+
+    .btn-gold:active { transform: scale(0.97); }
+
+    /* ===================================================
+       BREATHE ANIMATION (for dimmed locked elements)
+       =================================================== */
+    @keyframes breathe {
+      0%, 100% { opacity: 0.40; }
+      50%       { opacity: 0.55; }
+    }
+
+    .locked-dim {
+      opacity: 0.45;
+      animation: breathe 3s ease-in-out infinite;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ===================================================
+       SHIFT STATS ROW
+       =================================================== */
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+    }
+
+    .stat-icon-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-icon-circle svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .stat-value {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--cream);
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-family: var(--font-ui);
+      font-weight: 400;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+
+    /* ===================================================
+       QUICK LOG TILES
+       =================================================== */
+    .quick-log-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .quick-log-tile {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quick-log-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .quick-log-name {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--cream);
+    }
+
+    /* Lock overlay badge on tiles */
+    .lock-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(32,28,24,0.85);
+      border: 1px solid var(--border-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lock-badge svg {
+      width: 10px;
+      height: 10px;
+      stroke: var(--muted);
+    }
+
+    /* ===================================================
+       RECENT ACTIVITY LOG
+       =================================================== */
+    .activity-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .activity-entry {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .activity-entry:last-child {
+      border-bottom: none;
+    }
+
+    .activity-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .activity-text {
+      flex: 1;
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--cream);
+    }
+
+    .activity-time {
+      font-family: var(--font-ui);
+      font-weight: 400;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ===================================================
+       BOTTOM NAV
+       =================================================== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      align-items: stretch;
+      height: 72px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: var(--muted);
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      background: none;
+      -webkit-tap-highlight-color: transparent;
+      padding: 8px 0;
+      transition: color 0.2s ease;
+    }
+
+    .nav-item:hover {
+      color: var(--cream);
+    }
+
+    .nav-item.active {
+      color: var(--copper);
+    }
+
+    .nav-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .nav-active-dot {
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--copper);
+      display: none;
+    }
+
+    .nav-item.active .nav-active-dot {
+      display: block;
+    }
+
+    .nav-label {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+    }
+
+    /* Nav indicator bar */
+    .nav-item.active .nav-icon::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 2px;
+      background: var(--copper);
+      border-radius: 1px;
+    }
+
+    /* ===================================================
+       RESPONSIVE
+       =================================================== */
+    @media (max-width: 360px) {
+      .mood-day-circle { width: 38px; height: 38px; font-size: 17px; }
+      .mood-day-circle.today { width: 42px; height: 42px; font-size: 19px; }
+      .mood-circle { width: 46px; height: 46px; font-size: 21px; }
+      .stats-row { gap: 6px; }
+      .quick-log-row { gap: 6px; }
+    }
+
+    @media (min-width: 480px) {
+      .bottom-nav { left: 50%; transform: translateX(-50%); }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ===================================================
+       STICKY HEADER
+       =================================================== -->
+  <header class="top-header">
+    <span class="header-brand">The Dad Center</span>
+    <div class="header-right">
+      <button class="notif-btn" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        <span class="notif-dot"></span>
+      </button>
+      <div class="user-chip">
+        <div class="user-avatar">MJ</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================
+       SECTION TABS
+       =================================================== -->
+  <div class="section-tabs" role="tablist">
+    <button class="section-tab active" role="tab" aria-selected="true" onclick="switchSection('journey', this)">
+      Dad Journey
+    </button>
+    <button class="section-tab" role="tab" aria-selected="false" onclick="switchSection('tracker', this)">
+      Baby Tracker
+    </button>
+  </div>
+
+  <!-- ===================================================
+       PAGE 1: DAD JOURNEY
+       =================================================== -->
+  <section id="section-journey" class="page-section active" aria-label="Dad Journey">
+
+    <!-- Page Header -->
+    <div class="page-header reveal reveal-1">
+      <h1 class="page-heading font-display">Your Journey</h1>
+      <p class="page-subheading">Week 24 &middot; Explore what matters</p>
+      <div class="page-divider"></div>
+    </div>
+
+    <main class="page-content">
+
+      <!-- ================================================
+           CARD 1: MOOD HISTORY CHART
+           ================================================ -->
+      <div class="card card-copper reveal reveal-2" id="mood-history-card">
+        <div class="mood-history-header">
+          <h2 class="mood-history-title font-display">This Week</h2>
+          <div class="streak-badge">
+            5-day streak &#x1F525;
+          </div>
+        </div>
+
+        <!-- 7-day mood chart -->
+        <div class="mood-chart-wrapper">
+          <!-- SVG connecting line behind circles -->
+          <svg class="mood-line-svg" viewBox="0 0 400 44" preserveAspectRatio="none" aria-hidden="true">
+            <!-- Line connects the 5 filled circles (Mon–Fri), positioned at roughly equal intervals -->
+            <path class="mood-path"
+              d="M 28 22 L 85 22 L 142 22 L 200 22 L 257 22"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+          <div class="mood-days-row">
+            <!-- Mon — filled -->
+            <div class="mood-day-item">
+              <div class="mood-day-circle">😊</div>
+              <span class="mood-day-label">Mon</span>
+            </div>
+            <!-- Tue — filled -->
+            <div class="mood-day-item">
+              <div class="mood-day-circle">😊</div>
+              <span class="mood-day-label">Tue</span>
+            </div>
+            <!-- Wed — filled -->
+            <div class="mood-day-item">
+              <div class="mood-day-circle">😐</div>
+              <span class="mood-day-label">Wed</span>
+            </div>
+            <!-- Thu — filled -->
+            <div class="mood-day-item">
+              <div class="mood-day-circle">😕</div>
+              <span class="mood-day-label">Thu</span>
+            </div>
+            <!-- Fri — today, filled, copper glow -->
+            <div class="mood-day-item today-col">
+              <div class="mood-day-circle today">🔥</div>
+              <span class="mood-day-label">Fri</span>
+            </div>
+            <!-- Sat — future, empty dashed -->
+            <div class="mood-day-item">
+              <div class="mood-day-circle empty"></div>
+              <span class="mood-day-label">Sat</span>
+            </div>
+            <!-- Sun — future, empty dashed -->
+            <div class="mood-day-item">
+              <div class="mood-day-circle empty"></div>
+              <span class="mood-day-label">Sun</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mood-chart-summary">
+          <span class="mood-avg-text font-body">Average mood: Good 😊</span>
+          <span class="mood-log-count font-ui">Logged 5 of 7 days</span>
+        </div>
+      </div>
+
+      <!-- ================================================
+           CARD 2: MOOD CHECK-IN WIDGET
+           ================================================ -->
+      <div class="card card-copper reveal reveal-3" id="mood-checkin-card">
+        <h2 class="checkin-title font-display">How are you feeling?</h2>
+
+        <!-- 5 mood options -->
+        <div class="mood-emojis" role="group" aria-label="Select your mood">
+          <div class="mood-item" onclick="selectMood(this)" role="radio" aria-label="Rough" tabindex="0">
+            <div class="mood-circle">😫</div>
+            <span class="mood-label">Rough</span>
+          </div>
+          <div class="mood-item" onclick="selectMood(this)" role="radio" aria-label="Tough" tabindex="0">
+            <div class="mood-circle">😕</div>
+            <span class="mood-label">Tough</span>
+          </div>
+          <div class="mood-item" onclick="selectMood(this)" role="radio" aria-label="Okay" tabindex="0">
+            <div class="mood-circle">😐</div>
+            <span class="mood-label">Okay</span>
+          </div>
+          <div class="mood-item selected" onclick="selectMood(this)" role="radio" aria-label="Good" aria-checked="true" tabindex="0">
+            <div class="mood-circle">😊</div>
+            <span class="mood-label">Good</span>
+          </div>
+          <div class="mood-item" onclick="selectMood(this)" role="radio" aria-label="Great" tabindex="0">
+            <div class="mood-circle">🔥</div>
+            <span class="mood-label">Great</span>
+          </div>
+        </div>
+
+        <!-- Flags section (visible by default since mood is pre-selected) -->
+        <div class="mood-flags visible" id="mood-flags">
+          <p class="flags-label">What's affecting you?</p>
+          <div class="flags-row">
+            <button class="flag-pill" onclick="toggleFlag(this)">Sleep</button>
+            <button class="flag-pill selected" onclick="toggleFlag(this)">Work stress</button>
+            <button class="flag-pill" onclick="toggleFlag(this)">Partner tension</button>
+            <button class="flag-pill selected" onclick="toggleFlag(this)">Anxiety</button>
+            <button class="flag-pill" onclick="toggleFlag(this)">Physical health</button>
+            <button class="flag-pill" onclick="toggleFlag(this)">Money</button>
+          </div>
+          <button class="checkin-btn" onclick="submitCheckin(this)">Check In</button>
+        </div>
+      </div>
+
+      <!-- ================================================
+           CHALLENGE TILES — ON YOUR MIND
+           ================================================ -->
+      <div class="reveal reveal-4">
+        <div class="section-title-row">
+          <h2 class="section-heading font-display">On Your Mind</h2>
+          <div class="section-heading-line"></div>
+        </div>
+        <p class="section-subtitle">7 areas to navigate as a new dad</p>
+      </div>
+
+      <!-- Tile 1: Knowledge -->
+      <div class="challenge-tile reveal reveal-4" style="border-left: 4px solid var(--sky);" data-pillar="knowledge">
+        <div class="challenge-tile-header" onclick="toggleTile(this.parentElement)" aria-expanded="false">
+          <div class="pillar-icon-wrap" style="background: var(--sky-dim);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <div class="challenge-tile-meta">
+            <div class="pillar-name">Knowledge</div>
+            <div class="tile-badges">
+              <span class="phase-badge">Trimester 2</span>
+            </div>
+          </div>
+          <div class="chevron-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+        <div class="challenge-tile-body">
+          <div class="challenge-tile-inner">
+            <p class="tile-article-title">Understanding Pregnancy Stages</p>
+            <p class="tile-excerpt">The second trimester brings rapid development — your baby's features are forming, and you're entering a window where connection becomes more tangible. Understanding what's happening helps you show up confidently.</p>
+            <div class="tile-blockquote">
+              <p>"Knowing the week-by-week changes helped me feel less like a bystander and more like an active participant in the pregnancy."</p>
+            </div>
+            <div class="tile-footer">
+              <a href="#" class="tile-read-link">
+                Read Full Article
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+              <span class="tile-task-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Read birth plan together
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tile 2: Planning -->
+      <div class="challenge-tile reveal reveal-4" style="border-left: 4px solid var(--copper);" data-pillar="planning">
+        <div class="challenge-tile-header" onclick="toggleTile(this.parentElement)" aria-expanded="false">
+          <div class="pillar-icon-wrap" style="background: var(--copper-dim);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--copper)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+          </div>
+          <div class="challenge-tile-meta">
+            <div class="pillar-name">Planning</div>
+            <div class="tile-badges">
+              <span class="phase-badge">Trimester 2</span>
+            </div>
+          </div>
+          <div class="chevron-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+        <div class="challenge-tile-body">
+          <div class="challenge-tile-inner">
+            <p class="tile-article-title">Building Your Preparation Plan</p>
+            <p class="tile-excerpt">A structured plan for the next 16 weeks reduces the feeling of being overwhelmed. Break down nursery prep, hospital bag packing, and parental leave planning into small, weekly steps.</p>
+            <div class="tile-blockquote">
+              <p>"I made a spreadsheet with 4-week milestones. It sounds nerdy but it genuinely helped me feel ready."</p>
+            </div>
+            <div class="tile-footer">
+              <a href="#" class="tile-read-link">
+                Read Full Article
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+              <span class="tile-task-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Schedule hospital tour
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tile 3: Finances -->
+      <div class="challenge-tile reveal reveal-5" style="border-left: 4px solid var(--gold);" data-pillar="finances">
+        <div class="challenge-tile-header" onclick="toggleTile(this.parentElement)" aria-expanded="false">
+          <div class="pillar-icon-wrap" style="background: var(--gold-dim);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <div class="challenge-tile-meta">
+            <div class="pillar-name">Finances</div>
+            <div class="tile-badges">
+              <span class="phase-badge">Trimester 2</span>
+            </div>
+          </div>
+          <div class="chevron-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+        <div class="challenge-tile-body">
+          <div class="challenge-tile-inner">
+            <p class="tile-article-title">Growing Financial Readiness</p>
+            <p class="tile-excerpt">From childcare costs to adjusting to one income temporarily, financial preparation now prevents stress later. Start with a baseline budget that accounts for the first 6 months.</p>
+            <div class="tile-blockquote">
+              <p>"We didn't have everything figured out, but having a rough number we were comfortable with gave us real peace of mind."</p>
+            </div>
+            <div class="tile-footer">
+              <a href="#" class="tile-read-link">
+                Read Full Article
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+              <span class="tile-task-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Review parental leave policy
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tile 4: Anxiety — PRE-EXPANDED, Active badge -->
+      <div class="challenge-tile open reveal reveal-5" style="border-left: 4px solid var(--coral);" id="tile-anxiety" data-pillar="anxiety">
+        <div class="challenge-tile-header" onclick="toggleTile(this.parentElement)" aria-expanded="true">
+          <div class="pillar-icon-wrap" style="background: var(--coral-dim);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+            </svg>
+          </div>
+          <div class="challenge-tile-meta">
+            <div class="pillar-name">Anxiety</div>
+            <div class="tile-badges">
+              <span class="phase-badge">Trimester 2</span>
+              <span class="active-badge">
+                <span class="active-dot"></span>
+                Active
+              </span>
+            </div>
+          </div>
+          <div class="chevron-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+        <div class="challenge-tile-body">
+          <div class="challenge-tile-inner">
+            <p class="tile-article-title">Navigating Worries</p>
+            <p class="tile-excerpt">Dad anxiety is real — and vastly underreported. Fear of failure, financial pressure, and the unknown can compound silently. This pillar covers practical tools: naming the worry, cognitive reframing, and knowing when to seek support.</p>
+            <div class="tile-blockquote">
+              <p>"I was anxious every single day during the pregnancy. Naming it out loud — even just to myself — took away some of its power."</p>
+            </div>
+            <div class="tile-footer">
+              <a href="#" class="tile-read-link">
+                Read Full Article
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+              <span class="tile-task-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Try 5-min breathing exercise
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tile 5: Baby Bonding -->
+      <div class="challenge-tile reveal reveal-6" style="border-left: 4px solid #7bb8e8;" data-pillar="baby_bonding">
+        <div class="challenge-tile-header" onclick="toggleTile(this.parentElement)" aria-expanded="false">
+          <div class="pillar-icon-wrap" style="background: rgba(123,184,232,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7bb8e8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </div>
+          <div class="challenge-tile-meta">
+            <div class="pillar-name">Baby Bonding</div>
+            <div class="tile-badges">
+              <span class="phase-badge">Trimester 2</span>
+            </div>
+          </div>
+          <div class="chevron-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+        <div class="challenge-tile-body">
+          <div class="challenge-tile-inner">
+            <p class="tile-article-title">Connecting Before Arrival</p>
+            <p class="tile-excerpt">Prenatal bonding is a real phenomenon — talking to the bump, attending scans, and learning baby's movement patterns all build the neural pathways of attachment before birth.</p>
+            <div class="tile-blockquote">
+              <p>"I felt silly at first talking to the bump, but after a few weeks I genuinely looked forward to those quiet moments."</p>
+            </div>
+            <div class="tile-footer">
+              <a href="#" class="tile-read-link">
+                Read Full Article
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+              <span class="tile-task-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Attend next scan together
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tile 6: Relationship -->
+      <div class="challenge-tile reveal reveal-7" style="border-left: 4px solid var(--rose);" data-pillar="relationship">
+        <div class="challenge-tile-header" onclick="toggleTile(this.parentElement)" aria-expanded="false">
+          <div class="pillar-icon-wrap" style="background: var(--rose-dim);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+          </div>
+          <div class="challenge-tile-meta">
+            <div class="pillar-name">Relationship</div>
+            <div class="tile-badges">
+              <span class="phase-badge">Trimester 2</span>
+            </div>
+          </div>
+          <div class="chevron-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+        <div class="challenge-tile-body">
+          <div class="challenge-tile-inner">
+            <p class="tile-article-title">Tending the Partnership</p>
+            <p class="tile-excerpt">Research consistently shows relationship satisfaction drops in the first year postpartum — but it doesn't have to. Small investments now pay forward: regular check-ins, shared decision-making, and protecting couple time.</p>
+            <div class="tile-blockquote">
+              <p>"We started a 10-minute nightly check-in during pregnancy. It became the most important habit we built."</p>
+            </div>
+            <div class="tile-footer">
+              <a href="#" class="tile-read-link">
+                Read Full Article
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+              <span class="tile-task-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Plan a date night this week
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tile 7: Extended Family -->
+      <div class="challenge-tile reveal reveal-8" style="border-left: 4px solid var(--muted);" data-pillar="extended_family">
+        <div class="challenge-tile-header" onclick="toggleTile(this.parentElement)" aria-expanded="false">
+          <div class="pillar-icon-wrap" style="background: rgba(122,111,98,0.12);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div class="challenge-tile-meta">
+            <div class="pillar-name">Extended Family</div>
+            <div class="tile-badges">
+              <span class="phase-badge">Trimester 2</span>
+            </div>
+          </div>
+          <div class="chevron-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+        <div class="challenge-tile-body">
+          <div class="challenge-tile-inner">
+            <p class="tile-article-title">Managing the Wider Circle</p>
+            <p class="tile-excerpt">Grandparent expectations, unsolicited advice, and differing parenting philosophies are real stressors. Setting gentle but clear boundaries early — as a united front — protects your growing family's wellbeing.</p>
+            <div class="tile-blockquote">
+              <p>"We agreed on what we'd share and what we wouldn't before any conversations happened. That alignment was everything."</p>
+            </div>
+            <div class="tile-footer">
+              <a href="#" class="tile-read-link">
+                Read Full Article
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+              <span class="tile-task-chip">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Discuss grandparent visits
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom spacer -->
+      <div style="height: 24px;"></div>
+
+    </main>
+  </section><!-- /#section-journey -->
+
+
+  <!-- ===================================================
+       PAGE 2: BABY TRACKER
+       =================================================== -->
+  <section id="section-tracker" class="page-section" aria-label="Baby Tracker">
+
+    <!-- Page Header -->
+    <div class="page-header reveal reveal-1">
+      <div class="tracker-header-row">
+        <h1 class="tracker-heading font-display">Baby Tracker</h1>
+        <span class="premium-badge">PREMIUM</span>
+      </div>
+      <p class="page-subheading">Monitor, log, and share</p>
+      <div class="page-divider"></div>
+    </div>
+
+    <main class="page-content">
+
+      <!-- ================================================
+           PREMIUM PREVIEW BANNER
+           ================================================ -->
+      <div class="premium-banner reveal reveal-2">
+        <div class="banner-lock-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <h2 class="banner-heading font-display">Track every precious moment</h2>
+        <div class="banner-features-row">
+          <span class="feature-pill feature-pill-sage">Feedings</span>
+          <span class="feature-pill feature-pill-gold">Diapers</span>
+          <span class="feature-pill feature-pill-sky">Sleep</span>
+          <span class="feature-pill feature-pill-coral">Growth</span>
+        </div>
+        <a href="#" class="btn-gold">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Unlock with Premium &middot; $4.99/mo
+        </a>
+      </div>
+
+      <!-- ================================================
+           SHIFT BRIEFING STATS (dimmed / locked)
+           ================================================ -->
+      <div class="locked-dim" aria-hidden="true">
+        <div class="stats-row">
+          <!-- Last Feed -->
+          <div class="stat-card">
+            <div class="stat-icon-circle" style="background: var(--sage-dim);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                <line x1="6" y1="1" x2="6" y2="4"/>
+                <line x1="10" y1="1" x2="10" y2="4"/>
+                <line x1="14" y1="1" x2="14" y2="4"/>
+              </svg>
+            </div>
+            <div class="stat-value">2h ago</div>
+            <div class="stat-label">Last Feed</div>
+          </div>
+          <!-- Diapers -->
+          <div class="stat-card">
+            <div class="stat-icon-circle" style="background: var(--gold-dim);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <line x1="7" y1="7" x2="7.01" y2="7"/>
+              </svg>
+            </div>
+            <div class="stat-value">4</div>
+            <div class="stat-label">Diapers Today</div>
+          </div>
+          <!-- Sleep -->
+          <div class="stat-card">
+            <div class="stat-icon-circle" style="background: var(--sky-dim);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            </div>
+            <div class="stat-value">6h</div>
+            <div class="stat-label">Total Sleep</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================================================
+           QUICK LOG TILES (dimmed / locked)
+           ================================================ -->
+      <div class="locked-dim" aria-hidden="true" style="margin-bottom: 14px;">
+        <div class="quick-log-row">
+          <!-- Feeding -->
+          <div class="quick-log-tile" style="background: linear-gradient(145deg, rgba(107,143,113,0.08), var(--card));">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <div class="quick-log-icon" style="background: var(--sage-dim); font-size: 22px;">🍼</div>
+            <div class="quick-log-name">Feeding</div>
+          </div>
+          <!-- Diapers -->
+          <div class="quick-log-tile" style="background: linear-gradient(145deg, rgba(212,168,83,0.08), var(--card));">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <div class="quick-log-icon" style="background: var(--gold-dim); font-size: 22px;">🧷</div>
+            <div class="quick-log-name">Diapers</div>
+          </div>
+          <!-- Sleep -->
+          <div class="quick-log-tile" style="background: linear-gradient(145deg, rgba(91,155,213,0.08), var(--card));">
+            <div class="lock-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <div class="quick-log-icon" style="background: var(--sky-dim); font-size: 22px;">🌙</div>
+            <div class="quick-log-name">Sleep</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================================================
+           RECENT ACTIVITY (dimmed / locked)
+           ================================================ -->
+      <div class="card locked-dim" aria-hidden="true" style="margin-bottom: 14px;">
+        <div class="activity-header-row">
+          <h3 class="card-title font-display" style="font-size:16px;margin-bottom:0;">Recent Activity</h3>
+          <a href="#" class="card-link">View All &rarr;</a>
+        </div>
+        <div class="activity-list">
+          <div class="activity-entry">
+            <span class="activity-dot" style="background: var(--sage);"></span>
+            <span class="activity-text">Bottle &middot; 4oz</span>
+            <span class="activity-time">2:30 PM</span>
+          </div>
+          <div class="activity-entry">
+            <span class="activity-dot" style="background: var(--gold);"></span>
+            <span class="activity-text">Diaper &middot; Wet</span>
+            <span class="activity-time">1:45 PM</span>
+          </div>
+          <div class="activity-entry">
+            <span class="activity-dot" style="background: var(--sky);"></span>
+            <span class="activity-text">Nap &middot; 45 min</span>
+            <span class="activity-time">12:00 PM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom spacer -->
+      <div style="height: 24px;"></div>
+
+    </main>
+  </section><!-- /#section-tracker -->
+
+</div><!-- /.app-shell -->
+
+
+<!-- ===================================================
+     BOTTOM NAV
+     =================================================== -->
+<nav class="bottom-nav" aria-label="Main navigation">
+
+  <a class="nav-item" href="#" aria-label="Home">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+    </span>
+    <span class="nav-label">Home</span>
+  </a>
+
+  <a class="nav-item" href="#" aria-label="Tasks">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+    </span>
+    <span class="nav-label">Tasks</span>
+  </a>
+
+  <a class="nav-item" href="#" aria-label="Briefing">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+    </span>
+    <span class="nav-label">Briefing</span>
+  </a>
+
+  <a class="nav-item active" href="#" aria-current="page" aria-label="Tracker" id="nav-tracker">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/>
+        <line x1="12" y1="20" x2="12" y2="4"/>
+        <line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      <span class="nav-active-dot"></span>
+    </span>
+    <span class="nav-label">Tracker</span>
+  </a>
+
+  <a class="nav-item" href="#" aria-label="More">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="1"/>
+        <circle cx="12" cy="5" r="1"/>
+        <circle cx="12" cy="19" r="1"/>
+      </svg>
+    </span>
+    <span class="nav-label">More</span>
+  </a>
+
+</nav>
+
+
+<!-- ===================================================
+     JAVASCRIPT
+     =================================================== -->
+<script>
+  /* -------------------------------------------------------
+     1. Scroll Reveal Observer
+     ------------------------------------------------------- */
+  (function () {
+    var reveals = document.querySelectorAll('.reveal');
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.06, rootMargin: '0px 0px -24px 0px' }
+    );
+
+    reveals.forEach(function (el) { observer.observe(el); });
+
+    // Trigger for above-fold elements immediately
+    setTimeout(function () {
+      reveals.forEach(function (el) {
+        var rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+          el.classList.add('visible');
+        }
+      });
+    }, 60);
+  })();
+
+
+  /* -------------------------------------------------------
+     2. Section Tab Switcher
+     ------------------------------------------------------- */
+  function switchSection(sectionId, tabEl) {
+    // Hide all sections
+    document.querySelectorAll('.page-section').forEach(function (sec) {
+      sec.classList.remove('active');
+    });
+
+    // Deactivate all tabs
+    document.querySelectorAll('.section-tab').forEach(function (tab) {
+      tab.classList.remove('active');
+      tab.setAttribute('aria-selected', 'false');
+    });
+
+    // Activate target section
+    var target = document.getElementById('section-' + sectionId);
+    if (target) {
+      target.classList.add('active');
+      // Re-trigger reveals for newly visible section
+      setTimeout(function () {
+        target.querySelectorAll('.reveal').forEach(function (el) {
+          var rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight) {
+            el.classList.add('visible');
+          }
+        });
+      }, 60);
+    }
+
+    // Activate tab
+    tabEl.classList.add('active');
+    tabEl.setAttribute('aria-selected', 'true');
+
+    // Update bottom nav active state
+    var navTracker = document.getElementById('nav-tracker');
+    if (navTracker) {
+      if (sectionId === 'tracker') {
+        navTracker.classList.add('active');
+        navTracker.setAttribute('aria-current', 'page');
+      } else {
+        navTracker.classList.remove('active');
+        navTracker.removeAttribute('aria-current');
+      }
+    }
+
+    // Scroll to top of content
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+
+  /* -------------------------------------------------------
+     3. Challenge Tile Accordion (one open at a time)
+     ------------------------------------------------------- */
+  function toggleTile(tile) {
+    var isOpen = tile.classList.contains('open');
+
+    // Close all tiles
+    document.querySelectorAll('.challenge-tile').forEach(function (t) {
+      t.classList.remove('open');
+      var header = t.querySelector('.challenge-tile-header');
+      if (header) header.setAttribute('aria-expanded', 'false');
+    });
+
+    // If the clicked tile was closed, open it
+    if (!isOpen) {
+      tile.classList.add('open');
+      var header = tile.querySelector('.challenge-tile-header');
+      if (header) header.setAttribute('aria-expanded', 'true');
+
+      // Smooth scroll to tile after a brief delay so the expand animation runs first
+      setTimeout(function () {
+        tile.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 80);
+    }
+  }
+
+  // Initialize: ensure Anxiety tile is pre-expanded on load
+  document.addEventListener('DOMContentLoaded', function () {
+    var anxietyTile = document.getElementById('tile-anxiety');
+    if (anxietyTile) {
+      anxietyTile.classList.add('open');
+      var header = anxietyTile.querySelector('.challenge-tile-header');
+      if (header) header.setAttribute('aria-expanded', 'true');
+    }
+  });
+
+
+  /* -------------------------------------------------------
+     4. Mood Selector (Journey check-in widget)
+     ------------------------------------------------------- */
+  function selectMood(el) {
+    // Deselect all mood items
+    document.querySelectorAll('#mood-checkin-card .mood-item').forEach(function (item) {
+      item.classList.remove('selected');
+      item.setAttribute('aria-checked', 'false');
+    });
+
+    // Select clicked
+    el.classList.add('selected');
+    el.setAttribute('aria-checked', 'true');
+
+    // Show flags
+    var flags = document.getElementById('mood-flags');
+    if (flags) flags.classList.add('visible');
+
+    // Spring bounce on circle
+    var circle = el.querySelector('.mood-circle');
+    if (circle) {
+      circle.style.animation = 'none';
+      void circle.offsetHeight; // force reflow
+      circle.style.animation = 'mood-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    }
+  }
+
+  // Inject bounce keyframe
+  (function () {
+    var s = document.createElement('style');
+    s.textContent = '@keyframes mood-bounce { 0% { transform: scale(1); } 40% { transform: scale(1.28); } 70% { transform: scale(0.94); } 100% { transform: scale(1.12); } }';
+    document.head.appendChild(s);
+  })();
+
+
+  /* -------------------------------------------------------
+     5. Flag Pills Toggle
+     ------------------------------------------------------- */
+  function toggleFlag(el) {
+    el.classList.toggle('selected');
+  }
+
+
+  /* -------------------------------------------------------
+     6. Check-in Submit
+     ------------------------------------------------------- */
+  function submitCheckin(btn) {
+    btn.textContent = 'Checked In \u2713';
+    btn.style.background = 'var(--sage)';
+    btn.disabled = true;
+
+    // Collapse checkin card after a moment
+    setTimeout(function () {
+      var card = document.getElementById('mood-checkin-card');
+      if (card) {
+        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease, max-height 0.6s ease';
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(-8px) scale(0.98)';
+        setTimeout(function () {
+          card.style.maxHeight = '0';
+          card.style.padding = '0';
+          card.style.margin = '0';
+          card.style.border = 'none';
+          card.style.overflow = 'hidden';
+        }, 450);
+      }
+    }, 900);
+  }
+
+
+  /* -------------------------------------------------------
+     7. Progress bar animated entry
+     ------------------------------------------------------- */
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      document.querySelectorAll('.progress-fill').forEach(function (el) {
+        var target = el.style.width;
+        el.style.width = '0';
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            el.style.width = target;
+          });
+        });
+      });
+    }, 300);
+  });
+
+</script>
+
+</body>
+</html>

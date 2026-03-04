@@ -94,25 +94,25 @@ export default function BriefingArchivePage() {
       <div className="flex items-center gap-4">
         <Link
           href="/briefing"
-          className="p-2 rounded-lg hover:bg-surface-800 transition-colors"
+          className="p-2 rounded-lg hover:bg-[--card] transition-colors"
         >
-          <ChevronLeft className="h-5 w-5 text-surface-400" />
+          <ChevronLeft className="h-5 w-5 text-[--muted]" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-white">Briefing Archive</h1>
-          <p className="text-sm text-surface-400">
+          <h1 className="text-2xl font-display font-bold text-[--cream]">Briefing Archive</h1>
+          <p className="text-sm text-[--muted]">
             Your complete pregnancy and parenting journey
           </p>
         </div>
       </div>
 
       {/* Current Position Indicator */}
-      <Card className="bg-accent-600/10 border-accent-600/30">
+      <Card className="bg-copper-dim border-copper/30">
         <CardContent className="py-4 flex items-center gap-3">
-          <Sparkles className="h-5 w-5 text-accent-400" />
-          <span className="text-surface-200">
+          <Sparkles className="h-5 w-5 text-copper" />
+          <span className="text-[--cream]">
             You are currently at{' '}
-            <strong className="text-accent-400">
+            <strong className="text-copper">
               {getTrimesterLabel(currentStage)} Week {currentWeek}
             </strong>
           </span>
@@ -120,14 +120,14 @@ export default function BriefingArchivePage() {
       </Card>
 
       {/* Info about content visibility */}
-      <p className="text-sm text-surface-500 flex items-center gap-2">
+      <p className="text-sm text-[--dim] flex items-center gap-2">
         <Lock className="h-4 w-4" />
         Only your current week shows full content. Other weeks show a preview.
       </p>
 
       {/* Tabs for Trimester/Stage */}
       <Tabs defaultValue={defaultTab} className="w-full">
-        <TabsList className="bg-surface-900 w-full justify-start gap-1 p-1">
+        <TabsList className="bg-[--surface] w-full justify-start gap-1 p-1">
           <TabsTrigger value="first-trimester" className="flex-1">
             T1 ({groupedBriefings['first-trimester'].length})
           </TabsTrigger>
@@ -190,7 +190,7 @@ function BriefingGrid({
   if (briefings.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-surface-400">No briefings available for this stage.</p>
+        <p className="text-[--muted]">No briefings available for this stage.</p>
       </div>
     )
   }
@@ -241,9 +241,9 @@ function BriefingCard({
     >
       <Card
         className={cn(
-          "h-full transition-all hover:border-surface-600",
-          isCurrent && "border-accent-500 bg-accent-900/20",
-          isLocked && "bg-surface-900/50 border-surface-800"
+          "h-full transition-all hover:border-[--border-hover]",
+          isCurrent && "border-copper bg-copper-dim",
+          isLocked && "bg-[--surface]/50 border-[--border]"
         )}
       >
         <CardHeader className="pb-2">
@@ -254,23 +254,23 @@ function BriefingCard({
                   variant={isCurrent ? "default" : "secondary"}
                   className={cn(
                     "text-xs",
-                    isCurrent && "bg-accent-600"
+                    isCurrent && "bg-copper"
                   )}
                 >
                   Week {briefing.week}
                 </Badge>
                 {isCurrent && (
-                  <Badge variant="outline" className="text-xs border-accent-500 text-accent-400">
+                  <Badge variant="outline" className="text-xs border-copper text-copper">
                     Current
                   </Badge>
                 )}
                 {isLocked && (
-                  <Lock className="h-3 w-3 text-surface-500" />
+                  <Lock className="h-3 w-3 text-[--dim]" />
                 )}
               </div>
               <CardTitle className={cn(
                 "text-lg mt-2",
-                isLocked ? "text-surface-400" : "text-white"
+                isLocked ? "text-[--muted]" : "text-[--cream]"
               )}>
                 {briefing.title}
               </CardTitle>
@@ -281,48 +281,48 @@ function BriefingCard({
         <CardContent className="space-y-3">
           {/* Baby Update Preview */}
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-blue-400">
+            <div className="flex items-center gap-1.5 text-xs text-sage">
               <Baby className="h-3 w-3" />
               Baby Update
             </div>
             <div className="relative">
               <p className={cn(
                 "text-sm line-clamp-2",
-                isLocked ? "text-surface-500" : "text-surface-300"
+                isLocked ? "text-[--dim]" : "text-[--cream]"
               )}>
                 {babyPreview}
               </p>
               {isLocked && (
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-surface-900/90" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[--surface]/90" />
               )}
             </div>
           </div>
 
           {/* Mom Update Preview */}
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-pink-400">
+            <div className="flex items-center gap-1.5 text-xs text-rose-300">
               <Heart className="h-3 w-3" />
               Mom Update
             </div>
             <div className="relative">
               <p className={cn(
                 "text-sm line-clamp-2",
-                isLocked ? "text-surface-500" : "text-surface-300"
+                isLocked ? "text-[--dim]" : "text-[--cream]"
               )}>
                 {momPreview}
               </p>
               {isLocked && (
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-surface-900/90" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[--surface]/90" />
               )}
             </div>
           </div>
 
           {/* Dad Focus Count */}
           {briefing.dad_focus && briefing.dad_focus.length > 0 && (
-            <div className="pt-2 border-t border-surface-800">
+            <div className="pt-2 border-t border-[--border]">
               <span className={cn(
                 "text-xs",
-                isLocked ? "text-surface-600" : "text-surface-500"
+                isLocked ? "text-[--dim]" : "text-[--muted]"
               )}>
                 {briefing.dad_focus.length} focus {briefing.dad_focus.length === 1 ? 'area' : 'areas'} for dad
               </span>
@@ -331,7 +331,7 @@ function BriefingCard({
 
           {/* Locked briefing message */}
           {isLocked && (
-            <div className="flex items-center gap-2 text-xs text-surface-500 pt-2">
+            <div className="flex items-center gap-2 text-xs text-[--dim] pt-2">
               <Lock className="h-3 w-3" />
               <span>
                 {isFuture

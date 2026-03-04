@@ -56,19 +56,19 @@ export default function ResetPasswordPage() {
 
   if (success) {
     return (
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-accent-900/20 flex items-center justify-center">
-            <CheckCircle className="h-6 w-6 text-accent-500" />
+          <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-copper-dim flex items-center justify-center">
+            <CheckCircle className="h-6 w-6 text-copper" />
           </div>
-          <CardTitle className="text-2xl text-white">Password updated!</CardTitle>
+          <CardTitle className="text-2xl font-display text-[--cream]">Password updated!</CardTitle>
           <CardDescription>
             Your password has been successfully reset.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Alert className="bg-accent-900/20 border-accent-700">
-            <AlertDescription className="text-accent-300">
+          <Alert className="bg-copper-dim border-copper/50">
+            <AlertDescription className="text-copper">
               Redirecting you to login...
             </AlertDescription>
           </Alert>
@@ -78,9 +78,9 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <Card className="bg-surface-900 border-surface-800">
+    <Card className="bg-[--surface] border-[--border]">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl text-white">Reset your password</CardTitle>
+        <CardTitle className="text-2xl font-display text-[--cream]">Reset your password</CardTitle>
         <CardDescription>
           Enter your new password below
         </CardDescription>
@@ -99,10 +99,10 @@ export default function ResetPasswordPage() {
               id="password"
               type="password"
               {...register('password')}
-              className="bg-surface-800 border-surface-700"
+              className="bg-[--card] border-[--border-hover]"
             />
             {errors.password && (
-              <p className="text-sm text-red-500">{errors.password.message}</p>
+              <p className="text-sm text-coral">{errors.password.message}</p>
             )}
           </div>
 
@@ -112,10 +112,10 @@ export default function ResetPasswordPage() {
               id="confirm_password"
               type="password"
               {...register('confirm_password')}
-              className="bg-surface-800 border-surface-700"
+              className="bg-[--card] border-[--border-hover]"
             />
             {errors.confirm_password && (
-              <p className="text-sm text-red-500">{errors.confirm_password.message}</p>
+              <p className="text-sm text-coral">{errors.confirm_password.message}</p>
             )}
           </div>
 
@@ -135,7 +135,7 @@ export default function ResetPasswordPage() {
         </form>
       </CardContent>
       <CardFooter className="justify-center">
-        <Link href="/login" className="text-sm text-accent-500 hover:text-accent-400">
+        <Link href="/login" className="text-sm text-copper hover:text-copper/80">
           Back to login
         </Link>
       </CardFooter>

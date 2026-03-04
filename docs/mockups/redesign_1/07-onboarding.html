@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Onboarding Screens</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              950: '#0a0a0f',
+              900: '#111118',
+              800: '#1a1a24',
+              700: '#252533',
+            },
+            amber: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: #0a0a0f;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #fff;
+      min-height: 100vh;
+      padding: 48px 24px 80px;
+    }
+
+    /* Page header */
+    .page-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .page-header h1 {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #f59e0b;
+      margin-bottom: 8px;
+    }
+    .page-header p {
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+    }
+    .page-header span {
+      font-size: 14px;
+      color: #71717a;
+      display: block;
+      margin-top: 8px;
+    }
+
+    /* Screen wrapper */
+    .screen-block {
+      max-width: 420px;
+      margin: 0 auto 72px;
+    }
+    .screen-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .screen-label-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      font-size: 12px;
+      font-weight: 700;
+      color: #f59e0b;
+      flex-shrink: 0;
+    }
+    .screen-label-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: #a1a1aa;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* Card */
+    .card {
+      background: #111118;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 24px;
+      padding: 32px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.2), transparent);
+    }
+
+    /* Status bar */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      font-size: 12px;
+      color: #a1a1aa;
+      font-weight: 500;
+    }
+    .status-bar .time { color: #ffffff; font-weight: 600; }
+    .status-bar .icons { display: flex; gap: 5px; align-items: center; }
+    .status-bar .icons svg { width: 14px; height: 14px; }
+
+    /* Screen 1 — Welcome */
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
+    }
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .logo-text strong {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .logo-text span {
+      font-size: 11px;
+      color: #71717a;
+      letter-spacing: 0.04em;
+    }
+
+    .welcome-title {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 0%, #d4d4d8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .welcome-sub {
+      font-size: 15px;
+      color: #71717a;
+      margin-bottom: 28px;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .feature-check {
+      width: 22px;
+      height: 22px;
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .feature-check svg { width: 12px; height: 12px; color: #22c55e; stroke: #22c55e; }
+    .feature-text {
+      font-size: 14px;
+      color: #d4d4d8;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+
+    /* Buttons */
+    .btn-amber {
+      width: 100%;
+      padding: 15px 24px;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #0a0a0f;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+      transition: all 0.2s ease;
+      letter-spacing: 0.01em;
+    }
+    .btn-amber svg { width: 16px; height: 16px; }
+
+    .btn-outline {
+      width: 100%;
+      padding: 13px 24px;
+      background: transparent;
+      color: #a1a1aa;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+      transition: all 0.2s ease;
+    }
+    .btn-outline svg { width: 15px; height: 15px; }
+
+    .btn-divider {
+      text-align: center;
+      color: #52525b;
+      font-size: 12px;
+      margin: 14px 0 4px;
+      font-weight: 500;
+    }
+
+    /* Screen 2 — Role Selection */
+    .screen-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+    .screen-sub {
+      font-size: 14px;
+      color: #71717a;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .role-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 20px;
+      background: #1a1a24;
+      border: 1.5px solid rgba(255, 255, 255, 0.07);
+      border-radius: 16px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .role-card:last-child { margin-bottom: 0; }
+    .role-card.selected {
+      border-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.06);
+      box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.15), 0 4px 24px rgba(245, 158, 11, 0.08);
+    }
+    .role-card.selected::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.5), transparent);
+    }
+    .role-emoji {
+      font-size: 28px;
+      width: 52px;
+      height: 52px;
+      background: #252533;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .role-card.selected .role-emoji {
+      background: rgba(245, 158, 11, 0.1);
+    }
+    .role-info { flex: 1; }
+    .role-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+    .role-desc {
+      font-size: 13px;
+      color: #71717a;
+    }
+    .role-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .role-card.selected .role-check {
+      background: #f59e0b;
+      border-color: #f59e0b;
+    }
+    .role-card.selected .role-check svg { width: 11px; height: 11px; stroke: #0a0a0f; }
+
+    .role-cards-wrap { margin-bottom: 28px; }
+
+    /* Screen 3 — Family Setup */
+    .toggle-pill {
+      display: flex;
+      background: #1a1a24;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 28px;
+    }
+    .toggle-option {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #71717a;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .toggle-option svg { width: 15px; height: 15px; }
+    .toggle-option.active {
+      background: #f59e0b;
+      color: #0a0a0f;
+      box-shadow: 0 2px 12px rgba(245, 158, 11, 0.3);
+    }
+    .toggle-option.active svg { stroke: #0a0a0f; }
+
+    .form-group { margin-bottom: 20px; }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #a1a1aa;
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .form-select,
+    .form-input {
+      width: 100%;
+      padding: 13px 16px;
+      background: #1a1a24;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      outline: none;
+      appearance: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .form-select:focus,
+    .form-input:focus {
+      border-color: rgba(245, 158, 11, 0.4);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.08);
+    }
+    .form-select-wrap {
+      position: relative;
+    }
+    .form-select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid #71717a;
+      pointer-events: none;
+    }
+    .form-input::placeholder { color: #52525b; }
+
+    .progress-dots {
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 28px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #252533;
+      transition: all 0.2s;
+    }
+    .dot.active {
+      width: 24px;
+      border-radius: 4px;
+      background: #f59e0b;
+    }
+
+    /* Screen 4 — All Set */
+    .success-icon-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .success-icon {
+      width: 88px;
+      height: 88px;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1.5px solid rgba(245, 158, 11, 0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      position: relative;
+      box-shadow: 0 0 40px rgba(245, 158, 11, 0.15), 0 0 80px rgba(245, 158, 11, 0.06);
+    }
+    .success-icon::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 1px solid rgba(245, 158, 11, 0.1);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.06); opacity: 0.5; }
+    }
+
+    .success-title {
+      font-size: 28px;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 0%, #d4d4d8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .success-sub {
+      font-size: 14px;
+      color: #71717a;
+      text-align: center;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .stats-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: #1a1a24;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, #f59e0b, #d97706);
+      border-radius: 0 2px 2px 0;
+    }
+    .stat-check {
+      width: 24px;
+      height: 24px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.25);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .stat-check svg { width: 12px; height: 12px; stroke: #22c55e; }
+    .stat-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e4e4e7;
+    }
+    .stat-text span {
+      color: #f59e0b;
+    }
+
+    /* Divider between screens */
+    .screen-divider {
+      max-width: 420px;
+      margin: 0 auto 72px;
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    }
+
+    /* Page footer note */
+    .page-footer {
+      text-align: center;
+      color: #3f3f46;
+      font-size: 12px;
+      margin-top: 24px;
+      letter-spacing: 0.03em;
+    }
+
+    /* Shimmer effect for selected state */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .btn-amber:hover {
+      box-shadow: 0 6px 28px rgba(245, 158, 11, 0.45);
+      transform: translateY(-1px);
+    }
+    .role-card:not(.selected):hover {
+      border-color: rgba(255,255,255,0.14);
+      background: #1e1e2a;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>The Dad Center — V2</h1>
+    <p>Onboarding Flow</p>
+    <span>4 screens &bull; ~45 seconds to dashboard &bull; Dark mode</span>
+  </div>
+
+  <!-- ===================== SCREEN 1: WELCOME ===================== -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="screen-label-num">1</div>
+      <div class="screen-label-text">Screen 1 &mdash; Welcome</div>
+    </div>
+
+    <div class="card">
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="icons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6l5 5 5-5M1 12l5 5 5-5"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="11" rx="2"/><path d="M22 11V9"/></svg>
+        </div>
+      </div>
+
+      <!-- Logo -->
+      <div class="logo-area">
+        <div class="logo-icon">🏠</div>
+        <div class="logo-text">
+          <strong>The Dad Center</strong>
+          <span>thedadcenter.com</span>
+        </div>
+      </div>
+
+      <!-- Title -->
+      <h1 class="welcome-title">Welcome to<br>The Dad Center</h1>
+      <p class="welcome-sub">Your parenting command center</p>
+
+      <!-- Feature list -->
+      <ul class="feature-list">
+        <li class="feature-item">
+          <div class="feature-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
+          </div>
+          <span class="feature-text">Smart tasks that adapt to your stage</span>
+        </li>
+        <li class="feature-item">
+          <div class="feature-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
+          </div>
+          <span class="feature-text">Weekly briefings personalized for you</span>
+        </li>
+        <li class="feature-item">
+          <div class="feature-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
+          </div>
+          <span class="feature-text">Sync with your partner seamlessly</span>
+        </li>
+        <li class="feature-item">
+          <div class="feature-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
+          </div>
+          <span class="feature-text">Track baby's growth and milestones</span>
+        </li>
+      </ul>
+
+      <!-- CTA buttons -->
+      <button class="btn-amber">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Get Started
+      </button>
+      <div class="btn-divider">or</div>
+      <button class="btn-outline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Join Partner's Family
+      </button>
+    </div>
+  </div>
+
+  <hr class="screen-divider" />
+
+  <!-- ===================== SCREEN 2: ROLE SELECTION ===================== -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="screen-label-num">2</div>
+      <div class="screen-label-text">Screen 2 &mdash; Role Selection</div>
+    </div>
+
+    <div class="card">
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="icons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6l5 5 5-5M1 12l5 5 5-5"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="11" rx="2"/><path d="M22 11V9"/></svg>
+        </div>
+      </div>
+
+      <!-- Back arrow + logo -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
+        <button style="background:rgba(255,255,255,0.06);border:none;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#a1a1aa;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <div style="font-size:14px;font-weight:600;color:#71717a;">Step 1 of 3</div>
+        <div style="flex:1;"></div>
+        <div style="display:flex;gap:5px;">
+          <div style="width:20px;height:4px;border-radius:2px;background:#f59e0b;"></div>
+          <div style="width:20px;height:4px;border-radius:2px;background:#252533;"></div>
+          <div style="width:20px;height:4px;border-radius:2px;background:#252533;"></div>
+        </div>
+      </div>
+
+      <h2 class="screen-title">What's your role?</h2>
+      <p class="screen-sub">This helps us personalize your experience and show content that matters most to you.</p>
+
+      <div class="role-cards-wrap">
+        <!-- Dad — selected state -->
+        <div class="role-card selected">
+          <div class="role-emoji">👨</div>
+          <div class="role-info">
+            <div class="role-title">Dad</div>
+            <div class="role-desc">I'm the father / dad</div>
+          </div>
+          <div class="role-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
+          </div>
+        </div>
+
+        <!-- Mom -->
+        <div class="role-card">
+          <div class="role-emoji">👩</div>
+          <div class="role-info">
+            <div class="role-title">Mom</div>
+            <div class="role-desc">I'm the mother / mom</div>
+          </div>
+          <div class="role-check"></div>
+        </div>
+
+        <!-- Other -->
+        <div class="role-card">
+          <div class="role-emoji">🧑</div>
+          <div class="role-info">
+            <div class="role-title">Other</div>
+            <div class="role-desc">I'm another family member</div>
+          </div>
+          <div class="role-check"></div>
+        </div>
+      </div>
+
+      <button class="btn-amber">
+        Continue
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <hr class="screen-divider" />
+
+  <!-- ===================== SCREEN 3: FAMILY SETUP ===================== -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="screen-label-num">3</div>
+      <div class="screen-label-text">Screen 3 &mdash; Family Setup</div>
+    </div>
+
+    <div class="card">
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="icons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6l5 5 5-5M1 12l5 5 5-5"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="11" rx="2"/><path d="M22 11V9"/></svg>
+        </div>
+      </div>
+
+      <!-- Back + progress -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
+        <button style="background:rgba(255,255,255,0.06);border:none;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#a1a1aa;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <div style="font-size:14px;font-weight:600;color:#71717a;">Step 2 of 3</div>
+        <div style="flex:1;"></div>
+        <div style="display:flex;gap:5px;">
+          <div style="width:20px;height:4px;border-radius:2px;background:#f59e0b;"></div>
+          <div style="width:20px;height:4px;border-radius:2px;background:#f59e0b;"></div>
+          <div style="width:20px;height:4px;border-radius:2px;background:#252533;"></div>
+        </div>
+      </div>
+
+      <h2 class="screen-title">Tell us about<br>your journey</h2>
+      <p class="screen-sub">We'll customize tasks and content to match exactly where you are.</p>
+
+      <!-- Toggle: Expecting / Baby Born -->
+      <div class="toggle-pill">
+        <div class="toggle-option active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Expecting
+        </div>
+        <div class="toggle-option">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12 7.03 3 12 3s9 4.03 9 9z"/></svg>
+          Baby Born
+        </div>
+      </div>
+
+      <!-- Due date form -->
+      <div class="form-group">
+        <label class="form-label">When is your due date?</label>
+        <div class="form-row">
+          <div class="form-select-wrap">
+            <select class="form-select">
+              <option value="" disabled selected style="color:#52525b;">Month</option>
+              <option>January</option><option>February</option><option>March</option>
+              <option>April</option><option>May</option><option>June</option>
+              <option>July</option><option>August</option><option>September</option>
+              <option>October</option><option>November</option><option>December</option>
+            </select>
+          </div>
+          <div class="form-select-wrap">
+            <select class="form-select">
+              <option value="" disabled selected style="color:#52525b;">Year</option>
+              <option>2025</option><option selected>2026</option><option>2027</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Baby name -->
+      <div class="form-group">
+        <label class="form-label">Baby's name <span style="color:#52525b;font-weight:400;">(optional)</span></label>
+        <input type="text" class="form-input" placeholder="e.g. Oliver" />
+      </div>
+
+      <button class="btn-amber" style="margin-top:8px;">
+        Continue
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+
+      <!-- Progress dots -->
+      <div class="progress-dots">
+        <div class="dot"></div>
+        <div class="dot active"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="screen-divider" />
+
+  <!-- ===================== SCREEN 3B: FAMILY SETUP — Baby Born Mode ===================== -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="screen-label-num" style="background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.2);color:#71717a;">3b</div>
+      <div class="screen-label-text" style="color:#52525b;">Screen 3 &mdash; Family Setup (Baby Born mode)</div>
+    </div>
+
+    <div class="card" style="border-color:rgba(255,255,255,0.04);opacity:0.75;">
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="icons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6l5 5 5-5M1 12l5 5 5-5"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="11" rx="2"/><path d="M22 11V9"/></svg>
+        </div>
+      </div>
+
+      <!-- Back + progress -->
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
+        <button style="background:rgba(255,255,255,0.06);border:none;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#a1a1aa;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <div style="font-size:14px;font-weight:600;color:#71717a;">Step 2 of 3</div>
+        <div style="flex:1;"></div>
+        <div style="display:flex;gap:5px;">
+          <div style="width:20px;height:4px;border-radius:2px;background:#f59e0b;"></div>
+          <div style="width:20px;height:4px;border-radius:2px;background:#f59e0b;"></div>
+          <div style="width:20px;height:4px;border-radius:2px;background:#252533;"></div>
+        </div>
+      </div>
+
+      <h2 class="screen-title">Tell us about<br>your journey</h2>
+      <p class="screen-sub">We'll customize tasks and content to match exactly where you are.</p>
+
+      <!-- Toggle: Baby Born selected -->
+      <div class="toggle-pill">
+        <div class="toggle-option">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Expecting
+        </div>
+        <div class="toggle-option active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12 7.03 3 12 3s9 4.03 9 9z"/></svg>
+          Baby Born
+        </div>
+      </div>
+
+      <!-- Birth date form -->
+      <div class="form-group">
+        <label class="form-label">When was your baby born?</label>
+        <div class="form-row">
+          <div class="form-select-wrap">
+            <select class="form-select">
+              <option>March</option>
+            </select>
+          </div>
+          <div class="form-select-wrap">
+            <select class="form-select">
+              <option>2026</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Baby name -->
+      <div class="form-group">
+        <label class="form-label">Baby's name <span style="color:#52525b;font-weight:400;">(optional)</span></label>
+        <input type="text" class="form-input" placeholder="e.g. Oliver" value="Aria" />
+      </div>
+
+      <button class="btn-amber" style="margin-top:8px;">
+        Continue
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+
+      <div class="progress-dots">
+        <div class="dot"></div>
+        <div class="dot active"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="screen-divider" />
+
+  <!-- ===================== SCREEN 4: ALL SET ===================== -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <div class="screen-label-num">4</div>
+      <div class="screen-label-text">Screen 4 &mdash; All Set!</div>
+    </div>
+
+    <div class="card">
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="icons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6l5 5 5-5M1 12l5 5 5-5"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="11" rx="2"/><path d="M22 11V9"/></svg>
+        </div>
+      </div>
+
+      <!-- Step indicator -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:36px;">
+        <div style="width:20px;height:4px;border-radius:2px;background:#f59e0b;"></div>
+        <div style="width:20px;height:4px;border-radius:2px;background:#f59e0b;"></div>
+        <div style="width:20px;height:4px;border-radius:2px;background:#f59e0b;"></div>
+      </div>
+
+      <!-- Rocket icon -->
+      <div class="success-icon-wrap">
+        <div class="success-icon">🚀</div>
+      </div>
+
+      <h2 class="success-title">You're all set!</h2>
+      <p class="success-sub">Your parenting command center is ready. Here's what we've set up for you:</p>
+
+      <!-- Stats -->
+      <div class="stats-list">
+        <div class="stat-item">
+          <div class="stat-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
+          </div>
+          <div class="stat-text"><span>47 tasks</span> generated for your stage</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
+          </div>
+          <div class="stat-text">Your <span>first briefing</span> is ready</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg>
+          </div>
+          <div class="stat-text"><span>7 dad challenge</span> guides unlocked</div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <button class="btn-amber" style="padding:17px 24px;font-size:16px;border-radius:16px;box-shadow:0 6px 30px rgba(245,158,11,0.4);">
+        Go to Dashboard
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+
+      <!-- Invite partner nudge -->
+      <div style="margin-top:20px;text-align:center;padding:16px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.12);border-radius:12px;">
+        <div style="font-size:12px;color:#71717a;margin-bottom:6px;">One family, one subscription</div>
+        <button style="background:none;border:none;color:#f59e0b;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;margin:0 auto;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11v6M19 14h6"/></svg>
+          Invite your partner — do this later
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page footer -->
+  <p class="page-footer">The Dad Center V2 &bull; Onboarding Mockup &bull; March 2026</p>
+
+</body>
+</html>

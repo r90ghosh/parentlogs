@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Onboarding & Upgrade Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* ============================================================
+       CUSTOM PROPERTIES
+    ============================================================ */
+    :root {
+      --bg: #030303;
+      --glass-bg: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.10);
+      --glass-hover: rgba(255,255,255,0.07);
+
+      --indigo: #6366f1;
+      --rose: #f43f5e;
+      --violet: #8b5cf6;
+
+      --grad: linear-gradient(135deg, #6366f1, #f43f5e, #8b5cf6);
+      --grad-h: linear-gradient(135deg, #818cf8, #fb7185, #a78bfa);
+    }
+
+    /* ============================================================
+       RESETS & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ============================================================
+       KEYFRAME ANIMATIONS
+    ============================================================ */
+
+    /* Background floating shapes */
+    @keyframes gentle-float {
+      0%   { transform: translateY(0px) rotate(0deg) scale(1); }
+      33%  { transform: translateY(-24px) rotate(8deg) scale(1.04); }
+      66%  { transform: translateY(12px) rotate(-5deg) scale(0.97); }
+      100% { transform: translateY(0px) rotate(0deg) scale(1); }
+    }
+
+    /* Logo circles */
+    @keyframes logo-rotate {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes logo-counter {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(-360deg); }
+    }
+
+    /* Glow pulse on buttons */
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0.5), 0 0 20px rgba(99,102,241,0.3); }
+      50%       { box-shadow: 0 0 0 8px rgba(99,102,241,0), 0 0 40px rgba(244,63,94,0.4); }
+    }
+
+    /* Rotating conic gradient for premium card border */
+    @keyframes rotating-gradient {
+      0%   { --angle: 0deg; }
+      100% { --angle: 360deg; }
+    }
+    @property --angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    /* Confetti particles */
+    @keyframes confetti-float {
+      0%   { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-140px) scale(0.4) rotate(360deg); opacity: 0; }
+    }
+
+    /* Step dash */
+    @keyframes dash-animate {
+      0%   { stroke-dashoffset: 30; }
+      100% { stroke-dashoffset: 0; }
+    }
+
+    /* Emoji pulse */
+    @keyframes emoji-pulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.15); }
+    }
+
+    /* Sparkle spin */
+    @keyframes sparkle-spin {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Rocket pulse */
+    @keyframes rocket-pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(99,102,241,0.5); }
+      50%       { transform: scale(1.08); box-shadow: 0 0 0 20px rgba(99,102,241,0); }
+    }
+
+    /* Feature check stagger */
+    @keyframes slide-in {
+      from { opacity: 0; transform: translateX(-16px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Card glow sweep */
+    @keyframes glow-sweep {
+      0%   { opacity: 0; transform: translateX(-100%); }
+      50%  { opacity: 1; }
+      100% { opacity: 0; transform: translateX(100%); }
+    }
+
+    /* ============================================================
+       UTILITY CLASSES
+    ============================================================ */
+
+    .grad-text {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .grad-bg {
+      background: var(--grad);
+    }
+
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+    }
+
+    .glass-input {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      color: #f1f5f9;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 15px;
+    }
+    .glass-input::placeholder { color: rgba(255,255,255,0.3); }
+    .glass-input:focus {
+      border-color: var(--indigo);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+    }
+
+    select.glass-input option {
+      background: #1e1e2e;
+      color: #f1f5f9;
+    }
+
+    .btn-grad {
+      background: var(--grad);
+      border: none;
+      border-radius: 999px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 14px 32px;
+      width: 100%;
+      animation: pulse-glow 2.5s ease-in-out infinite;
+      transition: opacity 0.2s, transform 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .btn-grad:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-grad:active { transform: scale(0.98); }
+
+    .btn-glass {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      color: rgba(255,255,255,0.8);
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 13px 32px;
+      width: 100%;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-glass:hover { background: rgba(255,255,255,0.1); transform: translateY(-1px); }
+
+    /* Animated gradient border on top edge of each screen card */
+    .screen-card {
+      position: relative;
+      overflow: hidden;
+    }
+    .screen-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--grad);
+      border-radius: 2px 2px 0 0;
+      opacity: 0.9;
+    }
+
+    /* ============================================================
+       BACKGROUND SHAPES
+    ============================================================ */
+    .bg-shape {
+      position: fixed;
+      pointer-events: none;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      animation: gentle-float 12s ease-in-out infinite;
+    }
+    .bg-shape-1 {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, #6366f1, transparent);
+      top: -120px; right: -100px;
+      animation-delay: 0s;
+    }
+    .bg-shape-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #f43f5e, transparent);
+      bottom: 30%; left: -120px;
+      animation-delay: -4s;
+    }
+    .bg-shape-3 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, #8b5cf6, transparent);
+      bottom: 10%; right: 10%;
+      animation-delay: -8s;
+    }
+
+    /* ============================================================
+       LOGO ANIMATION
+    ============================================================ */
+    .logo-wrap {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      margin: 0 auto;
+    }
+    .logo-circle-outer {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      background: conic-gradient(#6366f1, #f43f5e, #8b5cf6, #6366f1) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      animation: logo-rotate 6s linear infinite;
+      opacity: 0.7;
+    }
+    .logo-inner {
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      background: var(--grad);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    /* ============================================================
+       STEP DOTS
+    ============================================================ */
+    .step-dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .step-dot {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.2);
+      transition: all 0.35s ease;
+    }
+    .step-dot.active {
+      background: var(--grad);
+      width: 28px;
+    }
+    .step-dot.inactive { width: 8px; }
+
+    /* ============================================================
+       ROLE CARDS
+    ============================================================ */
+    .role-card {
+      position: relative;
+      padding: 18px 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      overflow: hidden;
+    }
+    .role-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(99,102,241,0.4); }
+    .role-card.selected {
+      background: rgba(99,102,241,0.08);
+      border-color: rgba(99,102,241,0.6);
+      box-shadow: 0 0 0 1px rgba(99,102,241,0.3), inset 0 0 20px rgba(99,102,241,0.06);
+    }
+    .role-card.selected::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(244,63,94,0.04));
+      pointer-events: none;
+    }
+    .role-card .check-badge {
+      position: absolute;
+      top: 12px; right: 12px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--grad);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.25s ease;
+    }
+    .role-card.selected .check-badge { opacity: 1; transform: scale(1); }
+    .role-emoji {
+      font-size: 32px;
+      animation: emoji-pulse 3s ease-in-out infinite;
+    }
+    .role-card:nth-child(2) .role-emoji { animation-delay: -1s; }
+    .role-card:nth-child(3) .role-emoji { animation-delay: -2s; }
+
+    /* ============================================================
+       TOGGLE
+    ============================================================ */
+    .glass-toggle {
+      display: flex;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 999px;
+      padding: 4px;
+      gap: 4px;
+    }
+    .toggle-option {
+      flex: 1;
+      text-align: center;
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s;
+      color: rgba(255,255,255,0.55);
+    }
+    .toggle-option.active {
+      background: var(--grad);
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(99,102,241,0.4);
+    }
+
+    /* ============================================================
+       CONFETTI
+    ============================================================ */
+    .confetti-wrap {
+      position: relative;
+      height: 0;
+    }
+    .confetti-dot {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      animation: confetti-float 2s ease-out infinite;
+    }
+
+    /* ============================================================
+       ROCKET ICON
+    ============================================================ */
+    .rocket-circle {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: var(--grad);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+      animation: rocket-pulse 2s ease-in-out infinite;
+      margin: 0 auto;
+    }
+
+    /* ============================================================
+       STAT MINI CARDS
+    ============================================================ */
+    .stat-card {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 22px;
+      font-weight: 800;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+    .stat-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      margin-top: 4px;
+      line-height: 1.3;
+    }
+
+    /* ============================================================
+       FEATURE CHECK
+    ============================================================ */
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      animation: slide-in 0.4s ease both;
+    }
+    .feature-item:nth-child(1) { animation-delay: 0.05s; }
+    .feature-item:nth-child(2) { animation-delay: 0.10s; }
+    .feature-item:nth-child(3) { animation-delay: 0.15s; }
+    .feature-item:nth-child(4) { animation-delay: 0.20s; }
+
+    .check-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--grad);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ============================================================
+       SECTION DIVIDER
+    ============================================================ */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 60px 24px;
+    }
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(99,102,241,0.6), rgba(244,63,94,0.6), transparent);
+    }
+    .divider-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ============================================================
+       PRICING CARDS
+    ============================================================ */
+    .pricing-card {
+      flex: 1;
+      min-width: 0;
+      border-radius: 20px;
+      padding: 24px 20px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      transition: transform 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pricing-card-featured {
+      transform: scale(1.06);
+      z-index: 2;
+    }
+
+    /* Rotating conic gradient border for featured card */
+    .pricing-card-featured-border {
+      position: absolute;
+      inset: -2px;
+      border-radius: 22px;
+      background: conic-gradient(from var(--angle), #6366f1, #f43f5e, #8b5cf6, #6366f1);
+      animation: rotating-gradient 3s linear infinite;
+      z-index: -1;
+    }
+    .pricing-card-featured-inner {
+      position: absolute;
+      inset: 2px;
+      border-radius: 20px;
+      background: #0d0d1a;
+      z-index: -1;
+    }
+
+    .pricing-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--grad);
+      color: #fff;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .pricing-price {
+      font-size: 32px;
+      font-weight: 900;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+
+    /* ============================================================
+       FEATURE COMPARISON TABLE
+    ============================================================ */
+    .comp-row {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .comp-row:last-child { border-bottom: none; }
+    .comp-feature { flex: 1; font-size: 14px; color: rgba(255,255,255,0.75); }
+    .comp-free, .comp-premium {
+      width: 80px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .comp-free { color: rgba(255,255,255,0.3); }
+
+    .comp-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--grad);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+    .comp-x {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    /* ============================================================
+       FAQ ACCORDION
+    ============================================================ */
+    .faq-item {
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+    .faq-question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      transition: background 0.2s;
+    }
+    .faq-question:hover { background: rgba(255,255,255,0.04); }
+    .faq-chevron {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+    .faq-chevron.open { transform: rotate(180deg); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.25s;
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.65;
+    }
+    .faq-answer.open {
+      max-height: 200px;
+      padding: 0 20px 18px;
+    }
+
+    /* ============================================================
+       SCREEN LABELS
+    ============================================================ */
+    .screen-label {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .screen-label span {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 999px;
+      padding: 5px 14px;
+    }
+
+    /* ============================================================
+       UPGRADE HEADER (sticky-style)
+    ============================================================ */
+    .upgrade-header {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(3,3,3,0.75);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px 20px 0 0;
+    }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 480px) {
+      .pricing-card-featured { transform: scale(1.02); }
+      .pricing-cards-row { flex-direction: column !important; }
+      .pricing-card { width: 100% !important; }
+    }
+
+    /* page wrapper */
+    .page {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 48px 20px;
+    }
+
+    /* Upgrade page is wider */
+    .page-wide {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 20px 64px;
+    }
+
+    .screen-gap { margin-bottom: 48px; }
+
+    /* glow ring for active btn */
+    .glow-ring {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== BACKGROUND SHAPES ==================== -->
+  <div class="bg-shape bg-shape-1" aria-hidden="true"></div>
+  <div class="bg-shape bg-shape-2" aria-hidden="true"></div>
+  <div class="bg-shape bg-shape-3" aria-hidden="true"></div>
+
+  <!-- ==================== PAGE WRAPPER ==================== -->
+  <div class="page">
+
+    <!-- ========================================================
+         SECTION HEADER: ONBOARDING
+    ======================================================== -->
+    <div style="text-align:center; margin-bottom:48px;">
+      <div style="display:inline-flex; align-items:center; gap:10px; background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.3); border-radius:999px; padding:8px 20px; margin-bottom:20px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="url(#g1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <defs><linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#f43f5e"/></linearGradient></defs>
+          <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+        </svg>
+        <span style="font-size:13px; font-weight:700; color:rgba(255,255,255,0.75); letter-spacing:0.05em; text-transform:uppercase;">Onboarding Flow</span>
+      </div>
+      <h1 class="grad-text" style="font-size:36px; font-weight:900; line-height:1.15;">4 Screens · ~45 sec to Dashboard</h1>
+      <p style="color:rgba(255,255,255,0.45); font-size:15px; margin-top:10px;">The fastest path from signup to value in fatherhood apps</p>
+    </div>
+
+    <!-- ========================================================
+         SCREEN 1: WELCOME
+    ======================================================== -->
+    <div class="screen-gap">
+      <div class="screen-label"><span>Screen 1 of 4 — Welcome</span></div>
+
+      <div class="glass screen-card" style="padding:36px 28px;">
+        <!-- Logo -->
+        <div style="text-align:center; margin-bottom:28px;">
+          <div class="logo-wrap">
+            <div class="logo-circle-outer"></div>
+            <!-- Inner circle overlay -->
+            <div style="
+              position:absolute; inset:4px; border-radius:50%;
+              background: linear-gradient(135deg, #6366f1 0%, #f43f5e 50%, #8b5cf6 100%);
+              display:flex; align-items:center; justify-content:center;
+              font-size:30px;
+            ">🏠</div>
+          </div>
+        </div>
+
+        <!-- Headline -->
+        <h2 class="grad-text" style="font-size:28px; font-weight:900; text-align:center; line-height:1.2; margin-bottom:8px;">
+          Welcome to The Dad Center
+        </h2>
+        <p style="text-align:center; color:rgba(255,255,255,0.45); font-size:15px; margin-bottom:32px;">
+          Your command center for fatherhood
+        </p>
+
+        <!-- Feature list -->
+        <div style="display:flex; flex-direction:column; gap:16px; margin-bottom:36px;">
+          <div class="feature-item">
+            <div class="check-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div style="font-size:15px; font-weight:600; color:rgba(255,255,255,0.9);">Smart tasks that adapt to your stage</div>
+              <div style="font-size:13px; color:rgba(255,255,255,0.4); margin-top:2px;">30-day rolling window, never feel behind</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="check-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div style="font-size:15px; font-weight:600; color:rgba(255,255,255,0.9);">Weekly briefings personalized for you</div>
+              <div style="font-size:13px; color:rgba(255,255,255,0.4); margin-top:2px;">Know exactly what's happening each week</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="check-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div style="font-size:15px; font-weight:600; color:rgba(255,255,255,0.9);">Real talk about dad challenges</div>
+              <div style="font-size:13px; color:rgba(255,255,255,0.4); margin-top:2px;">7 pillars — finances, anxiety, bonding & more</div>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="check-icon">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <div style="font-size:15px; font-weight:600; color:rgba(255,255,255,0.9);">Sync with your partner</div>
+              <div style="font-size:13px; color:rgba(255,255,255,0.4); margin-top:2px;">One family subscription, shared access</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <button class="btn-grad glow-ring">Get Started</button>
+          <button class="btn-glass">Join Partner's Family</button>
+        </div>
+
+        <!-- Step dots -->
+        <div class="step-dots">
+          <div class="step-dot active"></div>
+          <div class="step-dot inactive"></div>
+          <div class="step-dot inactive"></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ========================================================
+         SCREEN 2: ROLE SELECTION
+    ======================================================== -->
+    <div class="screen-gap">
+      <div class="screen-label"><span>Screen 2 of 4 — Role Selection</span></div>
+
+      <div class="glass screen-card" style="padding:36px 28px;">
+        <p style="text-align:center; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.35); margin-bottom:8px;">Who Are You?</p>
+        <h2 class="grad-text" style="font-size:28px; font-weight:900; text-align:center; line-height:1.2; margin-bottom:6px;">Tell us about yourself</h2>
+        <p style="text-align:center; color:rgba(255,255,255,0.4); font-size:14px; margin-bottom:32px;">We'll personalize your experience from the start</p>
+
+        <!-- Role cards -->
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:36px;">
+
+          <!-- Dad (selected by default in mockup) -->
+          <div class="role-card selected" onclick="selectRole(this)">
+            <span class="role-emoji">👨</span>
+            <div style="flex:1;">
+              <div style="font-size:17px; font-weight:700; color:rgba(255,255,255,0.95); margin-bottom:2px;">I'm Dad</div>
+              <div style="font-size:13px; color:rgba(255,255,255,0.45);">Full dashboard with mood check-ins, journey guides & tasks</div>
+            </div>
+            <div class="check-badge">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+
+          <!-- Mom -->
+          <div class="role-card" onclick="selectRole(this)">
+            <span class="role-emoji">👩</span>
+            <div style="flex:1;">
+              <div style="font-size:17px; font-weight:700; color:rgba(255,255,255,0.95); margin-bottom:2px;">I'm Mom</div>
+              <div style="font-size:13px; color:rgba(255,255,255,0.45);">Partner activity view, shared tasks & briefings</div>
+            </div>
+            <div class="check-badge">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+
+          <!-- Other -->
+          <div class="role-card" onclick="selectRole(this)">
+            <span class="role-emoji">🧑</span>
+            <div style="flex:1;">
+              <div style="font-size:17px; font-weight:700; color:rgba(255,255,255,0.95); margin-bottom:2px;">Other Family Member</div>
+              <div style="font-size:13px; color:rgba(255,255,255,0.45);">Support role — view tasks and stay connected</div>
+            </div>
+            <div class="check-badge">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-grad glow-ring">Continue</button>
+
+        <!-- Step dots -->
+        <div class="step-dots">
+          <div class="step-dot inactive"></div>
+          <div class="step-dot active"></div>
+          <div class="step-dot inactive"></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ========================================================
+         SCREEN 3: FAMILY SETUP
+    ======================================================== -->
+    <div class="screen-gap">
+      <div class="screen-label"><span>Screen 3 of 4 — Family Setup</span></div>
+
+      <div class="glass screen-card" style="padding:36px 28px;">
+        <p style="text-align:center; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.35); margin-bottom:8px;">Your Journey</p>
+        <h2 class="grad-text" style="font-size:28px; font-weight:900; text-align:center; line-height:1.2; margin-bottom:6px;">Tell us about<br/>your journey</h2>
+        <p style="text-align:center; color:rgba(255,255,255,0.4); font-size:14px; margin-bottom:32px;">We'll generate tasks and content specific to your stage</p>
+
+        <!-- Stage toggle -->
+        <div style="margin-bottom:24px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.06em;">Where are you?</label>
+          <div class="glass-toggle">
+            <div class="toggle-option active" onclick="toggleStage(this)">Expecting</div>
+            <div class="toggle-option" onclick="toggleStage(this)">Baby Born</div>
+          </div>
+        </div>
+
+        <!-- Date selection -->
+        <div style="margin-bottom:24px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.06em;">Due date (estimated)</label>
+          <div style="display:flex; gap:12px;">
+            <select class="glass-input" style="flex:1;">
+              <option value="">Month</option>
+              <option>January</option><option>February</option><option>March</option>
+              <option>April</option><option>May</option><option>June</option>
+              <option>July</option><option>August</option><option selected>September</option>
+              <option>October</option><option>November</option><option>December</option>
+            </select>
+            <select class="glass-input" style="flex:1;">
+              <option value="">Year</option>
+              <option>2025</option><option selected>2026</option><option>2027</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Partner name (optional) -->
+        <div style="margin-bottom:36px;">
+          <label style="display:block; font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.06em;">
+            Your name <span style="color:rgba(255,255,255,0.25); font-weight:400; text-transform:none; letter-spacing:0;">(optional)</span>
+          </label>
+          <input class="glass-input" type="text" placeholder="e.g. Marcus" />
+        </div>
+
+        <button class="btn-grad glow-ring">Continue</button>
+        <div style="text-align:center; margin-top:16px;">
+          <a href="#" style="font-size:13px; color:rgba(255,255,255,0.3); text-decoration:none;">I'll add this later</a>
+        </div>
+
+        <!-- Step dots -->
+        <div class="step-dots">
+          <div class="step-dot inactive"></div>
+          <div class="step-dot inactive"></div>
+          <div class="step-dot active"></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ========================================================
+         SCREEN 4: ALL SET!
+    ======================================================== -->
+    <div class="screen-gap">
+      <div class="screen-label"><span>Screen 4 of 4 — All Set!</span></div>
+
+      <div class="glass screen-card" style="padding:36px 28px; position:relative; overflow:hidden;">
+
+        <!-- Confetti particles -->
+        <div class="confetti-wrap" aria-hidden="true">
+          <div class="confetti-dot" style="width:8px;height:8px;background:#6366f1;left:15%;animation-duration:1.8s;animation-delay:0.1s;top:-10px;"></div>
+          <div class="confetti-dot" style="width:6px;height:6px;background:#f43f5e;left:30%;animation-duration:2.2s;animation-delay:0.4s;top:-10px;"></div>
+          <div class="confetti-dot" style="width:10px;height:10px;background:#8b5cf6;left:50%;animation-duration:1.6s;animation-delay:0.7s;top:-10px;"></div>
+          <div class="confetti-dot" style="width:7px;height:7px;background:#f43f5e;left:68%;animation-duration:2.0s;animation-delay:0.2s;top:-10px;"></div>
+          <div class="confetti-dot" style="width:9px;height:9px;background:#6366f1;left:82%;animation-duration:1.9s;animation-delay:0.6s;top:-10px;"></div>
+          <div class="confetti-dot" style="width:5px;height:5px;background:#a78bfa;left:42%;animation-duration:2.4s;animation-delay:0.9s;top:-10px;"></div>
+          <div class="confetti-dot" style="width:8px;height:8px;background:#fb7185;left:60%;animation-duration:1.7s;animation-delay:0.3s;top:-10px;"></div>
+        </div>
+
+        <!-- Rocket icon -->
+        <div style="text-align:center; margin-bottom:24px; margin-top:16px;">
+          <div class="rocket-circle">🚀</div>
+        </div>
+
+        <!-- Heading -->
+        <h2 class="grad-text" style="font-size:36px; font-weight:900; text-align:center; line-height:1.15; margin-bottom:8px;">
+          You're All Set!
+        </h2>
+        <p style="text-align:center; color:rgba(255,255,255,0.45); font-size:15px; margin-bottom:32px; line-height:1.6;">
+          Your personalized dashboard is ready.<br/>Here's what we generated for you:
+        </p>
+
+        <!-- Stat mini cards -->
+        <div style="display:flex; gap:10px; margin-bottom:36px;">
+          <div class="stat-card">
+            <div class="stat-num">47</div>
+            <div class="stat-label">Tasks<br/>generated</div>
+          </div>
+          <div class="stat-card">
+            <div style="display:flex; align-items:center; justify-content:center; gap:5px; margin-bottom:4px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#6366f1;flex-shrink:0;"></div>
+              <span class="stat-num" style="font-size:13px;font-weight:700;white-space:nowrap;">Ready</span>
+            </div>
+            <div class="stat-label">First briefing<br/>unlocked</div>
+          </div>
+          <div class="stat-card">
+            <div style="display:flex; align-items:center; justify-content:center; gap:5px; margin-bottom:4px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:#f43f5e;flex-shrink:0;"></div>
+              <span class="stat-num">7</span>
+            </div>
+            <div class="stat-label">Challenge<br/>guides</div>
+          </div>
+        </div>
+
+        <!-- Free tier note -->
+        <div style="background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.2); border-radius:12px; padding:14px 16px; margin-bottom:28px; display:flex; align-items:flex-start; gap:12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="url(#gInfo)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;">
+            <defs><linearGradient id="gInfo" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#f43f5e"/></linearGradient></defs>
+            <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+          </svg>
+          <p style="font-size:13px; color:rgba(255,255,255,0.55); line-height:1.55; margin:0;">
+            You're on the free plan. Enjoy full access to briefings for <strong style="color:rgba(255,255,255,0.8);">4 weeks</strong> and tasks for <strong style="color:rgba(255,255,255,0.8);">30 days</strong> — no credit card needed.
+          </p>
+        </div>
+
+        <!-- CTA -->
+        <button class="btn-grad glow-ring" style="font-size:18px; padding:16px 32px;">Go to Dashboard</button>
+      </div>
+    </div>
+
+  </div><!-- end .page -->
+
+
+  <!-- ==================== SECTION DIVIDER ==================== -->
+  <div class="section-divider">
+    <div class="divider-line"></div>
+    <div class="divider-label">Upgrade / Premium Page</div>
+    <div class="divider-line"></div>
+  </div>
+
+
+  <!-- ========================================================
+       UPGRADE PAGE
+  ======================================================== -->
+  <div class="page-wide">
+
+    <!-- Upgrade header -->
+    <div class="upgrade-header" style="padding:16px 24px; display:flex; align-items:center; gap:16px; margin-bottom:0; border-radius:20px 20px 0 0; border:1px solid rgba(255,255,255,0.08); border-bottom:none;">
+      <button style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff; flex-shrink:0;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      </button>
+      <div style="flex:1; text-align:center;">
+        <span style="font-size:16px; font-weight:700; color:rgba(255,255,255,0.9);">The Dad Center Premium</span>
+      </div>
+      <!-- Sparkle icon -->
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="url(#gSparkle)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        style="animation: sparkle-spin 4s linear infinite; flex-shrink:0;">
+        <defs><linearGradient id="gSparkle" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#f43f5e"/></linearGradient></defs>
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+    </div>
+
+    <!-- Upgrade hero -->
+    <div style="text-align:center; padding:56px 24px 48px; position:relative; overflow:hidden; background:linear-gradient(180deg, rgba(99,102,241,0.06) 0%, transparent 100%); border:1px solid rgba(255,255,255,0.08); border-top:none; border-bottom:none;">
+      <!-- Mini geo shapes inside hero -->
+      <div style="position:absolute; width:300px; height:300px; border-radius:50%; background:radial-gradient(circle, rgba(99,102,241,0.15), transparent); top:-80px; right:-60px; pointer-events:none;"></div>
+      <div style="position:absolute; width:200px; height:200px; border-radius:50%; background:radial-gradient(circle, rgba(244,63,94,0.12), transparent); bottom:-40px; left:-40px; pointer-events:none;"></div>
+
+      <div style="position:relative; z-index:1;">
+        <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.25); border-radius:999px; padding:6px 16px; margin-bottom:24px;">
+          <div style="width:7px;height:7px;border-radius:50%;background:var(--grad);"></div>
+          <span style="font-size:12px; font-weight:700; color:rgba(255,255,255,0.65); text-transform:uppercase; letter-spacing:0.08em;">Premium Access</span>
+        </div>
+        <h2 class="grad-text" style="font-size:52px; font-weight:900; line-height:1.05; margin-bottom:16px;">Unlock<br/>Everything</h2>
+        <p style="color:rgba(255,255,255,0.5); font-size:16px; max-width:380px; margin:0 auto; line-height:1.65;">
+          One subscription covers your whole family. Both partners get full premium access on a single plan.
+        </p>
+      </div>
+    </div>
+
+    <!-- Pricing cards -->
+    <div style="padding:0 24px; border:1px solid rgba(255,255,255,0.08); border-top:none; border-bottom:none; background:rgba(255,255,255,0.01);">
+      <div style="display:flex; gap:14px; align-items:flex-start; padding-bottom:0;" class="pricing-cards-row">
+
+        <!-- Monthly -->
+        <div class="pricing-card">
+          <p style="font-size:13px; font-weight:700; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:14px;">Monthly</p>
+          <div class="pricing-price">$4.99</div>
+          <p style="font-size:13px; color:rgba(255,255,255,0.35); margin-bottom:20px;">/month</p>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px; margin-bottom:24px;">
+            <li style="font-size:12px; color:rgba(255,255,255,0.5); display:flex; align-items:center; gap:6px;">
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(99,102,241,0.6);flex-shrink:0;"></div>All premium features
+            </li>
+            <li style="font-size:12px; color:rgba(255,255,255,0.5); display:flex; align-items:center; gap:6px;">
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(99,102,241,0.6);flex-shrink:0;"></div>Cancel anytime
+            </li>
+          </ul>
+          <button class="btn-glass" style="font-size:13px; padding:11px 20px;">Choose Monthly</button>
+        </div>
+
+        <!-- Yearly (featured) -->
+        <div class="pricing-card pricing-card-featured" style="background:#0d0d1a; position:relative;">
+          <div class="pricing-card-featured-border"></div>
+          <div class="pricing-card-featured-inner"></div>
+          <div style="position:relative; z-index:1;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+              <p style="font-size:13px; font-weight:700; color:rgba(255,255,255,0.6); text-transform:uppercase; letter-spacing:0.07em;">Yearly</p>
+              <span class="pricing-badge">Most Popular</span>
+            </div>
+            <div class="pricing-price">$39.99</div>
+            <p style="font-size:13px; color:rgba(255,255,255,0.35); margin-bottom:4px;">/year</p>
+            <p style="font-size:12px; font-weight:700; margin-bottom:20px; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">$3.33/mo · Save 33%</p>
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:8px; margin-bottom:24px;">
+              <li style="font-size:12px; color:rgba(255,255,255,0.6); display:flex; align-items:center; gap:6px;">
+                <div style="width:5px;height:5px;border-radius:50%;background:var(--grad);flex-shrink:0;box-shadow:0 0 6px rgba(99,102,241,0.8);"></div>All premium features
+              </li>
+              <li style="font-size:12px; color:rgba(255,255,255,0.6); display:flex; align-items:center; gap:6px;">
+                <div style="width:5px;height:5px;border-radius:50%;background:var(--grad);flex-shrink:0;box-shadow:0 0 6px rgba(244,63,94,0.8);"></div>Best per-month value
+              </li>
+              <li style="font-size:12px; color:rgba(255,255,255,0.6); display:flex; align-items:center; gap:6px;">
+                <div style="width:5px;height:5px;border-radius:50%;background:var(--grad);flex-shrink:0;"></div>Partner included
+              </li>
+            </ul>
+            <button class="btn-grad glow-ring" style="font-size:14px;">Choose Yearly</button>
+          </div>
+        </div>
+
+        <!-- Lifetime -->
+        <div class="pricing-card" style="background:linear-gradient(135deg, rgba(99,102,241,0.07), rgba(244,63,94,0.04));">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <p style="font-size:13px; font-weight:700; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.07em;">Lifetime</p>
+            <span style="font-size:11px; font-weight:700; padding:4px 9px; border-radius:999px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.6); letter-spacing:0.04em; text-transform:uppercase;">Best Value</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:2px;">
+            <!-- Crown inline SVG -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="url(#gCrown)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <defs><linearGradient id="gCrown" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#f43f5e"/></linearGradient></defs>
+              <path d="M2 20h20M5 20V10l7-6 7 6v10"/>
+            </svg>
+            <div class="pricing-price">$99.99</div>
+          </div>
+          <p style="font-size:13px; color:rgba(255,255,255,0.35); margin-bottom:4px;">one-time</p>
+          <p style="font-size:12px; color:rgba(255,255,255,0.4); margin-bottom:20px;">Pay once, yours forever</p>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px; margin-bottom:24px;">
+            <li style="font-size:12px; color:rgba(255,255,255,0.5); display:flex; align-items:center; gap:6px;">
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(139,92,246,0.7);flex-shrink:0;"></div>No recurring charges
+            </li>
+            <li style="font-size:12px; color:rgba(255,255,255,0.5); display:flex; align-items:center; gap:6px;">
+              <div style="width:5px;height:5px;border-radius:50%;background:rgba(139,92,246,0.7);flex-shrink:0;"></div>All future updates
+            </li>
+          </ul>
+          <button class="btn-glass" style="font-size:13px; padding:11px 20px;">Choose Lifetime</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature comparison -->
+    <div style="padding:0 24px; border:1px solid rgba(255,255,255,0.08); border-top:none; border-bottom:none;">
+      <div class="glass" style="padding:28px 24px; margin-top:32px;">
+        <h3 style="font-size:18px; font-weight:800; color:rgba(255,255,255,0.9); margin-bottom:20px; text-align:center;">What's included</h3>
+
+        <!-- Column headers -->
+        <div style="display:flex; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.08); margin-bottom:4px;">
+          <div style="flex:1; font-size:12px; font-weight:700; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.07em;">Feature</div>
+          <div style="width:80px; text-align:center; font-size:12px; font-weight:700; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.07em;">Free</div>
+          <div style="width:80px; text-align:center; font-size:12px; font-weight:700; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; text-transform:uppercase; letter-spacing:0.07em;">Premium</div>
+        </div>
+
+        <!-- Rows -->
+        <div class="comp-row">
+          <div class="comp-feature">Tasks</div>
+          <div class="comp-free" style="font-size:12px; color:rgba(255,255,255,0.4);">30-day window</div>
+          <div class="comp-premium"><div class="comp-check"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-feature">Briefings</div>
+          <div class="comp-free" style="font-size:12px; color:rgba(255,255,255,0.4);">4 weeks</div>
+          <div class="comp-premium"><div class="comp-check"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-feature">Mood Check-ins</div>
+          <div class="comp-free"><div class="comp-x"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="rgba(255,255,255,0.25)" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+          <div class="comp-premium"><div class="comp-check"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-feature">Checklists</div>
+          <div class="comp-free" style="font-size:12px; color:rgba(255,255,255,0.4);">4 of 15</div>
+          <div class="comp-premium" style="font-size:12px; font-weight:700; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">All 15</div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-feature">Push Notifications</div>
+          <div class="comp-free" style="font-size:12px; color:rgba(255,255,255,0.4);">30 days</div>
+          <div class="comp-premium"><div class="comp-check"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-feature">Budget Tracker</div>
+          <div class="comp-free"><div class="comp-x"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="rgba(255,255,255,0.25)" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+          <div class="comp-premium"><div class="comp-check"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-feature">Dad Journey Guides</div>
+          <div class="comp-free" style="font-size:12px; color:rgba(255,255,255,0.4);">Preview</div>
+          <div class="comp-premium"><div class="comp-check"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-feature">Premium Checklists</div>
+          <div class="comp-free"><div class="comp-x"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="rgba(255,255,255,0.25)" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+          <div class="comp-premium"><div class="comp-check"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-feature">Partner Sync</div>
+          <div class="comp-free"><div class="comp-x"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="rgba(255,255,255,0.25)" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+          <div class="comp-premium"><div class="comp-check"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        </div>
+        <div class="comp-row">
+          <div class="comp-feature">Priority Support</div>
+          <div class="comp-free"><div class="comp-x"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="rgba(255,255,255,0.25)" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+          <div class="comp-premium"><div class="comp-check"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div style="padding:0 24px; border:1px solid rgba(255,255,255,0.08); border-top:none; border-bottom:none;">
+      <div style="margin-top:32px;">
+        <h3 style="font-size:18px; font-weight:800; color:rgba(255,255,255,0.9); margin-bottom:16px; text-align:center;">Frequently asked</h3>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+
+          <!-- FAQ 1 -->
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Does my partner also get premium access?</span>
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="url(#gChev1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <defs><linearGradient id="gChev1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#f43f5e"/></linearGradient></defs>
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </div>
+            <div class="faq-answer">
+              Yes — one subscription covers your entire family. When you subscribe, your partner automatically gets full premium access too. The Dad Center is built for both parents, not just one.
+            </div>
+          </div>
+
+          <!-- FAQ 2 -->
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>Can I cancel anytime?</span>
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="url(#gChev2)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <defs><linearGradient id="gChev2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#f43f5e"/></linearGradient></defs>
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </div>
+            <div class="faq-answer">
+              Monthly and yearly plans can be cancelled anytime from your account settings. You'll keep premium access until the end of your billing period. The lifetime plan is a one-time purchase with no recurring charges.
+            </div>
+          </div>
+
+          <!-- FAQ 3 -->
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <span>What can I do on the free plan?</span>
+              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="url(#gChev3)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <defs><linearGradient id="gChev3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#f43f5e"/></linearGradient></defs>
+                <path d="M6 9l6 6 6-6"/>
+              </svg>
+            </div>
+            <div class="faq-answer">
+              The free plan includes all tasks in your 30-day rolling window, full briefing access for your first 4 weeks, push notifications for 30 days, and 4 starter checklists. It's genuinely useful — not a crippled trial. Upgrade when you want more.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom CTA -->
+    <div style="padding:0 24px; border:1px solid rgba(255,255,255,0.08); border-top:none; border-radius:0 0 20px 20px; background:rgba(255,255,255,0.01);">
+      <div style="padding:36px 0 48px; text-align:center;">
+        <!-- Guarantee badge -->
+        <div style="display:inline-flex; align-items:center; gap:10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.10); border-radius:999px; padding:10px 20px; margin-bottom:32px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="url(#gShield)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <defs><linearGradient id="gShield" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#f43f5e"/></linearGradient></defs>
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span style="font-size:14px; font-weight:600; color:rgba(255,255,255,0.7);">30-day money-back guarantee</span>
+        </div>
+
+        <!-- Gradient separator -->
+        <div style="height:1px; background:linear-gradient(90deg, transparent, rgba(99,102,241,0.4), rgba(244,63,94,0.4), transparent); margin-bottom:24px;"></div>
+
+        <!-- Main upgrade button -->
+        <button class="btn-grad glow-ring" style="max-width:320px; margin:0 auto 20px; display:block; font-size:17px; padding:16px 32px;">
+          Start Premium — $4.99/mo
+        </button>
+
+        <!-- Legal links -->
+        <div style="display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap;">
+          <a href="#" style="font-size:12px; color:rgba(255,255,255,0.28); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.55)'" onmouseout="this.style.color='rgba(255,255,255,0.28)'">Terms of Service</a>
+          <div style="width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,0.15);"></div>
+          <a href="#" style="font-size:12px; color:rgba(255,255,255,0.28); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.55)'" onmouseout="this.style.color='rgba(255,255,255,0.28)'">Privacy Policy</a>
+          <div style="width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,0.15);"></div>
+          <a href="#" style="font-size:12px; color:rgba(255,255,255,0.28); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='rgba(255,255,255,0.55)'" onmouseout="this.style.color='rgba(255,255,255,0.28)'">Restore Purchase</a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .page-wide -->
+
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    /* Role selection */
+    function selectRole(el) {
+      document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    /* Stage toggle */
+    function toggleStage(el) {
+      const parent = el.closest('.glass-toggle');
+      parent.querySelectorAll('.toggle-option').forEach(o => o.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    /* FAQ accordion */
+    function toggleFaq(el) {
+      const answer = el.nextElementSibling;
+      const chevron = el.querySelector('.faq-chevron');
+      const isOpen = answer.classList.contains('open');
+
+      // Close all
+      document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+      document.querySelectorAll('.faq-chevron').forEach(c => c.classList.remove('open'));
+
+      if (!isOpen) {
+        answer.classList.add('open');
+        chevron.classList.add('open');
+      }
+    }
+
+    /* Confetti loop — re-trigger animation */
+    const confettiDots = document.querySelectorAll('.confetti-dot');
+    confettiDots.forEach((dot, i) => {
+      dot.style.animationDelay = `${i * 0.35}s`;
+      dot.style.animationIterationCount = 'infinite';
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Command Center</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --bg:          #060a0f;
+      --surface:     #0c1420;
+      --card-bg:     rgba(0, 255, 135, 0.02);
+      --card-border: rgba(0, 255, 135, 0.08);
+      --card-hover:  rgba(0, 255, 135, 0.14);
+      --primary:     #00ff87;
+      --primary-dim: rgba(0, 255, 135, 0.4);
+      --primary-glow:0 0 12px rgba(0, 255, 135, 0.5), 0 0 30px rgba(0, 255, 135, 0.15);
+      --secondary:   #4af2c8;
+      --amber:       #ffb700;
+      --amber-dim:   rgba(255, 183, 0, 0.4);
+      --red:         #ff4f4f;
+      --blue:        #3b82f6;
+      --text:        #c8d6e5;
+      --muted:       #3d5a80;
+      --muted-light: #5a7a9a;
+      --font-display:'Orbitron', sans-serif;
+      --font-body:   'DM Sans', sans-serif;
+      --font-mono:   'JetBrains Mono', monospace;
+    }
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 400;
+      min-height: 100vh;
+      overflow-x: hidden;
+      /* Grid texture */
+      background-image:
+        linear-gradient(rgba(0,255,135,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,135,0.03) 1px, transparent 1px),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0,255,135,0.008) 2px,
+          rgba(0,255,135,0.008) 4px
+        );
+      background-size: 40px 40px, 40px 40px, 100% 4px;
+    }
+
+    /* ===== PAGE SCAN LINE ===== */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      opacity: 0;
+      z-index: 9999;
+      pointer-events: none;
+      animation: page-scan 1.8s ease-in-out 0.3s forwards;
+    }
+    @keyframes page-scan {
+      0%   { top: 0;    opacity: 0.9; }
+      90%  { top: 100%; opacity: 0.6; }
+      100% { top: 100%; opacity: 0;   }
+    }
+
+    /* ===== HUD CARD ===== */
+    .hud-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .hud-card::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: -1px;
+      width: 20px; height: 20px;
+      border-top: 2px solid var(--primary);
+      border-left: 2px solid var(--primary);
+      border-radius: 2px 0 0 0;
+      z-index: 2;
+    }
+    .hud-card::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; right: -1px;
+      width: 20px; height: 20px;
+      border-bottom: 2px solid var(--primary);
+      border-right: 2px solid var(--primary);
+      border-radius: 0 0 2px 0;
+      z-index: 2;
+    }
+    .hud-card:hover {
+      border-color: rgba(0, 255, 135, 0.22);
+      box-shadow: 0 0 20px rgba(0, 255, 135, 0.06), inset 0 0 30px rgba(0, 255, 135, 0.02);
+    }
+    /* Card scan on hover */
+    .hud-card .card-scan {
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, transparent 0%, rgba(0,255,135,0.04) 50%, transparent 100%);
+      pointer-events: none;
+      transition: none;
+    }
+    .hud-card:hover .card-scan {
+      animation: card-sweep 0.5s ease-out forwards;
+    }
+    @keyframes card-sweep {
+      0%   { top: -100%; }
+      100% { top: 100%;  }
+    }
+
+    /* Card top accent line */
+    .card-accent-line {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--primary), transparent 60%);
+      opacity: 0.5;
+    }
+
+    /* ===== CARD TITLE ===== */
+    .card-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--muted-light);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-title-icon {
+      color: var(--primary);
+      opacity: 0.8;
+    }
+
+    /* ===== TOP BAR ===== */
+    #top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 54px;
+      background: rgba(6, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1000;
+    }
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .topbar-monogram {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 18px;
+      color: var(--primary);
+      text-shadow: var(--primary-glow);
+      letter-spacing: 0.05em;
+    }
+    .topbar-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--muted-light);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-left: 1px solid var(--muted);
+      padding-left: 10px;
+    }
+    .topbar-center {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--primary);
+      text-shadow: 0 0 8px rgba(0,255,135,0.4);
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .topbar-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--primary);
+      animation: blink-cursor 1s step-end infinite;
+      vertical-align: middle;
+      margin-left: 2px;
+    }
+    @keyframes blink-cursor {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .status-leds {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .led {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      position: relative;
+    }
+    .led-green  { background: var(--primary);    box-shadow: 0 0 6px var(--primary); animation: led-pulse 2s ease-in-out infinite; }
+    .led-amber  { background: var(--amber);      box-shadow: 0 0 6px var(--amber);   animation: led-pulse 2.4s ease-in-out infinite 0.4s; }
+    .led-blue   { background: var(--secondary);  box-shadow: 0 0 6px var(--secondary); animation: led-pulse 3s ease-in-out infinite 0.8s; }
+    @keyframes led-pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.5; }
+    }
+    .topbar-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .user-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--bg);
+      letter-spacing: 0.05em;
+      border: 1px solid rgba(0,255,135,0.3);
+    }
+    .user-name {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* ===== MAIN LAYOUT ===== */
+    #app-layout {
+      display: grid;
+      grid-template-columns: 64px 1fr 280px;
+      grid-template-rows: auto;
+      gap: 16px;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 70px 16px 90px;
+      min-height: 100vh;
+    }
+
+    /* ===== LEFT PANEL ===== */
+    #left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 8px;
+      position: sticky;
+      top: 70px;
+      height: fit-content;
+    }
+    .status-stack {
+      padding: 12px 0;
+    }
+    .status-stack-label {
+      font-family: var(--font-display);
+      font-size: 7px;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .status-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .status-dot-green  { background: var(--primary);   box-shadow: 0 0 5px var(--primary); }
+    .status-dot-amber  { background: var(--amber);     box-shadow: 0 0 5px var(--amber); }
+    .status-dot-blue   { background: var(--secondary); box-shadow: 0 0 5px var(--secondary); }
+    .status-item-label {
+      font-family: var(--font-mono);
+      font-size: 7px;
+      color: var(--muted-light);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      letter-spacing: 0.05em;
+    }
+
+    /* Quick action buttons */
+    .quick-actions-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .quick-action-btn {
+      width: 44px; height: 44px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+      color: var(--muted-light);
+      align-self: center;
+    }
+    .quick-action-btn:hover {
+      border-color: var(--primary);
+      background: rgba(0,255,135,0.06);
+      color: var(--primary);
+      transform: scale(1.05);
+    }
+    .quick-action-btn:hover .qa-label {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .qa-label {
+      position: absolute;
+      left: calc(100% + 8px);
+      background: var(--surface);
+      border: 1px solid var(--card-border);
+      border-radius: 3px;
+      padding: 4px 8px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--primary);
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+      z-index: 10;
+    }
+    svg.qa-icon { width: 18px; height: 18px; }
+
+    /* ===== CENTER COLUMN ===== */
+    #center-col {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Welcome Banner */
+    #welcome-banner {
+      padding: 20px 24px;
+    }
+    .welcome-greeting {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--primary);
+      text-shadow: var(--primary-glow);
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+    .welcome-sub {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--muted-light);
+      font-weight: 400;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 1px solid var(--primary);
+      width: 0;
+      animation: type-in 1.5s steps(50) 0.8s forwards;
+    }
+    @keyframes type-in {
+      to { width: 100%; border-right-color: transparent; }
+    }
+
+    /* ===== MOOD RADAR CARD ===== */
+    #mood-card {
+      padding: 18px 20px;
+    }
+    .mood-card-inner {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+    .radar-container {
+      position: relative;
+      width: 140px; height: 140px;
+      flex-shrink: 0;
+    }
+    .radar-svg {
+      width: 140px; height: 140px;
+    }
+    .radar-ring {
+      fill: none;
+      stroke: rgba(0,255,135,0.1);
+      stroke-width: 1;
+    }
+    .radar-ring-mid {
+      stroke: rgba(0,255,135,0.07);
+    }
+    .radar-cross {
+      stroke: rgba(0,255,135,0.08);
+      stroke-width: 0.5;
+    }
+    .radar-sweep-group {
+      transform-origin: 70px 70px;
+      animation: radar-spin 3s linear infinite;
+    }
+    .radar-sweep-line {
+      stroke: var(--primary);
+      stroke-width: 1.5;
+      opacity: 0.9;
+    }
+    .radar-sweep-fill {
+      fill: url(#radarGrad);
+      opacity: 0.6;
+    }
+    .radar-center-dot {
+      fill: var(--primary);
+      filter: drop-shadow(0 0 4px var(--primary));
+    }
+    @keyframes radar-spin {
+      from { transform: rotate(0deg);   }
+      to   { transform: rotate(360deg); }
+    }
+    .mood-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .mood-options-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .mood-option {
+      width: 44px; height: 44px;
+      background: rgba(0,255,135,0.03);
+      border: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      position: relative;
+    }
+    .mood-option:hover {
+      transform: scale(1.15);
+      border-color: var(--primary);
+      box-shadow: 0 0 12px rgba(0,255,135,0.4);
+    }
+    .mood-option.selected {
+      border-color: var(--primary);
+      box-shadow: 0 0 16px rgba(0,255,135,0.5);
+      animation: mood-pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes mood-pulse {
+      0%, 100% { box-shadow: 0 0 12px rgba(0,255,135,0.4); }
+      50%       { box-shadow: 0 0 24px rgba(0,255,135,0.7); }
+    }
+    .mood-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .mood-last {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .mood-last span {
+      color: var(--muted-light);
+    }
+
+    /* ===== BRIEFING CARD ===== */
+    #briefing-card {
+      padding: 18px 20px;
+    }
+    .briefing-rows {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .briefing-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 3px;
+      opacity: 0;
+      transform: translateX(-16px);
+    }
+    .briefing-row.animate-in {
+      animation: slide-in-left 0.4s ease-out forwards;
+    }
+    .briefing-row:nth-child(1).animate-in { animation-delay: 0.1s; }
+    .briefing-row:nth-child(2).animate-in { animation-delay: 0.25s; }
+    .briefing-row:nth-child(3).animate-in { animation-delay: 0.4s; }
+    @keyframes slide-in-left {
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .briefing-bar {
+      width: 3px;
+      min-height: 40px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .briefing-bar-blue   { background: var(--secondary); box-shadow: 0 0 6px var(--secondary); }
+    .briefing-bar-amber  { background: var(--amber);     box-shadow: 0 0 6px var(--amber); }
+    .briefing-bar-green  { background: var(--primary);   box-shadow: 0 0 6px var(--primary); }
+    .briefing-row-content { flex: 1; }
+    .briefing-row-key {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--muted-light);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .briefing-row-val {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.4;
+    }
+    .briefing-footer {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .briefing-progress-wrap {
+      flex: 1;
+      margin-right: 16px;
+    }
+    .briefing-progress-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--muted);
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .briefing-progress-bar {
+      height: 4px;
+      background: rgba(0,255,135,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .briefing-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 2px;
+      box-shadow: 0 0 8px rgba(0,255,135,0.5);
+      width: 0%;
+      transition: width 1.2s ease-out;
+    }
+    .briefing-cta {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      text-decoration: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: text-shadow 0.2s;
+    }
+    .briefing-cta:hover {
+      text-shadow: var(--primary-glow);
+    }
+
+    /* ===== TASKS CARD ===== */
+    #tasks-card {
+      padding: 18px 20px;
+    }
+    .tasks-list {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+    }
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .task-row:nth-child(even) {
+      background: rgba(0,255,135,0.015);
+    }
+    .task-row:hover {
+      background: rgba(0,255,135,0.04);
+    }
+    .task-row.done {
+      opacity: 0.4;
+    }
+    .task-check {
+      width: 16px; height: 16px;
+      border: 1.5px solid rgba(0,255,135,0.4);
+      border-radius: 2px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+      cursor: pointer;
+    }
+    .task-check.checked {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .task-check.checked::after {
+      content: '';
+      width: 8px; height: 5px;
+      border-left: 1.5px solid var(--bg);
+      border-bottom: 1.5px solid var(--bg);
+      transform: rotate(-45deg) translateY(-1px);
+    }
+    .task-name {
+      flex: 1;
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .task-row.done .task-name {
+      text-decoration: line-through;
+      color: var(--muted-light);
+    }
+    .task-priority {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 5px;
+      border-radius: 2px;
+      letter-spacing: 0.05em;
+    }
+    .p1 { color: var(--red);       background: rgba(255,79,79,0.12);  border: 1px solid rgba(255,79,79,0.25);   }
+    .p2 { color: var(--amber);     background: rgba(255,183,0,0.1);   border: 1px solid rgba(255,183,0,0.25);  }
+    .p3 { color: var(--primary);   background: rgba(0,255,135,0.08);  border: 1px solid rgba(0,255,135,0.2);   }
+    .task-due {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--muted);
+      min-width: 24px;
+      text-align: right;
+    }
+    .tasks-progress-wrap {
+      margin-top: 14px;
+    }
+    .tasks-progress-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    .tasks-progress-label span:last-child {
+      color: var(--primary);
+    }
+    .tasks-progress-bar {
+      height: 4px;
+      background: rgba(0,255,135,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .tasks-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 2px;
+      box-shadow: 0 0 8px rgba(0,255,135,0.5);
+      width: 0%;
+      transition: width 1.4s ease-out 0.6s;
+    }
+
+    /* ===== CHALLENGE SECTORS CARD ===== */
+    #challenge-card {
+      padding: 18px 20px;
+    }
+    .challenge-tiles {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .challenge-tile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 3px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, padding-left 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .challenge-tile:hover {
+      transform: translateX(4px);
+      border-color: rgba(255,255,255,0.1);
+    }
+    .challenge-tile:hover .tile-strip {
+      width: 6px;
+    }
+    .tile-strip {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      border-radius: 2px 0 0 2px;
+      transition: width 0.2s;
+    }
+    .strip-blue    { background: var(--blue);     box-shadow: 0 0 8px var(--blue); }
+    .strip-green   { background: #22c55e;          box-shadow: 0 0 8px #22c55e; }
+    .strip-red     { background: #ff6b6b;          box-shadow: 0 0 8px #ff6b6b; }
+    .tile-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      margin-left: 4px;
+    }
+    .tile-content { flex: 1; }
+    .tile-pillar {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .tile-desc {
+      font-family: var(--font-body);
+      font-size: 11px;
+      color: var(--muted-light);
+      line-height: 1.4;
+    }
+    .tile-arrow {
+      color: var(--muted);
+      font-size: 12px;
+      transition: color 0.2s, transform 0.2s;
+    }
+    .challenge-tile:hover .tile-arrow {
+      color: var(--primary);
+      transform: translateX(3px);
+    }
+    .challenge-see-all {
+      display: block;
+      margin-top: 10px;
+      font-family: var(--font-display);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--muted-light);
+      text-decoration: none;
+      cursor: pointer;
+      text-align: right;
+      transition: color 0.2s;
+    }
+    .challenge-see-all:hover { color: var(--primary); }
+
+    /* ===== RIGHT PANEL ===== */
+    #right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-top: 8px;
+    }
+
+    /* Countdown Module */
+    #countdown-card {
+      padding: 20px 18px;
+      text-align: center;
+    }
+    .countdown-ring-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      margin: 12px 0;
+    }
+    .countdown-svg { transform: rotate(-90deg); }
+    .countdown-ring-bg   { fill: none; stroke: rgba(0,255,135,0.08); stroke-width: 6; }
+    .countdown-ring-fill {
+      fill: none;
+      stroke: url(#countdownGrad);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 408;
+      stroke-dashoffset: 408;
+      transition: stroke-dashoffset 1.6s ease-out 0.5s;
+      filter: drop-shadow(0 0 6px rgba(0,255,135,0.6));
+    }
+    .countdown-inner {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .countdown-number {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 52px;
+      line-height: 1;
+      color: var(--primary);
+      text-shadow: var(--primary-glow);
+      animation: data-flicker 0.3s ease-out 0.2s;
+    }
+    @keyframes data-flicker {
+      0%  { opacity: 0.2; }
+      30% { opacity: 1;   }
+      50% { opacity: 0.3; }
+      70% { opacity: 1;   }
+      85% { opacity: 0.4; }
+      100%{ opacity: 1;   }
+    }
+    .countdown-unit {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--muted-light);
+      margin-top: 2px;
+    }
+    .countdown-mini-stats {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    .mini-stat {
+      flex: 1;
+      padding: 6px 4px;
+      background: rgba(0,255,135,0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 3px;
+      text-align: center;
+    }
+    .mini-stat-val {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--secondary);
+    }
+    .mini-stat-label {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-top: 2px;
+    }
+
+    /* Partner Status */
+    #partner-card {
+      padding: 18px;
+    }
+    .partner-last-activity {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--muted-light);
+      margin-top: 10px;
+      margin-bottom: 12px;
+    }
+    .partner-last-activity strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+    .activity-dots {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .activity-dot {
+      width: 10px; height: 10px;
+      border-radius: 2px;
+      border: 1px solid var(--card-border);
+    }
+    .activity-dot.active {
+      background: var(--primary);
+      box-shadow: 0 0 6px rgba(0,255,135,0.5);
+      border-color: var(--primary);
+    }
+    .activity-dot.inactive {
+      background: rgba(0,255,135,0.06);
+    }
+    .sparkline {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 32px;
+      margin-top: 4px;
+    }
+    .spark-bar {
+      flex: 1;
+      background: var(--primary);
+      border-radius: 1px 1px 0 0;
+      min-height: 3px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .spark-bar:hover { opacity: 1; }
+    .spark-label {
+      font-family: var(--font-mono);
+      font-size: 8px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    /* Quick Add */
+    #quickadd-card {
+      padding: 14px 16px;
+    }
+    .quickadd-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .quickadd-input {
+      flex: 1;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--card-border);
+      border-radius: 3px;
+      padding: 8px 12px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .quickadd-input::placeholder { color: var(--muted); }
+    .quickadd-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0,255,135,0.1);
+    }
+    .quickadd-btn {
+      width: 34px; height: 34px;
+      background: var(--primary);
+      border: none;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: 300;
+      color: var(--bg);
+      font-family: var(--font-display);
+      transition: background 0.2s, box-shadow 0.2s;
+      flex-shrink: 0;
+    }
+    .quickadd-btn:hover {
+      background: #33ffaa;
+      box-shadow: var(--primary-glow);
+    }
+
+    /* ===== BOTTOM NAV ===== */
+    #bottom-nav {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(12, 20, 32, 0.92);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0,255,135,0.2);
+      border-radius: 8px;
+      padding: 0 8px;
+      display: flex;
+      gap: 0;
+      z-index: 1000;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 0 20px rgba(0,255,135,0.06);
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 10px 16px;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s;
+      color: var(--muted-light);
+      min-width: 64px;
+    }
+    .nav-item.active { color: var(--primary); }
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 20px; height: 2px;
+      background: var(--primary);
+      border-radius: 1px;
+      box-shadow: 0 0 6px var(--primary);
+    }
+    .nav-icon { width: 20px; height: 20px; }
+    .nav-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .nav-item.active .nav-label {
+      text-shadow: 0 0 8px rgba(0,255,135,0.6);
+    }
+
+    /* ===== BOOT ANIMATION ===== */
+    .hud-card, #welcome-banner, #left-panel, #right-panel {
+      opacity: 0;
+    }
+    .boot-ready {
+      animation: boot-in 0.5s ease-out forwards;
+    }
+    @keyframes boot-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0);   }
+    }
+
+    /* ===== DIVIDER ===== */
+    .hud-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--card-border), transparent);
+      margin: 12px 0;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      #app-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        padding: 70px 12px 90px;
+      }
+      #left-panel {
+        flex-direction: row;
+        position: static;
+        overflow-x: auto;
+        padding: 8px 0;
+      }
+      .status-stack { display: flex; gap: 12px; align-items: center; padding: 0; }
+      .status-item  { flex-direction: row; margin-bottom: 0; }
+      .status-item-label { writing-mode: horizontal-tb; transform: none; }
+      .quick-actions-stack { flex-direction: row; }
+      #right-panel { order: 3; }
+    }
+
+    /* ===== UTILITY ===== */
+    .flex-between {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .gap-8  { gap: 8px; }
+    .gap-12 { gap: 12px; }
+    .mt-4   { margin-top: 4px; }
+    .mt-8   { margin-top: 8px; }
+    .mt-12  { margin-top: 12px; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== TOP BAR ===== -->
+  <header id="top-bar">
+    <div class="topbar-logo">
+      <div class="topbar-monogram">TDC</div>
+      <div class="topbar-label">COMMAND&nbsp;CENTER</div>
+    </div>
+
+    <div class="topbar-center">
+      WEEK&nbsp;24&nbsp;&middot;&nbsp;DAY&nbsp;168
+      <span class="topbar-cursor"></span>
+    </div>
+
+    <div class="topbar-right">
+      <div class="status-leds">
+        <div class="led led-green"  title="Online"></div>
+        <div class="led led-amber"  title="Partner"></div>
+        <div class="led led-green"  title="Sync"></div>
+      </div>
+      <div class="topbar-user">
+        <div class="user-avatar">AG</div>
+        <div class="user-name">Ash G.</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== APP LAYOUT ===== -->
+  <div id="app-layout">
+
+    <!-- LEFT PANEL -->
+    <aside id="left-panel">
+
+      <!-- System Status -->
+      <div class="hud-card status-stack">
+        <div class="card-scan"></div>
+        <div class="card-accent-line"></div>
+        <div class="status-stack-label">SYS</div>
+
+        <div class="status-item">
+          <div class="status-dot status-dot-green"></div>
+          <div class="status-item-label">5 Tasks</div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot status-dot-amber"></div>
+          <div class="status-item-label">Briefing</div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot status-dot-green"></div>
+          <div class="status-item-label">Mood</div>
+        </div>
+        <div class="status-item">
+          <div class="status-dot status-dot-blue"></div>
+          <div class="status-item-label">Partner</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions-stack">
+
+        <button class="quick-action-btn" title="Add Task">
+          <div class="qa-label">ADD TASK</div>
+          <!-- Plus icon -->
+          <svg class="qa-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+
+        <button class="quick-action-btn" title="Log Mood">
+          <div class="qa-label">LOG MOOD</div>
+          <!-- Smile icon -->
+          <svg class="qa-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9" stroke-linecap="round" stroke-width="3"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9" stroke-linecap="round" stroke-width="3"></line>
+          </svg>
+        </button>
+
+        <button class="quick-action-btn" title="View Briefing">
+          <div class="qa-label">BRIEFING</div>
+          <!-- Book open icon -->
+          <svg class="qa-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+        </button>
+
+        <button class="quick-action-btn" title="Notifications">
+          <div class="qa-label">ALERTS</div>
+          <!-- Bell icon -->
+          <svg class="qa-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+        </button>
+
+      </div>
+    </aside>
+
+    <!-- CENTER COLUMN -->
+    <main id="center-col">
+
+      <!-- Welcome Banner -->
+      <div class="hud-card" id="welcome-banner">
+        <div class="card-scan"></div>
+        <div class="card-accent-line"></div>
+        <div class="welcome-greeting">Good evening, Ash.</div>
+        <div class="welcome-sub">Week 24 &middot; Third Trimester &middot; 112 days to estimated arrival</div>
+      </div>
+
+      <!-- Mood Radar Card -->
+      <div class="hud-card" id="mood-card">
+        <div class="card-scan"></div>
+        <div class="card-accent-line"></div>
+        <div class="card-title">
+          <svg class="card-title-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="4"></circle>
+            <line x1="12" y1="2" x2="12" y2="6"></line>
+            <line x1="12" y1="18" x2="12" y2="22"></line>
+            <line x1="2" y1="12" x2="6" y2="12"></line>
+            <line x1="18" y1="12" x2="22" y2="12"></line>
+          </svg>
+          MOOD RADAR
+        </div>
+
+        <div class="mood-card-inner" style="margin-top:16px;">
+          <!-- Radar SVG -->
+          <div class="radar-container">
+            <svg class="radar-svg" viewBox="0 0 140 140">
+              <defs>
+                <linearGradient id="radarGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="rgba(0,255,135,0)" />
+                  <stop offset="100%" stop-color="rgba(0,255,135,0.3)" />
+                </linearGradient>
+              </defs>
+              <!-- Rings -->
+              <circle cx="70" cy="70" r="60" class="radar-ring" />
+              <circle cx="70" cy="70" r="45" class="radar-ring radar-ring-mid" />
+              <circle cx="70" cy="70" r="30" class="radar-ring" />
+              <circle cx="70" cy="70" r="15" class="radar-ring radar-ring-mid" />
+              <!-- Cross hairs -->
+              <line x1="70" y1="10" x2="70" y2="130" class="radar-cross" />
+              <line x1="10" y1="70" x2="130" y2="70" class="radar-cross" />
+              <line x1="27" y1="27" x2="113" y2="113" class="radar-cross" style="opacity:0.4" />
+              <line x1="113" y1="27" x2="27" y2="113" class="radar-cross" style="opacity:0.4" />
+              <!-- Sweep -->
+              <g class="radar-sweep-group">
+                <path d="M70,70 L70,10 A60,60 0 0,1 130,70 Z" class="radar-sweep-fill" />
+                <line x1="70" y1="70" x2="70" y2="10" class="radar-sweep-line" />
+              </g>
+              <!-- Center dot -->
+              <circle cx="70" cy="70" r="3" class="radar-center-dot" />
+            </svg>
+          </div>
+
+          <!-- Mood options + last check-in -->
+          <div class="mood-options">
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:0.1em;margin-bottom:6px;">SELECT CURRENT STATE</div>
+            <div class="mood-options-row">
+              <div class="mood-option" onclick="selectMood(this, '😫')" title="Struggling">😫</div>
+              <div class="mood-option" onclick="selectMood(this, '😕')" title="Rough">😕</div>
+              <div class="mood-option" onclick="selectMood(this, '😐')" title="Okay">😐</div>
+              <div class="mood-option" onclick="selectMood(this, '😊')" title="Good">😊</div>
+              <div class="mood-option" onclick="selectMood(this, '🔥')" title="Great">🔥</div>
+            </div>
+            <div style="display:flex;gap:32px;margin-top:4px;">
+              <div class="mood-label">STRUGGLING</div>
+              <div class="mood-label" style="margin-left:auto">GREAT</div>
+            </div>
+            <div class="mood-last">LAST CHECK-IN: <span>Yesterday, 9:14 PM</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Briefing Preview Card -->
+      <div class="hud-card" id="briefing-card">
+        <div class="card-scan"></div>
+        <div class="card-accent-line"></div>
+        <div class="flex-between">
+          <div class="card-title">
+            <svg class="card-title-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            WEEKLY INTEL &mdash; WEEK 24
+          </div>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--muted)">WK 24/40</span>
+        </div>
+
+        <div class="briefing-rows">
+          <div class="briefing-row animate-in">
+            <div class="briefing-bar briefing-bar-blue"></div>
+            <div class="briefing-row-content">
+              <div class="briefing-row-key">Baby</div>
+              <div class="briefing-row-val">Ear development complete, weighing approximately 600g</div>
+            </div>
+          </div>
+          <div class="briefing-row animate-in">
+            <div class="briefing-bar briefing-bar-amber"></div>
+            <div class="briefing-row-content">
+              <div class="briefing-row-key">Partner</div>
+              <div class="briefing-row-val">Glucose tolerance test due this week &mdash; energy dips normal</div>
+            </div>
+          </div>
+          <div class="briefing-row animate-in">
+            <div class="briefing-bar briefing-bar-green"></div>
+            <div class="briefing-row-content">
+              <div class="briefing-row-key">Your Focus</div>
+              <div class="briefing-row-val">Start hospital bag checklist &amp; research birthing classes nearby</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="briefing-footer">
+          <div class="briefing-progress-wrap">
+            <div class="briefing-progress-label">
+              <span>PREGNANCY PROGRESS</span>
+              <span>24 / 40 weeks</span>
+            </div>
+            <div class="briefing-progress-bar">
+              <div class="briefing-progress-fill" id="briefingProgressFill"></div>
+            </div>
+          </div>
+          <a class="briefing-cta" href="#">ACCESS FULL BRIEFING &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Active Missions (Tasks) Card -->
+      <div class="hud-card" id="tasks-card">
+        <div class="card-scan"></div>
+        <div class="card-accent-line"></div>
+        <div class="flex-between">
+          <div class="card-title">
+            <svg class="card-title-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 11 12 14 22 4"></polyline>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+            ACTIVE MISSIONS
+          </div>
+          <span style="font-family:var(--font-mono);font-size:9px;color:var(--primary);cursor:pointer;">VIEW ALL &rarr;</span>
+        </div>
+
+        <div class="tasks-list">
+          <div class="task-row">
+            <div class="task-check"></div>
+            <div class="task-name">Schedule hospital tour</div>
+            <span class="task-priority p1">P1</span>
+            <span class="task-due">2d</span>
+          </div>
+          <div class="task-row">
+            <div class="task-check"></div>
+            <div class="task-name">Research pediatricians</div>
+            <span class="task-priority p1">P1</span>
+            <span class="task-due">5d</span>
+          </div>
+          <div class="task-row">
+            <div class="task-check"></div>
+            <div class="task-name">Book birthing class — 2nd session</div>
+            <span class="task-priority p2">P2</span>
+            <span class="task-due">1w</span>
+          </div>
+          <div class="task-row">
+            <div class="task-check"></div>
+            <div class="task-name">Start hospital bag packing</div>
+            <span class="task-priority p2">P2</span>
+            <span class="task-due">1w</span>
+          </div>
+          <div class="task-row">
+            <div class="task-check"></div>
+            <div class="task-name">Review birth plan draft</div>
+            <span class="task-priority p3">P3</span>
+            <span class="task-due">2w</span>
+          </div>
+          <div class="task-row done">
+            <div class="task-check checked"></div>
+            <div class="task-name">Install car seat base</div>
+            <span class="task-priority p2">P2</span>
+            <span class="task-due">Done</span>
+          </div>
+        </div>
+
+        <div class="tasks-progress-wrap">
+          <div class="tasks-progress-label">
+            <span>MISSION COMPLETION</span>
+            <span>12 / 20 completed</span>
+          </div>
+          <div class="tasks-progress-bar">
+            <div class="tasks-progress-fill" id="tasksProgressFill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Challenge Sectors Card -->
+      <div class="hud-card" id="challenge-card">
+        <div class="card-scan"></div>
+        <div class="card-accent-line"></div>
+        <div class="card-title">
+          <svg class="card-title-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          CHALLENGE SECTORS
+        </div>
+
+        <div class="challenge-tiles">
+          <div class="challenge-tile">
+            <div class="tile-strip strip-blue"></div>
+            <div class="tile-icon">📚</div>
+            <div class="tile-content">
+              <div class="tile-pillar">Knowledge</div>
+              <div class="tile-desc">Understanding third trimester anatomy and what to expect during delivery</div>
+            </div>
+            <div class="tile-arrow">›</div>
+          </div>
+
+          <div class="challenge-tile">
+            <div class="tile-strip strip-red"></div>
+            <div class="tile-icon">🧠</div>
+            <div class="tile-content">
+              <div class="tile-pillar">Anxiety</div>
+              <div class="tile-desc">Managing pre-birth anxiety — grounding techniques for the delivery room</div>
+            </div>
+            <div class="tile-arrow">›</div>
+          </div>
+        </div>
+
+        <a class="challenge-see-all" href="#">VIEW ALL 7 SECTORS &rarr;</a>
+      </div>
+
+    </main>
+
+    <!-- RIGHT PANEL -->
+    <aside id="right-panel">
+
+      <!-- Countdown Module -->
+      <div class="hud-card" id="countdown-card">
+        <div class="card-scan"></div>
+        <div class="card-accent-line"></div>
+        <div class="card-title" style="justify-content:center;">
+          <svg class="card-title-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ESTIMATED ARRIVAL
+        </div>
+
+        <div class="countdown-ring-wrap">
+          <svg class="countdown-svg" width="140" height="140" viewBox="0 0 140 140">
+            <defs>
+              <linearGradient id="countdownGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#00ff87" />
+                <stop offset="100%" stop-color="#4af2c8" />
+              </linearGradient>
+            </defs>
+            <circle cx="70" cy="70" r="65" class="countdown-ring-bg" />
+            <circle cx="70" cy="70" r="65" class="countdown-ring-fill" id="countdownRingFill" />
+          </svg>
+          <div class="countdown-inner">
+            <div class="countdown-number">112</div>
+            <div class="countdown-unit">DAYS</div>
+          </div>
+        </div>
+
+        <div class="countdown-mini-stats">
+          <div class="mini-stat">
+            <div class="mini-stat-val">24</div>
+            <div class="mini-stat-label">WEEK</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val">6</div>
+            <div class="mini-stat-label">MONTH</div>
+          </div>
+          <div class="mini-stat">
+            <div class="mini-stat-val">T3</div>
+            <div class="mini-stat-label">STAGE</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Partner Activity -->
+      <div class="hud-card" id="partner-card">
+        <div class="card-scan"></div>
+        <div class="card-accent-line"></div>
+        <div class="card-title">
+          <svg class="card-title-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          PARTNER STATUS
+        </div>
+        <div class="partner-last-activity">
+          <strong>Logged 3 tasks</strong> &middot; 2 hours ago
+        </div>
+
+        <div style="font-family:var(--font-mono);font-size:8px;color:var(--muted);letter-spacing:0.1em;margin-bottom:6px;">7-DAY ACTIVITY</div>
+        <div class="activity-dots">
+          <div class="activity-dot active" title="Mon"></div>
+          <div class="activity-dot active" title="Tue"></div>
+          <div class="activity-dot inactive" title="Wed"></div>
+          <div class="activity-dot active" title="Thu"></div>
+          <div class="activity-dot active" title="Fri"></div>
+          <div class="activity-dot active" title="Sat"></div>
+          <div class="activity-dot active" title="Sun"></div>
+        </div>
+
+        <div style="font-family:var(--font-mono);font-size:8px;color:var(--muted);letter-spacing:0.1em;margin-bottom:4px;">ENGAGEMENT</div>
+        <div class="sparkline">
+          <div class="spark-bar" style="height:40%"></div>
+          <div class="spark-bar" style="height:70%"></div>
+          <div class="spark-bar" style="height:20%"></div>
+          <div class="spark-bar" style="height:90%"></div>
+          <div class="spark-bar" style="height:60%"></div>
+          <div class="spark-bar" style="height:100%"></div>
+          <div class="spark-bar" style="height:75%"></div>
+        </div>
+        <div class="spark-label">
+          <span>MON</span>
+          <span>SUN</span>
+        </div>
+      </div>
+
+      <!-- Quick Add -->
+      <div class="hud-card" id="quickadd-card">
+        <div class="card-scan"></div>
+        <div class="card-accent-line"></div>
+        <div class="card-title">
+          <svg class="card-title-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          QUICK ADD
+        </div>
+        <div class="quickadd-form">
+          <input
+            type="text"
+            class="quickadd-input"
+            placeholder="Quick add task..."
+            id="quickAddInput"
+          />
+          <button class="quickadd-btn" onclick="handleQuickAdd()">+</button>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- ===== BOTTOM NAV ===== -->
+  <nav id="bottom-nav">
+    <!-- Home -->
+    <div class="nav-item active">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+      </svg>
+      <span class="nav-label">Home</span>
+    </div>
+    <!-- Tasks -->
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 11 12 14 22 4"></polyline>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+      </svg>
+      <span class="nav-label">Tasks</span>
+    </div>
+    <!-- Briefing -->
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+      </svg>
+      <span class="nav-label">Briefing</span>
+    </div>
+    <!-- Tracker -->
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="20" x2="18" y2="10"></line>
+        <line x1="12" y1="20" x2="12" y2="4"></line>
+        <line x1="6"  y1="20" x2="6"  y2="14"></line>
+      </svg>
+      <span class="nav-label">Tracker</span>
+    </div>
+    <!-- More -->
+    <div class="nav-item">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="1"></circle>
+        <circle cx="19" cy="12" r="1"></circle>
+        <circle cx="5"  cy="12" r="1"></circle>
+      </svg>
+      <span class="nav-label">More</span>
+    </div>
+  </nav>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    // ---- Boot sequence ----
+    const cards = document.querySelectorAll('.hud-card, #welcome-banner, #left-panel, #right-panel');
+    cards.forEach((card, i) => {
+      setTimeout(() => {
+        card.classList.add('boot-ready');
+      }, 200 + i * 120);
+    });
+
+    // ---- Trigger briefing row slide-in ----
+    setTimeout(() => {
+      document.querySelectorAll('.briefing-row').forEach(row => {
+        row.classList.add('animate-in');
+      });
+    }, 800);
+
+    // ---- Progress bar fills ----
+    setTimeout(() => {
+      const briefingFill = document.getElementById('briefingProgressFill');
+      if (briefingFill) briefingFill.style.width = '60%'; // 24/40 = 60%
+    }, 900);
+
+    setTimeout(() => {
+      const tasksFill = document.getElementById('tasksProgressFill');
+      if (tasksFill) tasksFill.style.width = '60%'; // 12/20 = 60%
+    }, 1000);
+
+    // ---- Countdown ring ----
+    setTimeout(() => {
+      const ringFill = document.getElementById('countdownRingFill');
+      if (ringFill) {
+        // 112 days remaining out of 280 total = 60% elapsed
+        const circumference = 2 * Math.PI * 65; // ~408.4
+        const elapsed = 0.60;
+        const offset = circumference * (1 - elapsed);
+        ringFill.style.strokeDasharray = circumference;
+        ringFill.style.strokeDashoffset = offset;
+      }
+    }, 600);
+
+    // ---- Mood selection ----
+    function selectMood(el, mood) {
+      document.querySelectorAll('.mood-option').forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+
+      // Stop radar sweep visually
+      const sweepGroup = document.querySelector('.radar-sweep-group');
+      if (sweepGroup) {
+        sweepGroup.style.animationPlayState = 'paused';
+        sweepGroup.style.opacity = '0.5';
+      }
+
+      // Flash confirmation
+      const moodCard = document.getElementById('mood-card');
+      moodCard.style.boxShadow = '0 0 24px rgba(0,255,135,0.25)';
+      setTimeout(() => {
+        moodCard.style.boxShadow = '';
+      }, 800);
+    }
+
+    // ---- Task check toggle ----
+    document.querySelectorAll('.task-check').forEach(check => {
+      check.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const row = this.closest('.task-row');
+        const isChecked = this.classList.contains('checked');
+
+        if (!isChecked) {
+          this.classList.add('checked');
+          row.classList.add('done');
+          // Brief flash
+          this.style.boxShadow = '0 0 12px rgba(0,255,135,0.8)';
+          setTimeout(() => { this.style.boxShadow = ''; }, 400);
+        } else {
+          this.classList.remove('checked');
+          row.classList.remove('done');
+        }
+      });
+    });
+
+    // ---- Quick add ----
+    function handleQuickAdd() {
+      const input = document.getElementById('quickAddInput');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const tasksList = document.querySelector('.tasks-list');
+      const newRow = document.createElement('div');
+      newRow.className = 'task-row';
+      newRow.style.opacity = '0';
+      newRow.style.transform = 'translateX(-12px)';
+      newRow.innerHTML = `
+        <div class="task-check"></div>
+        <div class="task-name">${val}</div>
+        <span class="task-priority p3">P3</span>
+        <span class="task-due">New</span>
+      `;
+      tasksList.appendChild(newRow);
+
+      // Add check listener
+      newRow.querySelector('.task-check').addEventListener('click', function(e) {
+        e.stopPropagation();
+        const row = this.closest('.task-row');
+        this.classList.toggle('checked');
+        row.classList.toggle('done');
+      });
+
+      // Animate in
+      requestAnimationFrame(() => {
+        newRow.style.transition = 'opacity 0.3s, transform 0.3s';
+        newRow.style.opacity = '1';
+        newRow.style.transform = 'translateX(0)';
+      });
+
+      input.value = '';
+      input.focus();
+    }
+
+    // Allow Enter key in quick add
+    document.getElementById('quickAddInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') handleQuickAdd();
+    });
+
+    // ---- Nav item switching ----
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // ---- Data flicker on numbers ----
+    setTimeout(() => {
+      const numbers = document.querySelectorAll(
+        '.countdown-number, .mini-stat-val'
+      );
+      numbers.forEach((el, i) => {
+        setTimeout(() => {
+          el.style.animation = 'none';
+          el.offsetHeight; // reflow
+          el.style.animation = 'data-flicker 0.3s ease-out forwards';
+        }, i * 100);
+      });
+    }, 400);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Tasks (V2 Redesign)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #030303;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      color: white;
+    }
+
+    /* ── DOT GRID BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── GLOBAL AMBIENT GLOW ── */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 20%;
+      width: 60%;
+      height: 50%;
+      background: radial-gradient(ellipse at center, rgba(59,130,246,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+
+    /* ── GLASS CARD ── */
+    .glass {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 16px;
+    }
+    .glass-sm {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+    }
+
+    /* ── GRADIENT TEXT ── */
+    .gradient-text-blue {
+      background: linear-gradient(135deg, #3b82f6 0%, #93c5fd 50%, #ffffff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-emerald {
+      background: linear-gradient(135deg, #10b981 0%, #6ee7b7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-rose {
+      background: linear-gradient(135deg, #f43f5e 0%, #fda4af 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-indigo {
+      background: linear-gradient(135deg, #6366f1 0%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── PHASE TIMELINE ── */
+    .phase-timeline {
+      display: flex;
+      position: relative;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      height: 44px;
+    }
+    .phase-segment {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.3);
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      letter-spacing: 0.03em;
+    }
+    .phase-segment:last-child { border-right: none; }
+    .phase-segment:hover { color: rgba(255,255,255,0.6); }
+    .phase-segment.active {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(59,130,246,0.3) 0%, rgba(99,102,241,0.2) 100%);
+    }
+    /* Animated gradient sweep on active */
+    .phase-segment.active::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: sweep 2.4s ease-in-out infinite;
+    }
+    /* Triangle indicator below active */
+    .phase-segment.active::before {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 5px solid #030303;
+      z-index: 2;
+    }
+    @keyframes sweep {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    /* ── PHASE GLOW ── */
+    .phase-glow {
+      position: absolute;
+      bottom: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #3b82f6, #6366f1);
+      box-shadow: 0 0 8px #3b82f6, 0 0 20px rgba(59,130,246,0.4);
+      animation: phaseGlow 2s ease-in-out infinite alternate;
+    }
+    @keyframes phaseGlow {
+      0% { opacity: 0.7; }
+      100% { opacity: 1; box-shadow: 0 0 12px #3b82f6, 0 0 28px rgba(59,130,246,0.6); }
+    }
+
+    /* ── STATS ENTRANCE ── */
+    @keyframes statEntrance {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .stat-card { animation: statEntrance 0.4s ease forwards; }
+    .stat-card:nth-child(1) { animation-delay: 0.05s; opacity: 0; }
+    .stat-card:nth-child(2) { animation-delay: 0.12s; opacity: 0; }
+    .stat-card:nth-child(3) { animation-delay: 0.19s; opacity: 0; }
+    .stat-card:nth-child(4) { animation-delay: 0.26s; opacity: 0; }
+
+    /* ── TASK CARD ── */
+    .task-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 14px 16px;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .task-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(59,130,246,0.25);
+      background: rgba(255,255,255,0.06);
+    }
+    .task-card:hover .task-card-glow {
+      opacity: 1;
+    }
+    .task-card-glow {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59,130,246,0.5), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    /* Completed task */
+    .task-card.completed {
+      opacity: 0.45;
+      background: rgba(255,255,255,0.02);
+      border-color: rgba(255,255,255,0.04);
+    }
+    .task-card.completed .task-title {
+      text-decoration: line-through;
+      text-decoration-color: rgba(255,255,255,0.3);
+    }
+
+    /* Coming up — lower opacity */
+    .task-card.coming-up {
+      opacity: 0.6;
+    }
+
+    /* ── CHECKBOX ── */
+    .task-checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      position: relative;
+    }
+    .task-checkbox.unchecked {
+      border-color: rgba(59,130,246,0.5);
+      background: transparent;
+    }
+    .task-checkbox.unchecked:hover {
+      border-color: #3b82f6;
+      background: rgba(59,130,246,0.1);
+      transform: scale(1.1);
+    }
+    .task-checkbox.unchecked.dim {
+      border-color: rgba(255,255,255,0.2);
+    }
+    .task-checkbox.unchecked.dim:hover {
+      border-color: rgba(59,130,246,0.6);
+      background: rgba(59,130,246,0.08);
+    }
+    .task-checkbox.checked {
+      border-color: #10b981;
+      background: rgba(16,185,129,0.2);
+    }
+    /* Gradient ring for unchecked active */
+    .task-checkbox.unchecked::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #3b82f6, #6366f1, #3b82f6);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .task-checkbox.unchecked:hover::before {
+      opacity: 0.4;
+    }
+
+    /* ── CATCH-UP CARD ANIMATED BORDER ── */
+    @keyframes rotateGrad {
+      0% { --angle: 0deg; }
+      100% { --angle: 360deg; }
+    }
+    .catchup-card {
+      position: relative;
+      border-radius: 18px;
+      padding: 1px;
+      background: transparent;
+    }
+    .catchup-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      padding: 1.5px;
+      background: conic-gradient(from var(--angle, 0deg), #f59e0b, #fbbf24, #fcd34d, #f59e0b);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: rotateBorder 3s linear infinite;
+    }
+    @property --angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+    @keyframes rotateBorder {
+      to { --angle: 360deg; }
+    }
+    .catchup-inner {
+      background: rgba(245,158,11,0.05);
+      backdrop-filter: blur(12px);
+      border-radius: 17px;
+      padding: 16px 20px;
+      position: relative;
+    }
+    .catchup-glow {
+      position: absolute;
+      inset: -40px;
+      background: radial-gradient(ellipse at 30% 50%, rgba(245,158,11,0.12) 0%, transparent 60%);
+      pointer-events: none;
+      border-radius: 50%;
+    }
+
+    /* ── FILTER PILL ── */
+    .filter-pill {
+      display: flex;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 99px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .filter-tab {
+      padding: 6px 16px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.45);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-tab:hover { color: rgba(255,255,255,0.75); }
+    .filter-tab.active {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 2px 12px rgba(59,130,246,0.35);
+    }
+
+    /* ── VIEW TOGGLE ── */
+    .view-toggle {
+      display: flex;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 99px;
+      padding: 3px;
+    }
+    .view-tab {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .view-tab.active {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 2px 10px rgba(59,130,246,0.3);
+    }
+
+    /* ── SIDEBAR FOCUS CARD ROTATING BORDER ── */
+    .focus-card-wrap {
+      position: relative;
+      border-radius: 20px;
+      padding: 1.5px;
+    }
+    .focus-card-wrap::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: conic-gradient(from var(--focus-angle, 0deg), #3b82f6, #6366f1, #8b5cf6, #3b82f6);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: rotateFocusBorder 4s linear infinite;
+    }
+    @property --focus-angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+    @keyframes rotateFocusBorder {
+      to { --focus-angle: 360deg; }
+    }
+    .focus-card-inner {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(16px);
+      border-radius: 19px;
+      padding: 20px;
+    }
+
+    /* ── PROGRESS RING ── */
+    .progress-ring-circle {
+      transition: stroke-dashoffset 1s ease;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+    /* ── STREAK PULSE ── */
+    @keyframes flamePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+    .flame-icon { animation: flamePulse 1.4s ease-in-out infinite; display: inline-block; }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 99px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      z-index: 50;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 8px 16px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.05); }
+    .nav-item.active {
+      background: rgba(59,130,246,0.15);
+    }
+    .nav-label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.35);
+    }
+    .nav-item.active .nav-label { color: #60a5fa; }
+
+    /* ── SECTION HEADER ── */
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ── ASSIGNEE PILL ── */
+    .assignee-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: 10px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.65);
+      gap: 4px;
+    }
+    .assignee-pill.dad { background: rgba(59,130,246,0.12); border-color: rgba(59,130,246,0.25); color: #93c5fd; }
+    .assignee-pill.mom { background: rgba(244,63,94,0.12); border-color: rgba(244,63,94,0.25); color: #fda4af; }
+    .assignee-pill.both { background: rgba(168,85,247,0.12); border-color: rgba(168,85,247,0.25); color: #c4b5fd; }
+
+    /* ── CATEGORY DOT-LABEL ── */
+    .cat-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .cat-tag .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .cat-education { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+    .cat-education .dot { background: #8b5cf6; }
+    .cat-medical { background: rgba(16,185,129,0.12); color: #6ee7b7; }
+    .cat-medical .dot { background: #10b981; }
+    .cat-shopping { background: rgba(245,158,11,0.12); color: #fcd34d; }
+    .cat-shopping .dot { background: #f59e0b; }
+    .cat-financial { background: rgba(6,182,212,0.12); color: #67e8f9; }
+    .cat-financial .dot { background: #06b6d4; }
+    .cat-preparation { background: rgba(239,68,68,0.12); color: #fca5a5; }
+    .cat-preparation .dot { background: #ef4444; }
+    .cat-planning { background: rgba(99,102,241,0.12); color: #a5b4fc; }
+    .cat-planning .dot { background: #6366f1; }
+
+    /* ── BUTTON GRADIENT ── */
+    .btn-gradient {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: white;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-gradient:hover { opacity: 0.9; transform: scale(1.02); }
+    .btn-amber {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #000;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-amber:hover { opacity: 0.9; transform: scale(1.02); }
+
+    /* ── MISC ── */
+    .relative { position: relative; }
+    .z-10 { z-index: 10; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     APP SHELL
+════════════════════════════════════════════════════════════ -->
+<div style="max-width: 1180px; margin: 0 auto; padding: 0; display: flex; flex-direction: column; min-height: 100vh; position: relative; z-index: 1;">
+
+  <!-- ─── HEADER ─── -->
+  <header style="position: sticky; top: 0; z-index: 30; background: rgba(3,3,3,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 20px 24px 16px;">
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+      <!-- Left: Title -->
+      <div>
+        <h1 style="font-size: 36px; font-weight: 800; line-height: 1; letter-spacing: -0.03em;" class="gradient-text-blue">Tasks</h1>
+        <p style="font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 5px; display: flex; align-items: center; gap: 6px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Week 24 &middot; 112 days to go
+        </p>
+      </div>
+      <!-- Right: View Toggle -->
+      <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-top: 4px;">
+        <div class="view-toggle">
+          <div class="view-tab active">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            List
+          </div>
+          <div class="view-tab">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Calendar
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PHASE TIMELINE ─── -->
+    <div style="margin-top: 16px; position: relative;">
+      <div class="phase-timeline" id="phaseTimeline">
+        <div class="phase-segment">Pre</div>
+        <div class="phase-segment">T1</div>
+        <div class="phase-segment active" id="activeSegment">T2</div>
+        <div class="phase-segment">T3</div>
+        <div class="phase-segment">0–3m</div>
+        <div class="phase-segment">3–6m</div>
+        <div class="phase-segment">6–12m</div>
+        <div class="phase-segment">12m+</div>
+        <!-- Active glow bar positioned by JS -->
+        <div class="phase-glow" id="phaseGlowBar" style="width: 12.5%; left: 25%;"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── MAIN LAYOUT ─── -->
+  <div style="flex: 1; display: flex; gap: 20px; padding: 20px 24px 100px; align-items: flex-start;">
+
+    <!-- ─── LEFT COLUMN ─── -->
+    <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px;">
+
+      <!-- ── STATS BANNER ── -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10); border-radius: 16px; overflow: hidden; backdrop-filter: blur(12px);">
+
+        <!-- Due Today -->
+        <div class="stat-card" style="padding: 16px 18px; position: relative; border-right: 1px solid rgba(255,255,255,0.06);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(59,130,246,0.15); display: flex; align-items: center; justify-content: center;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+          </div>
+          <div style="font-size: 32px; font-weight: 800; line-height: 1; letter-spacing: -0.03em;" class="gradient-text-blue">2</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; font-weight: 500;">Due Today</div>
+        </div>
+
+        <!-- This Week -->
+        <div class="stat-card" style="padding: 16px 18px; position: relative; border-right: 1px solid rgba(255,255,255,0.06);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(99,102,241,0.15); display: flex; align-items: center; justify-content: center;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a5b4fc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+          </div>
+          <div style="font-size: 32px; font-weight: 800; line-height: 1; letter-spacing: -0.03em;" class="gradient-text-indigo">5</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; font-weight: 500;">This Week</div>
+        </div>
+
+        <!-- Completed -->
+        <div class="stat-card" style="padding: 16px 18px; position: relative; border-right: 1px solid rgba(255,255,255,0.06);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(16,185,129,0.15); display: flex; align-items: center; justify-content: center;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+          <div style="font-size: 32px; font-weight: 800; line-height: 1; letter-spacing: -0.03em;" class="gradient-text-emerald">12</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; font-weight: 500;">Completed</div>
+        </div>
+
+        <!-- Partner -->
+        <div class="stat-card" style="padding: 16px 18px; position: relative;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(244,63,94,0.15); display: flex; align-items: center; justify-content: center;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fda4af" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+          </div>
+          <div style="font-size: 32px; font-weight: 800; line-height: 1; letter-spacing: -0.03em;" class="gradient-text-rose">3</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; font-weight: 500;">Partner</div>
+        </div>
+
+      </div>
+
+      <!-- ── CATCH-UP SECTION ── -->
+      <div style="position: relative;">
+        <div class="catchup-glow"></div>
+        <div class="catchup-card">
+          <div class="catchup-inner">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+              <!-- Left -->
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 42px; height: 42px; border-radius: 12px; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                  <div style="font-size: 18px; font-weight: 800; color: #fbbf24; letter-spacing: -0.02em;">3 earlier tasks</div>
+                  <div style="font-size: 12px; color: rgba(245,158,11,0.6); margin-top: 2px;">Not overdue — just catch-up. Still worth doing.</div>
+                </div>
+              </div>
+              <!-- Right -->
+              <button class="btn-amber" style="padding: 9px 20px; border-radius: 99px; font-size: 13px; flex-shrink: 0; box-shadow: 0 4px 16px rgba(245,158,11,0.25);">
+                Review
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── FILTER BAR ── -->
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="filter-pill" style="flex: 1;">
+          <div class="filter-tab active">Active</div>
+          <div class="filter-tab">Mine</div>
+          <div class="filter-tab">Partner</div>
+          <div class="filter-tab">Done</div>
+        </div>
+        <button style="width: 38px; height: 38px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; flex-shrink: 0;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
+
+      <!-- ── THIS WEEK SECTION ── -->
+      <section>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em;">This Week</span>
+            <span class="section-badge" style="background: rgba(59,130,246,0.15); color: #60a5fa;">5</span>
+          </div>
+          <span style="font-size: 11px; color: rgba(255,255,255,0.25);">Mar 3 – Mar 9</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+
+          <!-- Task 1: Research childbirth classes · Education · Dad · Wed (DUE TODAY) -->
+          <div class="task-card">
+            <div class="task-card-glow"></div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="task-checkbox unchecked" onclick="toggleTask(this)">
+                <!-- empty unchecked -->
+              </div>
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span class="task-title" style="font-size: 14px; font-weight: 700; color: #fff;">Research childbirth classes</span>
+                  <span class="cat-tag cat-education"><span class="dot"></span>Education</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 5px; flex-wrap: wrap;">
+                  <span style="font-size: 11px; color: #60a5fa; font-weight: 700; display: flex; align-items: center; gap: 3px;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    Due Today
+                  </span>
+                  <span class="assignee-pill dad">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Dad
+                  </span>
+                  <span style="font-size: 11px; color: rgba(255,255,255,0.2);">Wed</span>
+                </div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+
+          <!-- Task 2: Schedule glucose test · Medical · Both · Thu (DUE TODAY) -->
+          <div class="task-card">
+            <div class="task-card-glow"></div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="task-checkbox unchecked" onclick="toggleTask(this)"></div>
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span class="task-title" style="font-size: 14px; font-weight: 700; color: #fff;">Schedule glucose test</span>
+                  <span class="cat-tag cat-medical"><span class="dot"></span>Medical</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 5px; flex-wrap: wrap;">
+                  <span style="font-size: 11px; color: #60a5fa; font-weight: 700; display: flex; align-items: center; gap: 3px;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    Due Today
+                  </span>
+                  <span class="assignee-pill both">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Both
+                  </span>
+                  <span style="font-size: 11px; color: rgba(255,255,255,0.2);">Thu</span>
+                </div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+
+          <!-- Task 3: Start baby registry · Shopping · Both · Fri -->
+          <div class="task-card">
+            <div class="task-card-glow"></div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="task-checkbox unchecked dim" onclick="toggleTask(this)"></div>
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span class="task-title" style="font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.88);">Start baby registry</span>
+                  <span class="cat-tag cat-shopping"><span class="dot"></span>Shopping</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 5px; flex-wrap: wrap;">
+                  <span style="font-size: 11px; color: rgba(255,255,255,0.35); display: flex; align-items: center; gap: 3px;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Fri, Mar 7
+                  </span>
+                  <span class="assignee-pill both">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Both
+                  </span>
+                </div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+
+          <!-- Task 4: Review life insurance · Financial · Dad · Sat -->
+          <div class="task-card">
+            <div class="task-card-glow"></div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="task-checkbox unchecked dim" onclick="toggleTask(this)"></div>
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span class="task-title" style="font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.88);">Review life insurance</span>
+                  <span class="cat-tag cat-financial"><span class="dot"></span>Financial</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 5px; flex-wrap: wrap;">
+                  <span style="font-size: 11px; color: rgba(255,255,255,0.35); display: flex; align-items: center; gap: 3px;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Sat, Mar 8
+                  </span>
+                  <span class="assignee-pill dad">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Dad
+                  </span>
+                </div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+
+          <!-- Task 5: Pack hospital bag basics · Preparation · Mom · Sun -->
+          <div class="task-card">
+            <div class="task-card-glow"></div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="task-checkbox unchecked dim" onclick="toggleTask(this)"></div>
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span class="task-title" style="font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.88);">Pack hospital bag basics</span>
+                  <span class="cat-tag cat-preparation"><span class="dot"></span>Preparation</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 5px; flex-wrap: wrap;">
+                  <span style="font-size: 11px; color: rgba(255,255,255,0.35); display: flex; align-items: center; gap: 3px;">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Sun, Mar 9
+                  </span>
+                  <span class="assignee-pill mom">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Mom
+                  </span>
+                </div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+
+          <!-- Task COMPLETED: Tour hospital -->
+          <div class="task-card completed">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="task-checkbox checked">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span class="task-title" style="font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.4); text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.2);">Tour hospital maternity ward</span>
+                </div>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 4px;">Completed Mon, Mar 3</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── COMING UP SECTION ── -->
+      <section style="margin-top: 4px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.08em;">Coming Up</span>
+            <span class="section-badge" style="background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3);">3</span>
+          </div>
+          <span style="font-size: 11px; color: rgba(255,255,255,0.2);">Next week</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+
+          <!-- Coming up 1 -->
+          <div class="task-card coming-up">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="task-checkbox unchecked dim"></div>
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span style="font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.65);">Write birth plan draft</span>
+                  <span class="cat-tag cat-planning" style="opacity: 0.7;"><span class="dot"></span>Planning</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 5px;">
+                  <span style="font-size: 11px; color: rgba(255,255,255,0.25);">Due Mar 12</span>
+                  <span class="assignee-pill both" style="opacity: 0.6;">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Both
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coming up 2 -->
+          <div class="task-card coming-up">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="task-checkbox unchecked dim"></div>
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span style="font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.65);">Set up college savings account</span>
+                  <span class="cat-tag cat-financial" style="opacity: 0.7;"><span class="dot"></span>Financial</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 5px;">
+                  <span style="font-size: 11px; color: rgba(255,255,255,0.25);">Due Mar 14</span>
+                  <span class="assignee-pill dad" style="opacity: 0.6;">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    Dad
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coming up 3 -->
+          <div class="task-card coming-up">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="task-checkbox unchecked dim"></div>
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span style="font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.65);">Research pediatricians in your area</span>
+                  <span class="cat-tag cat-medical" style="opacity: 0.7;"><span class="dot"></span>Medical</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 5px;">
+                  <span style="font-size: 11px; color: rgba(255,255,255,0.25);">Due Mar 16</span>
+                  <span class="assignee-pill both" style="opacity: 0.6;">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    Both
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div><!-- end left column -->
+
+    <!-- ─── RIGHT SIDEBAR ─── -->
+    <div style="width: 300px; flex-shrink: 0; display: flex; flex-direction: column; gap: 14px; position: sticky; top: 140px;">
+
+      <!-- ── FOCUS CARD ── -->
+      <div class="focus-card-wrap">
+        <div class="focus-card-inner">
+          <!-- Top Priority Label -->
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 14px;">
+            <div style="width: 20px; height: 20px; border-radius: 6px; background: rgba(99,102,241,0.2); display: flex; align-items: center; justify-content: center;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="#a5b4fc" stroke="#a5b4fc" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <span style="font-size: 10px; font-weight: 700; color: #a5b4fc; text-transform: uppercase; letter-spacing: 0.08em;">Top Priority</span>
+          </div>
+          <!-- Task name -->
+          <h3 style="font-size: 17px; font-weight: 800; color: #fff; line-height: 1.3; margin-bottom: 10px; letter-spacing: -0.01em;">Research childbirth classes</h3>
+          <!-- Description -->
+          <p style="font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.6; margin-bottom: 14px;">
+            Many classes fill up fast. Aim to book 8–10 weeks before your due date. Great time to explore options this week.
+          </p>
+          <!-- Tags row -->
+          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 14px;">
+            <span class="cat-tag cat-education"><span class="dot"></span>Education</span>
+            <span class="assignee-pill dad">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Dad
+            </span>
+            <span style="font-size: 10px; color: #60a5fa; font-weight: 700; margin-left: auto; display: flex; align-items: center; gap: 3px;">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Due Today
+            </span>
+          </div>
+          <!-- CTA Button -->
+          <button class="btn-gradient" style="width: 100%; padding: 11px; border-radius: 10px; font-size: 13px; box-shadow: 0 4px 20px rgba(59,130,246,0.3);">
+            Start Task
+          </button>
+        </div>
+      </div>
+
+      <!-- ── PROGRESS RING ── -->
+      <div class="glass" style="padding: 18px; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%); pointer-events: none;"></div>
+        <p style="font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px;">This Trimester</p>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <!-- Ring SVG -->
+          <div style="position: relative; flex-shrink: 0;">
+            <svg width="86" height="86" viewBox="0 0 86 86">
+              <!-- Defs for gradient -->
+              <defs>
+                <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#3b82f6"/>
+                  <stop offset="100%" stop-color="#6366f1"/>
+                </linearGradient>
+              </defs>
+              <!-- Track -->
+              <circle cx="43" cy="43" r="36" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="6"/>
+              <!-- Progress: 12/20 = 60% — circ = 2pi*36 = 226.2, filled = 135.7, offset = 90.5 -->
+              <circle
+                cx="43" cy="43" r="36"
+                fill="none"
+                stroke="url(#ringGrad)"
+                stroke-width="6"
+                stroke-linecap="round"
+                stroke-dasharray="226.2"
+                stroke-dashoffset="90.5"
+                class="progress-ring-circle"
+                style="filter: drop-shadow(0 0 6px rgba(59,130,246,0.5));"
+              />
+              <!-- Center text -->
+              <text x="43" y="39" text-anchor="middle" fill="white" font-size="18" font-weight="800" font-family="-apple-system,sans-serif">12</text>
+              <text x="43" y="52" text-anchor="middle" fill="rgba(255,255,255,0.35)" font-size="9" font-family="-apple-system,sans-serif">of 20</text>
+            </svg>
+          </div>
+          <!-- Stats list -->
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 10px; color: rgba(255,255,255,0.4);">Completed</span>
+                <span style="font-size: 10px; font-weight: 700; color: #34d399;">12</span>
+              </div>
+              <div style="height: 3px; border-radius: 99px; background: rgba(255,255,255,0.07);">
+                <div style="height: 3px; border-radius: 99px; width: 60%; background: linear-gradient(90deg,#10b981,#34d399);"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 10px; color: rgba(255,255,255,0.4);">Active</span>
+                <span style="font-size: 10px; font-weight: 700; color: #60a5fa;">5</span>
+              </div>
+              <div style="height: 3px; border-radius: 99px; background: rgba(255,255,255,0.07);">
+                <div style="height: 3px; border-radius: 99px; width: 25%; background: linear-gradient(90deg,#3b82f6,#6366f1);"></div>
+              </div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 10px; color: rgba(255,255,255,0.4);">Remaining</span>
+                <span style="font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3);">3</span>
+              </div>
+              <div style="height: 3px; border-radius: 99px; background: rgba(255,255,255,0.07);">
+                <div style="height: 3px; border-radius: 99px; width: 15%; background: rgba(255,255,255,0.2);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align: center; font-size: 10px; color: rgba(255,255,255,0.2); margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);">
+          60% complete &middot; 3 tasks remaining
+        </div>
+      </div>
+
+      <!-- ── STREAK ── -->
+      <div class="glass" style="padding: 14px 18px; display: flex; align-items: center; gap: 12px;">
+        <span class="flame-icon" style="font-size: 28px; line-height: 1;">&#128293;</span>
+        <div style="flex: 1;">
+          <div style="font-size: 15px; font-weight: 800; color: #fff;">5-day streak!</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 2px;">Tasks completed every day</div>
+        </div>
+        <div style="text-align: right; flex-shrink: 0;">
+          <div style="font-size: 22px; font-weight: 900; color: #f59e0b; line-height: 1;">5</div>
+          <div style="font-size: 9px; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 0.06em;">days</div>
+        </div>
+      </div>
+
+      <!-- ── QUICK ACTIONS ── -->
+      <div class="glass" style="padding: 16px;">
+        <p style="font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px;">Quick Actions</p>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <button style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; cursor: pointer; transition: all 0.2s; text-align: left;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+            <div style="width: 24px; height: 24px; border-radius: 7px; background: rgba(59,130,246,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <span style="font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.65);">Add custom task</span>
+          </button>
+          <button style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; cursor: pointer; transition: all 0.2s; text-align: left;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+            <div style="width: 24px; height: 24px; border-radius: 7px; background: rgba(244,63,94,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fda4af" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            </div>
+            <span style="font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.65);">Share with partner</span>
+          </button>
+          <button style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; cursor: pointer; transition: all 0.2s; text-align: left;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+            <div style="width: 24px; height: 24px; border-radius: 7px; background: rgba(139,92,246,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#c4b5fd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+            </div>
+            <span style="font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.65);">Filter by category</span>
+          </button>
+        </div>
+      </div>
+
+    </div><!-- end right sidebar -->
+
+  </div><!-- end main layout -->
+
+</div><!-- end app shell -->
+
+<!-- ─── FLOATING BOTTOM NAV ─── -->
+<nav class="bottom-nav" id="bottomNav">
+  <!-- Home -->
+  <div class="nav-item" onclick="setNav(this)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span class="nav-label">Home</span>
+  </div>
+  <!-- Tasks (active) -->
+  <div class="nav-item active" onclick="setNav(this)">
+    <div style="position: relative;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <div style="position: absolute; top: -2px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #3b82f6; border: 2px solid #030303; box-shadow: 0 0 6px rgba(59,130,246,0.8);"></div>
+    </div>
+    <span class="nav-label" style="color: #60a5fa;">Tasks</span>
+  </div>
+  <!-- Briefing -->
+  <div class="nav-item" onclick="setNav(this)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg>
+    <span class="nav-label">Briefing</span>
+  </div>
+  <!-- Tracker -->
+  <div class="nav-item" onclick="setNav(this)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <span class="nav-label">Tracker</span>
+  </div>
+  <!-- More -->
+  <div class="nav-item" onclick="setNav(this)">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+    <span class="nav-label">More</span>
+  </div>
+</nav>
+
+<!-- ─── JAVASCRIPT ─── -->
+<script>
+  /* ── NAV SWITCHING ── */
+  function setNav(el) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  /* ── FILTER TABS ── */
+  document.querySelectorAll('.filter-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      tab.closest('.filter-pill').querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  /* ── VIEW TOGGLE ── */
+  document.querySelectorAll('.view-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      tab.closest('.view-toggle').querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  /* ── PHASE SEGMENTS ── */
+  document.querySelectorAll('.phase-segment').forEach(seg => {
+    seg.addEventListener('click', () => {
+      const timeline = seg.closest('#phaseTimeline');
+      timeline.querySelectorAll('.phase-segment').forEach(s => s.classList.remove('active'));
+      seg.classList.add('active');
+      // Move glow bar
+      const idx = Array.from(timeline.querySelectorAll('.phase-segment')).indexOf(seg);
+      const totalSegs = timeline.querySelectorAll('.phase-segment').length;
+      const glow = document.getElementById('phaseGlowBar');
+      glow.style.width = (100 / totalSegs) + '%';
+      glow.style.left = (idx * 100 / totalSegs) + '%';
+    });
+  });
+
+  /* ── CHECKBOX TOGGLE ── */
+  function toggleTask(checkbox) {
+    const card = checkbox.closest('.task-card');
+    const isChecked = checkbox.classList.contains('checked');
+
+    if (isChecked) {
+      // Uncheck
+      checkbox.classList.remove('checked');
+      checkbox.classList.add('unchecked');
+      checkbox.innerHTML = '';
+      card.classList.remove('completed');
+    } else {
+      // Spring-animate check
+      checkbox.classList.remove('unchecked', 'dim');
+      checkbox.classList.add('checked');
+      checkbox.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+      // Scale bounce
+      checkbox.style.transform = 'scale(1.35)';
+      setTimeout(() => { checkbox.style.transform = 'scale(0.9)'; }, 140);
+      setTimeout(() => { checkbox.style.transform = 'scale(1.0)'; }, 240);
+
+      // Slide card to completed after brief delay
+      setTimeout(() => {
+        card.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+        card.style.opacity = '0.45';
+        card.style.transform = 'translateX(-6px)';
+        setTimeout(() => {
+          card.classList.add('completed');
+          card.style.transform = '';
+          card.style.opacity = '';
+          card.style.transition = '';
+        }, 350);
+      }, 300);
+    }
+  }
+
+  /* ── INIT: set glow bar position ── */
+  (function() {
+    const timeline = document.getElementById('phaseTimeline');
+    const segs = timeline.querySelectorAll('.phase-segment');
+    const active = timeline.querySelector('.phase-segment.active');
+    const idx = Array.from(segs).indexOf(active);
+    const total = segs.length;
+    const glow = document.getElementById('phaseGlowBar');
+    glow.style.width = (100 / total) + '%';
+    glow.style.left = (idx * 100 / total) + '%';
+  })();
+
+  /* ── RESPONSIVE: hide sidebar on small screens ── */
+  function checkWidth() {
+    const sidebar = document.querySelector('[style*="width: 300px"]');
+    if (sidebar) {
+      if (window.innerWidth < 960) {
+        sidebar.style.display = 'none';
+      } else {
+        sidebar.style.display = 'flex';
+      }
+    }
+  }
+  window.addEventListener('resize', checkWidth);
+  checkWidth();
+</script>
+
+</body>
+</html>

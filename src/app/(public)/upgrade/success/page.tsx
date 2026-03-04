@@ -27,7 +27,7 @@ export default function UpgradeSuccessPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-surface-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[--bg] flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -40,7 +40,7 @@ export default function UpgradeSuccessPage() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-            className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-6"
+            className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-gold to-copper flex items-center justify-center mb-6"
           >
             <Crown className="h-10 w-10 text-white" />
           </motion.div>
@@ -49,7 +49,7 @@ export default function UpgradeSuccessPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-3xl font-bold text-white mb-2"
+            className="text-3xl font-display font-bold text-[--cream] mb-2"
           >
             Welcome to Premium!
           </motion.h1>
@@ -58,7 +58,7 @@ export default function UpgradeSuccessPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-zinc-400"
+            className="text-[--muted]"
           >
             You&apos;ve unlocked the full Dad Center experience.
           </motion.p>
@@ -71,13 +71,13 @@ export default function UpgradeSuccessPage() {
           transition={{ delay: 0.5 }}
           className={cn(
             'rounded-2xl p-6 mb-6',
-            'bg-gradient-to-br from-zinc-800 to-zinc-900',
-            'border border-white/[0.06]'
+            'bg-gradient-to-br from-[--card] to-[--surface]',
+            'border border-[--border]'
           )}
         >
           <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="h-4 w-4 text-amber-400" />
-            <span className="text-sm font-semibold text-white">What&apos;s now unlocked</span>
+            <Sparkles className="h-4 w-4 text-gold" />
+            <span className="text-sm font-ui font-semibold text-[--cream]">What&apos;s now unlocked</span>
           </div>
 
           <div className="space-y-3">
@@ -89,10 +89,10 @@ export default function UpgradeSuccessPage() {
                 transition={{ delay: 0.6 + index * 0.05 }}
                 className="flex items-center gap-3"
               >
-                <CheckCircle className="h-4 w-4 text-green-400 flex-shrink-0" />
+                <CheckCircle className="h-4 w-4 text-sage flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <span className="text-sm text-white">{feature.label}</span>
-                  <span className="text-xs text-zinc-500 ml-2">{feature.detail}</span>
+                  <span className="text-sm text-[--cream]">{feature.label}</span>
+                  <span className="text-xs text-[--dim] ml-2">{feature.detail}</span>
                 </div>
               </motion.div>
             ))}
@@ -107,7 +107,7 @@ export default function UpgradeSuccessPage() {
           className="space-y-3"
         >
           {/* Primary CTA: Invite partner */}
-          <Button asChild className="w-full py-6 text-base bg-accent-500 hover:bg-accent-600">
+          <Button asChild className="w-full py-6 text-base bg-copper hover:bg-copper/90">
             <Link href="/settings/family">
               <Users className="h-5 w-5 mr-2" />
               Invite your partner now
@@ -116,7 +116,7 @@ export default function UpgradeSuccessPage() {
           </Button>
 
           {/* Secondary CTA: Go to dashboard */}
-          <Button asChild variant="outline" className="w-full py-5 border-surface-700 text-zinc-300 hover:bg-surface-800">
+          <Button asChild variant="outline" className="w-full py-5 border-[--border-hover] text-[--cream] hover:bg-[--card]">
             <Link href="/dashboard">
               Go to Dashboard
             </Link>
@@ -128,7 +128,7 @@ export default function UpgradeSuccessPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="text-center text-xs text-zinc-600 mt-6"
+          className="text-center text-xs text-[--dim] mt-6"
         >
           30-day money-back guarantee on all plans
         </motion.p>

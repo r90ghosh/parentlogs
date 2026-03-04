@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Dad Journey & Baby Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* =============================================
+       BASE & RESET
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #030303;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      padding-bottom: 100px;
+    }
+
+    /* Dot pattern background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* =============================================
+       SCROLLBAR
+    ============================================= */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
+
+    /* =============================================
+       GLASS CARD
+    ============================================= */
+    .glass {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+    }
+
+    .glass-sm {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+    }
+
+    .glass-pill {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* =============================================
+       GRADIENT TEXT
+    ============================================= */
+    .gradient-violet {
+      background: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 40%, #ffffff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .gradient-cyan {
+      background: linear-gradient(135deg, #22d3ee 0%, #67e8f9 40%, #ffffff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Pillar gradient text classes */
+    .gradient-blue {
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .gradient-green {
+      background: linear-gradient(135deg, #4ade80, #10b981);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .gradient-emerald {
+      background: linear-gradient(135deg, #34d399, #14b8a6);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .gradient-purple {
+      background: linear-gradient(135deg, #c084fc, #8b5cf6);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .gradient-pink {
+      background: linear-gradient(135deg, #f472b6, #fb7185);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .gradient-rose {
+      background: linear-gradient(135deg, #fb7185, #f87171);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .gradient-amber {
+      background: linear-gradient(135deg, #fbbf24, #f97316);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    /* =============================================
+       PAGE DIVIDER
+    ============================================= */
+    .page-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(139,92,246,0.4), rgba(34,211,238,0.4), transparent);
+      margin: 60px 0;
+      position: relative;
+    }
+    .page-divider::after {
+      content: '· · ·';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #030303;
+      padding: 0 16px;
+      color: rgba(255,255,255,0.2);
+      font-size: 14px;
+      letter-spacing: 8px;
+    }
+
+    /* =============================================
+       MOOD HISTORY WAVE
+    ============================================= */
+    .wave-svg path {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw-wave 2s ease forwards 0.5s;
+    }
+    @keyframes draw-wave {
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* =============================================
+       STREAK BADGE
+    ============================================= */
+    .streak-badge {
+      background: linear-gradient(135deg, rgba(251,146,60,0.15), rgba(239,68,68,0.1));
+      border: 1px solid rgba(251,146,60,0.25);
+      border-radius: 999px;
+      padding: 6px 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fb923c;
+    }
+    .streak-fire {
+      display: inline-block;
+      animation: fire-pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes fire-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2) rotate(-5deg); }
+    }
+
+    /* =============================================
+       MOOD CHECK-IN WIDGET
+    ============================================= */
+    .mood-emoji-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 8px;
+      border-radius: 16px;
+      border: 1.5px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      flex: 1;
+      min-width: 0;
+      position: relative;
+    }
+    .mood-emoji-btn .emoji-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      line-height: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid rgba(255,255,255,0.06);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .mood-emoji-btn:hover .emoji-wrap {
+      transform: scale(1.25);
+      box-shadow: var(--glow-color);
+    }
+    .mood-emoji-btn:hover {
+      border-color: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+    }
+    .mood-emoji-btn.selected {
+      transform: translateY(-2px);
+    }
+    .mood-emoji-btn.selected .emoji-wrap {
+      transform: scale(1.3);
+      border-width: 2px;
+    }
+    .mood-emoji-btn .emoji-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+
+    /* Per-mood glow colors */
+    .mood-1 { --glow-color: 0 0 20px rgba(239,68,68,0.4); }
+    .mood-2 { --glow-color: 0 0 20px rgba(251,146,60,0.4); }
+    .mood-3 { --glow-color: 0 0 20px rgba(168,85,247,0.3); }
+    .mood-4 { --glow-color: 0 0 20px rgba(34,197,94,0.4); }
+    .mood-5 { --glow-color: 0 0 20px rgba(74,222,128,0.5); }
+
+    .mood-1.selected .emoji-wrap { border-color: #ef4444; box-shadow: 0 0 24px rgba(239,68,68,0.5); background: rgba(239,68,68,0.12); }
+    .mood-2.selected .emoji-wrap { border-color: #fb923c; box-shadow: 0 0 24px rgba(251,146,60,0.5); background: rgba(251,146,60,0.12); }
+    .mood-3.selected .emoji-wrap { border-color: #a855f7; box-shadow: 0 0 24px rgba(168,85,247,0.4); background: rgba(168,85,247,0.12); }
+    .mood-4.selected .emoji-wrap { border-color: #22c55e; box-shadow: 0 0 24px rgba(34,197,94,0.5); background: rgba(34,197,94,0.12); }
+    .mood-5.selected .emoji-wrap { border-color: #4ade80; box-shadow: 0 0 30px rgba(74,222,128,0.6); background: rgba(74,222,128,0.12); }
+
+    /* Flag pills */
+    .flag-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .flag-pill:hover {
+      border-color: rgba(167,139,250,0.35);
+      background: rgba(167,139,250,0.1);
+      color: #c4b5fd;
+    }
+    .flag-pill.active {
+      border-color: rgba(167,139,250,0.5);
+      background: rgba(167,139,250,0.15);
+      color: #c4b5fd;
+    }
+
+    /* Flag section animated reveal */
+    .flags-section {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+    }
+    .flags-section.visible {
+      max-height: 200px;
+      opacity: 1;
+    }
+
+    /* Stagger animation for flag pills */
+    .flag-pill-enter {
+      animation: pill-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      opacity: 0;
+    }
+    @keyframes pill-in {
+      from { opacity: 0; transform: translateY(8px) scale(0.9); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Checkin button */
+    .checkin-btn {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border: none;
+      border-radius: 14px;
+      padding: 14px 32px;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 20px rgba(139,92,246,0.3);
+    }
+    .checkin-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(139,92,246,0.5);
+    }
+    .checkin-btn:active { transform: translateY(0); }
+
+    /* =============================================
+       CHALLENGE TILES
+    ============================================= */
+    .challenge-tile {
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      position: relative;
+    }
+    .challenge-tile::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      border-radius: 4px 0 0 4px;
+    }
+    .challenge-tile:hover {
+      border-color: rgba(255,255,255,0.14);
+      transform: translateY(-1px);
+    }
+
+    /* Pillar-specific border + glow on hover */
+    .tile-blue::before { background: linear-gradient(180deg, #60a5fa, #3b82f6); }
+    .tile-green::before { background: linear-gradient(180deg, #4ade80, #10b981); }
+    .tile-emerald::before { background: linear-gradient(180deg, #34d399, #14b8a6); }
+    .tile-purple::before { background: linear-gradient(180deg, #c084fc, #8b5cf6); }
+    .tile-pink::before { background: linear-gradient(180deg, #f472b6, #fb7185); }
+    .tile-rose::before { background: linear-gradient(180deg, #fb7185, #f87171); }
+    .tile-amber::before { background: linear-gradient(180deg, #fbbf24, #f97316); }
+
+    .tile-blue:hover   { box-shadow: 0 0 32px rgba(59,130,246,0.12), inset 0 0 32px rgba(59,130,246,0.04); border-color: rgba(96,165,250,0.25); }
+    .tile-green:hover  { box-shadow: 0 0 32px rgba(16,185,129,0.12), inset 0 0 32px rgba(16,185,129,0.04); border-color: rgba(74,222,128,0.25); }
+    .tile-emerald:hover{ box-shadow: 0 0 32px rgba(20,184,166,0.12), inset 0 0 32px rgba(20,184,166,0.04); border-color: rgba(52,211,153,0.25); }
+    .tile-purple:hover,
+    .tile-purple.expanded { box-shadow: 0 0 40px rgba(139,92,246,0.18), inset 0 0 40px rgba(139,92,246,0.06); border-color: rgba(192,132,252,0.3); }
+    .tile-pink:hover   { box-shadow: 0 0 32px rgba(244,114,182,0.12), inset 0 0 32px rgba(244,114,182,0.04); border-color: rgba(244,114,182,0.25); }
+    .tile-rose:hover   { box-shadow: 0 0 32px rgba(251,113,133,0.12), inset 0 0 32px rgba(251,113,133,0.04); border-color: rgba(251,113,133,0.25); }
+    .tile-amber:hover  { box-shadow: 0 0 32px rgba(251,191,36,0.12), inset 0 0 32px rgba(251,191,36,0.04); border-color: rgba(251,191,36,0.25); }
+
+    /* Pillar icon circles */
+    .pillar-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .icon-blue    { background: linear-gradient(135deg, rgba(96,165,250,0.2), rgba(59,130,246,0.1)); border: 1px solid rgba(96,165,250,0.2); }
+    .icon-green   { background: linear-gradient(135deg, rgba(74,222,128,0.2), rgba(16,185,129,0.1)); border: 1px solid rgba(74,222,128,0.2); }
+    .icon-emerald { background: linear-gradient(135deg, rgba(52,211,153,0.2), rgba(20,184,166,0.1)); border: 1px solid rgba(52,211,153,0.2); }
+    .icon-purple  { background: linear-gradient(135deg, rgba(192,132,252,0.2), rgba(139,92,246,0.1)); border: 1px solid rgba(192,132,252,0.2); }
+    .icon-pink    { background: linear-gradient(135deg, rgba(244,114,182,0.2), rgba(251,113,133,0.1)); border: 1px solid rgba(244,114,182,0.2); }
+    .icon-rose    { background: linear-gradient(135deg, rgba(251,113,133,0.2), rgba(248,113,113,0.1)); border: 1px solid rgba(251,113,133,0.2); }
+    .icon-amber   { background: linear-gradient(135deg, rgba(251,191,36,0.2), rgba(249,115,22,0.1)); border: 1px solid rgba(251,191,36,0.2); }
+
+    /* Expand chevron */
+    .expand-arrow {
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      color: rgba(255,255,255,0.3);
+      flex-shrink: 0;
+    }
+    .expanded-tile .expand-arrow { transform: rotate(180deg); color: rgba(255,255,255,0.6); }
+
+    /* Expanded content area */
+    .tile-expand-content {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+    }
+    .expanded-tile .tile-expand-content {
+      max-height: 600px;
+      opacity: 1;
+    }
+
+    /* =============================================
+       TRACKER SECTION
+    ============================================= */
+
+    /* Animated gradient border for preview banner */
+    .animated-border {
+      position: relative;
+      border-radius: 22px;
+    }
+    .animated-border::before {
+      content: '';
+      position: absolute;
+      inset: -1.5px;
+      border-radius: 23px;
+      background: linear-gradient(90deg, #22d3ee, #0ea5e9, #8b5cf6, #22d3ee);
+      background-size: 200% 100%;
+      animation: border-flow 3s linear infinite;
+      z-index: -1;
+    }
+    @keyframes border-flow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    /* Lock pulse */
+    .lock-glow {
+      animation: lock-pulse 2s ease-in-out infinite;
+    }
+    @keyframes lock-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34,211,238,0.3); }
+      50% { box-shadow: 0 0 0 12px rgba(34,211,238,0); }
+    }
+
+    /* Stat compartments */
+    .stat-compartment {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 16px 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .stat-icon {
+      font-size: 20px;
+      animation: stat-bounce 2s ease-in-out infinite;
+    }
+    @keyframes stat-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: -0.5px;
+    }
+    .stat-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* Quick log big tiles */
+    .log-tile-big {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      height: 120px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .log-tile-big:hover {
+      transform: translateY(-2px);
+    }
+    .log-tile-big .tile-icon-big { font-size: 32px; }
+    .log-tile-big .tile-label { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); }
+
+    /* Ripple effect */
+    .log-tile-big::after {
+      content: '';
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      transform: scale(0);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .log-tile-big.ripple::after {
+      animation: ripple-out 0.5s ease-out forwards;
+    }
+    @keyframes ripple-out {
+      from { transform: scale(0); opacity: 1; }
+      to   { transform: scale(4); opacity: 0; }
+    }
+
+    .log-tile-feed:hover  { box-shadow: 0 0 32px rgba(34,211,238,0.2); border-color: rgba(34,211,238,0.3); }
+    .log-tile-diap:hover  { box-shadow: 0 0 32px rgba(251,191,36,0.2); border-color: rgba(251,191,36,0.3); }
+    .log-tile-sleep:hover { box-shadow: 0 0 32px rgba(167,139,250,0.2); border-color: rgba(167,139,250,0.3); }
+
+    /* Small log tiles */
+    .log-tile-sm {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 80px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.025);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .log-tile-sm:hover {
+      border-color: rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-1px);
+    }
+    .log-tile-sm .sm-icon { font-size: 20px; }
+    .log-tile-sm .sm-label { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.4); }
+
+    /* Preview opacity */
+    .preview-dim { opacity: 0.45; pointer-events: none; }
+    .preview-pulse {
+      animation: preview-breathe 3s ease-in-out infinite;
+    }
+    @keyframes preview-breathe {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 0.6; }
+    }
+
+    /* Activity log row */
+    .activity-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.15s ease;
+    }
+    .activity-row:last-child { border-bottom: none; }
+    .activity-row:hover { background: rgba(255,255,255,0.02); border-radius: 10px; padding-left: 8px; }
+
+    /* =============================================
+       BOTTOM NAV (floating pill)
+    ============================================= */
+    .bottom-nav {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 100;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 10px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.35);
+    }
+    .nav-item:hover { color: rgba(255,255,255,0.7); }
+    .nav-item.active {
+      background: rgba(34,211,238,0.12);
+      color: #22d3ee;
+      box-shadow: 0 0 20px rgba(34,211,238,0.15);
+    }
+    .nav-item.active-violet {
+      background: rgba(167,139,250,0.12);
+      color: #a78bfa;
+      box-shadow: 0 0 20px rgba(167,139,250,0.15);
+    }
+    .nav-icon { font-size: 18px; line-height: 1; }
+
+    /* =============================================
+       MISC UTILITIES
+    ============================================= */
+    .small-caps {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .phase-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.3px;
+    }
+
+    /* Today's mood empty ring */
+    .today-ring {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px dashed rgba(167,139,250,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: rgba(167,139,250,0.6);
+      animation: ring-pulse 2s ease-in-out infinite;
+    }
+    @keyframes ring-pulse {
+      0%, 100% { border-color: rgba(167,139,250,0.4); box-shadow: 0 0 0 0 rgba(167,139,250,0.2); }
+      50% { border-color: rgba(167,139,250,0.7); box-shadow: 0 0 0 6px rgba(167,139,250,0); }
+    }
+
+    /* Blockquote style */
+    .dad-quote {
+      background: rgba(139,92,246,0.06);
+      border: 1px solid rgba(139,92,246,0.15);
+      border-left: 3px solid rgba(167,139,250,0.5);
+      border-radius: 12px;
+      padding: 16px;
+      font-style: italic;
+      color: rgba(255,255,255,0.55);
+      font-size: 14px;
+      line-height: 1.65;
+      position: relative;
+    }
+    .dad-quote::before {
+      content: '\201C';
+      position: absolute;
+      top: -8px;
+      left: 12px;
+      font-size: 48px;
+      color: rgba(167,139,250,0.3);
+      font-style: normal;
+      line-height: 1;
+    }
+
+    /* Read article link */
+    .article-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.75);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    .article-link:hover {
+      background: rgba(139,92,246,0.15);
+      border-color: rgba(167,139,250,0.35);
+      color: #c4b5fd;
+    }
+
+    /* Task chip */
+    .task-chip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 10px 14px;
+    }
+    .task-chip .add-btn {
+      background: rgba(167,139,250,0.15);
+      border: 1px solid rgba(167,139,250,0.25);
+      color: #a78bfa;
+      border-radius: 8px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .task-chip .add-btn:hover {
+      background: rgba(167,139,250,0.25);
+    }
+
+    /* Current page indicator */
+    .page-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.3);
+    }
+    .page-indicator .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div style="position:relative; z-index:1;">
+
+    <!-- ============================================================
+         PAGE 1: DAD JOURNEY
+    ============================================================ -->
+    <section class="max-w-2xl mx-auto px-4 pt-14 pb-6">
+
+      <!-- Page Indicator -->
+      <div class="page-indicator mb-6">
+        <div class="dot" style="background:rgba(167,139,250,0.7);"></div>
+        <span>Dad Journey</span>
+      </div>
+
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="gradient-violet font-black mb-2 leading-none tracking-tight" style="font-size:42px;">Your Journey</h1>
+        <p style="color:rgba(255,255,255,0.4); font-size:16px; font-weight:400; letter-spacing:0.2px;">7 challenges, real talk, real action.</p>
+      </div>
+
+      <!-- Mood History Wave Card -->
+      <div class="glass p-5 mb-4">
+        <div class="flex items-center justify-between mb-4">
+          <span class="small-caps">This Week</span>
+          <div class="streak-badge">
+            <span class="streak-fire">🔥</span>
+            <span>5-day streak</span>
+          </div>
+        </div>
+
+        <!-- SVG Wave Chart -->
+        <div style="position:relative; height:90px; margin-bottom:4px;">
+          <svg class="wave-svg" width="100%" height="90" viewBox="0 0 560 90" preserveAspectRatio="none" style="overflow:visible;">
+            <!-- Gradient fill under curve -->
+            <defs>
+              <linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(167,139,250,0.25)"/>
+                <stop offset="100%" stop-color="rgba(167,139,250,0)"/>
+              </linearGradient>
+              <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#7c3aed"/>
+                <stop offset="100%" stop-color="#a78bfa"/>
+              </linearGradient>
+            </defs>
+            <!-- Fill area -->
+            <path d="M40,65 C100,45 140,25 200,30 C260,35 300,55 360,20 C400,0 440,35 480,20 L480,90 L40,90 Z"
+              fill="url(#waveGrad)" opacity="0.6"/>
+            <!-- Wave line -->
+            <path class="wave-line" d="M40,65 C100,45 140,25 200,30 C260,35 300,55 360,20 C400,0 440,35 480,20"
+              fill="none" stroke="url(#lineGrad)" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Data point dots -->
+            <circle cx="40"  cy="65" r="4" fill="#7c3aed" opacity="0.9"/>
+            <circle cx="120" cy="35" r="4" fill="#8b5cf6" opacity="0.9"/>
+            <circle cx="200" cy="30" r="4" fill="#8b5cf6" opacity="0.9"/>
+            <circle cx="280" cy="50" r="4" fill="#9333ea" opacity="0.9"/>
+            <circle cx="360" cy="20" r="4" fill="#a855f7" opacity="0.9"/>
+            <circle cx="440" cy="35" r="4" fill="#a855f7" opacity="0.9"/>
+          </svg>
+
+          <!-- Emoji labels at data points — absolutely positioned -->
+          <div style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;">
+            <!-- M: rough -->
+            <div style="position:absolute; left:40px; top:44px; transform:translateX(-50%); font-size:18px; line-height:1;">😔</div>
+            <!-- T: good -->
+            <div style="position:absolute; left:120px; top:14px; transform:translateX(-50%); font-size:18px; line-height:1;">🙂</div>
+            <!-- W: good -->
+            <div style="position:absolute; left:200px; top:9px; transform:translateX(-50%); font-size:18px; line-height:1;">😊</div>
+            <!-- T: okay -->
+            <div style="position:absolute; left:280px; top:29px; transform:translateX(-50%); font-size:18px; line-height:1;">😐</div>
+            <!-- F: great -->
+            <div style="position:absolute; left:360px; top:0px; transform:translateX(-50%); font-size:18px; line-height:1;">😄</div>
+            <!-- S: good -->
+            <div style="position:absolute; left:440px; top:14px; transform:translateX(-50%); font-size:18px; line-height:1;">🙂</div>
+          </div>
+        </div>
+
+        <!-- Day labels + Today ring -->
+        <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:0; margin-top:8px;">
+          <!-- M through S (past days) -->
+          <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+            <span style="font-size:10px; color:rgba(255,255,255,0.25); font-weight:600;">M</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+            <span style="font-size:10px; color:rgba(255,255,255,0.25); font-weight:600;">T</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+            <span style="font-size:10px; color:rgba(255,255,255,0.25); font-weight:600;">W</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+            <span style="font-size:10px; color:rgba(255,255,255,0.25); font-weight:600;">T</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+            <span style="font-size:10px; color:rgba(255,255,255,0.25); font-weight:600;">F</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+            <span style="font-size:10px; color:rgba(255,255,255,0.25); font-weight:600;">S</span>
+          </div>
+          <!-- Today: S with pulsing ring -->
+          <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+            <div class="today-ring">+</div>
+            <span style="font-size:10px; color:rgba(167,139,250,0.7); font-weight:700;">S</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mood Check-in Widget -->
+      <div class="glass p-6 mb-8" id="mood-widget">
+        <div class="mb-5">
+          <h2 style="font-size:22px; font-weight:800; letter-spacing:-0.5px;" class="gradient-violet">How are you feeling?</h2>
+          <p style="font-size:13px; color:rgba(255,255,255,0.35); margin-top:4px;">Today, right now — be honest.</p>
+        </div>
+
+        <!-- 5 Large Emoji Buttons -->
+        <div style="display:flex; gap:8px;" class="mb-4">
+          <button class="mood-emoji-btn mood-1" onclick="selectMood(this, 1)" aria-label="Struggling">
+            <div class="emoji-wrap">😣</div>
+            <span class="emoji-label">Struggling</span>
+          </button>
+          <button class="mood-emoji-btn mood-2" onclick="selectMood(this, 2)" aria-label="Rough">
+            <div class="emoji-wrap">😔</div>
+            <span class="emoji-label">Rough</span>
+          </button>
+          <button class="mood-emoji-btn mood-3" onclick="selectMood(this, 3)" aria-label="Okay">
+            <div class="emoji-wrap">😐</div>
+            <span class="emoji-label">Okay</span>
+          </button>
+          <button class="mood-emoji-btn mood-4" onclick="selectMood(this, 4)" aria-label="Good">
+            <div class="emoji-wrap">🙂</div>
+            <span class="emoji-label">Good</span>
+          </button>
+          <button class="mood-emoji-btn mood-5" onclick="selectMood(this, 5)" aria-label="Great">
+            <div class="emoji-wrap">😄</div>
+            <span class="emoji-label">Great</span>
+          </button>
+        </div>
+
+        <!-- Situation Flags (revealed after selection) -->
+        <div class="flags-section" id="flags-section">
+          <p style="font-size:12px; color:rgba(255,255,255,0.3); margin-bottom:10px; font-weight:500;">What's going on? (optional)</p>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px;">
+            <button class="flag-pill flag-pill-enter" style="animation-delay:0.05s;" onclick="toggleFlag(this)">😴 Sleep deprived</button>
+            <button class="flag-pill flag-pill-enter" style="animation-delay:0.1s;" onclick="toggleFlag(this)">💼 Work stress</button>
+            <button class="flag-pill flag-pill-enter" style="animation-delay:0.15s;" onclick="toggleFlag(this)">💬 Partner tension</button>
+            <button class="flag-pill flag-pill-enter" style="animation-delay:0.2s;" onclick="toggleFlag(this)">💸 Financial worry</button>
+            <button class="flag-pill flag-pill-enter" style="animation-delay:0.25s;" onclick="toggleFlag(this)">✨ Feeling great</button>
+            <button class="flag-pill flag-pill-enter" style="animation-delay:0.3s;" onclick="toggleFlag(this)">👶 Excited for baby</button>
+          </div>
+          <!-- Check-In Button -->
+          <div style="display:flex; justify-content:flex-end;">
+            <button class="checkin-btn">Check In &rarr;</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Challenges Section Label -->
+      <div class="flex items-center justify-between mb-4">
+        <span class="small-caps">Your Challenges</span>
+        <span class="glass-pill">7 pillars</span>
+      </div>
+
+      <!-- Challenge Tiles -->
+      <div style="display:flex; flex-direction:column; gap:10px;">
+
+        <!-- 1. Knowledge -->
+        <div class="challenge-tile tile-blue" onclick="toggleTile(this)">
+          <div style="display:flex; align-items:center; gap:14px; padding:16px 20px;">
+            <div class="pillar-icon icon-blue">📚</div>
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                <span style="font-size:15px; font-weight:700; color:#fff;" class="gradient-blue">Knowledge</span>
+                <span class="phase-badge" style="background:rgba(96,165,250,0.12); border:1px solid rgba(96,165,250,0.2); color:#60a5fa;">Trimester 2</span>
+              </div>
+              <p style="font-size:12px; color:rgba(255,255,255,0.4); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Understanding what's happening — and what's ahead.</p>
+            </div>
+            <svg class="expand-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="tile-expand-content">
+            <div style="padding:0 20px 18px 20px; border-top:1px solid rgba(255,255,255,0.05); padding-top:16px;">
+              <h3 style="font-size:16px; font-weight:700; margin-bottom:8px;" class="gradient-blue">What Dads Actually Need to Know</h3>
+              <p style="font-size:13px; color:rgba(255,255,255,0.5); line-height:1.65; margin-bottom:12px;">The medical stuff, the emotional stuff, and the practical stuff most people forget to tell you before the baby arrives.</p>
+              <div class="dad-quote" style="margin-bottom:12px; margin-left:8px;">
+                <p>"I thought I'd read enough. I hadn't. Nobody tells you how fast everything changes."</p>
+                <p style="margin-top:8px; font-size:11px; font-style:normal; color:rgba(255,255,255,0.3);">— Marcus, first-time dad · 31 weeks</p>
+              </div>
+              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <a class="article-link">Read Full Article →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Planning -->
+        <div class="challenge-tile tile-green" onclick="toggleTile(this)">
+          <div style="display:flex; align-items:center; gap:14px; padding:16px 20px;">
+            <div class="pillar-icon icon-green">📋</div>
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                <span style="font-size:15px; font-weight:700;" class="gradient-green">Planning</span>
+                <span class="phase-badge" style="background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.2); color:#4ade80;">Trimester 2</span>
+              </div>
+              <p style="font-size:12px; color:rgba(255,255,255,0.4); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Building the systems before chaos kicks in.</p>
+            </div>
+            <svg class="expand-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="tile-expand-content">
+            <div style="padding:0 20px 18px 20px; border-top:1px solid rgba(255,255,255,0.05); padding-top:16px;">
+              <h3 style="font-size:16px; font-weight:700; margin-bottom:8px;" class="gradient-green">The Planning Dad's Cheat Sheet</h3>
+              <p style="font-size:13px; color:rgba(255,255,255,0.5); line-height:1.65; margin-bottom:12px;">Nursery setup, hospital bag, birth plan coordination — broken down into a timeline that actually makes sense.</p>
+              <div class="task-chip">
+                <span style="font-size:13px; color:rgba(255,255,255,0.6);">🗒️ Finalize hospital bag checklist</span>
+                <button class="add-btn" style="background:rgba(74,222,128,0.12); border-color:rgba(74,222,128,0.25); color:#4ade80;">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Finances -->
+        <div class="challenge-tile tile-emerald" onclick="toggleTile(this)">
+          <div style="display:flex; align-items:center; gap:14px; padding:16px 20px;">
+            <div class="pillar-icon icon-emerald">💰</div>
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                <span style="font-size:15px; font-weight:700;" class="gradient-emerald">Finances</span>
+                <span class="phase-badge" style="background:rgba(52,211,153,0.1); border:1px solid rgba(52,211,153,0.2); color:#34d399;">Ongoing</span>
+              </div>
+              <p style="font-size:12px; color:rgba(255,255,255,0.4); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">The real numbers, without the judgment.</p>
+            </div>
+            <svg class="expand-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="tile-expand-content">
+            <div style="padding:0 20px 18px 20px; border-top:1px solid rgba(255,255,255,0.05); padding-top:16px;">
+              <h3 style="font-size:16px; font-weight:700; margin-bottom:8px;" class="gradient-emerald">Your Baby Budget, Demystified</h3>
+              <p style="font-size:13px; color:rgba(255,255,255,0.5); line-height:1.65; margin-bottom:12px;">First-year costs, leave planning, emergency fund targets — figures that won't make you panic.</p>
+              <div class="task-chip">
+                <span style="font-size:13px; color:rgba(255,255,255,0.6);">💳 Review parental leave policy</span>
+                <button class="add-btn" style="background:rgba(52,211,153,0.12); border-color:rgba(52,211,153,0.25); color:#34d399;">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Anxiety — EXPANDED -->
+        <div class="challenge-tile tile-purple expanded-tile" id="anxiety-tile" onclick="toggleTile(this)">
+          <div style="display:flex; align-items:center; gap:14px; padding:16px 20px;">
+            <div class="pillar-icon icon-purple">😰</div>
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                <span style="font-size:15px; font-weight:700;" class="gradient-purple">Anxiety</span>
+                <span class="phase-badge" style="background:rgba(192,132,252,0.12); border:1px solid rgba(192,132,252,0.25); color:#c084fc;">Active Now</span>
+                <span style="width:7px; height:7px; border-radius:50%; background:#a855f7; animation:ring-pulse 1.5s infinite; flex-shrink:0;"></span>
+              </div>
+              <p style="font-size:12px; color:rgba(255,255,255,0.4); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">The worries nobody talks about — and how to move through them.</p>
+            </div>
+            <svg class="expand-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="tile-expand-content" style="max-height:600px; opacity:1;">
+            <div style="padding:0 20px 20px 20px; border-top:1px solid rgba(139,92,246,0.15); padding-top:18px;">
+              <h3 style="font-size:18px; font-weight:800; margin-bottom:10px; letter-spacing:-0.3px;" class="gradient-purple">The Worries Nobody Talks About</h3>
+              <p style="font-size:13px; color:rgba(255,255,255,0.55); line-height:1.7; margin-bottom:14px;">Fatherhood anxiety is real, common, and rarely acknowledged. This isn't about performance — it's about the weight of becoming someone else's whole world, and the quiet panic that comes with it.</p>
+              <div class="dad-quote" style="margin-bottom:14px;">
+                <p>"Every night I'd lie awake running through worst-case scenarios. My wife was asleep fine. I was spiraling alone. Nobody told me this was normal."</p>
+                <p style="margin-top:10px; font-size:11px; font-style:normal; color:rgba(255,255,255,0.3);">— James, dad of 2 · Birmingham</p>
+              </div>
+              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
+                <a class="article-link">Read Full Article →</a>
+                <span class="glass-pill">5 min read</span>
+              </div>
+              <div class="task-chip">
+                <div>
+                  <span style="font-size:13px; color:rgba(255,255,255,0.65); font-weight:500;">🧘 Try a 5-minute breathing exercise</span>
+                  <p style="font-size:11px; color:rgba(255,255,255,0.3); margin-top:2px;">Linked to your anxiety pillar</p>
+                </div>
+                <button class="add-btn">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Baby Bonding -->
+        <div class="challenge-tile tile-pink" onclick="toggleTile(this)">
+          <div style="display:flex; align-items:center; gap:14px; padding:16px 20px;">
+            <div class="pillar-icon icon-pink">👶</div>
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                <span style="font-size:15px; font-weight:700;" class="gradient-pink">Baby Bonding</span>
+                <span class="phase-badge" style="background:rgba(244,114,182,0.1); border:1px solid rgba(244,114,182,0.2); color:#f472b6;">Coming Soon</span>
+              </div>
+              <p style="font-size:12px; color:rgba(255,255,255,0.4); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">You don't have to wait until birth to connect.</p>
+            </div>
+            <svg class="expand-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="tile-expand-content">
+            <div style="padding:0 20px 18px 20px; border-top:1px solid rgba(255,255,255,0.05); padding-top:16px;">
+              <h3 style="font-size:16px; font-weight:700; margin-bottom:8px;" class="gradient-pink">Bonding Before Birth</h3>
+              <p style="font-size:13px; color:rgba(255,255,255,0.5); line-height:1.65; margin-bottom:12px;">Talk to them, read to them, put on music. The science is clear: connection starts now.</p>
+              <div class="task-chip">
+                <span style="font-size:13px; color:rgba(255,255,255,0.6);">🎵 Read to baby for 5 minutes tonight</span>
+                <button class="add-btn" style="background:rgba(244,114,182,0.12); border-color:rgba(244,114,182,0.25); color:#f472b6;">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Relationship -->
+        <div class="challenge-tile tile-rose" onclick="toggleTile(this)">
+          <div style="display:flex; align-items:center; gap:14px; padding:16px 20px;">
+            <div class="pillar-icon icon-rose">💑</div>
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                <span style="font-size:15px; font-weight:700;" class="gradient-rose">Relationship</span>
+                <span class="phase-badge" style="background:rgba(251,113,133,0.1); border:1px solid rgba(251,113,133,0.2); color:#fb7185;">Trimester 2</span>
+              </div>
+              <p style="font-size:12px; color:rgba(255,255,255,0.4); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Staying close when everything feels like a lot.</p>
+            </div>
+            <svg class="expand-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="tile-expand-content">
+            <div style="padding:0 20px 18px 20px; border-top:1px solid rgba(255,255,255,0.05); padding-top:16px;">
+              <h3 style="font-size:16px; font-weight:700; margin-bottom:8px;" class="gradient-rose">The Partnership Shift</h3>
+              <p style="font-size:13px; color:rgba(255,255,255,0.5); line-height:1.65; margin-bottom:12px;">Pregnancy changes the dynamic. It's not about romance — it's about being a team. Here's how to stay one.</p>
+              <div class="task-chip">
+                <span style="font-size:13px; color:rgba(255,255,255,0.6);">💬 Plan a device-free evening this week</span>
+                <button class="add-btn" style="background:rgba(251,113,133,0.12); border-color:rgba(251,113,133,0.25); color:#fb7185;">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Extended Family -->
+        <div class="challenge-tile tile-amber" onclick="toggleTile(this)">
+          <div style="display:flex; align-items:center; gap:14px; padding:16px 20px;">
+            <div class="pillar-icon icon-amber">👨‍👩‍👦</div>
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">
+                <span style="font-size:15px; font-weight:700;" class="gradient-amber">Extended Family</span>
+                <span class="phase-badge" style="background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.2); color:#fbbf24;">Trimester 3</span>
+              </div>
+              <p style="font-size:12px; color:rgba(255,255,255,0.4); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Navigating everyone's opinions without losing your mind.</p>
+            </div>
+            <svg class="expand-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="tile-expand-content">
+            <div style="padding:0 20px 18px 20px; border-top:1px solid rgba(255,255,255,0.05); padding-top:16px;">
+              <h3 style="font-size:16px; font-weight:700; margin-bottom:8px;" class="gradient-amber">Setting Limits, Not Burning Bridges</h3>
+              <p style="font-size:13px; color:rgba(255,255,255,0.5); line-height:1.65; margin-bottom:12px;">Everyone has advice. Not all of it is useful. Scripts for saying no, setting visit rules, and being the calm one.</p>
+              <div class="task-chip">
+                <span style="font-size:13px; color:rgba(255,255,255,0.6);">🗣️ Agree on visiting plan with partner</span>
+                <button class="add-btn" style="background:rgba(251,191,36,0.12); border-color:rgba(251,191,36,0.25); color:#fbbf24;">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         PAGE DIVIDER
+    ============================================================ -->
+    <div class="max-w-2xl mx-auto px-4">
+      <div class="page-divider"></div>
+    </div>
+
+    <!-- ============================================================
+         PAGE 2: BABY TRACKER
+    ============================================================ -->
+    <section class="max-w-2xl mx-auto px-4 pb-10">
+
+      <!-- Page Indicator -->
+      <div class="page-indicator mb-6">
+        <div class="dot" style="background:rgba(34,211,238,0.7);"></div>
+        <span>Baby Tracker</span>
+      </div>
+
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h1 class="gradient-cyan font-black leading-none tracking-tight mb-2" style="font-size:38px;">Baby Tracker</h1>
+          <p style="color:rgba(255,255,255,0.35); font-size:14px;">Your post-birth command center.</p>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="glass-pill" style="cursor:pointer; transition:all 0.15s;">History</button>
+          <button class="glass-pill" style="cursor:pointer; transition:all 0.15s;">Summary</button>
+        </div>
+      </div>
+
+      <!-- Preview Banner (pregnancy mode) -->
+      <div class="animated-border mb-6">
+        <div class="glass" style="border-radius:20px; padding:20px 22px; background:rgba(5,5,5,0.9);">
+          <div style="display:flex; align-items:flex-start; gap:16px;">
+            <div class="lock-glow" style="width:48px; height:48px; border-radius:14px; background:rgba(34,211,238,0.1); border:1px solid rgba(34,211,238,0.2); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">🔒</div>
+            <div style="flex:1;">
+              <h3 style="font-size:16px; font-weight:700; color:#fff; margin-bottom:4px;">Baby Tracker unlocks after birth</h3>
+              <p style="font-size:13px; color:rgba(255,255,255,0.4); line-height:1.55; margin-bottom:12px;">Everything you need to track the first months — feeds, diapers, sleep, and milestones — all in one place.</p>
+              <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                <span class="glass-pill" style="background:rgba(34,211,238,0.08); border-color:rgba(34,211,238,0.2); color:#67e8f9;">🍼 Feeding</span>
+                <span class="glass-pill" style="background:rgba(251,191,36,0.08); border-color:rgba(251,191,36,0.2); color:#fcd34d;">🧷 Diapers</span>
+                <span class="glass-pill" style="background:rgba(167,139,250,0.08); border-color:rgba(167,139,250,0.2); color:#c4b5fd;">😴 Sleep</span>
+                <span class="glass-pill" style="background:rgba(251,113,133,0.08); border-color:rgba(251,113,133,0.2); color:#fda4af;">⭐ Milestones</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shift Briefing — 3-stat glass card (preview dimmed) -->
+      <div class="glass p-5 mb-5 preview-pulse">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+          <span class="small-caps">Last Shift</span>
+          <span class="glass-pill" style="background:rgba(34,211,238,0.07); border-color:rgba(34,211,238,0.15); color:#22d3ee;">Live preview</span>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <!-- Feed stat -->
+          <div class="stat-compartment">
+            <div class="stat-icon" style="animation-delay:0s;">🍼</div>
+            <div class="stat-value" style="color:rgba(34,211,238,0.7);">2h ago</div>
+            <div class="stat-label" style="color:rgba(34,211,238,0.35);">Last Feed</div>
+          </div>
+          <!-- Diaper stat -->
+          <div class="stat-compartment">
+            <div class="stat-icon" style="animation-delay:0.3s;">🧷</div>
+            <div class="stat-value" style="color:rgba(251,191,36,0.7);">45m</div>
+            <div class="stat-label" style="color:rgba(251,191,36,0.35);">Last Change</div>
+          </div>
+          <!-- Sleep stat -->
+          <div class="stat-compartment">
+            <div class="stat-icon" style="animation-delay:0.6s;">😴</div>
+            <div class="stat-value" style="color:rgba(167,139,250,0.7);">4h 30m</div>
+            <div class="stat-label" style="color:rgba(167,139,250,0.35);">Total Sleep</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Log Grid — 3 big tiles (preview dimmed) -->
+      <div class="preview-dim" style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:10px;">
+        <button class="log-tile-big log-tile-feed" onclick="triggerRipple(this)">
+          <div class="tile-icon-big">🍼</div>
+          <div class="tile-label">Feeding</div>
+          <div style="font-size:10px; color:rgba(34,211,238,0.5); font-weight:500; margin-top:2px;">+Quick log</div>
+        </button>
+        <button class="log-tile-big log-tile-diap" onclick="triggerRipple(this)">
+          <div class="tile-icon-big">🧷</div>
+          <div class="tile-label">Diaper</div>
+          <div style="font-size:10px; color:rgba(251,191,36,0.5); font-weight:500; margin-top:2px;">+Quick log</div>
+        </button>
+        <button class="log-tile-big log-tile-sleep" onclick="triggerRipple(this)">
+          <div class="tile-icon-big">😴</div>
+          <div class="tile-label">Sleep</div>
+          <div style="font-size:10px; color:rgba(167,139,250,0.5); font-weight:500; margin-top:2px;">+Start timer</div>
+        </button>
+      </div>
+
+      <!-- More Logs — 4 columns smaller tiles (preview dimmed) -->
+      <div class="preview-dim" style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:20px;">
+        <button class="log-tile-sm">
+          <div class="sm-icon">🌡️</div>
+          <div class="sm-label">Temp</div>
+        </button>
+        <button class="log-tile-sm">
+          <div class="sm-icon">💊</div>
+          <div class="sm-label">Medicine</div>
+        </button>
+        <button class="log-tile-sm">
+          <div class="sm-icon">☀️</div>
+          <div class="sm-label">Vitamin D</div>
+        </button>
+        <button class="log-tile-sm">
+          <div class="sm-icon">💭</div>
+          <div class="sm-label">Mood</div>
+        </button>
+        <button class="log-tile-sm">
+          <div class="sm-icon">⚖️</div>
+          <div class="sm-label">Weight</div>
+        </button>
+        <button class="log-tile-sm">
+          <div class="sm-icon">📏</div>
+          <div class="sm-label">Height</div>
+        </button>
+        <button class="log-tile-sm">
+          <div class="sm-icon">⭐</div>
+          <div class="sm-label">Milestone</div>
+        </button>
+        <button class="log-tile-sm">
+          <div class="sm-icon">➕</div>
+          <div class="sm-label">Custom</div>
+        </button>
+      </div>
+
+      <!-- Recent Activity (preview dimmed) -->
+      <div class="glass p-5 preview-dim">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+          <span class="small-caps">Recent Activity</span>
+          <a style="font-size:12px; color:rgba(34,211,238,0.6); cursor:pointer; font-weight:600;">View full history →</a>
+        </div>
+
+        <!-- Activity rows -->
+        <div class="activity-row" style="padding-top:16px;">
+          <div style="width:36px; height:36px; border-radius:10px; background:rgba(34,211,238,0.1); border:1px solid rgba(34,211,238,0.15); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">🍼</div>
+          <div style="flex:1;">
+            <div style="font-size:13px; font-weight:600; color:rgba(255,255,255,0.8);">Feeding</div>
+            <div style="font-size:11px; color:rgba(255,255,255,0.35);">Bottle &middot; 4 oz &middot; Left side 12 min</div>
+          </div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.3); font-weight:500; white-space:nowrap;">2:30 PM</div>
+        </div>
+
+        <div class="activity-row">
+          <div style="width:36px; height:36px; border-radius:10px; background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.15); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">🧷</div>
+          <div style="flex:1;">
+            <div style="font-size:13px; font-weight:600; color:rgba(255,255,255,0.8);">Diaper Change</div>
+            <div style="font-size:11px; color:rgba(255,255,255,0.35);">Wet only &middot; Size 1</div>
+          </div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.3); font-weight:500; white-space:nowrap;">1:45 PM</div>
+        </div>
+
+        <div class="activity-row">
+          <div style="width:36px; height:36px; border-radius:10px; background:rgba(167,139,250,0.1); border:1px solid rgba(167,139,250,0.15); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">😴</div>
+          <div style="flex:1;">
+            <div style="font-size:13px; font-weight:600; color:rgba(255,255,255,0.8);">Sleep Session</div>
+            <div style="font-size:11px; color:rgba(255,255,255,0.35);">Nap &middot; 1h 20m &middot; Bassinet</div>
+          </div>
+          <div style="font-size:11px; color:rgba(255,255,255,0.3); font-weight:500; white-space:nowrap;">12:10 PM</div>
+        </div>
+
+        <div style="text-align:center; padding-top:14px;">
+          <a style="font-size:12px; color:rgba(34,211,238,0.5); cursor:pointer; font-weight:500; text-decoration:none;">View full history →</a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================
+         BOTTOM NAV — Floating Pill
+    ============================================================ -->
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="setNav(this)">
+        <span class="nav-icon">🏠</span>
+        <span>Home</span>
+      </div>
+      <div class="nav-item" onclick="setNav(this)">
+        <span class="nav-icon">✅</span>
+        <span>Tasks</span>
+      </div>
+      <div class="nav-item" onclick="setNav(this)">
+        <span class="nav-icon">📰</span>
+        <span>Briefing</span>
+      </div>
+      <div class="nav-item active" onclick="setNav(this)">
+        <span class="nav-icon">📊</span>
+        <span>Tracker</span>
+      </div>
+      <div class="nav-item" onclick="setNav(this)">
+        <span class="nav-icon">···</span>
+        <span>More</span>
+      </div>
+    </nav>
+
+  </div><!-- end relative wrapper -->
+
+  <script>
+    // =============================================
+    // MOOD SELECTION
+    // =============================================
+    function selectMood(btn, level) {
+      // Remove selected from all
+      document.querySelectorAll('.mood-emoji-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+
+      // Show flags with stagger
+      const flags = document.getElementById('flags-section');
+      flags.classList.add('visible');
+
+      // Re-trigger stagger animations
+      document.querySelectorAll('.flag-pill').forEach((pill, i) => {
+        pill.style.animationDelay = (i * 0.055 + 0.05) + 's';
+        pill.classList.remove('flag-pill-enter');
+        void pill.offsetWidth; // force reflow
+        pill.classList.add('flag-pill-enter');
+      });
+    }
+
+    // =============================================
+    // FLAG TOGGLE
+    // =============================================
+    function toggleFlag(pill) {
+      pill.classList.toggle('active');
+    }
+
+    // =============================================
+    // CHALLENGE TILE EXPAND
+    // =============================================
+    function toggleTile(tile) {
+      const isExpanded = tile.classList.contains('expanded-tile');
+      // Collapse all
+      document.querySelectorAll('.challenge-tile').forEach(t => t.classList.remove('expanded-tile'));
+      if (!isExpanded) tile.classList.add('expanded-tile');
+    }
+
+    // =============================================
+    // QUICK LOG RIPPLE
+    // =============================================
+    function triggerRipple(btn) {
+      btn.classList.remove('ripple');
+      void btn.offsetWidth;
+      btn.classList.add('ripple');
+    }
+
+    // =============================================
+    // NAV
+    // =============================================
+    function setNav(item) {
+      document.querySelectorAll('.nav-item').forEach(n => {
+        n.classList.remove('active');
+        n.classList.remove('active-violet');
+      });
+      // Journey page uses violet, tracker uses cyan
+      item.classList.add('active');
+    }
+  </script>
+</body>
+</html>

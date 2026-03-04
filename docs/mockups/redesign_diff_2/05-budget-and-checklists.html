@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Budget Planner &amp; Checklists — The Dad Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0c1222;
+      --surface:     #111b33;
+      --card:        rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.06);
+      --gold:        #d4a853;
+      --gold-light:  #e8c47a;
+      --gold-dim:    rgba(212, 168, 83, 0.15);
+      --silver:      #b8c0cc;
+      --silver-dim:  rgba(184, 192, 204, 0.12);
+      --emerald:     #2d8b6a;
+      --emerald-light: #3aaf85;
+      --text:        #e8edf5;
+      --muted:       #5a6a8a;
+      --danger:      #8b2252;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'Jost', system-ui, sans-serif;
+      --shadow-card:  0 2px 4px rgba(0,0,0,0.1), 0 8px 32px rgba(0,0,0,0.2);
+      --shadow-deep:  0 4px 8px rgba(0,0,0,0.2), 0 16px 48px rgba(0,0,0,0.35);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-variant-numeric: tabular-nums;
+      overflow-x: hidden;
+    }
+
+    /* Radial gradient background — lighter center, darker edges */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(17,27,51,0.9) 0%, rgba(8,13,28,0.98) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Noise texture overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.4;
+    }
+
+    /* ─── Layout ───────────────────────────────────────────────── */
+    .page-wrap {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px 120px;
+    }
+
+    /* ─── Typography ───────────────────────────────────────────── */
+    .display { font-family: var(--font-display); }
+    .display-gold { font-family: var(--font-display); color: var(--gold); }
+    .display-silver { font-family: var(--font-display); color: var(--silver); }
+
+    /* ─── Gold line divider ────────────────────────────────────── */
+    .gold-line {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--gold) 70%, transparent 100%);
+      opacity: 0.35;
+      margin: 32px 0;
+    }
+
+    .gold-line-header {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--gold) 70%, transparent 100%);
+      opacity: 0.25;
+      margin-top: 24px;
+    }
+
+    /* Diamond divider */
+    .diamond-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 56px 0;
+    }
+    .diamond-divider::before,
+    .diamond-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212,168,83,0.4));
+    }
+    .diamond-divider::after {
+      background: linear-gradient(90deg, rgba(212,168,83,0.4), transparent);
+    }
+    .diamond-shape {
+      color: var(--gold);
+      font-size: 16px;
+      opacity: 0.7;
+      transform: rotate(0deg);
+    }
+
+    /* ─── Cards ────────────────────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-card);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .card:hover {
+      box-shadow: var(--shadow-deep);
+    }
+
+    .card-gold-top {
+      border-top: 2px solid var(--gold);
+    }
+    .card-emerald-top {
+      border-top: 2px solid var(--emerald);
+    }
+    .card-silver-top {
+      border-top: 2px solid var(--silver);
+    }
+
+    /* ─── Section headers ──────────────────────────────────────── */
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 40px;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+    }
+    .section-subtitle {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 14px;
+      color: var(--silver);
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── Buttons ──────────────────────────────────────────────── */
+    .btn-gold-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      background: transparent;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+    .btn-gold-outline:hover {
+      background: var(--gold);
+      color: var(--bg);
+    }
+
+    .btn-gold-solid {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: var(--gold);
+      color: var(--bg);
+      border: none;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.25s ease;
+    }
+    .btn-gold-solid:hover {
+      background: var(--gold-light);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.06);
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 13px;
+      letter-spacing: 0.3px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: border-color 0.25s ease, color 0.25s ease;
+      width: 100%;
+    }
+    .btn-ghost:hover {
+      border-color: rgba(212,168,83,0.3);
+      color: var(--gold);
+    }
+
+    /* ─── Tier selector ────────────────────────────────────────── */
+    .tier-selector {
+      display: inline-flex;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 8px;
+      padding: 4px;
+      gap: 2px;
+      position: relative;
+    }
+    .tier-btn {
+      position: relative;
+      padding: 8px 20px;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: color 0.25s ease;
+      z-index: 1;
+    }
+    .tier-btn.active {
+      color: var(--bg);
+    }
+    .tier-indicator {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      height: calc(100% - 8px);
+      background: var(--gold);
+      border-radius: 5px;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+    }
+
+    /* ─── Summary cards ────────────────────────────────────────── */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+    .summary-card {
+      padding: 28px 28px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .summary-card-icon {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      font-size: 56px;
+      opacity: 0.06;
+      line-height: 1;
+      pointer-events: none;
+      font-family: var(--font-display);
+    }
+    .summary-label {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .summary-amount {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 44px;
+      line-height: 1;
+      letter-spacing: -1px;
+      font-variant-numeric: tabular-nums;
+    }
+    .summary-sub {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+    .summary-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    /* Small progress ring */
+    .mini-ring-wrap {
+      width: 40px;
+      height: 40px;
+    }
+
+    .badge-percent {
+      display: inline-block;
+      padding: 3px 10px;
+      background: rgba(184,192,204,0.1);
+      border: 1px solid rgba(184,192,204,0.18);
+      color: var(--silver);
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      border-radius: 99px;
+    }
+
+    /* ─── Donut chart ──────────────────────────────────────────── */
+    .chart-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      padding: 36px 40px;
+      margin-bottom: 36px;
+    }
+
+    .donut-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .donut-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+    }
+
+    .donut-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .donut-center-pct {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 36px;
+      color: var(--gold);
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+
+    .donut-center-label {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    /* Legend */
+    .legend-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .legend-item {
+      display: grid;
+      grid-template-columns: 10px 1fr auto auto;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-name {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .legend-fraction {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+      min-width: 60px;
+    }
+
+    .legend-bar-wrap {
+      width: 80px;
+      height: 4px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .legend-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 1.5s ease;
+    }
+
+    /* ─── Item list ────────────────────────────────────────────── */
+    .list-toggle {
+      display: inline-flex;
+      gap: 0;
+      margin-bottom: 20px;
+    }
+    .list-toggle-btn {
+      padding: 8px 20px;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .list-toggle-btn:first-child {
+      border-radius: 6px 0 0 6px;
+      border-right: none;
+    }
+    .list-toggle-btn:last-child {
+      border-radius: 0 6px 6px 0;
+    }
+    .list-toggle-btn.active {
+      background: var(--gold-dim);
+      border-color: rgba(212,168,83,0.3);
+      color: var(--gold);
+    }
+
+    .item-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .item-row {
+      display: grid;
+      grid-template-columns: 3px 1fr auto auto;
+      align-items: center;
+      gap: 0;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      cursor: default;
+    }
+    .item-row:hover {
+      border-color: rgba(212,168,83,0.18);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .item-row:hover .item-stripe {
+      opacity: 1;
+    }
+
+    .item-stripe {
+      width: 3px;
+      align-self: stretch;
+      opacity: 0.6;
+      transition: opacity 0.25s ease;
+    }
+
+    .item-content {
+      padding: 16px 20px;
+    }
+
+    .item-name {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .item-name.purchased {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .badge-essential {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(212,168,83,0.12);
+      border: 1px solid rgba(212,168,83,0.25);
+      color: var(--gold);
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      border-radius: 99px;
+      margin-top: 4px;
+    }
+
+    .badge-nice {
+      display: inline-block;
+      padding: 2px 8px;
+      background: transparent;
+      border: 1px solid rgba(184,192,204,0.2);
+      color: var(--silver);
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      border-radius: 99px;
+      margin-top: 4px;
+    }
+
+    .item-price {
+      padding: 16px 16px;
+      text-align: right;
+    }
+    .item-price-est {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--silver);
+      font-variant-numeric: tabular-nums;
+    }
+    .item-price-est.purchased { color: var(--muted); text-decoration: line-through; }
+
+    .item-status {
+      padding: 16px 20px 16px 0;
+      min-width: 140px;
+    }
+    .status-purchased {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--emerald-light);
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 13px;
+    }
+    .status-purchased-price {
+      color: var(--emerald);
+      font-weight: 500;
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+    .status-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .status-btn-buy {
+      padding: 6px 14px;
+      background: transparent;
+      border: 1px solid rgba(212,168,83,0.3);
+      color: var(--gold);
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 11px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .status-btn-buy:hover {
+      background: var(--gold-dim);
+    }
+    .status-btn-skip {
+      padding: 6px 10px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--muted);
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 11px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .status-btn-skip:hover {
+      border-color: rgba(255,255,255,0.12);
+      color: var(--silver);
+    }
+
+    /* ─── Checklists ───────────────────────────────────────────── */
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+
+    .checklist-card {
+      padding: 28px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .checklist-card:hover {
+      border-color: rgba(212,168,83,0.25);
+      box-shadow: var(--shadow-deep);
+    }
+
+    .checklist-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .checklist-icon {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gold-dim);
+      border: 1px solid rgba(212,168,83,0.15);
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    .checklist-name {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text);
+      margin-top: 4px;
+    }
+
+    .checklist-count {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .checklist-progress-bar {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .checklist-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 99px;
+      transition: width 1.2s ease;
+    }
+
+    .checklist-progress-label {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+    }
+
+    /* ─── Overall progress card ────────────────────────────────── */
+    .overall-progress-card {
+      padding: 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .progress-ring-wrap {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin-bottom: 16px;
+    }
+
+    .progress-ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .progress-ring-number {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .progress-pct-label {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--silver);
+      margin-top: 4px;
+    }
+
+    /* ─── Premium upgrade banner ───────────────────────────────── */
+    .upgrade-banner {
+      position: relative;
+      overflow: hidden;
+      padding: 40px 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(212,168,83,0.06) 0%, rgba(17,27,51,0.8) 50%, rgba(212,168,83,0.04) 100%);
+      border: 1px solid rgba(212,168,83,0.2);
+      box-shadow: var(--shadow-deep);
+      margin-bottom: 36px;
+    }
+
+    /* Shimmer animation */
+    .upgrade-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 40%;
+      height: 200%;
+      background: linear-gradient(
+        105deg,
+        transparent 40%,
+        rgba(212,168,83,0.07) 50%,
+        transparent 60%
+      );
+      animation: shimmer 5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0%   { left: -60%; }
+      100% { left: 120%; }
+    }
+
+    .upgrade-banner-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .upgrade-lock-icon {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(212,168,83,0.1);
+      border: 1px solid rgba(212,168,83,0.25);
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+
+    .upgrade-text { flex: 1; }
+
+    .upgrade-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 28px;
+      color: var(--text);
+      letter-spacing: -0.3px;
+      margin-bottom: 6px;
+    }
+
+    .upgrade-sub {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .upgrade-cta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .upgrade-cta-sub {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    /* ─── Premium checklist grid ───────────────────────────────── */
+    .premium-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .premium-card {
+      position: relative;
+      padding: 22px 20px;
+      opacity: 0.5;
+      transition: opacity 0.3s ease, border-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .premium-card:hover {
+      opacity: 0.75;
+      border-color: rgba(212,168,83,0.2);
+    }
+
+    .premium-card-inner {
+      filter: blur(0.8px);
+      transition: filter 0.3s ease;
+    }
+
+    .premium-card:hover .premium-card-inner {
+      filter: blur(0);
+    }
+
+    .premium-card-icon-wrap {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .premium-card-name {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .premium-card-count {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .premium-lock-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(212,168,83,0.15);
+      border: 1px solid rgba(212,168,83,0.25);
+      border-radius: 50%;
+    }
+
+    .premium-tooltip {
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface);
+      border: 1px solid rgba(212,168,83,0.25);
+      color: var(--gold);
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .premium-card:hover .premium-tooltip {
+      opacity: 1;
+    }
+
+    /* ─── Bottom nav ───────────────────────────────────────────── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(11,17,33,0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(212,168,83,0.12);
+      padding: 0 0 env(safe-area-inset-bottom, 0);
+    }
+
+    .nav-inner {
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      align-items: stretch;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px 8px;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      color: var(--muted);
+      border-top: 2px solid transparent;
+      text-decoration: none;
+    }
+
+    .nav-item.active {
+      color: var(--gold);
+      border-top-color: var(--gold);
+    }
+
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 1.5;
+    }
+
+    .nav-label {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 10px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    /* ─── Scroll animations ────────────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── Scrollbar ────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(212,168,83,0.2); border-radius: 99px; }
+
+    /* ─── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .page-wrap { padding: 32px 16px 100px; }
+      .summary-grid { grid-template-columns: 1fr; gap: 14px; }
+      .chart-section { grid-template-columns: 1fr; gap: 32px; }
+      .checklist-grid { grid-template-columns: 1fr; }
+      .premium-grid { grid-template-columns: repeat(2, 1fr); }
+      .upgrade-banner-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .upgrade-cta { align-items: flex-start; }
+      .section-title { font-size: 30px; }
+      .summary-amount { font-size: 34px; }
+      .donut-container { width: 160px; height: 160px; }
+      .donut-center-pct { font-size: 28px; }
+    }
+
+    @media (max-width: 480px) {
+      .premium-grid { grid-template-columns: 1fr; }
+      .tier-selector { width: 100%; }
+      .tier-btn { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- ===== BUDGET PLANNER ===================================== -->
+
+  <!-- Section header -->
+  <div class="section-header fade-up">
+    <div>
+      <h1 class="section-title display-gold">Budget Planner</h1>
+      <p class="section-subtitle">Week 24 &middot; Third Trimester</p>
+    </div>
+    <button class="btn-gold-outline">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Custom Item
+    </button>
+  </div>
+
+  <div class="gold-line-header"></div>
+
+  <!-- Tier selector -->
+  <div style="margin: 28px 0 32px;" class="fade-up">
+    <div class="tier-selector" id="tierSelector">
+      <div class="tier-indicator" id="tierIndicator" style="width: 104px; transform: translateX(0px);"></div>
+      <button class="tier-btn active" data-index="0" onclick="selectTier(this, 0)">Budget</button>
+      <button class="tier-btn" data-index="1" onclick="selectTier(this, 1)">Mid-Range</button>
+      <button class="tier-btn" data-index="2" onclick="selectTier(this, 2)">Premium</button>
+    </div>
+  </div>
+
+  <!-- Summary cards -->
+  <div class="summary-grid fade-up">
+
+    <!-- Card 1: Estimated Total -->
+    <div class="card card-gold-top summary-card">
+      <div class="summary-card-icon">$</div>
+      <p class="summary-label">Estimated Total</p>
+      <div class="summary-amount display-gold" id="totalAmount">$2,847</div>
+      <p class="summary-sub" id="totalItems">28 items across 4 categories</p>
+    </div>
+
+    <!-- Card 2: Purchased -->
+    <div class="card card-emerald-top summary-card">
+      <div class="summary-card-icon" style="color: var(--emerald);">&#10003;</div>
+      <p class="summary-label">Purchased</p>
+      <div class="summary-amount" style="color: var(--emerald-light);" id="purchasedAmount">$1,234</div>
+      <div class="summary-meta">
+        <div class="mini-ring-wrap">
+          <svg width="40" height="40" viewBox="0 0 40 40">
+            <circle cx="20" cy="20" r="15" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+            <circle cx="20" cy="20" r="15" fill="none" stroke="#2d8b6a" stroke-width="3"
+              stroke-dasharray="94.2" stroke-dashoffset="53.7"
+              stroke-linecap="round"
+              transform="rotate(-90 20 20)"
+              class="ring-anim"/>
+          </svg>
+        </div>
+        <p class="summary-sub" style="margin-top:0">12 items complete</p>
+      </div>
+    </div>
+
+    <!-- Card 3: Remaining -->
+    <div class="card card-silver-top summary-card">
+      <div class="summary-card-icon" style="color: var(--silver);">&#8734;</div>
+      <p class="summary-label">Remaining</p>
+      <div class="summary-amount" style="color: var(--silver);" id="remainingAmount">$1,613</div>
+      <div class="summary-meta">
+        <span class="badge-percent">57% to go</span>
+        <p class="summary-sub" style="margin-top:0;">16 items left</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Donut chart section -->
+  <div class="card fade-up" style="margin-bottom: 36px;">
+    <div class="chart-section">
+
+      <!-- Donut -->
+      <div class="donut-wrap">
+        <div class="donut-container">
+          <svg width="200" height="200" viewBox="0 0 200 200" id="donutSvg">
+            <!-- Track -->
+            <circle cx="100" cy="100" r="78" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="18"/>
+            <!-- Baby Gear: gold — 40% = 196.1 of 490, offset from 0 -->
+            <circle cx="100" cy="100" r="78" fill="none"
+              stroke="url(#goldGrad)" stroke-width="18"
+              stroke-dasharray="490.1" stroke-dashoffset="294"
+              stroke-linecap="butt"
+              transform="rotate(-90 100 100)"
+              class="donut-segment" data-length="196"/>
+            <!-- Nursery: emerald — 28% -->
+            <circle cx="100" cy="100" r="78" fill="none"
+              stroke="url(#emeraldGrad)" stroke-width="18"
+              stroke-dasharray="490.1" stroke-dashoffset="196"
+              stroke-linecap="butt"
+              transform="rotate(-90 100 100)"
+              class="donut-segment" data-length="137"/>
+            <!-- Technology: silver — 20% -->
+            <circle cx="100" cy="100" r="78" fill="none"
+              stroke="url(#silverGrad)" stroke-width="18"
+              stroke-dasharray="490.1" stroke-dashoffset="353"
+              stroke-linecap="butt"
+              transform="rotate(-90 100 100)"
+              class="donut-segment" data-length="98"/>
+            <!-- Health: blue — 12% -->
+            <circle cx="100" cy="100" r="78" fill="none"
+              stroke="url(#blueGrad)" stroke-width="18"
+              stroke-dasharray="490.1" stroke-dashoffset="451"
+              stroke-linecap="butt"
+              transform="rotate(-90 100 100)"
+              class="donut-segment" data-length="59"/>
+            <!-- Defs -->
+            <defs>
+              <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#c49a3a"/>
+                <stop offset="100%" stop-color="#e8c47a"/>
+              </linearGradient>
+              <linearGradient id="emeraldGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1a6b4e"/>
+                <stop offset="100%" stop-color="#3aaf85"/>
+              </linearGradient>
+              <linearGradient id="silverGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#7a8698"/>
+                <stop offset="100%" stop-color="#c8d0dc"/>
+              </linearGradient>
+              <linearGradient id="blueGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#2a5ba8"/>
+                <stop offset="100%" stop-color="#6aa3e8"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="donut-center">
+            <span class="donut-center-pct">43%</span>
+            <span class="donut-center-label">purchased</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div>
+        <p style="font-family: var(--font-body); font-weight: 300; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 20px;">Category Breakdown</p>
+        <div class="legend-grid">
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--gold);"></div>
+            <span class="legend-name">Baby Gear</span>
+            <span class="legend-fraction">$1,140 / 11</span>
+            <div class="legend-bar-wrap">
+              <div class="legend-bar-fill" style="width: 40%; background: linear-gradient(90deg, #c49a3a, #e8c47a);"></div>
+            </div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--emerald-light);"></div>
+            <span class="legend-name">Nursery</span>
+            <span class="legend-fraction">$797 / 8</span>
+            <div class="legend-bar-wrap">
+              <div class="legend-bar-fill" style="width: 28%; background: linear-gradient(90deg, #1a6b4e, #3aaf85);"></div>
+            </div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--silver);"></div>
+            <span class="legend-name">Technology</span>
+            <span class="legend-fraction">$569 / 5</span>
+            <div class="legend-bar-wrap">
+              <div class="legend-bar-fill" style="width: 20%; background: linear-gradient(90deg, #7a8698, #c8d0dc);"></div>
+            </div>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: #6aa3e8;"></div>
+            <span class="legend-name">Health</span>
+            <span class="legend-fraction">$341 / 4</span>
+            <div class="legend-bar-wrap">
+              <div class="legend-bar-fill" style="width: 12%; background: linear-gradient(90deg, #2a5ba8, #6aa3e8);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Item list -->
+  <div class="fade-up">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+      <div class="list-toggle">
+        <button class="list-toggle-btn active">My Budget</button>
+        <button class="list-toggle-btn">Browse All</button>
+      </div>
+      <span style="font-family: var(--font-body); font-weight: 300; font-size: 12px; color: var(--muted);">Sorted by priority</span>
+    </div>
+
+    <div class="item-list">
+
+      <!-- Item 1: Convertible Car Seat — purchased -->
+      <div class="item-row">
+        <div class="item-stripe" style="background: var(--gold);"></div>
+        <div class="item-content">
+          <div class="item-name purchased">Convertible Car Seat</div>
+          <span class="badge-essential">Essential</span>
+        </div>
+        <div class="item-price">
+          <div class="item-price-est purchased">$299</div>
+        </div>
+        <div class="item-status">
+          <div class="status-purchased">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Purchased
+            &nbsp;<span class="status-purchased-price">$274</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 2: Baby Monitor — purchased -->
+      <div class="item-row">
+        <div class="item-stripe" style="background: var(--gold);"></div>
+        <div class="item-content">
+          <div class="item-name purchased">Video Baby Monitor</div>
+          <span class="badge-essential">Essential</span>
+        </div>
+        <div class="item-price">
+          <div class="item-price-est purchased">$149</div>
+        </div>
+        <div class="item-status">
+          <div class="status-purchased">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Purchased
+            &nbsp;<span class="status-purchased-price">$139</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 3: Crib & Mattress — not purchased -->
+      <div class="item-row">
+        <div class="item-stripe" style="background: var(--emerald-light);"></div>
+        <div class="item-content">
+          <div class="item-name">Crib &amp; Mattress Set</div>
+          <span class="badge-essential">Essential</span>
+        </div>
+        <div class="item-price">
+          <div class="item-price-est">$420</div>
+        </div>
+        <div class="item-status">
+          <div class="status-actions">
+            <button class="status-btn-buy">Mark Bought</button>
+            <button class="status-btn-skip">Skip</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 4: Nursing Pillow -->
+      <div class="item-row">
+        <div class="item-stripe" style="background: var(--gold);"></div>
+        <div class="item-content">
+          <div class="item-name">Nursing Pillow</div>
+          <span class="badge-essential">Essential</span>
+        </div>
+        <div class="item-price">
+          <div class="item-price-est">$45</div>
+        </div>
+        <div class="item-status">
+          <div class="status-actions">
+            <button class="status-btn-buy">Mark Bought</button>
+            <button class="status-btn-skip">Skip</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 5: Noise Machine -->
+      <div class="item-row">
+        <div class="item-stripe" style="background: var(--silver);"></div>
+        <div class="item-content">
+          <div class="item-name">White Noise Machine</div>
+          <span class="badge-nice">Nice to Have</span>
+        </div>
+        <div class="item-price">
+          <div class="item-price-est">$55</div>
+        </div>
+        <div class="item-status">
+          <div class="status-actions">
+            <button class="status-btn-buy">Mark Bought</button>
+            <button class="status-btn-skip">Skip</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 6: Baby Bouncer -->
+      <div class="item-row">
+        <div class="item-stripe" style="background: var(--silver);"></div>
+        <div class="item-content">
+          <div class="item-name">Baby Bouncer / Swing</div>
+          <span class="badge-nice">Nice to Have</span>
+        </div>
+        <div class="item-price">
+          <div class="item-price-est">$180</div>
+        </div>
+        <div class="item-status">
+          <div class="status-actions">
+            <button class="status-btn-buy">Mark Bought</button>
+            <button class="status-btn-skip">Skip</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Show more -->
+    <button class="btn-ghost" style="margin-top: 14px;">
+      Show 22 more items
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
+
+
+  <!-- ===== DIAMOND DIVIDER ===================================== -->
+  <div class="diamond-divider">
+    <span class="diamond-shape">&#9670;</span>
+  </div>
+
+
+  <!-- ===== CHECKLISTS ========================================= -->
+
+  <!-- Checklists header -->
+  <div class="section-header fade-up">
+    <div>
+      <h2 class="section-title display-silver">Checklists</h2>
+      <p class="section-subtitle">4 free &middot; 11 premium</p>
+    </div>
+  </div>
+
+  <div class="gold-line-header" style="margin-bottom: 32px;"></div>
+
+  <!-- Free checklists grid -->
+  <div class="checklist-grid fade-up">
+
+    <!-- Hospital Bag -->
+    <div class="card checklist-card">
+      <div class="checklist-card-header">
+        <div class="checklist-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+        </div>
+        <div>
+          <div class="checklist-name">Hospital Bag</div>
+          <div class="checklist-count">8 of 15 complete</div>
+        </div>
+      </div>
+      <div class="checklist-progress-bar">
+        <div class="checklist-progress-fill" style="width: 53%;"></div>
+      </div>
+      <div class="checklist-progress-label">53% complete</div>
+    </div>
+
+    <!-- Nursery Setup -->
+    <div class="card checklist-card">
+      <div class="checklist-card-header">
+        <div class="checklist-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 20h20"/>
+            <path d="M5 20V8a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12"/>
+            <path d="M5 12h14"/>
+            <path d="M9 7V4"/>
+            <path d="M15 7V4"/>
+          </svg>
+        </div>
+        <div>
+          <div class="checklist-name">Nursery Setup</div>
+          <div class="checklist-count">6 of 12 complete</div>
+        </div>
+      </div>
+      <div class="checklist-progress-bar">
+        <div class="checklist-progress-fill" style="width: 50%;"></div>
+      </div>
+      <div class="checklist-progress-label">50% complete</div>
+    </div>
+
+    <!-- Baby Essentials -->
+    <div class="card checklist-card">
+      <div class="checklist-card-header">
+        <div class="checklist-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 2h8l2 4H6L8 2z"/>
+            <path d="M6 6v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V6"/>
+            <path d="M9 12h6"/>
+          </svg>
+        </div>
+        <div>
+          <div class="checklist-name">Baby Essentials</div>
+          <div class="checklist-count">10 of 18 complete</div>
+        </div>
+      </div>
+      <div class="checklist-progress-bar">
+        <div class="checklist-progress-fill" style="width: 56%;"></div>
+      </div>
+      <div class="checklist-progress-label">56% complete</div>
+    </div>
+
+    <!-- Documents & Legal -->
+    <div class="card checklist-card">
+      <div class="checklist-card-header">
+        <div class="checklist-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </div>
+        <div>
+          <div class="checklist-name">Documents &amp; Legal</div>
+          <div class="checklist-count">3 of 8 complete</div>
+        </div>
+      </div>
+      <div class="checklist-progress-bar">
+        <div class="checklist-progress-fill" style="width: 37%;"></div>
+      </div>
+      <div class="checklist-progress-label">37% complete</div>
+    </div>
+
+  </div>
+
+  <!-- Overall progress -->
+  <div class="card overall-progress-card fade-up" style="max-width: 320px; margin: 0 auto 36px;">
+    <div class="progress-ring-wrap">
+      <svg width="100" height="100" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"/>
+        <circle cx="50" cy="50" r="40" fill="none"
+          stroke="url(#ringGrad)" stroke-width="8"
+          stroke-dasharray="251.3" stroke-dashoffset="122"
+          stroke-linecap="round"
+          transform="rotate(-90 50 50)"
+          class="ring-anim"/>
+        <defs>
+          <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#d4a853"/>
+            <stop offset="100%" stop-color="#2d8b6a"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="progress-ring-center">
+        <span class="progress-ring-number display">27/53</span>
+      </div>
+    </div>
+    <div class="progress-pct-label">51% Complete</div>
+    <p style="font-family: var(--font-body); font-weight: 300; font-size: 12px; color: var(--muted); margin-top: 6px; text-align: center;">Across all free checklists</p>
+  </div>
+
+  <!-- Premium upgrade banner -->
+  <div class="upgrade-banner fade-up">
+    <div class="upgrade-banner-inner">
+      <div class="upgrade-lock-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <div class="upgrade-text">
+        <div class="upgrade-title">Unlock 11 Premium Checklists</div>
+        <div class="upgrade-sub">From baby-proofing to pediatrician selection &mdash; everything covered for the first year</div>
+      </div>
+      <div class="upgrade-cta">
+        <button class="btn-gold-solid">
+          Upgrade &mdash; $4.99/mo
+        </button>
+        <div class="upgrade-cta-sub">or $39.99/year (save 33%)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Premium checklist grid -->
+  <div class="fade-up">
+    <p style="font-family: var(--font-body); font-weight: 300; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 20px;">Premium Checklists</p>
+    <div class="premium-grid">
+
+      <!-- Baby Proofing -->
+      <div class="card premium-card">
+        <div class="premium-tooltip">Premium</div>
+        <div class="premium-card-inner">
+          <div class="premium-card-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8c0cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="premium-card-name">Baby Proofing</div>
+          <div class="premium-card-count">24 items</div>
+        </div>
+        <div class="premium-lock-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+      <!-- Pediatrician -->
+      <div class="card premium-card">
+        <div class="premium-tooltip">Premium</div>
+        <div class="premium-card-inner">
+          <div class="premium-card-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8c0cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div class="premium-card-name">Pediatrician</div>
+          <div class="premium-card-count">16 items</div>
+        </div>
+        <div class="premium-lock-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+      <!-- Car Safety -->
+      <div class="card premium-card">
+        <div class="premium-tooltip">Premium</div>
+        <div class="premium-card-inner">
+          <div class="premium-card-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8c0cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5a2 2 0 0 1-2 2h-2m0 4a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 21a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/></svg>
+          </div>
+          <div class="premium-card-name">Car Safety</div>
+          <div class="premium-card-count">12 items</div>
+        </div>
+        <div class="premium-lock-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+      <!-- Baby Shower -->
+      <div class="card premium-card">
+        <div class="premium-tooltip">Premium</div>
+        <div class="premium-card-inner">
+          <div class="premium-card-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8c0cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="premium-card-name">Baby Shower</div>
+          <div class="premium-card-count">18 items</div>
+        </div>
+        <div class="premium-lock-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+      <!-- Travel Ready -->
+      <div class="card premium-card">
+        <div class="premium-tooltip">Premium</div>
+        <div class="premium-card-inner">
+          <div class="premium-card-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8c0cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div class="premium-card-name">Travel Ready</div>
+          <div class="premium-card-count">14 items</div>
+        </div>
+        <div class="premium-lock-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+      <!-- First Photos -->
+      <div class="card premium-card">
+        <div class="premium-tooltip">Premium</div>
+        <div class="premium-card-inner">
+          <div class="premium-card-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8c0cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <div class="premium-card-name">First Photos</div>
+          <div class="premium-card-count">10 items</div>
+        </div>
+        <div class="premium-lock-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+      <!-- Partner Prep -->
+      <div class="card premium-card">
+        <div class="premium-tooltip">Premium</div>
+        <div class="premium-card-inner">
+          <div class="premium-card-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8c0cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="premium-card-name">Partner Prep</div>
+          <div class="premium-card-count">20 items</div>
+        </div>
+        <div class="premium-lock-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+      <!-- Self-Care -->
+      <div class="card premium-card">
+        <div class="premium-tooltip">Premium</div>
+        <div class="premium-card-inner">
+          <div class="premium-card-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8c0cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          </div>
+          <div class="premium-card-name">Self-Care</div>
+          <div class="premium-card-count">15 items</div>
+        </div>
+        <div class="premium-lock-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+      <!-- Return to Work -->
+      <div class="card premium-card">
+        <div class="premium-tooltip">Premium</div>
+        <div class="premium-card-inner">
+          <div class="premium-card-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8c0cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <div class="premium-card-name">Return to Work</div>
+          <div class="premium-card-count">13 items</div>
+        </div>
+        <div class="premium-lock-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+      <!-- Postpartum Home -->
+      <div class="card premium-card">
+        <div class="premium-tooltip">Premium</div>
+        <div class="premium-card-inner">
+          <div class="premium-card-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8c0cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div class="premium-card-name">Postpartum Home</div>
+          <div class="premium-card-count">17 items</div>
+        </div>
+        <div class="premium-lock-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+      <!-- First Year Milestones -->
+      <div class="card premium-card">
+        <div class="premium-tooltip">Premium</div>
+        <div class="premium-card-inner">
+          <div class="premium-card-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b8c0cc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="premium-card-name">First Year Milestones</div>
+          <div class="premium-card-count">22 items</div>
+        </div>
+        <div class="premium-lock-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+
+<!-- ===== BOTTOM NAV ========================================= -->
+<nav class="bottom-nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <span class="nav-label">Home</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 11 12 14 22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+      <span class="nav-label">Tasks</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+      </svg>
+      <span class="nav-label">Briefing</span>
+    </a>
+    <a href="#" class="nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/>
+        <line x1="12" y1="20" x2="12" y2="4"/>
+        <line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      <span class="nav-label">Tracker</span>
+    </a>
+    <a href="#" class="nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+      </svg>
+      <span class="nav-label">More</span>
+    </a>
+  </div>
+</nav>
+
+
+<script>
+  // ─── Tier selector ────────────────────────────────────────
+  const tierData = {
+    0: { label: 'Budget',    total: '$2,847', items: '28 items across 4 categories', purchased: '$1,234', remaining: '$1,613' },
+    1: { label: 'Mid-Range', total: '$4,285', items: '28 items across 4 categories', purchased: '$1,234', remaining: '$3,051' },
+    2: { label: 'Premium',   total: '$8,640', items: '28 items across 4 categories', purchased: '$1,234', remaining: '$7,406' },
+  };
+
+  function selectTier(el, index) {
+    document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+
+    const indicator = document.getElementById('tierIndicator');
+    const width = el.offsetWidth;
+    const left = el.offsetLeft - 4;
+    indicator.style.width = width + 'px';
+    indicator.style.transform = `translateX(${left}px)`;
+
+    const d = tierData[index];
+    document.getElementById('totalAmount').textContent = d.total;
+    document.getElementById('totalItems').textContent = d.items;
+    document.getElementById('purchasedAmount').textContent = d.purchased;
+    document.getElementById('remainingAmount').textContent = d.remaining;
+  }
+
+  // ─── Donut chart draw-on animation ────────────────────────
+  // Segments: [total_circumference, offset_start, segment_arc]
+  // Circumference = 2 * pi * 78 ≈ 490.1
+  const C = 490.1;
+  const segments = [
+    { el: document.querySelectorAll('.donut-segment')[0], arc: 196, offset: C - 196 },
+    { el: document.querySelectorAll('.donut-segment')[1], arc: 137, offset: C - 137 - 196 + C },
+    { el: document.querySelectorAll('.donut-segment')[2], arc: 98,  offset: C - 98  - 196 - 137 + C + C },
+    { el: document.querySelectorAll('.donut-segment')[3], arc: 59,  offset: C - 59  - 196 - 137 - 98 + C + C + C },
+  ];
+
+  // Start all segments collapsed (dashoffset = C = fully hidden)
+  segments.forEach(s => {
+    s.el.style.transition = 'none';
+    s.el.setAttribute('stroke-dashoffset', C);
+  });
+
+  // Animate them in sequence after page load
+  window.addEventListener('load', () => {
+    let delay = 200;
+    segments.forEach((s, i) => {
+      setTimeout(() => {
+        s.el.style.transition = `stroke-dashoffset ${1.2 + i * 0.1}s cubic-bezier(0.4, 0, 0.2, 1)`;
+        s.el.setAttribute('stroke-dashoffset', s.offset);
+      }, delay);
+      delay += 200;
+    });
+  });
+
+  // ─── Scroll fade-up ───────────────────────────────────────
+  const fadeEls = document.querySelectorAll('.fade-up');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  fadeEls.forEach(el => observer.observe(el));
+
+  // ─── List toggle ──────────────────────────────────────────
+  document.querySelectorAll('.list-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.list-toggle-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // ─── Initialize tier indicator position ──────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    const firstBtn = document.querySelector('.tier-btn');
+    if (firstBtn) {
+      const indicator = document.getElementById('tierIndicator');
+      indicator.style.width = firstBtn.offsetWidth + 'px';
+    }
+
+    // Trigger visible for elements already in view
+    fadeEls.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight) {
+        el.classList.add('visible');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

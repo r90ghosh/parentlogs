@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Dashboard (V2 Redesign)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* ── Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #030303;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 28px 28px;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+      color: #fff;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 99px; }
+
+    /* ── Gradient Text ── */
+    .grad-text {
+      background: linear-gradient(135deg, #818cf8, #f43f5e, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .grad-text-indigo {
+      background: linear-gradient(135deg, #818cf8, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .grad-text-emerald {
+      background: linear-gradient(135deg, #34d399, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .grad-text-rose {
+      background: linear-gradient(135deg, #fb7185, #f43f5e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Glass Card Base ── */
+    .glass-card {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      box-shadow:
+        0 -20px 80px -20px rgba(255,255,255,0.07) inset,
+        0 4px 32px rgba(0,0,0,0.4);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .glass-card:hover {
+      border-color: rgba(255,255,255,0.15);
+      box-shadow:
+        0 -20px 80px -20px rgba(255,255,255,0.1) inset,
+        0 8px 48px rgba(0,0,0,0.5);
+      transform: translateY(-2px);
+    }
+
+    /* ── Tinted Glass Cards ── */
+    .glass-indigo {
+      background: linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(255,255,255,0.03) 100%);
+    }
+    .glass-violet {
+      background: linear-gradient(135deg, rgba(139,92,246,0.08) 0%, rgba(255,255,255,0.03) 100%);
+    }
+    .glass-emerald {
+      background: linear-gradient(135deg, rgba(16,185,129,0.07) 0%, rgba(255,255,255,0.03) 100%);
+    }
+    .glass-rose {
+      background: linear-gradient(135deg, rgba(244,63,94,0.07) 0%, rgba(255,255,255,0.03) 100%);
+    }
+
+    /* ── Animated Gradient Border (rotating conic) ── */
+    .grad-border-card {
+      position: relative;
+      border-radius: 20px;
+      padding: 1px;
+      background: transparent;
+    }
+    .grad-border-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 21px;
+      padding: 1px;
+      background: conic-gradient(
+        from var(--angle, 0deg),
+        #818cf8, #f43f5e, #a78bfa, #818cf8
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: grad-border-spin 4s linear infinite;
+    }
+    .grad-border-inner {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 19px;
+      box-shadow: 0 -20px 80px -20px rgba(255,255,255,0.07) inset;
+    }
+
+    /* ── Left Accent Border ── */
+    .left-accent::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 16px;
+      bottom: 16px;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      background: linear-gradient(180deg, #818cf8, #a78bfa);
+      animation: pulse-glow 2.5s ease-in-out infinite;
+    }
+
+    /* ── Floating Nav ── */
+    .floating-nav {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(40px) saturate(200%);
+      -webkit-backdrop-filter: blur(40px) saturate(200%);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      box-shadow:
+        0 8px 40px rgba(0,0,0,0.6),
+        0 -1px 0 rgba(255,255,255,0.05) inset;
+    }
+
+    .nav-active-bg {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 999px;
+      box-shadow: 0 0 20px rgba(99,102,241,0.5), 0 0 40px rgba(99,102,241,0.2);
+      animation: pulse-glow 2.5s ease-in-out infinite;
+    }
+
+    /* ── Emoji Selector ── */
+    .mood-emoji {
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      border: 2px solid transparent;
+      background: rgba(255,255,255,0.04);
+      position: relative;
+    }
+    .mood-emoji:hover {
+      transform: scale(1.22) translateY(-4px);
+      border-color: rgba(255,255,255,0.25);
+    }
+    .mood-emoji.selected {
+      transform: scale(1.22) translateY(-4px);
+      border-color: #818cf8;
+      box-shadow: 0 0 0 4px rgba(129,140,248,0.25), 0 8px 24px rgba(129,140,248,0.3);
+      background: rgba(129,140,248,0.12);
+    }
+    .mood-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      margin-top: 6px;
+      transition: color 0.2s ease;
+    }
+    .mood-emoji:hover + .mood-label,
+    .mood-emoji.selected + .mood-label {
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* ── Task Checkbox ── */
+    .task-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .task-check:hover {
+      border-color: #818cf8;
+      background: rgba(129,140,248,0.15);
+      transform: scale(1.1);
+    }
+    .task-check.checked {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-color: transparent;
+      transform: scale(1.15);
+      box-shadow: 0 0 12px rgba(99,102,241,0.5);
+    }
+
+    /* ── Progress Ring ── */
+    .progress-ring-circle {
+      transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+    /* ── Mini Progress Bar ── */
+    .mini-bar {
+      height: 3px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .mini-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 1s ease;
+    }
+
+    /* ── Quick Action Buttons ── */
+    .quick-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+      flex-direction: column;
+      gap: 0;
+    }
+    .quick-btn:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.18);
+      transform: scale(1.1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    /* ── Notification Dot ── */
+    .notif-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f43f5e;
+      border: 1.5px solid #030303;
+      animation: pulse-notif 1.8s ease-in-out infinite;
+    }
+
+    /* ── Avatar gradient border ── */
+    .avatar-ring {
+      padding: 2px;
+      background: linear-gradient(135deg, #818cf8, #f43f5e, #a78bfa);
+      border-radius: 50%;
+    }
+    .avatar-inner {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #1a1a2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #a78bfa;
+    }
+
+    /* ── Streak Badge ── */
+    .streak-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(251,146,60,0.15);
+      border: 1px solid rgba(251,146,60,0.3);
+      border-radius: 99px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #fb923c;
+      animation: streak-fire 2s ease-in-out infinite;
+    }
+
+    /* ── Pulsing Dot ── */
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: pulse-dot-anim 2s ease-in-out infinite;
+    }
+
+    /* ── Briefing Progress Dots ── */
+    .prog-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+
+    /* ── Sparkle animated ── */
+    .sparkle {
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    /* ── Upgrade "Read Briefing" button ── */
+    .grad-btn {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+      border: none;
+      border-radius: 99px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+    }
+    .grad-btn:hover {
+      opacity: 0.92;
+      transform: scale(1.03);
+      box-shadow: 0 6px 30px rgba(99,102,241,0.5);
+    }
+
+    /* ── Briefing link arrow ── */
+    .arrow-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: rgba(255,255,255,0.5);
+      font-size: 13px;
+      cursor: pointer;
+      transition: color 0.2s ease, gap 0.2s ease;
+    }
+    .arrow-link:hover {
+      color: rgba(255,255,255,0.9);
+      gap: 8px;
+    }
+
+    /* ──────────────── KEYFRAMES ──────────────── */
+
+    @keyframes grad-border-spin {
+      from { --angle: 0deg; }
+      to { --angle: 360deg; }
+    }
+    @property --angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.65; }
+    }
+
+    @keyframes pulse-notif {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.7; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes streak-fire {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    @keyframes pulse-dot-anim {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.5; }
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes counter-in {
+      from { opacity: 0; transform: scale(0.7); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ── Staggered fade-up for cards ── */
+    .card-1 { animation: fade-up 0.5s ease both 0.05s; }
+    .card-2 { animation: fade-up 0.5s ease both 0.12s; }
+    .card-3 { animation: fade-up 0.5s ease both 0.19s; }
+    .card-4 { animation: fade-up 0.5s ease both 0.26s; }
+    .card-5 { animation: fade-up 0.5s ease both 0.33s; }
+    .card-6 { animation: fade-up 0.5s ease both 0.40s; }
+    .card-7 { animation: fade-up 0.5s ease both 0.47s; }
+
+    /* ── Bento Grid ── */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: minmax(160px, auto);
+      gap: 14px;
+    }
+
+    .col-span-3 { grid-column: span 3; }
+    .col-span-2 { grid-column: span 2; }
+    .col-span-1 { grid-column: span 1; }
+
+    /* ── Mobile: single column ── */
+    @media (max-width: 700px) {
+      .bento-grid { grid-template-columns: 1fr; }
+      .col-span-3, .col-span-2, .col-span-1 { grid-column: span 1; }
+      .floating-nav { max-width: calc(100vw - 40px); }
+    }
+
+    /* ── No hover on touch ── */
+    @media (hover: none) {
+      .glass-card:hover { transform: none; }
+    }
+
+    /* ── Decorative blobs ── */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient color blobs -->
+  <div class="blob" style="width:500px;height:500px;background:rgba(99,102,241,0.07);top:-150px;left:-150px;"></div>
+  <div class="blob" style="width:400px;height:400px;background:rgba(244,63,94,0.05);top:200px;right:-100px;"></div>
+  <div class="blob" style="width:350px;height:350px;background:rgba(167,139,250,0.05);bottom:100px;left:30%;"></div>
+
+  <!-- ════════════════════════════════════════════
+       MAIN WRAPPER
+  ════════════════════════════════════════════ -->
+  <div style="position:relative;z-index:1;max-width:860px;margin:0 auto;padding:24px 18px 120px;">
+
+    <!-- ── TOP BAR ── -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;">
+      <div>
+        <div style="font-size:22px;font-weight:700;line-height:1.2;letter-spacing:-0.5px;">
+          Good morning, <span class="grad-text">Alex</span>
+        </div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.38);margin-top:4px;font-weight:500;">
+          Week 24 &nbsp;·&nbsp; Second Trimester
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <!-- Notification Bell -->
+        <div style="position:relative;cursor:pointer;">
+          <div style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);display:flex;align-items:center;justify-content:center;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </div>
+          <div class="notif-dot" style="position:absolute;top:2px;right:2px;"></div>
+        </div>
+        <!-- Avatar -->
+        <div class="avatar-ring">
+          <div class="avatar-inner">A</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ BENTO GRID ════ -->
+    <div class="bento-grid">
+
+      <!-- ══════════════════════════════════════════
+           ROW 1 — MOOD CHECK-IN (Full Width)
+      ══════════════════════════════════════════ -->
+      <div class="glass-card col-span-3 card-1" style="padding:28px 28px 24px;">
+
+        <!-- NOT checked-in state (default view) -->
+        <div id="mood-unchecked">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <div>
+              <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;">How are you feeling today?</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;">Your daily check-in — takes 5 seconds</div>
+            </div>
+            <div class="pulse-dot" style="background:linear-gradient(135deg,#818cf8,#f43f5e);"></div>
+          </div>
+
+          <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;">
+            <!-- Struggling -->
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div class="mood-emoji" onclick="selectMood(this,'#ef4444')" data-label="Struggling">😔</div>
+              <div class="mood-label">Struggling</div>
+            </div>
+            <!-- Rough -->
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div class="mood-emoji" onclick="selectMood(this,'#f97316')" data-label="Rough">😕</div>
+              <div class="mood-label">Rough</div>
+            </div>
+            <!-- Okay -->
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div class="mood-emoji" onclick="selectMood(this,'#eab308')" data-label="Okay">😐</div>
+              <div class="mood-label">Okay</div>
+            </div>
+            <!-- Good -->
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div class="mood-emoji" onclick="selectMood(this,'#22c55e')" data-label="Good">😊</div>
+              <div class="mood-label">Good</div>
+            </div>
+            <!-- Great -->
+            <div style="display:flex;flex-direction:column;align-items:center;">
+              <div class="mood-emoji" onclick="selectMood(this,'#818cf8')" data-label="Great">😄</div>
+              <div class="mood-label">Great</div>
+            </div>
+          </div>
+
+          <!-- Log button (hidden until selection) -->
+          <div id="mood-log-btn" style="margin-top:20px;display:none;">
+            <button class="grad-btn" onclick="submitMood()" style="padding:10px 28px;font-size:14px;">
+              Log Check-in
+            </button>
+          </div>
+        </div>
+
+        <!-- Checked-in compact state (hidden by default) -->
+        <div id="mood-checked" style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div style="font-size:44px;line-height:1;">😊</div>
+              <div>
+                <div style="font-size:16px;font-weight:700;">Feeling Good today</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px;">Logged 8:14 AM</div>
+              </div>
+            </div>
+            <div class="streak-badge">
+              <span>🔥</span>
+              <span>4-day streak</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           ROW 2 — BRIEFING (2 cols) + TASKS (1 col)
+      ══════════════════════════════════════════ -->
+
+      <!-- Briefing Card -->
+      <div class="glass-card glass-indigo col-span-2 card-2 left-accent" style="padding:24px 24px 22px 28px;">
+        <!-- Decorative week number -->
+        <div style="position:absolute;right:-10px;top:-20px;font-size:120px;font-weight:900;color:rgba(129,140,248,0.06);line-height:1;pointer-events:none;user-select:none;">24</div>
+
+        <div style="position:relative;z-index:1;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+            <span style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(129,140,248,0.8);background:rgba(129,140,248,0.12);border-radius:99px;padding:3px 10px;">Week 24 Briefing</span>
+          </div>
+
+          <div style="font-size:20px;font-weight:800;letter-spacing:-0.5px;line-height:1.25;margin-bottom:10px;">
+            Your Baby Can Hear<br/>Your Voice Now
+          </div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6;margin-bottom:20px;">
+            At 24 weeks, your baby's ears are fully formed. Research shows they recognize your voice at birth.
+          </div>
+
+          <!-- Section progress dots -->
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:18px;">
+            <div class="prog-dot" style="background:linear-gradient(135deg,#818cf8,#a78bfa);box-shadow:0 0 8px rgba(129,140,248,0.5);"></div>
+            <div class="prog-dot" style="background:linear-gradient(135deg,#818cf8,#a78bfa);box-shadow:0 0 8px rgba(129,140,248,0.5);"></div>
+            <div class="prog-dot" style="background:rgba(255,255,255,0.12);"></div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-left:4px;">2 of 3 sections</div>
+          </div>
+
+          <a class="arrow-link" href="#">
+            Read full briefing
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Tasks Due Card -->
+      <div class="glass-card col-span-1 card-3" style="padding:22px 20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.35);">Due This Week</div>
+        </div>
+        <div style="font-size:44px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:14px;" class="grad-text">5</div>
+
+        <!-- Task rows -->
+        <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:16px;">
+          <!-- Task 1 -->
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div style="font-size:12.5px;color:rgba(255,255,255,0.75);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Tour birthing center</div>
+            <div style="width:8px;height:8px;border-radius:50%;background:#818cf8;flex-shrink:0;"></div>
+          </div>
+          <!-- Task 2 -->
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div style="font-size:12.5px;color:rgba(255,255,255,0.75);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Review birth plan</div>
+            <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;"></div>
+          </div>
+          <!-- Task 3 -->
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div style="font-size:12.5px;color:rgba(255,255,255,0.75);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Set up nursery budget</div>
+            <div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;flex-shrink:0;"></div>
+          </div>
+        </div>
+
+        <a class="arrow-link" href="#">
+          View all 5
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           ROW 3 — JOURNEY + QUICK ACTIONS + BUDGET
+      ══════════════════════════════════════════ -->
+
+      <!-- Dad Journey -->
+      <div class="glass-card glass-violet col-span-1 card-4" style="padding:22px 20px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:rgba(167,139,250,0.7);margin-bottom:14px;">On Your Mind</div>
+
+        <!-- Challenge tile 1 -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer;transition:background 0.2s ease,border-color 0.2s ease;"
+             onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.12)'"
+             onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.07)'">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:#a78bfa;box-shadow:0 0 8px rgba(167,139,250,0.6);flex-shrink:0;animation:pulse-dot-anim 2s ease-in-out infinite;"></div>
+            <div style="font-size:13px;font-weight:600;">Managing Anxiety</div>
+          </div>
+          <div class="mini-bar">
+            <div class="mini-bar-fill" style="width:35%;background:linear-gradient(90deg,#818cf8,#a78bfa);"></div>
+          </div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:5px;">35% explored</div>
+        </div>
+
+        <!-- Challenge tile 2 -->
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px;cursor:pointer;transition:background 0.2s ease,border-color 0.2s ease;"
+             onmouseover="this.style.background='rgba(255,255,255,0.07)';this.style.borderColor='rgba(255,255,255,0.12)'"
+             onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.07)'">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,0.6);flex-shrink:0;animation:pulse-dot-anim 2.4s ease-in-out infinite;"></div>
+            <div style="font-size:13px;font-weight:600;">Financial Planning</div>
+          </div>
+          <div class="mini-bar">
+            <div class="mini-bar-fill" style="width:60%;background:linear-gradient(90deg,#22c55e,#10b981);"></div>
+          </div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:5px;">60% explored</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="glass-card col-span-1 card-5" style="padding:22px 20px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:18px;">Quick Actions</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <!-- Budget -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <button class="quick-btn" onclick="this.style.background='rgba(129,140,248,0.2)'">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="url(#g-budget)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <defs>
+                  <linearGradient id="g-budget" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#818cf8"/>
+                    <stop offset="100%" stop-color="#a78bfa"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="12" cy="12" r="10"/><path d="M12 6v2m0 8v2M8.5 9.5C8.5 8.12 10.07 7 12 7s3.5 1.12 3.5 2.5c0 2-3.5 2.5-3.5 4.5 0 1.38 1.57 2.5 3.5 2.5s3.5-1.12 3.5-2.5"/>
+              </svg>
+            </button>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">Budget</div>
+          </div>
+          <!-- Checklist -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <button class="quick-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="url(#g-check)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <defs>
+                  <linearGradient id="g-check" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#22c55e"/>
+                    <stop offset="100%" stop-color="#10b981"/>
+                  </linearGradient>
+                </defs>
+                <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+              </svg>
+            </button>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">Checklist</div>
+          </div>
+          <!-- Partner -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <button class="quick-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="url(#g-partner)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <defs>
+                  <linearGradient id="g-partner" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#fb7185"/>
+                    <stop offset="100%" stop-color="#f43f5e"/>
+                  </linearGradient>
+                </defs>
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </button>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">Partner</div>
+          </div>
+          <!-- Quick Log -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <button class="quick-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="url(#g-log)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <defs>
+                  <linearGradient id="g-log" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#f59e0b"/>
+                    <stop offset="100%" stop-color="#fb923c"/>
+                  </linearGradient>
+                </defs>
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+              </svg>
+            </button>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">Quick Log</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Budget Snapshot -->
+      <div class="glass-card glass-emerald col-span-1 card-6" style="padding:22px 20px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:rgba(52,211,153,0.7);margin-bottom:14px;">Budget Snapshot</div>
+
+        <!-- SVG Progress Ring -->
+        <div style="display:flex;align-items:center;gap:18px;">
+          <div style="position:relative;flex-shrink:0;">
+            <svg width="72" height="72" viewBox="0 0 72 72">
+              <defs>
+                <linearGradient id="ring-grad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#34d399"/>
+                  <stop offset="100%" stop-color="#10b981"/>
+                </linearGradient>
+              </defs>
+              <!-- Track -->
+              <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6"/>
+              <!-- Progress (34% of circumference ≈ 59.7 of 175.9) -->
+              <circle
+                cx="36" cy="36" r="28"
+                fill="none"
+                stroke="url(#ring-grad)"
+                stroke-width="6"
+                stroke-linecap="round"
+                stroke-dasharray="175.9"
+                stroke-dashoffset="116.2"
+                class="progress-ring-circle"
+                style="filter:drop-shadow(0 0 6px rgba(52,211,153,0.5));"
+              />
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#34d399;">34%</div>
+          </div>
+
+          <div>
+            <div style="font-size:28px;font-weight:900;letter-spacing:-1px;line-height:1;" class="grad-text-emerald">$4,850</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.35);margin-top:4px;line-height:1.4;">of $14,200<br/>estimated</div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:5px;">
+            <span>Spent</span>
+            <span>Remaining: $9,350</span>
+          </div>
+          <div class="mini-bar">
+            <div class="mini-bar-fill" style="width:34%;background:linear-gradient(90deg,#34d399,#10b981);box-shadow:0 0 10px rgba(52,211,153,0.4);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           ROW 4 — UPGRADE BANNER (Full Width)
+      ══════════════════════════════════════════ -->
+      <div class="grad-border-card col-span-3 card-7">
+        <div class="grad-border-inner" style="padding:22px 24px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+
+            <div style="display:flex;align-items:center;gap:14px;">
+              <div class="sparkle" style="font-size:28px;">✦</div>
+              <div>
+                <div style="font-size:15px;font-weight:800;letter-spacing:-0.3px;">Unlock the full experience</div>
+                <div style="display:flex;align-items:center;gap:14px;margin-top:6px;flex-wrap:wrap;">
+                  <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,0.5);">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    Full briefing library
+                  </span>
+                  <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,0.5);">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    Push notifications
+                  </span>
+                  <span style="display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,0.5);">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                    All 7 dad challenges
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="font-size:11px;color:rgba(255,255,255,0.3);">From $4.99/mo</div>
+              <button class="grad-btn" style="padding:10px 24px;font-size:13px;white-space:nowrap;">
+                Upgrade Now
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /bento-grid -->
+  </div><!-- /wrapper -->
+
+  <!-- ════════════════════════════════════════════
+       FLOATING BOTTOM NAV
+  ════════════════════════════════════════════ -->
+  <div style="position:fixed;bottom:24px;left:0;right:0;display:flex;justify-content:center;z-index:100;">
+    <nav class="floating-nav" style="display:flex;align-items:center;gap:4px;padding:8px 12px;">
+
+      <!-- Home (active) -->
+      <button onclick="setActiveNav(this)" style="position:relative;width:52px;height:48px;border:none;background:transparent;cursor:pointer;border-radius:999px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;">
+        <div class="nav-active-bg" style="position:absolute;inset:0;"></div>
+        <svg style="position:relative;z-index:1;" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="0">
+          <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+      </button>
+
+      <!-- Tasks -->
+      <button onclick="setActiveNav(this)" style="width:52px;height:48px;border:none;background:transparent;cursor:pointer;border-radius:999px;display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;"
+              onmouseover="this.style.background='rgba(255,255,255,0.06)'"
+              onmouseout="this.style.background='transparent'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+      </button>
+
+      <!-- Briefing -->
+      <button onclick="setActiveNav(this)" style="width:52px;height:48px;border:none;background:transparent;cursor:pointer;border-radius:999px;display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;"
+              onmouseover="this.style.background='rgba(255,255,255,0.06)'"
+              onmouseout="this.style.background='transparent'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+      </button>
+
+      <!-- Tracker -->
+      <button onclick="setActiveNav(this)" style="width:52px;height:48px;border:none;background:transparent;cursor:pointer;border-radius:999px;display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;"
+              onmouseover="this.style.background='rgba(255,255,255,0.06)'"
+              onmouseout="this.style.background='transparent'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </button>
+
+      <!-- More -->
+      <button onclick="setActiveNav(this)" style="width:52px;height:48px;border:none;background:transparent;cursor:pointer;border-radius:999px;display:flex;align-items:center;justify-content:center;transition:background 0.2s ease;"
+              onmouseover="this.style.background='rgba(255,255,255,0.06)'"
+              onmouseout="this.style.background='transparent'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="5" r="1" fill="rgba(255,255,255,0.45)"/>
+          <circle cx="12" cy="12" r="1" fill="rgba(255,255,255,0.45)"/>
+          <circle cx="12" cy="19" r="1" fill="rgba(255,255,255,0.45)"/>
+        </svg>
+      </button>
+
+    </nav>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       JAVASCRIPT — Interactions
+  ════════════════════════════════════════════ -->
+  <script>
+    /* ── Mood Emoji Selection ── */
+    let selectedMood = null;
+    function selectMood(el, color) {
+      // Deselect all
+      document.querySelectorAll('.mood-emoji').forEach(e => e.classList.remove('selected'));
+      // Select clicked
+      el.classList.add('selected');
+      el.style.boxShadow = `0 0 0 4px ${color}33, 0 8px 24px ${color}44`;
+      el.style.borderColor = color;
+      el.style.background = color + '1a';
+      selectedMood = el.getAttribute('data-label');
+      document.getElementById('mood-log-btn').style.display = 'block';
+    }
+
+    function submitMood() {
+      const unchecked = document.getElementById('mood-unchecked');
+      const checked = document.getElementById('mood-checked');
+      unchecked.style.opacity = '0';
+      unchecked.style.transform = 'scale(0.95)';
+      unchecked.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      setTimeout(() => {
+        unchecked.style.display = 'none';
+        checked.style.display = 'block';
+        checked.style.opacity = '0';
+        checked.style.transform = 'scale(0.95)';
+        checked.style.transition = 'opacity 0.4s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+        requestAnimationFrame(() => {
+          checked.style.opacity = '1';
+          checked.style.transform = 'scale(1)';
+        });
+      }, 300);
+    }
+
+    /* ── Task Checkbox Toggle ── */
+    function toggleTask(el) {
+      const isChecked = el.classList.contains('checked');
+      if (isChecked) {
+        el.classList.remove('checked');
+        el.innerHTML = '';
+        el.style.background = '';
+        el.style.borderColor = '';
+        el.style.boxShadow = '';
+      } else {
+        el.classList.add('checked');
+        el.innerHTML = `
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6 9 17l-5-5"/>
+          </svg>`;
+        el.style.background = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
+        el.style.borderColor = 'transparent';
+        el.style.boxShadow = '0 0 14px rgba(99,102,241,0.55)';
+
+        // Strike parent task text
+        const textEl = el.nextElementSibling;
+        if (textEl) {
+          textEl.style.textDecoration = 'line-through';
+          textEl.style.color = 'rgba(255,255,255,0.3)';
+          textEl.style.transition = 'color 0.2s ease';
+        }
+      }
+    }
+
+    /* ── Floating Nav Active State ── */
+    const navBtns = document.querySelectorAll('nav button');
+    function setActiveNav(clicked) {
+      navBtns.forEach(btn => {
+        // Remove active bg
+        const bg = btn.querySelector('.nav-active-bg');
+        if (bg) bg.remove();
+        // Reset icon color
+        const icon = btn.querySelector('svg');
+        if (icon) {
+          icon.setAttribute('fill', 'none');
+          icon.querySelectorAll('path, circle, polyline, polygon, rect').forEach(el => {
+            el.setAttribute('stroke', 'rgba(255,255,255,0.45)');
+          });
+        }
+        btn.style.transform = 'scale(1)';
+      });
+
+      // Add active bg to clicked
+      const activeBg = document.createElement('div');
+      activeBg.className = 'nav-active-bg';
+      activeBg.style.cssText = 'position:absolute;inset:0;';
+      clicked.style.position = 'relative';
+      clicked.insertBefore(activeBg, clicked.firstChild);
+      clicked.style.transform = 'scale(1.05)';
+
+      // White icon
+      const icon = clicked.querySelector('svg');
+      if (icon) {
+        icon.setAttribute('fill', 'white');
+        icon.setAttribute('stroke', 'white');
+        icon.querySelectorAll('path, circle').forEach(el => {
+          el.setAttribute('stroke', 'white');
+          el.setAttribute('fill', 'white');
+        });
+      }
+    }
+
+    /* ── Animate progress ring on load ── */
+    window.addEventListener('DOMContentLoaded', () => {
+      const ring = document.querySelector('.progress-ring-circle');
+      if (ring) {
+        ring.style.strokeDashoffset = '175.9'; // start empty
+        setTimeout(() => {
+          ring.style.strokeDashoffset = '116.2'; // animate to 34%
+        }, 600);
+      }
+
+      /* Animate mini bars */
+      document.querySelectorAll('.mini-bar-fill').forEach((bar, i) => {
+        const targetWidth = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+          bar.style.width = targetWidth;
+        }, 400 + i * 100);
+      });
+
+      /* Animate large counter number */
+      animateCounter(document.querySelector('.grad-text'), 0, 5, 600);
+    });
+
+    function animateCounter(el, start, end, duration) {
+      if (!el) return;
+      const range = end - start;
+      const startTime = performance.now();
+      function step(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(start + range * eased);
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+  </script>
+
+</body>
+</html>

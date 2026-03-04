@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Onboarding &amp; Premium</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Jost:wght@300;400;500;600&family=Karla:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── CSS Variables ─────────────────────────────────────────────── */
+    :root {
+      --bg:          #12100e;
+      --surface:     #1a1714;
+      --card:        #201c18;
+      --card-hover:  #282420;
+      --border:      rgba(237, 230, 220, 0.08);
+      --border-hover:rgba(237, 230, 220, 0.15);
+      --copper:      #c4703f;
+      --copper-glow: rgba(196, 112, 63, 0.25);
+      --gold:        #d4a853;
+      --gold-glow:   rgba(212, 168, 83, 0.25);
+      --cream:       #ede6dc;
+      --muted:       #7a6f62;
+      --dim:         #4a4239;
+      --sage:        #6b8f71;
+      --sky:         #5b9bd5;
+      --coral:       #d4836b;
+      --white:       #faf6f0;
+    }
+
+    /* ── Reset & Base ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-weight: 400;
+      line-height: 1.65;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── Subtle paper texture on bg ────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 400px 400px;
+    }
+
+    /* ── Typography helpers ────────────────────────────────────────── */
+    .font-display  { font-family: 'Playfair Display', serif; }
+    .font-body     { font-family: 'Jost', sans-serif; }
+    .font-ui       { font-family: 'Karla', sans-serif; }
+
+    .text-copper   { color: var(--copper); }
+    .text-gold     { color: var(--gold); }
+    .text-cream    { color: var(--cream); }
+    .text-muted    { color: var(--muted); }
+    .text-dim      { color: var(--dim); }
+    .text-sage     { color: var(--sage); }
+    .text-sky      { color: var(--sky); }
+
+    /* ── Outer layout ──────────────────────────────────────────────── */
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+      padding: 48px 24px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 48px;
+    }
+
+    /* ── Section label ─────────────────────────────────────────────── */
+    .section-label {
+      font-family: 'Karla', sans-serif;
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    /* ── Onboarding card shell ─────────────────────────────────────── */
+    .ob-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Warm inner glow at top */
+    .ob-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(196,112,63,0.4), transparent);
+    }
+
+    /* ── Step indicator (thin bars) ────────────────────────────────── */
+    .step-indicator {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 36px;
+    }
+
+    .step-bar {
+      flex: 1;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--dim);
+      position: relative;
+      overflow: visible;
+    }
+
+    .step-bar.active {
+      background: var(--copper);
+    }
+
+    .step-bar.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--copper);
+      box-shadow: 0 0 6px var(--copper-glow);
+    }
+
+    .step-bar.done {
+      background: var(--copper);
+      opacity: 0.55;
+    }
+
+    /* ── Logo mark ─────────────────────────────────────────────────── */
+    .ob-logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.12em;
+      color: var(--cream);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .ob-logo-line {
+      width: 32px;
+      height: 2px;
+      background: var(--copper);
+      border-radius: 1px;
+      margin-bottom: 28px;
+    }
+
+    /* ── Heading ───────────────────────────────────────────────────── */
+    .ob-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 28px;
+      line-height: 1.25;
+      color: var(--cream);
+      margin-bottom: 8px;
+    }
+
+    .ob-subheading {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    /* ── Feature list ──────────────────────────────────────────────── */
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(8px);
+      animation: featureReveal 0.5s ease forwards;
+    }
+
+    .feature-item:nth-child(1) { animation-delay: 0.15s; }
+    .feature-item:nth-child(2) { animation-delay: 0.25s; }
+    .feature-item:nth-child(3) { animation-delay: 0.35s; }
+    .feature-item:nth-child(4) { animation-delay: 0.45s; }
+
+    @keyframes featureReveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .feature-check {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      background: var(--copper);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .feature-check svg {
+      width: 9px;
+      height: 9px;
+      stroke: var(--white);
+      stroke-width: 2.5;
+      fill: none;
+    }
+
+    .feature-text {
+      font-family: 'Jost', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--cream);
+      line-height: 1.5;
+    }
+
+    /* ── Buttons ───────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-family: 'Karla', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-copper {
+      background: var(--copper);
+      color: var(--white);
+    }
+
+    .btn-copper:hover {
+      background: #d4814f;
+      box-shadow: 0 4px 20px rgba(196,112,63,0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-copper-outline {
+      background: transparent;
+      color: var(--copper);
+      border: 1.5px solid var(--copper);
+    }
+
+    .btn-copper-outline:hover {
+      background: rgba(196,112,63,0.08);
+      transform: translateY(-1px);
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #1a1410;
+    }
+
+    .btn-gold:hover {
+      background: #dfb560;
+      box-shadow: 0 4px 24px rgba(212,168,83,0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--cream);
+      border: 1.5px solid var(--border-hover);
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(237,230,220,0.25);
+      background: rgba(237,230,220,0.04);
+    }
+
+    .btn-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Glow pulse for final CTA */
+    .btn-glow-pulse {
+      animation: glowPulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 4px 16px rgba(196,112,63,0.2); }
+      50%       { box-shadow: 0 4px 32px rgba(196,112,63,0.5), 0 0 60px rgba(196,112,63,0.15); }
+    }
+
+    /* ── Screen 2: Role selection cards ────────────────────────────── */
+    .role-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .role-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .role-card:hover {
+      border-color: var(--border-hover);
+      background: var(--card-hover);
+    }
+
+    .role-card.selected {
+      border-color: var(--copper);
+      box-shadow: inset 0 0 30px rgba(196,112,63,0.06);
+    }
+
+    .role-emoji {
+      font-size: 28px;
+      flex-shrink: 0;
+      animation: subtlePulse 3s ease-in-out infinite;
+    }
+
+    @keyframes subtlePulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.06); }
+    }
+
+    .role-info {
+      flex: 1;
+    }
+
+    .role-name {
+      font-family: 'Jost', sans-serif;
+      font-weight: 500;
+      font-size: 17px;
+      color: var(--cream);
+      margin-bottom: 2px;
+    }
+
+    .role-desc {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .role-radio {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .role-card.selected .role-radio {
+      background: var(--copper);
+      border-color: var(--copper);
+    }
+
+    .role-radio-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--white);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .role-card.selected .role-radio-dot {
+      opacity: 1;
+    }
+
+    /* ── Screen 3: Family setup form ───────────────────────────────── */
+    .stage-toggle {
+      display: flex;
+      gap: 0;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 28px;
+    }
+
+    .stage-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-family: 'Karla', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .stage-btn.active {
+      background: var(--copper);
+      color: var(--white);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-family: 'Karla', sans-serif;
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .form-select,
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .form-select:focus,
+    .form-input:focus {
+      border-color: var(--copper);
+      box-shadow: 0 0 0 3px rgba(196,112,63,0.12);
+    }
+
+    .select-wrapper {
+      position: relative;
+      flex: 1;
+    }
+
+    .select-wrapper::after {
+      content: '';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      width: 10px;
+      height: 10px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a6f62' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+
+    .form-input::placeholder {
+      color: var(--muted);
+      opacity: 0.6;
+    }
+
+    /* ── Screen 4: Celebration particles ───────────────────────────── */
+    .particles-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 200px;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 2px;
+      animation: particleFloat linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes particleFloat {
+      0%   { opacity: 0;   transform: translateY(160px) rotate(0deg); }
+      15%  { opacity: 0.7; }
+      70%  { opacity: 0.4; }
+      100% { opacity: 0;   transform: translateY(-20px) rotate(180deg); }
+    }
+
+    .p1  { width:5px; height:5px; background:var(--copper); left:12%;  animation-duration:2.8s; animation-delay:0.1s; }
+    .p2  { width:3px; height:3px; background:var(--gold);   left:22%;  animation-duration:3.2s; animation-delay:0.4s; border-radius:50%; }
+    .p3  { width:6px; height:6px; background:var(--copper); left:36%;  animation-duration:2.5s; animation-delay:0.7s; opacity:0.6; }
+    .p4  { width:4px; height:4px; background:var(--gold);   left:50%;  animation-duration:3.5s; animation-delay:0.2s; border-radius:50%; }
+    .p5  { width:3px; height:3px; background:var(--copper); left:62%;  animation-duration:2.9s; animation-delay:0.9s; }
+    .p6  { width:5px; height:5px; background:var(--cream);  left:74%;  animation-duration:3.1s; animation-delay:0.3s; opacity:0.3; border-radius:50%; }
+    .p7  { width:4px; height:4px; background:var(--gold);   left:83%;  animation-duration:2.7s; animation-delay:0.6s; }
+    .p8  { width:3px; height:3px; background:var(--copper); left:91%;  animation-duration:3.3s; animation-delay:0.0s; border-radius:50%; }
+
+    /* Success icon */
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      background: var(--copper);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      position: relative;
+    }
+
+    .success-icon::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 26px;
+      border: 1.5px solid rgba(196,112,63,0.25);
+      animation: iconGlow 2.5s ease-in-out infinite;
+    }
+
+    @keyframes iconGlow {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50%       { opacity: 1;   transform: scale(1.05); }
+    }
+
+    .success-icon svg {
+      width: 36px;
+      height: 36px;
+      stroke: var(--white);
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Stat mini cards */
+    .stat-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+
+    .stat-mini {
+      flex: 1;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .free-note {
+      font-family: 'Karla', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 14px;
+    }
+
+    /* ── Section divider ───────────────────────────────────────────── */
+    .section-divider {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 0;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      border: none;
+      background: none;
+      border-top: 1px dashed var(--copper);
+      opacity: 0.35;
+    }
+
+    .divider-label {
+      font-family: 'Karla', sans-serif;
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ── Upgrade page ──────────────────────────────────────────────── */
+    .upgrade-wrapper {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* Header bar */
+    .upgrade-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      border-radius: 12px 12px 0 0;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 0;
+    }
+
+    .upgrade-header-back {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Karla', sans-serif;
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .upgrade-header-back svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--muted);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .upgrade-header-title {
+      flex: 1;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--cream);
+      text-align: center;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .premium-badge {
+      background: var(--gold);
+      color: #1a1410;
+      font-family: 'Karla', sans-serif;
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .upgrade-body {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      padding: 48px 40px 56px;
+    }
+
+    /* Hero section */
+    .upgrade-hero {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .upgrade-hero-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      line-height: 1.15;
+      color: var(--cream);
+      margin-bottom: 12px;
+    }
+
+    .upgrade-hero-sub {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .guarantee-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(196,112,63,0.08);
+      border: 1px solid rgba(196,112,63,0.2);
+      border-radius: 24px;
+    }
+
+    .guarantee-badge svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--copper);
+      stroke-width: 2;
+      fill: none;
+      flex-shrink: 0;
+    }
+
+    .guarantee-badge span {
+      font-family: 'Karla', sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      color: var(--copper);
+    }
+
+    /* Pricing cards row */
+    .pricing-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 48px;
+      align-items: start;
+    }
+
+    .pricing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+    }
+
+    .pricing-card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .pricing-card.featured {
+      transform: translateY(-8px);
+      border: 2px solid var(--gold);
+      border-top: none;
+    }
+
+    .pricing-card.featured::before {
+      content: '';
+      display: block;
+      height: 3px;
+      background: var(--gold);
+      border-radius: 0;
+      margin: -2px -2px 28px;
+    }
+
+    /* Shimmer animation on featured card */
+    .pricing-card.featured::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 40%;
+      height: 200%;
+      background: linear-gradient(
+        105deg,
+        transparent 0%,
+        rgba(212,168,83,0.06) 40%,
+        rgba(212,168,83,0.12) 50%,
+        rgba(212,168,83,0.06) 60%,
+        transparent 100%
+      );
+      animation: shimmer 5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0%   { left: -60%; }
+      30%  { left: 120%; }
+      100% { left: 120%; }
+    }
+
+    .plan-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-family: 'Karla', sans-serif;
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .plan-badge.popular {
+      background: var(--gold);
+      color: #1a1410;
+    }
+
+    .plan-badge.value {
+      border: 1.5px solid var(--copper);
+      color: var(--copper);
+    }
+
+    .plan-badge.placeholder {
+      visibility: hidden;
+    }
+
+    .plan-name {
+      font-family: 'Karla', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .plan-price {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 1;
+      color: var(--copper);
+      margin-bottom: 4px;
+    }
+
+    .plan-price.featured-price {
+      font-weight: 900;
+      font-size: 40px;
+      color: var(--gold);
+    }
+
+    .plan-period {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .plan-period.gold {
+      color: var(--gold);
+    }
+
+    .plan-billing {
+      font-family: 'Karla', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      color: var(--dim);
+      margin-bottom: 28px;
+    }
+
+    .plan-icon {
+      margin-bottom: 12px;
+    }
+
+    .plan-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ── Feature comparison table ──────────────────────────────────── */
+    .feature-table-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 36px;
+    }
+
+    .feature-table-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--cream);
+      margin-bottom: 24px;
+    }
+
+    .feature-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .feature-table thead th {
+      font-family: 'Karla', sans-serif;
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 0 14px;
+      text-align: center;
+    }
+
+    .feature-table thead th:first-child {
+      text-align: left;
+      width: 45%;
+    }
+
+    .feature-table tbody tr {
+      border-top: 1px solid var(--border);
+    }
+
+    .feature-table tbody td {
+      padding: 14px 0;
+      font-family: 'Jost', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--cream);
+      text-align: center;
+    }
+
+    .feature-table tbody td:first-child {
+      text-align: left;
+      color: var(--cream);
+      padding-right: 16px;
+    }
+
+    .cell-value {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Check and X icons in table */
+    .check-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: var(--copper);
+      border-radius: 3px;
+    }
+
+    .check-icon svg {
+      width: 11px;
+      height: 11px;
+      stroke: var(--white);
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .x-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid var(--dim);
+    }
+
+    .x-icon svg {
+      width: 10px;
+      height: 10px;
+      stroke: var(--dim);
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+    }
+
+    /* ── FAQ Accordion ─────────────────────────────────────────────── */
+    .faq-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 8px;
+      margin-bottom: 36px;
+    }
+
+    .faq-item {
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .faq-item + .faq-item {
+      border-top: 1px solid var(--border);
+    }
+
+    .faq-question {
+      width: 100%;
+      background: transparent;
+      border: none;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .faq-question:hover {
+      background: rgba(237,230,220,0.02);
+    }
+
+    .faq-question-text {
+      font-family: 'Jost', sans-serif;
+      font-weight: 500;
+      font-size: 15px;
+      color: var(--cream);
+    }
+
+    .faq-chevron {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      stroke: var(--muted);
+      stroke-width: 2;
+      fill: none;
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item.open .faq-chevron {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 200px;
+      opacity: 1;
+    }
+
+    .faq-answer-text {
+      padding: 0 24px 20px;
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── Bottom CTA ────────────────────────────────────────────────── */
+    .bottom-cta {
+      text-align: center;
+    }
+
+    .bottom-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 40px;
+      background: var(--copper);
+      color: var(--white);
+      font-family: 'Karla', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 16px;
+    }
+
+    .bottom-cta-btn:hover {
+      background: #d4814f;
+      box-shadow: 0 6px 28px rgba(196,112,63,0.4);
+      transform: translateY(-2px);
+    }
+
+    .bottom-guarantee {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .bottom-guarantee svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--muted);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .bottom-guarantee span {
+      font-family: 'Karla', sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .legal-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .legal-link {
+      font-family: 'Karla', sans-serif;
+      font-weight: 400;
+      font-size: 11px;
+      color: var(--dim);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .legal-link:hover {
+      color: var(--muted);
+    }
+
+    .legal-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--dim);
+    }
+
+    /* ── Responsive ────────────────────────────────────────────────── */
+    @media (max-width: 680px) {
+      .page-wrapper {
+        padding: 32px 16px 60px;
+        gap: 36px;
+      }
+
+      .ob-card {
+        padding: 28px 24px;
+      }
+
+      .upgrade-body {
+        padding: 32px 24px 40px;
+      }
+
+      .pricing-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .pricing-card.featured {
+        transform: translateY(0);
+        order: -1;
+      }
+
+      .pricing-card {
+        padding: 24px;
+      }
+
+      .feature-table-card {
+        padding: 20px;
+        overflow-x: auto;
+      }
+
+      .feature-table {
+        min-width: 340px;
+      }
+
+      .upgrade-header {
+        padding: 14px 16px;
+      }
+
+      .stat-row {
+        gap: 8px;
+      }
+    }
+
+    /* ── Load-in animation ─────────────────────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .fade-in-1 { animation-delay: 0.05s; }
+    .fade-in-2 { animation-delay: 0.12s; }
+    .fade-in-3 { animation-delay: 0.20s; }
+    .fade-in-4 { animation-delay: 0.28s; }
+
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- ONBOARDING LABEL                                            -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div style="width:100%;max-width:440px;text-align:center;">
+      <p class="section-label" style="font-size:11px;">Onboarding Flow — 4 Screens</p>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SCREEN 1: WELCOME                                           -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div class="ob-card fade-in fade-in-1">
+      <!-- Step indicator -->
+      <div class="step-indicator">
+        <div class="step-bar active"></div>
+        <div class="step-bar"></div>
+        <div class="step-bar"></div>
+        <div class="step-bar"></div>
+      </div>
+
+      <!-- Logo -->
+      <div class="ob-logo">The Dad Center</div>
+      <div class="ob-logo-line"></div>
+
+      <!-- Heading -->
+      <h1 class="ob-heading">Welcome to<br>The Dad Center</h1>
+      <p class="ob-subheading">Your partner in the journey to fatherhood</p>
+
+      <!-- Feature list -->
+      <ul class="feature-list">
+        <li class="feature-item">
+          <span class="feature-check">
+            <svg viewBox="0 0 9 7"><polyline points="1,3.5 3.5,6 8,1"/></svg>
+          </span>
+          <span class="feature-text">Smart tasks that adapt to your stage</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-check">
+            <svg viewBox="0 0 9 7"><polyline points="1,3.5 3.5,6 8,1"/></svg>
+          </span>
+          <span class="feature-text">Weekly briefings personalized for you</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-check">
+            <svg viewBox="0 0 9 7"><polyline points="1,3.5 3.5,6 8,1"/></svg>
+          </span>
+          <span class="feature-text">Real support for dad challenges</span>
+        </li>
+        <li class="feature-item">
+          <span class="feature-check">
+            <svg viewBox="0 0 9 7"><polyline points="1,3.5 3.5,6 8,1"/></svg>
+          </span>
+          <span class="feature-text">Sync with your partner</span>
+        </li>
+      </ul>
+
+      <!-- Buttons -->
+      <div class="btn-stack">
+        <button class="btn btn-copper">Get Started</button>
+        <button class="btn btn-copper-outline">Join Partner's Family</button>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SCREEN 2: ROLE SELECTION                                    -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div class="ob-card fade-in fade-in-2">
+      <!-- Step indicator -->
+      <div class="step-indicator">
+        <div class="step-bar done"></div>
+        <div class="step-bar active"></div>
+        <div class="step-bar"></div>
+        <div class="step-bar"></div>
+      </div>
+
+      <h2 class="ob-heading" style="font-size:24px;margin-bottom:6px;">Who are you?</h2>
+      <p class="ob-subheading">We'll personalize your experience accordingly</p>
+
+      <div class="role-cards" id="roleCards">
+        <!-- Dad — pre-selected -->
+        <div class="role-card selected" onclick="selectRole(this)">
+          <span class="role-emoji">👨</span>
+          <div class="role-info">
+            <div class="role-name">I'm Dad</div>
+            <div class="role-desc">Planning and preparing for fatherhood</div>
+          </div>
+          <div class="role-radio">
+            <div class="role-radio-dot"></div>
+          </div>
+        </div>
+
+        <!-- Mom -->
+        <div class="role-card" onclick="selectRole(this)">
+          <span class="role-emoji">👩</span>
+          <div class="role-info">
+            <div class="role-name">I'm Mom</div>
+            <div class="role-desc">Supporting and staying connected</div>
+          </div>
+          <div class="role-radio">
+            <div class="role-radio-dot"></div>
+          </div>
+        </div>
+
+        <!-- Other -->
+        <div class="role-card" onclick="selectRole(this)">
+          <span class="role-emoji">🧑</span>
+          <div class="role-info">
+            <div class="role-name">Other Family Member</div>
+            <div class="role-desc">Grandparent, partner, or close family</div>
+          </div>
+          <div class="role-radio">
+            <div class="role-radio-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-copper">Continue</button>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SCREEN 3: FAMILY SETUP                                      -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div class="ob-card fade-in fade-in-3">
+      <!-- Step indicator -->
+      <div class="step-indicator">
+        <div class="step-bar done"></div>
+        <div class="step-bar done"></div>
+        <div class="step-bar active"></div>
+        <div class="step-bar"></div>
+      </div>
+
+      <h2 class="ob-heading" style="font-size:24px;margin-bottom:6px;">Tell us about<br>your journey</h2>
+      <p class="ob-subheading">Help us generate the right tasks and content</p>
+
+      <!-- Stage toggle -->
+      <div class="stage-toggle">
+        <button class="stage-btn active" onclick="setStage(this)">Expecting</button>
+        <button class="stage-btn" onclick="setStage(this)">Baby Born</button>
+      </div>
+
+      <!-- Due date -->
+      <div class="form-group">
+        <label class="form-label">Expected Due Date</label>
+        <div class="form-row">
+          <div class="select-wrapper">
+            <select class="form-select">
+              <option value="" disabled selected>Month</option>
+              <option>January</option>
+              <option>February</option>
+              <option>March</option>
+              <option>April</option>
+              <option>May</option>
+              <option>June</option>
+              <option>July</option>
+              <option>August</option>
+              <option>September</option>
+              <option>October</option>
+              <option>November</option>
+              <option>December</option>
+            </select>
+          </div>
+          <div class="select-wrapper">
+            <select class="form-select">
+              <option value="" disabled selected>Year</option>
+              <option>2025</option>
+              <option>2026</option>
+              <option>2027</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Baby name -->
+      <div class="form-group">
+        <label class="form-label">Baby's Name (optional)</label>
+        <input
+          type="text"
+          class="form-input"
+          placeholder="e.g. Baby Clarke"
+        />
+      </div>
+
+      <button class="btn btn-copper">Continue</button>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SCREEN 4: ALL SET                                           -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div class="ob-card fade-in fade-in-4" style="text-align:center;">
+      <!-- Celebration particles -->
+      <div class="particles-container" aria-hidden="true">
+        <div class="particle p1"></div>
+        <div class="particle p2"></div>
+        <div class="particle p3"></div>
+        <div class="particle p4"></div>
+        <div class="particle p5"></div>
+        <div class="particle p6"></div>
+        <div class="particle p7"></div>
+        <div class="particle p8"></div>
+      </div>
+
+      <!-- Step indicator — all filled -->
+      <div class="step-indicator">
+        <div class="step-bar done"></div>
+        <div class="step-bar done"></div>
+        <div class="step-bar done"></div>
+        <div class="step-bar done" style="background:var(--copper);opacity:1;"></div>
+      </div>
+
+      <!-- Success icon -->
+      <div class="success-icon">
+        <svg viewBox="0 0 36 36">
+          <polyline points="8,19 14,25 28,11"/>
+        </svg>
+      </div>
+
+      <!-- Heading -->
+      <h2 style="font-family:'Playfair Display',serif;font-weight:900;font-size:32px;line-height:1.2;color:var(--cream);margin-bottom:8px;">
+        You're All Set
+      </h2>
+      <p style="font-family:'Jost',sans-serif;font-weight:300;font-size:15px;color:var(--muted);margin-bottom:32px;">
+        Your personalized dashboard is ready
+      </p>
+
+      <!-- Stat mini-cards -->
+      <div class="stat-row">
+        <div class="stat-mini">
+          <div class="stat-number text-copper">47</div>
+          <div class="stat-label">tasks generated</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-number text-gold">1st</div>
+          <div class="stat-label">briefing ready</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-number text-sage">7</div>
+          <div class="stat-label">challenge guides</div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <button class="btn btn-copper btn-glow-pulse" style="font-size:15px;padding:16px;">
+        Go to Dashboard
+      </button>
+      <p class="free-note">Free for 30 days &middot; No credit card required</p>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- SECTION DIVIDER                                             -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div class="section-divider">
+      <div class="divider-line"></div>
+      <span class="divider-label">Upgrade</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!-- UPGRADE / PREMIUM PAGE                                      -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div class="upgrade-wrapper fade-in fade-in-1">
+
+      <!-- Header bar -->
+      <div class="upgrade-header">
+        <div class="upgrade-header-back">
+          <svg viewBox="0 0 16 16"><polyline points="10,3 5,8 10,13"/></svg>
+          Back
+        </div>
+        <div class="upgrade-header-title">The Dad Center</div>
+        <div class="premium-badge">Premium</div>
+      </div>
+
+      <!-- Body -->
+      <div class="upgrade-body">
+
+        <!-- Hero -->
+        <div class="upgrade-hero">
+          <h2 class="upgrade-hero-title">Unlock Everything</h2>
+          <p class="upgrade-hero-sub">One subscription. Both partners. All features.</p>
+          <div class="guarantee-badge">
+            <svg viewBox="0 0 16 16">
+              <path d="M8 1L10.5 5.5L16 6.5L12 10.5L13 16L8 13.5L3 16L4 10.5L0 6.5L5.5 5.5Z"/>
+            </svg>
+            <span>30-day money-back guarantee</span>
+          </div>
+        </div>
+
+        <!-- Pricing cards -->
+        <div class="pricing-row">
+
+          <!-- Monthly -->
+          <div class="pricing-card">
+            <span class="plan-badge placeholder">-</span>
+            <div class="plan-name">Monthly</div>
+            <div class="plan-price">$4.99</div>
+            <div class="plan-period">/month</div>
+            <div class="plan-billing">Billed monthly</div>
+            <button class="btn btn-copper-outline" style="font-size:12px;padding:12px;">Choose Monthly</button>
+          </div>
+
+          <!-- Yearly — Featured -->
+          <div class="pricing-card featured">
+            <span class="plan-badge popular">Most Popular</span>
+            <div class="plan-name">Yearly</div>
+            <div class="plan-price featured-price">$39.99</div>
+            <div class="plan-period gold">/year &nbsp;&middot;&nbsp; $3.33/mo &nbsp;&middot;&nbsp; Save 33%</div>
+            <div class="plan-billing" style="margin-bottom:28px;">&nbsp;</div>
+            <button class="btn btn-gold" style="font-size:12px;padding:12px;">Choose Yearly</button>
+          </div>
+
+          <!-- Lifetime -->
+          <div class="pricing-card">
+            <span class="plan-badge value">Best Value</span>
+            <div class="plan-icon">
+              <!-- Crown icon -->
+              <svg viewBox="0 0 20 20" fill="none" stroke="var(--copper)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 15h16M3 15L2 6l4.5 4L10 3l3.5 7L18 6l-1 9H3z"/>
+              </svg>
+            </div>
+            <div class="plan-name">Lifetime</div>
+            <div class="plan-price">$99.99</div>
+            <div class="plan-period">one time</div>
+            <div class="plan-billing">Pay once, use forever</div>
+            <button class="btn btn-copper-outline" style="font-size:12px;padding:12px;">Choose Lifetime</button>
+          </div>
+
+        </div>
+
+        <!-- Feature comparison table -->
+        <div class="feature-table-card">
+          <div class="feature-table-title">What You Get</div>
+          <table class="feature-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Free</th>
+                <th>Premium</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Tasks</td>
+                <td><span class="cell-value">30-day window</span></td>
+                <td><span class="cell-value" style="color:var(--copper);">Unlimited</span> &nbsp;<span class="check-icon"><svg viewBox="0 0 11 9"><polyline points="1.5,4.5 4.5,7.5 9.5,1.5"/></svg></span></td>
+              </tr>
+              <tr>
+                <td>Briefings</td>
+                <td><span class="cell-value">4 weeks</span></td>
+                <td><span class="cell-value" style="color:var(--copper);">All weeks</span> &nbsp;<span class="check-icon"><svg viewBox="0 0 11 9"><polyline points="1.5,4.5 4.5,7.5 9.5,1.5"/></svg></span></td>
+              </tr>
+              <tr>
+                <td>Mood Check-ins</td>
+                <td><span class="check-icon"><svg viewBox="0 0 11 9"><polyline points="1.5,4.5 4.5,7.5 9.5,1.5"/></svg></span></td>
+                <td><span class="check-icon"><svg viewBox="0 0 11 9"><polyline points="1.5,4.5 4.5,7.5 9.5,1.5"/></svg></span></td>
+              </tr>
+              <tr>
+                <td>Checklists</td>
+                <td><span class="cell-value">4 basic</span></td>
+                <td><span class="cell-value" style="color:var(--copper);">All 15</span> &nbsp;<span class="check-icon"><svg viewBox="0 0 11 9"><polyline points="1.5,4.5 4.5,7.5 9.5,1.5"/></svg></span></td>
+              </tr>
+              <tr>
+                <td>Notifications</td>
+                <td><span class="cell-value">30 days</span></td>
+                <td><span class="cell-value" style="color:var(--copper);">Unlimited</span> &nbsp;<span class="check-icon"><svg viewBox="0 0 11 9"><polyline points="1.5,4.5 4.5,7.5 9.5,1.5"/></svg></span></td>
+              </tr>
+              <tr>
+                <td>Budget Planner</td>
+                <td><span class="x-icon"><svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></span></td>
+                <td><span class="check-icon"><svg viewBox="0 0 11 9"><polyline points="1.5,4.5 4.5,7.5 9.5,1.5"/></svg></span></td>
+              </tr>
+              <tr>
+                <td>Dad Journey</td>
+                <td><span class="x-icon"><svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></span></td>
+                <td><span class="check-icon"><svg viewBox="0 0 11 9"><polyline points="1.5,4.5 4.5,7.5 9.5,1.5"/></svg></span></td>
+              </tr>
+              <tr>
+                <td>Premium Checklists</td>
+                <td><span class="x-icon"><svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></span></td>
+                <td><span class="check-icon"><svg viewBox="0 0 11 9"><polyline points="1.5,4.5 4.5,7.5 9.5,1.5"/></svg></span></td>
+              </tr>
+              <tr>
+                <td>Partner Sync</td>
+                <td><span class="check-icon"><svg viewBox="0 0 11 9"><polyline points="1.5,4.5 4.5,7.5 9.5,1.5"/></svg></span></td>
+                <td><span class="check-icon"><svg viewBox="0 0 11 9"><polyline points="1.5,4.5 4.5,7.5 9.5,1.5"/></svg></span></td>
+              </tr>
+              <tr>
+                <td>Priority Support</td>
+                <td><span class="x-icon"><svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/></svg></span></td>
+                <td><span class="check-icon"><svg viewBox="0 0 11 9"><polyline points="1.5,4.5 4.5,7.5 9.5,1.5"/></svg></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FAQ Accordion -->
+        <div class="faq-card" id="faqContainer">
+
+          <div class="faq-item" id="faq1">
+            <button class="faq-question" onclick="toggleFaq('faq1')">
+              <span class="faq-question-text">Do both partners get access?</span>
+              <svg class="faq-chevron" viewBox="0 0 18 18">
+                <polyline points="4,6 9,12 14,6"/>
+              </svg>
+            </button>
+            <div class="faq-answer">
+              <p class="faq-answer-text">
+                Yes. One subscription covers the whole family. Both you and your partner sign in with separate accounts but share the same family workspace — tasks, briefings, and progress are all in sync.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item" id="faq2">
+            <button class="faq-question" onclick="toggleFaq('faq2')">
+              <span class="faq-question-text">Can I cancel anytime?</span>
+              <svg class="faq-chevron" viewBox="0 0 18 18">
+                <polyline points="4,6 9,12 14,6"/>
+              </svg>
+            </button>
+            <div class="faq-answer">
+              <p class="faq-answer-text">
+                Absolutely. No questions asked. You can cancel your subscription at any time from your account settings. You'll retain premium access until the end of your current billing period.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item" id="faq3">
+            <button class="faq-question" onclick="toggleFaq('faq3')">
+              <span class="faq-question-text">What happens after the free period?</span>
+              <svg class="faq-chevron" viewBox="0 0 18 18">
+                <polyline points="4,6 9,12 14,6"/>
+              </svg>
+            </button>
+            <div class="faq-answer">
+              <p class="faq-answer-text">
+                You keep access to all free-tier features — including mood check-ins, partner sync, 30-day task window, and your first 4 briefing weeks — with no charge. Premium features simply become locked until you upgrade.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="bottom-cta">
+          <button class="bottom-cta-btn">
+            Start Your Premium Journey
+          </button>
+          <div class="bottom-guarantee">
+            <svg viewBox="0 0 14 14">
+              <path d="M7 1L8.8 4.5L13 5.3L10 8.3L10.7 13L7 11.1L3.3 13L4 8.3L1 5.3L5.2 4.5Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>30-day money-back guarantee</span>
+          </div>
+          <div class="legal-links">
+            <a class="legal-link">Terms of Service</a>
+            <div class="legal-dot"></div>
+            <a class="legal-link">Privacy Policy</a>
+            <div class="legal-dot"></div>
+            <a class="legal-link">Restore Purchase</a>
+          </div>
+        </div>
+
+      </div><!-- /upgrade-body -->
+    </div><!-- /upgrade-wrapper -->
+
+  </div><!-- /page-wrapper -->
+
+  <script>
+    /* ── Role selection ──────────────────────────────────────────── */
+    function selectRole(el) {
+      document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    /* ── Stage toggle ────────────────────────────────────────────── */
+    function setStage(el) {
+      el.closest('.stage-toggle').querySelectorAll('.stage-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    /* ── FAQ accordion ───────────────────────────────────────────── */
+    function toggleFaq(id) {
+      const item = document.getElementById(id);
+      const isOpen = item.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      // Open clicked (if it wasn't already open)
+      if (!isOpen) item.classList.add('open');
+    }
+  </script>
+
+</body>
+</html>

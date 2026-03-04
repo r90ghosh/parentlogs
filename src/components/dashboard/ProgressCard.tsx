@@ -19,13 +19,13 @@ export function ProgressCard({ completed, remaining, overdue, percentComplete }:
     <div
       className={cn(
         'rounded-2xl p-5',
-        'bg-gradient-to-br from-zinc-800 to-zinc-900',
-        'border border-white/[0.06]'
+        'bg-[--card]',
+        'border border-[--border]'
       )}
     >
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-sm font-semibold text-white">📊 Your Progress</span>
+        <span className="text-sm font-semibold text-[--cream]">📊 Your Progress</span>
       </div>
 
       {/* Progress visual */}
@@ -35,8 +35,8 @@ export function ProgressCard({ completed, remaining, overdue, percentComplete }:
           <svg className="w-full h-full -rotate-90" viewBox="0 0 80 80">
             <defs>
               <linearGradient id="dashboardProgressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#22c55e" />
-                <stop offset="100%" stopColor="#14b8a6" />
+                <stop offset="0%" stopColor="var(--sage)" />
+                <stop offset="100%" stopColor="var(--copper)" />
               </linearGradient>
             </defs>
             {/* Background circle */}
@@ -45,7 +45,7 @@ export function ProgressCard({ completed, remaining, overdue, percentComplete }:
               cy="40"
               r={radius}
               fill="none"
-              stroke="rgba(255,255,255,0.1)"
+              stroke="var(--border)"
               strokeWidth="6"
             />
             {/* Progress circle */}
@@ -64,28 +64,28 @@ export function ProgressCard({ completed, remaining, overdue, percentComplete }:
           </svg>
           {/* Center text */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="text-lg font-bold text-white">
+            <div className="text-lg font-bold text-[--cream]">
               {Math.round(percentComplete)}%
             </div>
-            <div className="text-[9px] text-zinc-500">Complete</div>
+            <div className="text-[9px] text-[--dim]">Complete</div>
           </div>
         </div>
 
         {/* Stats */}
         <div className="flex-1">
-          <div className="flex justify-between py-2 border-b border-white/[0.04]">
-            <span className="text-[13px] text-zinc-500">Completed</span>
-            <span className="text-[13px] font-semibold text-green-500">{completed}</span>
+          <div className="flex justify-between py-2 border-b border-[--border]">
+            <span className="text-[13px] text-[--muted]">Completed</span>
+            <span className="text-[13px] font-semibold text-[--sage]">{completed}</span>
           </div>
-          <div className="flex justify-between py-2 border-b border-white/[0.04]">
-            <span className="text-[13px] text-zinc-500">Remaining</span>
-            <span className="text-[13px] font-semibold text-white">{remaining}</span>
+          <div className="flex justify-between py-2 border-b border-[--border]">
+            <span className="text-[13px] text-[--muted]">Remaining</span>
+            <span className="text-[13px] font-semibold text-[--cream]">{remaining}</span>
           </div>
           <div className="flex justify-between py-2">
-            <span className="text-[13px] text-zinc-500">Overdue</span>
+            <span className="text-[13px] text-[--muted]">Overdue</span>
             <span className={cn(
               "text-[13px] font-semibold",
-              overdue > 0 ? "text-amber-500" : "text-white"
+              overdue > 0 ? "text-[--gold]" : "text-[--cream]"
             )}>
               {overdue}
             </span>

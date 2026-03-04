@@ -14,7 +14,7 @@ export function RelatedContent({ articles, currentStage }: RelatedContentProps) 
   if (articles.length === 0) return null
 
   return (
-    <section className="mt-16 pt-12 border-t border-slate-800">
+    <section className="mt-16 pt-12 border-t border-[--border]">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl font-bold text-white">Related Articles</h2>
         <Link

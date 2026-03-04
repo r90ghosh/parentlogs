@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — The Operating System for Modern Fatherhood</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            amber: {
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+            },
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    /* Smooth scroll behavior */
+    html { scroll-behavior: smooth; }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #09090b; }
+    ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #52525b; }
+
+    /* Gradient text utility */
+    .text-gradient-amber {
+      background: linear-gradient(135deg, #f59e0b 0%, #fb923c 50%, #f97316 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Glassmorphism card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* Hero glow */
+    .hero-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(245, 158, 11, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Bottom glow for hero */
+    .hero-glow-bottom {
+      position: absolute;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 300px;
+      background: radial-gradient(ellipse, rgba(245, 158, 11, 0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Pricing card highlight */
+    .pricing-highlight {
+      background: linear-gradient(160deg, rgba(245, 158, 11, 0.08) 0%, rgba(249, 115, 22, 0.04) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+
+    /* Subtle grid background */
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* Step connector line */
+    .step-connector {
+      position: absolute;
+      top: 28px;
+      left: calc(50% + 48px);
+      width: calc(100% - 96px);
+      height: 1px;
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.4) 0%, rgba(245, 158, 11, 0.1) 100%);
+    }
+
+    /* Feature card icon glow */
+    .icon-glow-teal { box-shadow: 0 0 20px rgba(20, 184, 166, 0.25); }
+    .icon-glow-blue { box-shadow: 0 0 20px rgba(59, 130, 246, 0.25); }
+    .icon-glow-purple { box-shadow: 0 0 20px rgba(168, 85, 247, 0.25); }
+    .icon-glow-amber { box-shadow: 0 0 20px rgba(245, 158, 11, 0.25); }
+    .icon-glow-green { box-shadow: 0 0 20px rgba(34, 197, 94, 0.25); }
+    .icon-glow-pink { box-shadow: 0 0 20px rgba(236, 72, 153, 0.25); }
+
+    /* Hover transitions */
+    .card-hover {
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    /* Pricing card hover */
+    .pricing-card-hover {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .pricing-card-hover:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+    }
+
+    /* Button transitions */
+    .btn-amber {
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+      transition: opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn-amber:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+    }
+
+    .btn-ghost {
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.25);
+    }
+
+    /* Nav link hover */
+    .nav-link {
+      transition: color 0.15s ease;
+    }
+    .nav-link:hover { color: #fbbf24; }
+
+    /* Stats number animation */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-up {
+      animation: fadeInUp 0.6s ease both;
+    }
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-500 { animation-delay: 0.5s; }
+
+    /* Badge pill */
+    .badge-pill {
+      background: linear-gradient(135deg, rgba(245,158,11,0.15) 0%, rgba(249,115,22,0.10) 100%);
+      border: 1px solid rgba(245,158,11,0.3);
+    }
+
+    /* Pricing best-value scale */
+    .pricing-featured {
+      transform: scale(1.02);
+    }
+    @media (max-width: 768px) {
+      .pricing-featured { transform: scale(1); }
+    }
+
+    /* Footer link hover */
+    .footer-link {
+      transition: color 0.15s ease;
+    }
+    .footer-link:hover { color: #fbbf24; }
+
+    /* Section dividers */
+    .section-divider {
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+      height: 1px;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 font-sans antialiased">
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header
+    class="fixed top-0 left-0 right-0 z-50"
+    style="background: rgba(9,9,11,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06);"
+  >
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-2.5 flex-shrink-0">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center btn-amber">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <span class="font-semibold text-base tracking-tight text-white">The Dad Center</span>
+        </a>
+
+        <!-- Nav links — desktop -->
+        <nav class="hidden md:flex items-center gap-7">
+          <a href="#features" class="nav-link text-sm text-zinc-400">Features</a>
+          <a href="#how-it-works" class="nav-link text-sm text-zinc-400">How It Works</a>
+          <a href="#pricing" class="nav-link text-sm text-zinc-400">Pricing</a>
+          <a href="#resources" class="nav-link text-sm text-zinc-400">Resources</a>
+        </nav>
+
+        <!-- CTA buttons -->
+        <div class="flex items-center gap-3">
+          <a
+            href="#"
+            class="btn-ghost hidden sm:inline-flex items-center px-4 py-2 text-sm text-zinc-300 border border-zinc-700 rounded-lg font-medium"
+          >
+            Log In
+          </a>
+          <a
+            href="#"
+            class="btn-amber inline-flex items-center px-4 py-2 text-sm text-white rounded-lg font-semibold"
+          >
+            Get Started Free
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ============================================================
+       HERO SECTION
+  ============================================================ -->
+  <section class="relative min-h-screen flex items-center pt-16 overflow-hidden grid-bg">
+
+    <!-- Background glows -->
+    <div class="hero-glow"></div>
+    <div class="hero-glow-bottom"></div>
+
+    <!-- Subtle noise texture overlay -->
+    <div class="absolute inset-0 opacity-30" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%220.08%22/%3E%3C/svg%3E'); pointer-events: none;"></div>
+
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+
+      <!-- Badge pill -->
+      <div class="inline-flex items-center gap-2 badge-pill px-4 py-1.5 rounded-full text-sm text-amber-400 font-medium mb-8 animate-fade-up">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="flex-shrink-0">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        Built by dads, for dads
+      </div>
+
+      <!-- Headline -->
+      <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6 animate-fade-up delay-100">
+        The Operating System for<br />
+        <span class="text-gradient-amber">Modern Fatherhood</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="text-base sm:text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed mb-10 animate-fade-up delay-200">
+        Your personal command center for pregnancy, newborn care, and beyond.
+        Weekly briefings, smart task management, and real talk about the
+        challenges of becoming a dad.
+      </p>
+
+      <!-- CTA buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-fade-up delay-300">
+        <a
+          href="#"
+          class="btn-amber inline-flex items-center gap-2 px-7 py-3.5 text-base text-white rounded-xl font-semibold w-full sm:w-auto justify-center"
+        >
+          Get Started Free
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+        <a
+          href="#how-it-works"
+          class="btn-ghost inline-flex items-center gap-2 px-7 py-3.5 text-base text-zinc-300 border border-zinc-700 rounded-xl font-medium w-full sm:w-auto justify-center"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          See How It Works
+        </a>
+      </div>
+
+      <!-- Stats row -->
+      <div class="animate-fade-up delay-400">
+        <div class="glass-card inline-flex flex-wrap items-center justify-center divide-x divide-zinc-800 rounded-2xl overflow-hidden">
+          <div class="px-6 py-4 text-center">
+            <div class="text-2xl font-bold text-white">47</div>
+            <div class="text-xs text-zinc-500 mt-0.5 whitespace-nowrap">Weekly Briefings</div>
+          </div>
+          <div class="px-6 py-4 text-center">
+            <div class="text-2xl font-bold text-white">200+</div>
+            <div class="text-xs text-zinc-500 mt-0.5 whitespace-nowrap">Tasks</div>
+          </div>
+          <div class="px-6 py-4 text-center">
+            <div class="text-2xl font-bold text-white">83</div>
+            <div class="text-xs text-zinc-500 mt-0.5 whitespace-nowrap">Expert Videos</div>
+          </div>
+          <div class="px-6 py-4 text-center">
+            <div class="text-2xl font-bold text-white">15</div>
+            <div class="text-xs text-zinc-500 mt-0.5 whitespace-nowrap">Checklists</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FEATURES SECTION
+  ============================================================ -->
+  <section id="features" class="py-24 relative">
+    <div class="section-divider mb-24 -mt-12"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Section header -->
+      <div class="text-center mb-16">
+        <p class="text-amber-500 text-sm font-semibold uppercase tracking-widest mb-3">Features</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
+          Everything You Need
+        </h2>
+        <p class="mt-4 text-zinc-400 text-lg max-w-xl mx-auto">
+          Tools built specifically for the modern dad — from first heartbeat to first steps.
+        </p>
+      </div>
+
+      <!-- Feature grid 2x3 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <!-- Feature: Weekly Briefings (teal) -->
+        <div class="glass-card card-hover rounded-2xl p-6">
+          <div class="w-11 h-11 rounded-xl bg-teal-500/15 flex items-center justify-center mb-5 icon-glow-teal">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+          </div>
+          <h3 class="text-base font-semibold text-white mb-2">Weekly Briefings</h3>
+          <p class="text-sm text-zinc-400 leading-relaxed">
+            Personalized weekly guides for each stage of pregnancy and early fatherhood — written in plain language, not medical jargon.
+          </p>
+          <div class="mt-4 flex items-center gap-1.5 text-teal-400 text-xs font-medium">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            4 free weeks from signup
+          </div>
+        </div>
+
+        <!-- Feature: Smart Tasks (blue) -->
+        <div class="glass-card card-hover rounded-2xl p-6">
+          <div class="w-11 h-11 rounded-xl bg-blue-500/15 flex items-center justify-center mb-5 icon-glow-blue">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+          </div>
+          <h3 class="text-base font-semibold text-white mb-2">Smart Tasks</h3>
+          <p class="text-sm text-zinc-400 leading-relaxed">
+            Know exactly what to do and when. Tasks surface at the right time based on your stage, with a rolling 30-day window.
+          </p>
+          <div class="mt-4 flex items-center gap-1.5 text-blue-400 text-xs font-medium">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            30-day rolling window
+          </div>
+        </div>
+
+        <!-- Feature: Mood Check-ins (purple) -->
+        <div class="glass-card card-hover rounded-2xl p-6">
+          <div class="w-11 h-11 rounded-xl bg-purple-500/15 flex items-center justify-center mb-5 icon-glow-purple">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+              <line x1="9" y1="9" x2="9.01" y2="9"/>
+              <line x1="15" y1="9" x2="15.01" y2="9"/>
+            </svg>
+          </div>
+          <h3 class="text-base font-semibold text-white mb-2">Mood Check-ins</h3>
+          <p class="text-sm text-zinc-400 leading-relaxed">
+            Track how you're really feeling day to day. Streaks, patterns, and flags that help you notice what's going on beneath the surface.
+          </p>
+          <div class="mt-4 flex items-center gap-1.5 text-purple-400 text-xs font-medium">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Daily streaks + history
+          </div>
+        </div>
+
+        <!-- Feature: Dad Journey (amber) -->
+        <div class="glass-card card-hover rounded-2xl p-6">
+          <div class="w-11 h-11 rounded-xl bg-amber-500/15 flex items-center justify-center mb-5 icon-glow-amber">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </div>
+          <h3 class="text-base font-semibold text-white mb-2">Dad Journey</h3>
+          <p class="text-sm text-zinc-400 leading-relaxed">
+            7 challenge pillars — Knowledge, Planning, Finances, Anxiety, Baby Bonding, Relationship, and Family — with real, honest guidance.
+          </p>
+          <div class="mt-4 flex items-center gap-1.5 text-amber-400 text-xs font-medium">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            7 pillars, 9 phases
+          </div>
+        </div>
+
+        <!-- Feature: Budget Planner (green) -->
+        <div class="glass-card card-hover rounded-2xl p-6">
+          <div class="w-11 h-11 rounded-xl bg-green-500/15 flex items-center justify-center mb-5 icon-glow-green">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <h3 class="text-base font-semibold text-white mb-2">Budget Planner</h3>
+          <p class="text-sm text-zinc-400 leading-relaxed">
+            Track baby expenses by category. See what's coming, what you've spent, and where you stand — without the spreadsheet.
+          </p>
+          <div class="mt-4 flex items-center gap-1.5 text-green-400 text-xs font-medium">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Category breakdowns
+          </div>
+        </div>
+
+        <!-- Feature: Partner Sync (pink) -->
+        <div class="glass-card card-hover rounded-2xl p-6">
+          <div class="w-11 h-11 rounded-xl bg-pink-500/15 flex items-center justify-center mb-5 icon-glow-pink">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </div>
+          <h3 class="text-base font-semibold text-white mb-2">Partner Sync</h3>
+          <p class="text-sm text-zinc-400 leading-relaxed">
+            One subscription covers the whole family. Both partners get full access — with role-aware views designed for each perspective.
+          </p>
+          <div class="mt-4 flex items-center gap-1.5 text-pink-400 text-xs font-medium">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            One subscription, both partners
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       HOW IT WORKS
+  ============================================================ -->
+  <section id="how-it-works" class="py-24 relative">
+    <div class="section-divider mb-24 -mt-12"></div>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Section header -->
+      <div class="text-center mb-16">
+        <p class="text-amber-500 text-sm font-semibold uppercase tracking-widest mb-3">How It Works</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
+          Up and running in minutes
+        </h2>
+        <p class="mt-4 text-zinc-400 text-lg max-w-xl mx-auto">
+          No lengthy setup. No confusing onboarding. Just useful content from day one.
+        </p>
+      </div>
+
+      <!-- Steps -->
+      <div class="relative grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6">
+
+        <!-- Connector lines (desktop only) -->
+        <div class="hidden md:block absolute top-[52px] left-[calc(33.33%+24px)] right-[calc(33.33%+24px)] h-px"
+          style="background: linear-gradient(90deg, rgba(245,158,11,0.5) 0%, rgba(245,158,11,0.5) 100%); border-top: 1px dashed rgba(245,158,11,0.3);"
+        ></div>
+
+        <!-- Step 1 -->
+        <div class="relative text-center">
+          <div class="relative inline-flex">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-6 btn-amber">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <!-- Step number -->
+            <div class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center">
+              1
+            </div>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">Sign Up</h3>
+          <p class="text-sm text-zinc-400 leading-relaxed">
+            Create your account in under 30 seconds. Tell us your due date and your role — we handle the rest.
+          </p>
+          <p class="text-xs text-amber-500 font-medium mt-3">Takes 30 seconds</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="relative text-center">
+          <div class="relative inline-flex">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-6" style="background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+            </div>
+            <div class="absolute -top-2 -right-2 w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center" style="background: rgba(245,158,11,0.2); color: #f59e0b; border: 1px solid rgba(245,158,11,0.4);">
+              2
+            </div>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">Get Your First Briefing</h3>
+          <p class="text-sm text-zinc-400 leading-relaxed">
+            Receive a personalized weekly briefing matched to your current stage. Plain language, actionable, honest.
+          </p>
+          <p class="text-xs text-amber-500 font-medium mt-3">Stage-matched content</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="relative text-center">
+          <div class="relative inline-flex">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-6" style="background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+            <div class="absolute -top-2 -right-2 w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center" style="background: rgba(245,158,11,0.2); color: #f59e0b; border: 1px solid rgba(245,158,11,0.4);">
+              3
+            </div>
+          </div>
+          <h3 class="text-lg font-semibold text-white mb-2">Start Your Journey</h3>
+          <p class="text-sm text-zinc-400 leading-relaxed">
+            Explore the 7 challenge pillars, check tasks off your list, track your mood, and grow into the dad you want to be.
+          </p>
+          <p class="text-xs text-amber-500 font-medium mt-3">Day by day, stage by stage</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       PRICING SECTION
+  ============================================================ -->
+  <section id="pricing" class="py-24 relative">
+    <div class="section-divider mb-24 -mt-12"></div>
+
+    <!-- Subtle bg glow -->
+    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 60% 50% at 50% 100%, rgba(245,158,11,0.05) 0%, transparent 70%);"></div>
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- Section header -->
+      <div class="text-center mb-16">
+        <p class="text-amber-500 text-sm font-semibold uppercase tracking-widest mb-3">Pricing</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
+          Simple, honest pricing
+        </h2>
+        <p class="mt-4 text-zinc-400 text-lg max-w-xl mx-auto">
+          Start free. Upgrade when you're ready. One subscription covers both partners.
+        </p>
+      </div>
+
+      <!-- Pricing cards grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 items-start">
+
+        <!-- FREE -->
+        <div class="glass-card pricing-card-hover rounded-2xl p-6">
+          <div class="mb-6">
+            <p class="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Free</p>
+            <div class="flex items-baseline gap-1">
+              <span class="text-4xl font-bold text-white">$0</span>
+            </div>
+            <p class="text-xs text-zinc-500 mt-1">Forever free</p>
+          </div>
+          <a href="#" class="btn-ghost block text-center py-2.5 px-4 rounded-xl text-sm font-semibold text-zinc-300 border border-zinc-700 mb-6">
+            Get Started
+          </a>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              30-day task window
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              4-week briefings
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Daily mood check-ins
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Basic checklists
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Dad Journey (2 pillars)
+            </li>
+          </ul>
+        </div>
+
+        <!-- MONTHLY -->
+        <div class="glass-card pricing-card-hover rounded-2xl p-6">
+          <div class="mb-6">
+            <p class="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Monthly</p>
+            <div class="flex items-baseline gap-1">
+              <span class="text-4xl font-bold text-white">$4.99</span>
+              <span class="text-zinc-500 text-sm">/mo</span>
+            </div>
+            <p class="text-xs text-zinc-500 mt-1">Billed monthly</p>
+          </div>
+          <a href="#" class="btn-ghost block text-center py-2.5 px-4 rounded-xl text-sm font-semibold text-zinc-300 border border-zinc-700 mb-6">
+            Start Free Trial
+          </a>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Everything in Free
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Unlimited tasks
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              All briefings
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Push notifications
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Premium checklists
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Budget planner
+            </li>
+          </ul>
+        </div>
+
+        <!-- YEARLY — FEATURED / BEST VALUE -->
+        <div class="pricing-highlight pricing-card-hover pricing-featured rounded-2xl p-6 relative">
+          <!-- Best Value badge -->
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
+            <span class="btn-amber text-white text-xs font-bold px-3.5 py-1 rounded-full">
+              Best Value
+            </span>
+          </div>
+          <div class="mb-6 mt-2">
+            <p class="text-xs font-semibold text-amber-500 uppercase tracking-wider mb-2">Yearly</p>
+            <div class="flex items-baseline gap-1">
+              <span class="text-4xl font-bold text-white">$39.99</span>
+              <span class="text-zinc-500 text-sm">/yr</span>
+            </div>
+            <p class="text-xs text-amber-500/80 mt-1 font-medium">$3.33/mo — save 33%</p>
+          </div>
+          <a href="#" class="btn-amber block text-center py-2.5 px-4 rounded-xl text-sm font-semibold text-white mb-6">
+            Get Started Free
+          </a>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2.5 text-sm text-zinc-300">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Everything in Monthly
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-300">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              All 7 journey pillars
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-300">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Partner sync
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-300">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Priority support
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-300">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Full budget planner
+            </li>
+          </ul>
+        </div>
+
+        <!-- LIFETIME -->
+        <div class="glass-card pricing-card-hover rounded-2xl p-6" style="border-color: rgba(168,85,247,0.2);">
+          <div class="mb-6">
+            <p class="text-xs font-semibold text-purple-400 uppercase tracking-wider mb-2">Lifetime</p>
+            <div class="flex items-baseline gap-1">
+              <span class="text-4xl font-bold text-white">$99.99</span>
+            </div>
+            <p class="text-xs text-zinc-500 mt-1">One-time payment</p>
+          </div>
+          <a href="#" class="btn-ghost block text-center py-2.5 px-4 rounded-xl text-sm font-semibold text-purple-300 border mb-6" style="border-color: rgba(168,85,247,0.35);">
+            Buy Once, Own Forever
+          </a>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Everything in Yearly
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              No recurring fees
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              All future updates
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Family access, forever
+            </li>
+            <li class="flex items-start gap-2.5 text-sm text-zinc-400">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 flex-shrink-0">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              VIP early feature access
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Trust line -->
+      <div class="text-center mt-10">
+        <p class="text-zinc-500 text-sm flex flex-wrap items-center justify-center gap-4">
+          <span class="flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            No credit card required
+          </span>
+          <span class="w-px h-4 bg-zinc-700 hidden sm:block"></span>
+          <span class="flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            30-day money-back guarantee
+          </span>
+          <span class="w-px h-4 bg-zinc-700 hidden sm:block"></span>
+          <span class="flex items-center gap-1.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Cancel anytime
+          </span>
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FINAL CTA BANNER
+  ============================================================ -->
+  <section class="py-20 relative overflow-hidden">
+    <div class="section-divider mb-20 -mt-8"></div>
+
+    <!-- Background glow -->
+    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(245,158,11,0.07) 0%, transparent 70%);"></div>
+
+    <div class="relative max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
+        Ready to be the dad you want to be?
+      </h2>
+      <p class="text-zinc-400 text-lg mb-8">
+        Join thousands of dads navigating pregnancy and early fatherhood with clarity and confidence.
+      </p>
+      <a
+        href="#"
+        class="btn-amber inline-flex items-center gap-2 px-8 py-4 text-base text-white rounded-xl font-semibold"
+      >
+        Get Started Free
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <p class="text-zinc-600 text-sm mt-4">Free plan available. No credit card needed.</p>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer id="resources" class="border-t border-zinc-800/60 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
+
+        <!-- Brand column -->
+        <div class="lg:col-span-2">
+          <a href="#" class="flex items-center gap-2.5 mb-4">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center btn-amber">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <span class="font-semibold text-base text-white">The Dad Center</span>
+          </a>
+          <p class="text-sm text-zinc-500 leading-relaxed max-w-xs">
+            The operating system for modern fatherhood. Built to help dads show up with confidence at every stage.
+          </p>
+          <p class="text-xs text-zinc-600 mt-4">thedadcenter.com</p>
+        </div>
+
+        <!-- Product links -->
+        <div>
+          <p class="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">Product</p>
+          <ul class="space-y-2.5">
+            <li><a href="#features" class="footer-link text-sm text-zinc-500">Features</a></li>
+            <li><a href="#pricing" class="footer-link text-sm text-zinc-500">Pricing</a></li>
+            <li><a href="#how-it-works" class="footer-link text-sm text-zinc-500">How It Works</a></li>
+            <li><a href="#" class="footer-link text-sm text-zinc-500">Changelog</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources links -->
+        <div>
+          <p class="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">Resources</p>
+          <ul class="space-y-2.5">
+            <li><a href="#" class="footer-link text-sm text-zinc-500">Dad's Guide</a></li>
+            <li><a href="#" class="footer-link text-sm text-zinc-500">Pregnancy Timeline</a></li>
+            <li><a href="#" class="footer-link text-sm text-zinc-500">Baby Budget Calculator</a></li>
+            <li><a href="#" class="footer-link text-sm text-zinc-500">Community</a></li>
+          </ul>
+        </div>
+
+        <!-- Company links -->
+        <div>
+          <p class="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">Company</p>
+          <ul class="space-y-2.5">
+            <li><a href="#" class="footer-link text-sm text-zinc-500">About</a></li>
+            <li><a href="#" class="footer-link text-sm text-zinc-500">Privacy Policy</a></li>
+            <li><a href="#" class="footer-link text-sm text-zinc-500">Terms of Service</a></li>
+            <li><a href="#" class="footer-link text-sm text-zinc-500">Contact</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="section-divider mb-6"></div>
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p class="text-xs text-zinc-600">
+          &copy; 2026 The Dad Center. All rights reserved.
+        </p>
+        <p class="text-xs text-zinc-600">
+          Made with intention — for dads everywhere.
+        </p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       MOBILE MENU (simple toggle, no JS framework)
+  ============================================================ -->
+  <script>
+    // Initialize Lucide icons if available
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+
+    // Smooth active nav link highlighting on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            navLinks.forEach((link) => {
+              link.style.color = '';
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                link.style.color = '#fbbf24';
+              }
+            });
+          }
+        });
+      },
+      { rootMargin: '-40% 0px -55% 0px' }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    // Add header backdrop on scroll
+    const header = document.querySelector('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        header.style.borderBottomColor = 'rgba(255,255,255,0.08)';
+      } else {
+        header.style.borderBottomColor = 'rgba(255,255,255,0.04)';
+      }
+    }, { passive: true });
+  </script>
+
+</body>
+</html>

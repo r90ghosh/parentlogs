@@ -1,0 +1,2284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Command Center for Fatherhood</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── CSS Variables ──────────────────────────────────────────────────── */
+    :root {
+      --bg:        #080808;
+      --surface:   #111111;
+      --card:      rgba(255,255,255,0.03);
+      --cyan:      #00e5ff;
+      --brass:     #c8a55a;
+      --text:      #e8e8e8;
+      --muted:     #666666;
+      --danger:    #ff3d00;
+      --border:    rgba(255,255,255,0.06);
+      --border-hi: rgba(0,229,255,0.25);
+    }
+
+    /* ── Reset & Base ───────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Film Grain Overlay ─────────────────────────────────────────────── */
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 300px 300px;
+    }
+
+    /* ── Scan Lines ─────────────────────────────────────────────────────── */
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 998;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.012) 2px,
+        rgba(255,255,255,0.012) 3px
+      );
+    }
+
+    /* ── Typography ─────────────────────────────────────────────────────── */
+    .font-display { font-family: 'Syne', sans-serif; }
+    .font-body    { font-family: 'Outfit', sans-serif; }
+
+    /* ── Utility ────────────────────────────────────────────────────────── */
+    .cyan  { color: var(--cyan); }
+    .brass { color: var(--brass); }
+    .muted { color: var(--muted); }
+
+    /* ── Reveal Animation System ────────────────────────────────────────── */
+    .reveal {
+      clip-path: inset(0 0 100% 0);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: clip-path 0.9s cubic-bezier(0.16,1,0.3,1),
+                  opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.9s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.visible {
+      clip-path: inset(0 0 0% 0);
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.45s; }
+    .reveal-delay-5 { transition-delay: 0.6s; }
+
+    /* ── Page Load Orchestration ────────────────────────────────────────── */
+    .load-reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: loadReveal 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    @keyframes loadReveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Header ─────────────────────────────────────────────────────────── */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(8,8,8,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.3s ease;
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 28px;
+      letter-spacing: -0.05em;
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    nav a {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 400;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover { color: var(--text); }
+
+    .btn-outline {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+      padding: 10px 24px;
+      background: transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease;
+      display: inline-block;
+    }
+
+    .btn-outline:hover {
+      background: var(--cyan);
+      color: #000;
+    }
+
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .burger span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--text);
+      transition: transform 0.3s ease;
+    }
+
+    /* ── Progress Line ──────────────────────────────────────────────────── */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 1px;
+      background: var(--cyan);
+      z-index: 200;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ── Hero ───────────────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 60px;
+      align-items: center;
+      padding: 140px 48px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+    }
+
+    .hero-bg-blob-1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,229,255,0.07) 0%, transparent 70%);
+      top: -100px;
+      left: -200px;
+    }
+
+    .hero-bg-blob-2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(200,165,90,0.06) 0%, transparent 70%);
+      bottom: 0;
+      right: 300px;
+    }
+
+    .hero-preheading {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 400;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--brass);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: loadReveal 0.6s ease forwards 0.3s;
+    }
+
+    .hero-heading {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(4rem, 8vw, 9rem);
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      margin-bottom: 40px;
+    }
+
+    .hero-heading .line {
+      display: block;
+      overflow: hidden;
+    }
+
+    .hero-heading .line-inner {
+      display: block;
+      transform: translateY(100%);
+      opacity: 0;
+      animation: slideUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .hero-heading .line:nth-child(1) .line-inner { animation-delay: 0.5s; }
+    .hero-heading .line:nth-child(2) .line-inner { animation-delay: 0.65s; }
+    .hero-heading .line:nth-child(3) .line-inner { animation-delay: 0.8s; }
+    .hero-heading .line:nth-child(4) .line-inner { animation-delay: 0.95s; }
+
+    @keyframes slideUp {
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .hero-line {
+      width: 0;
+      height: 1px;
+      background: var(--cyan);
+      margin-bottom: 32px;
+      animation: expandLine 1s cubic-bezier(0.16,1,0.3,1) forwards 1.4s;
+    }
+
+    @keyframes expandLine {
+      to { width: 100%; }
+    }
+
+    .hero-sub {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      font-size: 18px;
+      color: rgba(232,232,232,0.7);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: loadReveal 0.8s ease forwards 1.5s;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      opacity: 0;
+      animation: loadReveal 0.8s ease forwards 1.7s;
+    }
+
+    .btn-primary {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--cyan);
+      color: #000;
+      border: 1px solid var(--cyan);
+      padding: 16px 40px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s ease, color 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--cyan);
+    }
+
+    .hero-link {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 400;
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .hero-link:hover {
+      color: var(--text);
+      border-color: var(--muted);
+    }
+
+    /* ── Dashboard Preview Card ─────────────────────────────────────────── */
+    .dashboard-preview {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      padding: 24px;
+      position: relative;
+      opacity: 0;
+      animation: loadReveal 1s ease forwards 1.2s;
+    }
+
+    .dashboard-preview::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity: 0.5;
+    }
+
+    .preview-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .preview-dot-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .preview-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+    }
+
+    .preview-dot.cyan { background: var(--cyan); opacity: 0.6; }
+    .preview-dot.brass { background: var(--brass); opacity: 0.6; }
+    .preview-dot.muted { background: var(--muted); opacity: 0.4; }
+
+    .preview-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .preview-date {
+      font-family: 'Syne', sans-serif;
+      font-size: 10px;
+      color: var(--brass);
+      letter-spacing: 0.05em;
+    }
+
+    .preview-week-label {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+
+    .preview-week-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .preview-week-tag {
+      font-size: 10px;
+      color: var(--cyan);
+      letter-spacing: 0.08em;
+    }
+
+    .preview-progress-wrap {
+      margin: 20px 0;
+    }
+
+    .preview-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .preview-progress-track {
+      height: 3px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .preview-progress-fill {
+      height: 100%;
+      background: var(--cyan);
+      border-radius: 2px;
+      animation: progressFill 2s ease forwards 2s;
+      width: 0;
+    }
+
+    @keyframes progressFill {
+      to { width: 68%; }
+    }
+
+    .preview-tasks {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .preview-task-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: rgba(232,232,232,0.6);
+    }
+
+    .preview-check {
+      width: 14px;
+      height: 14px;
+      border: 1px solid rgba(255,255,255,0.15);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preview-check.done {
+      background: rgba(0,229,255,0.15);
+      border-color: var(--cyan);
+    }
+
+    .preview-check.done::after {
+      content: '';
+      width: 6px;
+      height: 4px;
+      border-left: 1px solid var(--cyan);
+      border-bottom: 1px solid var(--cyan);
+      transform: rotate(-45deg) translateY(-1px);
+    }
+
+    .preview-mood-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .preview-emoji {
+      font-size: 18px;
+      opacity: 0.35;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .preview-emoji.active {
+      opacity: 1;
+      transform: scale(1.25);
+      filter: drop-shadow(0 0 6px var(--cyan));
+    }
+
+    .preview-nav {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .preview-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .preview-nav-item.active { color: var(--cyan); }
+
+    .preview-nav-icon {
+      width: 16px;
+      height: 1px;
+      background: currentColor;
+      position: relative;
+    }
+
+    .preview-nav-icon::before,
+    .preview-nav-icon::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: currentColor;
+    }
+
+    .preview-nav-icon::before { top: -4px; }
+    .preview-nav-icon::after  { top: 4px; }
+
+    /* ── Scroll Indicator ───────────────────────────────────────────────── */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 48px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0;
+      animation: loadReveal 0.8s ease forwards 2s;
+    }
+
+    .scroll-arrow {
+      width: 20px;
+      height: 20px;
+      border-right: 1px solid var(--muted);
+      border-bottom: 1px solid var(--muted);
+      transform: rotate(45deg);
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: rotate(45deg) translateY(0); }
+      50%       { transform: rotate(45deg) translateY(4px); }
+    }
+
+    /* ── Stats Bar ──────────────────────────────────────────────────────── */
+    .stats-bar {
+      background: var(--surface);
+      border-top: 1px solid #222;
+      border-bottom: 1px solid #222;
+      padding: 48px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stats-bar::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 300px 300px;
+      opacity: 0.03;
+      pointer-events: none;
+    }
+
+    .stats-inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    .stat-item {
+      padding: 0 40px;
+      text-align: center;
+      position: relative;
+    }
+
+    .stat-item + .stat-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 48px;
+      background: var(--brass);
+      opacity: 0.3;
+    }
+
+    .stat-number {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(48px, 5vw, 72px);
+      line-height: 1;
+      color: var(--text);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Features Section ───────────────────────────────────────────────── */
+    .features {
+      padding: 120px 48px;
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .section-title-wrap {
+      margin-bottom: 80px;
+      position: relative;
+    }
+
+    .section-eyebrow {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(3rem, 6vw, 7rem);
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      margin-left: -4px;
+    }
+
+    /* Bento Grid */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 16px;
+    }
+
+    .bento-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 40px;
+      position: relative;
+      transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+
+    .bento-card:hover {
+      border-color: var(--border-hi);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,229,255,0.06);
+    }
+
+    .bento-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-hi), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .bento-card:hover::before { opacity: 1; }
+
+    /* Card 1 — big, spans row 1 col 1 */
+    .card-briefings {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    /* Card 2 — row 1 col 2 */
+    .card-mood {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    /* Card 3 — row 2 col 1 */
+    .card-tasks {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    /* Card 4 — row 2 col 2 */
+    .card-journey {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    /* Card 5 — full width row 3 */
+    .card-partner {
+      grid-column: 1 / -1;
+      grid-row: 3;
+    }
+
+    .card-bg-number {
+      position: absolute;
+      bottom: -20px;
+      right: 20px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 160px;
+      line-height: 1;
+      color: var(--text);
+      opacity: 0.04;
+      pointer-events: none;
+      letter-spacing: -0.05em;
+    }
+
+    .card-label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 28px;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+
+    .card-desc {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      color: rgba(232,232,232,0.55);
+      line-height: 1.7;
+      max-width: 400px;
+    }
+
+    /* Mood emojis */
+    .mood-emoji-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .mood-emoji {
+      font-size: 28px;
+      opacity: 0.35;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s, filter 0.2s;
+    }
+
+    .mood-emoji:hover, .mood-emoji.lit {
+      opacity: 1;
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 8px var(--cyan));
+    }
+
+    /* Animated task list */
+    .task-list-demo {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .task-demo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      font-size: 13px;
+      color: rgba(232,232,232,0.7);
+      opacity: 0;
+      transform: translateX(-16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .task-demo-row.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .task-check-sq {
+      width: 14px;
+      height: 14px;
+      border: 1px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+
+    .task-check-sq.done {
+      background: rgba(0,229,255,0.12);
+      border-color: rgba(0,229,255,0.4);
+    }
+
+    .task-tag {
+      margin-left: auto;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      padding: 2px 8px;
+      background: rgba(0,229,255,0.08);
+      color: var(--cyan);
+      border: 1px solid rgba(0,229,255,0.15);
+    }
+
+    /* Pillar bars */
+    .pillar-bars {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .pillar-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pillar-bar-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      width: 90px;
+      flex-shrink: 0;
+    }
+
+    .pillar-bar-track {
+      flex: 1;
+      height: 3px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .pillar-bar-fill {
+      height: 100%;
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    /* Partner card */
+    .partner-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      height: 160px;
+      position: relative;
+    }
+
+    .partner-side {
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .partner-side-dad {
+      background: rgba(0,229,255,0.04);
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .partner-side-mom {
+      background: rgba(200,165,90,0.04);
+    }
+
+    .partner-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .partner-label-dad { color: var(--cyan); }
+    .partner-label-mom { color: var(--brass); }
+
+    .partner-stat {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 36px;
+      line-height: 1;
+      color: var(--text);
+    }
+
+    .partner-stat-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .partner-connector {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+
+    .partner-connector svg {
+      width: 40px;
+      height: 40px;
+    }
+
+    /* ── Testimonial ────────────────────────────────────────────────────── */
+    .testimonial {
+      background: #000;
+      padding: 120px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .testimonial-bg-blob {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(200,165,90,0.04) 0%, transparent 70%);
+      top: -200px;
+      right: -200px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .quote-mark {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 200px;
+      line-height: 0.7;
+      color: var(--brass);
+      opacity: 0.25;
+      transform: rotate(-5deg);
+      display: block;
+      margin-bottom: -60px;
+      user-select: none;
+    }
+
+    .quote-text {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(20px, 2.5vw, 28px);
+      color: var(--text);
+      max-width: 640px;
+      line-height: 1.5;
+      margin-bottom: 40px;
+    }
+
+    .quote-author {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .quote-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(0,229,255,0.2), rgba(200,165,90,0.2));
+      border: 1px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
+    }
+
+    .quote-name {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      font-size: 15px;
+      color: var(--text);
+      display: block;
+    }
+
+    .quote-meta {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .featured-strip {
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .featured-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+      display: block;
+    }
+
+    .featured-logos {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .featured-logo-placeholder {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.12);
+      text-transform: uppercase;
+    }
+
+    /* ── Pricing ────────────────────────────────────────────────────────── */
+    .pricing {
+      padding: 120px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .pricing-bg-blob {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0,229,255,0.04) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .pricing-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 80px;
+    }
+
+    .pricing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 40px 36px;
+      position: relative;
+      transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .pricing-card:hover {
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    .pricing-card.featured {
+      border-color: rgba(0,229,255,0.2);
+      transform: scale(1.03);
+    }
+
+    .pricing-card.featured:hover {
+      border-color: rgba(0,229,255,0.4);
+    }
+
+    /* SVG border trace on featured card */
+    .pricing-card.featured .card-border-svg {
+      position: absolute;
+      inset: -1px;
+      pointer-events: none;
+    }
+
+    .card-border-svg rect {
+      fill: none;
+      stroke: var(--cyan);
+      stroke-width: 1;
+      stroke-dasharray: 1400;
+      stroke-dashoffset: 1400;
+      transition: stroke-dashoffset 1.5s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .pricing-card.featured.visible .card-border-svg rect {
+      stroke-dashoffset: 0;
+    }
+
+    .pricing-badge {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      background: rgba(0,229,255,0.1);
+      color: var(--cyan);
+      border: 1px solid rgba(0,229,255,0.2);
+      margin-bottom: 24px;
+    }
+
+    .pricing-badge-lifetime {
+      background: rgba(200,165,90,0.1);
+      color: var(--brass);
+      border-color: rgba(200,165,90,0.2);
+    }
+
+    .pricing-price {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(48px, 5vw, 64px);
+      line-height: 1;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .pricing-price-sub {
+      font-size: 14px;
+      color: var(--brass);
+      margin-bottom: 24px;
+    }
+
+    .pricing-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .pricing-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 28px 0;
+    }
+
+    .pricing-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 13px;
+      color: rgba(232,232,232,0.65);
+      font-weight: 300;
+    }
+
+    .check-sq {
+      width: 12px;
+      height: 12px;
+      background: rgba(0,229,255,0.15);
+      border: 1px solid rgba(0,229,255,0.3);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .check-sq-brass {
+      background: rgba(200,165,90,0.15);
+      border-color: rgba(200,165,90,0.3);
+    }
+
+    .pricing-cta {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 14px;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .pricing-cta-free {
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .pricing-cta-free:hover {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    .pricing-cta-featured {
+      background: var(--cyan);
+      color: #000;
+      border: 1px solid var(--cyan);
+    }
+
+    .pricing-cta-featured:hover {
+      background: transparent;
+      color: var(--cyan);
+    }
+
+    .pricing-cta-lifetime {
+      color: var(--brass);
+      border: 1px solid rgba(200,165,90,0.3);
+    }
+
+    .pricing-cta-lifetime:hover {
+      background: rgba(200,165,90,0.08);
+      border-color: var(--brass);
+    }
+
+    /* ── Final CTA ──────────────────────────────────────────────────────── */
+    .final-cta {
+      padding: 160px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .final-cta-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(0,229,255,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .final-heading {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(3rem, 8vw, 9rem);
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 48px;
+    }
+
+    .btn-large {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: var(--cyan);
+      color: #000;
+      border: 1px solid var(--cyan);
+      padding: 20px 60px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .btn-large:hover {
+      background: transparent;
+      color: var(--cyan);
+    }
+
+    .final-guarantee {
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .final-guarantee span {
+      margin: 0 8px;
+      color: rgba(255,255,255,0.15);
+    }
+
+    /* ── Footer ─────────────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--brass);
+      padding: 60px 48px 40px;
+      position: relative;
+    }
+
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200,165,90,0.5), transparent);
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+
+    .footer-brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: var(--text);
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .footer-tagline {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.6;
+      max-width: 260px;
+    }
+
+    .footer-col-title {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-col ul li a {
+      font-size: 12px;
+      color: rgba(232,232,232,0.45);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul li a:hover { color: var(--text); }
+
+    .footer-bottom {
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copy {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-legal a {
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+
+    .footer-legal a:hover { color: var(--muted); }
+
+    /* ── Responsive ─────────────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 120px;
+      }
+
+      .dashboard-preview { max-width: 420px; }
+
+      .bento-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .card-briefings { grid-column: 1 / -1; }
+      .card-partner   { grid-column: 1 / -1; }
+
+      .footer-top {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 16px 24px;
+      }
+
+      nav { display: none; }
+      .burger { display: flex; }
+
+      .hero {
+        padding: 100px 24px 60px;
+        gap: 40px;
+      }
+
+      .scroll-indicator { left: 24px; }
+
+      .stats-inner {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0;
+        padding: 0 24px;
+      }
+
+      .stat-item:nth-child(3)::before { display: none; }
+      .stat-item:nth-child(2)::before { opacity: 0.3; }
+
+      .features, .pricing, .testimonial, .final-cta {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card-briefings,
+      .card-mood,
+      .card-tasks,
+      .card-journey,
+      .card-partner {
+        grid-column: 1;
+        grid-row: auto;
+      }
+
+      .partner-split { grid-template-columns: 1fr; height: auto; }
+      .partner-connector { display: none; }
+
+      .pricing-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .pricing-card.featured { transform: none; }
+
+      .footer-top {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+    }
+
+    /* ── Horizontal Progress Line ───────────────────────────────────────── */
+    .section-connector {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-hi), transparent);
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 0;
+      transition: width 1.5s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .section-connector.drawn {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Film grain + scan lines -->
+<div class="grain"></div>
+<div class="scanlines"></div>
+
+<!-- Scroll progress bar -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- HEADER -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<header>
+  <a href="#" class="logo">TDC</a>
+
+  <nav>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#testimonial">Stories</a>
+    <a href="#" class="btn-outline">Start Free</a>
+  </nav>
+
+  <div class="burger" id="burgerBtn" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- HERO -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-bg-blob hero-bg-blob-1"></div>
+  <div class="hero-bg-blob hero-bg-blob-2"></div>
+
+  <div class="hero-content">
+    <div class="hero-preheading">EST. 2026</div>
+
+    <h1 class="hero-heading">
+      <span class="line"><span class="line-inner">YOUR</span></span>
+      <span class="line"><span class="line-inner cyan">COMMAND</span></span>
+      <span class="line"><span class="line-inner">CENTER</span></span>
+      <span class="line"><span class="line-inner">FOR FATHERHOOD</span></span>
+    </h1>
+
+    <div class="hero-line"></div>
+
+    <p class="hero-sub">
+      Everything a dad needs — weekly briefings, smart tasks, mood tracking, and a partner sync system built for the modern father.
+    </p>
+
+    <div class="hero-ctas">
+      <a href="#" class="btn-primary" id="heroCta">Start Free Today</a>
+      <a href="#features" class="hero-link">See how it works</a>
+    </div>
+  </div>
+
+  <!-- Dashboard mini-preview -->
+  <div class="dashboard-preview">
+    <div class="preview-topbar">
+      <div class="preview-dot-row">
+        <div class="preview-dot cyan"></div>
+        <div class="preview-dot brass"></div>
+        <div class="preview-dot muted"></div>
+      </div>
+      <div class="preview-title">The Dad Center</div>
+      <div class="preview-date">Week 24</div>
+    </div>
+
+    <div class="preview-week-label">Current Week</div>
+    <div class="preview-week-num">24</div>
+    <div class="preview-week-tag">Second Trimester &rarr;</div>
+
+    <div class="preview-progress-wrap">
+      <div class="preview-progress-label">
+        <span>Task Completion</span>
+        <span style="color:var(--cyan)">68%</span>
+      </div>
+      <div class="preview-progress-track">
+        <div class="preview-progress-fill"></div>
+      </div>
+    </div>
+
+    <div class="preview-tasks">
+      <div class="preview-task-row">
+        <div class="preview-check done"></div>
+        <span>Research birth plans</span>
+      </div>
+      <div class="preview-task-row">
+        <div class="preview-check done"></div>
+        <span>Tour hospital facilities</span>
+      </div>
+      <div class="preview-task-row">
+        <div class="preview-check"></div>
+        <span>Set up savings account</span>
+      </div>
+      <div class="preview-task-row">
+        <div class="preview-check"></div>
+        <span>Pack hospital bag</span>
+      </div>
+    </div>
+
+    <div class="preview-mood-row">
+      <div class="preview-emoji">😔</div>
+      <div class="preview-emoji">😕</div>
+      <div class="preview-emoji active">😐</div>
+      <div class="preview-emoji">🙂</div>
+      <div class="preview-emoji">😄</div>
+    </div>
+
+    <div class="preview-nav">
+      <div class="preview-nav-item active">
+        <div class="preview-nav-icon"></div>
+        <span>Home</span>
+      </div>
+      <div class="preview-nav-item">
+        <div class="preview-nav-icon"></div>
+        <span>Tasks</span>
+      </div>
+      <div class="preview-nav-item">
+        <div class="preview-nav-icon"></div>
+        <span>Briefing</span>
+      </div>
+      <div class="preview-nav-item">
+        <div class="preview-nav-icon"></div>
+        <span>Tracker</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-arrow"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- STATS BAR -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <span class="stat-number" data-target="2400" data-suffix="+">0</span>
+      <span class="stat-label">Active Dads</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="47">0</span>
+      <span class="stat-label">Smart Tasks</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="7">0</span>
+      <span class="stat-label">Journey Pillars</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="4" data-decimal="9" data-suffix="&#9733;">0</span>
+      <span class="stat-label">App Rating</span>
+    </div>
+  </div>
+</div>
+
+<!-- Section connector line -->
+<div class="section-connector" id="connector1" style="padding:0 48px;"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- FEATURES -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="features" id="features">
+  <div class="section-title-wrap reveal">
+    <span class="section-eyebrow">Everything you need</span>
+    <h2 class="section-title">BUILT<br>FOR DADS</h2>
+  </div>
+
+  <div class="bento-grid">
+
+    <!-- Card 1: Weekly Briefings — BIG -->
+    <div class="bento-card card-briefings reveal">
+      <div class="card-bg-number">40</div>
+      <span class="card-label">Feature 01</span>
+      <h3 class="card-title">Weekly Briefings</h3>
+      <p class="card-desc">
+        Every week, a curated digest built around your pregnancy stage. What's happening with your baby, what to do this week, what to expect next. Delivered with zero fluff.
+      </p>
+      <div style="margin-top:32px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div style="padding:16px; background:rgba(255,255,255,0.02); border:1px solid var(--border);">
+          <div style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:8px;">This Week</div>
+          <div style="font-family:'Syne',sans-serif; font-weight:800; font-size:24px; color:var(--text);">Week 24</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">Baby's size: Corn</div>
+        </div>
+        <div style="padding:16px; background:rgba(255,255,255,0.02); border:1px solid var(--border);">
+          <div style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--brass); margin-bottom:8px;">Your Focus</div>
+          <div style="font-size:13px; color:rgba(232,232,232,0.7); line-height:1.5;">Finances &<br>Birth Planning</div>
+        </div>
+      </div>
+      <div style="margin-top:16px; padding:16px; background:rgba(0,229,255,0.04); border:1px solid rgba(0,229,255,0.1);">
+        <div style="font-size:11px; color:rgba(232,232,232,0.5); line-height:1.6;">
+          "Your partner is at 24 weeks. Baby can now hear your voice. Here are 3 things to do this week..."
+        </div>
+        <div style="margin-top:8px; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan);">Read full briefing &rarr;</div>
+      </div>
+    </div>
+
+    <!-- Card 2: Mood Check-ins -->
+    <div class="bento-card card-mood reveal reveal-delay-1">
+      <span class="card-label">Feature 02</span>
+      <h3 class="card-title">Mood<br>Check-ins</h3>
+      <p class="card-desc" style="font-size:13px;">
+        A 5-second daily check-in. Track patterns. Identify anxiety before it compounds.
+      </p>
+      <div class="mood-emoji-row">
+        <div class="mood-emoji" data-mood="struggling">😔</div>
+        <div class="mood-emoji" data-mood="rough">😕</div>
+        <div class="mood-emoji lit" data-mood="okay">😐</div>
+        <div class="mood-emoji" data-mood="good">🙂</div>
+        <div class="mood-emoji" data-mood="great">😄</div>
+      </div>
+      <div style="margin-top:20px; height:40px; position:relative; overflow:hidden;">
+        <div style="display:flex; gap:3px; align-items:flex-end; height:100%;">
+          <div style="flex:1; background:rgba(200,165,90,0.3); height:40%"></div>
+          <div style="flex:1; background:rgba(200,165,90,0.3); height:55%"></div>
+          <div style="flex:1; background:rgba(0,229,255,0.3); height:65%"></div>
+          <div style="flex:1; background:rgba(0,229,255,0.4); height:80%"></div>
+          <div style="flex:1; background:rgba(0,229,255,0.5); height:70%"></div>
+          <div style="flex:1; background:rgba(0,229,255,0.5); height:90%"></div>
+          <div style="flex:1; background:rgba(0,229,255,0.6); height:100%"></div>
+        </div>
+        <div style="position:absolute; bottom:0; left:0; right:0; font-size:9px; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-top:6px; display:flex; justify-content:space-between;">
+          <span>7 days</span><span>Today</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Smart Tasks -->
+    <div class="bento-card card-tasks reveal reveal-delay-1">
+      <span class="card-label">Feature 03</span>
+      <h3 class="card-title">Smart Tasks</h3>
+      <p class="card-desc" style="font-size:13px;">
+        47 curated tasks across 9 phases of pregnancy and early parenting. 30-day rolling window. No overwhelm.
+      </p>
+      <div class="task-list-demo" id="taskListDemo">
+        <div class="task-demo-row">
+          <div class="task-check-sq done"></div>
+          <span>Research pediatricians in your area</span>
+          <span class="task-tag">Done</span>
+        </div>
+        <div class="task-demo-row">
+          <div class="task-check-sq done"></div>
+          <span>Set up a baby savings account</span>
+          <span class="task-tag">Done</span>
+        </div>
+        <div class="task-demo-row">
+          <div class="task-check-sq"></div>
+          <span>Build a birth plan together</span>
+          <span class="task-tag" style="color:var(--brass); background:rgba(200,165,90,0.08); border-color:rgba(200,165,90,0.2);">This Week</span>
+        </div>
+        <div class="task-demo-row">
+          <div class="task-check-sq"></div>
+          <span>Tour the maternity ward</span>
+          <span class="task-tag" style="color:var(--muted); background:transparent; border-color:rgba(255,255,255,0.06);">Upcoming</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Dad Journey -->
+    <div class="bento-card card-journey reveal reveal-delay-2">
+      <span class="card-label">Feature 04</span>
+      <h3 class="card-title">Dad<br>Journey</h3>
+      <p class="card-desc" style="font-size:13px;">
+        7 pillars of fatherhood. Track growth across every dimension that matters.
+      </p>
+      <div class="pillar-bars" id="pillarBars">
+        <div class="pillar-bar-row">
+          <span class="pillar-bar-label">Knowledge</span>
+          <div class="pillar-bar-track"><div class="pillar-bar-fill" style="background:var(--cyan);" data-width="72"></div></div>
+        </div>
+        <div class="pillar-bar-row">
+          <span class="pillar-bar-label">Planning</span>
+          <div class="pillar-bar-track"><div class="pillar-bar-fill" style="background:#5c7fff;" data-width="58"></div></div>
+        </div>
+        <div class="pillar-bar-row">
+          <span class="pillar-bar-label">Finances</span>
+          <div class="pillar-bar-track"><div class="pillar-bar-fill" style="background:var(--brass);" data-width="44"></div></div>
+        </div>
+        <div class="pillar-bar-row">
+          <span class="pillar-bar-label">Anxiety</span>
+          <div class="pillar-bar-track"><div class="pillar-bar-fill" style="background:#ff6b6b;" data-width="30"></div></div>
+        </div>
+        <div class="pillar-bar-row">
+          <span class="pillar-bar-label">Bonding</span>
+          <div class="pillar-bar-track"><div class="pillar-bar-fill" style="background:#a8ff78;" data-width="65"></div></div>
+        </div>
+        <div class="pillar-bar-row">
+          <span class="pillar-bar-label">Relationship</span>
+          <div class="pillar-bar-track"><div class="pillar-bar-fill" style="background:#ff8fab;" data-width="50"></div></div>
+        </div>
+        <div class="pillar-bar-row">
+          <span class="pillar-bar-label">Family</span>
+          <div class="pillar-bar-track"><div class="pillar-bar-fill" style="background:#ffd166;" data-width="38"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5: Partner Sync — full width -->
+    <div class="bento-card card-partner reveal">
+      <span class="card-label">Feature 05</span>
+      <h3 class="card-title" style="margin-bottom:24px;">Partner Sync</h3>
+
+      <div class="partner-split">
+        <div class="partner-side partner-side-dad">
+          <span class="partner-label partner-label-dad">Dad</span>
+          <div class="partner-stat">12</div>
+          <div class="partner-stat-sub">tasks completed this week</div>
+        </div>
+
+        <div class="partner-connector">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="18" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+            <circle cx="20" cy="20" r="18" stroke="var(--cyan)" stroke-width="1"
+              stroke-dasharray="4 4"
+              stroke-dashoffset="0">
+              <animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="8s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="20" cy="20" r="4" fill="rgba(0,229,255,0.3)" stroke="var(--cyan)" stroke-width="1"/>
+          </svg>
+        </div>
+
+        <div class="partner-side partner-side-mom">
+          <span class="partner-label partner-label-mom">Partner</span>
+          <div class="partner-stat">8</div>
+          <div class="partner-stat-sub">tasks completed this week</div>
+        </div>
+      </div>
+
+      <p style="margin-top:20px; font-size:13px; color:rgba(232,232,232,0.45); font-weight:300; max-width:560px; line-height:1.7;">
+        One subscription per family. Both partners see shared progress, tasks, and milestones. Never have "who's doing what" conversations again.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- TESTIMONIAL -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="testimonial" id="testimonial">
+  <div class="testimonial-bg-blob"></div>
+
+  <div style="max-width:800px; margin:0 auto; position:relative; z-index:1;">
+    <div class="reveal">
+      <span class="quote-mark">&ldquo;</span>
+    </div>
+
+    <blockquote class="quote-text reveal reveal-delay-1">
+      I didn't know what I didn't know. This app turned months of vague anxiety into a clear action plan. By the time our daughter arrived, I felt like I'd actually shown up.
+    </blockquote>
+
+    <div class="quote-author reveal reveal-delay-2">
+      <div class="quote-avatar"></div>
+      <div>
+        <span class="quote-name">Marcus T.</span>
+        <span class="quote-meta">Dad of 1 &middot; Week 32 when he started</span>
+      </div>
+    </div>
+
+    <div class="featured-strip reveal reveal-delay-3">
+      <span class="featured-label">As seen in</span>
+      <div class="featured-logos">
+        <span class="featured-logo-placeholder">Fatherly</span>
+        <span class="featured-logo-placeholder">The Bump</span>
+        <span class="featured-logo-placeholder">Gear Patrol</span>
+        <span class="featured-logo-placeholder">BabyCenter</span>
+        <span class="featured-logo-placeholder">Men's Health</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- PRICING -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="pricing" id="pricing">
+  <div class="pricing-bg-blob"></div>
+
+  <div class="section-title-wrap reveal">
+    <span class="section-eyebrow">Simple, transparent</span>
+    <h2 class="section-title">INVEST IN<br>YOUR JOURNEY</h2>
+  </div>
+
+  <div class="pricing-cards">
+
+    <!-- Free -->
+    <div class="pricing-card reveal">
+      <span class="pricing-name">Free</span>
+      <div class="pricing-price">$0</div>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:0; font-weight:300;">Forever free, no card required</p>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li><div class="check-sq"></div>Weekly briefings (4-week window)</li>
+        <li><div class="check-sq"></div>Tasks (30-day rolling window)</li>
+        <li><div class="check-sq"></div>Mood check-ins (30 days)</li>
+        <li><div class="check-sq"></div>Partner invite</li>
+        <li><div class="check-sq" style="background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.08); opacity:0.4;"></div><span style="text-decoration:line-through; opacity:0.4;">Full journey access</span></li>
+        <li><div class="check-sq" style="background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.08); opacity:0.4;"></div><span style="text-decoration:line-through; opacity:0.4;">Push notifications</span></li>
+      </ul>
+      <a href="#" class="pricing-cta pricing-cta-free">Get Started</a>
+    </div>
+
+    <!-- Yearly — FEATURED -->
+    <div class="pricing-card featured reveal reveal-delay-1" id="featuredPricingCard">
+      <!-- SVG border trace -->
+      <svg class="card-border-svg" viewBox="0 0 100% 100%" preserveAspectRatio="none" style="position:absolute;inset:-1px;width:calc(100% + 2px);height:calc(100% + 2px);">
+        <rect x="0.5" y="0.5" width="99%" height="99%" rx="0" ry="0"
+          fill="none" stroke="rgba(0,229,255,0.5)" stroke-width="1"
+          stroke-dasharray="2000" stroke-dashoffset="2000"
+          id="borderTrace"/>
+      </svg>
+
+      <span class="pricing-badge">Most Popular</span>
+      <span class="pricing-name">Yearly</span>
+      <div class="pricing-price">$39.99</div>
+      <div class="pricing-price-sub">$3.33 / month &mdash; billed annually</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li><div class="check-sq"></div>Everything in Free</li>
+        <li><div class="check-sq"></div>Unlimited briefing history</li>
+        <li><div class="check-sq"></div>Full journey (all 7 pillars)</li>
+        <li><div class="check-sq"></div>Push notifications</li>
+        <li><div class="check-sq"></div>Budget snapshot</li>
+        <li><div class="check-sq"></div>Priority support</li>
+      </ul>
+      <a href="#" class="pricing-cta pricing-cta-featured">Start Yearly Plan</a>
+    </div>
+
+    <!-- Lifetime -->
+    <div class="pricing-card reveal reveal-delay-2">
+      <span class="pricing-badge pricing-badge-lifetime">&#9812; Lifetime</span>
+      <span class="pricing-name">One-Time</span>
+      <div class="pricing-price" style="color:var(--brass);">$99.99</div>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:0; font-weight:300;">Pay once, own it forever</p>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li><div class="check-sq check-sq-brass"></div>Everything in Yearly</li>
+        <li><div class="check-sq check-sq-brass"></div>Lifetime updates</li>
+        <li><div class="check-sq check-sq-brass"></div>Early access features</li>
+        <li><div class="check-sq check-sq-brass"></div>Founding member badge</li>
+        <li><div class="check-sq check-sq-brass"></div>White-glove onboarding</li>
+        <li><div class="check-sq check-sq-brass"></div>One subscription covers family</li>
+      </ul>
+      <a href="#" class="pricing-cta pricing-cta-lifetime">Get Lifetime Access</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- FINAL CTA -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="final-cta">
+  <div class="final-cta-bg"></div>
+
+  <div class="final-heading reveal">READY TO<br>STEP UP?</div>
+  <div class="reveal reveal-delay-2">
+    <a href="#" class="btn-large" id="finalCtaBtn">Start Free Today</a>
+    <p class="final-guarantee">
+      30-day money-back guarantee
+      <span>&middot;</span>
+      No credit card required
+      <span>&middot;</span>
+      Cancel anytime
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <span class="footer-brand">The Dad Center</span>
+        <p class="footer-tagline">
+          Your command center for fatherhood. Built for the modern dad who wants to show up fully — before, during, and after.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <span class="footer-col-title">Product</span>
+        <ul>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Dad Journey</a></li>
+          <li><a href="#">Weekly Briefings</a></li>
+          <li><a href="#">Partner Sync</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <span class="footer-col-title">Company</span>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <span class="footer-col-title">Legal</span>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="#">GDPR</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2026 The Dad Center &middot; thedadcenter.com</span>
+      <div class="footer-legal">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<script>
+  // ── Scroll Progress Bar ─────────────────────────────────────────────────
+  const progressBar = document.getElementById('scrollProgress');
+
+  window.addEventListener('scroll', () => {
+    const scrollTop    = window.scrollY;
+    const docHeight    = document.documentElement.scrollHeight - window.innerHeight;
+    const progress     = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = progress + '%';
+  }, { passive: true });
+
+  // ── Intersection Observer — Reveal ──────────────────────────────────────
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12, rootMargin: '0px 0px -60px 0px' }
+  );
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // ── Count-up Animation ──────────────────────────────────────────────────
+  function countUp(el) {
+    const target  = parseInt(el.dataset.target, 10);
+    const suffix  = el.dataset.suffix || '';
+    const decimal = el.dataset.decimal;
+    const duration = 1800;
+    const start    = performance.now();
+
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(eased * target);
+
+      if (decimal !== undefined) {
+        el.textContent = current + '.' + decimal + suffix;
+      } else if (target >= 1000) {
+        el.textContent = current.toLocaleString() + suffix;
+      } else {
+        el.textContent = current + suffix;
+      }
+
+      if (progress < 1) requestAnimationFrame(update);
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  const statObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          countUp(entry.target);
+          statObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  document.querySelectorAll('.stat-number[data-target]').forEach(el => statObserver.observe(el));
+
+  // ── Pillar Bars — animate on scroll ────────────────────────────────────
+  const pillarObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.pillar-bar-fill').forEach((bar, i) => {
+            setTimeout(() => {
+              bar.style.width = bar.dataset.width + '%';
+            }, i * 120);
+          });
+          pillarObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+
+  const pillarSection = document.getElementById('pillarBars');
+  if (pillarSection) pillarObserver.observe(pillarSection.closest('.bento-card'));
+
+  // ── Task List — animate on scroll ──────────────────────────────────────
+  const taskObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.task-demo-row').forEach((row, i) => {
+            setTimeout(() => row.classList.add('visible'), i * 150);
+          });
+          taskObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.2 }
+  );
+
+  const taskList = document.getElementById('taskListDemo');
+  if (taskList) taskObserver.observe(taskList);
+
+  // ── Pricing Card Border Trace ───────────────────────────────────────────
+  const pricingObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          const traceRect = entry.target.querySelector('#borderTrace');
+          if (traceRect) {
+            setTimeout(() => {
+              traceRect.style.transition = 'stroke-dashoffset 2s cubic-bezier(0.16,1,0.3,1)';
+              traceRect.style.strokeDashoffset = '0';
+            }, 400);
+          }
+          pricingObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+
+  const featuredCard = document.getElementById('featuredPricingCard');
+  if (featuredCard) pricingObserver.observe(featuredCard);
+
+  // ── Mood Emoji Interaction ──────────────────────────────────────────────
+  document.querySelectorAll('.mood-emoji').forEach(emoji => {
+    emoji.addEventListener('click', function() {
+      document.querySelectorAll('.mood-emoji').forEach(e => e.classList.remove('lit'));
+      this.classList.add('lit');
+    });
+  });
+
+  // ── Magnetic CTA Effect ─────────────────────────────────────────────────
+  function magneticEffect(btn) {
+    btn.addEventListener('mousemove', function(e) {
+      const rect    = btn.getBoundingClientRect();
+      const centerX = rect.left + rect.width  / 2;
+      const centerY = rect.top  + rect.height / 2;
+      const deltaX  = (e.clientX - centerX) * 0.25;
+      const deltaY  = (e.clientY - centerY) * 0.25;
+      btn.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+    });
+
+    btn.addEventListener('mouseleave', function() {
+      btn.style.transform = '';
+      btn.style.transition = 'transform 0.4s cubic-bezier(0.16,1,0.3,1), background 0.2s ease, color 0.2s ease';
+      setTimeout(() => { btn.style.transition = ''; }, 400);
+    });
+  }
+
+  const heroCta  = document.getElementById('heroCta');
+  const finalCta = document.getElementById('finalCtaBtn');
+  if (heroCta)  magneticEffect(heroCta);
+  if (finalCta) magneticEffect(finalCta);
+
+  // ── Parallax Hero ───────────────────────────────────────────────────────
+  const heroHeading = document.querySelector('.hero-heading');
+  const heroBg1     = document.querySelector('.hero-bg-blob-1');
+  const heroBg2     = document.querySelector('.hero-bg-blob-2');
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    if (heroHeading) {
+      heroHeading.style.transform = `translateY(${scrollY * 0.12}px)`;
+    }
+    if (heroBg1) {
+      heroBg1.style.transform = `translateY(${scrollY * 0.2}px)`;
+    }
+    if (heroBg2) {
+      heroBg2.style.transform = `translateY(${scrollY * -0.1}px)`;
+    }
+  }, { passive: true });
+
+  // ── Section Connector Lines ─────────────────────────────────────────────
+  const connectorObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('drawn');
+          connectorObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  document.querySelectorAll('.section-connector').forEach(el => connectorObserver.observe(el));
+
+  // ── Mobile burger (stub — just toggles nav visibility) ─────────────────
+  const burgerBtn = document.getElementById('burgerBtn');
+  const mainNav   = document.querySelector('nav');
+
+  if (burgerBtn && mainNav) {
+    burgerBtn.addEventListener('click', () => {
+      const isOpen = mainNav.style.display === 'flex';
+      if (isOpen) {
+        mainNav.style.display = '';
+      } else {
+        mainNav.style.cssText = `
+          display: flex;
+          flex-direction: column;
+          position: fixed;
+          top: 64px;
+          left: 0;
+          right: 0;
+          background: rgba(8,8,8,0.97);
+          backdrop-filter: blur(20px);
+          padding: 24px 24px 32px;
+          gap: 24px;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+          z-index: 99;
+        `;
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

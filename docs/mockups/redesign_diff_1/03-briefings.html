@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Briefings — The Dad Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --indigo: #6366f1;
+      --indigo-light: #818cf8;
+      --violet: #7c3aed;
+      --rose: #f43f5e;
+      --surface: #030303;
+    }
+
+    body {
+      background-color: var(--surface);
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Dot pattern overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Floating geometric blobs ── */
+    .geo-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .geo-blob-1 {
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
+      top: -120px;
+      right: -80px;
+      animation: blobDrift1 18s ease-in-out infinite alternate;
+    }
+    .geo-blob-2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(124,58,237,0.14) 0%, transparent 70%);
+      bottom: 200px;
+      left: -100px;
+      animation: blobDrift2 22s ease-in-out infinite alternate;
+    }
+    .geo-blob-3 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(244,63,94,0.08) 0%, transparent 70%);
+      top: 50%;
+      right: 10%;
+      animation: blobDrift3 15s ease-in-out infinite alternate;
+    }
+
+    @keyframes blobDrift1 {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(-40px, 30px) scale(1.08); }
+      100% { transform: translate(20px, -20px) scale(0.96); }
+    }
+    @keyframes blobDrift2 {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(30px, -40px) scale(1.05); }
+      100% { transform: translate(-20px, 20px) scale(0.98); }
+    }
+    @keyframes blobDrift3 {
+      0%   { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-30px, 40px) scale(1.1); }
+    }
+
+    /* ── Glass card ── */
+    .glass {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+    }
+    .glass-rose {
+      background: rgba(244,63,94,0.03);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(244,63,94,0.12);
+      border-radius: 20px;
+    }
+    .glass-violet {
+      background: rgba(124,58,237,0.04);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(124,58,237,0.15);
+      border-radius: 20px;
+    }
+
+    /* ── Gradient text ── */
+    .gradient-text-hero {
+      background: linear-gradient(135deg, #818cf8 0%, #ffffff 45%, #fb7185 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-indigo {
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-violet {
+      background: linear-gradient(135deg, #7c3aed, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-number {
+      background: linear-gradient(135deg, #818cf8, #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.25); border-radius: 2px; }
+
+    /* ══════════════════════════════
+       HERO SECTION
+    ══════════════════════════════ */
+    .hero-section {
+      position: relative;
+      width: 100%;
+      min-height: 460px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 60px;
+    }
+
+    /* Animated gradient mesh */
+    .hero-mesh {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 30%, rgba(99,102,241,0.28) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 60% at 80% 20%, rgba(124,58,237,0.20) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 50% 80%, rgba(244,63,94,0.10) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 40% at 10% 80%, rgba(99,102,241,0.12) 0%, transparent 60%);
+      animation: meshMorph 12s ease-in-out infinite alternate;
+    }
+    @keyframes meshMorph {
+      0%   { background-position: 0% 0%, 100% 0%, 50% 100%, 0% 100%; }
+      25%  { background-position: 10% 20%, 90% 10%, 40% 90%, 15% 85%; }
+      50%  { background-position: 5% 30%, 95% 5%, 55% 85%, 5% 95%; }
+      75%  { background-position: 15% 10%, 85% 20%, 45% 95%, 10% 80%; }
+      100% { background-position: 20% 25%, 80% 15%, 50% 80%, 20% 90%; }
+    }
+
+    /* Hero mesh dark vignette at bottom */
+    .hero-mesh::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 140px;
+      background: linear-gradient(to bottom, transparent, #030303);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 780px;
+    }
+
+    /* Week nav pill */
+    .week-nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .week-nav-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      color: rgba(255,255,255,0.5);
+    }
+    .week-nav-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+    .week-nav-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    .week-nav-center {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 20px;
+      height: 44px;
+      border-left: 1px solid rgba(255,255,255,0.08);
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .week-num-inactive {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.35);
+    }
+    .week-separator {
+      width: 1px;
+      height: 14px;
+      background: rgba(255,255,255,0.15);
+    }
+    .week-num-active {
+      font-size: 14px;
+      font-weight: 700;
+      color: #818cf8;
+    }
+
+    /* Hero title */
+    .hero-title {
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      color: rgba(255,255,255,0.5);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 13px;
+      margin-bottom: 40px;
+    }
+
+    /* Progress dots row */
+    .progress-dots {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-empty {
+      background: rgba(255,255,255,0.1);
+    }
+    .dot-filled {
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+    }
+    .dot-current {
+      background: linear-gradient(135deg, #818cf8, #c4b5fd);
+      width: 10px;
+      height: 10px;
+      box-shadow: 0 0 8px rgba(129,140,248,0.8);
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+    @keyframes dotPulse {
+      0%, 100% { box-shadow: 0 0 6px rgba(129,140,248,0.6); transform: scale(1); }
+      50%       { box-shadow: 0 0 14px rgba(129,140,248,1); transform: scale(1.25); }
+    }
+
+    /* ══════════════════════════════
+       MAIN LAYOUT
+    ══════════════════════════════ */
+    .page-layout {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: 28px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 120px;
+    }
+    .main-col {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .sidebar-col {
+      width: 260px;
+      flex-shrink: 0;
+    }
+    .sidebar-sticky {
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ══════════════════════════════
+       SECTION LABELS
+    ══════════════════════════════ */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .section-icon-wrap {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+    .section-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      margin-top: 1px;
+    }
+
+    /* ══════════════════════════════
+       BABY UPDATE CARD
+    ══════════════════════════════ */
+    .baby-orb-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 180px;
+      margin-bottom: 24px;
+    }
+    .baby-orb {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%,
+        rgba(129,140,248,0.6) 0%,
+        rgba(99,102,241,0.35) 35%,
+        rgba(124,58,237,0.2) 65%,
+        transparent 100%
+      );
+      box-shadow:
+        0 0 60px rgba(99,102,241,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+      animation: orbFloat 5s ease-in-out infinite;
+      position: relative;
+    }
+    .baby-orb::before {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12) 0%, transparent 60%);
+    }
+    @keyframes orbFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%       { transform: translateY(-10px) scale(1.03); }
+    }
+
+    /* Orbiting size text */
+    .orb-orbit {
+      position: absolute;
+      inset: 0;
+      animation: orbitRotate 20s linear infinite;
+    }
+    @keyframes orbitRotate {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .orb-size-badge {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(129,140,248,0.3);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #818cf8;
+      white-space: nowrap;
+      letter-spacing: 0.04em;
+    }
+
+    .highlight-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .highlight-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      border: 1px solid;
+      position: relative;
+      overflow: hidden;
+    }
+    .highlight-chip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.06;
+    }
+    .chip-indigo {
+      color: #818cf8;
+      border-color: rgba(99,102,241,0.35);
+      background: rgba(99,102,241,0.08);
+    }
+    .chip-violet {
+      color: #c4b5fd;
+      border-color: rgba(124,58,237,0.35);
+      background: rgba(124,58,237,0.08);
+    }
+    .chip-rose {
+      color: #fb7185;
+      border-color: rgba(244,63,94,0.35);
+      background: rgba(244,63,94,0.08);
+    }
+    .chip-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════
+       MOM'S EXPERIENCE CARD
+    ══════════════════════════════ */
+    .experience-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      position: relative;
+    }
+    .experience-item:last-child { border-bottom: none; }
+
+    .exp-border {
+      width: 3px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      align-self: stretch;
+      min-height: 32px;
+    }
+    .exp-border-rose   { background: linear-gradient(to bottom, #f43f5e, #fb7185); }
+    .exp-border-orange { background: linear-gradient(to bottom, #f97316, #fb923c); }
+    .exp-border-yellow { background: linear-gradient(to bottom, #eab308, #facc15); }
+    .exp-border-indigo { background: linear-gradient(to bottom, #6366f1, #818cf8); }
+
+    .exp-text-group { flex: 1; }
+    .exp-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 2px;
+    }
+    .exp-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.5;
+    }
+
+    .this-week-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: rgba(244,63,94,0.12);
+      border: 1px solid rgba(244,63,94,0.25);
+      color: #fb7185;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .this-week-badge::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #f43f5e;
+      display: inline-block;
+      margin-right: 4px;
+      animation: badgePulse 2s ease-in-out infinite;
+    }
+    @keyframes badgePulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    /* ══════════════════════════════
+       YOUR FOCUS CARDS
+    ══════════════════════════════ */
+    .focus-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .focus-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 18px 16px;
+      cursor: pointer;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1),
+                  border-color 0.2s ease,
+                  box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .focus-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(99,102,241,0.06) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .focus-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(99,102,241,0.35);
+      box-shadow: 0 12px 40px rgba(99,102,241,0.15);
+    }
+    .focus-card:hover::before { opacity: 1; }
+
+    .focus-number {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+    .focus-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .focus-card-desc {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.5;
+    }
+
+    /* ══════════════════════════════
+       TASK LIST
+    ══════════════════════════════ */
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: padding-left 0.2s ease;
+    }
+    .task-row:last-child { border-bottom: none; }
+    .task-row:hover { padding-left: 4px; }
+
+    .task-checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.18);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .task-checkbox::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .task-checkbox.checked {
+      border-color: #6366f1;
+    }
+    .task-checkbox.checked::before { opacity: 1; }
+    .task-checkbox.checked svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .task-checkbox svg {
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+      width: 12px;
+      height: 12px;
+      color: white;
+    }
+    .task-checkbox:hover {
+      border-color: rgba(99,102,241,0.5);
+      transform: scale(1.1);
+    }
+
+    .task-text {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.85);
+      transition: color 0.2s ease;
+    }
+    .task-row:has(.checked) .task-text {
+      color: rgba(255,255,255,0.35);
+      text-decoration: line-through;
+      text-decoration-color: rgba(255,255,255,0.2);
+    }
+
+    .assignee-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .assignee-dad {
+      background: rgba(99,102,241,0.12);
+      border: 1px solid rgba(99,102,241,0.25);
+      color: #818cf8;
+    }
+    .assignee-both {
+      background: rgba(124,58,237,0.1);
+      border: 1px solid rgba(124,58,237,0.25);
+      color: #a78bfa;
+    }
+    .assignee-mom {
+      background: rgba(244,63,94,0.1);
+      border: 1px solid rgba(244,63,94,0.25);
+      color: #fb7185;
+    }
+
+    /* ══════════════════════════════
+       RELATIONSHIP TIP CARD
+    ══════════════════════════════ */
+    .relationship-card {
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .relationship-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(to bottom, #7c3aed, #a78bfa, #818cf8);
+      border-radius: 2px 0 0 2px;
+    }
+    .quotemark {
+      font-size: 72px;
+      line-height: 1;
+      font-family: Georgia, serif;
+      background: linear-gradient(135deg, #7c3aed, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0.5;
+      margin-bottom: -20px;
+      display: block;
+    }
+    .quote-text {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.7;
+      font-style: italic;
+    }
+    .quote-action {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #a78bfa;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ══════════════════════════════
+       COMING UP NEXT
+    ══════════════════════════════ */
+    .topics-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .topics-scroll::-webkit-scrollbar { display: none; }
+
+    .topic-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+      border: 1px solid;
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1),
+                  box-shadow 0.2s ease;
+    }
+    .topic-pill:hover {
+      transform: scale(1.06) translateY(-2px);
+    }
+    .topic-pill-1 {
+      color: #818cf8;
+      border-color: rgba(99,102,241,0.3);
+      background: rgba(99,102,241,0.08);
+    }
+    .topic-pill-1:hover { box-shadow: 0 4px 20px rgba(99,102,241,0.2); }
+    .topic-pill-2 {
+      color: #a78bfa;
+      border-color: rgba(124,58,237,0.3);
+      background: rgba(124,58,237,0.08);
+    }
+    .topic-pill-2:hover { box-shadow: 0 4px 20px rgba(124,58,237,0.2); }
+    .topic-pill-3 {
+      color: #fb7185;
+      border-color: rgba(244,63,94,0.3);
+      background: rgba(244,63,94,0.08);
+    }
+    .topic-pill-3:hover { box-shadow: 0 4px 20px rgba(244,63,94,0.2); }
+    .topic-pill-4 {
+      color: #34d399;
+      border-color: rgba(52,211,153,0.3);
+      background: rgba(52,211,153,0.08);
+    }
+    .topic-pill-4:hover { box-shadow: 0 4px 20px rgba(52,211,153,0.15); }
+    .topic-pill-5 {
+      color: #fbbf24;
+      border-color: rgba(251,191,36,0.3);
+      background: rgba(251,191,36,0.08);
+    }
+    .topic-pill-5:hover { box-shadow: 0 4px 20px rgba(251,191,36,0.15); }
+    .topic-pill-6 {
+      color: #67e8f9;
+      border-color: rgba(103,232,249,0.3);
+      background: rgba(103,232,249,0.08);
+    }
+    .topic-pill-6:hover { box-shadow: 0 4px 20px rgba(103,232,249,0.15); }
+
+    /* ══════════════════════════════
+       SIDEBAR
+    ══════════════════════════════ */
+    .sidebar-card { padding: 22px; }
+
+    .baby-size-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .cantaloupe-emoji {
+      font-size: 52px;
+      display: block;
+      animation: gentlePulse 4s ease-in-out infinite;
+      margin-bottom: 8px;
+    }
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.06); }
+    }
+    .size-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 2px;
+    }
+    .size-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .stat-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 4px 0;
+    }
+
+    .sidebar-stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
+    .stat-key {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      font-weight: 500;
+    }
+    .stat-val {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    /* ══════════════════════════════
+       NAV FOOTER
+    ══════════════════════════════ */
+    .nav-footer {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 32px;
+      position: relative;
+      z-index: 1;
+    }
+    .nav-footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .btn-prev {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .btn-prev:hover {
+      border-color: rgba(255,255,255,0.22);
+      color: #fff;
+      background: rgba(255,255,255,0.07);
+    }
+    .btn-prev svg { width: 16px; height: 16px; }
+
+    .btn-next {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #6366f1, #7c3aed);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+    }
+    .btn-next:hover {
+      background: linear-gradient(135deg, #818cf8, #6366f1);
+      box-shadow: 0 6px 28px rgba(99,102,241,0.5);
+      transform: translateY(-1px);
+    }
+    .btn-next svg { width: 16px; height: 16px; }
+
+    .medical-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(52,211,153,0.07);
+      border: 1px solid rgba(52,211,153,0.2);
+      color: #34d399;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .medical-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34d399;
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════
+       BOTTOM NAV
+    ══════════════════════════════ */
+    .bottom-nav-wrap {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+    }
+    .bottom-nav-pill {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 8px 8px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 60px;
+    }
+    .nav-item svg { width: 20px; height: 20px; }
+    .nav-item-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-item-default { color: rgba(255,255,255,0.4); }
+    .nav-item-default:hover { color: rgba(255,255,255,0.7); }
+
+    .nav-item-active {
+      background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(124,58,237,0.15));
+      color: #818cf8;
+      box-shadow: 0 0 20px rgba(99,102,241,0.25);
+      border: 1px solid rgba(99,102,241,0.2);
+    }
+    .nav-item-active .nav-item-label { color: #818cf8; }
+
+    /* ══════════════════════════════
+       CARD INNER PADDING
+    ══════════════════════════════ */
+    .card-pad { padding: 24px; }
+    .card-pad-lg { padding: 28px; }
+
+    /* ══════════════════════════════
+       SCROLL-IN ANIMATION
+    ══════════════════════════════ */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.5s ease forwards;
+    }
+    .fade-up-1 { animation-delay: 0.05s; }
+    .fade-up-2 { animation-delay: 0.12s; }
+    .fade-up-3 { animation-delay: 0.19s; }
+    .fade-up-4 { animation-delay: 0.26s; }
+    .fade-up-5 { animation-delay: 0.33s; }
+    .fade-up-6 { animation-delay: 0.40s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ══════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════ */
+    @media (max-width: 900px) {
+      .page-layout { flex-direction: column; }
+      .sidebar-col { width: 100%; }
+      .sidebar-sticky { position: static; flex-direction: row; gap: 12px; }
+      .sidebar-card { flex: 1; }
+      .focus-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .focus-grid { grid-template-columns: 1fr; }
+      .sidebar-sticky { flex-direction: column; }
+      .hero-title { font-size: 2rem; }
+      .nav-item { padding: 8px 12px; min-width: 48px; }
+      .nav-item-label { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating geometric blobs -->
+  <div class="geo-blob geo-blob-1"></div>
+  <div class="geo-blob geo-blob-2"></div>
+  <div class="geo-blob geo-blob-3"></div>
+
+  <!-- ══════════════════════════════════════════════
+       IMMERSIVE HERO
+  ═══════════════════════════════════════════════ -->
+  <section class="hero-section">
+    <div class="hero-mesh"></div>
+
+    <div class="hero-content">
+      <!-- Week navigation pill -->
+      <div style="display:flex;justify-content:center;margin-bottom:32px;">
+        <div class="week-nav-pill">
+          <button class="week-nav-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+          </button>
+          <div class="week-nav-center">
+            <span class="week-num-inactive">23</span>
+            <div class="week-separator"></div>
+            <span class="week-num-active">Week 24</span>
+            <div class="week-separator"></div>
+            <span class="week-num-inactive">25</span>
+          </div>
+          <button class="week-nav-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Massive title -->
+      <h1 class="hero-title gradient-text-hero">
+        Your Baby Can Now<br>Hear Your Voice
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="hero-subtitle">Week 24 of 40 &nbsp;&middot;&nbsp; Second Trimester</p>
+
+      <!-- Progress dots -->
+      <div class="progress-dots">
+        <!-- Weeks 1–23: filled -->
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <div class="dot dot-filled"></div>
+        <!-- Week 24: current, pulsing -->
+        <div class="dot dot-current"></div>
+        <!-- Weeks 25–40: empty -->
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+        <div class="dot dot-empty"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       MAIN CONTENT + SIDEBAR
+  ═══════════════════════════════════════════════ -->
+  <div class="page-layout">
+
+    <!-- MAIN COLUMN -->
+    <main class="main-col">
+
+      <!-- 1. Baby Update Card -->
+      <div class="glass card-pad-lg fade-up fade-up-1">
+        <div class="section-label">
+          <div class="section-icon-wrap" style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.2);">
+            <!-- Baby/heart icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="section-title">Baby Update</div>
+            <div class="section-sub">What's happening this week</div>
+          </div>
+        </div>
+
+        <!-- Orb visual -->
+        <div class="baby-orb-container">
+          <div class="baby-orb"></div>
+          <div class="orb-orbit">
+            <div class="orb-size-badge">12 inches &middot; ~1.3 lbs</div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <p style="font-size:14px;color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:20px;">
+          Your baby is about the size of a cantaloupe — and hitting a huge developmental milestone this week.
+          Their inner ear is now fully developed, which means they can hear sounds from outside the womb.
+          Talk, read, or play music. Your voice is already familiar.
+        </p>
+
+        <!-- Highlight chips -->
+        <div class="highlight-chips">
+          <div class="highlight-chip chip-indigo">
+            <span class="chip-dot"></span>
+            Hearing Developed
+          </div>
+          <div class="highlight-chip chip-violet">
+            <span class="chip-dot"></span>
+            Breathing Practice
+          </div>
+          <div class="highlight-chip chip-rose">
+            <span class="chip-dot"></span>
+            Brain Growing Fast
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Mom's Experience Card -->
+      <div class="glass-rose card-pad fade-up fade-up-2">
+        <div class="section-label">
+          <div class="section-icon-wrap" style="background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.2);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fb7185" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="section-title">What She's Experiencing</div>
+            <div class="section-sub">How to show up this week</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="experience-item">
+            <div class="exp-border exp-border-rose"></div>
+            <div class="exp-text-group">
+              <div class="exp-title">Round ligament pain</div>
+              <div class="exp-desc">Sharp or aching pain on the sides of the belly — totally normal as the uterus grows. A heating pad and slow movements help.</div>
+            </div>
+            <div class="this-week-badge">This week</div>
+          </div>
+          <div class="experience-item">
+            <div class="exp-border exp-border-orange"></div>
+            <div class="exp-text-group">
+              <div class="exp-title">Back pain & posture shifts</div>
+              <div class="exp-desc">The growing belly shifts her center of gravity. Offer a back rub or suggest a prenatal pillow.</div>
+            </div>
+          </div>
+          <div class="experience-item">
+            <div class="exp-border exp-border-yellow"></div>
+            <div class="exp-text-group">
+              <div class="exp-title">Braxton Hicks contractions</div>
+              <div class="exp-desc">Irregular, painless tightening — practice contractions. Reassuring to know they're normal when she feels them.</div>
+            </div>
+            <div class="this-week-badge">This week</div>
+          </div>
+          <div class="experience-item">
+            <div class="exp-border exp-border-indigo"></div>
+            <div class="exp-text-group">
+              <div class="exp-title">Feeling more kicks</div>
+              <div class="exp-desc">Movement is becoming more regular and stronger. Ask her about the patterns she's noticing — it's meaningful connection.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Your Focus -->
+      <div class="glass card-pad fade-up fade-up-3">
+        <div class="section-label">
+          <div class="section-icon-wrap" style="background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="section-title">Your Focus This Week</div>
+            <div class="section-sub">Three things that move the needle</div>
+          </div>
+        </div>
+
+        <div class="focus-grid">
+          <div class="focus-card">
+            <div class="focus-number gradient-text-indigo">01</div>
+            <div class="focus-card-title">Talk to the bump</div>
+            <div class="focus-card-desc">Spend 5 minutes reading aloud or just talking. Your baby recognizes your voice now — this is real bonding.</div>
+          </div>
+          <div class="focus-card">
+            <div class="focus-number gradient-text-violet">02</div>
+            <div class="focus-card-title">Research childbirth classes</div>
+            <div class="focus-card-desc">Most hospitals and midwives offer them. Register early — spots fill up fast in months 6–7.</div>
+          </div>
+          <div class="focus-card">
+            <div class="focus-number" style="background:linear-gradient(135deg,#f43f5e,#fb7185);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">03</div>
+            <div class="focus-card-title">Check in on her sleep</div>
+            <div class="focus-card-desc">If she's struggling, help arrange a pregnancy pillow setup. Sleep deprivation compounds everything else she's dealing with.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Tasks This Week -->
+      <div class="glass card-pad fade-up fade-up-4">
+        <div class="section-label">
+          <div class="section-icon-wrap" style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+          </div>
+          <div>
+            <div class="section-title">Tasks This Week</div>
+            <div class="section-sub">4 tasks &nbsp;&middot;&nbsp; 1 completed</div>
+          </div>
+          <div style="margin-left:auto;">
+            <span style="font-size:11px;color:#818cf8;font-weight:600;cursor:pointer;">View all &rarr;</span>
+          </div>
+        </div>
+
+        <div>
+          <!-- Completed task -->
+          <div class="task-row" onclick="toggleTask(this)">
+            <div class="task-checkbox checked" id="tc1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="task-text" style="color:rgba(255,255,255,0.35);text-decoration:line-through;text-decoration-color:rgba(255,255,255,0.2);">Schedule 24-week OB appointment</span>
+            <span class="assignee-pill assignee-both">Both</span>
+          </div>
+
+          <div class="task-row" onclick="toggleTask(this)">
+            <div class="task-checkbox" id="tc2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="task-text">Research childbirth classes and register</span>
+            <span class="assignee-pill assignee-dad">Dad</span>
+          </div>
+
+          <div class="task-row" onclick="toggleTask(this)">
+            <div class="task-checkbox" id="tc3">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="task-text">Create a registry for hospital bag essentials</span>
+            <span class="assignee-pill assignee-both">Both</span>
+          </div>
+
+          <div class="task-row" onclick="toggleTask(this)">
+            <div class="task-checkbox" id="tc4">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span class="task-text">Order pregnancy pillow</span>
+            <span class="assignee-pill assignee-dad">Dad</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Relationship Tip -->
+      <div class="glass-violet relationship-card fade-up fade-up-5">
+        <span class="quotemark">"</span>
+        <p class="quote-text">
+          She doesn't need you to fix how she's feeling — she needs to know you see her.
+          Ask what the hardest part of this week was. Then just listen.
+          That conversation matters more than any errand you could run.
+        </p>
+        <div class="quote-action">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          Relationship Tip &nbsp;&middot;&nbsp; Week 24
+        </div>
+      </div>
+
+      <!-- 6. Coming Up Next Week -->
+      <div class="glass card-pad fade-up fade-up-6">
+        <div class="section-label" style="margin-bottom:14px;">
+          <div class="section-icon-wrap" style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <div>
+            <div class="section-title">Coming Up — Week 25</div>
+            <div class="section-sub">Preview of what's ahead</div>
+          </div>
+        </div>
+
+        <div class="topics-scroll">
+          <div class="topic-pill topic-pill-1">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            Glucose Test Prep
+          </div>
+          <div class="topic-pill topic-pill-2">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Nursery Planning
+          </div>
+          <div class="topic-pill topic-pill-3">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Kick Counting
+          </div>
+          <div class="topic-pill topic-pill-4">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Birth Plan Basics
+          </div>
+          <div class="topic-pill topic-pill-5">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Budget: Baby Gear
+          </div>
+          <div class="topic-pill topic-pill-6">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Partner Check-In
+          </div>
+        </div>
+      </div>
+
+    </main><!-- /main-col -->
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar-col">
+      <div class="sidebar-sticky">
+
+        <!-- Baby size card -->
+        <div class="glass sidebar-card">
+          <div class="baby-size-visual">
+            <span class="cantaloupe-emoji">🍈</span>
+            <div class="size-label">Cantaloupe</div>
+            <div class="size-sub">Comparable size this week</div>
+          </div>
+
+          <div class="stat-divider"></div>
+
+          <div class="sidebar-stat">
+            <span class="stat-key">Length</span>
+            <span class="stat-val gradient-text-indigo">11.8"</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="sidebar-stat">
+            <span class="stat-key">Weight</span>
+            <span class="stat-val gradient-text-violet">1.3 lbs</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="sidebar-stat">
+            <span class="stat-key">Due in</span>
+            <span class="stat-val" style="background:linear-gradient(135deg,#f43f5e,#fb7185);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">112 days</span>
+          </div>
+        </div>
+
+        <!-- Quick milestones card -->
+        <div class="glass sidebar-card">
+          <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.8);margin-bottom:14px;letter-spacing:-0.01em;">
+            Milestones This Week
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:28px;height:28px;border-radius:8px;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">👂</div>
+              <div>
+                <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.8);">Hearing active</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.35);">Responds to sound</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:28px;height:28px;border-radius:8px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🧠</div>
+              <div>
+                <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.8);">Brain growth surge</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.35);">Billions of neurons</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:28px;height:28px;border-radius:8px;background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">💗</div>
+              <div>
+                <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.8);">Heartbeat audible</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.35);">~140–150 bpm</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+  </div><!-- /page-layout -->
+
+  <!-- ══════════════════════════════════════════════
+       NAVIGATION FOOTER
+  ═══════════════════════════════════════════════ -->
+  <div class="nav-footer">
+    <div class="nav-footer-inner">
+      <button class="btn-prev">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Week 23
+      </button>
+
+      <div class="medical-badge">
+        <div class="medical-dot"></div>
+        Medically Reviewed
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+
+      <button class="btn-next">
+        Week 25
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       FLOATING BOTTOM NAV PILL
+  ═══════════════════════════════════════════════ -->
+  <div class="bottom-nav-wrap">
+    <div class="bottom-nav-pill">
+
+      <!-- Home -->
+      <div class="nav-item nav-item-default">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span class="nav-item-label">Home</span>
+      </div>
+
+      <!-- Tasks -->
+      <div class="nav-item nav-item-default">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 11 12 14 22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+        <span class="nav-item-label">Tasks</span>
+      </div>
+
+      <!-- Briefing — ACTIVE -->
+      <div class="nav-item nav-item-active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+        </svg>
+        <span class="nav-item-label">Briefing</span>
+      </div>
+
+      <!-- Tracker -->
+      <div class="nav-item nav-item-default">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"/>
+          <line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/>
+        </svg>
+        <span class="nav-item-label">Tracker</span>
+      </div>
+
+      <!-- More -->
+      <div class="nav-item nav-item-default">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+        </svg>
+        <span class="nav-item-label">More</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Task checkbox toggle
+    function toggleTask(row) {
+      const cb = row.querySelector('.task-checkbox');
+      const text = row.querySelector('.task-text');
+      if (!cb) return;
+      cb.classList.toggle('checked');
+      if (cb.classList.contains('checked')) {
+        text.style.color = 'rgba(255,255,255,0.35)';
+        text.style.textDecoration = 'line-through';
+        text.style.textDecorationColor = 'rgba(255,255,255,0.2)';
+      } else {
+        text.style.color = 'rgba(255,255,255,0.85)';
+        text.style.textDecoration = 'none';
+      }
+    }
+
+    // Intersection Observer for fade-up cards
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-up').forEach(el => {
+      el.style.animationPlayState = 'paused';
+      observer.observe(el);
+    });
+
+    // Horizontal scroll snap for topics on mobile
+    const topicsScroll = document.querySelector('.topics-scroll');
+    if (topicsScroll) {
+      topicsScroll.addEventListener('wheel', (e) => {
+        if (e.deltaY !== 0) {
+          e.preventDefault();
+          topicsScroll.scrollLeft += e.deltaY;
+        }
+      }, { passive: false });
+    }
+  </script>
+</body>
+</html>

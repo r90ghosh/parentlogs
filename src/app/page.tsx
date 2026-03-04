@@ -32,7 +32,7 @@ export default async function Home() {
 
   // Not logged in - show landing page
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950">
+    <div className="min-h-screen flex flex-col bg-[--bg]">
       <Header />
       <main className="flex-1">
         <Hero />

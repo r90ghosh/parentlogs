@@ -127,10 +127,10 @@ function OnboardingJoinContent() {
   if (!isReady) {
     console.log('[OnboardingJoin] Not ready yet, showing loader')
     return (
-      <Card className="w-full max-w-md bg-surface-900 border-surface-800">
+      <Card className="w-full max-w-md bg-[--surface] border-[--border]">
         <CardContent className="py-8">
           <div className="flex items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+            <Loader2 className="h-6 w-6 animate-spin text-copper" />
           </div>
         </CardContent>
       </Card>
@@ -140,12 +140,12 @@ function OnboardingJoinContent() {
   console.log('[OnboardingJoin] Rendering join form')
 
   return (
-    <Card className="w-full max-w-md bg-surface-900 border-surface-800">
+    <Card className="w-full max-w-md bg-[--surface] border-[--border]">
       <CardHeader className="text-center">
         <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-primary-500/20 flex items-center justify-center">
           <Users className="h-6 w-6 text-primary-500" />
         </div>
-        <CardTitle className="text-2xl text-white">Join your partner</CardTitle>
+        <CardTitle className="text-2xl font-display text-[--cream]">Join your partner</CardTitle>
         <CardDescription>
           Enter the invite code shared by your partner
         </CardDescription>
@@ -166,14 +166,14 @@ function OnboardingJoinContent() {
             value={inviteCode}
             onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
             maxLength={8}
-            className="bg-surface-800 border-surface-700 text-center text-xl font-mono tracking-wider uppercase"
+            className="bg-[--card] border-[--border-hover] text-center text-xl font-mono tracking-wider uppercase"
           />
         </div>
 
         {familyInfo && (
-          <Alert className="bg-accent-900/20 border-accent-700">
-            <CheckCircle className="h-4 w-4 text-accent-500" />
-            <AlertDescription className="text-accent-300">
+          <Alert className="bg-copper-dim border-copper/50">
+            <CheckCircle className="h-4 w-4 text-copper" />
+            <AlertDescription className="text-copper">
               Found family! Stage: {familyInfo.stage === 'pregnancy' ? 'Expecting' : 'Baby born'}
               {familyInfo.name && ` - ${familyInfo.name}`}
             </AlertDescription>
@@ -198,7 +198,7 @@ function OnboardingJoinContent() {
       <CardFooter className="justify-center">
         <Link
           href="/onboarding"
-          className="text-sm text-surface-400 hover:text-surface-300 flex items-center gap-2"
+          className="text-sm text-[--muted] hover:text-[--cream] flex items-center gap-2"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to options
@@ -211,10 +211,10 @@ function OnboardingJoinContent() {
 export default function OnboardingJoin() {
   return (
     <Suspense fallback={
-      <Card className="w-full max-w-md bg-surface-900 border-surface-800">
+      <Card className="w-full max-w-md bg-[--surface] border-[--border]">
         <CardContent className="py-8">
           <div className="flex items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+            <Loader2 className="h-6 w-6 animate-spin text-copper" />
           </div>
         </CardContent>
       </Card>

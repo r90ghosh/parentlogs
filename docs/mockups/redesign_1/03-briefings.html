@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Briefings — The Dad Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              950: '#0a0a0f',
+              900: '#111118',
+              800: '#1a1a24',
+              700: '#22222e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background-color: #0a0a0f;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    /* Progress bar animation */
+    @keyframes progress-fill {
+      from { width: 0%; }
+      to { width: 60%; }
+    }
+    .progress-animate { animation: progress-fill 1s ease-out forwards; }
+
+    /* Hover states */
+    .card-hover { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+    .card-hover:hover { border-color: rgba(20,184,166,0.2); box-shadow: 0 0 0 1px rgba(20,184,166,0.08); }
+
+    .nav-item { transition: color 0.15s ease; }
+    .week-nav-btn { transition: all 0.15s ease; }
+    .week-nav-btn:hover { background: rgba(255,255,255,0.06); }
+
+    .task-checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .task-checkbox.checked {
+      background: #14b8a6;
+      border-color: #14b8a6;
+    }
+
+    /* Focus item checkmark circle */
+    .focus-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(20,184,166,0.4);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .focus-check.done {
+      background: rgba(20,184,166,0.15);
+      border-color: #14b8a6;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .tag-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      background: rgba(20,184,166,0.08);
+      border: 1px solid rgba(20,184,166,0.2);
+      color: #2dd4bf;
+    }
+
+    /* Gradient hero */
+    .hero-gradient {
+      background: linear-gradient(135deg,
+        rgba(20,184,166,0.15) 0%,
+        rgba(6,182,212,0.08) 40%,
+        transparent 70%
+      );
+      border-bottom: 1px solid rgba(20,184,166,0.12);
+    }
+
+    /* Week nav pill */
+    .week-current {
+      background: rgba(20,184,166,0.12);
+      border: 1px solid rgba(20,184,166,0.3);
+      color: #2dd4bf;
+      padding: 6px 20px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(17,17,24,0.96);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 50;
+    }
+
+    /* Sidebar stat */
+    .stat-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .stat-item:last-child { border-bottom: none; }
+
+    /* Teal glow for active elements */
+    .teal-glow {
+      box-shadow: 0 0 20px rgba(20,184,166,0.15);
+    }
+
+    /* Section icon wrapper */
+    .section-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Medical badge */
+    .medical-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.2);
+      color: #4ade80;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Button styles */
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: transparent;
+      color: #a1a1aa;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-outline:hover {
+      border-color: rgba(255,255,255,0.2);
+      color: #fff;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .btn-teal {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 24px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #14b8a6, #06b6d4);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-teal:hover {
+      opacity: 0.9;
+      box-shadow: 0 4px 16px rgba(20,184,166,0.3);
+    }
+
+    /* Timeline week indicator */
+    .week-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Lock overlay */
+    .lock-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10,10,15,0.7);
+      border-radius: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(2px);
+    }
+
+    /* Tooltip-style paywall nudge */
+    .paywall-nudge {
+      background: linear-gradient(135deg, rgba(20,184,166,0.1), rgba(6,182,212,0.06));
+      border: 1px solid rgba(20,184,166,0.2);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    /* Relationship card special bg */
+    .relationship-bg {
+      background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(17,17,24,1));
+    }
+
+    @media (max-width: 900px) {
+      .two-col-layout { flex-direction: column !important; }
+      .sidebar { width: 100% !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========== BOTTOM NAV (fixed, renders on top of page) ========== -->
+<nav class="bottom-nav">
+  <div class="flex items-center justify-around px-2 py-2" style="max-width: 600px; margin: 0 auto;">
+
+    <!-- Home -->
+    <a href="#" class="nav-item flex flex-col items-center gap-1 px-3 py-1 rounded-xl text-zinc-500 hover:text-zinc-300">
+      <i data-lucide="home" style="width:20px;height:20px;"></i>
+      <span style="font-size:10px;font-weight:500;">Home</span>
+    </a>
+
+    <!-- Tasks -->
+    <a href="#" class="nav-item flex flex-col items-center gap-1 px-3 py-1 rounded-xl text-zinc-500 hover:text-zinc-300">
+      <i data-lucide="check-square" style="width:20px;height:20px;"></i>
+      <span style="font-size:10px;font-weight:500;">Tasks</span>
+    </a>
+
+    <!-- Briefing — ACTIVE -->
+    <a href="#" class="nav-item flex flex-col items-center gap-1 px-3 py-1 rounded-xl" style="color:#14b8a6;">
+      <div style="position:relative;">
+        <i data-lucide="book-open" style="width:22px;height:22px;"></i>
+        <span style="
+          position:absolute;
+          top:-4px;right:-6px;
+          width:8px;height:8px;
+          background:#14b8a6;
+          border-radius:50%;
+          border:1.5px solid #111118;
+        "></span>
+      </div>
+      <span style="font-size:10px;font-weight:700;">Briefing</span>
+      <div style="width:20px;height:2px;background:#14b8a6;border-radius:1px;margin-top:-2px;"></div>
+    </a>
+
+    <!-- Tracker -->
+    <a href="#" class="nav-item flex flex-col items-center gap-1 px-3 py-1 rounded-xl text-zinc-500 hover:text-zinc-300">
+      <i data-lucide="activity" style="width:20px;height:20px;"></i>
+      <span style="font-size:10px;font-weight:500;">Tracker</span>
+    </a>
+
+    <!-- More -->
+    <a href="#" class="nav-item flex flex-col items-center gap-1 px-3 py-1 rounded-xl text-zinc-500 hover:text-zinc-300">
+      <i data-lucide="more-horizontal" style="width:20px;height:20px;"></i>
+      <span style="font-size:10px;font-weight:500;">More</span>
+    </a>
+
+  </div>
+</nav>
+
+<!-- ========== MAIN PAGE CONTENT ========== -->
+<div style="max-width: 1100px; margin: 0 auto; padding: 0 20px 100px 20px;">
+
+  <!-- ===== HERO BANNER ===== -->
+  <div class="hero-gradient rounded-2xl mt-6 mb-6 overflow-hidden" style="padding: 32px 28px 28px 28px;">
+
+    <!-- Week Navigation -->
+    <div class="flex items-center gap-3 mb-5">
+      <button class="week-nav-btn flex items-center gap-1 px-3 py-1.5 rounded-lg text-zinc-400" style="border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">
+        <i data-lucide="chevron-left" style="width:14px;height:14px;"></i>
+        <span style="font-size:12px;font-weight:500;">Week 23</span>
+      </button>
+
+      <span class="week-current flex items-center gap-2">
+        <i data-lucide="calendar" style="width:14px;height:14px;"></i>
+        Week 24
+      </span>
+
+      <button class="week-nav-btn flex items-center gap-1 px-3 py-1.5 rounded-lg text-zinc-400" style="border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">
+        <span style="font-size:12px;font-weight:500;">Week 25</span>
+        <i data-lucide="chevron-right" style="width:14px;height:14px;"></i>
+      </button>
+
+      <!-- Timeline indicator -->
+      <button class="week-nav-btn ml-auto px-3 py-1.5 rounded-lg" style="border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03);">
+        <i data-lucide="list" style="width:14px;height:14px; color:#71717a;"></i>
+      </button>
+    </div>
+
+    <!-- Title + subtitle -->
+    <h1 style="font-size:28px;font-weight:700;line-height:1.25;margin:0 0 10px 0;letter-spacing:-0.02em;">
+      Your Baby Can Now Hear Your Voice
+    </h1>
+    <p style="color:#a1a1aa;font-size:15px;margin:0 0 24px 0;line-height:1.5;">
+      Week 24 of pregnancy — here's what's happening and what you can do
+    </p>
+
+    <!-- Progress section -->
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <span style="font-size:12px;color:#6366f1;font-weight:500;">Second Trimester</span>
+        <span style="font-size:12px;color:#71717a;">Week 24 of 40</span>
+      </div>
+      <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
+        <div class="progress-animate" style="height:100%;background:linear-gradient(90deg,#14b8a6,#06b6d4);border-radius:3px;"></div>
+      </div>
+      <div class="flex justify-between mt-1.5">
+        <span style="font-size:11px;color:#52525b;">Conception</span>
+        <span style="font-size:11px;color:#14b8a6;font-weight:500;">60% complete</span>
+        <span style="font-size:11px;color:#52525b;">Due Date</span>
+      </div>
+    </div>
+
+    <!-- Stage pills -->
+    <div class="flex items-center gap-2 mt-4">
+      <span style="font-size:11px;background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.25);color:#2dd4bf;padding:3px 10px;border-radius:999px;font-weight:500;">
+        Viability Milestone
+      </span>
+      <span style="font-size:11px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#71717a;padding:3px 10px;border-radius:999px;font-weight:500;">
+        ~16 weeks to go
+      </span>
+    </div>
+
+  </div>
+
+  <!-- ===== TWO-COLUMN LAYOUT ===== -->
+  <div class="two-col-layout flex gap-5 items-start">
+
+    <!-- ===== LEFT COLUMN — main briefing content ===== -->
+    <div style="flex:1;min-width:0;">
+
+      <!-- 1. Baby Update Card -->
+      <div class="card-hover rounded-2xl mb-4 overflow-hidden" style="background:#111118;border:1px solid rgba(255,255,255,0.06);">
+        <div class="p-5">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="section-icon" style="background:rgba(20,184,166,0.1);">
+              <span>👶</span>
+            </div>
+            <div>
+              <h2 style="font-size:16px;font-weight:700;margin:0;">Baby Update</h2>
+              <p style="font-size:12px;color:#52525b;margin:0;margin-top:2px;">Fetal development this week</p>
+            </div>
+            <span class="badge ml-auto" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.2);color:#2dd4bf;">Week 24</span>
+          </div>
+
+          <p style="color:#d4d4d8;font-size:14px;line-height:1.7;margin:0 0 16px 0;">
+            Your baby is now about the size of a <strong style="color:#fff;">cantaloupe</strong> — around 12 inches long and weighing about 1.3 pounds. Their hearing is now developed enough to recognize your voice from outside the womb.
+          </p>
+
+          <p style="color:#d4d4d8;font-size:14px;line-height:1.7;margin:0 0 16px 0;">
+            They're practicing breathing movements, inhaling and exhaling amniotic fluid to prepare their lungs for the outside world. Brain development is happening at a rapid pace this week.
+          </p>
+
+          <!-- Development highlights -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px;">
+            <div style="background:rgba(20,184,166,0.06);border:1px solid rgba(20,184,166,0.12);border-radius:12px;padding:12px;text-align:center;">
+              <div style="font-size:22px;margin-bottom:4px;">👂</div>
+              <div style="font-size:11px;color:#2dd4bf;font-weight:600;">Hearing</div>
+              <div style="font-size:11px;color:#71717a;margin-top:2px;">Fully developed</div>
+            </div>
+            <div style="background:rgba(20,184,166,0.06);border:1px solid rgba(20,184,166,0.12);border-radius:12px;padding:12px;text-align:center;">
+              <div style="font-size:22px;margin-bottom:4px;">🫁</div>
+              <div style="font-size:11px;color:#2dd4bf;font-weight:600;">Lungs</div>
+              <div style="font-size:11px;color:#71717a;margin-top:2px;">Practicing breathing</div>
+            </div>
+            <div style="background:rgba(20,184,166,0.06);border:1px solid rgba(20,184,166,0.12);border-radius:12px;padding:12px;text-align:center;">
+              <div style="font-size:22px;margin-bottom:4px;">🧠</div>
+              <div style="font-size:11px;color:#2dd4bf;font-weight:600;">Brain</div>
+              <div style="font-size:11px;color:#71717a;margin-top:2px;">Rapid growth</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. What Mom's Experiencing Card -->
+      <div class="card-hover rounded-2xl mb-4" style="background:#111118;border:1px solid rgba(255,255,255,0.06);">
+        <div class="p-5">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="section-icon" style="background:rgba(244,114,182,0.1);">
+              <span>💝</span>
+            </div>
+            <div>
+              <h2 style="font-size:16px;font-weight:700;margin:0;">What Mom's Experiencing</h2>
+              <p style="font-size:12px;color:#52525b;margin:0;margin-top:2px;">Physical and emotional changes this week</p>
+            </div>
+          </div>
+
+          <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;">
+            <li style="display:flex;align-items:flex-start;gap:12px;">
+              <div style="width:6px;height:6px;border-radius:50%;background:#f472b6;flex-shrink:0;margin-top:7px;"></div>
+              <div>
+                <span style="color:#e4e4e7;font-size:14px;font-weight:500;">Back pain increasing</span>
+                <p style="color:#71717a;font-size:12px;margin:2px 0 0 0;line-height:1.5;">The growing belly shifts her center of gravity. Gentle stretches and a supportive pillow help.</p>
+              </div>
+            </li>
+            <li style="display:flex;align-items:flex-start;gap:12px;">
+              <div style="width:6px;height:6px;border-radius:50%;background:#f472b6;flex-shrink:0;margin-top:7px;"></div>
+              <div>
+                <span style="color:#e4e4e7;font-size:14px;font-weight:500;">Braxton Hicks may start</span>
+                <p style="color:#71717a;font-size:12px;margin:2px 0 0 0;line-height:1.5;">Practice contractions are normal at this stage. Irregular and painless — not true labor.</p>
+              </div>
+            </li>
+            <li style="display:flex;align-items:flex-start;gap:12px;">
+              <div style="width:6px;height:6px;border-radius:50%;background:#f472b6;flex-shrink:0;margin-top:7px;"></div>
+              <div>
+                <span style="color:#e4e4e7;font-size:14px;font-weight:500;">Sleep becoming harder</span>
+                <p style="color:#71717a;font-size:12px;margin:2px 0 0 0;line-height:1.5;">Finding a comfortable position gets trickier. A full-body pregnancy pillow can be a game-changer.</p>
+              </div>
+            </li>
+            <li style="display:flex;align-items:flex-start;gap:12px;">
+              <div style="width:6px;height:6px;border-radius:50%;background:#fb923c;flex-shrink:0;margin-top:7px;"></div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span style="color:#e4e4e7;font-size:14px;font-weight:500;">Glucose screening test</span>
+                  <span class="badge" style="background:rgba(251,146,60,0.12);border:1px solid rgba(251,146,60,0.25);color:#fb923c;">This week</span>
+                </div>
+                <p style="color:#71717a;font-size:12px;margin:2px 0 0 0;line-height:1.5;">Checks for gestational diabetes. She'll drink a sweet solution and have blood drawn one hour later.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3. Your Focus This Week Card -->
+      <div class="card-hover rounded-2xl mb-4" style="background:#111118;border:1px solid rgba(255,255,255,0.06);">
+        <div class="p-5">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="section-icon" style="background:rgba(99,102,241,0.1);">
+              <span>🎯</span>
+            </div>
+            <div>
+              <h2 style="font-size:16px;font-weight:700;margin:0;">Your Focus This Week</h2>
+              <p style="font-size:12px;color:#52525b;margin:0;margin-top:2px;">Three things that move the needle as a dad</p>
+            </div>
+            <span class="badge ml-auto" style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);color:#818cf8;">For Dad</span>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px;">
+
+            <!-- Focus 1 -->
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:12px;">
+              <div class="focus-check done">
+                <i data-lucide="check" style="width:12px;height:12px;color:#14b8a6;"></i>
+              </div>
+              <div style="flex:1;">
+                <p style="color:#fff;font-size:14px;font-weight:500;margin:0 0 4px 0;">Start talking and reading to your baby</p>
+                <p style="color:#71717a;font-size:12px;margin:0;line-height:1.5;">They can hear you now. Read a book aloud, tell them about your day, or sing a song. It sounds silly — it's not.</p>
+              </div>
+              <span style="font-size:18px;">🗣️</span>
+            </div>
+
+            <!-- Focus 2 -->
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:12px;">
+              <div class="focus-check">
+              </div>
+              <div style="flex:1;">
+                <p style="color:#fff;font-size:14px;font-weight:500;margin:0 0 4px 0;">Research childbirth classes together</p>
+                <p style="color:#71717a;font-size:12px;margin:0;line-height:1.5;">In-person classes fill up fast. Look at hospital-based vs. independent options. Lamaze and Bradley are the most common.</p>
+              </div>
+              <span style="font-size:18px;">📚</span>
+            </div>
+
+            <!-- Focus 3 -->
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:12px;">
+              <div class="focus-check">
+              </div>
+              <div style="flex:1;">
+                <p style="color:#fff;font-size:14px;font-weight:500;margin:0 0 4px 0;">Review your insurance coverage for delivery</p>
+                <p style="color:#71717a;font-size:12px;margin:0;line-height:1.5;">Call your insurer and confirm: in-network hospital, OB coverage, and what you'll owe after delivery. No surprises.</p>
+              </div>
+              <span style="font-size:18px;">🏥</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Linked Tasks Card -->
+      <div class="card-hover rounded-2xl mb-4" style="background:#111118;border:1px solid rgba(255,255,255,0.06);">
+        <div class="p-5">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="section-icon" style="background:rgba(20,184,166,0.1);">
+              <i data-lucide="check-square" style="width:16px;height:16px;color:#14b8a6;"></i>
+            </div>
+            <div>
+              <h2 style="font-size:16px;font-weight:700;margin:0;">Linked Tasks</h2>
+              <p style="font-size:12px;color:#52525b;margin:0;margin-top:2px;">Complete without leaving this page</p>
+            </div>
+            <div class="ml-auto flex items-center gap-2">
+              <span style="font-size:12px;color:#14b8a6;font-weight:600;">3 / 4</span>
+              <div style="width:48px;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;">
+                <div style="width:75%;height:100%;background:#14b8a6;border-radius:2px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Task list -->
+          <div style="display:flex;flex-direction:column;gap:2px;">
+
+            <!-- Task 1 — Done -->
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);">
+              <div class="task-checkbox checked">
+                <i data-lucide="check" style="width:10px;height:10px;color:#fff;"></i>
+              </div>
+              <span style="color:#52525b;font-size:14px;flex:1;text-decoration:line-through;">Schedule OB appointment for week 28</span>
+              <span class="badge" style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);color:#818cf8;">Both</span>
+            </div>
+
+            <!-- Task 2 — Done -->
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);">
+              <div class="task-checkbox checked">
+                <i data-lucide="check" style="width:10px;height:10px;color:#fff;"></i>
+              </div>
+              <span style="color:#52525b;font-size:14px;flex:1;text-decoration:line-through;">Look up glucose test locations and prep</span>
+              <span class="badge" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.2);color:#2dd4bf;">Dad</span>
+            </div>
+
+            <!-- Task 3 — Done -->
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);">
+              <div class="task-checkbox checked">
+                <i data-lucide="check" style="width:10px;height:10px;color:#fff;"></i>
+              </div>
+              <span style="color:#52525b;font-size:14px;flex:1;text-decoration:line-through;">Start a baby name shortlist</span>
+              <span class="badge" style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);color:#818cf8;">Both</span>
+            </div>
+
+            <!-- Task 4 — Pending -->
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(20,184,166,0.12);">
+              <div class="task-checkbox">
+              </div>
+              <span style="color:#e4e4e7;font-size:14px;flex:1;">Call insurance to confirm delivery coverage</span>
+              <span class="badge" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.2);color:#2dd4bf;">Dad</span>
+            </div>
+
+          </div>
+
+          <div class="mt-4 flex items-center justify-between">
+            <a href="#" style="color:#14b8a6;font-size:13px;font-weight:500;text-decoration:none;display:flex;align-items:center;gap:4px;">
+              View all tasks
+              <i data-lucide="arrow-right" style="width:12px;height:12px;"></i>
+            </a>
+            <span style="font-size:12px;color:#52525b;">1 remaining</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Relationship Check-In Card -->
+      <div class="card-hover rounded-2xl mb-4 relationship-bg" style="border:1px solid rgba(139,92,246,0.15);">
+        <div class="p-5">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="section-icon" style="background:rgba(139,92,246,0.12);">
+              <span>💜</span>
+            </div>
+            <div>
+              <h2 style="font-size:16px;font-weight:700;margin:0;">Relationship Check-In</h2>
+              <p style="font-size:12px;color:#52525b;margin:0;margin-top:2px;">One practical thing you can do today</p>
+            </div>
+          </div>
+
+          <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:12px;padding:16px;">
+            <div style="display:flex;gap:12px;align-items:flex-start;">
+              <i data-lucide="message-circle-heart" style="width:20px;height:20px;color:#a78bfa;flex-shrink:0;margin-top:2px;"></i>
+              <p style="color:#d4d4d8;font-size:14px;line-height:1.65;margin:0;">
+                Ask your partner how they're feeling about the upcoming glucose test. Offer to go with them to the appointment — even waiting together makes a difference. The test itself takes about an hour.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 mt-3">
+            <i data-lucide="lightbulb" style="width:13px;height:13px;color:#a78bfa;"></i>
+            <p style="color:#71717a;font-size:12px;margin:0;">Tip: Lead with curiosity, not solutions. "How are you feeling?" is more powerful than "Here's what you should do."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Coming Up Card -->
+      <div class="card-hover rounded-2xl mb-4" style="background:#111118;border:1px solid rgba(255,255,255,0.06);">
+        <div class="p-5">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="section-icon" style="background:rgba(6,182,212,0.1);">
+              <span>📆</span>
+            </div>
+            <div>
+              <h2 style="font-size:16px;font-weight:700;margin:0;">Coming Up Next Week</h2>
+              <p style="font-size:12px;color:#52525b;margin:0;margin-top:2px;">Week 25 preview — tap to unlock early</p>
+            </div>
+          </div>
+
+          <p style="color:#a1a1aa;font-size:14px;margin:0 0 14px 0;">Week 25 covers some important milestones for both your baby and your growing to-do list:</p>
+
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <span class="tag-pill">Baby's skin developing</span>
+            <span class="tag-pill">Hospital bag checklist</span>
+            <span class="tag-pill">Birth plan basics</span>
+            <span class="tag-pill">Paternity leave planning</span>
+            <span class="tag-pill">Fat deposits forming</span>
+            <span class="tag-pill">Nursery setup</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== FOOTER AREA ===== -->
+      <div style="padding:20px 0;border-top:1px solid rgba(255,255,255,0.06);">
+
+        <!-- Medical reviewed badge -->
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <div class="medical-badge">
+            <i data-lucide="shield-check" style="width:14px;height:14px;"></i>
+            Medically reviewed — content updated March 2026
+          </div>
+
+          <!-- Footer navigation -->
+          <div class="flex items-center gap-3">
+            <button class="btn-outline">
+              <i data-lucide="chevron-left" style="width:15px;height:15px;"></i>
+              Week 23
+            </button>
+            <button class="btn-teal">
+              Week 25
+              <i data-lucide="chevron-right" style="width:15px;height:15px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Source line -->
+        <p style="color:#3f3f46;font-size:11px;margin:16px 0 0 0;line-height:1.6;">
+          Sources: American College of Obstetricians and Gynecologists (ACOG), Mayo Clinic Pregnancy Guide, What to Expect When You're Expecting. Content is educational and not a substitute for medical advice.
+        </p>
+      </div>
+
+    </div><!-- end left column -->
+
+    <!-- ===== RIGHT SIDEBAR ===== -->
+    <div class="sidebar" style="width:300px;flex-shrink:0;position:sticky;top:24px;">
+
+      <!-- Baby Size Card -->
+      <div class="card-hover rounded-2xl mb-4 overflow-hidden" style="background:#111118;border:1px solid rgba(255,255,255,0.06);">
+        <div style="background:linear-gradient(135deg,rgba(20,184,166,0.12),rgba(6,182,212,0.06));padding:20px;border-bottom:1px solid rgba(255,255,255,0.04);">
+          <div class="flex items-center justify-between mb-3">
+            <h3 style="font-size:13px;font-weight:600;color:#71717a;text-transform:uppercase;letter-spacing:0.08em;margin:0;">Baby Size</h3>
+            <span style="font-size:10px;color:#52525b;">Week 24</span>
+          </div>
+
+          <!-- Visual size comparison -->
+          <div style="text-align:center;padding:12px 0;">
+            <div style="font-size:64px;line-height:1;margin-bottom:8px;filter:drop-shadow(0 4px 16px rgba(20,184,166,0.3));">🍈</div>
+            <p style="font-size:13px;color:#a1a1aa;margin:0;font-weight:500;">Cantaloupe</p>
+          </div>
+        </div>
+
+        <div class="p-4">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="text-align:center;padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.05);">
+              <div style="font-size:22px;font-weight:700;color:#14b8a6;margin-bottom:2px;">12"</div>
+              <div style="font-size:11px;color:#71717a;font-weight:500;">Length</div>
+            </div>
+            <div style="text-align:center;padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.05);">
+              <div style="font-size:22px;font-weight:700;color:#14b8a6;margin-bottom:2px;">1.3<span style="font-size:14px;">lb</span></div>
+              <div style="font-size:11px;color:#71717a;font-weight:500;">Weight</div>
+            </div>
+          </div>
+
+          <!-- Size progress vs full term -->
+          <div class="mt-3">
+            <div class="flex justify-between items-center mb-1.5">
+              <span style="font-size:11px;color:#71717a;">vs. full term</span>
+              <span style="font-size:11px;color:#14b8a6;font-weight:600;">~27%</span>
+            </div>
+            <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;">
+              <div style="width:27%;height:100%;background:linear-gradient(90deg,#14b8a6,#06b6d4);border-radius:2px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Card -->
+      <div class="card-hover rounded-2xl mb-4" style="background:#111118;border:1px solid rgba(255,255,255,0.06);">
+        <div class="p-4">
+          <h3 style="font-size:13px;font-weight:600;color:#71717a;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 14px 0;">Your Progress</h3>
+
+          <div class="stat-item">
+            <div class="flex items-center gap-2">
+              <i data-lucide="check-circle-2" style="width:15px;height:15px;color:#14b8a6;"></i>
+              <span style="font-size:13px;color:#a1a1aa;">Tasks this week</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span style="font-size:16px;font-weight:700;color:#fff;">3</span>
+              <span style="font-size:12px;color:#52525b;">/ 7</span>
+            </div>
+          </div>
+
+          <div class="stat-item">
+            <div class="flex items-center gap-2">
+              <i data-lucide="calendar-heart" style="width:15px;height:15px;color:#f472b6;"></i>
+              <span style="font-size:13px;color:#a1a1aa;">Days to due date</span>
+            </div>
+            <span style="font-size:16px;font-weight:700;color:#fff;">112</span>
+          </div>
+
+          <div class="stat-item">
+            <div class="flex items-center gap-2">
+              <i data-lucide="book-open-check" style="width:15px;height:15px;color:#06b6d4;"></i>
+              <span style="font-size:13px;color:#a1a1aa;">Briefings read</span>
+            </div>
+            <span style="font-size:16px;font-weight:700;color:#fff;">6</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Timeline mini-map -->
+      <div class="card-hover rounded-2xl mb-4" style="background:#111118;border:1px solid rgba(255,255,255,0.06);">
+        <div class="p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h3 style="font-size:13px;font-weight:600;color:#71717a;text-transform:uppercase;letter-spacing:0.08em;margin:0;">Timeline</h3>
+            <a href="#" style="font-size:11px;color:#14b8a6;text-decoration:none;font-weight:500;">View all</a>
+          </div>
+
+          <!-- Trimester sections -->
+          <div style="display:flex;flex-direction:column;gap:6px;">
+
+            <!-- T1 -->
+            <div style="display:flex;align-items:center;gap-8px;gap:8px;">
+              <div style="width:60px;font-size:10px;color:#52525b;font-weight:500;flex-shrink:0;">T1 (1-12)</div>
+              <div style="flex:1;height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;">
+                <div style="width:100%;height:100%;background:rgba(20,184,166,0.3);"></div>
+              </div>
+              <i data-lucide="check" style="width:11px;height:11px;color:#14b8a6;flex-shrink:0;"></i>
+            </div>
+
+            <!-- T2 (current) -->
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:60px;font-size:10px;color:#2dd4bf;font-weight:600;flex-shrink:0;">T2 (13-26)</div>
+              <div style="flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;position:relative;">
+                <div style="width:85%;height:100%;background:linear-gradient(90deg,#14b8a6,#06b6d4);"></div>
+                <!-- Current week marker -->
+                <div style="position:absolute;top:50%;left:85%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid #14b8a6;box-shadow:0 0 6px rgba(20,184,166,0.5);"></div>
+              </div>
+              <span style="font-size:10px;color:#2dd4bf;font-weight:600;flex-shrink:0;">24</span>
+            </div>
+
+            <!-- T3 (locked for free) -->
+            <div style="display:flex;align-items:center;gap:8px;opacity:0.5;">
+              <div style="width:60px;font-size:10px;color:#52525b;font-weight:500;flex-shrink:0;">T3 (27-40)</div>
+              <div style="flex:1;height:6px;background:rgba(255,255,255,0.04);border-radius:3px;"></div>
+              <i data-lucide="lock" style="width:11px;height:11px;color:#52525b;flex-shrink:0;"></i>
+            </div>
+
+          </div>
+
+          <!-- Paywall nudge -->
+          <div class="paywall-nudge mt-4">
+            <div class="flex items-start gap-2">
+              <i data-lucide="sparkles" style="width:14px;height:14px;color:#14b8a6;flex-shrink:0;margin-top:1px;"></i>
+              <div>
+                <p style="font-size:12px;color:#2dd4bf;font-weight:600;margin:0 0 2px 0;">Unlock all 40 weeks</p>
+                <p style="font-size:11px;color:#71717a;margin:0;line-height:1.5;">Premium includes full timeline access, week archives, and team briefings.</p>
+              </div>
+            </div>
+            <button class="btn-teal mt-3 w-full" style="width:100%;justify-content:center;padding:8px 16px;font-size:13px;">
+              Upgrade — $4.99/mo
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mood check-in mini card -->
+      <div class="card-hover rounded-2xl" style="background:#111118;border:1px solid rgba(255,255,255,0.06);">
+        <div class="p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="heart-pulse" style="width:15px;height:15px;color:#f472b6;"></i>
+            <h3 style="font-size:13px;font-weight:600;color:#a1a1aa;margin:0;">Today's Check-In</h3>
+          </div>
+          <p style="font-size:12px;color:#71717a;margin:0 0 12px 0;">How are you feeling this week?</p>
+          <div style="display:flex;justify-content:space-between;">
+            <button style="font-size:22px;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);cursor:pointer;transition:all 0.15s;" title="Struggling">😔</button>
+            <button style="font-size:22px;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);cursor:pointer;transition:all 0.15s;" title="Rough">😕</button>
+            <button style="font-size:22px;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);cursor:pointer;transition:all 0.15s;" title="Okay">😐</button>
+            <button style="font-size:22px;padding:8px;border-radius:10px;border:1px solid rgba(20,184,166,0.3);background:rgba(20,184,166,0.1);cursor:pointer;" title="Good">🙂</button>
+            <button style="font-size:22px;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);cursor:pointer;transition:all 0.15s;" title="Great">😄</button>
+          </div>
+          <button style="width:100%;margin-top:12px;padding:8px;border-radius:10px;background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.25);color:#2dd4bf;font-size:13px;font-weight:600;cursor:pointer;">
+            Log mood
+          </button>
+        </div>
+      </div>
+
+    </div><!-- end sidebar -->
+
+  </div><!-- end two-col-layout -->
+
+</div><!-- end main content -->
+
+<!-- Lucide icon init -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    lucide.createIcons();
+  });
+</script>
+
+</body>
+</html>

@@ -45,25 +45,25 @@ export default function ForgotPasswordPage() {
 
   if (success) {
     return (
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-accent-900/20 flex items-center justify-center">
-            <CheckCircle className="h-6 w-6 text-accent-500" />
+          <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-copper-dim flex items-center justify-center">
+            <CheckCircle className="h-6 w-6 text-copper" />
           </div>
-          <CardTitle className="text-2xl text-white">Check your email</CardTitle>
+          <CardTitle className="text-2xl font-display text-[--cream]">Check your email</CardTitle>
           <CardDescription>
             We&apos;ve sent a password reset link to your email address.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Alert className="bg-accent-900/20 border-accent-700">
-            <AlertDescription className="text-accent-300">
+          <Alert className="bg-copper-dim border-copper/50">
+            <AlertDescription className="text-copper">
               Click the link in the email to reset your password. The link will expire in 24 hours.
             </AlertDescription>
           </Alert>
         </CardContent>
         <CardFooter className="justify-center">
-          <Link href="/login" className="text-sm text-accent-500 hover:text-accent-400 flex items-center gap-2">
+          <Link href="/login" className="text-sm text-copper hover:text-copper/80 flex items-center gap-2">
             <ArrowLeft className="h-4 w-4" />
             Back to login
           </Link>
@@ -73,9 +73,9 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <Card className="bg-surface-900 border-surface-800">
+    <Card className="bg-[--surface] border-[--border]">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl text-white">Forgot password?</CardTitle>
+        <CardTitle className="text-2xl font-display text-[--cream]">Forgot password?</CardTitle>
         <CardDescription>
           Enter your email and we&apos;ll send you a reset link
         </CardDescription>
@@ -95,10 +95,10 @@ export default function ForgotPasswordPage() {
               type="email"
               placeholder="you@example.com"
               {...register('email')}
-              className="bg-surface-800 border-surface-700"
+              className="bg-[--card] border-[--border-hover]"
             />
             {errors.email && (
-              <p className="text-sm text-red-500">{errors.email.message}</p>
+              <p className="text-sm text-coral">{errors.email.message}</p>
             )}
           </div>
 
@@ -118,7 +118,7 @@ export default function ForgotPasswordPage() {
         </form>
       </CardContent>
       <CardFooter className="justify-center">
-        <Link href="/login" className="text-sm text-accent-500 hover:text-accent-400 flex items-center gap-2">
+        <Link href="/login" className="text-sm text-copper hover:text-copper/80 flex items-center gap-2">
           <ArrowLeft className="h-4 w-4" />
           Back to login
         </Link>

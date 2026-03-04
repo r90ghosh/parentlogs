@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Dashboard Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <style>
+    body {
+      background-color: #0a0a0f;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+
+    /* Mood button hover */
+    .mood-btn {
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .mood-btn:hover {
+      transform: translateY(-4px) scale(1.12);
+    }
+    .mood-btn.selected {
+      transform: translateY(-4px) scale(1.15);
+      background: rgba(245, 158, 11, 0.15);
+      border-color: #f59e0b;
+    }
+
+    /* Card hover lift */
+    .card-lift {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-lift:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Challenge tile hover */
+    .challenge-tile {
+      transition: all 0.2s ease;
+    }
+    .challenge-tile:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    /* Checkbox animation */
+    .task-checkbox {
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .task-checkbox:hover {
+      border-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    /* Quick action button */
+    .quick-action {
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .quick-action:hover {
+      transform: translateY(-2px) scale(1.04);
+    }
+
+    /* Nav item */
+    .nav-item {
+      transition: all 0.15s ease;
+    }
+    .nav-item:hover { opacity: 0.85; }
+
+    /* Gradient text */
+    .amber-gradient-text {
+      background: linear-gradient(135deg, #f59e0b, #fbbf24, #fde68a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Upgrade banner gradient */
+    .upgrade-banner {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.08) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    /* Briefing card gradient */
+    .briefing-gradient {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.18) 0%, rgba(15, 23, 42, 0.9) 60%);
+    }
+
+    /* Progress bar fill animation */
+    .progress-fill {
+      transition: width 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* Avatar gradient */
+    .avatar-gradient {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+
+    /* Dot pulse */
+    @keyframes dot-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .dot-pulse { animation: dot-pulse 2s ease-in-out infinite; }
+
+    /* Stagger animation simulation */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-in-1 { animation: fadeSlideUp 0.4s ease forwards 0.05s; opacity: 0; }
+    .animate-in-2 { animation: fadeSlideUp 0.4s ease forwards 0.12s; opacity: 0; }
+    .animate-in-3 { animation: fadeSlideUp 0.4s ease forwards 0.19s; opacity: 0; }
+    .animate-in-4 { animation: fadeSlideUp 0.4s ease forwards 0.26s; opacity: 0; }
+    .animate-in-5 { animation: fadeSlideUp 0.4s ease forwards 0.33s; opacity: 0; }
+    .animate-in-6 { animation: fadeSlideUp 0.4s ease forwards 0.40s; opacity: 0; }
+    .animate-in-7 { animation: fadeSlideUp 0.4s ease forwards 0.47s; opacity: 0; }
+    .animate-in-8 { animation: fadeSlideUp 0.4s ease forwards 0.54s; opacity: 0; }
+
+    /* Notification badge */
+    .notif-badge {
+      background: #ef4444;
+      animation: dot-pulse 2.5s ease-in-out infinite;
+    }
+
+    /* Card base */
+    .card {
+      background: #18181b;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 1rem;
+    }
+
+    /* Budget progress */
+    .budget-bar {
+      background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    }
+
+    /* Checklist bar colors */
+    .bar-teal  { background: linear-gradient(90deg, #14b8a6, #2dd4bf); }
+    .bar-indigo { background: linear-gradient(90deg, #6366f1, #818cf8); }
+    .bar-amber { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              950: '#0a0a0f',
+              900: '#18181b',
+              800: '#27272a',
+              700: '#3f3f46',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen" style="background:#0a0a0f;">
+
+  <!-- ─── STICKY HEADER ──────────────────────────────────────────────── -->
+  <header class="sticky top-0 z-50 h-14 flex items-center px-4 md:px-6"
+          style="background: rgba(24,24,27,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.06);">
+    <div class="max-w-[1600px] mx-auto w-full flex items-center justify-between">
+
+      <!-- Left: Logo + Week badge -->
+      <div class="flex items-center gap-3">
+        <!-- Logo mark -->
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+             style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M8 2C5.8 2 4 3.8 4 6c0 1.5.8 2.8 2 3.5V11h4V9.5C11.2 8.8 12 7.5 12 6c0-2.2-1.8-4-4-4z"
+                  fill="white" opacity="0.9"/>
+            <path d="M5.5 12h5v1.5a.5.5 0 01-.5.5h-4a.5.5 0 01-.5-.5V12z" fill="white" opacity="0.7"/>
+          </svg>
+        </div>
+        <span class="text-white font-semibold text-sm tracking-tight hidden sm:block">The Dad Center</span>
+
+        <!-- Week badge -->
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold"
+              style="background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3);">
+          <i data-lucide="calendar-days" style="width:11px;height:11px;"></i>
+          Week 24
+        </span>
+      </div>
+
+      <!-- Right: Notification + Avatar -->
+      <div class="flex items-center gap-2">
+
+        <!-- Notification bell -->
+        <button class="relative w-9 h-9 rounded-xl flex items-center justify-center"
+                style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);">
+          <i data-lucide="bell" style="width:18px;height:18px;color:#a1a1aa;"></i>
+          <!-- Red badge -->
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full notif-badge"></span>
+        </button>
+
+        <!-- User avatar dropdown -->
+        <button class="flex items-center gap-2 rounded-xl px-2 py-1.5"
+                style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);">
+          <div class="w-6 h-6 rounded-lg flex items-center justify-center avatar-gradient">
+            <span class="text-white text-[10px] font-bold">A</span>
+          </div>
+          <span class="text-zinc-300 text-xs font-medium hidden sm:block">Alex</span>
+          <i data-lucide="chevron-down" style="width:13px;height:13px;color:#71717a;"></i>
+        </button>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTENT ───────────────────────────────────────────────── -->
+  <main class="max-w-[1600px] mx-auto px-4 md:px-6 py-6 pb-28">
+
+    <!-- Dashboard Header -->
+    <div class="mb-6 animate-in-1">
+      <div class="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-white leading-tight">
+            Good morning, <span class="amber-gradient-text">Alex</span> 👋
+          </h1>
+          <p class="text-zinc-500 text-sm mt-1">Tuesday, March 3, 2026 &nbsp;·&nbsp; Week 24 of your pregnancy journey</p>
+        </div>
+        <!-- Overdue alert badge -->
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl"
+             style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25);">
+          <i data-lucide="alert-circle" style="width:13px;height:13px;color:#f87171;"></i>
+          <span class="text-red-400 text-xs font-medium">3 tasks need attention</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MOOD CHECK-IN CARD (full width) ── -->
+    <div class="card mb-5 p-5 animate-in-2"
+         style="background: linear-gradient(135deg, #1c1c23 0%, #18181b 100%);">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-white font-semibold text-base">How are you feeling today?</h2>
+          <p class="text-zinc-500 text-xs mt-0.5">Your check-in helps track patterns over time</p>
+        </div>
+        <!-- Streak -->
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg"
+             style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2);">
+          <span class="text-sm">🔥</span>
+          <span class="text-amber-400 text-xs font-semibold">3-day streak</span>
+        </div>
+      </div>
+
+      <!-- Emoji row -->
+      <div class="flex items-center justify-between gap-2 sm:gap-3">
+        <button class="mood-btn flex flex-col items-center gap-2 flex-1 py-3 px-1 rounded-xl"
+                style="border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02);">
+          <span class="text-2xl sm:text-3xl leading-none">😫</span>
+          <span class="text-zinc-500 text-[10px] sm:text-xs font-medium">Struggling</span>
+        </button>
+        <button class="mood-btn flex flex-col items-center gap-2 flex-1 py-3 px-1 rounded-xl"
+                style="border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02);">
+          <span class="text-2xl sm:text-3xl leading-none">😕</span>
+          <span class="text-zinc-500 text-[10px] sm:text-xs font-medium">Rough</span>
+        </button>
+        <button class="mood-btn flex flex-col items-center gap-2 flex-1 py-3 px-1 rounded-xl"
+                style="border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02);">
+          <span class="text-2xl sm:text-3xl leading-none">😐</span>
+          <span class="text-zinc-500 text-[10px] sm:text-xs font-medium">Okay</span>
+        </button>
+        <button class="mood-btn selected flex flex-col items-center gap-2 flex-1 py-3 px-1 rounded-xl"
+                style="border: 1px solid rgba(245,158,11,0.4); background: rgba(245,158,11,0.08);">
+          <span class="text-2xl sm:text-3xl leading-none">😊</span>
+          <span class="text-amber-400 text-[10px] sm:text-xs font-semibold">Good</span>
+        </button>
+        <button class="mood-btn flex flex-col items-center gap-2 flex-1 py-3 px-1 rounded-xl"
+                style="border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.02);">
+          <span class="text-2xl sm:text-3xl leading-none">🤩</span>
+          <span class="text-zinc-500 text-[10px] sm:text-xs font-medium">Great</span>
+        </button>
+      </div>
+
+      <!-- Confirm button (shown when mood selected) -->
+      <div class="mt-4 flex justify-end">
+        <button class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all"
+                style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #000;">
+          <i data-lucide="check" style="width:14px;height:14px;"></i>
+          Log Check-in
+        </button>
+      </div>
+    </div>
+
+    <!-- ── TWO COLUMN GRID ── -->
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-5">
+
+      <!-- ────────── LEFT COLUMN ────────── -->
+      <div class="flex flex-col gap-5">
+
+        <!-- BRIEFING TEASER CARD -->
+        <div class="card card-lift p-5 briefing-gradient animate-in-3 cursor-pointer"
+             style="border: 1px solid rgba(99,102,241,0.2);">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <!-- Label -->
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-7 h-7 rounded-lg flex items-center justify-center"
+                     style="background: rgba(99,102,241,0.2);">
+                  <i data-lucide="book-open" style="width:14px;height:14px;color:#818cf8;"></i>
+                </div>
+                <span class="text-indigo-400 text-xs font-semibold uppercase tracking-wider">Week 24 Briefing</span>
+              </div>
+              <!-- Title -->
+              <h3 class="text-white font-bold text-lg leading-snug mb-2">
+                Your Baby Can Now Hear Your Voice
+              </h3>
+              <!-- Excerpt -->
+              <p class="text-zinc-400 text-sm leading-relaxed line-clamp-2">
+                At 24 weeks, your baby's hearing is developing rapidly. Talking, reading, and even playing music can begin forming early neural pathways and a bond before birth.
+              </p>
+              <!-- CTA -->
+              <div class="mt-3 flex items-center gap-1.5">
+                <span class="text-teal-400 text-sm font-semibold">Read full briefing</span>
+                <i data-lucide="arrow-right" style="width:14px;height:14px;color:#2dd4bf;"></i>
+              </div>
+            </div>
+            <!-- Illustration / week badge -->
+            <div class="flex-shrink-0 w-16 h-16 rounded-2xl flex flex-col items-center justify-center gap-0.5"
+                 style="background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.2);">
+              <span class="text-2xl leading-none">👂</span>
+              <span class="text-indigo-300 text-[10px] font-semibold">Wk 24</span>
+            </div>
+          </div>
+
+          <!-- Progress line -->
+          <div class="mt-4 pt-4" style="border-top: 1px solid rgba(255,255,255,0.05);">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-zinc-500 text-xs">Briefing progress</span>
+              <span class="text-zinc-400 text-xs">2 of 3 sections read</span>
+            </div>
+            <div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);">
+              <div class="h-1 rounded-full progress-fill bar-indigo" style="width: 66%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ON YOUR MIND / CHALLENGE TILES -->
+        <div class="animate-in-4">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h2 class="text-white font-semibold text-sm">What's on Your Mind?</h2>
+              <p class="text-zinc-600 text-xs mt-0.5">Topics tailored to where you are</p>
+            </div>
+            <a href="#" class="text-zinc-500 text-xs font-medium flex items-center gap-1 hover:text-amber-400 transition-colors">
+              See all
+              <i data-lucide="chevron-right" style="width:12px;height:12px;"></i>
+            </a>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+            <!-- Challenge tile: Anxiety -->
+            <div class="challenge-tile card p-4 cursor-pointer"
+                 style="border-left: 3px solid #a855f7; border: 1px solid rgba(255,255,255,0.06); border-left: 3px solid #a855f7;">
+              <div class="flex items-start justify-between mb-3">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center"
+                     style="background: rgba(168,85,247,0.15);">
+                  <i data-lucide="brain" style="width:15px;height:15px;color:#c084fc;"></i>
+                </div>
+                <div class="flex items-center gap-1 px-2 py-0.5 rounded-full"
+                     style="background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.2);">
+                  <span class="text-purple-400 text-[10px] font-semibold">Anxiety</span>
+                </div>
+              </div>
+              <h4 class="text-white font-semibold text-sm mb-1.5">Managing Dad Anxiety</h4>
+              <p class="text-zinc-500 text-xs leading-relaxed mb-3">
+                It's normal to worry. Learn evidence-based strategies to manage pre-birth anxiety and stay grounded.
+              </p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <div class="h-1 w-16 rounded-full" style="background: rgba(255,255,255,0.06);">
+                    <div class="h-1 rounded-full" style="width: 40%; background: #a855f7;"></div>
+                  </div>
+                  <span class="text-zinc-600 text-[10px]">2 of 5</span>
+                </div>
+                <span class="text-purple-400 text-xs font-medium flex items-center gap-0.5">
+                  Continue
+                  <i data-lucide="chevron-right" style="width:11px;height:11px;"></i>
+                </span>
+              </div>
+            </div>
+
+            <!-- Challenge tile: Finances -->
+            <div class="challenge-tile card p-4 cursor-pointer"
+                 style="border: 1px solid rgba(255,255,255,0.06); border-left: 3px solid #22c55e;">
+              <div class="flex items-start justify-between mb-3">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center"
+                     style="background: rgba(34,197,94,0.12);">
+                  <i data-lucide="wallet" style="width:15px;height:15px;color:#4ade80;"></i>
+                </div>
+                <div class="flex items-center gap-1 px-2 py-0.5 rounded-full"
+                     style="background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2);">
+                  <span class="text-green-400 text-[10px] font-semibold">Finances</span>
+                </div>
+              </div>
+              <h4 class="text-white font-semibold text-sm mb-1.5">Financial Planning for Baby</h4>
+              <p class="text-zinc-500 text-xs leading-relaxed mb-3">
+                From hospital costs to building an emergency fund — get a clear picture of what's ahead.
+              </p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <div class="h-1 w-16 rounded-full" style="background: rgba(255,255,255,0.06);">
+                    <div class="h-1 rounded-full" style="width: 0%; background: #22c55e;"></div>
+                  </div>
+                  <span class="text-zinc-600 text-[10px]">Not started</span>
+                </div>
+                <span class="text-green-400 text-xs font-medium flex items-center gap-0.5">
+                  Start
+                  <i data-lucide="chevron-right" style="width:11px;height:11px;"></i>
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- UPGRADE PROMPT (free users only) -->
+        <div class="upgrade-banner rounded-2xl p-4 animate-in-5 cursor-pointer card-lift">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                 style="background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3);">
+              <i data-lucide="lock" style="width:18px;height:18px;color:#fbbf24;"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-white font-semibold text-sm">Unlock unlimited tasks &amp; all briefings</p>
+              <p class="text-zinc-500 text-xs mt-0.5">You're on the free plan &nbsp;·&nbsp; 4 days left in trial</p>
+            </div>
+            <button class="flex-shrink-0 px-4 py-2 rounded-xl text-xs font-bold transition-all"
+                    style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #000;">
+              Upgrade &nbsp;→
+            </button>
+          </div>
+          <!-- Trial progress bar -->
+          <div class="mt-3">
+            <div class="h-1 rounded-full" style="background: rgba(255,255,255,0.06);">
+              <div class="h-1 rounded-full budget-bar" style="width: 85%;"></div>
+            </div>
+            <div class="flex justify-between mt-1">
+              <span class="text-zinc-600 text-[10px]">24 days used</span>
+              <span class="text-amber-500 text-[10px] font-medium">4 days left</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end left column -->
+
+      <!-- ────────── RIGHT COLUMN ────────── -->
+      <div class="flex flex-col gap-5">
+
+        <!-- TASKS DUE THIS WEEK -->
+        <div class="card p-4 animate-in-3">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-white font-semibold text-sm flex items-center gap-2">
+              <i data-lucide="check-square" style="width:15px;height:15px;color:#f59e0b;"></i>
+              This Week
+            </h3>
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold"
+                  style="background: rgba(245,158,11,0.15); color: #fbbf24;">7</span>
+          </div>
+
+          <!-- Task list -->
+          <div class="flex flex-col gap-1">
+
+            <!-- Task 1 (catch-up / yellow) -->
+            <div class="flex items-center gap-3 p-2.5 rounded-xl group cursor-pointer"
+                 style="background: rgba(234,179,8,0.05); border: 1px solid rgba(234,179,8,0.15);">
+              <div class="task-checkbox w-5 h-5 rounded-md flex-shrink-0 flex items-center justify-center"
+                   style="border: 1.5px solid rgba(234,179,8,0.5); background: transparent;">
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-white text-xs font-medium truncate">Tour the hospital maternity ward</p>
+                <p class="text-yellow-600 text-[10px] mt-0.5 flex items-center gap-1">
+                  <i data-lucide="clock" style="width:9px;height:9px;"></i>
+                  Catch up &nbsp;·&nbsp; Week 20
+                </p>
+              </div>
+              <span class="w-2 h-2 rounded-full flex-shrink-0" style="background: #eab308;"></span>
+            </div>
+
+            <!-- Task 2 -->
+            <div class="flex items-center gap-3 p-2.5 rounded-xl group cursor-pointer"
+                 style="background: rgba(255,255,255,0.02); border: 1px solid transparent;"
+                 onmouseover="this.style.background='rgba(255,255,255,0.04)'"
+                 onmouseout="this.style.background='rgba(255,255,255,0.02)'">
+              <div class="task-checkbox w-5 h-5 rounded-md flex-shrink-0 flex items-center justify-center"
+                   style="border: 1.5px solid rgba(255,255,255,0.15); background: transparent;">
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-white text-xs font-medium truncate">Research pediatricians in your area</p>
+                <p class="text-zinc-600 text-[10px] mt-0.5">Due this week</p>
+              </div>
+              <span class="w-2 h-2 rounded-full flex-shrink-0" style="background: #6366f1;"></span>
+            </div>
+
+            <!-- Task 3 (completed) -->
+            <div class="flex items-center gap-3 p-2.5 rounded-xl cursor-pointer opacity-50">
+              <div class="w-5 h-5 rounded-md flex-shrink-0 flex items-center justify-center"
+                   style="background: rgba(34,197,94,0.2); border: 1.5px solid rgba(34,197,94,0.4);">
+                <i data-lucide="check" style="width:11px;height:11px;color:#4ade80;"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-zinc-500 text-xs font-medium truncate line-through">Create a birth plan document</p>
+                <p class="text-green-700 text-[10px] mt-0.5">Done</p>
+              </div>
+              <span class="w-2 h-2 rounded-full flex-shrink-0" style="background: #22c55e;"></span>
+            </div>
+
+            <!-- Task 4 -->
+            <div class="flex items-center gap-3 p-2.5 rounded-xl group cursor-pointer"
+                 style="background: rgba(255,255,255,0.02); border: 1px solid transparent;"
+                 onmouseover="this.style.background='rgba(255,255,255,0.04)'"
+                 onmouseout="this.style.background='rgba(255,255,255,0.02)'">
+              <div class="task-checkbox w-5 h-5 rounded-md flex-shrink-0 flex items-center justify-center"
+                   style="border: 1.5px solid rgba(255,255,255,0.15); background: transparent;">
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-white text-xs font-medium truncate">Install infant car seat (practice)</p>
+                <p class="text-zinc-600 text-[10px] mt-0.5">Due this week</p>
+              </div>
+              <span class="w-2 h-2 rounded-full flex-shrink-0" style="background: #f59e0b;"></span>
+            </div>
+
+          </div>
+
+          <!-- View all link -->
+          <div class="mt-3 pt-3" style="border-top: 1px solid rgba(255,255,255,0.04);">
+            <a href="#" class="flex items-center justify-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-amber-400 transition-colors">
+              View all 7 tasks
+              <i data-lucide="arrow-right" style="width:12px;height:12px;"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="animate-in-4">
+          <h3 class="text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-2.5">Quick Actions</h3>
+          <div class="grid grid-cols-4 gap-2">
+
+            <button class="quick-action flex flex-col items-center gap-1.5 p-3 rounded-xl"
+                    style="background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2);">
+              <i data-lucide="smile" style="width:18px;height:18px;color:#fbbf24;"></i>
+              <span class="text-zinc-400 text-[10px] font-medium leading-tight text-center">Log Mood</span>
+            </button>
+
+            <button class="quick-action flex flex-col items-center gap-1.5 p-3 rounded-xl"
+                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+              <i data-lucide="plus-circle" style="width:18px;height:18px;color:#a1a1aa;"></i>
+              <span class="text-zinc-400 text-[10px] font-medium leading-tight text-center">Add Task</span>
+            </button>
+
+            <button class="quick-action flex flex-col items-center gap-1.5 p-3 rounded-xl"
+                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+              <i data-lucide="bar-chart-2" style="width:18px;height:18px;color:#a1a1aa;"></i>
+              <span class="text-zinc-400 text-[10px] font-medium leading-tight text-center">Budget</span>
+            </button>
+
+            <button class="quick-action flex flex-col items-center gap-1.5 p-3 rounded-xl"
+                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+              <i data-lucide="user-plus" style="width:18px;height:18px;color:#a1a1aa;"></i>
+              <span class="text-zinc-400 text-[10px] font-medium leading-tight text-center">Invite</span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- BUDGET SNAPSHOT -->
+        <div class="card p-4 animate-in-5">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-white font-semibold text-sm flex items-center gap-2">
+              <i data-lucide="piggy-bank" style="width:15px;height:15px;color:#4ade80;"></i>
+              Budget Snapshot
+            </h3>
+            <a href="#" class="text-zinc-500 text-xs hover:text-amber-400 transition-colors">Details →</a>
+          </div>
+
+          <!-- Figures -->
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div class="rounded-xl p-3 text-center"
+                 style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);">
+              <p class="text-zinc-500 text-[10px] font-medium uppercase tracking-wider mb-1">Estimated Total</p>
+              <p class="text-white font-bold text-lg">$14,200</p>
+            </div>
+            <div class="rounded-xl p-3 text-center"
+                 style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);">
+              <p class="text-zinc-500 text-[10px] font-medium uppercase tracking-wider mb-1">Spent So Far</p>
+              <p class="text-green-400 font-bold text-lg">$4,850</p>
+            </div>
+          </div>
+
+          <!-- Progress bar -->
+          <div>
+            <div class="flex justify-between mb-1.5">
+              <span class="text-zinc-600 text-[10px]">34% of estimated budget</span>
+              <span class="text-zinc-500 text-[10px]">$9,350 remaining</span>
+            </div>
+            <div class="h-2 rounded-full" style="background: rgba(255,255,255,0.06);">
+              <div class="h-2 rounded-full progress-fill budget-bar" style="width: 34%;"></div>
+            </div>
+          </div>
+
+          <!-- Categories row -->
+          <div class="flex gap-2 mt-3">
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full" style="background: #f59e0b;"></span>
+              <span class="text-zinc-600 text-[10px]">Gear</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full" style="background: #6366f1;"></span>
+              <span class="text-zinc-600 text-[10px]">Medical</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full" style="background: #14b8a6;"></span>
+              <span class="text-zinc-600 text-[10px]">Nursery</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHECKLIST PROGRESS -->
+        <div class="card p-4 animate-in-6">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-white font-semibold text-sm flex items-center gap-2">
+              <i data-lucide="clipboard-check" style="width:15px;height:15px;color:#818cf8;"></i>
+              Checklist Progress
+            </h3>
+            <a href="#" class="text-zinc-500 text-xs hover:text-amber-400 transition-colors">View all →</a>
+          </div>
+
+          <div class="flex flex-col gap-3">
+
+            <!-- Hospital Bag -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm">🏥</span>
+                  <span class="text-zinc-300 text-xs font-medium">Hospital Bag</span>
+                </div>
+                <span class="text-zinc-400 text-xs font-semibold">80%</span>
+              </div>
+              <div class="h-1.5 rounded-full" style="background: rgba(255,255,255,0.06);">
+                <div class="h-1.5 rounded-full progress-fill bar-teal" style="width: 80%;"></div>
+              </div>
+              <p class="text-zinc-600 text-[10px] mt-1">4 of 5 items packed</p>
+            </div>
+
+            <!-- Nursery Setup -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm">🛏️</span>
+                  <span class="text-zinc-300 text-xs font-medium">Nursery Setup</span>
+                </div>
+                <span class="text-zinc-400 text-xs font-semibold">45%</span>
+              </div>
+              <div class="h-1.5 rounded-full" style="background: rgba(255,255,255,0.06);">
+                <div class="h-1.5 rounded-full progress-fill bar-indigo" style="width: 45%;"></div>
+              </div>
+              <p class="text-zinc-600 text-[10px] mt-1">9 of 20 items complete</p>
+            </div>
+
+            <!-- Baby Essentials -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm">🍼</span>
+                  <span class="text-zinc-300 text-xs font-medium">Baby Essentials</span>
+                </div>
+                <span class="text-zinc-400 text-xs font-semibold">60%</span>
+              </div>
+              <div class="h-1.5 rounded-full" style="background: rgba(255,255,255,0.06);">
+                <div class="h-1.5 rounded-full progress-fill bar-amber" style="width: 60%;"></div>
+              </div>
+              <p class="text-zinc-600 text-[10px] mt-1">6 of 10 items purchased</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- end right column -->
+    </div><!-- end two-column grid -->
+
+  </main>
+
+  <!-- ─── BOTTOM NAV ─────────────────────────────────────────────────── -->
+  <nav class="fixed bottom-0 left-0 right-0 h-16 flex items-center z-50"
+       style="background: rgba(24,24,27,0.97); backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.06);">
+    <div class="max-w-[640px] mx-auto w-full flex items-center justify-around px-2">
+
+      <!-- Home (active) -->
+      <a href="#" class="nav-item flex flex-col items-center gap-0.5 flex-1 py-1.5 relative">
+        <div class="relative">
+          <i data-lucide="home" style="width:20px;height:20px;color:#f59e0b;"></i>
+        </div>
+        <span class="text-amber-400 text-[10px] font-semibold">Home</span>
+        <!-- Active dot -->
+        <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full dot-pulse" style="background:#f59e0b;"></span>
+      </a>
+
+      <!-- Tasks -->
+      <a href="#" class="nav-item flex flex-col items-center gap-0.5 flex-1 py-1.5">
+        <i data-lucide="check-square" style="width:20px;height:20px;color:#52525b;"></i>
+        <span class="text-zinc-500 text-[10px] font-medium">Tasks</span>
+      </a>
+
+      <!-- Briefing (center, prominent) -->
+      <a href="#" class="nav-item flex flex-col items-center gap-0.5 flex-1 py-1.5">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center -mt-4 shadow-lg"
+             style="background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 4px 16px rgba(99,102,241,0.4);">
+          <i data-lucide="book-open" style="width:18px;height:18px;color:white;"></i>
+        </div>
+        <span class="text-zinc-500 text-[10px] font-medium">Briefing</span>
+      </a>
+
+      <!-- Tracker -->
+      <a href="#" class="nav-item flex flex-col items-center gap-0.5 flex-1 py-1.5">
+        <i data-lucide="activity" style="width:20px;height:20px;color:#52525b;"></i>
+        <span class="text-zinc-500 text-[10px] font-medium">Tracker</span>
+      </a>
+
+      <!-- More -->
+      <a href="#" class="nav-item flex flex-col items-center gap-0.5 flex-1 py-1.5">
+        <i data-lucide="more-horizontal" style="width:20px;height:20px;color:#52525b;"></i>
+        <span class="text-zinc-500 text-[10px] font-medium">More</span>
+      </a>
+
+    </div>
+  </nav>
+
+  <!-- ─── INIT LUCIDE ICONS ──────────────────────────────────────────── -->
+  <script>
+    lucide.createIcons();
+
+    // Interactive mood selection
+    const moodBtns = document.querySelectorAll('.mood-btn');
+    moodBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        moodBtns.forEach(b => {
+          b.classList.remove('selected');
+          b.style.borderColor = 'rgba(255,255,255,0.06)';
+          b.style.background = 'rgba(255,255,255,0.02)';
+          b.querySelector('span:last-child').style.color = '#71717a';
+        });
+        btn.classList.add('selected');
+        btn.style.borderColor = 'rgba(245,158,11,0.4)';
+        btn.style.background = 'rgba(245,158,11,0.08)';
+        btn.querySelector('span:last-child').style.color = '#fbbf24';
+      });
+    });
+
+    // Interactive task checkboxes
+    const taskRows = document.querySelectorAll('.task-checkbox');
+    taskRows.forEach(cb => {
+      cb.addEventListener('click', () => {
+        const isChecked = cb.dataset.checked === 'true';
+        if (!isChecked) {
+          cb.dataset.checked = 'true';
+          cb.style.background = 'rgba(34,197,94,0.2)';
+          cb.style.borderColor = 'rgba(34,197,94,0.5)';
+          cb.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+          const row = cb.closest('.flex.items-center');
+          if (row) {
+            row.style.opacity = '0.5';
+            const taskText = row.querySelector('p.text-white');
+            if (taskText) {
+              taskText.classList.remove('text-white');
+              taskText.classList.add('text-zinc-500', 'line-through');
+            }
+          }
+        } else {
+          cb.dataset.checked = 'false';
+          cb.style.background = 'transparent';
+          cb.style.borderColor = 'rgba(255,255,255,0.15)';
+          cb.innerHTML = '';
+          const row = cb.closest('.flex.items-center');
+          if (row) {
+            row.style.opacity = '1';
+            const taskText = row.querySelector('p.text-zinc-500.line-through');
+            if (taskText) {
+              taskText.classList.add('text-white');
+              taskText.classList.remove('text-zinc-500', 'line-through');
+            }
+          }
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

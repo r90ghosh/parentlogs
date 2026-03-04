@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Dad Center — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Jost:wght@300;400;500;600&family=Karla:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ===================================================
+       DESIGN SYSTEM — WARM LUXURY EDITORIAL
+       =================================================== */
+    :root {
+      --bg:          #12100e;
+      --surface:     #1a1714;
+      --card:        #201c18;
+      --card-hover:  #282420;
+      --border:      rgba(237, 230, 220, 0.08);
+      --border-hover:rgba(237, 230, 220, 0.15);
+      --copper:      #c4703f;
+      --copper-dim:  rgba(196, 112, 63, 0.15);
+      --copper-glow: rgba(196, 112, 63, 0.25);
+      --gold:        #d4a853;
+      --gold-dim:    rgba(212, 168, 83, 0.15);
+      --cream:       #ede6dc;
+      --muted:       #7a6f62;
+      --dim:         #4a4239;
+      --sage:        #6b8f71;
+      --sage-dim:    rgba(107, 143, 113, 0.15);
+      --sky:         #5b9bd5;
+      --coral:       #d4836b;
+      --coral-dim:   rgba(212, 131, 107, 0.15);
+      --white:       #faf6f0;
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Jost', system-ui, sans-serif;
+      --font-ui:      'Karla', system-ui, sans-serif;
+
+      --radius:      12px;
+      --radius-sm:   8px;
+      --radius-lg:   16px;
+
+      --shadow-card: 0 2px 16px rgba(0,0,0,0.35), 0 1px 4px rgba(0,0,0,0.2);
+      --shadow-hover:0 6px 28px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
+      --shadow-copper: 0 4px 20px rgba(196,112,63,0.18);
+    }
+
+    /* ===================================================
+       RESET & BASE
+       =================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--cream);
+      font-family: var(--font-body);
+      font-weight: 400;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 100px;
+    }
+
+    /* Warm radial gradient on body */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% -10%, rgba(196,112,63,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 90% 60%, rgba(212,168,83,0.04) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Noise texture overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ===================================================
+       TYPOGRAPHY HELPERS
+       =================================================== */
+    .font-display { font-family: var(--font-display); }
+    .font-body    { font-family: var(--font-body); }
+    .font-ui      { font-family: var(--font-ui); }
+
+    /* ===================================================
+       LAYOUT WRAPPERS
+       =================================================== */
+    .app-shell {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .page-content {
+      padding: 0 16px 24px;
+    }
+
+    /* ===================================================
+       STICKY HEADER
+       =================================================== */
+    .top-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-brand {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      color: var(--cream);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .notif-btn {
+      position: relative;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: var(--copper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .notif-btn:hover { color: var(--gold); transform: scale(1.1); }
+
+    .notif-btn svg { width: 22px; height: 22px; }
+
+    .notif-dot {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 8px;
+      height: 8px;
+      background: var(--copper);
+      border-radius: 50%;
+      border: 2px solid var(--surface);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%       { transform: scale(1.3); opacity: 0.7; }
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--copper), var(--gold));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 12px;
+      color: #12100e;
+      letter-spacing: 0.04em;
+      box-shadow: 0 2px 8px var(--copper-glow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .user-chip:hover .user-avatar {
+      transform: scale(1.05);
+      box-shadow: 0 4px 14px var(--copper-glow);
+    }
+
+    .user-name {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--cream);
+    }
+
+    /* ===================================================
+       WELCOME SECTION
+       =================================================== */
+    .welcome-section {
+      padding: 28px 16px 20px;
+    }
+
+    .welcome-greeting {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 1.2;
+      color: var(--cream);
+      margin-bottom: 8px;
+    }
+
+    .welcome-meta {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 15px;
+      color: var(--muted);
+      letter-spacing: 0.01em;
+    }
+
+    .welcome-divider {
+      margin-top: 18px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--copper) 0%, rgba(196,112,63,0.3) 60%, transparent 100%);
+      width: 0;
+      animation: expand-line 1s ease-out forwards;
+    }
+
+    @keyframes expand-line {
+      from { width: 0; }
+      to   { width: 100%; }
+    }
+
+    /* ===================================================
+       CARD BASE
+       =================================================== */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--border-hover);
+    }
+
+    /* Copper top-line */
+    .card-copper::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--copper), rgba(196,112,63,0.4));
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    /* Gold top-line */
+    .card-gold::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), rgba(212,168,83,0.4));
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    /* ===================================================
+       CARD HEADER / SECTION TITLE PATTERN
+       =================================================== */
+    .card-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 19px;
+      color: var(--cream);
+      margin-bottom: 18px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .card-title::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 24px;
+      height: 1.5px;
+      background: var(--copper);
+      transition: width 0.3s ease;
+    }
+
+    .card:hover .card-title::after {
+      width: 100%;
+    }
+
+    /* ===================================================
+       SCROLL REVEAL ANIMATIONS
+       =================================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger delays */
+    .reveal-1 { transition-delay: 0ms; }
+    .reveal-2 { transition-delay: 80ms; }
+    .reveal-3 { transition-delay: 160ms; }
+    .reveal-4 { transition-delay: 240ms; }
+    .reveal-5 { transition-delay: 320ms; }
+    .reveal-6 { transition-delay: 400ms; }
+
+    /* ===================================================
+       CARD 1: MOOD CHECK-IN
+       =================================================== */
+    .mood-emojis {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .mood-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .mood-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  border-color 0.3s ease,
+                  background 0.3s ease,
+                  box-shadow 0.3s ease;
+      user-select: none;
+    }
+
+    .mood-item:hover .mood-circle {
+      transform: scale(1.15);
+      border-color: var(--copper);
+      box-shadow: 0 4px 16px var(--copper-glow);
+    }
+
+    .mood-item.selected .mood-circle {
+      background: var(--copper-dim);
+      border-color: var(--copper);
+      box-shadow: 0 4px 16px var(--copper-glow);
+      transform: scale(1.1);
+    }
+
+    .mood-label {
+      font-family: var(--font-ui);
+      font-weight: 400;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+      text-align: center;
+    }
+
+    .mood-item.selected .mood-label {
+      color: var(--copper);
+    }
+
+    /* Flags section (hidden by default, shown after mood select) */
+    .mood-flags {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      animation: fade-in-up 0.35s ease-out forwards;
+    }
+
+    .mood-flags.visible {
+      display: flex;
+    }
+
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .flags-label {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .flags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .flag-pill {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+      user-select: none;
+    }
+
+    .flag-pill:hover {
+      border-color: var(--border-hover);
+      color: var(--cream);
+      transform: scale(1.03);
+    }
+
+    .flag-pill.selected {
+      background: var(--copper);
+      border-color: var(--copper);
+      color: #12100e;
+    }
+
+    .checkin-btn {
+      align-self: flex-start;
+      background: var(--copper);
+      color: #12100e;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      padding: 10px 24px;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .checkin-btn:hover {
+      background: #d4824f;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-copper);
+    }
+
+    .checkin-btn:active { transform: scale(0.97); }
+
+    /* ===================================================
+       CARD 2: BRIEFING TEASER
+       =================================================== */
+    .briefing-week-num {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 80px;
+      line-height: 1;
+      color: rgba(237, 230, 220, 0.06);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .briefing-subtitle {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 15px;
+      color: var(--cream);
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .briefing-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .briefing-bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .briefing-bullets li::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .week-progress {
+      margin-bottom: 16px;
+    }
+
+    .week-progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .week-progress-label span {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .week-progress-label .week-val {
+      color: var(--gold);
+    }
+
+    .progress-track {
+      height: 3px;
+      background: var(--dim);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 1s ease-out;
+    }
+
+    .progress-fill-copper { background: linear-gradient(90deg, var(--copper), #d4824f); }
+    .progress-fill-gold   { background: linear-gradient(90deg, var(--gold), #e0bc72); }
+
+    .card-link {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--copper);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      position: relative;
+      display: inline-block;
+      transition: color 0.2s ease;
+    }
+
+    .card-link::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--copper);
+      transition: width 0.3s ease;
+    }
+
+    .card-link:hover { color: var(--gold); }
+    .card-link:hover::after { width: 100%; }
+
+    .card-link-gold { color: var(--gold); }
+    .card-link-gold::after { background: var(--gold); }
+
+    /* ===================================================
+       CARD 3: TASKS
+       =================================================== */
+    .tasks-progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .tasks-progress-text {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+
+    .tasks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-bottom: 18px;
+    }
+
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s ease;
+      border-radius: 6px;
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+
+    .task-row:last-child { border-bottom: none; }
+
+    .task-row:hover { background: rgba(237,230,220,0.03); }
+
+    /* Custom checkbox */
+    .task-checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 1.5px solid var(--dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background: transparent;
+    }
+
+    .task-row:hover .task-checkbox {
+      border-color: var(--copper);
+    }
+
+    .task-row.checked .task-checkbox {
+      background: var(--copper);
+      border-color: var(--copper);
+      transform: scale(0.95);
+    }
+
+    .task-checkbox svg {
+      width: 11px;
+      height: 11px;
+      color: #12100e;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .task-row.checked .task-checkbox svg { opacity: 1; }
+
+    .task-text {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--cream);
+      flex: 1;
+      line-height: 1.3;
+      transition: color 0.2s ease, opacity 0.2s ease;
+    }
+
+    .task-row.checked .task-text {
+      text-decoration: line-through;
+      color: var(--muted);
+      opacity: 0.5;
+    }
+
+    .assignee-pill {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      padding: 3px 8px;
+      border-radius: 10px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .assignee-dad  { background: var(--copper-dim); color: var(--copper); border: 1px solid rgba(196,112,63,0.25); }
+    .assignee-both { background: var(--gold-dim);   color: var(--gold);   border: 1px solid rgba(212,168,83,0.25); }
+    .assignee-mom  { background: var(--sage-dim);   color: var(--sage);   border: 1px solid rgba(107,143,113,0.25); }
+
+    /* ===================================================
+       CARD 4: ON YOUR MIND
+       =================================================== */
+    .challenge-tiles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .challenge-tile {
+      background: rgba(237,230,220,0.02);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 12px;
+      cursor: pointer;
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease, padding-left 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Colored left border */
+    .challenge-tile::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 3px;
+      border-radius: 1px;
+      transition: width 0.25s ease;
+    }
+
+    .challenge-tile:hover {
+      background: var(--card-hover);
+      transform: translateX(3px);
+    }
+
+    .challenge-tile:hover::before { width: 5px; }
+
+    .challenge-tile.coral-accent::before { background: var(--coral); }
+    .challenge-tile.sage-accent::before  { background: var(--sage); }
+
+    .challenge-tile.coral-accent:hover { border-color: rgba(212,131,107,0.25); }
+    .challenge-tile.sage-accent:hover  { border-color: rgba(107,143,113,0.25); }
+
+    .challenge-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .challenge-icon-coral { background: var(--coral-dim); }
+    .challenge-icon-sage  { background: var(--sage-dim); }
+
+    .challenge-icon svg { width: 16px; height: 16px; }
+    .challenge-icon-coral svg { color: var(--coral); }
+    .challenge-icon-sage  svg { color: var(--sage); }
+
+    .challenge-pillar {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--cream);
+      margin-bottom: 5px;
+      line-height: 1.2;
+    }
+
+    .challenge-desc {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ===================================================
+       CARD 5: QUICK ACTIONS
+       =================================================== */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .quick-action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      padding: 14px 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+      text-decoration: none;
+    }
+
+    .quick-action-btn:hover {
+      border-color: var(--copper);
+      background: var(--card-hover);
+      transform: translateY(-2px);
+    }
+
+    .quick-action-btn:hover .qa-icon { color: var(--gold); }
+
+    .qa-icon {
+      color: var(--copper);
+      transition: color 0.25s ease;
+    }
+
+    .qa-icon svg { width: 20px; height: 20px; }
+
+    .qa-label {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 10px;
+      color: var(--muted);
+      text-align: center;
+      letter-spacing: 0.03em;
+      line-height: 1.3;
+    }
+
+    /* ===================================================
+       CARD 6: PERSONALIZE
+       =================================================== */
+    .personalize-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+
+    .personalize-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--cream);
+      line-height: 1.3;
+    }
+
+    .personalize-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--gold-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .personalize-icon svg { width: 18px; height: 18px; color: var(--gold); }
+
+    .personalize-desc {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .personalize-progress {
+      margin-bottom: 16px;
+    }
+
+    .personalize-progress-label {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 6px;
+    }
+
+    .personalize-progress-label span {
+      color: var(--gold);
+    }
+
+    .btn-outline-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+      background: transparent;
+      border: 1.5px solid rgba(212,168,83,0.4);
+      border-radius: var(--radius-sm);
+      padding: 9px 18px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-outline-gold:hover {
+      background: var(--gold-dim);
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline-gold svg { width: 14px; height: 14px; }
+
+    /* ===================================================
+       BOTTOM NAV
+       =================================================== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: var(--surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: stretch;
+      padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Full-width nav bar */
+    @media (min-width: 481px) {
+      .bottom-nav {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 480px;
+      }
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 4px 12px;
+      position: relative;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+      flex: 1;
+    }
+
+    /* Active copper dot above */
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      top: -9px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--copper);
+    }
+
+    .nav-icon {
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+    }
+
+    .nav-icon svg { width: 20px; height: 20px; }
+
+    .nav-label {
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+    }
+
+    .nav-item .nav-icon,
+    .nav-item .nav-label { color: var(--muted); }
+
+    .nav-item.active .nav-icon,
+    .nav-item.active .nav-label { color: var(--copper); }
+
+    .nav-item:hover .nav-icon { transform: scale(1.15); }
+
+    /* ===================================================
+       UTILITY / MISC
+       =================================================== */
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 0 18px;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 380px) {
+      .welcome-greeting { font-size: 24px; }
+      .card { padding: 16px; }
+      .mood-circle { width: 42px; height: 42px; font-size: 19px; }
+      .quick-actions { grid-template-columns: repeat(2, 1fr); }
+      .challenge-tiles { grid-template-columns: 1fr; }
+      .briefing-week-num { font-size: 60px; }
+      .card-title { font-size: 17px; }
+    }
+
+    /* ===================================================
+       SKELETON SHIMMER (decorative, shows loaded state)
+       =================================================== */
+    .shimmer-pulse {
+      animation: shimmer 2s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.6; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ======================================================
+     NOISE + GRADIENT layers handled by CSS pseudo-elements
+     ====================================================== -->
+
+<div class="app-shell">
+
+  <!-- ===================================================
+       STICKY HEADER
+       =================================================== -->
+  <header class="top-header">
+    <span class="header-brand">THE DAD CENTER</span>
+
+    <div class="header-right">
+      <!-- Notification bell -->
+      <button class="notif-btn" aria-label="Notifications">
+        <div class="notif-dot"></div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+      </button>
+
+      <!-- User chip -->
+      <div class="user-chip">
+        <div class="user-avatar">AG</div>
+        <span class="user-name">Ash</span>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ===================================================
+       WELCOME SECTION
+       =================================================== -->
+  <section class="welcome-section">
+    <h1 class="welcome-greeting">Good evening, Ash.</h1>
+    <p class="welcome-meta">Week 24 &middot; Third Trimester &middot; 112 days to go</p>
+    <div class="welcome-divider"></div>
+  </section>
+
+
+  <!-- ===================================================
+       DASHBOARD CARDS FEED
+       =================================================== -->
+  <main class="page-content">
+
+    <!-- ──────────────────────────────────────────────────
+         CARD 1: MOOD CHECK-IN
+         ────────────────────────────────────────────────── -->
+    <div class="card card-copper reveal reveal-1" id="mood-card">
+      <h2 class="card-title">How are you today?</h2>
+
+      <div class="mood-emojis" role="group" aria-label="Mood selector">
+
+        <div class="mood-item" data-mood="rough" onclick="selectMood(this)">
+          <div class="mood-circle">😫</div>
+          <span class="mood-label">Rough</span>
+        </div>
+
+        <div class="mood-item" data-mood="tough" onclick="selectMood(this)">
+          <div class="mood-circle">😕</div>
+          <span class="mood-label">Tough</span>
+        </div>
+
+        <div class="mood-item" data-mood="okay" onclick="selectMood(this)">
+          <div class="mood-circle">😐</div>
+          <span class="mood-label">Okay</span>
+        </div>
+
+        <div class="mood-item selected" data-mood="good" onclick="selectMood(this)">
+          <div class="mood-circle">😊</div>
+          <span class="mood-label">Good</span>
+        </div>
+
+        <div class="mood-item" data-mood="great" onclick="selectMood(this)">
+          <div class="mood-circle">🔥</div>
+          <span class="mood-label">Great</span>
+        </div>
+
+      </div>
+
+      <!-- Flags section (visible because mood is pre-selected in demo) -->
+      <div class="mood-flags visible" id="mood-flags">
+        <span class="flags-label">Anything on your mind?</span>
+        <div class="flags-row">
+          <span class="flag-pill" onclick="toggleFlag(this)">Sleep</span>
+          <span class="flag-pill" onclick="toggleFlag(this)">Work</span>
+          <span class="flag-pill selected" onclick="toggleFlag(this)">Anxiety</span>
+          <span class="flag-pill" onclick="toggleFlag(this)">Partner</span>
+          <span class="flag-pill" onclick="toggleFlag(this)">Health</span>
+          <span class="flag-pill" onclick="toggleFlag(this)">Money</span>
+        </div>
+        <button class="checkin-btn" onclick="submitCheckin(this)">Check In</button>
+      </div>
+    </div>
+
+
+    <!-- ──────────────────────────────────────────────────
+         CARD 2: BRIEFING TEASER
+         ────────────────────────────────────────────────── -->
+    <div class="card card-gold reveal reveal-2" id="briefing-card">
+      <!-- Decorative large "24" -->
+      <span class="briefing-week-num" aria-hidden="true">24</span>
+
+      <h2 class="card-title">Week 24 Briefing</h2>
+
+      <p class="briefing-subtitle">Your baby is the size of a cantaloupe.</p>
+
+      <ul class="briefing-bullets" aria-label="Briefing highlights">
+        <li>Ear development milestone — she can hear your voice now</li>
+        <li>Glucose tolerance test this week — schedule it early</li>
+        <li>Hospital bag planning — start the list</li>
+      </ul>
+
+      <!-- Week progress -->
+      <div class="week-progress">
+        <div class="week-progress-label">
+          <span>Pregnancy Progress</span>
+          <span class="week-val">Week 24 of 40</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill progress-fill-gold" style="width: 60%"></div>
+        </div>
+      </div>
+
+      <a href="#" class="card-link card-link-gold">Read Full Briefing &rarr;</a>
+    </div>
+
+
+    <!-- ──────────────────────────────────────────────────
+         CARD 3: TASKS DUE THIS WEEK
+         ────────────────────────────────────────────────── -->
+    <div class="card card-copper reveal reveal-3" id="tasks-card">
+      <h2 class="card-title">This Week's Tasks</h2>
+
+      <!-- Task progress summary -->
+      <div class="tasks-progress-row">
+        <span class="tasks-progress-text">3 of 5 completed</span>
+        <div style="flex:1; margin: 0 12px;">
+          <div class="progress-track">
+            <div class="progress-fill progress-fill-copper" style="width: 60%"></div>
+          </div>
+        </div>
+        <a href="#" class="card-link" style="white-space:nowrap; font-size:12px;">View All &rarr;</a>
+      </div>
+
+      <div class="tasks-list">
+
+        <div class="task-row checked" onclick="toggleTask(this)">
+          <div class="task-checkbox">
+            <!-- Checkmark SVG -->
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1.5 6.5 4.5 9.5 10.5 2.5"/>
+            </svg>
+          </div>
+          <span class="task-text">Research pediatricians in your area</span>
+          <span class="assignee-pill assignee-dad">DAD</span>
+        </div>
+
+        <div class="task-row checked" onclick="toggleTask(this)">
+          <div class="task-checkbox">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1.5 6.5 4.5 9.5 10.5 2.5"/>
+            </svg>
+          </div>
+          <span class="task-text">Tour the hospital maternity ward</span>
+          <span class="assignee-pill assignee-both">BOTH</span>
+        </div>
+
+        <div class="task-row checked" onclick="toggleTask(this)">
+          <div class="task-checkbox">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1.5 6.5 4.5 9.5 10.5 2.5"/>
+            </svg>
+          </div>
+          <span class="task-text">Review birth plan options</span>
+          <span class="assignee-pill assignee-both">BOTH</span>
+        </div>
+
+        <div class="task-row" onclick="toggleTask(this)">
+          <div class="task-checkbox">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1.5 6.5 4.5 9.5 10.5 2.5"/>
+            </svg>
+          </div>
+          <span class="task-text">Schedule glucose tolerance test appointment</span>
+          <span class="assignee-pill assignee-mom">MOM</span>
+        </div>
+
+        <div class="task-row" onclick="toggleTask(this)">
+          <div class="task-checkbox">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1.5 6.5 4.5 9.5 10.5 2.5"/>
+            </svg>
+          </div>
+          <span class="task-text">Start the hospital bag checklist</span>
+          <span class="assignee-pill assignee-dad">DAD</span>
+        </div>
+
+      </div>
+
+      <a href="#" class="card-link">View All Tasks &rarr;</a>
+    </div>
+
+
+    <!-- ──────────────────────────────────────────────────
+         CARD 4: ON YOUR MIND — DAD CHALLENGES
+         ────────────────────────────────────────────────── -->
+    <div class="card reveal reveal-4" id="challenges-card">
+      <h2 class="card-title">On Your Mind</h2>
+
+      <div class="challenge-tiles">
+
+        <!-- Challenge: Managing Anxiety -->
+        <div class="challenge-tile coral-accent" onclick="this.style.background='var(--card-hover)'">
+          <div class="challenge-icon challenge-icon-coral">
+            <!-- Brain / anxiety icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+              <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+            </svg>
+          </div>
+          <p class="challenge-pillar">Managing Anxiety</p>
+          <p class="challenge-desc">Techniques for the third trimester stretch</p>
+        </div>
+
+        <!-- Challenge: Financial Planning -->
+        <div class="challenge-tile sage-accent" onclick="this.style.background='var(--card-hover)'">
+          <div class="challenge-icon challenge-icon-sage">
+            <!-- Dollar / finance icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <p class="challenge-pillar">Financial Planning</p>
+          <p class="challenge-desc">Build your newborn budget before she arrives</p>
+        </div>
+
+      </div>
+
+      <a href="#" class="card-link">Explore All 7 Areas &rarr;</a>
+    </div>
+
+
+    <!-- ──────────────────────────────────────────────────
+         CARD 5: QUICK ACTIONS
+         ────────────────────────────────────────────────── -->
+    <div class="card reveal reveal-5" id="quick-actions-card">
+      <div class="quick-actions">
+
+        <a href="#" class="quick-action-btn">
+          <span class="qa-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </span>
+          <span class="qa-label">Add Task</span>
+        </a>
+
+        <a href="#" class="quick-action-btn">
+          <span class="qa-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+              <line x1="9" y1="9" x2="9.01" y2="9"/>
+              <line x1="15" y1="9" x2="15.01" y2="9"/>
+            </svg>
+          </span>
+          <span class="qa-label">Log Mood</span>
+        </a>
+
+        <a href="#" class="quick-action-btn">
+          <span class="qa-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <path d="M8 21h8M12 17v4"/>
+            </svg>
+          </span>
+          <span class="qa-label">View Budget</span>
+        </a>
+
+        <a href="#" class="quick-action-btn">
+          <span class="qa-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <line x1="23" y1="11" x2="23" y2="17"/>
+              <line x1="20" y1="14" x2="26" y2="14"/>
+            </svg>
+          </span>
+          <span class="qa-label">Invite Partner</span>
+        </a>
+
+      </div>
+    </div>
+
+
+    <!-- ──────────────────────────────────────────────────
+         CARD 6: PERSONALIZE YOUR EXPERIENCE
+         ────────────────────────────────────────────────── -->
+    <div class="card card-gold reveal reveal-6" id="personalize-card">
+      <div class="personalize-header">
+        <h2 class="personalize-title">Personalize Your Experience</h2>
+        <div class="personalize-icon">
+          <!-- Sparkle / star icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+      </div>
+
+      <p class="personalize-desc">Complete your dad profile to get challenge tiles and briefings tailored to where you are right now.</p>
+
+      <div class="personalize-progress">
+        <div class="personalize-progress-label">
+          <span><span>2</span> of 5 questions answered</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill progress-fill-gold" style="width: 40%"></div>
+        </div>
+      </div>
+
+      <a href="#" class="btn-outline-gold">
+        Continue
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Bottom spacer for fixed nav -->
+    <div style="height: 24px;"></div>
+
+  </main>
+</div><!-- /.app-shell -->
+
+
+<!-- ===================================================
+     BOTTOM NAV
+     =================================================== -->
+<nav class="bottom-nav" aria-label="Main navigation">
+
+  <a class="nav-item active" href="#" aria-current="page">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+    </span>
+    <span class="nav-label">Home</span>
+  </a>
+
+  <a class="nav-item" href="#">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+    </span>
+    <span class="nav-label">Tasks</span>
+  </a>
+
+  <a class="nav-item" href="#">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+    </span>
+    <span class="nav-label">Briefing</span>
+  </a>
+
+  <a class="nav-item" href="#">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/>
+        <line x1="12" y1="20" x2="12" y2="4"/>
+        <line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+    </span>
+    <span class="nav-label">Tracker</span>
+  </a>
+
+  <a class="nav-item" href="#">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="1"/>
+        <circle cx="12" cy="5" r="1"/>
+        <circle cx="12" cy="19" r="1"/>
+      </svg>
+    </span>
+    <span class="nav-label">More</span>
+  </a>
+
+</nav>
+
+
+<!-- ===================================================
+     JAVASCRIPT — Interactions
+     =================================================== -->
+<script>
+  /* -------------------------------------------------------
+     1. Scroll Reveal
+     ------------------------------------------------------- */
+  (function () {
+    const reveals = document.querySelectorAll('.reveal');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
+    );
+
+    reveals.forEach((el) => observer.observe(el));
+
+    // Also trigger immediately for above-fold items
+    setTimeout(() => {
+      reveals.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+          el.classList.add('visible');
+        }
+      });
+    }, 50);
+  })();
+
+
+  /* -------------------------------------------------------
+     2. Mood Selector
+     ------------------------------------------------------- */
+  function selectMood(el) {
+    // Deselect all
+    document.querySelectorAll('.mood-item').forEach((item) => {
+      item.classList.remove('selected');
+    });
+
+    // Select clicked
+    el.classList.add('selected');
+
+    // Show flags with animation
+    const flags = document.getElementById('mood-flags');
+    if (flags) {
+      flags.classList.add('visible');
+    }
+
+    // Bounce animation on the circle
+    const circle = el.querySelector('.mood-circle');
+    circle.style.animation = 'none';
+    circle.offsetHeight; // reflow
+    circle.style.animation = 'mood-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+  }
+
+  // Inject bounce keyframe
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes mood-bounce {
+      0%  { transform: scale(1); }
+      40% { transform: scale(1.25); }
+      70% { transform: scale(0.95); }
+      100%{ transform: scale(1.1); }
+    }
+  `;
+  document.head.appendChild(style);
+
+
+  /* -------------------------------------------------------
+     3. Flag Pills Toggle
+     ------------------------------------------------------- */
+  function toggleFlag(el) {
+    el.classList.toggle('selected');
+  }
+
+
+  /* -------------------------------------------------------
+     4. Check-in Submit
+     ------------------------------------------------------- */
+  function submitCheckin(btn) {
+    btn.textContent = 'Checked In ✓';
+    btn.style.background = 'var(--sage)';
+    btn.disabled = true;
+
+    // Collapse mood card after a moment
+    setTimeout(() => {
+      const moodCard = document.getElementById('mood-card');
+      moodCard.style.transition = 'opacity 0.5s ease, transform 0.5s ease, max-height 0.6s ease';
+      moodCard.style.opacity   = '0';
+      moodCard.style.transform = 'translateY(-8px) scale(0.98)';
+      setTimeout(() => {
+        moodCard.style.maxHeight = '0';
+        moodCard.style.padding   = '0';
+        moodCard.style.margin    = '0';
+        moodCard.style.border    = 'none';
+        moodCard.style.overflow  = 'hidden';
+      }, 450);
+    }, 900);
+  }
+
+
+  /* -------------------------------------------------------
+     5. Task Checkbox Toggle
+     ------------------------------------------------------- */
+  function toggleTask(row) {
+    row.classList.toggle('checked');
+
+    // Update progress counter
+    const tasks      = document.querySelectorAll('#tasks-card .task-row');
+    const checked    = document.querySelectorAll('#tasks-card .task-row.checked');
+    const total      = tasks.length;
+    const done       = checked.length;
+    const pct        = Math.round((done / total) * 100);
+
+    const countEl = document.querySelector('#tasks-card .tasks-progress-text');
+    if (countEl) countEl.textContent = `${done} of ${total} completed`;
+
+    const fillEl = document.querySelector('#tasks-card .progress-fill');
+    if (fillEl) fillEl.style.width = pct + '%';
+
+    // Bounce checked checkbox
+    if (row.classList.contains('checked')) {
+      const cb = row.querySelector('.task-checkbox');
+      cb.style.animation = 'none';
+      cb.offsetHeight;
+      cb.style.animation = 'cb-bounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    }
+  }
+
+  const style2 = document.createElement('style');
+  style2.textContent = `
+    @keyframes cb-bounce {
+      0%  { transform: scale(1); }
+      50% { transform: scale(1.35); }
+      100%{ transform: scale(0.95); }
+    }
+  `;
+  document.head.appendChild(style2);
+
+
+  /* -------------------------------------------------------
+     6. Progress bar animated entry (width starts at 0)
+     ------------------------------------------------------- */
+  window.addEventListener('load', () => {
+    // Animate progress bars from 0 after a short delay
+    setTimeout(() => {
+      document.querySelectorAll('.progress-fill').forEach((el) => {
+        const target = el.style.width;
+        el.style.width = '0';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            el.style.width = target;
+          });
+        });
+      });
+    }, 300);
+  });
+
+</script>
+
+</body>
+</html>
