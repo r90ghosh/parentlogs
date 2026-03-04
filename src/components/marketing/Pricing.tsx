@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Check, X, Sparkles, Zap, Crown } from 'lucide-react'
+import { Check, X, Sparkles, Crown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const freeFeatures = [
@@ -77,21 +77,21 @@ const plans = [
 
 export function Pricing() {
   return (
-    <section id="pricing" className="relative py-24 md:py-32 bg-slate-900">
+    <section id="pricing" className="relative py-24 md:py-32 bg-[--surface]">
       {/* Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-amber-500/5 via-slate-900 to-slate-900" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-copper/4 via-[--surface] to-[--surface]" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-amber-500/10 text-amber-400 text-sm font-medium mb-4">
+          <span className="font-ui font-semibold text-[11px] uppercase tracking-[0.2em] text-copper inline-block mb-4">
             Simple Pricing
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-[--white] mb-6">
             Choose your plan
           </h2>
-          <p className="text-lg text-slate-400">
-            Start free, upgrade when you're ready. Less than the cost of one parenting book.
+          <p className="font-body text-lg text-[--muted]">
+            Start free, upgrade when you&apos;re ready. Less than the cost of one parenting book.
           </p>
         </div>
 
@@ -102,14 +102,14 @@ export function Pricing() {
               key={index}
               className={`relative rounded-2xl flex flex-col ${
                 plan.highlighted
-                  ? 'bg-gradient-to-b from-amber-500/10 to-slate-900 border-2 border-amber-500/50 lg:scale-105 lg:-my-2'
-                  : 'bg-slate-800/30 border border-slate-700/50'
+                  ? 'bg-gradient-to-b from-gold/8 to-[--card] border-2 border-gold/40 lg:scale-105 lg:-my-2 shadow-gold'
+                  : 'bg-[--card] border border-[--border] shadow-card'
               } p-6`}
             >
               {/* Badge */}
               {plan.badge && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500 text-slate-900 text-xs font-semibold">
+                  <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gold text-[--bg] font-ui text-xs font-semibold">
                     <Sparkles className="h-3 w-3" />
                     {plan.badge}
                   </div>
@@ -119,29 +119,29 @@ export function Pricing() {
               {/* Plan name with optional icon */}
               <div className="mb-4">
                 <div className="flex items-center gap-2 mb-1">
-                  {plan.icon && <plan.icon className="h-5 w-5 text-amber-400" />}
-                  <h3 className="text-lg font-semibold text-white">{plan.name}</h3>
+                  {plan.icon && <plan.icon className="h-5 w-5 text-gold" />}
+                  <h3 className="font-display text-lg font-semibold text-[--white]">{plan.name}</h3>
                 </div>
-                <p className="text-xs text-slate-400">{plan.description}</p>
+                <p className="font-ui text-xs text-[--muted]">{plan.description}</p>
               </div>
 
               {/* Price */}
               <div className="mb-1">
-                <span className="text-3xl font-bold text-white">{plan.price}</span>
-                {plan.period && <span className="text-slate-400 text-sm">{plan.period}</span>}
+                <span className="font-display font-bold text-3xl text-[--white]">{plan.price}</span>
+                {plan.period && <span className="font-ui text-[--muted] text-sm">{plan.period}</span>}
               </div>
-              <p className="text-xs text-slate-500 mb-6">{plan.periodNote}</p>
+              <p className="font-ui text-xs text-[--muted] mb-6">{plan.periodNote}</p>
 
               {/* Features */}
               <ul className="space-y-2.5 mb-6 flex-1">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-2">
                     {feature.included ? (
-                      <Check className="h-4 w-4 text-green-400 mt-0.5 shrink-0" />
+                      <Check className="h-4 w-4 text-sage mt-0.5 shrink-0" />
                     ) : (
-                      <X className="h-4 w-4 text-slate-600 mt-0.5 shrink-0" />
+                      <X className="h-4 w-4 text-[--dim] mt-0.5 shrink-0" />
                     )}
-                    <span className={`text-sm ${feature.included ? 'text-slate-300' : 'text-slate-600'}`}>
+                    <span className={`font-ui text-sm ${feature.included ? 'text-[--cream]' : 'text-[--dim]'}`}>
                       {feature.text}
                     </span>
                   </li>
@@ -151,11 +151,11 @@ export function Pricing() {
               {/* CTA */}
               <Button
                 asChild
-                className={`w-full ${
+                className={`w-full font-ui font-semibold ${
                   plan.highlighted
-                    ? 'bg-amber-500 hover:bg-amber-600 text-slate-900'
-                    : 'bg-slate-700 hover:bg-slate-600 text-white'
-                } font-semibold`}
+                    ? 'bg-gold hover:bg-gold-hover text-[--bg] shadow-gold'
+                    : 'bg-[--card-hover] hover:bg-[--dim] text-[--cream] border border-[--border-hover]'
+                }`}
                 size="default"
               >
                 <Link href={plan.ctaLink}>{plan.cta}</Link>
@@ -166,7 +166,7 @@ export function Pricing() {
 
         {/* Money back guarantee */}
         <div className="mt-12 text-center">
-          <p className="text-slate-500 text-sm">
+          <p className="font-ui text-[--muted] text-sm">
             No credit card required. Cancel anytime.
             <br />
             30-day money-back guarantee.

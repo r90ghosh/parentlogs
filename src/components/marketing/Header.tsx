@@ -72,14 +72,16 @@ export function Header() {
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
         isScrolled
-          ? 'bg-slate-950/95 backdrop-blur-md border-b border-slate-800/50 shadow-lg'
+          ? 'bg-[--bg]/88 backdrop-blur-[20px] border-b border-[--border] shadow-card'
           : 'bg-transparent'
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Logo size="md" variant="dark" />
+          <div className="font-display font-bold text-[18px] tracking-tight text-[--cream]">
+            <Logo size="md" variant="dark" />
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
@@ -88,7 +90,7 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleSmoothScroll(e, link.href)}
-                className="text-slate-300 hover:text-white transition-colors text-sm font-medium"
+                className="font-ui text-[13px] font-medium text-[--muted] hover:text-[--cream] transition-colors"
               >
                 {link.label}
               </a>
@@ -98,7 +100,7 @@ export function Header() {
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center gap-4">
             {isLoggedIn === true ? (
-              <Button asChild className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold">
+              <Button asChild className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper">
                 <Link href="/dashboard">
                   Go to Dashboard
                   <ChevronRight className="ml-1 h-4 w-4" />
@@ -106,10 +108,10 @@ export function Header() {
               </Button>
             ) : (
               <>
-                <Button asChild variant="ghost" className="text-slate-300 hover:text-white hover:bg-slate-800">
+                <Button asChild variant="ghost" className="font-ui text-[--muted] hover:text-[--cream] hover:bg-[--card]">
                   <Link href="/login">Log In</Link>
                 </Button>
-                <Button asChild className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold">
+                <Button asChild className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper">
                   <Link href="/signup">Get Started Free</Link>
                 </Button>
               </>
@@ -118,7 +120,7 @@ export function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 text-slate-300 hover:text-white"
+            className="md:hidden p-2 text-[--muted] hover:text-[--cream]"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -130,7 +132,7 @@ export function Header() {
       {/* Mobile Menu */}
       <div
         className={cn(
-          'md:hidden absolute top-full left-0 right-0 bg-slate-950/98 backdrop-blur-lg border-b border-slate-800 transition-all duration-300 overflow-hidden',
+          'md:hidden absolute top-full left-0 right-0 bg-[--bg]/98 backdrop-blur-[20px] border-b border-[--border] transition-all duration-300 overflow-hidden',
           isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
         )}
       >
@@ -140,22 +142,22 @@ export function Header() {
               key={link.href}
               href={link.href}
               onClick={(e) => handleSmoothScroll(e, link.href)}
-              className="block py-3 text-slate-300 hover:text-white transition-colors font-medium"
+              className="block py-3 font-ui text-[--muted] hover:text-[--cream] transition-colors font-medium"
             >
               {link.label}
             </a>
           ))}
-          <div className="pt-4 border-t border-slate-800 space-y-3">
+          <div className="pt-4 border-t border-[--border] space-y-3">
             {isLoggedIn ? (
-              <Button asChild className="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold">
+              <Button asChild className="w-full bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold">
                 <Link href="/dashboard">Go to Dashboard</Link>
               </Button>
             ) : (
               <>
-                <Button asChild variant="outline" className="w-full border-slate-700 text-white hover:bg-slate-800">
+                <Button asChild variant="outline" className="w-full border-[--border] text-[--cream] hover:bg-[--card] font-ui">
                   <Link href="/login">Log In</Link>
                 </Button>
-                <Button asChild className="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold">
+                <Button asChild className="w-full bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold">
                   <Link href="/signup">Get Started Free</Link>
                 </Button>
               </>
