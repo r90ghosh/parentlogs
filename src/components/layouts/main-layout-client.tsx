@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, useRef, useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth/auth-context'
@@ -34,7 +34,8 @@ import {
   HelpCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Logo } from '@/components/ui/logo'
+import { WarmBackground } from '@/components/ui/animations/WarmBackground'
+import { FloatingParticles } from '@/components/ui/animations/FloatingParticles'
 
 const mainNavItems = [
   { href: '/dashboard', label: 'Home', icon: Home },
@@ -59,6 +60,60 @@ const moreAccountItems = [
   { href: '/help', label: 'Help & Support', icon: HelpCircle },
 ]
 
+function NavIndicator({ activeIndex }: { activeIndex: number }) {
+  const indicatorRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (indicatorRef.current && activeIndex >= 0) {
+      // 5 items total (4 nav + 1 More), each takes 20% width
+      const itemWidth = 100 / 5
+      const left = activeIndex * itemWidth + itemWidth / 2
+      indicatorRef.current.style.left = `calc(${left}% - 10px)`
+    }
+  }, [activeIndex])
+
+  if (activeIndex < 0) return null
+
+  return (
+    <div
+      ref={indicatorRef}
+      className="absolute top-0 w-5 h-[2px] bg-copper transition-[left] duration-350"
+      style={{ transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+    />
+  )
+}
+
+function SectionItems({
+  items,
+  pathname,
+}: {
+  items: typeof moreToolItems
+  pathname: string
+}) {
+  return (
+    <>
+      {items.map((item) => {
+        const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+        return (
+          <Link
+            key={item.href + item.label}
+            href={item.href}
+            className={cn(
+              'flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-ui transition-colors w-full',
+              isActive
+                ? 'bg-copper-dim text-copper border-l-2 border-l-copper'
+                : 'text-[--cream] hover:bg-[--card] active:bg-[--card-hover]'
+            )}
+          >
+            <item.icon className="h-5 w-5 flex-shrink-0" />
+            <span>{item.label}</span>
+          </Link>
+        )
+      })}
+    </>
+  )
+}
+
 export function MainLayoutClient({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const { signOut } = useAuth()
@@ -66,33 +121,46 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
 
   const weekDisplay = family ? `Week ${family.current_week}` : ''
 
+  // Find active nav index for sliding indicator
+  const activeIndex = mainNavItems.findIndex(
+    (item) => pathname === item.href || pathname.startsWith(item.href + '/')
+  )
+
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-surface-950">
+    <div className="min-h-screen min-h-[100dvh] bg-[--bg]">
+      <WarmBackground />
+      <FloatingParticles count={8} />
+
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-surface-900 border-b border-surface-800">
-        <div className="flex items-center justify-between px-4 h-14">
+      <header className="sticky top-0 z-40 bg-[--surface]/95 backdrop-blur-[16px] border-b border-[--border]" style={{ height: 'var(--header-h)' }}>
+        <div className="flex items-center justify-between px-4 h-full">
           <div className="flex items-center gap-3">
-            <Logo size="sm" href="/dashboard" variant="dark" />
+            <Link href="/dashboard" className="font-display font-bold text-[15px] text-[--cream] tracking-[0.08em] hover:text-copper transition-colors">
+              The Dad Center
+            </Link>
             {weekDisplay && (
-              <span className="text-xs font-medium bg-accent-600/20 text-accent-400 px-2 py-0.5 rounded-full leading-none">
+              <span className="font-ui text-[11px] font-medium tracking-[0.05em] text-[--muted]">
                 {weekDisplay}
               </span>
             )}
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" asChild>
+            <Button variant="ghost" size="icon" asChild className="relative">
               <Link href="/notifications">
-                <Bell className="h-5 w-5" />
+                <Bell className="h-[22px] w-[22px] text-copper" />
               </Link>
             </Button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                  <Avatar className="h-8 w-8">
+                <Button variant="ghost" className="relative h-[34px] w-[34px] rounded-full p-0">
+                  <Avatar className="h-[34px] w-[34px]">
                     <AvatarImage src={profile.avatar_url} alt={profile.full_name || ''} />
-                    <AvatarFallback>
+                    <AvatarFallback
+                      className="font-ui font-semibold text-xs"
+                      style={{ background: 'linear-gradient(135deg, var(--copper), var(--gold))' }}
+                    >
                       {profile.full_name?.charAt(0).toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
@@ -101,8 +169,8 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
               <DropdownMenuContent className="w-56" align="end">
                 <DropdownMenuLabel>
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">{profile.full_name}</p>
-                    <p className="text-xs text-muted-foreground">{profile.email}</p>
+                    <p className="text-sm font-medium font-body text-[--cream]">{profile.full_name}</p>
+                    <p className="text-xs text-[--muted]">{profile.email}</p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -119,7 +187,7 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => signOut()} className="text-red-500">
+                <DropdownMenuItem onClick={() => signOut()} className="text-coral">
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign out
                 </DropdownMenuItem>
@@ -130,26 +198,34 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
       </header>
 
       {/* Main Content */}
-      <main className="pb-24 md:pb-4 md:ml-64">
+      <main className="relative z-[2] pb-24 md:pb-4 md:ml-64">
         {children}
       </main>
 
       {/* Bottom Navigation - Mobile */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-surface-900/95 backdrop-blur-sm border-t border-surface-800 md:hidden safe-area-bottom">
-        <div className="flex items-center justify-around h-16">
-          {mainNavItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-[--surface]/95 backdrop-blur-[16px] border-t border-[--border] md:hidden" style={{ paddingBottom: 'calc(8px + env(safe-area-inset-bottom))' }}>
+        <div className="relative flex items-center justify-around pt-2 pb-1" style={{ height: 'var(--nav-h)' }}>
+          <NavIndicator activeIndex={activeIndex} />
+
+          {mainNavItems.map((item, index) => {
+            const isActive = activeIndex === index
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex flex-col items-center justify-center w-full h-full gap-1 text-xs',
-                  isActive ? 'text-accent-500' : 'text-surface-400'
+                  'flex flex-col items-center justify-center w-full h-full gap-1 transition-colors',
+                  isActive ? 'text-copper' : 'text-[--muted]'
                 )}
               >
-                <item.icon className="h-5 w-5" />
-                <span>{item.label}</span>
+                <item.icon
+                  className={cn(
+                    'h-5 w-5 transition-transform duration-300',
+                    isActive && 'scale-[1.08]'
+                  )}
+                  style={isActive ? { transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)' } : undefined}
+                />
+                <span className="font-ui text-[9px] font-medium uppercase tracking-[0.08em]">{item.label}</span>
               </Link>
             )
           })}
@@ -157,81 +233,39 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
           {/* More menu */}
           <Sheet>
             <SheetTrigger asChild>
-              <button className="flex flex-col items-center justify-center w-full h-full gap-1 text-xs text-surface-400 active:text-accent-400 transition-colors">
+              <button className="flex flex-col items-center justify-center w-full h-full gap-1 text-[--muted] active:text-copper transition-colors">
                 <Menu className="h-5 w-5" />
-                <span>More</span>
+                <span className="font-ui text-[9px] font-medium uppercase tracking-[0.08em]">More</span>
               </button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="bg-surface-900 border-surface-800 rounded-t-2xl max-h-[70vh] overflow-y-auto">
-              <div className="w-12 h-1 bg-surface-700 rounded-full mx-auto mb-4" />
+            <SheetContent side="bottom" className="bg-[--surface] border-t border-[--border] rounded-t-2xl max-h-[70vh] overflow-y-auto">
+              <div className="w-12 h-1 bg-[--dim] rounded-full mx-auto mb-4" />
 
               <div className="pb-6 safe-area-bottom space-y-1">
                 {/* Tools Section */}
-                <p className="text-xs uppercase tracking-wider text-surface-500 px-3 py-2">
+                <p className="font-ui font-semibold text-[10px] uppercase tracking-[0.12em] text-[--muted] px-3 py-2">
                   Tools
                 </p>
-                {moreToolItems.map((item) => (
-                  <Link
-                    key={item.href + item.label}
-                    href={item.href}
-                    className={cn(
-                      'flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-colors w-full',
-                      pathname === item.href || pathname.startsWith(item.href + '/')
-                        ? 'bg-accent-600/20 text-accent-400'
-                        : 'text-surface-300 hover:bg-surface-800 active:bg-surface-700'
-                    )}
-                  >
-                    <item.icon className="h-5 w-5 flex-shrink-0" />
-                    <span>{item.label}</span>
-                  </Link>
-                ))}
+                <SectionItems items={moreToolItems} pathname={pathname} />
 
-                <div className="border-t border-surface-800 my-2" />
+                <div className="border-t border-[--border] my-2" />
 
                 {/* Family Section */}
-                <p className="text-xs uppercase tracking-wider text-surface-500 px-3 py-2">
+                <p className="font-ui font-semibold text-[10px] uppercase tracking-[0.12em] text-[--muted] px-3 py-2">
                   Family
                 </p>
-                {moreFamilyItems.map((item) => (
-                  <Link
-                    key={item.href + item.label}
-                    href={item.href}
-                    className={cn(
-                      'flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-colors w-full',
-                      pathname === item.href || pathname.startsWith(item.href + '/')
-                        ? 'bg-accent-600/20 text-accent-400'
-                        : 'text-surface-300 hover:bg-surface-800 active:bg-surface-700'
-                    )}
-                  >
-                    <item.icon className="h-5 w-5 flex-shrink-0" />
-                    <span>{item.label}</span>
-                  </Link>
-                ))}
+                <SectionItems items={moreFamilyItems} pathname={pathname} />
 
-                <div className="border-t border-surface-800 my-2" />
+                <div className="border-t border-[--border] my-2" />
 
                 {/* Account Section */}
-                <p className="text-xs uppercase tracking-wider text-surface-500 px-3 py-2">
+                <p className="font-ui font-semibold text-[10px] uppercase tracking-[0.12em] text-[--muted] px-3 py-2">
                   Account
                 </p>
-                {moreAccountItems.map((item) => (
-                  <Link
-                    key={item.href + item.label}
-                    href={item.href}
-                    className={cn(
-                      'flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-colors w-full',
-                      pathname === item.href || pathname.startsWith(item.href + '/')
-                        ? 'bg-accent-600/20 text-accent-400'
-                        : 'text-surface-300 hover:bg-surface-800 active:bg-surface-700'
-                    )}
-                  >
-                    <item.icon className="h-5 w-5 flex-shrink-0" />
-                    <span>{item.label}</span>
-                  </Link>
-                ))}
+                <SectionItems items={moreAccountItems} pathname={pathname} />
                 <button
                   onClick={() => signOut()}
-                  className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-colors w-full text-red-400 hover:bg-surface-800 active:bg-surface-700"
+                  className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-ui transition-colors w-full text-coral hover:bg-[--card] active:bg-[--card-hover]"
                 >
                   <LogOut className="h-5 w-5 flex-shrink-0" />
                   <span>Sign Out</span>
@@ -243,7 +277,7 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
       </nav>
 
       {/* Sidebar Navigation - Desktop */}
-      <aside className="hidden md:flex fixed left-0 top-14 bottom-0 w-64 bg-surface-900 border-r border-surface-800 flex-col p-4 overflow-y-auto">
+      <aside className="hidden md:flex fixed left-0 bottom-0 w-64 bg-[--surface] border-r border-[--border] flex-col p-4 overflow-y-auto" style={{ top: 'var(--header-h)' }}>
         <nav className="space-y-1">
           {mainNavItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
@@ -252,10 +286,10 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
+                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-ui font-medium transition-colors',
                   isActive
-                    ? 'bg-accent-600/20 text-accent-400'
-                    : 'text-surface-300 hover:bg-surface-800'
+                    ? 'bg-copper-dim text-copper border-l-2 border-l-copper'
+                    : 'text-[--cream] hover:bg-[--card]'
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -265,85 +299,34 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
           })}
         </nav>
 
-        <div className="border-t border-surface-800 my-3" />
+        <div className="border-t border-[--border] my-3" />
 
         <div className="space-y-1">
-          <p className="text-xs uppercase tracking-wider text-surface-500 px-3 py-2">
+          <p className="font-ui font-semibold text-[10px] uppercase tracking-[0.12em] text-[--muted] px-3 py-2">
             Tools
           </p>
-          {moreToolItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
-            return (
-              <Link
-                key={item.href + item.label}
-                href={item.href}
-                className={cn(
-                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
-                  isActive
-                    ? 'bg-accent-600/20 text-accent-400'
-                    : 'text-surface-300 hover:bg-surface-800'
-                )}
-              >
-                <item.icon className="h-5 w-5" />
-                {item.label}
-              </Link>
-            )
-          })}
+          <SectionItems items={moreToolItems} pathname={pathname} />
         </div>
 
-        <div className="border-t border-surface-800 my-3" />
+        <div className="border-t border-[--border] my-3" />
 
         <div className="space-y-1">
-          <p className="text-xs uppercase tracking-wider text-surface-500 px-3 py-2">
+          <p className="font-ui font-semibold text-[10px] uppercase tracking-[0.12em] text-[--muted] px-3 py-2">
             Family
           </p>
-          {moreFamilyItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
-            return (
-              <Link
-                key={item.href + item.label}
-                href={item.href}
-                className={cn(
-                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
-                  isActive
-                    ? 'bg-accent-600/20 text-accent-400'
-                    : 'text-surface-300 hover:bg-surface-800'
-                )}
-              >
-                <item.icon className="h-5 w-5" />
-                {item.label}
-              </Link>
-            )
-          })}
+          <SectionItems items={moreFamilyItems} pathname={pathname} />
         </div>
 
-        <div className="border-t border-surface-800 my-3" />
+        <div className="border-t border-[--border] my-3" />
 
         <div className="space-y-1">
-          <p className="text-xs uppercase tracking-wider text-surface-500 px-3 py-2">
+          <p className="font-ui font-semibold text-[10px] uppercase tracking-[0.12em] text-[--muted] px-3 py-2">
             Account
           </p>
-          {moreAccountItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
-            return (
-              <Link
-                key={item.href + item.label}
-                href={item.href}
-                className={cn(
-                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
-                  isActive
-                    ? 'bg-accent-600/20 text-accent-400'
-                    : 'text-surface-300 hover:bg-surface-800'
-                )}
-              >
-                <item.icon className="h-5 w-5" />
-                {item.label}
-              </Link>
-            )
-          })}
+          <SectionItems items={moreAccountItems} pathname={pathname} />
           <button
             onClick={() => signOut()}
-            className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors w-full text-red-400 hover:bg-surface-800"
+            className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-ui transition-colors w-full text-coral hover:bg-[--card]"
           >
             <LogOut className="h-5 w-5" />
             Sign Out
