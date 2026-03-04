@@ -161,10 +161,10 @@ function LogEntryContent() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <h1 className="text-xl font-bold text-white">{getTitle()}</h1>
+        <h1 className="text-xl font-bold font-display text-[--cream]">{getTitle()}</h1>
       </div>
 
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border] shadow-card">
         <CardContent className="pt-6 space-y-4">
           {/* Time */}
           <div className="space-y-2">
@@ -173,7 +173,7 @@ function LogEntryContent() {
               type="datetime-local"
               value={loggedAt}
               onChange={(e) => setLoggedAt(e.target.value)}
-              className="bg-surface-800 border-surface-700"
+              className="bg-[--card] border-[--border]"
             />
           </div>
 
@@ -232,7 +232,7 @@ function LogEntryContent() {
                       value={feedingDuration}
                       onChange={(e) => setFeedingDuration(e.target.value)}
                       placeholder="15"
-                      className="bg-surface-800 border-surface-700"
+                      className="bg-[--card] border-[--border]"
                     />
                   </div>
                 </>
@@ -247,7 +247,7 @@ function LogEntryContent() {
                     value={feedingAmount}
                     onChange={(e) => setFeedingAmount(e.target.value)}
                     placeholder="4"
-                    className="bg-surface-800 border-surface-700"
+                    className="bg-[--card] border-[--border]"
                   />
                 </div>
               )}
@@ -287,13 +287,13 @@ function LogEntryContent() {
                   value={sleepDuration}
                   onChange={(e) => setSleepDuration(e.target.value)}
                   placeholder="60"
-                  className="bg-surface-800 border-surface-700"
+                  className="bg-[--card] border-[--border]"
                 />
               </div>
               <div className="space-y-2">
                 <Label>Quality</Label>
                 <Select value={sleepQuality} onValueChange={(v) => setSleepQuality(v as any)}>
-                  <SelectTrigger className="bg-surface-800 border-surface-700">
+                  <SelectTrigger className="bg-[--card] border-[--border]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -316,13 +316,13 @@ function LogEntryContent() {
                   value={temperature}
                   onChange={(e) => setTemperature(e.target.value)}
                   placeholder="98.6"
-                  className="bg-surface-800 border-surface-700"
+                  className="bg-[--card] border-[--border]"
                 />
               </div>
               <div className="w-20 space-y-2">
                 <Label>Unit</Label>
                 <Select value={temperatureUnit} onValueChange={(v) => setTemperatureUnit(v as any)}>
-                  <SelectTrigger className="bg-surface-800 border-surface-700">
+                  <SelectTrigger className="bg-[--card] border-[--border]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -342,7 +342,7 @@ function LogEntryContent() {
                   value={medicineName}
                   onChange={(e) => setMedicineName(e.target.value)}
                   placeholder="Tylenol"
-                  className="bg-surface-800 border-surface-700"
+                  className="bg-[--card] border-[--border]"
                 />
               </div>
               <div className="space-y-2">
@@ -351,7 +351,7 @@ function LogEntryContent() {
                   value={medicineDosage}
                   onChange={(e) => setMedicineDosage(e.target.value)}
                   placeholder="2.5ml"
-                  className="bg-surface-800 border-surface-700"
+                  className="bg-[--card] border-[--border]"
                 />
               </div>
             </>
@@ -367,8 +367,8 @@ function LogEntryContent() {
                     onClick={() => setMoodLevel(level as any)}
                     className={`w-12 h-12 rounded-full text-2xl transition-all ${
                       moodLevel === level
-                        ? 'bg-accent-500 scale-110'
-                        : 'bg-surface-800 hover:bg-surface-700'
+                        ? 'bg-copper scale-110'
+                        : 'bg-[--card] hover:bg-[--card-hover]'
                     }`}
                   >
                     {level === 1 ? '😢' : level === 2 ? '😕' : level === 3 ? '😐' : level === 4 ? '😊' : '😄'}
@@ -388,13 +388,13 @@ function LogEntryContent() {
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
                   placeholder="12.5"
-                  className="bg-surface-800 border-surface-700"
+                  className="bg-[--card] border-[--border]"
                 />
               </div>
               <div className="w-20 space-y-2">
                 <Label>Unit</Label>
                 <Select value={weightUnit} onValueChange={(v) => setWeightUnit(v as any)}>
-                  <SelectTrigger className="bg-surface-800 border-surface-700">
+                  <SelectTrigger className="bg-[--card] border-[--border]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -416,13 +416,13 @@ function LogEntryContent() {
                   value={height}
                   onChange={(e) => setHeight(e.target.value)}
                   placeholder="24"
-                  className="bg-surface-800 border-surface-700"
+                  className="bg-[--card] border-[--border]"
                 />
               </div>
               <div className="w-20 space-y-2">
                 <Label>Unit</Label>
                 <Select value={heightUnit} onValueChange={(v) => setHeightUnit(v as any)}>
-                  <SelectTrigger className="bg-surface-800 border-surface-700">
+                  <SelectTrigger className="bg-[--card] border-[--border]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -441,7 +441,7 @@ function LogEntryContent() {
                 value={milestoneName}
                 onChange={(e) => setMilestoneName(e.target.value)}
                 placeholder="First smile"
-                className="bg-surface-800 border-surface-700"
+                className="bg-[--card] border-[--border]"
               />
             </div>
           )}
@@ -453,7 +453,7 @@ function LogEntryContent() {
                 value={customType}
                 onChange={(e) => setCustomType(e.target.value)}
                 placeholder="Bath time"
-                className="bg-surface-800 border-surface-700"
+                className="bg-[--card] border-[--border]"
               />
             </div>
           )}
@@ -465,7 +465,7 @@ function LogEntryContent() {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add any notes..."
-              className="bg-surface-800 border-surface-700"
+              className="bg-[--card] border-[--border]"
             />
           </div>
 
@@ -494,7 +494,7 @@ export default function LogEntryPage() {
   return (
     <Suspense fallback={
       <div className="p-4 flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+        <Loader2 className="h-6 w-6 animate-spin text-copper" />
       </div>
     }>
       <LogEntryContent />

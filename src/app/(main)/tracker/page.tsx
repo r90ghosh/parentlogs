@@ -28,17 +28,17 @@ import { cn } from '@/lib/utils'
 import { BASIC_LOG_TYPES, PREMIUM_LOG_TYPES, LogType } from '@/services/tracker-service'
 
 const LOG_TYPE_CONFIG: Record<LogType, { icon: any; color: string; bgColor: string; label: string }> = {
-  feeding: { icon: Milk, color: 'text-blue-400', bgColor: 'bg-blue-500/20', label: 'Feeding' },
-  diaper: { icon: Baby, color: 'text-amber-400', bgColor: 'bg-amber-500/20', label: 'Diaper' },
-  sleep: { icon: Moon, color: 'text-purple-400', bgColor: 'bg-purple-500/20', label: 'Sleep' },
-  temperature: { icon: Thermometer, color: 'text-red-400', bgColor: 'bg-red-500/20', label: 'Temperature' },
-  medicine: { icon: Pill, color: 'text-green-400', bgColor: 'bg-green-500/20', label: 'Medicine' },
-  vitamin_d: { icon: Sun, color: 'text-yellow-400', bgColor: 'bg-yellow-500/20', label: 'Vitamin D' },
-  mood: { icon: Smile, color: 'text-pink-400', bgColor: 'bg-pink-500/20', label: 'Mood' },
-  weight: { icon: Scale, color: 'text-cyan-400', bgColor: 'bg-cyan-500/20', label: 'Weight' },
-  height: { icon: Ruler, color: 'text-indigo-400', bgColor: 'bg-indigo-500/20', label: 'Height' },
-  milestone: { icon: Star, color: 'text-accent-400', bgColor: 'bg-accent-500/20', label: 'Milestone' },
-  custom: { icon: Plus, color: 'text-surface-400', bgColor: 'bg-surface-500/20', label: 'Custom' },
+  feeding: { icon: Milk, color: 'text-sky', bgColor: 'bg-sky-dim', label: 'Feeding' },
+  diaper: { icon: Baby, color: 'text-gold', bgColor: 'bg-gold-dim', label: 'Diaper' },
+  sleep: { icon: Moon, color: 'text-rose', bgColor: 'bg-rose-dim', label: 'Sleep' },
+  temperature: { icon: Thermometer, color: 'text-coral', bgColor: 'bg-coral-dim', label: 'Temperature' },
+  medicine: { icon: Pill, color: 'text-sage', bgColor: 'bg-sage-dim', label: 'Medicine' },
+  vitamin_d: { icon: Sun, color: 'text-gold', bgColor: 'bg-gold-dim', label: 'Vitamin D' },
+  mood: { icon: Smile, color: 'text-rose', bgColor: 'bg-rose-dim', label: 'Mood' },
+  weight: { icon: Scale, color: 'text-sky', bgColor: 'bg-sky-dim', label: 'Weight' },
+  height: { icon: Ruler, color: 'text-sky', bgColor: 'bg-sky-dim', label: 'Height' },
+  milestone: { icon: Star, color: 'text-copper', bgColor: 'bg-copper-dim', label: 'Milestone' },
+  custom: { icon: Plus, color: 'text-[--muted]', bgColor: 'bg-[--card]', label: 'Custom' },
 }
 
 export default function TrackerPage() {
@@ -68,7 +68,7 @@ export default function TrackerPage() {
 
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Baby Tracker</h1>
+        <h1 className="text-2xl font-bold font-display text-[--cream]">Baby Tracker</h1>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" disabled={isPreview} asChild={!isPreview}>
             {isPreview ? (
@@ -100,10 +100,10 @@ export default function TrackerPage() {
       </div>
 
       {/* Shift Briefing */}
-      <Card className={cn("bg-surface-900 border-surface-800", isPreview && "opacity-70")}>
+      <Card className={cn("bg-[--surface] border-[--border] shadow-card", isPreview && "opacity-70")}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Clock className="h-5 w-5 text-accent-500" />
+          <CardTitle className="text-lg font-display flex items-center gap-2 text-[--cream]">
+            <Clock className="h-5 w-5 text-copper" />
             Shift Briefing
           </CardTitle>
         </CardHeader>
@@ -115,21 +115,21 @@ export default function TrackerPage() {
                 value="2h ago"
                 subValue="6 today"
                 icon={Milk}
-                color="text-blue-400"
+                color="text-sky"
               />
               <BriefingStat
                 label="Last Diaper"
                 value="45m ago"
                 subValue="4 today"
                 icon={Baby}
-                color="text-amber-400"
+                color="text-gold"
               />
               <BriefingStat
                 label="Sleep Today"
                 value="12h"
                 subValue="2h ago"
                 icon={Moon}
-                color="text-purple-400"
+                color="text-rose"
               />
             </div>
           ) : briefingLoading ? (
@@ -147,7 +147,7 @@ export default function TrackerPage() {
                   : 'No logs'}
                 subValue={`${shiftBriefing.total_feedings_today} today`}
                 icon={Milk}
-                color="text-blue-400"
+                color="text-sky"
               />
               <BriefingStat
                 label="Last Diaper"
@@ -156,7 +156,7 @@ export default function TrackerPage() {
                   : 'No logs'}
                 subValue={`${shiftBriefing.total_diapers_today} today`}
                 icon={Baby}
-                color="text-amber-400"
+                color="text-gold"
               />
               <BriefingStat
                 label="Sleep Today"
@@ -165,18 +165,18 @@ export default function TrackerPage() {
                   ? formatDistanceToNow(new Date(shiftBriefing.last_sleep.logged_at), { addSuffix: true })
                   : 'No logs'}
                 icon={Moon}
-                color="text-purple-400"
+                color="text-rose"
               />
             </div>
           ) : (
-            <p className="text-surface-400 text-center py-4">No data available</p>
+            <p className="text-[--muted] text-center py-4 font-body">No data available</p>
           )}
         </CardContent>
       </Card>
 
       {/* Quick Log Grid - Basic Types */}
       <div className={cn(isPreview && "opacity-70")}>
-        <h2 className="text-lg font-medium text-white mb-3">Quick Log</h2>
+        <h2 className="text-lg font-display font-medium text-[--cream] mb-3">Quick Log</h2>
         <div className="grid grid-cols-3 gap-3">
           {BASIC_LOG_TYPES.map((type) => {
             const config = LOG_TYPE_CONFIG[type]
@@ -186,11 +186,11 @@ export default function TrackerPage() {
                 className={cn(
                   "flex flex-col items-center gap-2 p-4 rounded-lg border cursor-not-allowed",
                   config.bgColor,
-                  "border-surface-700"
+                  "border-[--border]"
                 )}
               >
                 <config.icon className={cn("h-8 w-8", config.color)} />
-                <span className="text-sm text-surface-200">{config.label}</span>
+                <span className="text-sm font-ui text-[--cream]">{config.label}</span>
               </div>
             ) : (
               <Link
@@ -199,11 +199,11 @@ export default function TrackerPage() {
                 className={cn(
                   "flex flex-col items-center gap-2 p-4 rounded-lg border transition-colors",
                   config.bgColor,
-                  "border-surface-700 hover:border-surface-600"
+                  "border-[--border] hover:border-[--border-hover]"
                 )}
               >
                 <config.icon className={cn("h-8 w-8", config.color)} />
-                <span className="text-sm text-surface-200">{config.label}</span>
+                <span className="text-sm font-ui text-[--cream]">{config.label}</span>
               </Link>
             )
           })}
@@ -212,7 +212,7 @@ export default function TrackerPage() {
 
       {/* More Log Types */}
       <div className={cn(isPreview && "opacity-70")}>
-        <h2 className="text-lg font-medium text-white mb-3">More Logs</h2>
+        <h2 className="text-lg font-display font-medium text-[--cream] mb-3">More Logs</h2>
         <div className="grid grid-cols-4 gap-2">
           {PREMIUM_LOG_TYPES.map((type) => {
             const config = LOG_TYPE_CONFIG[type]
@@ -222,12 +222,12 @@ export default function TrackerPage() {
                 className={cn(
                   "flex flex-col items-center gap-1.5 p-3 rounded-lg border cursor-not-allowed",
                   config.bgColor,
-                  "border-surface-700",
+                  "border-[--border]",
                   "opacity-60"
                 )}
               >
                 <config.icon className={cn("h-6 w-6", config.color)} />
-                <span className="text-xs text-surface-300">{config.label}</span>
+                <span className="text-xs font-ui text-[--cream]">{config.label}</span>
               </div>
             ) : (
               <Link
@@ -236,11 +236,11 @@ export default function TrackerPage() {
                 className={cn(
                   "flex flex-col items-center gap-1.5 p-3 rounded-lg border transition-colors",
                   config.bgColor,
-                  "border-surface-700 hover:border-surface-600"
+                  "border-[--border] hover:border-[--border-hover]"
                 )}
               >
                 <config.icon className={cn("h-6 w-6", config.color)} />
-                <span className="text-xs text-surface-300">{config.label}</span>
+                <span className="text-xs font-ui text-[--cream]">{config.label}</span>
               </Link>
             )
           })}
@@ -250,11 +250,11 @@ export default function TrackerPage() {
       {/* Recent Logs */}
       <div className={cn(isPreview && "opacity-70")}>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-medium text-white">Recent Activity</h2>
+          <h2 className="text-lg font-display font-medium text-[--cream]">Recent Activity</h2>
           {isPreview ? (
-            <span className="text-sm text-surface-500 cursor-not-allowed">View All</span>
+            <span className="text-sm font-ui text-[--dim] cursor-not-allowed">View All</span>
           ) : (
-            <Link href="/tracker/history" className="text-sm text-accent-500">
+            <Link href="/tracker/history" className="text-sm font-ui text-copper hover:text-copper-hover">
               View All
             </Link>
           )}
@@ -270,16 +270,16 @@ export default function TrackerPage() {
               return (
                 <div
                   key={idx}
-                  className="flex items-center gap-3 p-3 rounded-lg bg-surface-900 border border-surface-800"
+                  className="flex items-center gap-3 p-3 rounded-lg bg-[--surface] border border-[--border]"
                 >
                   <div className={cn("p-2 rounded-lg", config?.bgColor)}>
                     {config && <config.icon className={cn("h-4 w-4", config.color)} />}
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-white capitalize">
+                    <p className="text-sm font-medium font-ui text-[--cream] capitalize">
                       {log.type.replace('_', ' ')}
                     </p>
-                    <p className="text-xs text-surface-400">
+                    <p className="text-xs font-body text-[--muted]">
                       {log.time}
                       {log.notes && ` - ${log.notes}`}
                     </p>
@@ -301,16 +301,16 @@ export default function TrackerPage() {
               return (
                 <div
                   key={log.id}
-                  className="flex items-center gap-3 p-3 rounded-lg bg-surface-900 border border-surface-800"
+                  className="flex items-center gap-3 p-3 rounded-lg bg-[--surface] border border-[--border]"
                 >
                   <div className={cn("p-2 rounded-lg", config?.bgColor)}>
                     {config && <config.icon className={cn("h-4 w-4", config.color)} />}
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-white capitalize">
+                    <p className="text-sm font-medium font-ui text-[--cream] capitalize">
                       {log.log_type.replace('_', ' ')}
                     </p>
-                    <p className="text-xs text-surface-400">
+                    <p className="text-xs font-body text-[--muted]">
                       {format(new Date(log.logged_at), 'h:mm a')}
                       {log.notes && ` - ${log.notes}`}
                     </p>
@@ -320,9 +320,9 @@ export default function TrackerPage() {
             })}
           </div>
         ) : (
-          <Card className="bg-surface-900 border-surface-800">
+          <Card className="bg-[--surface] border-[--border] shadow-card">
             <CardContent className="py-8 text-center">
-              <p className="text-surface-400">No logs yet. Start tracking!</p>
+              <p className="text-[--muted] font-body">No logs yet. Start tracking!</p>
             </CardContent>
           </Card>
         )}
@@ -347,9 +347,9 @@ function BriefingStat({
   return (
     <div className="text-center">
       <Icon className={cn("h-5 w-5 mx-auto mb-1", color)} />
-      <p className="text-xs text-surface-400">{label}</p>
-      <p className="text-sm font-medium text-white">{value}</p>
-      <p className="text-xs text-surface-500">{subValue}</p>
+      <p className="text-xs font-ui text-[--muted]">{label}</p>
+      <p className="text-sm font-medium font-ui text-[--cream]">{value}</p>
+      <p className="text-xs font-body text-[--dim]">{subValue}</p>
     </div>
   )
 }

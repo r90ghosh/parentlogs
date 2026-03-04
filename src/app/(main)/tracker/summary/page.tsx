@@ -42,7 +42,7 @@ export default function TrackerSummaryPage() {
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
-          <h1 className="text-xl font-bold text-white">Summary & Insights</h1>
+          <h1 className="text-xl font-bold font-display text-[--cream]">Summary & Insights</h1>
         </div>
         <PaywallOverlay
           feature="tracker_summary"
@@ -109,12 +109,12 @@ export default function TrackerSummaryPage() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <h1 className="text-xl font-bold text-white flex-1">Summary & Insights</h1>
+        <h1 className="text-xl font-bold font-display text-[--cream] flex-1">Summary & Insights</h1>
       </div>
 
       {/* Period Selector */}
       <Tabs value={period} onValueChange={(v) => setPeriod(v as any)}>
-        <TabsList className="bg-surface-900">
+        <TabsList className="bg-[--surface]">
           <TabsTrigger value="7d">Last 7 Days</TabsTrigger>
           <TabsTrigger value="30d">Last 30 Days</TabsTrigger>
         </TabsList>
@@ -132,8 +132,8 @@ export default function TrackerSummaryPage() {
           <div className="grid grid-cols-3 gap-3">
             <SummaryCard
               icon={Milk}
-              iconColor="text-blue-400"
-              bgColor="bg-blue-500/20"
+              iconColor="text-sky"
+              bgColor="bg-sky-dim"
               label="Avg Feedings"
               value={avgFeedings.toFixed(1)}
               unit="/day"
@@ -141,8 +141,8 @@ export default function TrackerSummaryPage() {
             />
             <SummaryCard
               icon={Baby}
-              iconColor="text-amber-400"
-              bgColor="bg-amber-500/20"
+              iconColor="text-gold"
+              bgColor="bg-gold-dim"
               label="Avg Diapers"
               value={avgDiapers.toFixed(1)}
               unit="/day"
@@ -150,8 +150,8 @@ export default function TrackerSummaryPage() {
             />
             <SummaryCard
               icon={Moon}
-              iconColor="text-purple-400"
-              bgColor="bg-purple-500/20"
+              iconColor="text-rose"
+              bgColor="bg-rose-dim"
               label="Avg Sleep"
               value={avgSleepHours.toFixed(1)}
               unit="hrs/day"
@@ -160,10 +160,10 @@ export default function TrackerSummaryPage() {
           </div>
 
           {/* Feeding Chart */}
-          <Card className="bg-surface-900 border-surface-800">
+          <Card className="bg-[--surface] border-[--border] shadow-card">
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Milk className="h-5 w-5 text-blue-400" />
+              <CardTitle className="text-lg font-display flex items-center gap-2 text-[--cream]">
+                <Milk className="h-5 w-5 text-sky" />
                 Feedings
               </CardTitle>
             </CardHeader>
@@ -172,10 +172,10 @@ export default function TrackerSummaryPage() {
                 {dailyStats.map((day, i) => (
                   <div key={i} className="flex-1 flex flex-col items-center gap-1">
                     <div
-                      className="w-full bg-blue-500/50 rounded-t transition-all"
+                      className="w-full bg-sky-dim rounded-t transition-all border-t-2 border-sky/50"
                       style={{ height: `${(day.feedings / maxFeedings) * 100}%` }}
                     />
-                    <span className="text-[10px] text-surface-500">
+                    <span className="text-[10px] font-ui text-[--dim]">
                       {format(day.date, period === '7d' ? 'EEE' : 'd')}
                     </span>
                   </div>
@@ -185,10 +185,10 @@ export default function TrackerSummaryPage() {
           </Card>
 
           {/* Diaper Chart */}
-          <Card className="bg-surface-900 border-surface-800">
+          <Card className="bg-[--surface] border-[--border] shadow-card">
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Baby className="h-5 w-5 text-amber-400" />
+              <CardTitle className="text-lg font-display flex items-center gap-2 text-[--cream]">
+                <Baby className="h-5 w-5 text-gold" />
                 Diapers
               </CardTitle>
             </CardHeader>
@@ -197,10 +197,10 @@ export default function TrackerSummaryPage() {
                 {dailyStats.map((day, i) => (
                   <div key={i} className="flex-1 flex flex-col items-center gap-1">
                     <div
-                      className="w-full bg-amber-500/50 rounded-t transition-all"
+                      className="w-full bg-gold-dim rounded-t transition-all border-t-2 border-gold/50"
                       style={{ height: `${(day.diapers / maxDiapers) * 100}%` }}
                     />
-                    <span className="text-[10px] text-surface-500">
+                    <span className="text-[10px] font-ui text-[--dim]">
                       {format(day.date, period === '7d' ? 'EEE' : 'd')}
                     </span>
                   </div>
@@ -210,10 +210,10 @@ export default function TrackerSummaryPage() {
           </Card>
 
           {/* Sleep Chart */}
-          <Card className="bg-surface-900 border-surface-800">
+          <Card className="bg-[--surface] border-[--border] shadow-card">
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Moon className="h-5 w-5 text-purple-400" />
+              <CardTitle className="text-lg font-display flex items-center gap-2 text-[--cream]">
+                <Moon className="h-5 w-5 text-rose" />
                 Sleep (hours)
               </CardTitle>
             </CardHeader>
@@ -222,10 +222,10 @@ export default function TrackerSummaryPage() {
                 {dailyStats.map((day, i) => (
                   <div key={i} className="flex-1 flex flex-col items-center gap-1">
                     <div
-                      className="w-full bg-purple-500/50 rounded-t transition-all"
+                      className="w-full bg-rose-dim rounded-t transition-all border-t-2 border-rose/50"
                       style={{ height: `${(day.sleepMinutes / maxSleep) * 100}%` }}
                     />
-                    <span className="text-[10px] text-surface-500">
+                    <span className="text-[10px] font-ui text-[--dim]">
                       {format(day.date, period === '7d' ? 'EEE' : 'd')}
                     </span>
                   </div>
@@ -257,22 +257,22 @@ function SummaryCard({
   trend: number
 }) {
   const TrendIcon = trend > 0.1 ? TrendingUp : trend < -0.1 ? TrendingDown : Minus
-  const trendColor = trend > 0.1 ? 'text-green-400' : trend < -0.1 ? 'text-red-400' : 'text-surface-500'
+  const trendColor = trend > 0.1 ? 'text-sage' : trend < -0.1 ? 'text-coral' : 'text-[--dim]'
 
   return (
-    <Card className="bg-surface-900 border-surface-800">
+    <Card className="bg-[--surface] border-[--border] shadow-card">
       <CardContent className="pt-4 pb-3 px-3 text-center">
         <div className={cn("w-10 h-10 rounded-lg mx-auto flex items-center justify-center mb-2", bgColor)}>
           <Icon className={cn("h-5 w-5", iconColor)} />
         </div>
-        <p className="text-xs text-surface-400 mb-1">{label}</p>
-        <p className="text-xl font-bold text-white">
+        <p className="text-xs font-ui text-[--muted] mb-1">{label}</p>
+        <p className="text-xl font-bold font-display text-[--cream]">
           {value}
-          <span className="text-sm font-normal text-surface-400">{unit}</span>
+          <span className="text-sm font-normal font-body text-[--muted]">{unit}</span>
         </p>
         <div className={cn("flex items-center justify-center gap-1 mt-1", trendColor)}>
           <TrendIcon className="h-3 w-3" />
-          <span className="text-xs">
+          <span className="text-xs font-ui">
             {Math.abs(trend).toFixed(1)}
           </span>
         </div>

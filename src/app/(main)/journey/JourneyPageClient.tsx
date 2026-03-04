@@ -57,8 +57,8 @@ export function JourneyPageClient({ userId, userRole }: JourneyPageClientProps) 
         transition={{ duration: 0.4 }}
         className="mb-6"
       >
-        <h1 className="text-2xl font-bold text-white">Your Dad Journey</h1>
-        <p className="text-surface-400 mt-1 text-sm">
+        <h1 className="text-2xl font-bold font-display text-[--cream]">Your Dad Journey</h1>
+        <p className="text-[--muted] mt-1 text-sm font-body">
           7 real challenges, real talk, and things you can actually do.
         </p>
       </motion.div>
@@ -69,17 +69,17 @@ export function JourneyPageClient({ userId, userRole }: JourneyPageClientProps) 
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.35 }}
-          className="mb-5 rounded-xl bg-surface-900 border border-surface-800 p-4"
+          className="mb-5 rounded-xl bg-[--surface] border border-[--border] p-4 shadow-card"
         >
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-surface-400" />
-              <p className="text-sm font-semibold text-white">Recent mood</p>
+              <TrendingUp className="h-4 w-4 text-[--muted]" />
+              <p className="text-sm font-semibold font-ui text-[--cream]">Recent mood</p>
             </div>
             {streak > 0 && (
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/20">
-                <Flame className="h-3.5 w-3.5 text-amber-400" />
-                <span className="text-xs font-semibold text-amber-400">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gold-dim border border-gold/20">
+                <Flame className="h-3.5 w-3.5 text-gold" />
+                <span className="text-xs font-semibold font-ui text-gold">
                   {streak}-day streak
                 </span>
               </div>
@@ -97,7 +97,7 @@ export function JourneyPageClient({ userId, userRole }: JourneyPageClientProps) 
                   <span className="text-xl leading-none" title={cfg.label}>
                     {cfg.emoji}
                   </span>
-                  <span className="text-[10px] text-surface-500">{dayLabel}</span>
+                  <span className="text-[10px] text-[--dim] font-ui">{dayLabel}</span>
                 </div>
               )
             })}
@@ -123,7 +123,7 @@ export function JourneyPageClient({ userId, userRole }: JourneyPageClientProps) 
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.35 }}
       >
-        <p className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3">
+        <p className="text-xs font-semibold font-ui text-[--muted] uppercase tracking-wider mb-3">
           Your challenges
         </p>
         <DadChallengeTiles maxTiles={7} />

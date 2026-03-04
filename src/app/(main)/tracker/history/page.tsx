@@ -48,17 +48,17 @@ import { LogType, BASIC_LOG_TYPES, PREMIUM_LOG_TYPES } from '@/services/tracker-
 import { useToast } from '@/hooks/use-toast'
 
 const LOG_TYPE_CONFIG: Record<LogType, { icon: any; color: string; bgColor: string; label: string }> = {
-  feeding: { icon: Milk, color: 'text-blue-400', bgColor: 'bg-blue-500/20', label: 'Feeding' },
-  diaper: { icon: Baby, color: 'text-amber-400', bgColor: 'bg-amber-500/20', label: 'Diaper' },
-  sleep: { icon: Moon, color: 'text-purple-400', bgColor: 'bg-purple-500/20', label: 'Sleep' },
-  temperature: { icon: Thermometer, color: 'text-red-400', bgColor: 'bg-red-500/20', label: 'Temperature' },
-  medicine: { icon: Pill, color: 'text-green-400', bgColor: 'bg-green-500/20', label: 'Medicine' },
-  vitamin_d: { icon: Sun, color: 'text-yellow-400', bgColor: 'bg-yellow-500/20', label: 'Vitamin D' },
-  mood: { icon: Smile, color: 'text-pink-400', bgColor: 'bg-pink-500/20', label: 'Mood' },
-  weight: { icon: Scale, color: 'text-cyan-400', bgColor: 'bg-cyan-500/20', label: 'Weight' },
-  height: { icon: Ruler, color: 'text-indigo-400', bgColor: 'bg-indigo-500/20', label: 'Height' },
-  milestone: { icon: Star, color: 'text-accent-400', bgColor: 'bg-accent-500/20', label: 'Milestone' },
-  custom: { icon: Plus, color: 'text-surface-400', bgColor: 'bg-surface-500/20', label: 'Custom' },
+  feeding: { icon: Milk, color: 'text-sky', bgColor: 'bg-sky-dim', label: 'Feeding' },
+  diaper: { icon: Baby, color: 'text-gold', bgColor: 'bg-gold-dim', label: 'Diaper' },
+  sleep: { icon: Moon, color: 'text-rose', bgColor: 'bg-rose-dim', label: 'Sleep' },
+  temperature: { icon: Thermometer, color: 'text-coral', bgColor: 'bg-coral-dim', label: 'Temperature' },
+  medicine: { icon: Pill, color: 'text-sage', bgColor: 'bg-sage-dim', label: 'Medicine' },
+  vitamin_d: { icon: Sun, color: 'text-gold', bgColor: 'bg-gold-dim', label: 'Vitamin D' },
+  mood: { icon: Smile, color: 'text-rose', bgColor: 'bg-rose-dim', label: 'Mood' },
+  weight: { icon: Scale, color: 'text-sky', bgColor: 'bg-sky-dim', label: 'Weight' },
+  height: { icon: Ruler, color: 'text-sky', bgColor: 'bg-sky-dim', label: 'Height' },
+  milestone: { icon: Star, color: 'text-copper', bgColor: 'bg-copper-dim', label: 'Milestone' },
+  custom: { icon: Plus, color: 'text-[--muted]', bgColor: 'bg-[--card]', label: 'Custom' },
 }
 
 export default function TrackerHistoryPage() {
@@ -132,7 +132,7 @@ export default function TrackerHistoryPage() {
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
-          <h1 className="text-xl font-bold text-white">Log History</h1>
+          <h1 className="text-xl font-bold font-display text-[--cream]">Log History</h1>
         </div>
         <PaywallOverlay
           feature="tracker_history"
@@ -151,14 +151,14 @@ export default function TrackerHistoryPage() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <h1 className="text-xl font-bold text-white flex-1">Log History</h1>
+        <h1 className="text-xl font-bold font-display text-[--cream] flex-1">Log History</h1>
       </div>
 
       {/* Filter */}
       <div className="flex items-center gap-2">
-        <Filter className="h-4 w-4 text-surface-400" />
+        <Filter className="h-4 w-4 text-[--muted]" />
         <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v as any)}>
-          <SelectTrigger className="w-40 bg-surface-800 border-surface-700">
+          <SelectTrigger className="w-40 bg-[--card] border-[--border]">
             <SelectValue placeholder="Filter by type" />
           </SelectTrigger>
           <SelectContent>
@@ -184,7 +184,7 @@ export default function TrackerHistoryPage() {
         <div className="space-y-6">
           {Object.entries(groupedLogs).map(([date, dateLogs]) => (
             <div key={date}>
-              <h3 className="text-sm font-medium text-surface-400 mb-2">
+              <h3 className="text-sm font-medium font-ui text-[--muted] mb-2">
                 {formatDateHeader(date)}
               </h3>
               <div className="space-y-2">
@@ -193,32 +193,32 @@ export default function TrackerHistoryPage() {
                   return (
                     <div
                       key={log.id}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-surface-900 border border-surface-800"
+                      className="flex items-center gap-3 p-3 rounded-lg bg-[--surface] border border-[--border]"
                     >
                       <div className={cn("p-2 rounded-lg", config?.bgColor)}>
                         {config && <config.icon className={cn("h-4 w-4", config.color)} />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-medium text-white capitalize">
+                          <p className="text-sm font-medium font-ui text-[--cream] capitalize">
                             {log.log_type.replace('_', ' ')}
                           </p>
-                          <span className="text-xs text-surface-500">
+                          <span className="text-xs font-ui text-[--dim]">
                             {format(new Date(log.logged_at), 'h:mm a')}
                           </span>
                         </div>
-                        <p className="text-xs text-surface-400">
+                        <p className="text-xs font-body text-[--muted]">
                           {formatLogDetails(log)}
                           {log.notes && ` • ${log.notes}`}
                         </p>
                       </div>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="icon" className="text-surface-500 hover:text-red-500">
+                          <Button variant="ghost" size="icon" className="text-[--dim] hover:text-coral">
                             <Trash className="h-4 w-4" />
                           </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="bg-surface-900 border-surface-800">
+                        <AlertDialogContent className="bg-[--surface] border-[--border]">
                           <AlertDialogHeader>
                             <AlertDialogTitle>Delete Log?</AlertDialogTitle>
                             <AlertDialogDescription>
@@ -229,7 +229,7 @@ export default function TrackerHistoryPage() {
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => handleDelete(log.id)}
-                              className="bg-red-600 hover:bg-red-700"
+                              className="bg-coral hover:bg-coral/80"
                             >
                               Delete
                             </AlertDialogAction>
@@ -244,9 +244,9 @@ export default function TrackerHistoryPage() {
           ))}
         </div>
       ) : (
-        <Card className="bg-surface-900 border-surface-800">
+        <Card className="bg-[--surface] border-[--border] shadow-card">
           <CardContent className="py-12 text-center">
-            <p className="text-surface-400">No logs found</p>
+            <p className="text-[--muted] font-body">No logs found</p>
           </CardContent>
         </Card>
       )}
