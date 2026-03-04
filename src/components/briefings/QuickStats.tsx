@@ -34,8 +34,8 @@ export function QuickStats({ week, babySize, dueDate }: QuickStatsProps) {
   const miscarriageRisk = getMiscarriageRisk(week)
 
   return (
-    <div className="bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 border border-white/[0.08] rounded-2xl p-6">
-      <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-4">
+    <div className="bg-[--card] border border-[--border] rounded-2xl p-6 shadow-card">
+      <div className="text-xs font-semibold font-ui text-[--muted] uppercase tracking-wider mb-4">
         This Week at a Glance
       </div>
 
@@ -78,10 +78,10 @@ function StatRow({
   highlight?: boolean
 }) {
   return (
-    <div className="flex justify-between items-center py-3 border-b border-white/[0.04] last:border-0">
-      <span className="text-sm text-zinc-400">{label}</span>
+    <div className="flex justify-between items-center py-3 border-b border-[--border] last:border-0">
+      <span className="text-sm font-body text-[--muted]">{label}</span>
       <span
-        className={`text-sm font-semibold ${highlight ? 'text-green-500' : 'text-white'}`}
+        className={`text-sm font-semibold font-ui ${highlight ? 'text-[--sage]' : 'text-gold'}`}
       >
         {value}
       </span>

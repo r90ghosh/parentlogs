@@ -44,11 +44,11 @@ export function BriefingLinkedTasks({ weekNumber, familyId }: BriefingLinkedTask
 
   if (isLoading) {
     return (
-      <div className="bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 border border-white/[0.08] rounded-2xl p-6">
-        <div className="h-4 w-32 bg-zinc-700 rounded animate-pulse mb-4" />
+      <div className="bg-[--card] border border-[--border] rounded-2xl p-6 shadow-card">
+        <div className="h-4 w-32 bg-[--card-hover] rounded animate-pulse mb-4" />
         <div className="space-y-2">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-12 bg-zinc-700/50 rounded-xl animate-pulse" />
+            <div key={i} className="h-12 bg-[--card-hover]/50 rounded-xl animate-pulse" />
           ))}
         </div>
       </div>
@@ -67,22 +67,22 @@ export function BriefingLinkedTasks({ weekNumber, familyId }: BriefingLinkedTask
   }
 
   return (
-    <div className="bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 border border-white/[0.08] rounded-2xl p-6">
+    <div className="bg-[--card] border border-[--border] rounded-2xl p-6 shadow-card">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-amber-500/15 flex items-center justify-center">
-            <ListTodo className="h-4 w-4 text-amber-400" />
+          <div className="w-8 h-8 rounded-lg bg-copper-dim flex items-center justify-center">
+            <ListTodo className="h-4 w-4 text-copper" />
           </div>
-          <span className="text-sm font-semibold text-zinc-300">Tasks This Week</span>
+          <span className="text-sm font-semibold font-ui text-[--cream]">Tasks This Week</span>
         </div>
         {/* Completion summary */}
         <span
           className={cn(
-            'text-xs font-medium px-2.5 py-1 rounded-full',
+            'text-xs font-medium font-ui px-2.5 py-1 rounded-full',
             completedCount === totalCount
-              ? 'bg-green-500/15 text-green-400'
-              : 'bg-zinc-700/60 text-zinc-400'
+              ? 'bg-[--sage-dim] text-[--sage]'
+              : 'bg-[--card-hover] text-[--muted]'
           )}
         >
           {completedCount === totalCount
@@ -103,8 +103,8 @@ export function BriefingLinkedTasks({ weekNumber, familyId }: BriefingLinkedTask
               className={cn(
                 'w-full flex items-center gap-3 p-3 rounded-xl transition-colors text-left',
                 isCompleted
-                  ? 'bg-black/10 cursor-default'
-                  : 'bg-black/20 hover:bg-black/30 cursor-pointer'
+                  ? 'bg-[--bg] cursor-default'
+                  : 'bg-[--bg] hover:bg-[--card-hover] cursor-pointer'
               )}
             >
               {/* Checkbox */}
@@ -112,20 +112,20 @@ export function BriefingLinkedTasks({ weekNumber, familyId }: BriefingLinkedTask
                 className={cn(
                   'w-5 h-5 rounded-md border-2 flex-shrink-0 flex items-center justify-center transition-all',
                   isCompleted
-                    ? 'bg-green-500 border-green-500'
-                    : 'border-zinc-600 hover:border-amber-500/60'
+                    ? 'bg-copper border-copper'
+                    : 'border-[--dim] hover:border-copper/60'
                 )}
               >
-                {isCompleted && <Check className="h-3 w-3 text-white" />}
+                {isCompleted && <Check className="h-3 w-3 text-[--white]" />}
               </div>
 
               {/* Title */}
               <span
                 className={cn(
-                  'text-sm flex-1 leading-snug',
+                  'text-sm font-body flex-1 leading-snug',
                   isCompleted
-                    ? 'text-zinc-500 line-through'
-                    : 'text-zinc-200'
+                    ? 'text-[--dim] line-through'
+                    : 'text-[--cream]'
                 )}
               >
                 {task.title}
@@ -133,7 +133,7 @@ export function BriefingLinkedTasks({ weekNumber, familyId }: BriefingLinkedTask
 
               {/* Priority badge */}
               {task.priority === 'must-do' && !isCompleted && (
-                <span className="text-xs text-amber-500/80 bg-amber-500/10 px-1.5 py-0.5 rounded flex-shrink-0">
+                <span className="text-xs font-ui text-copper bg-copper-dim px-1.5 py-0.5 rounded flex-shrink-0">
                   Must do
                 </span>
               )}

@@ -73,7 +73,7 @@ export default function BriefingPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-[--bg]">
         <div className="p-6 md:p-12 space-y-6">
           <Skeleton className="h-[300px] w-full rounded-2xl" />
           <Skeleton className="h-8 w-48" />
@@ -96,7 +96,7 @@ export default function BriefingPage() {
   // Locked content
   if (isPremiumLocked) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[--bg] flex items-center justify-center p-6">
         <PaywallOverlay feature="briefings_beyond_4_weeks" />
       </div>
     )
@@ -105,22 +105,22 @@ export default function BriefingPage() {
   // No briefing available
   if (!displayBriefing) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-[--bg]">
         {/* Hero with navigation only */}
-        <div className="bg-gradient-to-br from-teal-500/[0.15] via-cyan-500/[0.08] to-transparent border-b border-white/[0.06] px-6 md:px-12 py-10">
+        <div className="bg-[--surface] border-b border-[--border] px-6 md:px-12 py-10">
           <div className="flex items-center justify-center gap-4">
             <button
               onClick={() => handleNavigate(weekToView - 1)}
               disabled={weekToView <= 1}
-              className="p-2 rounded-lg hover:bg-white/5 text-zinc-500 disabled:opacity-30"
+              className="p-2 rounded-lg hover:bg-[--card] text-[--muted] disabled:opacity-30"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
-            <h1 className="text-2xl font-bold text-white">Week {weekToView}</h1>
+            <h1 className="text-2xl font-display font-bold text-[--cream]">Week {weekToView}</h1>
             <button
               onClick={() => handleNavigate(weekToView + 1)}
               disabled={weekToView >= maxWeek}
-              className="p-2 rounded-lg hover:bg-white/5 text-zinc-500 disabled:opacity-30"
+              className="p-2 rounded-lg hover:bg-[--card] text-[--muted] disabled:opacity-30"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
@@ -128,11 +128,11 @@ export default function BriefingPage() {
         </div>
 
         <div className="p-6 md:p-12 text-center">
-          <div className="bg-zinc-800/50 border border-zinc-700 rounded-2xl p-12">
-            <p className="text-zinc-400 text-lg">No briefing available for this week.</p>
+          <div className="bg-[--card] border border-[--border] rounded-2xl p-12">
+            <p className="text-[--muted] font-body text-lg">No briefing available for this week.</p>
             <Link
               href="/briefing/archive"
-              className="inline-block mt-4 text-teal-500 hover:text-teal-400"
+              className="inline-block mt-4 font-ui text-copper hover:text-gold transition-colors"
             >
               Browse all briefings →
             </Link>
@@ -143,7 +143,7 @@ export default function BriefingPage() {
   }
 
   return (
-    <div className="min-h-screen pb-24 md:pb-8">
+    <div className="min-h-screen bg-[--bg] pb-24 md:pb-8">
       {/* Hero Section */}
       <BriefingHero
         briefing={displayBriefing}
@@ -160,7 +160,7 @@ export default function BriefingPage() {
         {viewingWeek !== null && viewingWeek !== currentWeek && (
           <button
             onClick={() => setViewingWeek(null)}
-            className="mb-4 text-sm text-teal-500 hover:text-teal-400 flex items-center gap-1"
+            className="mb-4 text-sm font-ui text-copper hover:text-gold flex items-center gap-1 transition-colors"
           >
             ← Back to current week (Week {currentWeek})
           </button>
@@ -191,7 +191,7 @@ export default function BriefingPage() {
 
             {/* Dad Focus */}
             <BriefingSection type="dad" title="Your Focus This Week" icon="🎯">
-              <p className="mb-4">Here's what to focus on this week:</p>
+              <p className="mb-4">Here&apos;s what to focus on this week:</p>
               <DadFocusList items={displayBriefing.dad_focus} />
             </BriefingSection>
 
@@ -234,9 +234,9 @@ export default function BriefingPage() {
         </div>
 
         {/* Footer */}
-        <footer className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-10 pt-6 border-t border-white/[0.06]">
-          <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-500">
-            <span className="inline-flex items-center gap-1.5 bg-green-500/10 text-green-500 px-3 py-1 rounded-full text-xs font-medium">
+        <footer className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-10 pt-6 border-t border-[--border]">
+          <div className="flex flex-wrap items-center gap-3 text-sm font-body text-[--muted]">
+            <span className="inline-flex items-center gap-1.5 bg-[--sage-dim] text-[--sage] px-3 py-1 rounded-full text-xs font-medium font-ui">
               ✓ Medically Reviewed
             </span>
             {displayBriefing.medical_source && (
@@ -249,8 +249,8 @@ export default function BriefingPage() {
               onClick={() => handleNavigate(weekToView - 1)}
               disabled={weekToView <= 1}
               className={cn(
-                'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium',
-                'bg-white/[0.04] border border-white/[0.08] text-zinc-400 hover:bg-white/[0.08] hover:text-zinc-200 transition-all',
+                'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium font-ui',
+                'bg-[--card] border border-[--border] text-[--muted] hover:bg-[--card-hover] hover:text-[--cream] transition-all',
                 weekToView <= 1 && 'opacity-50 pointer-events-none'
               )}
             >
@@ -261,8 +261,8 @@ export default function BriefingPage() {
               onClick={() => handleNavigate(weekToView + 1)}
               disabled={weekToView >= maxWeek}
               className={cn(
-                'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium',
-                'bg-gradient-to-r from-teal-500 to-cyan-500 text-white hover:shadow-lg hover:shadow-teal-500/25 transition-all',
+                'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium font-ui',
+                'bg-copper text-[--white] hover:shadow-copper transition-all',
                 weekToView >= maxWeek && 'opacity-50 pointer-events-none'
               )}
             >
@@ -276,7 +276,7 @@ export default function BriefingPage() {
         <div className="text-center mt-8">
           <Link
             href="/briefing/archive"
-            className="text-sm text-teal-500 hover:text-teal-400 transition-colors"
+            className="text-sm font-ui text-copper hover:text-gold transition-colors"
           >
             View All Briefings →
           </Link>

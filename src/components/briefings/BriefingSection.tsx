@@ -17,29 +17,29 @@ const sectionStyles: Record<SectionType, {
   titleClass: string
 }> = {
   baby: {
-    borderClass: 'before:bg-gradient-to-b before:from-teal-500 before:to-cyan-500',
-    iconBgClass: 'bg-teal-500/15',
-    titleClass: 'text-teal-400',
+    borderClass: 'before:bg-gradient-to-b before:from-[--sage] before:to-[--sky]',
+    iconBgClass: 'bg-[--sage-dim]',
+    titleClass: 'text-[--sage]',
   },
   mom: {
-    borderClass: 'before:bg-gradient-to-b before:from-pink-500 before:to-rose-500',
-    iconBgClass: 'bg-pink-500/15',
-    titleClass: 'text-pink-400',
+    borderClass: 'before:bg-gradient-to-b before:from-[--rose] before:to-[--coral]',
+    iconBgClass: 'bg-[--rose-dim]',
+    titleClass: 'text-[--rose]',
   },
   dad: {
-    borderClass: 'before:bg-gradient-to-b before:from-amber-500 before:to-orange-500',
-    iconBgClass: 'bg-amber-500/15',
-    titleClass: 'text-amber-400',
+    borderClass: 'before:bg-gradient-to-b before:from-[--copper] before:to-[--gold]',
+    iconBgClass: 'bg-copper-dim',
+    titleClass: 'text-copper',
   },
   relationship: {
-    borderClass: 'before:bg-gradient-to-b before:from-violet-500 before:to-indigo-500',
-    iconBgClass: 'bg-violet-500/15',
-    titleClass: 'text-violet-400',
+    borderClass: 'before:bg-gradient-to-b before:from-[--rose] before:to-[--sky]',
+    iconBgClass: 'bg-[--rose-dim]',
+    titleClass: 'text-[--rose]',
   },
   coming: {
-    borderClass: 'before:bg-gradient-to-b before:from-indigo-500 before:to-blue-500',
-    iconBgClass: 'bg-indigo-500/15',
-    titleClass: 'text-indigo-400',
+    borderClass: 'before:bg-gradient-to-b before:from-[--sky] before:to-[--sage]',
+    iconBgClass: 'bg-[--sky-dim]',
+    titleClass: 'text-[--sky]',
   },
 }
 
@@ -55,7 +55,7 @@ export function BriefingSection({
   return (
     <div
       className={cn(
-        'relative bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 border border-white/[0.08] rounded-2xl p-7 overflow-hidden',
+        'relative bg-[--card] border border-[--border] rounded-2xl p-7 overflow-hidden shadow-card',
         'before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1',
         styles.borderClass,
         className
@@ -71,13 +71,13 @@ export function BriefingSection({
         >
           {icon}
         </div>
-        <h2 className={cn('text-lg font-bold', styles.titleClass)}>
+        <h2 className={cn('text-lg font-display font-bold', styles.titleClass)}>
           {title}
         </h2>
       </div>
 
       {/* Content */}
-      <div className="text-zinc-400 text-[15px] leading-relaxed">
+      <div className="text-[--muted] font-body text-[15px] leading-relaxed">
         {children}
       </div>
     </div>
@@ -93,14 +93,14 @@ interface HighlightBoxProps {
 
 export function HighlightBox({ icon = '💡', children, color = 'teal' }: HighlightBoxProps) {
   const colorStyles = {
-    teal: 'bg-teal-500/10 border-teal-500/20 text-teal-400',
-    amber: 'bg-amber-500/10 border-amber-500/20 text-amber-400',
-    pink: 'bg-pink-500/10 border-pink-500/20 text-pink-400',
+    teal: 'bg-[--sage-dim] border-[--sage]/20 text-[--sage]',
+    amber: 'bg-copper-dim border-copper/20 text-copper',
+    pink: 'bg-[--rose-dim] border-[--rose]/20 text-[--rose]',
   }
 
   return (
     <div className={cn('rounded-xl border p-4 mt-4', colorStyles[color])}>
-      <div className="flex items-start gap-2.5 text-sm">
+      <div className="flex items-start gap-2.5 text-sm font-body">
         <span className="text-lg flex-shrink-0">{icon}</span>
         <div>{children}</div>
       </div>

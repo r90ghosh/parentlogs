@@ -25,14 +25,14 @@ export function RelatedTasks({ linkedTaskIds }: RelatedTasksProps) {
   }
 
   return (
-    <div className="bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 border border-white/[0.08] rounded-2xl p-6">
+    <div className="bg-[--card] border border-[--border] rounded-2xl p-6 shadow-card">
       <div className="flex justify-between items-center mb-4">
-        <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+        <div className="text-xs font-semibold font-ui text-[--muted] uppercase tracking-wider">
           Related Tasks
         </div>
         <Link
           href="/tasks"
-          className="text-xs text-teal-500 hover:text-teal-400 transition-colors"
+          className="text-xs font-ui text-copper hover:text-gold transition-colors"
         >
           View All &rarr;
         </Link>
@@ -47,24 +47,24 @@ export function RelatedTasks({ linkedTaskIds }: RelatedTasksProps) {
                 key={task.id}
                 onClick={() => handleToggle(task.id, isCompleted)}
                 disabled={completeTask.isPending}
-                className="w-full flex items-center gap-3 p-3 bg-black/20 hover:bg-black/30 rounded-xl transition-colors text-left"
+                className="w-full flex items-center gap-3 p-3 bg-[--bg] hover:bg-[--card-hover] rounded-xl transition-colors text-left"
               >
                 <div
                   className={cn(
                     'w-5 h-5 rounded-md border-2 flex-shrink-0 flex items-center justify-center transition-colors',
                     isCompleted
-                      ? 'bg-green-500 border-green-500'
-                      : 'border-zinc-600 hover:border-zinc-500'
+                      ? 'bg-copper border-copper'
+                      : 'border-[--dim] hover:border-copper'
                   )}
                 >
-                  {isCompleted && <Check className="h-3 w-3 text-white" />}
+                  {isCompleted && <Check className="h-3 w-3 text-[--white]" />}
                 </div>
                 <span
                   className={cn(
-                    'text-sm flex-1',
+                    'text-sm font-body flex-1',
                     isCompleted
-                      ? 'text-zinc-500 line-through'
-                      : 'text-zinc-200'
+                      ? 'text-[--dim] line-through'
+                      : 'text-[--cream]'
                   )}
                 >
                   {task.title}
@@ -74,7 +74,7 @@ export function RelatedTasks({ linkedTaskIds }: RelatedTasksProps) {
           })}
         </div>
       ) : (
-        <p className="text-sm text-zinc-500 text-center py-4">
+        <p className="text-sm font-body text-[--muted] text-center py-4">
           No tasks for this week
         </p>
       )}

@@ -69,7 +69,7 @@ function parseItem(item: string): { title: string; description?: string } {
 export function DadFocusList({ items }: DadFocusListProps) {
   if (!items || items.length === 0) {
     return (
-      <p className="text-zinc-500 text-sm">No focus items for this week.</p>
+      <p className="text-[--muted] font-body text-sm">No focus items for this week.</p>
     )
   }
 
@@ -82,15 +82,15 @@ export function DadFocusList({ items }: DadFocusListProps) {
         return (
           <li
             key={idx}
-            className="flex items-start gap-3 py-3 border-b border-white/[0.04] last:border-0"
+            className="flex items-start gap-3 py-3 border-b border-[--border] last:border-0"
           >
-            <div className="w-6 h-6 rounded-md bg-amber-500/15 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+            <div className="w-6 h-6 rounded-md bg-copper-dim flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
               {icon}
             </div>
             <div className="flex-1">
-              <div className="font-semibold text-zinc-200 text-sm">{title}</div>
+              <div className="font-semibold font-ui text-[--cream] text-sm">{title}</div>
               {description && (
-                <div className="text-xs text-zinc-500 mt-1">{description}</div>
+                <div className="text-xs font-body text-[--muted] mt-1">{description}</div>
               )}
             </div>
           </li>

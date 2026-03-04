@@ -18,22 +18,22 @@ export function BriefingProgressBar({
     <div className={cn('mb-10', className)}>
       {/* Header */}
       <div className="flex justify-between items-center mb-3">
-        <span className="text-sm text-zinc-500">Pregnancy Progress</span>
-        <span className="text-sm font-semibold text-teal-500">
+        <span className="text-sm font-ui text-[--muted]">Pregnancy Progress</span>
+        <span className="text-sm font-semibold font-ui text-copper">
           Week {currentWeek} of {totalWeeks} ({percentComplete}%)
         </span>
       </div>
 
       {/* Progress Bar */}
-      <div className="relative h-1.5 bg-white/10 rounded-full">
+      <div className="relative h-1.5 bg-[--dim] rounded-full">
         <div
-          className="absolute left-0 top-0 h-full bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full transition-all duration-500"
+          className="absolute left-0 top-0 h-full bg-gradient-to-r from-copper to-gold rounded-full transition-all duration-500"
           style={{ width: `${progress}%` }}
         />
       </div>
 
       {/* Markers */}
-      <div className="flex justify-between mt-2 text-[11px] text-zinc-600">
+      <div className="flex justify-between mt-2 text-[11px] font-ui text-[--dim]">
         <span>Conception</span>
         <span className="hidden sm:inline">1st Trimester</span>
         <span className="hidden sm:inline">2nd Trimester</span>
