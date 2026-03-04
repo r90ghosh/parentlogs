@@ -35,7 +35,6 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WarmBackground } from '@/components/ui/animations/WarmBackground'
-import { FloatingParticles } from '@/components/ui/animations/FloatingParticles'
 
 const mainNavItems = [
   { href: '/dashboard', label: 'Home', icon: Home },
@@ -129,7 +128,6 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen min-h-[100dvh] bg-[--bg]">
       <WarmBackground />
-      <FloatingParticles count={8} />
 
       {/* Header */}
       <header className="sticky top-0 z-40 bg-[--surface]/95 backdrop-blur-[16px] border-b border-[--border]" style={{ height: 'var(--header-h)' }}>

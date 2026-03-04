@@ -33,21 +33,23 @@ function generateParticles(count: number): Particle[] {
 }
 
 export function FloatingParticles({ count = 10 }: { count?: number }) {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
-  const [particles] = useState(() => generateParticles(count))
+  const [particles, setParticles] = useState<Particle[]>([])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    setPrefersReducedMotion(mq.matches)
-    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches)
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
+    if (mq.matches) return
 
-  if (prefersReducedMotion) return null
+    setParticles(generateParticles(count))
+  }, [count])
+
+  if (particles.length === 0) return null
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-[1] overflow-hidden" aria-hidden="true">
+    <div
+      className="pointer-events-none fixed inset-0 overflow-hidden"
+      style={{ zIndex: 9999 }}
+      aria-hidden="true"
+    >
       {particles.map((p) => (
         <div
           key={p.id}

@@ -14,6 +14,7 @@ import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 import { CardEntrance } from '@/components/ui/animations/CardEntrance'
+import { WarmBackground } from '@/components/ui/animations/WarmBackground'
 
 function UpgradeContent() {
   const router = useRouter()
@@ -74,6 +75,8 @@ function UpgradeContent() {
 
   return (
     <div className="min-h-screen bg-[--bg]">
+      <WarmBackground />
+
       {/* Sticky header */}
       <div className="border-b border-[--border] bg-[--surface]/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
