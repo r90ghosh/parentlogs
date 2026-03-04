@@ -47,8 +47,8 @@ export function ProblemSolution() {
         {/* Pain points grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {painPoints.map((point, index) => (
-            <RevealOnScroll key={index} delay={80 + index * 120}>
-              <Card3DTilt maxTilt={3} gloss>
+            <RevealOnScroll key={index} delay={80 + index * 120} className="h-full">
+              <Card3DTilt maxTilt={3} gloss className="h-full">
                 <div className="relative h-full p-8 rounded-xl bg-[--card] border border-[--border] shadow-card">
                   {/* Icon */}
                   <div className={`inline-flex p-3 rounded-xl mb-6 ${
