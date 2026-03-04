@@ -1,8 +1,232 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Play, Shield } from 'lucide-react'
+import { ArrowRight, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { MagneticButton } from '@/components/ui/animations/MagneticButton'
+import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+
+function SplitLetterHeading() {
+  const ref = useRef<HTMLHeadingElement>(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    if (mq.matches) {
+      setVisible(true)
+      return
+    }
+    // Double RAF to ensure layout is complete
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setVisible(true))
+    })
+  }, [])
+
+  const line1 = 'Your partner in the'
+  const line2 = 'journey'
+  const line3 = 'to fatherhood'
+
+  let globalIndex = 0
+
+  const renderChars = (text: string, italic = false) => {
+    return text.split('').map((char) => {
+      if (char === ' ') {
+        globalIndex++
+        return <span key={`sp-${globalIndex}`} className="inline-block w-[0.28em]" />
+      }
+      const idx = globalIndex++
+      return (
+        <span
+          key={`ch-${idx}`}
+          className={italic ? 'italic text-copper' : ''}
+          style={{
+            display: 'inline-block',
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateY(0)' : 'translateY(40px)',
+            transition: `opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)`,
+            transitionDelay: `${idx * 30}ms`,
+          }}
+        >
+          {char}
+        </span>
+      )
+    })
+  }
+
+  return (
+    <h1
+      ref={ref}
+      className="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[--cream] leading-[1.1] mb-6"
+      aria-label="Your partner in the journey to fatherhood"
+    >
+      {renderChars(line1)}
+      <span className="inline-block w-[0.28em]" />
+      {(() => { globalIndex++; return null })()}
+      {renderChars(line2, true)}
+      <span className="inline-block w-[0.28em]" />
+      {(() => { globalIndex++; return null })()}
+      {renderChars(line3)}
+    </h1>
+  )
+}
+
+function AnimatedSubtitle() {
+  return (
+    <p
+      className="font-body font-light text-lg sm:text-xl max-w-[560px] mx-auto leading-[1.65] mb-11"
+      style={{
+        background: 'linear-gradient(135deg, var(--muted) 0%, var(--cream) 40%, var(--muted) 80%, var(--gold) 100%)',
+        backgroundSize: '200% 200%',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        animation: 'subtitleGradient 8s ease infinite',
+      }}
+    >
+      Finally, a parenting app that respects your intelligence. Week-by-week
+      guidance, actionable tasks, and zero fluff.
+    </p>
+  )
+}
+
+function ParallaxOrbs() {
+  const orb1Ref = useRef<HTMLDivElement>(null)
+  const orb2Ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    if (mq.matches) return
+
+    let ticking = false
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true
+        requestAnimationFrame(() => {
+          const y = window.scrollY
+          if (orb1Ref.current) orb1Ref.current.style.transform = `translateY(${y * 0.25}px)`
+          if (orb2Ref.current) orb2Ref.current.style.transform = `translateY(${y * 0.18}px)`
+          ticking = false
+        })
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  return (
+    <>
+      <div
+        ref={orb1Ref}
+        className="absolute pointer-events-none"
+        aria-hidden="true"
+        style={{
+          width: 500,
+          height: 500,
+          top: '5%',
+          right: -120,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(196,112,63,0.06) 0%, transparent 70%)',
+        }}
+      />
+      <div
+        ref={orb2Ref}
+        className="absolute pointer-events-none"
+        aria-hidden="true"
+        style={{
+          width: 300,
+          height: 300,
+          bottom: '15%',
+          left: -60,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(212,168,83,0.05) 0%, transparent 70%)',
+        }}
+      />
+    </>
+  )
+}
+
+function DashboardPreview() {
+  return (
+    <Card3DTilt maxTilt={8} gloss>
+      <div
+        className="rounded-xl overflow-hidden border border-[--border] bg-[--card] shadow-lift"
+        style={{ borderTop: '2px solid transparent', borderImage: 'linear-gradient(90deg, var(--copper), var(--gold)) 1' }}
+      >
+        {/* Dashboard label */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-[--border]">
+          <span className="font-ui text-[10px] uppercase tracking-[0.1em] text-[--dim]">Your Dashboard</span>
+          <span className="font-ui text-[10px] uppercase tracking-[0.1em] text-[--dim]">Week 28</span>
+        </div>
+
+        <div className="p-5 space-y-4">
+          {/* Mood row */}
+          <div className="flex justify-center gap-3">
+            {['😟', '😐', '🙂', '😊', '🔥'].map((emoji, i) => (
+              <div
+                key={i}
+                className={`w-10 h-10 rounded-full flex items-center justify-center text-lg border ${
+                  i === 3
+                    ? 'border-copper bg-copper-dim'
+                    : 'border-[--border] bg-[--surface]'
+                }`}
+              >
+                {emoji}
+              </div>
+            ))}
+          </div>
+
+          {/* Task items */}
+          <div className="space-y-2">
+            {[
+              { text: 'Schedule glucose screening', done: true },
+              { text: 'Research pediatricians', done: true },
+              { text: 'Start baby registry', done: false, badge: 'Must-do' },
+              { text: 'Pack hospital bag', done: false },
+            ].map((task, i) => (
+              <div key={i} className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[--surface] border border-[--border]">
+                <div className={`w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center ${task.done ? 'bg-copper border-copper' : 'border-[--dim]'}`}>
+                  {task.done && (
+                    <svg className="w-2.5 h-2.5 text-[--bg]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </div>
+                <span className={`font-ui text-xs flex-1 ${task.done ? 'text-[--muted] line-through' : 'text-[--cream]'}`}>
+                  {task.text}
+                </span>
+                {task.badge && (
+                  <span className="px-1.5 py-0.5 text-[9px] font-ui font-medium rounded bg-copper/15 text-copper border border-copper/25">
+                    {task.badge}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Progress bar */}
+          <div>
+            <div className="flex items-center justify-between text-[10px] font-ui text-[--muted] mb-1">
+              <span>Progress</span>
+              <span className="text-copper">62%</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-[--surface] overflow-hidden">
+              <div
+                className="h-full rounded-full"
+                style={{
+                  width: '62%',
+                  background: 'linear-gradient(90deg, var(--copper), var(--gold))',
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </Card3DTilt>
+  )
+}
 
 export function Hero() {
   const scrollToHowItWorks = () => {
@@ -13,203 +237,72 @@ export function Hero() {
   }
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[--bg] via-[--surface] to-[--bg]" />
+    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden" style={{ padding: '100px 0 80px' }}>
+      <ParallaxOrbs />
 
-      {/* Subtle grid pattern - hidden on mobile for performance */}
-      <div
-        className="hidden md:block absolute inset-0 opacity-[0.025]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ede6dc' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }}
-      />
+      <div className="relative max-w-[1100px] mx-auto px-6 z-[1]">
+        <div className="text-center">
+          {/* Pre-label */}
+          <RevealOnScroll>
+            <span className="section-pre mb-5 justify-center">For Modern Dads</span>
+          </RevealOnScroll>
 
-      {/* Ambient copper glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-copper/8 rounded-full blur-[120px]" />
+          {/* Split-letter heading */}
+          <SplitLetterHeading />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
-        <div className="text-center max-w-4xl mx-auto">
-          {/* Trust badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[--card] border border-[--border] mb-8">
-            <Shield className="h-4 w-4 text-copper" />
-            <span className="font-ui text-sm text-[--cream]">Built by dads, for dads</span>
-          </div>
-
-          {/* Main headline */}
-          <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[--white] mb-6 leading-tight">
-            The Operating System for{' '}
-            <span className="text-gradient-copper">
-              Modern Fatherhood
-            </span>
-          </h1>
-
-          {/* Subheadline */}
-          <p className="font-body font-light text-lg sm:text-xl text-[--muted] mb-10 max-w-2xl mx-auto leading-relaxed">
-            Finally, a parenting app that respects your intelligence. Week-by-week guidance,
-            actionable tasks, and zero fluff.
-          </p>
+          {/* Animated gradient subtitle */}
+          <RevealOnScroll delay={160}>
+            <AnimatedSubtitle />
+          </RevealOnScroll>
 
           {/* CTA buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Button asChild size="lg" className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-lg px-8 py-6 h-auto shadow-copper">
-              <Link href="/signup">
-                Get Started Free
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-[--border-hover] text-[--cream] hover:bg-[--card] hover:border-[--border-hover] font-ui text-lg px-8 py-6 h-auto"
-              onClick={scrollToHowItWorks}
-            >
-              <Play className="mr-2 h-5 w-5" />
-              See How It Works
-            </Button>
-          </div>
-
-          {/* Dashboard mockup */}
-          <div className="relative mx-auto max-w-5xl">
-            {/* Glow behind mockup */}
-            <div className="absolute -inset-4 bg-gradient-to-r from-copper/15 via-gold/15 to-copper/15 rounded-2xl blur-2xl opacity-50" />
-
-            {/* Mockup container */}
-            <div className="relative rounded-xl overflow-hidden border border-[--border] bg-[--bg]/90 backdrop-blur-md shadow-lift">
-              {/* Browser chrome */}
-              <div className="flex items-center gap-2 px-4 py-3 bg-[--card] border-b border-[--border]">
-                <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-coral/80" />
-                  <div className="w-3 h-3 rounded-full bg-gold/80" />
-                  <div className="w-3 h-3 rounded-full bg-sage/80" />
-                </div>
-                <div className="flex-1 flex justify-center">
-                  <div className="px-4 py-1 rounded-md bg-[--surface] border border-[--border] font-ui text-xs text-[--muted]">
-                    thedadcenter.com/dashboard
-                  </div>
-                </div>
-              </div>
-
-              {/* Dashboard preview content */}
-              <div className="p-6 md:p-8 bg-[--surface]">
-                {/* Timeline Bar */}
-                <div className="mb-6">
-                  <div className="flex items-center justify-between font-ui text-xs text-[--muted] mb-2">
-                    <span className="font-medium">Tasks by Phase</span>
-                    <span className="italic hidden sm:inline">Click to filter</span>
-                  </div>
-                  <div className="flex h-12 rounded-xl overflow-hidden bg-[--card] border border-[--border]">
-                    {[
-                      { label: 'Trimester 1', color: 'rgba(196, 122, 143, 0.30)', count: 8 },
-                      { label: 'Trimester 2', color: 'rgba(196, 122, 143, 0.38)', count: 12, current: true },
-                      { label: 'Trimester 3', color: 'rgba(196, 112, 63, 0.35)', count: 15 },
-                      { label: 'Delivery', color: 'rgba(196, 112, 63, 0.45)', count: 4 },
-                      { label: '0-3 mo', color: 'rgba(212, 168, 83, 0.30)', count: 10 },
-                      { label: '3-6 mo', color: 'rgba(212, 168, 83, 0.38)', count: 8 },
-                    ].map((phase, i) => (
-                      <div
-                        key={i}
-                        className={`flex-1 flex flex-col items-center justify-center border-r border-[--border] last:border-r-0 ${phase.current ? 'ring-1 ring-copper/50 ring-inset' : ''}`}
-                        style={{ backgroundColor: phase.color }}
-                      >
-                        <span className="font-ui text-sm font-semibold text-[--white] drop-shadow-sm">{phase.count}</span>
-                        <span className="font-ui text-[9px] text-[--cream]/70 hidden md:block">{phase.label}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Two column layout */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  {/* Baby Development Card */}
-                  <div className="p-5 rounded-2xl bg-[--card] border border-[--border]">
-                    <div className="flex items-start gap-4">
-                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-copper/20 to-gold/20 flex items-center justify-center text-2xl">
-                        🍋
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-ui text-xs text-[--muted] mb-1">Week 24 • Baby is the size of</p>
-                        <p className="font-display text-lg font-bold text-[--white] mb-1">A Cantaloupe</p>
-                        <p className="font-ui text-sm text-[--muted]">~12 inches, 1.3 lbs</p>
-                      </div>
-                    </div>
-                    <p className="mt-3 font-body text-xs text-[--muted] leading-relaxed">
-                      Baby can now hear your voice! Their lungs are developing surfactant.
-                    </p>
-                  </div>
-
-                  {/* Mom Status Card */}
-                  <div className="p-5 rounded-2xl bg-[--card] border border-[--border]">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="text-lg">💝</span>
-                      <span className="font-ui text-sm font-medium text-[--cream]">What Mom&apos;s Experiencing</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {['Back pain', 'Braxton Hicks', 'Heartburn'].map((symptom, i) => (
-                        <span key={i} className="px-2.5 py-1 rounded-full font-ui text-xs bg-rose/10 text-rose border border-rose/20">
-                          {symptom}
-                        </span>
-                      ))}
-                    </div>
-                    <p className="mt-3 font-body text-xs text-[--muted] italic">
-                      Tip: Offer a foot massage tonight
-                    </p>
-                  </div>
-                </div>
-
-                {/* Priority Tasks */}
-                <div className="p-5 rounded-2xl bg-[--card] border border-[--border]">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-ui text-sm font-medium text-[--cream]">Priority Tasks</h3>
-                    <span className="font-ui text-xs text-copper">3 this week</span>
-                  </div>
-                  <div className="space-y-2">
-                    {[
-                      { task: 'Schedule glucose screening test', done: true },
-                      { task: 'Research pediatricians in your area', done: true },
-                      { task: 'Start baby registry', done: false, priority: true },
-                    ].map((item, i) => (
-                      <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-[--surface] border border-[--border]">
-                        <div className={`w-5 h-5 rounded-md border flex items-center justify-center ${item.done ? 'bg-sage/80 border-sage' : 'border-[--dim] bg-transparent'}`}>
-                          {item.done && (
-                            <svg className="w-3 h-3 text-[--white]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                            </svg>
-                          )}
-                        </div>
-                        <span className={`font-ui flex-1 text-sm ${item.done ? 'text-[--muted] line-through' : 'text-[--cream]'}`}>
-                          {item.task}
-                        </span>
-                        {item.priority && (
-                          <span className="px-2 py-0.5 font-ui text-xs rounded-full bg-copper/15 text-copper border border-copper/25">Must-do</span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+          <RevealOnScroll delay={240}>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+              <MagneticButton maxOffset={6}>
+                <Button asChild size="lg" className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] px-7 py-3.5 h-auto shadow-copper">
+                  <Link href="/signup">
+                    Start Free
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+              </MagneticButton>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-copper/50 text-[--cream] hover:bg-copper hover:text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] px-7 py-3.5 h-auto transition-all"
+                onClick={scrollToHowItWorks}
+              >
+                <Play className="mr-2 h-5 w-5" />
+                See How It Works
+              </Button>
             </div>
-          </div>
+          </RevealOnScroll>
 
-          {/* Stats row */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
-            {[
-              { value: '47', label: 'Weekly Briefings' },
-              { value: '200+', label: 'Pre-loaded Tasks' },
-              { value: '83', label: 'Expert Videos' },
-              { value: '15', label: 'Curated Checklists' },
-            ].map((stat, i) => (
-              <div key={i} className="text-center">
-                <p className="font-display font-bold text-3xl md:text-4xl text-[--white] mb-1">{stat.value}</p>
-                <p className="font-ui text-sm text-[--muted]">{stat.label}</p>
-              </div>
-            ))}
-          </div>
+          {/* Dashboard preview with 3D tilt */}
+          <RevealOnScroll delay={320}>
+            <div className="mx-auto max-w-[640px]" style={{ perspective: '1000px' }}>
+              <DashboardPreview />
+            </div>
+          </RevealOnScroll>
+
+          {/* Trust bar stats */}
+          <RevealOnScroll delay={400}>
+            <div className="mt-16 flex flex-wrap justify-center gap-8 md:gap-12">
+              {[
+                { value: '10,000+', label: 'Active Dads' },
+                { value: '200+', label: 'Pre-loaded Tasks' },
+                { value: '47', label: 'Weekly Briefings' },
+                { value: '4.9/5', label: 'User Rating' },
+              ].map((stat, i) => (
+                <div key={i} className="text-center">
+                  <p className="font-display font-bold text-3xl md:text-4xl text-[--cream] mb-1">{stat.value}</p>
+                  <p className="font-ui text-[11px] uppercase tracking-[0.08em] text-[--muted]">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          </RevealOnScroll>
         </div>
       </div>
-
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[--bg] to-transparent" />
     </section>
   )
 }

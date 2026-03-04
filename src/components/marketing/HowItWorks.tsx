@@ -1,6 +1,8 @@
 'use client'
 
 import { CalendarDays, FileText, Users } from 'lucide-react'
+import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 
 const steps = [
   {
@@ -8,116 +10,102 @@ const steps = [
     icon: CalendarDays,
     title: 'Enter your due date',
     description: 'Tell us when your baby is expected, and we personalize everything to your timeline. Tasks, briefings, and resources all sync to your specific week.',
-    color: 'copper',
   },
   {
     number: '02',
     icon: FileText,
     title: 'Get your weekly briefing',
     description: 'Each week, receive a detailed update on what\'s happening with baby, what mom is experiencing, and exactly what you should be doing as a dad.',
-    color: 'gold',
   },
   {
     number: '03',
     icon: Users,
     title: 'Track progress together',
     description: 'Invite your partner to share the dashboard. Tasks sync in real-time, so you always know who\'s handling what. No more dropped balls.',
-    color: 'sage',
   },
 ]
 
-const colorClasses = {
-  copper: {
-    bg: 'bg-copper/10',
-    text: 'text-copper',
-    border: 'border-copper/30',
-  },
-  gold: {
-    bg: 'bg-gold/10',
-    text: 'text-gold',
-    border: 'border-gold/30',
-  },
-  sage: {
-    bg: 'bg-sage/10',
-    text: 'text-sage',
-    border: 'border-sage/30',
-  },
-}
-
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative py-24 md:py-32 bg-[--surface] overflow-hidden">
-      {/* Background elements - hidden on mobile for performance */}
-      <div className="hidden md:block absolute top-0 left-1/4 w-96 h-96 bg-copper/5 rounded-full blur-[100px]" />
-      <div className="hidden md:block absolute bottom-0 right-1/4 w-96 h-96 bg-gold/5 rounded-full blur-[100px]" />
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="how-it-works" className="relative py-24 md:py-32 overflow-hidden">
+      <div className="max-w-[1100px] mx-auto px-6">
         {/* Section header */}
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <span className="font-ui font-semibold text-[11px] uppercase tracking-[0.2em] text-copper inline-block mb-4">
-            Simple Setup
-          </span>
-          <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-[--white] mb-6">
+        <RevealOnScroll className="text-center mb-16">
+          <span className="section-pre justify-center">How It Works</span>
+          <h2 className="font-display font-bold text-4xl text-[--cream] leading-[1.2] mb-12">
             Up and running in 2 minutes
           </h2>
-          <p className="font-body text-lg text-[--muted]">
-            No complicated onboarding. No learning curve. Just enter your due date
-            and we handle the rest.
-          </p>
-        </div>
+        </RevealOnScroll>
 
         {/* Steps */}
         <div className="relative">
-          {/* Connecting line (desktop) */}
-          <div className="hidden lg:block absolute top-24 left-[16.67%] right-[16.67%] h-0.5 bg-gradient-to-r from-copper/40 via-gold/40 to-sage/40" />
+          {/* Connecting dashed line (desktop) */}
+          <div className="hidden lg:block absolute top-20 left-[16.67%] right-[16.67%]">
+            <svg width="100%" height="2" className="overflow-visible">
+              <line
+                x1="0" y1="1" x2="100%" y2="1"
+                stroke="var(--copper)"
+                strokeWidth="1.5"
+                strokeDasharray="6 4"
+                strokeOpacity="0.7"
+              />
+            </svg>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-            {steps.map((step, index) => {
-              const colors = colorClasses[step.color as keyof typeof colorClasses]
-              return (
-                <div key={index} className="relative">
-                  {/* Step card */}
-                  <div className="relative p-8 rounded-2xl bg-[--card] border border-[--border] hover:border-[--border-hover] shadow-card hover:shadow-hover transition-all duration-300 h-full">
-                    {/* Number badge */}
-                    <div className={`absolute -top-4 left-8 px-4 py-2 rounded-full font-ui text-sm font-bold ${colors.bg} ${colors.text}`}>
-                      {step.number}
-                    </div>
-
-                    {/* Icon */}
-                    <div className={`inline-flex p-4 rounded-2xl ${colors.bg} mt-4 mb-6`}>
-                      <step.icon className={`h-8 w-8 ${colors.text}`} />
-                    </div>
-
-                    {/* Content */}
-                    <h3 className="font-display text-xl font-semibold text-[--white] mb-3">
-                      {step.title}
-                    </h3>
-                    <p className="font-body text-[--muted] leading-relaxed">
-                      {step.description}
-                    </p>
+            {steps.map((step, index) => (
+              <RevealOnScroll key={index} delay={80 + index * 120}>
+                <div className="relative text-center">
+                  {/* Step number - flip in */}
+                  <div
+                    className="font-display font-bold text-[56px] text-copper leading-none mb-4"
+                    style={{ opacity: 0.3 }}
+                  >
+                    {step.number}
                   </div>
 
-                  {/* Connecting dot (desktop) */}
-                  <div className={`hidden lg:block absolute top-24 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full ${colors.bg} border-2 ${colors.border}`} />
+                  {/* Step card */}
+                  <Card3DTilt maxTilt={4} gloss>
+                    <div className="p-6 rounded-xl bg-[--card] border border-[--border] shadow-card hover:shadow-hover transition-all duration-300">
+                      {/* Icon */}
+                      <div
+                        className="inline-flex p-4 rounded-2xl mb-4"
+                        style={{
+                          background: 'rgba(196,112,63,0.1)',
+                          border: '1px solid rgba(196,112,63,0.2)',
+                        }}
+                      >
+                        <step.icon className="h-7 w-7 text-copper" strokeWidth={1.5} />
+                      </div>
+
+                      {/* Content */}
+                      <h3 className="font-display text-xl font-semibold text-[--cream] mb-3">
+                        {step.title}
+                      </h3>
+                      <p className="font-body text-sm text-[--muted] leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
+                  </Card3DTilt>
                 </div>
-              )
-            })}
+              </RevealOnScroll>
+            ))}
           </div>
         </div>
 
         {/* Time saved callout */}
-        <div className="mt-16 text-center">
+        <RevealOnScroll delay={500} className="mt-16 text-center">
           <div className="inline-flex items-center gap-4 px-6 py-4 rounded-2xl bg-[--card] border border-[--border] shadow-card">
             <div className="text-right">
-              <p className="font-display font-bold text-3xl text-[--white]">10+</p>
+              <p className="font-display font-bold text-3xl text-[--cream]">10+</p>
               <p className="font-ui text-sm text-[--muted]">hours saved</p>
             </div>
             <div className="w-px h-12 bg-[--dim]" />
-            <p className="font-body text-[--muted] text-left max-w-xs">
+            <p className="font-body text-sm text-[--muted] text-left max-w-xs">
               Average time dads save by not having to research and organize everything themselves.
             </p>
           </div>
-        </div>
+        </RevealOnScroll>
       </div>
     </section>
   )

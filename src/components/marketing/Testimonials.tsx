@@ -1,6 +1,8 @@
 'use client'
 
-import { Star, Quote } from 'lucide-react'
+import { Star } from 'lucide-react'
+import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 
 const testimonials = [
   {
@@ -8,109 +10,108 @@ const testimonials = [
     author: 'Michael T.',
     role: 'Software Engineer',
     avatar: 'M',
-    color: 'sky',
   },
   {
     quote: "The task system is brilliant. I didn't even know half of these things needed to happen, and now I'm ahead of schedule on everything.",
     author: 'David K.',
     role: 'Product Manager',
     avatar: 'D',
-    color: 'sage',
   },
   {
     quote: "My wife was skeptical at first, but when she saw how organized I was with the nursery prep, she became a bigger fan than me.",
     author: 'James R.',
     role: 'Data Scientist',
     avatar: 'J',
-    color: 'copper',
   },
 ]
 
-const colorClasses = {
-  sky: {
-    bg: 'bg-sky',
-    light: 'bg-sky/10',
-  },
-  sage: {
-    bg: 'bg-sage',
-    light: 'bg-sage/10',
-  },
-  copper: {
-    bg: 'bg-copper',
-    light: 'bg-copper/10',
-  },
-}
-
 export function Testimonials() {
   return (
-    <section className="relative py-24 md:py-32 bg-[--bg]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-24 md:py-32">
+      <div className="max-w-[1100px] mx-auto px-6">
         {/* Section header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="font-ui font-semibold text-[11px] uppercase tracking-[0.2em] text-copper inline-block mb-4">
-            Testimonials
-          </span>
-          <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-[--white] mb-6">
+        <RevealOnScroll className="text-center mb-16">
+          <span className="section-pre justify-center">Testimonials</span>
+          <h2 className="font-display font-bold text-4xl text-[--cream] leading-[1.2] mb-12">
             Trusted by 10,000+ dads
           </h2>
-          <p className="font-body text-lg text-[--muted]">
-            Join the community of prepared fathers who refuse to wing it.
-          </p>
-        </div>
+        </RevealOnScroll>
 
-        {/* Testimonials grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => {
-            const colors = colorClasses[testimonial.color as keyof typeof colorClasses]
-            return (
+        {/* Single featured testimonial - like mockup */}
+        <RevealOnScroll>
+          <div className="relative max-w-3xl mx-auto text-center p-8 md:p-12">
+            {/* Rotating quote mark */}
+            <div
+              className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/4 font-display text-[120px] leading-none text-[--cream] pointer-events-none select-none"
+              style={{ opacity: 0.15, animation: 'quoteRotate 30s linear infinite' }}
+              aria-hidden="true"
+            >
+              &ldquo;
+            </div>
+
+            {/* Stars */}
+            <div className="flex justify-center gap-1 mb-6">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-5 w-5 text-gold fill-gold" />
+              ))}
+            </div>
+
+            {/* Quote */}
+            <blockquote className="font-body text-xl md:text-2xl text-[--cream] leading-relaxed mb-8 italic">
+              &ldquo;{testimonials[0].quote}&rdquo;
+            </blockquote>
+
+            {/* Author */}
+            <div className="flex items-center justify-center gap-3">
               <div
-                key={index}
-                className="relative p-8 rounded-2xl bg-[--card] border border-[--border] hover:border-[--border-hover] shadow-card hover:shadow-hover transition-all duration-300"
+                className="w-10 h-10 rounded-full flex items-center justify-center font-ui font-semibold text-[--bg]"
+                style={{ background: 'linear-gradient(135deg, var(--copper), var(--gold))' }}
               >
-                {/* Quote icon */}
-                <Quote className="h-8 w-8 text-[--dim] mb-4" />
-
-                {/* Stars */}
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-gold fill-gold" />
-                  ))}
-                </div>
-
-                {/* Quote text */}
-                <p className="font-body text-[--cream] leading-relaxed mb-6">
-                  &ldquo;{testimonial.quote}&rdquo;
-                </p>
-
-                {/* Author */}
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-full ${colors.bg} flex items-center justify-center font-ui font-semibold text-[--white]`}>
-                    {testimonial.avatar}
-                  </div>
-                  <div>
-                    <p className="font-ui font-medium text-[--white]">{testimonial.author}</p>
-                    <p className="font-ui text-sm text-[--muted]">{testimonial.role}</p>
-                  </div>
-                </div>
+                {testimonials[0].avatar}
               </div>
-            )
-          })}
-        </div>
-
-        {/* Logos section placeholder */}
-        <div className="mt-20">
-          <p className="font-ui text-center text-sm text-[--dim] mb-8">As featured in</p>
-          <div className="flex items-center justify-center gap-12 opacity-25">
-            {/* Placeholder logos - replace with actual logos later */}
-            {['TechCrunch', 'Forbes', 'Fatherly', 'Men\'s Health'].map((name, i) => (
-              <div
-                key={i}
-                className="font-display text-xl font-bold text-[--muted]"
-              >
-                {name}
+              <div className="text-left">
+                <p className="font-ui font-medium text-[--cream]">{testimonials[0].author}</p>
+                <p className="font-ui text-sm text-[--muted]">{testimonials[0].role}</p>
               </div>
-            ))}
+            </div>
           </div>
+        </RevealOnScroll>
+
+        {/* Additional testimonials grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+          {testimonials.map((testimonial, index) => (
+            <RevealOnScroll key={index} delay={80 + index * 120}>
+              <Card3DTilt maxTilt={3} gloss>
+                <div className="p-6 rounded-xl bg-[--card] border border-[--border] shadow-card h-full">
+                  {/* Stars */}
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 text-gold fill-gold" />
+                    ))}
+                  </div>
+
+                  {/* Quote */}
+                  <p className="font-body text-sm text-[--cream] leading-relaxed mb-6">
+                    &ldquo;{testimonial.quote}&rdquo;
+                  </p>
+
+                  {/* Author */}
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-9 h-9 rounded-full flex items-center justify-center font-ui font-semibold text-sm text-[--bg]"
+                      style={{ background: 'linear-gradient(135deg, var(--copper), var(--gold))' }}
+                    >
+                      {testimonial.avatar}
+                    </div>
+                    <div>
+                      <p className="font-ui font-medium text-sm text-[--cream]">{testimonial.author}</p>
+                      <p className="font-ui text-xs text-[--muted]">{testimonial.role}</p>
+                    </div>
+                  </div>
+                </div>
+              </Card3DTilt>
+            </RevealOnScroll>
+          ))}
         </div>
       </div>
     </section>

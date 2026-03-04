@@ -90,7 +90,7 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => handleSmoothScroll(e, link.href)}
-                className="font-ui text-[13px] font-medium text-[--muted] hover:text-[--cream] transition-colors"
+                className="relative font-ui text-[13px] font-medium text-[--muted] hover:text-[--cream] transition-colors after:content-[''] after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-px after:bg-[--cream] after:transition-[width] after:duration-300 hover:after:w-full"
               >
                 {link.label}
               </a>

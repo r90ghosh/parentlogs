@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { ArrowRight, BookOpen, Video, CheckCircle, Clock, Baby, Calendar, Heart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 
 // Sample articles representing actual content from the articles folder
 const sampleArticles = [
@@ -69,12 +71,12 @@ const colorClasses = {
 
 export function ContentPreview() {
   return (
-    <section className="relative py-24 md:py-32 bg-[--bg]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-24 md:py-32">
+      <div className="max-w-[1100px] mx-auto px-6">
         {/* Section header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+        <RevealOnScroll className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>
-            <span className="font-ui font-semibold text-[11px] uppercase tracking-[0.2em] text-copper inline-block mb-4">
+            <span className="section-pre">
               Resource Library
             </span>
             <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-[--white] mb-4">
@@ -111,16 +113,17 @@ export function ContentPreview() {
               <span className="font-ui text-sm text-[--muted]">Expert Reviewed</span>
             </div>
           </div>
-        </div>
+        </RevealOnScroll>
 
         {/* Article cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {sampleArticles.map((article) => {
+          {sampleArticles.map((article, index) => {
             const colors = colorClasses[article.color as keyof typeof colorClasses]
             return (
+              <RevealOnScroll key={article.id} delay={80 + index * 80}>
+              <Card3DTilt maxTilt={3} gloss>
               <article
-                key={article.id}
-                className="group relative p-6 rounded-2xl bg-[--card] border border-[--border] hover:border-[--border-hover] shadow-card hover:shadow-hover transition-all duration-300"
+                className="group relative p-6 rounded-xl bg-[--card] border border-[--border] shadow-card transition-all duration-300"
               >
                 {/* Category & time */}
                 <div className="flex items-center justify-between mb-4">
@@ -146,9 +149,9 @@ export function ContentPreview() {
                   {article.excerpt}
                 </p>
 
-                {/* Hover effect */}
-                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-to-br from-copper/4 to-transparent" />
               </article>
+              </Card3DTilt>
+              </RevealOnScroll>
             )
           })}
         </div>

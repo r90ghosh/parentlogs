@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { Header } from '@/components/marketing/Header'
 import { Footer } from '@/components/marketing/Footer'
+import { MarketingShell } from '@/components/marketing/MarketingShell'
 
 export const metadata: Metadata = {
   title: 'The Dad Center - The Operating System for Modern Fatherhood',
@@ -30,12 +31,14 @@ export default function MarketingLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen flex flex-col bg-[--bg]">
-      <Header />
-      <main className="flex-1">
-        {children}
-      </main>
-      <Footer />
+    <div className="min-h-screen flex flex-col bg-[--bg] relative">
+      <MarketingShell>
+        <Header />
+        <main className="flex-1 relative z-[2]">
+          {children}
+        </main>
+        <Footer />
+      </MarketingShell>
     </div>
   )
 }
