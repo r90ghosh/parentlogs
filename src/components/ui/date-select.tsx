@@ -79,7 +79,7 @@ export function DateSelect({ value, onChange, mode = 'future', className }: Date
     }
   }
 
-  const triggerClass = 'bg-surface-800 border-surface-700 text-white hover:bg-surface-700 w-full'
+  const triggerClass = 'bg-[--card] border-[--border] text-[--cream] hover:border-[--border-hover] w-full'
 
   return (
     <div className={cn('grid grid-cols-3 gap-2', className)}>
@@ -88,7 +88,7 @@ export function DateSelect({ value, onChange, mode = 'future', className }: Date
         <SelectTrigger className={triggerClass}>
           <SelectValue placeholder="Month" />
         </SelectTrigger>
-        <SelectContent className="bg-surface-800 border-surface-700 max-h-[280px]">
+        <SelectContent className="bg-[--card] border-[--border] max-h-[280px]">
           {MONTHS.map((month, i) => (
             <SelectItem key={month} value={String(i + 1).padStart(2, '0')}>
               {month}
@@ -102,7 +102,7 @@ export function DateSelect({ value, onChange, mode = 'future', className }: Date
         <SelectTrigger className={triggerClass}>
           <SelectValue placeholder="Day" />
         </SelectTrigger>
-        <SelectContent className="bg-surface-800 border-surface-700 max-h-[280px]">
+        <SelectContent className="bg-[--card] border-[--border] max-h-[280px]">
           {Array.from({ length: daysCount }, (_, i) => (
             <SelectItem key={i + 1} value={String(i + 1).padStart(2, '0')}>
               {i + 1}
@@ -116,7 +116,7 @@ export function DateSelect({ value, onChange, mode = 'future', className }: Date
         <SelectTrigger className={triggerClass}>
           <SelectValue placeholder="Year" />
         </SelectTrigger>
-        <SelectContent className="bg-surface-800 border-surface-700">
+        <SelectContent className="bg-[--card] border-[--border]">
           {years.map((year) => (
             <SelectItem key={year} value={String(year)}>
               {year}

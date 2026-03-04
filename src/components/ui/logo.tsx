@@ -45,7 +45,7 @@ export function Logo({
 
   const content = (
     <div className={cn('flex items-center gap-2', className)}>
-      <div className={cn('relative flex-shrink-0 rounded-lg overflow-hidden', sizeClasses[size])}>
+      <div className={cn('relative flex-shrink-0 rounded-[--radius-sm] overflow-hidden', sizeClasses[size])}>
         <Image
           src={logoSrc}
           alt="The Dad Center"
@@ -57,10 +57,10 @@ export function Logo({
       {showText && (
         <span
           className={cn(
-            'font-bold transition-colors',
+            'font-display font-bold tracking-tight transition-colors',
             textSizeClasses[size],
-            variant === 'light' ? 'text-slate-900' : 'text-white',
-            href && 'group-hover:text-amber-400'
+            variant === 'light' ? 'text-[--bg]' : 'text-[--cream]',
+            href && 'group-hover:text-copper'
           )}
         >
           The Dad Center
@@ -93,7 +93,7 @@ export function LogoIcon({
   const logoSrc = variant === 'light' ? LOGO_FOR_LIGHT_BG : LOGO_FOR_DARK_BG
 
   return (
-    <div className={cn('relative flex-shrink-0 rounded-lg overflow-hidden', sizeClasses[size], className)}>
+    <div className={cn('relative flex-shrink-0 rounded-[--radius-sm] overflow-hidden', sizeClasses[size], className)}>
       <Image
         src={logoSrc}
         alt="The Dad Center"
