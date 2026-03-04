@@ -29,17 +29,17 @@ export function PartnerStatus() {
       <div className="relative">
         <Avatar className="h-8 w-8">
           <AvatarImage src={partner.avatar_url} alt={partner.full_name || ''} />
-          <AvatarFallback>
+          <AvatarFallback className="font-display">
             {partner.full_name?.charAt(0).toUpperCase() || 'P'}
           </AvatarFallback>
         </Avatar>
-        <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-surface-900" />
+        <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-sage border-2 border-[--surface]" />
       </div>
       <div className="hidden sm:block">
-        <p className="text-sm font-medium text-white">
+        <p className="font-body text-sm font-medium text-white">
           {partner.full_name?.split(' ')[0]}
         </p>
-        <p className="text-xs text-surface-400">Online</p>
+        <p className="font-body text-xs text-[--muted]">Online</p>
       </div>
     </div>
   )
@@ -54,7 +54,7 @@ export function RecentPartnerActivity() {
   if (!partner) {
     return (
       <div className="text-center py-4">
-        <p className="text-sm text-surface-400">
+        <p className="font-body text-sm text-[--muted]">
           Invite your partner to see their activity
         </p>
       </div>
@@ -66,15 +66,15 @@ export function RecentPartnerActivity() {
       <div className="flex items-center gap-3">
         <Avatar className="h-10 w-10">
           <AvatarImage src={partner.avatar_url} alt={partner.full_name || ''} />
-          <AvatarFallback>
+          <AvatarFallback className="font-display">
             {partner.full_name?.charAt(0).toUpperCase() || 'P'}
           </AvatarFallback>
         </Avatar>
         <div>
-          <p className="text-sm font-medium text-white">{partner.full_name}</p>
-          <p className="text-xs text-surface-400 capitalize">{partner.role}</p>
+          <p className="font-body text-sm font-medium text-white">{partner.full_name}</p>
+          <p className="font-body text-xs text-[--muted] capitalize">{partner.role}</p>
         </div>
-        <Badge variant="outline" className="ml-auto text-green-400 border-green-400/30">
+        <Badge variant="outline" className="ml-auto text-sage border-sage/30 font-ui">
           Online
         </Badge>
       </div>
@@ -102,30 +102,30 @@ export function ActivityItem({
   const getTypeColor = () => {
     switch (type) {
       case 'task':
-        return 'bg-accent-500/20 text-accent-400'
+        return 'bg-copper/20 text-copper'
       case 'log':
         return 'bg-blue-500/20 text-blue-400'
       case 'checklist':
         return 'bg-purple-500/20 text-purple-400'
       default:
-        return 'bg-surface-500/20 text-surface-400'
+        return 'bg-[--card]/20 text-[--muted]'
     }
   }
 
   return (
-    <div className="flex items-start gap-3 p-3 rounded-lg bg-surface-800/50">
+    <div className="flex items-start gap-3 p-3 rounded-lg bg-[--card]/50">
       <Avatar className="h-8 w-8">
         <AvatarImage src={userAvatar} alt={userName} />
-        <AvatarFallback>{userName.charAt(0).toUpperCase()}</AvatarFallback>
+        <AvatarFallback className="font-display">{userName.charAt(0).toUpperCase()}</AvatarFallback>
       </Avatar>
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-white">
+        <p className="font-body text-sm text-white">
           <span className="font-medium">{userName}</span>{' '}
-          <span className="text-surface-400">{action}</span>
+          <span className="text-[--muted]">{action}</span>
         </p>
-        <p className="text-xs text-surface-400 truncate">{description}</p>
+        <p className="font-body text-xs text-[--muted] truncate">{description}</p>
       </div>
-      <Badge className={cn('text-xs', getTypeColor())}>{type}</Badge>
+      <Badge className={cn('font-ui text-xs', getTypeColor())}>{type}</Badge>
     </div>
   )
 }

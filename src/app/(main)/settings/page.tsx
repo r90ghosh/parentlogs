@@ -71,34 +71,34 @@ export default function SettingsPage() {
     <div className="p-4 space-y-6 max-w-2xl">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Settings</h1>
-        <p className="text-surface-400">Manage your account and preferences</p>
+        <h1 className="font-display text-2xl font-bold text-white">Settings</h1>
+        <p className="font-body text-[--muted]">Manage your account and preferences</p>
       </div>
 
       {/* Profile Card */}
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16">
               <AvatarImage src={profile.avatar_url} alt={profile.full_name || ''} />
-              <AvatarFallback className="text-xl">
+              <AvatarFallback className="text-xl font-display">
                 {profile.full_name?.charAt(0).toUpperCase() || 'U'}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-semibold text-white truncate">
+                <h2 className="font-display text-lg font-semibold text-white truncate">
                   {profile.full_name || 'User'}
                 </h2>
                 {isPremium && (
-                  <Badge className="bg-accent-500/20 text-accent-400 border-accent-500/30">
+                  <Badge className="bg-copper/20 text-copper border-copper/30">
                     <Crown className="h-3 w-3 mr-1" />
                     {tier === 'lifetime' ? 'Lifetime' : 'Premium'}
                   </Badge>
                 )}
               </div>
-              <p className="text-sm text-surface-400 truncate">{profile.email}</p>
-              <p className="text-xs text-surface-500 capitalize">{profile.role || 'Parent'}</p>
+              <p className="font-body text-sm text-[--muted] truncate">{profile.email}</p>
+              <p className="font-ui text-xs text-[--dim] capitalize">{profile.role || 'Parent'}</p>
             </div>
           </div>
         </CardContent>
@@ -108,17 +108,17 @@ export default function SettingsPage() {
       <div className="space-y-2">
         {settingsItems.map((item) => (
           <Link key={item.href} href={item.href}>
-            <Card className="bg-surface-900 border-surface-800 hover:bg-surface-800/50 transition-colors cursor-pointer">
+            <Card className="bg-[--surface] border-[--border] hover:bg-[--card] transition-colors cursor-pointer">
               <CardContent className="py-4">
                 <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-full bg-surface-800 flex items-center justify-center">
-                    <item.icon className="h-5 w-5 text-surface-300" />
+                  <div className="h-10 w-10 rounded-full bg-[--card] flex items-center justify-center">
+                    <item.icon className="h-5 w-5 text-[--cream]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-white">{item.label}</p>
-                    <p className="text-sm text-surface-400">{item.description}</p>
+                    <p className="font-body font-medium text-white">{item.label}</p>
+                    <p className="font-body text-sm text-[--muted]">{item.description}</p>
                   </div>
-                  <ChevronRight className="h-5 w-5 text-surface-500" />
+                  <ChevronRight className="h-5 w-5 text-[--dim]" />
                 </div>
               </CardContent>
             </Card>
@@ -127,14 +127,14 @@ export default function SettingsPage() {
       </div>
 
       {/* App Info */}
-      <div className="text-center text-sm text-surface-500 pt-4">
+      <div className="text-center font-body text-sm text-[--dim] pt-4">
         <p>The Dad Center v1.0.0</p>
         <p className="mt-1">
-          <Link href="/terms" className="hover:text-surface-300">Terms</Link>
+          <Link href="/terms" className="hover:text-[--cream]">Terms</Link>
           {' · '}
-          <Link href="/privacy" className="hover:text-surface-300">Privacy</Link>
+          <Link href="/privacy" className="hover:text-[--cream]">Privacy</Link>
           {' · '}
-          <a href="mailto:support@thedadcenter.com" className="hover:text-surface-300">Support</a>
+          <a href="mailto:support@thedadcenter.com" className="hover:text-[--cream]">Support</a>
         </p>
       </div>
     </div>

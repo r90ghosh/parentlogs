@@ -65,29 +65,29 @@ export default function PersonalizePage() {
       <div className="max-w-md mx-auto px-4 py-8 space-y-6">
         <Link
           href="/dashboard"
-          className="flex items-center gap-1 text-sm text-surface-400 hover:text-surface-200 transition-colors"
+          className="flex items-center gap-1 font-ui text-sm text-[--muted] hover:text-[--cream] transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
         </Link>
 
-        <Card className="bg-surface-900 border-surface-800">
+        <Card className="bg-[--surface] border-[--border]">
           <CardHeader>
-            <CardTitle className="text-xl text-white">Personalize Your Experience</CardTitle>
-            <CardDescription>
+            <CardTitle className="font-display text-xl text-white">Personalize Your Experience</CardTitle>
+            <CardDescription className="font-body">
               Tell us what&apos;s on your mind so we can tailor content to you
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {error && (
               <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
+                <AlertDescription className="font-body">{error}</AlertDescription>
               </Alert>
             )}
 
             {/* Concerns */}
             <div>
-              <p className="text-sm font-medium text-surface-200 mb-3">
+              <p className="font-ui font-semibold text-[11px] uppercase tracking-[0.12em] text-[--muted] mb-3">
                 What&apos;s on your mind? (select all that apply)
               </p>
               <div className="grid grid-cols-2 gap-2">
@@ -96,10 +96,10 @@ export default function PersonalizePage() {
                     key={concern.key}
                     onClick={() => toggleConcern(concern.key)}
                     className={cn(
-                      'flex items-center gap-2 p-3 rounded-lg text-sm text-left transition-all border',
+                      'flex items-center gap-2 p-3 rounded-lg font-body text-sm text-left transition-all border',
                       selectedConcerns.includes(concern.key)
-                        ? 'border-accent-500 bg-accent-500/10 text-white'
-                        : 'border-surface-700 bg-surface-800 text-surface-300 hover:border-surface-600'
+                        ? 'border-copper bg-copper/10 text-white'
+                        : 'border-[--border] bg-[--card] text-[--cream] hover:border-[--border-hover]'
                     )}
                   >
                     <span>{concern.emoji}</span>
@@ -111,7 +111,7 @@ export default function PersonalizePage() {
 
             {/* Work Situation */}
             <div>
-              <p className="text-sm font-medium text-surface-200 mb-3">
+              <p className="font-ui font-semibold text-[11px] uppercase tracking-[0.12em] text-[--muted] mb-3">
                 Work situation
               </p>
               <div className="space-y-2">
@@ -120,10 +120,10 @@ export default function PersonalizePage() {
                     key={option}
                     onClick={() => setWorkSituation(option)}
                     className={cn(
-                      'w-full p-3 rounded-lg text-sm text-left transition-all border',
+                      'w-full p-3 rounded-lg font-body text-sm text-left transition-all border',
                       workSituation === option
-                        ? 'border-accent-500 bg-accent-500/10 text-white'
-                        : 'border-surface-700 bg-surface-800 text-surface-300 hover:border-surface-600'
+                        ? 'border-copper bg-copper/10 text-white'
+                        : 'border-[--border] bg-[--card] text-[--cream] hover:border-[--border-hover]'
                     )}
                   >
                     {option}
@@ -133,7 +133,7 @@ export default function PersonalizePage() {
             </div>
 
             <Button
-              className="w-full"
+              className="w-full font-ui font-semibold bg-copper hover:bg-copper/80"
               size="lg"
               onClick={handleSave}
               disabled={upsertProfile.isPending}

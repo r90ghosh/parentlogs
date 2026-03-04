@@ -8,9 +8,9 @@ import { cn } from '@/lib/utils'
 // Full page loading spinner
 export function PageLoading({ message }: { message?: string }) {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-surface-950">
-      <Loader2 className="h-10 w-10 animate-spin text-accent-500 mb-4" />
-      {message && <p className="text-surface-400">{message}</p>}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[--bg]">
+      <Loader2 className="h-10 w-10 animate-spin text-copper mb-4" />
+      {message && <p className="font-body text-[--muted]">{message}</p>}
     </div>
   )
 }
@@ -25,7 +25,7 @@ export function InlineLoading({ size = 'md', className }: { size?: 'sm' | 'md' |
 
   return (
     <div className={cn('flex items-center justify-center', className)}>
-      <Loader2 className={cn('animate-spin text-accent-500', sizeClasses[size])} />
+      <Loader2 className={cn('animate-spin text-copper', sizeClasses[size])} />
     </div>
   )
 }
@@ -33,7 +33,7 @@ export function InlineLoading({ size = 'md', className }: { size?: 'sm' | 'md' |
 // Card skeleton for dashboard items
 export function CardSkeleton({ className }: { className?: string }) {
   return (
-    <Card className={cn('bg-surface-900 border-surface-800', className)}>
+    <Card className={cn('bg-[--surface] border-[--border]', className)}>
       <CardHeader>
         <Skeleton className="h-5 w-32" />
         <Skeleton className="h-4 w-48 mt-1" />
@@ -50,7 +50,7 @@ export function ListSkeleton({ count = 3, className }: { count?: number; classNa
   return (
     <div className={cn('space-y-3', className)}>
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="flex items-center gap-3 p-3 bg-surface-800/50 rounded-lg">
+        <div key={i} className="flex items-center gap-3 p-3 bg-[--card]/50 rounded-lg">
           <Skeleton className="h-10 w-10 rounded-full" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-4 w-3/4" />
@@ -81,7 +81,7 @@ export function DashboardSkeleton() {
 
       {/* Main Content */}
       <div className="grid md:grid-cols-2 gap-6">
-        <Card className="bg-surface-900 border-surface-800">
+        <Card className="bg-[--surface] border-[--border]">
           <CardHeader>
             <Skeleton className="h-5 w-32" />
           </CardHeader>
@@ -89,7 +89,7 @@ export function DashboardSkeleton() {
             <ListSkeleton count={3} />
           </CardContent>
         </Card>
-        <Card className="bg-surface-900 border-surface-800">
+        <Card className="bg-[--surface] border-[--border]">
           <CardHeader>
             <Skeleton className="h-5 w-32" />
           </CardHeader>
@@ -180,11 +180,11 @@ export function EmptyState({
 }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-      <div className="h-16 w-16 rounded-full bg-surface-800 flex items-center justify-center mb-4">
-        <Icon className="h-8 w-8 text-surface-500" />
+      <div className="h-16 w-16 rounded-full bg-[--card] flex items-center justify-center mb-4">
+        <Icon className="h-8 w-8 text-[--dim]" />
       </div>
-      <h3 className="text-lg font-medium text-white mb-1">{title}</h3>
-      <p className="text-sm text-surface-400 max-w-sm mb-4">{description}</p>
+      <h3 className="font-display text-lg font-medium text-white mb-1">{title}</h3>
+      <p className="font-body text-sm text-[--muted] max-w-sm mb-4">{description}</p>
       {action}
     </div>
   )

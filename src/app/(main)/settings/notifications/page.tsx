@@ -76,13 +76,13 @@ export default function NotificationSettingsPage() {
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
-          <h1 className="text-xl font-bold text-white">Notifications</h1>
+          <h1 className="font-display text-xl font-bold text-white">Notifications</h1>
         </div>
 
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            Your browser doesn't support push notifications. Try using a modern browser like Chrome, Firefox, or Edge.
+          <AlertDescription className="font-body">
+            Your browser doesn&apos;t support push notifications. Try using a modern browser like Chrome, Firefox, or Edge.
           </AlertDescription>
         </Alert>
       </div>
@@ -98,21 +98,21 @@ export default function NotificationSettingsPage() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <h1 className="text-xl font-bold text-white">Notifications</h1>
+        <h1 className="font-display text-xl font-bold text-white">Notifications</h1>
       </div>
 
       {/* Permission Status */}
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="font-display flex items-center gap-2">
             {isGranted ? (
-              <Bell className="h-5 w-5 text-accent-500" />
+              <Bell className="h-5 w-5 text-copper" />
             ) : (
-              <BellOff className="h-5 w-5 text-surface-500" />
+              <BellOff className="h-5 w-5 text-[--dim]" />
             )}
             Push Notifications
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="font-body">
             {isGranted
               ? 'You will receive push notifications on this device'
               : 'Enable push notifications to stay updated'}
@@ -122,20 +122,21 @@ export default function NotificationSettingsPage() {
           {isDenied ? (
             <Alert>
               <AlertTriangle className="h-4 w-4" />
-              <AlertDescription>
+              <AlertDescription className="font-body">
                 Notifications are blocked. Please enable them in your browser settings, then refresh this page.
               </AlertDescription>
             </Alert>
           ) : isGranted && isSubscribed ? (
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-accent-500">
+              <div className="flex items-center gap-2 text-copper">
                 <CheckCircle className="h-4 w-4" />
-                <span className="text-sm">Notifications enabled</span>
+                <span className="font-body text-sm">Notifications enabled</span>
               </div>
               <Button
                 variant="outline"
                 onClick={handleDisableNotifications}
                 disabled={subscriptionLoading}
+                className="font-ui font-semibold"
               >
                 {subscriptionLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Disable'}
               </Button>
@@ -144,7 +145,7 @@ export default function NotificationSettingsPage() {
             <Button
               onClick={handleEnableNotifications}
               disabled={subscriptionLoading}
-              className="w-full"
+              className="w-full font-ui font-semibold"
             >
               {subscriptionLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -160,6 +161,7 @@ export default function NotificationSettingsPage() {
               variant="outline"
               size="sm"
               onClick={handleTestNotification}
+              className="font-ui"
             >
               Send Test Notification
             </Button>
@@ -169,7 +171,7 @@ export default function NotificationSettingsPage() {
 
       {/* Notification Preferences */}
       {preferencesLoading ? (
-        <Card className="bg-surface-900 border-surface-800">
+        <Card className="bg-[--surface] border-[--border]">
           <CardContent className="pt-6 space-y-4">
             <Skeleton className="h-8 w-full" />
             <Skeleton className="h-8 w-full" />
@@ -179,15 +181,15 @@ export default function NotificationSettingsPage() {
       ) : (
         <>
           {/* Task Notifications */}
-          <Card className="bg-surface-900 border-surface-800">
+          <Card className="bg-[--surface] border-[--border]">
             <CardHeader>
-              <CardTitle className="text-lg">Task Reminders</CardTitle>
+              <CardTitle className="font-display text-lg">Task Reminders</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>7-day reminder</Label>
-                  <p className="text-xs text-surface-400">Get a heads up a week before tasks are due</p>
+                  <Label className="font-ui font-medium">7-day reminder</Label>
+                  <p className="font-body text-xs text-[--muted]">Get a heads up a week before tasks are due</p>
                 </div>
                 <Switch
                   checked={preferences?.task_reminders_7_day ?? true}
@@ -197,8 +199,8 @@ export default function NotificationSettingsPage() {
 
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>3-day reminder</Label>
-                  <p className="text-xs text-surface-400">Remind me 3 days before tasks are due</p>
+                  <Label className="font-ui font-medium">3-day reminder</Label>
+                  <p className="font-body text-xs text-[--muted]">Remind me 3 days before tasks are due</p>
                 </div>
                 <Switch
                   checked={preferences?.task_reminders_3_day ?? true}
@@ -208,8 +210,8 @@ export default function NotificationSettingsPage() {
 
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>1-day reminder</Label>
-                  <p className="text-xs text-surface-400">Last chance reminder the day before</p>
+                  <Label className="font-ui font-medium">1-day reminder</Label>
+                  <p className="font-body text-xs text-[--muted]">Last chance reminder the day before</p>
                 </div>
                 <Switch
                   checked={preferences?.task_reminders_1_day ?? true}
@@ -220,15 +222,15 @@ export default function NotificationSettingsPage() {
           </Card>
 
           {/* Partner Notifications */}
-          <Card className="bg-surface-900 border-surface-800">
+          <Card className="bg-[--surface] border-[--border]">
             <CardHeader>
-              <CardTitle className="text-lg">Partner Activity</CardTitle>
+              <CardTitle className="font-display text-lg">Partner Activity</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Partner activity</Label>
-                  <p className="text-xs text-surface-400">Notify when partner completes tasks or logs</p>
+                  <Label className="font-ui font-medium">Partner activity</Label>
+                  <p className="font-body text-xs text-[--muted]">Notify when partner completes tasks or logs</p>
                 </div>
                 <Switch
                   checked={preferences?.partner_activity ?? true}
@@ -239,15 +241,15 @@ export default function NotificationSettingsPage() {
           </Card>
 
           {/* Briefing Notifications */}
-          <Card className="bg-surface-900 border-surface-800">
+          <Card className="bg-[--surface] border-[--border]">
             <CardHeader>
-              <CardTitle className="text-lg">Weekly Briefings</CardTitle>
+              <CardTitle className="font-display text-lg">Weekly Briefings</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>New briefing alert</Label>
-                  <p className="text-xs text-surface-400">Notify when a new weekly briefing is available</p>
+                  <Label className="font-ui font-medium">New briefing alert</Label>
+                  <p className="font-body text-xs text-[--muted]">Notify when a new weekly briefing is available</p>
                 </div>
                 <Switch
                   checked={preferences?.weekly_briefing ?? true}
@@ -258,17 +260,17 @@ export default function NotificationSettingsPage() {
           </Card>
 
           {/* Quiet Hours */}
-          <Card className="bg-surface-900 border-surface-800">
+          <Card className="bg-[--surface] border-[--border]">
             <CardHeader>
-              <CardTitle className="text-lg">Quiet Hours</CardTitle>
-              <CardDescription>
+              <CardTitle className="font-display text-lg">Quiet Hours</CardTitle>
+              <CardDescription className="font-body">
                 Pause notifications during these hours
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Enable quiet hours</Label>
+                  <Label className="font-ui font-medium">Enable quiet hours</Label>
                 </div>
                 <Switch
                   checked={!!preferences?.quiet_hours_start}
@@ -286,12 +288,12 @@ export default function NotificationSettingsPage() {
               {!!preferences?.quiet_hours_start && (
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Start time</Label>
+                    <Label className="font-ui font-medium">Start time</Label>
                     <Select
                       value={preferences?.quiet_hours_start || '22:00'}
                       onValueChange={(value) => handleQuietHoursChange('quiet_hours_start', value)}
                     >
-                      <SelectTrigger className="bg-surface-800 border-surface-700">
+                      <SelectTrigger className="bg-[--card] border-[--border]">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -304,12 +306,12 @@ export default function NotificationSettingsPage() {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label>End time</Label>
+                    <Label className="font-ui font-medium">End time</Label>
                     <Select
                       value={preferences?.quiet_hours_end || '07:00'}
                       onValueChange={(value) => handleQuietHoursChange('quiet_hours_end', value)}
                     >
-                      <SelectTrigger className="bg-surface-800 border-surface-700">
+                      <SelectTrigger className="bg-[--card] border-[--border]">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>

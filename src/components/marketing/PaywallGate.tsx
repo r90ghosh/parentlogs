@@ -13,25 +13,25 @@ export function PaywallGate({ title, isAuthenticated = false }: PaywallGateProps
   return (
     <div className="relative mt-8">
       {/* Blur/fade overlay for content above */}
-      <div className="absolute -top-32 left-0 right-0 h-32 bg-gradient-to-t from-slate-950 to-transparent pointer-events-none" />
+      <div className="absolute -top-32 left-0 right-0 h-32 bg-gradient-to-t from-[--bg] to-transparent pointer-events-none" />
 
       {/* Gate content */}
-      <div className="relative p-8 md:p-12 rounded-2xl bg-slate-900/80 border border-slate-800 backdrop-blur-sm">
+      <div className="relative p-8 md:p-12 rounded-2xl bg-[--surface]/80 border border-[--border] backdrop-blur-sm">
         <div className="text-center max-w-md mx-auto">
           {/* Lock icon */}
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/10 mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-copper/10 mb-6">
             {isAuthenticated ? (
-              <Sparkles className="h-8 w-8 text-amber-400" />
+              <Sparkles className="h-8 w-8 text-copper" />
             ) : (
-              <Lock className="h-8 w-8 text-amber-400" />
+              <Lock className="h-8 w-8 text-copper" />
             )}
           </div>
 
           {isAuthenticated ? (
             <>
               {/* Upgrade CTA for authenticated free users */}
-              <h3 className="text-2xl font-bold text-white mb-3">Upgrade to unlock this article</h3>
-              <p className="text-slate-400 mb-8">
+              <h3 className="font-display text-2xl font-bold text-white mb-3">Upgrade to unlock this article</h3>
+              <p className="font-body text-[--muted] mb-8">
                 This is a premium article. Upgrade your account to read the full article and unlock
                 all premium content.
               </p>
@@ -39,7 +39,7 @@ export function PaywallGate({ title, isAuthenticated = false }: PaywallGateProps
               <Button
                 asChild
                 size="lg"
-                className="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold"
+                className="w-full bg-copper hover:bg-copper/80 text-white font-ui font-semibold"
               >
                 <Link href="/upgrade">
                   Upgrade to Premium
@@ -50,8 +50,8 @@ export function PaywallGate({ title, isAuthenticated = false }: PaywallGateProps
           ) : (
             <>
               {/* Signup CTA for unauthenticated users */}
-              <h3 className="text-2xl font-bold text-white mb-3">Sign up free to continue reading</h3>
-              <p className="text-slate-400 mb-8">
+              <h3 className="font-display text-2xl font-bold text-white mb-3">Sign up free to continue reading</h3>
+              <p className="font-body text-[--muted] mb-8">
                 Create a free account to unlock this article and get access to weekly briefings
                 personalized to your due date.
               </p>
@@ -60,7 +60,7 @@ export function PaywallGate({ title, isAuthenticated = false }: PaywallGateProps
                 <Button
                   asChild
                   size="lg"
-                  className="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold"
+                  className="w-full bg-copper hover:bg-copper/80 text-white font-ui font-semibold"
                 >
                   <Link href="/signup">
                     Get Started Free
@@ -72,7 +72,7 @@ export function PaywallGate({ title, isAuthenticated = false }: PaywallGateProps
                   asChild
                   variant="outline"
                   size="lg"
-                  className="w-full border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
+                  className="w-full border-[--border] text-[--cream] hover:bg-[--card] hover:text-white font-ui font-semibold"
                 >
                   <Link href="/login">
                     <Mail className="mr-2 h-5 w-5" />
@@ -81,9 +81,9 @@ export function PaywallGate({ title, isAuthenticated = false }: PaywallGateProps
                 </Button>
               </div>
 
-              <p className="mt-6 text-sm text-slate-500">
+              <p className="font-body mt-6 text-sm text-[--dim]">
                 Already have an account?{' '}
-                <Link href="/login" className="text-amber-400 hover:text-amber-300">
+                <Link href="/login" className="text-copper hover:text-copper/80">
                   Log in
                 </Link>
               </p>

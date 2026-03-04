@@ -117,14 +117,14 @@ export default function AppearanceSettingsPage() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <h1 className="text-xl font-bold text-white">Appearance</h1>
+        <h1 className="font-display text-xl font-bold text-white">Appearance</h1>
       </div>
 
       {/* Theme */}
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardHeader>
-          <CardTitle className="text-lg">Theme</CardTitle>
-          <CardDescription>Choose your preferred color scheme</CardDescription>
+          <CardTitle className="font-display text-lg">Theme</CardTitle>
+          <CardDescription className="font-body">Choose your preferred color scheme</CardDescription>
         </CardHeader>
         <CardContent>
           <RadioGroup value={theme} onValueChange={(v) => handleThemeChange(v as Theme)}>
@@ -134,13 +134,13 @@ export default function AppearanceSettingsPage() {
                 className={cn(
                   "flex flex-col items-center gap-2 p-4 rounded-lg border-2 cursor-pointer transition-colors",
                   theme === 'dark'
-                    ? "border-accent-500 bg-accent-500/10"
-                    : "border-surface-700 hover:border-surface-600"
+                    ? "border-copper bg-copper/10"
+                    : "border-[--border-hover] hover:border-[--border-hover]"
                 )}
               >
                 <RadioGroupItem value="dark" id="theme-dark" className="sr-only" />
-                <Moon className="h-6 w-6 text-surface-300" />
-                <span className="text-sm text-white">Dark</span>
+                <Moon className="h-6 w-6 text-[--cream]" />
+                <span className="font-body text-sm text-white">Dark</span>
               </Label>
 
               <Label
@@ -148,13 +148,13 @@ export default function AppearanceSettingsPage() {
                 className={cn(
                   "flex flex-col items-center gap-2 p-4 rounded-lg border-2 cursor-pointer transition-colors",
                   theme === 'light'
-                    ? "border-accent-500 bg-accent-500/10"
-                    : "border-surface-700 hover:border-surface-600"
+                    ? "border-copper bg-copper/10"
+                    : "border-[--border-hover] hover:border-[--border-hover]"
                 )}
               >
                 <RadioGroupItem value="light" id="theme-light" className="sr-only" />
-                <Sun className="h-6 w-6 text-surface-300" />
-                <span className="text-sm text-white">Light</span>
+                <Sun className="h-6 w-6 text-[--cream]" />
+                <span className="font-body text-sm text-white">Light</span>
               </Label>
 
               <Label
@@ -162,27 +162,27 @@ export default function AppearanceSettingsPage() {
                 className={cn(
                   "flex flex-col items-center gap-2 p-4 rounded-lg border-2 cursor-pointer transition-colors",
                   theme === 'system'
-                    ? "border-accent-500 bg-accent-500/10"
-                    : "border-surface-700 hover:border-surface-600"
+                    ? "border-copper bg-copper/10"
+                    : "border-[--border-hover] hover:border-[--border-hover]"
                 )}
               >
                 <RadioGroupItem value="system" id="theme-system" className="sr-only" />
-                <Monitor className="h-6 w-6 text-surface-300" />
-                <span className="text-sm text-white">System</span>
+                <Monitor className="h-6 w-6 text-[--cream]" />
+                <span className="font-body text-sm text-white">System</span>
               </Label>
             </div>
           </RadioGroup>
-          <p className="text-xs text-surface-500 mt-3">
+          <p className="font-body text-xs text-[--dim] mt-3">
             Note: Light mode is coming soon. Currently optimized for dark mode.
           </p>
         </CardContent>
       </Card>
 
       {/* Accent Color */}
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardHeader>
-          <CardTitle className="text-lg">Accent Color</CardTitle>
-          <CardDescription>Personalize the app with your favorite color</CardDescription>
+          <CardTitle className="font-display text-lg">Accent Color</CardTitle>
+          <CardDescription className="font-body">Personalize the app with your favorite color</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">
@@ -193,7 +193,7 @@ export default function AppearanceSettingsPage() {
                 className={cn(
                   "relative h-10 w-10 rounded-full transition-transform hover:scale-110",
                   color.class,
-                  accentColor === color.value && "ring-2 ring-offset-2 ring-offset-surface-900 ring-white"
+                  accentColor === color.value && "ring-2 ring-offset-2 ring-offset-[--surface] ring-white"
                 )}
                 title={color.label}
               >
@@ -203,24 +203,24 @@ export default function AppearanceSettingsPage() {
               </button>
             ))}
           </div>
-          <p className="text-xs text-surface-500 mt-3">
+          <p className="font-body text-xs text-[--dim] mt-3">
             Note: Custom accent colors are coming soon.
           </p>
         </CardContent>
       </Card>
 
       {/* Font Size */}
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
+          <CardTitle className="font-display text-lg flex items-center gap-2">
             <Type className="h-5 w-5" />
             Font Size
           </CardTitle>
-          <CardDescription>Adjust text size for better readability</CardDescription>
+          <CardDescription className="font-body">Adjust text size for better readability</CardDescription>
         </CardHeader>
         <CardContent>
           <Select value={fontSize} onValueChange={(v) => handleFontSizeChange(v as FontSize)}>
-            <SelectTrigger className="bg-surface-800 border-surface-700">
+            <SelectTrigger className="bg-[--card] border-[--border]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -231,10 +231,10 @@ export default function AppearanceSettingsPage() {
           </Select>
 
           {/* Preview */}
-          <div className="mt-4 p-4 bg-surface-800/50 rounded-lg">
-            <p className="text-surface-400 text-xs mb-2">Preview:</p>
+          <div className="mt-4 p-4 bg-[--card]/50 rounded-lg">
+            <p className="font-ui text-[--muted] text-xs mb-2">Preview:</p>
             <p
-              className="text-white"
+              className="font-body text-white"
               style={{
                 fontSize: fontSize === 'small' ? '14px' : fontSize === 'large' ? '18px' : '16px'
               }}
@@ -246,16 +246,16 @@ export default function AppearanceSettingsPage() {
       </Card>
 
       {/* Accessibility */}
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardHeader>
-          <CardTitle className="text-lg">Accessibility</CardTitle>
-          <CardDescription>Make the app more comfortable to use</CardDescription>
+          <CardTitle className="font-display text-lg">Accessibility</CardTitle>
+          <CardDescription className="font-body">Make the app more comfortable to use</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label>Reduced Motion</Label>
-              <p className="text-xs text-surface-400">Minimize animations and transitions</p>
+              <Label className="font-ui font-medium">Reduced Motion</Label>
+              <p className="font-body text-xs text-[--muted]">Minimize animations and transitions</p>
             </div>
             <Switch
               checked={reducedMotion}
@@ -265,8 +265,8 @@ export default function AppearanceSettingsPage() {
 
           <div className="flex items-center justify-between">
             <div>
-              <Label>Compact Mode</Label>
-              <p className="text-xs text-surface-400">Reduce spacing for more content on screen</p>
+              <Label className="font-ui font-medium">Compact Mode</Label>
+              <p className="font-body text-xs text-[--muted]">Reduce spacing for more content on screen</p>
             </div>
             <Switch
               checked={compactMode}
@@ -277,11 +277,11 @@ export default function AppearanceSettingsPage() {
       </Card>
 
       {/* Reset */}
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardContent className="pt-6">
           <Button
             variant="outline"
-            className="w-full"
+            className="w-full font-ui font-semibold"
             onClick={() => {
               handleThemeChange('dark')
               handleFontSizeChange('medium')

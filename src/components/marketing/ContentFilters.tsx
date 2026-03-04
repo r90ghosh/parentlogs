@@ -59,7 +59,7 @@ export function ContentFilters({
   const hasActiveFilters = currentStage !== 'all' || currentFormat !== 'all' || searchQuery !== ''
 
   return (
-    <div className="md:sticky md:top-20 z-40 bg-slate-950 md:bg-slate-950/95 md:backdrop-blur-md border-b border-slate-800/50 py-4">
+    <div className="md:sticky md:top-20 z-40 bg-[--bg] md:bg-[--bg]/95 md:backdrop-blur-md border-b border-[--border]/50 py-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4">
           {/* Stage filters */}
@@ -67,10 +67,10 @@ export function ContentFilters({
             <button
               onClick={() => handleStageChange('all')}
               className={cn(
-                'px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
+                'font-ui px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
                 currentStage === 'all'
-                  ? 'bg-amber-500 text-slate-900'
-                  : 'bg-slate-800/50 text-slate-400 hover:bg-slate-700/50 hover:text-white'
+                  ? 'bg-copper text-white'
+                  : 'bg-[--card]/50 text-[--muted] hover:bg-[--card-hover]/50 hover:text-white'
               )}
             >
               All Stages
@@ -90,10 +90,10 @@ export function ContentFilters({
                   key={stage.id}
                   onClick={() => handleStageChange(stage.id)}
                   className={cn(
-                    'px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
+                    'font-ui px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
                     currentStage === stage.id
-                      ? 'bg-amber-500 text-slate-900'
-                      : 'bg-slate-800/50 text-slate-400 hover:bg-slate-700/50 hover:text-white'
+                      ? 'bg-copper text-white'
+                      : 'bg-[--card]/50 text-[--muted] hover:bg-[--card-hover]/50 hover:text-white'
                   )}
                 >
                   {stage.label}
@@ -110,10 +110,10 @@ export function ContentFilters({
               <button
                 onClick={() => handleFormatChange('all')}
                 className={cn(
-                  'px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2',
+                  'font-ui px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2',
                   currentFormat === 'all'
-                    ? 'bg-slate-700 text-white'
-                    : 'bg-slate-800/30 text-slate-400 hover:bg-slate-700/50 hover:text-white'
+                    ? 'bg-[--card-hover] text-white'
+                    : 'bg-[--card]/30 text-[--muted] hover:bg-[--card-hover]/50 hover:text-white'
                 )}
               >
                 All
@@ -121,10 +121,10 @@ export function ContentFilters({
               <button
                 onClick={() => handleFormatChange('articles')}
                 className={cn(
-                  'px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2',
+                  'font-ui px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2',
                   currentFormat === 'articles'
-                    ? 'bg-slate-700 text-white'
-                    : 'bg-slate-800/30 text-slate-400 hover:bg-slate-700/50 hover:text-white'
+                    ? 'bg-[--card-hover] text-white'
+                    : 'bg-[--card]/30 text-[--muted] hover:bg-[--card-hover]/50 hover:text-white'
                 )}
               >
                 <BookOpen className="h-4 w-4" />
@@ -133,10 +133,10 @@ export function ContentFilters({
               <button
                 onClick={() => handleFormatChange('videos')}
                 className={cn(
-                  'px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2',
+                  'font-ui px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2',
                   currentFormat === 'videos'
-                    ? 'bg-slate-700 text-white'
-                    : 'bg-slate-800/30 text-slate-400 hover:bg-slate-700/50 hover:text-white'
+                    ? 'bg-[--card-hover] text-white'
+                    : 'bg-[--card]/30 text-[--muted] hover:bg-[--card-hover]/50 hover:text-white'
                 )}
               >
                 <Video className="h-4 w-4" />
@@ -146,13 +146,13 @@ export function ContentFilters({
 
             {/* Search input */}
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[--dim]" />
               <input
                 type="text"
                 placeholder="Search articles and videos..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-800/30 border border-slate-700/50 text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/50 transition-colors"
+                className="w-full pl-10 pr-4 py-2 rounded-lg bg-[--card]/30 border border-[--border]/50 font-body text-white placeholder:text-[--dim] focus:outline-none focus:border-copper/50 focus:ring-1 focus:ring-copper/50 transition-colors"
               />
             </div>
 
@@ -160,7 +160,7 @@ export function ContentFilters({
             {hasActiveFilters && (
               <button
                 onClick={handleClearFilters}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-700/50 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg font-ui text-sm font-medium text-[--muted] hover:text-white hover:bg-[--card-hover]/50 transition-colors"
               >
                 <X className="h-4 w-4" />
                 Clear

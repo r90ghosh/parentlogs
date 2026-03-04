@@ -156,7 +156,7 @@ export default function ProfileSettingsPage() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <h1 className="text-xl font-bold text-white">Profile</h1>
+        <h1 className="font-display text-xl font-bold text-white">Profile</h1>
       </div>
 
       {error && (
@@ -167,24 +167,24 @@ export default function ProfileSettingsPage() {
       )}
 
       {/* Avatar Section */}
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardHeader>
-          <CardTitle className="text-lg">Profile Photo</CardTitle>
-          <CardDescription>Click to upload a new avatar</CardDescription>
+          <CardTitle className="font-display text-lg">Profile Photo</CardTitle>
+          <CardDescription className="font-body">Click to upload a new avatar</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-6">
             <div className="relative">
               <Avatar className="h-24 w-24">
                 <AvatarImage src={profile.avatar_url} alt={profile.full_name || ''} />
-                <AvatarFallback className="text-2xl">
+                <AvatarFallback className="font-display text-2xl">
                   {profile.full_name?.charAt(0).toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
               <button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading}
-                className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-accent-500 flex items-center justify-center hover:bg-accent-600 transition-colors disabled:opacity-50"
+                className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-copper flex items-center justify-center hover:bg-copper/80 transition-colors disabled:opacity-50"
               >
                 {isUploading ? (
                   <Loader2 className="h-4 w-4 animate-spin text-white" />
@@ -200,7 +200,7 @@ export default function ProfileSettingsPage() {
                 className="hidden"
               />
             </div>
-            <div className="text-sm text-surface-400">
+            <div className="font-body text-sm text-[--muted]">
               <p>Recommended: Square image</p>
               <p>Max size: 5MB</p>
             </div>
@@ -209,37 +209,37 @@ export default function ProfileSettingsPage() {
       </Card>
 
       {/* Profile Details */}
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardHeader>
-          <CardTitle className="text-lg">Profile Details</CardTitle>
+          <CardTitle className="font-display text-lg">Profile Details</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="font-ui font-medium">Email</Label>
             <Input
               id="email"
               value={profile.email}
               disabled
-              className="bg-surface-800 border-surface-700 text-surface-400"
+              className="bg-[--card] border-[--border] text-[--muted]"
             />
-            <p className="text-xs text-surface-500">Email cannot be changed</p>
+            <p className="font-body text-xs text-[--dim]">Email cannot be changed</p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="fullName">Full Name</Label>
+            <Label htmlFor="fullName" className="font-ui font-medium">Full Name</Label>
             <Input
               id="fullName"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Enter your name"
-              className="bg-surface-800 border-surface-700"
+              className="bg-[--card] border-[--border]"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="role">Role</Label>
+            <Label htmlFor="role" className="font-ui font-medium">Role</Label>
             <Select value={role} onValueChange={(v) => setRole(v as UserRole)}>
-              <SelectTrigger className="bg-surface-800 border-surface-700">
+              <SelectTrigger className="bg-[--card] border-[--border]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -248,7 +248,7 @@ export default function ProfileSettingsPage() {
                 <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-xs text-surface-500">
+            <p className="font-body text-xs text-[--dim]">
               This helps personalize task assignments and content
             </p>
           </div>
@@ -256,7 +256,7 @@ export default function ProfileSettingsPage() {
           <Button
             onClick={handleSave}
             disabled={updateProfile.isPending}
-            className="w-full bg-accent-500 hover:bg-accent-600"
+            className="w-full bg-copper hover:bg-copper/80 font-ui font-semibold"
           >
             {updateProfile.isPending ? (
               <>
@@ -274,25 +274,25 @@ export default function ProfileSettingsPage() {
       </Card>
 
       {/* Danger Zone */}
-      <Card className="bg-surface-900 border-red-900/50">
+      <Card className="bg-[--surface] border-coral/30">
         <CardHeader>
-          <CardTitle className="text-lg text-red-500">Danger Zone</CardTitle>
-          <CardDescription>
+          <CardTitle className="font-display text-lg text-coral">Danger Zone</CardTitle>
+          <CardDescription className="font-body">
             Irreversible actions that affect your account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" className="w-full">
+              <Button variant="destructive" className="w-full font-ui font-semibold">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete Account
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent className="bg-surface-900 border-surface-800">
+            <AlertDialogContent className="bg-[--surface] border-[--border]">
               <AlertDialogHeader>
-                <AlertDialogTitle className="text-white">Delete Account?</AlertDialogTitle>
-                <AlertDialogDescription>
+                <AlertDialogTitle className="font-display text-white">Delete Account?</AlertDialogTitle>
+                <AlertDialogDescription className="font-body">
                   This action cannot be undone. This will permanently delete your account
                   and remove all your data including:
                   <ul className="list-disc list-inside mt-2 space-y-1">
@@ -301,19 +301,19 @@ export default function ProfileSettingsPage() {
                     <li>Baby tracker logs</li>
                     <li>Budget items and checklists</li>
                   </ul>
-                  <p className="mt-2 font-medium text-red-400">
+                  <p className="mt-2 font-medium text-coral">
                     If you&apos;re the only member, your family will also be deleted.
                   </p>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel className="bg-surface-800 border-surface-700">
+                <AlertDialogCancel className="bg-[--card] border-[--border] font-ui">
                   Cancel
                 </AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleDeleteAccount}
                   disabled={isDeleting}
-                  className="bg-red-600 hover:bg-red-700"
+                  className="bg-coral hover:bg-coral/80 font-ui font-semibold"
                 >
                   {isDeleting ? (
                     <>

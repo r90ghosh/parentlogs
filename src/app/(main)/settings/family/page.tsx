@@ -160,13 +160,13 @@ export default function FamilySettingsPage() {
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
-          <h1 className="text-xl font-bold text-white">Family</h1>
+          <h1 className="font-display text-xl font-bold text-white">Family</h1>
         </div>
 
-        <Card className="bg-surface-900 border-surface-800">
+        <Card className="bg-[--surface] border-[--border]">
           <CardContent className="pt-6 text-center">
-            <Users className="h-12 w-12 text-surface-600 mx-auto mb-4" />
-            <p className="text-surface-400 mb-4">You&apos;re not part of a family yet</p>
+            <Users className="h-12 w-12 text-[--dim] mx-auto mb-4" />
+            <p className="font-body text-[--muted] mb-4">You&apos;re not part of a family yet</p>
             <Button asChild>
               <Link href="/onboarding">Set Up Family</Link>
             </Button>
@@ -185,7 +185,7 @@ export default function FamilySettingsPage() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <h1 className="text-xl font-bold text-white">Family</h1>
+        <h1 className="font-display text-xl font-bold text-white">Family</h1>
       </div>
 
       {error && (
@@ -196,13 +196,13 @@ export default function FamilySettingsPage() {
       )}
 
       {/* Family Members */}
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
+          <CardTitle className="font-display text-lg flex items-center gap-2">
             <Users className="h-5 w-5" />
             Family Members
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="font-body">
             {members?.length === 1
               ? 'Invite your partner to join'
               : `${members?.length} members in your family`}
@@ -210,33 +210,33 @@ export default function FamilySettingsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           {members?.map((member) => (
-            <div key={member.id} className="flex items-center gap-3 p-3 bg-surface-800/50 rounded-lg">
+            <div key={member.id} className="flex items-center gap-3 p-3 bg-[--card]/50 rounded-lg">
               <Avatar className="h-10 w-10">
                 <AvatarImage src={member.avatar_url} alt={member.full_name} />
-                <AvatarFallback>
+                <AvatarFallback className="font-display">
                   {member.full_name?.charAt(0).toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className="font-medium text-white truncate">{member.full_name}</p>
+                  <p className="font-body font-medium text-white truncate">{member.full_name}</p>
                   {member.is_owner && (
-                    <Badge variant="outline" className="text-xs border-amber-500/30 text-amber-400">
+                    <Badge variant="outline" className="text-xs border-gold/30 text-gold">
                       <Crown className="h-3 w-3 mr-1" />
                       Owner
                     </Badge>
                   )}
                 </div>
-                <p className="text-sm text-surface-400 capitalize">{member.role}</p>
+                <p className="font-body text-sm text-[--muted] capitalize">{member.role}</p>
               </div>
             </div>
           ))}
 
           {/* Invite Code */}
-          <div className="pt-4 border-t border-surface-800">
-            <Label className="text-sm text-surface-400">Invite Code</Label>
+          <div className="pt-4 border-t border-[--border]">
+            <Label className="font-ui font-semibold text-[11px] uppercase tracking-[0.12em] text-[--muted]">Invite Code</Label>
             <div className="flex items-center gap-2 mt-2">
-              <div className="flex-1 bg-surface-800 rounded-lg px-4 py-3 font-mono text-lg tracking-wider text-white">
+              <div className="flex-1 bg-[--card] rounded-lg px-4 py-3 font-mono text-lg tracking-wider text-white">
                 {family.invite_code}
               </div>
               <Button
@@ -246,13 +246,13 @@ export default function FamilySettingsPage() {
                 className="h-12 w-12"
               >
                 {copied ? (
-                  <Check className="h-5 w-5 text-green-500" />
+                  <Check className="h-5 w-5 text-sage" />
                 ) : (
                   <Copy className="h-5 w-5" />
                 )}
               </Button>
             </div>
-            <p className="text-xs text-surface-500 mt-2">
+            <p className="font-body text-xs text-[--dim] mt-2">
               Share this code with your partner to join your family
             </p>
 
@@ -262,7 +262,7 @@ export default function FamilySettingsPage() {
                 size="sm"
                 onClick={handleRegenerateCode}
                 disabled={isRegenerating}
-                className="mt-2"
+                className="mt-2 font-ui"
               >
                 {isRegenerating ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -277,27 +277,27 @@ export default function FamilySettingsPage() {
       </Card>
 
       {/* Baby Details */}
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
+          <CardTitle className="font-display text-lg flex items-center gap-2">
             <Baby className="h-5 w-5" />
             Baby Details
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="babyName">Baby&apos;s Name (optional)</Label>
+            <Label htmlFor="babyName" className="font-ui font-medium">Baby&apos;s Name (optional)</Label>
             <Input
               id="babyName"
               value={babyName}
               onChange={(e) => setBabyName(e.target.value)}
               placeholder="Enter baby's name"
-              className="bg-surface-800 border-surface-700"
+              className="bg-[--card] border-[--border]"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="dueDate" className="flex items-center gap-2">
+            <Label htmlFor="dueDate" className="font-ui font-medium flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               Due Date
             </Label>
@@ -306,12 +306,12 @@ export default function FamilySettingsPage() {
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="bg-surface-800 border-surface-700"
+              className="bg-[--card] border-[--border]"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="birthDate" className="flex items-center gap-2">
+            <Label htmlFor="birthDate" className="font-ui font-medium flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               Birth Date (if born)
             </Label>
@@ -320,28 +320,28 @@ export default function FamilySettingsPage() {
               type="date"
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
-              className="bg-surface-800 border-surface-700"
+              className="bg-[--card] border-[--border]"
             />
-            <p className="text-xs text-surface-500">
+            <p className="font-body text-xs text-[--dim]">
               Setting a birth date will switch your family to post-birth mode
             </p>
           </div>
 
           {/* Current Stage Display */}
-          <div className="p-3 bg-surface-800/50 rounded-lg">
-            <p className="text-sm text-surface-400">Current Stage</p>
-            <p className="text-white font-medium capitalize">
+          <div className="p-3 bg-[--card]/50 rounded-lg">
+            <p className="font-ui text-sm text-[--muted]">Current Stage</p>
+            <p className="font-body text-white font-medium capitalize">
               {family.stage === 'pregnancy' ? 'Pregnancy' : 'Post-Birth'}
               {' · '}
               Week {family.current_week}
             </p>
             {family.due_date && family.stage === 'pregnancy' && (
-              <p className="text-xs text-surface-500 mt-1">
+              <p className="font-body text-xs text-[--dim] mt-1">
                 Due: {format(new Date(family.due_date), 'MMMM d, yyyy')}
               </p>
             )}
             {family.birth_date && (
-              <p className="text-xs text-surface-500 mt-1">
+              <p className="font-body text-xs text-[--dim] mt-1">
                 Born: {format(new Date(family.birth_date), 'MMMM d, yyyy')}
               </p>
             )}
@@ -350,7 +350,7 @@ export default function FamilySettingsPage() {
           <Button
             onClick={handleSave}
             disabled={isSaving}
-            className="w-full bg-accent-500 hover:bg-accent-600"
+            className="w-full bg-copper hover:bg-copper/80 font-ui font-semibold"
           >
             {isSaving ? (
               <>
@@ -369,38 +369,38 @@ export default function FamilySettingsPage() {
 
       {/* Leave Family */}
       {!isOwner && (
-        <Card className="bg-surface-900 border-amber-900/50">
+        <Card className="bg-[--surface] border-gold/30">
           <CardHeader>
-            <CardTitle className="text-lg text-amber-500">Leave Family</CardTitle>
-            <CardDescription>
+            <CardTitle className="font-display text-lg text-gold">Leave Family</CardTitle>
+            <CardDescription className="font-body">
               Remove yourself from this family
             </CardDescription>
           </CardHeader>
           <CardContent>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="outline" className="w-full border-amber-600 text-amber-500 hover:bg-amber-500/10">
+                <Button variant="outline" className="w-full border-gold/50 text-gold hover:bg-gold/10 font-ui font-semibold">
                   <UserMinus className="mr-2 h-4 w-4" />
                   Leave Family
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="bg-surface-900 border-surface-800">
+              <AlertDialogContent className="bg-[--surface] border-[--border]">
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="text-white">Leave Family?</AlertDialogTitle>
-                  <AlertDialogDescription>
+                  <AlertDialogTitle className="font-display text-white">Leave Family?</AlertDialogTitle>
+                  <AlertDialogDescription className="font-body">
                     You will be removed from this family. Your personal data will be preserved,
                     but you&apos;ll lose access to shared family data like tasks and tracker logs.
                     You can join another family or create a new one.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel className="bg-surface-800 border-surface-700">
+                  <AlertDialogCancel className="bg-[--card] border-[--border] font-ui">
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleLeaveFamily}
                     disabled={isLeaving}
-                    className="bg-amber-600 hover:bg-amber-700"
+                    className="bg-gold hover:bg-gold/80 text-[--bg] font-ui font-semibold"
                   >
                     {isLeaving ? (
                       <>
@@ -419,9 +419,9 @@ export default function FamilySettingsPage() {
       )}
 
       {isOwner && members && members.length > 1 && (
-        <Alert className="bg-surface-800 border-surface-700">
+        <Alert className="bg-[--card] border-[--border]">
           <AlertTriangle className="h-4 w-4" />
-          <AlertDescription className="text-surface-300">
+          <AlertDescription className="font-body text-[--cream]">
             As the family owner, you cannot leave while other members are present.
             Transfer ownership or have all members leave first.
           </AlertDescription>

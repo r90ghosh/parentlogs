@@ -36,21 +36,21 @@ export default function OfflinePage() {
   }, [isOnline])
 
   return (
-    <div className="min-h-screen bg-surface-950 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-surface-900 border-surface-800">
+    <div className="min-h-screen bg-[--bg] flex items-center justify-center p-4">
+      <Card className="w-full max-w-md bg-[--surface] border-[--border]">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 h-20 w-20 rounded-full bg-surface-800 flex items-center justify-center">
-            <WifiOff className="h-10 w-10 text-surface-400" />
+          <div className="mx-auto mb-4 h-20 w-20 rounded-full bg-[--card] flex items-center justify-center">
+            <WifiOff className="h-10 w-10 text-[--muted]" />
           </div>
-          <CardTitle className="text-2xl text-white">You&apos;re Offline</CardTitle>
-          <CardDescription>
+          <CardTitle className="font-display text-2xl text-white">You&apos;re Offline</CardTitle>
+          <CardDescription className="font-body">
             It looks like you&apos;ve lost your internet connection. Don&apos;t worry, some features are still available.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="p-4 bg-surface-800/50 rounded-lg">
-            <h3 className="font-medium text-white mb-2">Available offline:</h3>
-            <ul className="text-sm text-surface-400 space-y-1">
+          <div className="p-4 bg-[--card]/50 rounded-lg">
+            <h3 className="font-body font-medium text-white mb-2">Available offline:</h3>
+            <ul className="font-body text-sm text-[--muted] space-y-1">
               <li>• View cached pages</li>
               <li>• Browse previously loaded content</li>
               <li>• Changes will sync when back online</li>
@@ -58,11 +58,11 @@ export default function OfflinePage() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <Button onClick={handleRetry} className="w-full">
+            <Button onClick={handleRetry} className="w-full font-ui font-semibold">
               <RefreshCw className="mr-2 h-4 w-4" />
               Try Again
             </Button>
-            <Button variant="outline" asChild className="w-full">
+            <Button variant="outline" asChild className="w-full font-ui font-semibold">
               <Link href="/dashboard">
                 <Home className="mr-2 h-4 w-4" />
                 Go to Dashboard
@@ -70,7 +70,7 @@ export default function OfflinePage() {
             </Button>
           </div>
 
-          <p className="text-xs text-center text-surface-500">
+          <p className="font-body text-xs text-center text-[--dim]">
             Your data is safe and will automatically sync when you&apos;re back online.
           </p>
         </CardContent>

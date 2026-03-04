@@ -35,18 +35,18 @@ export function ShiftChangeButton() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
+        <Button variant="outline" size="sm" className="gap-2 font-ui font-semibold">
           <ArrowRightLeft className="h-4 w-4" />
           Shift Change
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-surface-900 border-surface-800 max-w-lg">
+      <DialogContent className="bg-[--surface] border-[--border] max-w-lg">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5 text-accent-500" />
+          <DialogTitle className="font-display flex items-center gap-2">
+            <Clock className="h-5 w-5 text-copper" />
             Shift Handoff
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="font-body">
             Quick summary for your partner taking over
           </DialogDescription>
         </DialogHeader>
@@ -98,29 +98,29 @@ export function ShiftChangeContent() {
         <div className="text-center">
           <Avatar className="h-12 w-12 mx-auto mb-1">
             <AvatarImage src={currentUser?.avatar_url} />
-            <AvatarFallback>{currentUser?.full_name?.charAt(0) || 'Y'}</AvatarFallback>
+            <AvatarFallback className="font-display">{currentUser?.full_name?.charAt(0) || 'Y'}</AvatarFallback>
           </Avatar>
-          <p className="text-xs text-surface-400">You</p>
+          <p className="font-body text-xs text-[--muted]">You</p>
         </div>
-        <ArrowRightLeft className="h-5 w-5 text-surface-500" />
+        <ArrowRightLeft className="h-5 w-5 text-[--dim]" />
         <div className="text-center">
           <Avatar className="h-12 w-12 mx-auto mb-1">
             <AvatarImage src={partner?.avatar_url} />
-            <AvatarFallback>{partner?.full_name?.charAt(0) || 'P'}</AvatarFallback>
+            <AvatarFallback className="font-display">{partner?.full_name?.charAt(0) || 'P'}</AvatarFallback>
           </Avatar>
-          <p className="text-xs text-surface-400">{partner?.full_name?.split(' ')[0] || 'Partner'}</p>
+          <p className="font-body text-xs text-[--muted]">{partner?.full_name?.split(' ')[0] || 'Partner'}</p>
         </div>
       </div>
 
       {/* Alerts */}
       {alerts.length > 0 && (
-        <Card className="bg-amber-500/10 border-amber-500/30">
+        <Card className="bg-gold/10 border-gold/30">
           <CardContent className="py-3">
             <div className="flex items-start gap-2">
-              <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5" />
+              <AlertTriangle className="h-4 w-4 text-gold mt-0.5" />
               <div>
-                <p className="text-sm font-medium text-amber-400">Heads Up</p>
-                <ul className="text-xs text-amber-300/80 mt-1 space-y-1">
+                <p className="font-ui text-sm font-medium text-gold">Heads Up</p>
+                <ul className="font-body text-xs text-gold/80 mt-1 space-y-1">
                   {alerts.map((alert, i) => (
                     <li key={i}>• {alert}</li>
                   ))}
@@ -144,7 +144,7 @@ export function ShiftChangeContent() {
         />
         <ShiftStat
           icon={Baby}
-          iconColor="text-amber-400"
+          iconColor="text-gold"
           label="Last Diaper"
           value={shiftData?.last_diaper
             ? formatDistanceToNow(new Date(shiftData.last_diaper.logged_at), { addSuffix: true })
@@ -162,39 +162,39 @@ export function ShiftChangeContent() {
         />
         <ShiftStat
           icon={Pill}
-          iconColor="text-green-400"
+          iconColor="text-sage"
           label="Medicine"
           value={medicineLogs.length > 0 ? 'Given' : 'None logged'}
           subValue={medicineLogs.length > 0
-            ? (medicineLogs[0].log_data as Record<string, any>)?.name || ''
+            ? (medicineLogs[0].log_data as Record<string, string>)?.name || ''
             : 'In last 8hrs'}
         />
       </div>
 
       {/* Recent Activity Timeline */}
-      <Card className="bg-surface-800/50 border-surface-700">
+      <Card className="bg-[--card]/50 border-[--border]">
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm">Recent Activity (8hrs)</CardTitle>
+          <CardTitle className="font-ui text-sm font-semibold text-[11px] uppercase tracking-[0.12em] text-[--muted]">Recent Activity (8hrs)</CardTitle>
         </CardHeader>
         <CardContent className="max-h-48 overflow-y-auto">
           {recentActivity.length > 0 ? (
             <div className="space-y-2">
               {recentActivity.slice(0, 8).map((log, i) => (
-                <div key={log.id} className="flex items-center gap-2 text-xs">
-                  <span className="text-surface-500 w-14">
+                <div key={log.id} className="flex items-center gap-2 font-body text-xs">
+                  <span className="text-[--dim] w-14">
                     {format(new Date(log.logged_at), 'h:mm a')}
                   </span>
-                  <Badge variant="outline" className="capitalize text-xs">
+                  <Badge variant="outline" className="font-ui capitalize text-xs">
                     {log.log_type.replace('_', ' ')}
                   </Badge>
                   {log.notes && (
-                    <span className="text-surface-400 truncate">{log.notes}</span>
+                    <span className="text-[--muted] truncate">{log.notes}</span>
                   )}
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-surface-500 text-sm text-center py-4">
+            <p className="font-body text-[--dim] text-sm text-center py-4">
               No activity in the last 8 hours
             </p>
           )}
@@ -202,7 +202,7 @@ export function ShiftChangeContent() {
       </Card>
 
       {/* Handoff Complete */}
-      <Button className="w-full gap-2">
+      <Button className="w-full gap-2 font-ui font-semibold">
         <CheckCircle className="h-4 w-4" />
         Confirm Handoff
       </Button>
@@ -217,35 +217,35 @@ function ShiftStat({
   value,
   subValue,
 }: {
-  icon: any
+  icon: React.ElementType
   iconColor: string
   label: string
   value: string
   subValue: string
 }) {
   return (
-    <div className="bg-surface-800 rounded-lg p-3">
+    <div className="bg-[--card] rounded-lg p-3">
       <div className="flex items-center gap-2 mb-1">
         <Icon className={cn("h-4 w-4", iconColor)} />
-        <span className="text-xs text-surface-400">{label}</span>
+        <span className="font-ui text-xs text-[--muted]">{label}</span>
       </div>
-      <p className="text-sm font-medium text-white">{value}</p>
-      <p className="text-xs text-surface-500">{subValue}</p>
+      <p className="font-body text-sm font-medium text-white">{value}</p>
+      <p className="font-body text-xs text-[--dim]">{subValue}</p>
     </div>
   )
 }
 
 export function ShiftChangeCard() {
   return (
-    <Card className="bg-surface-900 border-surface-800">
+    <Card className="bg-[--surface] border-[--border]">
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg flex items-center gap-2">
-          <ArrowRightLeft className="h-5 w-5 text-accent-500" />
+        <CardTitle className="font-display text-lg flex items-center gap-2">
+          <ArrowRightLeft className="h-5 w-5 text-copper" />
           Shift Handoff
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-surface-400 mb-4">
+        <p className="font-body text-sm text-[--muted] mb-4">
           Use the shift change feature to give your partner a quick summary when they take over.
         </p>
         <ShiftChangeButton />

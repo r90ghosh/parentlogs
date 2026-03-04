@@ -70,31 +70,31 @@ export default async function ResourcesPage(props: PageProps) {
   const isPremium = profile?.subscription_tier === 'premium' || profile?.subscription_tier === 'lifetime'
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-[--bg]">
       {/* Header Section */}
       <section className="relative pt-24 pb-12 md:pt-32 md:pb-16">
         {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-500/5 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[--surface] via-[--bg] to-[--bg]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-copper/5 via-transparent to-transparent" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
             {/* Badge */}
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 text-amber-400 text-sm font-medium mb-6">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-copper/10 text-copper font-ui font-medium text-sm mb-6">
               <BookOpen className="h-4 w-4" />
               Resource Library
             </span>
 
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
               Everything you need to navigate{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-copper to-gold">
                 fatherhood
               </span>
             </h1>
 
             {/* Description */}
-            <p className="text-lg text-slate-400 mb-10 max-w-2xl mx-auto">
+            <p className="font-body text-lg text-[--muted] mb-10 max-w-2xl mx-auto">
               Expert-reviewed articles, curated videos, and practical guides. From first positive
               test to toddler years.
             </p>
@@ -103,29 +103,29 @@ export default async function ResourcesPage(props: PageProps) {
             <div className="flex items-center justify-center gap-6 md:gap-10">
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
-                  <BookOpen className="h-5 w-5 text-amber-400" />
-                  <span className="text-3xl font-bold text-white">{counts.articles}</span>
+                  <BookOpen className="h-5 w-5 text-copper" />
+                  <span className="font-display text-3xl font-bold text-white">{counts.articles}</span>
                 </div>
-                <span className="text-sm text-slate-500">Articles</span>
+                <span className="font-ui text-sm text-[--dim]">Articles</span>
               </div>
 
-              <div className="w-px h-12 bg-slate-700" />
+              <div className="w-px h-12 bg-[--border]" />
 
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
-                  <Video className="h-5 w-5 text-amber-400" />
-                  <span className="text-3xl font-bold text-white">{counts.videos}</span>
+                  <Video className="h-5 w-5 text-copper" />
+                  <span className="font-display text-3xl font-bold text-white">{counts.videos}</span>
                 </div>
-                <span className="text-sm text-slate-500">Videos</span>
+                <span className="font-ui text-sm text-[--dim]">Videos</span>
               </div>
 
-              <div className="w-px h-12 bg-slate-700" />
+              <div className="w-px h-12 bg-[--border]" />
 
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
-                  <Sparkles className="h-5 w-5 text-green-400" />
+                  <Sparkles className="h-5 w-5 text-sage" />
                 </div>
-                <span className="text-sm text-slate-500">Expert Reviewed</span>
+                <span className="font-ui text-sm text-[--dim]">Expert Reviewed</span>
               </div>
             </div>
           </div>
@@ -136,7 +136,7 @@ export default async function ResourcesPage(props: PageProps) {
       <Suspense
         fallback={
           <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-copper" />
           </div>
         }
       >
@@ -145,15 +145,15 @@ export default async function ResourcesPage(props: PageProps) {
 
       {/* Bottom CTA - only show for non-premium users */}
       {!isPremium && (
-        <section className="relative py-20 bg-slate-900">
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900" />
+        <section className="relative py-20 bg-[--surface]">
+          <div className="absolute inset-0 bg-gradient-to-b from-[--bg] via-[--surface] to-[--surface]" />
 
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="p-8 md:p-12 rounded-2xl bg-gradient-to-br from-amber-500/10 to-slate-900 border border-amber-500/20">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+            <div className="p-8 md:p-12 rounded-2xl bg-gradient-to-br from-copper/10 to-[--surface] border border-copper/20">
+              <h2 className="font-display text-2xl md:text-3xl font-bold text-white mb-4">
                 {isAuthenticated ? 'Upgrade to Premium' : 'Unlock All Content'}
               </h2>
-              <p className="text-slate-400 mb-8 max-w-xl mx-auto">
+              <p className="font-body text-[--muted] mb-8 max-w-xl mx-auto">
                 Get access to all {counts.articles} articles, personalized weekly briefings, task
                 management, budget tracking, and partner sync.
               </p>
@@ -162,7 +162,7 @@ export default async function ResourcesPage(props: PageProps) {
                 <Button
                   asChild
                   size="lg"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold"
+                  className="bg-copper hover:bg-copper/80 text-white font-ui font-semibold"
                 >
                   <Link href={isAuthenticated ? '/upgrade' : '/signup'}>
                     {isAuthenticated ? 'Upgrade Now' : 'Start Free Trial'}
@@ -175,7 +175,7 @@ export default async function ResourcesPage(props: PageProps) {
                     asChild
                     variant="outline"
                     size="lg"
-                    className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
+                    className="border-[--border] text-[--cream] hover:bg-[--card] hover:text-white font-ui font-semibold"
                   >
                     <Link href="/#pricing">See Pricing</Link>
                   </Button>
@@ -183,7 +183,7 @@ export default async function ResourcesPage(props: PageProps) {
               </div>
 
               {!isAuthenticated && (
-                <p className="mt-6 text-sm text-slate-500">
+                <p className="font-body mt-6 text-sm text-[--dim]">
                   No credit card required. 30-day money-back guarantee.
                 </p>
               )}

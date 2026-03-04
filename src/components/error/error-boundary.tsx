@@ -65,34 +65,34 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="min-h-[400px] flex items-center justify-center p-4">
-          <Card className="w-full max-w-md bg-surface-900 border-surface-800">
+          <Card className="w-full max-w-md bg-[--surface] border-[--border]">
             <CardHeader className="text-center">
-              <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-red-500/10 flex items-center justify-center">
-                <AlertTriangle className="h-8 w-8 text-red-500" />
+              <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-coral/10 flex items-center justify-center">
+                <AlertTriangle className="h-8 w-8 text-coral" />
               </div>
-              <CardTitle className="text-xl text-white">Something went wrong</CardTitle>
-              <CardDescription>
+              <CardTitle className="font-display text-xl text-white">Something went wrong</CardTitle>
+              <CardDescription className="font-body">
                 An unexpected error occurred. We&apos;ve been notified and are working on it.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {process.env.NODE_ENV === 'development' && this.state.error && (
-                <div className="p-3 bg-surface-800 rounded-lg overflow-auto max-h-32">
-                  <p className="text-xs font-mono text-red-400">
+                <div className="p-3 bg-[--card] rounded-lg overflow-auto max-h-32">
+                  <p className="font-mono text-xs text-coral">
                     {this.state.error.message}
                   </p>
                 </div>
               )}
 
               <div className="flex flex-col gap-2">
-                <Button onClick={this.handleReset} className="w-full">
+                <Button onClick={this.handleReset} className="w-full font-ui font-semibold">
                   <RefreshCw className="mr-2 h-4 w-4" />
                   Try Again
                 </Button>
-                <Button onClick={this.handleReload} variant="outline" className="w-full">
+                <Button onClick={this.handleReload} variant="outline" className="w-full font-ui font-semibold">
                   Reload Page
                 </Button>
-                <Button variant="ghost" asChild className="w-full">
+                <Button variant="ghost" asChild className="w-full font-ui">
                   <Link href="/dashboard">
                     <Home className="mr-2 h-4 w-4" />
                     Go to Dashboard
@@ -103,7 +103,7 @@ export class ErrorBoundary extends Component<Props, State> {
               <div className="text-center">
                 <a
                   href="mailto:support@thedadcenter.com"
-                  className="text-xs text-surface-500 hover:text-surface-400 inline-flex items-center gap-1"
+                  className="font-ui text-xs text-[--dim] hover:text-[--muted] inline-flex items-center gap-1"
                 >
                   <Bug className="h-3 w-3" />
                   Report this issue
