@@ -2,50 +2,124 @@
 @tailwind components;
 @tailwind utilities;
 
+/* === Warm Luxury Editorial Design System === */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 243 75% 59%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 166 76% 40%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 243 75% 59%;
-    --radius: 0.5rem;
+    /* Core Palette */
+    --bg: #12100e;
+    --surface: #1a1714;
+    --card: #201c18;
+    --card-hover: #282420;
+    --white: #faf6f0;
+    --cream: #ede6dc;
+    --muted: #7a6f62;
+    --dim: #4a4239;
+
+    /* Accent Colors */
+    --copper: #c4703f;
+    --copper-dim: rgba(196, 112, 63, 0.15);
+    --copper-glow: rgba(196, 112, 63, 0.25);
+    --gold: #d4a853;
+    --gold-dim: rgba(212, 168, 83, 0.15);
+    --gold-glow: rgba(212, 168, 83, 0.25);
+
+    /* Semantic Colors */
+    --sage: #6b8f71;
+    --sage-dim: rgba(107, 143, 113, 0.15);
+    --coral: #d4836b;
+    --coral-dim: rgba(212, 131, 107, 0.15);
+    --sky: #5b9bd5;
+    --sky-dim: rgba(91, 155, 213, 0.15);
+    --rose: #c47a8f;
+    --rose-dim: rgba(196, 122, 143, 0.15);
+
+    /* Borders */
+    --border: rgba(237, 230, 220, 0.08);
+    --border-hover: rgba(237, 230, 220, 0.15);
+
+    /* Shadows */
+    --shadow-card: 0 2px 16px rgba(0,0,0,0.35), 0 1px 4px rgba(0,0,0,0.2);
+    --shadow-hover: 0 6px 28px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
+    --shadow-lift: 0 6px 24px rgba(0,0,0,0.28), 0 16px 48px rgba(0,0,0,0.36);
+    --shadow-copper: 0 4px 20px rgba(196,112,63,0.18);
+    --shadow-gold: 0 4px 20px rgba(212,168,83,0.18);
+
+    /* Layout */
+    --header-h: 60px;
+    --nav-h: 64px;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-xs: 4px;
+    --radius-lg: 16px;
+
+    /* shadcn/ui backward compat (mapped to warm tokens) */
+    --background: #12100e;
+    --foreground: #ede6dc;
+    --card-foreground: #ede6dc;
+    --popover: #201c18;
+    --popover-foreground: #ede6dc;
+    --primary: #c4703f;
+    --primary-foreground: #12100e;
+    --secondary: #d4a853;
+    --secondary-foreground: #12100e;
+    --muted-foreground: #7a6f62;
+    --accent-foreground: #c4703f;
+    --destructive: #d4836b;
+    --destructive-foreground: #faf6f0;
+    --input: rgba(237, 230, 220, 0.08);
+    --ring: #c4703f;
   }
 
+  /* Keep .dark class pointing to same warm values for backward compat */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 6%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 6%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 243 75% 59%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 166 76% 40%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 243 75% 59%;
+    --bg: #12100e;
+    --surface: #1a1714;
+    --card: #201c18;
+    --card-hover: #282420;
+    --white: #faf6f0;
+    --cream: #ede6dc;
+    --muted: #7a6f62;
+    --dim: #4a4239;
+    --copper: #c4703f;
+    --copper-dim: rgba(196, 112, 63, 0.15);
+    --copper-glow: rgba(196, 112, 63, 0.25);
+    --gold: #d4a853;
+    --gold-dim: rgba(212, 168, 83, 0.15);
+    --gold-glow: rgba(212, 168, 83, 0.25);
+    --sage: #6b8f71;
+    --sage-dim: rgba(107, 143, 113, 0.15);
+    --coral: #d4836b;
+    --coral-dim: rgba(212, 131, 107, 0.15);
+    --sky: #5b9bd5;
+    --sky-dim: rgba(91, 155, 213, 0.15);
+    --rose: #c47a8f;
+    --rose-dim: rgba(196, 122, 143, 0.15);
+    --border: rgba(237, 230, 220, 0.08);
+    --border-hover: rgba(237, 230, 220, 0.15);
+    --shadow-card: 0 2px 16px rgba(0,0,0,0.35), 0 1px 4px rgba(0,0,0,0.2);
+    --shadow-hover: 0 6px 28px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
+    --shadow-lift: 0 6px 24px rgba(0,0,0,0.28), 0 16px 48px rgba(0,0,0,0.36);
+    --shadow-copper: 0 4px 20px rgba(196,112,63,0.18);
+    --shadow-gold: 0 4px 20px rgba(212,168,83,0.18);
+    --background: #12100e;
+    --foreground: #ede6dc;
+    --card-foreground: #ede6dc;
+    --popover: #201c18;
+    --popover-foreground: #ede6dc;
+    --primary: #c4703f;
+    --primary-foreground: #12100e;
+    --secondary: #d4a853;
+    --secondary-foreground: #12100e;
+    --muted-foreground: #7a6f62;
+    --accent-foreground: #c4703f;
+    --destructive: #d4836b;
+    --destructive-foreground: #faf6f0;
+    --input: rgba(237, 230, 220, 0.08);
+    --ring: #c4703f;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-xs: 4px;
+    --radius-lg: 16px;
   }
 }
 
@@ -59,20 +133,44 @@
   }
 }
 
-/* Custom scrollbar for dark mode */
+/* === Warm Luxury Utility Classes === */
+@layer utilities {
+  .card-copper-top { border-top: 2px solid var(--copper); }
+  .card-gold-top { border-top: 2px solid var(--gold); }
+  .card-sage-top { border-top: 2px solid var(--sage); }
+  .card-coral-top { border-top: 2px solid var(--coral); }
+  .card-sky-top { border-top: 2px solid var(--sky); }
+  .card-rose-top { border-top: 2px solid var(--rose); }
+
+  .text-gradient-copper {
+    background: linear-gradient(135deg, var(--copper), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .shadow-card { box-shadow: var(--shadow-card); }
+  .shadow-hover { box-shadow: var(--shadow-hover); }
+  .shadow-lift { box-shadow: var(--shadow-lift); }
+  .shadow-copper { box-shadow: var(--shadow-copper); }
+  .shadow-gold { box-shadow: var(--shadow-gold); }
+}
+
+/* Custom scrollbar */
 @layer utilities {
   .scrollbar-thin::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   .scrollbar-thin::-webkit-scrollbar-track {
-    @apply bg-surface-800;
+    background: var(--card);
   }
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    @apply bg-surface-600 rounded-full;
+    background: var(--dim);
+    border-radius: 9999px;
   }
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    @apply bg-surface-500;
+    background: var(--muted);
   }
 
   /* Safe area utilities for notched devices */
@@ -103,7 +201,7 @@
 
 /* Mobile-first touch optimization */
 @layer base {
-  /* Ensure minimum touch target size (44x44px recommended by Apple, 48x48 by Google) */
+  /* Minimum touch target size */
   button,
   [role="button"],
   input[type="submit"],
@@ -159,7 +257,6 @@
 
 /* Gesture-friendly utilities */
 @layer utilities {
-  /* Swipeable container */
   .swipeable {
     touch-action: pan-x;
     overflow-x: auto;
@@ -171,12 +268,10 @@
     scroll-snap-align: start;
   }
 
-  /* Pull to refresh container */
   .pull-refresh {
     overscroll-behavior-y: contain;
   }
 
-  /* Draggable item */
   .draggable {
     touch-action: none;
     cursor: grab;
@@ -199,7 +294,6 @@
   }
 }
 
-/* Manual reduced motion class */
 .reduce-motion *,
 .reduce-motion *::before,
 .reduce-motion *::after {
@@ -209,21 +303,12 @@
 }
 
 /* Loading skeleton animation */
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
 .skeleton-shimmer {
   background: linear-gradient(
     90deg,
-    hsl(var(--muted)) 25%,
-    hsl(var(--muted-foreground) / 0.1) 50%,
-    hsl(var(--muted)) 75%
+    var(--card) 25%,
+    var(--card-hover) 50%,
+    var(--card) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
@@ -231,7 +316,6 @@
 
 /* PWA standalone mode styles */
 @media (display-mode: standalone) {
-  /* Hide browser UI elements when running as PWA */
   .browser-only {
     display: none !important;
   }
@@ -239,21 +323,19 @@
 
 /* iOS specific fixes */
 @supports (-webkit-touch-callout: none) {
-  /* Allow proper scrolling on iOS while preventing bounce on non-scrollable areas */
   html,
   body {
     height: 100%;
     overflow-x: hidden;
   }
 
-  /* Enable smooth momentum scrolling */
   body {
     -webkit-overflow-scrolling: touch;
     overflow-y: auto;
   }
 }
 
-/* Mobile viewport fix - ensure content is scrollable */
+/* Mobile viewport fix */
 @media (max-width: 768px) {
   html {
     overflow-x: hidden;
@@ -282,7 +364,6 @@
     -webkit-backdrop-filter: blur(4px) !important;
   }
 
-  /* Simplify blur-2xl on mobile */
   .blur-2xl {
     filter: blur(16px) !important;
   }

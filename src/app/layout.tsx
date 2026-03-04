@@ -1,10 +1,27 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Playfair_Display, Jost, Karla } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
 import { Toaster } from '@/components/ui/sonner'
 
-const inter = Inter({ subsets: ['latin'] })
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-display',
+  weight: ['400', '700', '900'],
+  style: ['normal', 'italic'],
+})
+
+const jost = Jost({
+  subsets: ['latin'],
+  variable: '--font-body',
+  weight: ['300', '400', '500', '600'],
+})
+
+const karla = Karla({
+  subsets: ['latin'],
+  variable: '--font-ui',
+  weight: ['400', '500', '600'],
+})
 
 export const metadata: Metadata = {
   title: 'The Dad Center - Your Parenting Command Center',
@@ -30,7 +47,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#0f172a',
+  themeColor: '#12100e',
 }
 
 export default function RootLayout({
@@ -40,7 +57,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${playfair.variable} ${jost.variable} ${karla.variable} font-body antialiased`}>
         <Providers>
           {children}
           <Toaster />
