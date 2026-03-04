@@ -184,7 +184,7 @@ export default async function ResourcesPage(props: PageProps) {
 
               {!isAuthenticated && (
                 <p className="mt-6 text-sm text-slate-500">
-                  14-day free trial. No credit card required.
+                  No credit card required. 30-day money-back guarantee.
                 </p>
               )}
             </div>

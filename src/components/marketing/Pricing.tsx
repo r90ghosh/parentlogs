@@ -5,25 +5,25 @@ import { Check, X, Sparkles, Zap, Crown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const freeFeatures = [
-  { text: 'Current week briefing', included: true },
-  { text: '2-week task window', included: true },
-  { text: 'Basic checklists (4)', included: true },
-  { text: 'Budget overview', included: true },
-  { text: 'Full timeline access', included: false },
-  { text: 'Partner sync', included: false },
-  { text: 'All 15 checklists', included: false },
-  { text: 'Video library', included: false },
+  { text: '4-week briefing window', included: true },
+  { text: '30-day task window', included: true },
+  { text: 'All 15+ checklists (350+ items)', included: true },
+  { text: 'Full budget planner', included: true },
+  { text: 'Daily mood check-ins', included: true },
+  { text: 'Full task timeline', included: false },
+  { text: 'Real-time partner sync', included: false },
+  { text: 'Push notifications (after 30 days)', included: false },
 ]
 
 const premiumFeatures = [
-  { text: 'All 47 weekly briefings', included: true },
-  { text: 'Full task timeline', included: true },
-  { text: 'All 15 premium checklists', included: true },
-  { text: 'Complete budget tracker', included: true },
+  { text: 'All ~140 weekly briefings', included: true },
+  { text: 'Full task timeline (pregnancy → 24 months)', included: true },
   { text: 'Real-time partner sync', included: true },
-  { text: '83 curated videos', included: true },
-  { text: 'Offline access', included: true },
-  { text: 'Priority support', included: true },
+  { text: 'Push notifications & reminders', included: true },
+  { text: 'Mood trends & insights', included: true },
+  { text: 'Advanced baby tracker', included: true },
+  { text: 'Full briefing archive', included: true },
+  { text: 'Task snooze & assignment', included: true },
 ]
 
 const plans = [
@@ -40,7 +40,7 @@ const plans = [
   },
   {
     name: 'Monthly',
-    price: '$5.99',
+    price: '$4.99',
     period: '/month',
     periodNote: 'Billed monthly',
     description: 'Full access, flexible commitment',
@@ -51,9 +51,9 @@ const plans = [
   },
   {
     name: 'Yearly',
-    price: '$49.99',
+    price: '$39.99',
     period: '/year',
-    periodNote: 'Save 30% vs monthly',
+    periodNote: 'Save 33% vs monthly',
     description: 'Best value for your journey',
     features: premiumFeatures,
     cta: 'Start Free Trial',
@@ -167,9 +167,9 @@ export function Pricing() {
         {/* Money back guarantee */}
         <div className="mt-12 text-center">
           <p className="text-slate-500 text-sm">
-            14-day free trial. No credit card required to start.
+            No credit card required. Cancel anytime.
             <br />
-            Cancel anytime. 30-day money-back guarantee.
+            30-day money-back guarantee.
           </p>
         </div>
       </div>

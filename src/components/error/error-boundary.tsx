@@ -102,7 +102,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
               <div className="text-center">
                 <a
-                  href="mailto:support@parentlogs.com"
+                  href="mailto:support@thedadcenter.com"
                   className="text-xs text-surface-500 hover:text-surface-400 inline-flex items-center gap-1"
                 >
                   <Bug className="h-3 w-3" />

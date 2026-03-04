@@ -134,7 +134,7 @@ export default function SettingsPage() {
           {' · '}
           <Link href="/privacy" className="hover:text-surface-300">Privacy</Link>
           {' · '}
-          <a href="mailto:support@parentlogs.com" className="hover:text-surface-300">Support</a>
+          <a href="mailto:support@thedadcenter.com" className="hover:text-surface-300">Support</a>
         </p>
       </div>
     </div>

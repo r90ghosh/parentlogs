@@ -154,7 +154,7 @@ export function Features() {
             </Link>
           </Button>
           <p className="mt-4 text-sm text-slate-500">
-            No credit card required. Full access for 14 days.
+            No credit card required. 30-day money-back guarantee.
           </p>
         </div>
       </div>

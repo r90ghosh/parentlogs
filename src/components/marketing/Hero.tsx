@@ -85,7 +85,7 @@ export function Hero() {
                 </div>
                 <div className="flex-1 flex justify-center">
                   <div className="px-4 py-1 rounded-md bg-white/[0.05] border border-white/[0.08] text-xs text-slate-400">
-                    app.parentlogs.com/dashboard
+                    thedadcenter.com/dashboard
                   </div>
                 </div>
               </div>
