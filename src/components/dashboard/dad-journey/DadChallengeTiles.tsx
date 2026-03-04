@@ -74,8 +74,8 @@ export function DadChallengeTiles({ maxTiles = 7 }: DadChallengeTilesProps) {
 
   if (!content || content.length === 0) {
     return (
-      <div className="rounded-xl bg-surface-900 border border-surface-800 p-6 text-center">
-        <p className="text-surface-400 text-sm">
+      <div className="rounded-xl bg-[--card] border border-[--border] p-6 text-center">
+        <p className="text-[--muted] text-sm font-body">
           Challenge content will be available soon. Check back after setting up your family profile.
         </p>
       </div>
@@ -114,7 +114,7 @@ export function DadChallengeTiles({ maxTiles = 7 }: DadChallengeTilesProps) {
         >
           <Link
             href="/journey"
-            className="flex items-center gap-1.5 text-sm text-accent-500 hover:text-accent-400 font-medium pt-1"
+            className="flex items-center gap-1.5 text-sm font-ui text-copper hover:text-copper-hover font-medium pt-1"
           >
             See all 7 challenges
             <ArrowRight className="h-4 w-4" />

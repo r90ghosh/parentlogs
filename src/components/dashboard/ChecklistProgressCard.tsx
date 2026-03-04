@@ -29,19 +29,20 @@ export function ChecklistProgressCard() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        'rounded-[20px] p-5',
-        'bg-gradient-to-br from-zinc-800 to-zinc-900',
-        'border border-white/[0.06]'
+        'rounded-[20px] p-5 card-copper-top',
+        'bg-[--card]',
+        'border border-[--border]',
+        'shadow-card'
       )}
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <ListChecks className="h-4 w-4 text-teal-400" />
-          <span className="text-sm font-semibold text-white">Checklists</span>
+          <ListChecks className="h-4 w-4 text-copper" />
+          <span className="text-sm font-semibold font-ui text-[--cream]">Checklists</span>
         </div>
         <Link
           href="/checklists"
-          className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1"
+          className="text-xs font-ui text-[--muted] hover:text-[--cream] transition-colors flex items-center gap-1"
         >
           View all <ArrowRight className="h-3 w-3" />
         </Link>
@@ -49,37 +50,37 @@ export function ChecklistProgressCard() {
 
       {featured ? (
         <>
-          <div className="text-xs text-zinc-400 mb-2 truncate">{featured.name}</div>
-          <div className="relative h-2 bg-zinc-700 rounded-full overflow-hidden mb-2">
+          <div className="text-xs font-body text-[--muted] mb-2 truncate">{featured.name}</div>
+          <div className="relative h-2 bg-[--dim] rounded-full overflow-hidden mb-2">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${featured.progress.percentage}%` }}
               transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="absolute inset-y-0 left-0 bg-teal-500 rounded-full"
+              className="absolute inset-y-0 left-0 bg-copper rounded-full"
             />
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className="text-zinc-500">
+            <span className="font-body text-[--muted]">
               {featured.progress.completed} of {featured.progress.total} items
             </span>
-            <span className="text-teal-400 font-medium">{featured.progress.percentage}%</span>
+            <span className="text-copper font-medium font-ui">{featured.progress.percentage}%</span>
           </div>
         </>
       ) : (
         <>
-          <div className="relative h-2 bg-zinc-700 rounded-full overflow-hidden mb-2">
+          <div className="relative h-2 bg-[--dim] rounded-full overflow-hidden mb-2">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${overallPercent}%` }}
               transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="absolute inset-y-0 left-0 bg-teal-500 rounded-full"
+              className="absolute inset-y-0 left-0 bg-copper rounded-full"
             />
           </div>
           <div className="flex items-center justify-between text-xs">
-            <span className="text-zinc-500">
+            <span className="font-body text-[--muted]">
               {totalCompleted} of {totalItems} items complete
             </span>
-            <span className="text-teal-400 font-medium">{overallPercent}%</span>
+            <span className="text-copper font-medium font-ui">{overallPercent}%</span>
           </div>
         </>
       )}

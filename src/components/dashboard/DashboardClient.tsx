@@ -71,7 +71,7 @@ export function DashboardClient({
   const rightCards = cards.filter(c => RIGHT_COLUMN_CARDS.includes(c.id))
 
   return (
-    <div className="max-w-[1600px] mx-auto px-6 md:px-10 py-8">
+    <div className="max-w-[1600px] mx-auto px-6 md:px-10 py-8 bg-[--bg]">
       {/* Header */}
       <DashboardHeader
         userName={userName}
@@ -90,6 +90,7 @@ export function DashboardClient({
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.08 }}
+                className="shadow-card"
               >
                 {component}
               </motion.div>

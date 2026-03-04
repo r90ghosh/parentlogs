@@ -18,10 +18,10 @@ const actions: QuickAction[] = [
 ]
 
 const colorStyles: Record<string, string> = {
-  teal: 'bg-teal-500/15',
-  purple: 'bg-purple-500/15',
-  blue: 'bg-blue-500/15',
-  amber: 'bg-amber-500/15',
+  teal: 'bg-sage-dim',
+  purple: 'bg-copper-dim',
+  blue: 'bg-sky-dim',
+  amber: 'bg-gold-dim',
 }
 
 export function QuickActionsBar() {
@@ -29,12 +29,13 @@ export function QuickActionsBar() {
     <div
       className={cn(
         'rounded-[20px] p-5',
-        'bg-gradient-to-br from-zinc-800 to-zinc-900',
-        'border border-white/[0.06]'
+        'bg-[--card]',
+        'border border-[--border]',
+        'shadow-card'
       )}
     >
       {/* Title */}
-      <div className="text-sm font-semibold text-zinc-400 mb-4">
+      <div className="text-sm font-semibold font-ui text-[--muted] mb-4">
         ⚡ Quick Actions
       </div>
 
@@ -46,8 +47,8 @@ export function QuickActionsBar() {
             href={action.href}
             className={cn(
               'flex flex-col items-center gap-2.5 py-5 px-4 rounded-[14px]',
-              'bg-white/[0.02] border border-white/[0.04]',
-              'hover:bg-white/[0.05] hover:border-white/10 hover:-translate-y-0.5',
+              'bg-[--surface] border border-[--border]',
+              'hover:bg-[--card-hover] hover:border-[--border-hover] hover:-translate-y-0.5',
               'transition-all cursor-pointer'
             )}
           >
@@ -59,7 +60,7 @@ export function QuickActionsBar() {
             >
               {action.icon}
             </div>
-            <span className="text-[13px] font-medium text-zinc-400">
+            <span className="text-[13px] font-medium font-ui text-[--muted]">
               {action.label}
             </span>
           </Link>

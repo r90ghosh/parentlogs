@@ -82,28 +82,29 @@ export function UpgradePromptCard() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
           className={cn(
-            'rounded-[20px] p-5 relative',
-            'bg-gradient-to-br from-accent-600/15 to-teal-600/10',
-            'border border-accent-500/20'
+            'rounded-[20px] p-5 relative card-copper-top',
+            'bg-[--card]',
+            'border border-copper/20',
+            'shadow-copper'
           )}
         >
           <button
             onClick={handleDismissUsage}
-            className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors"
+            className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-[--card-hover] text-[--muted] hover:text-[--cream] transition-colors"
             aria-label="Dismiss"
           >
             <X className="h-4 w-4" />
           </button>
 
           <div className="flex items-start gap-3 mb-3">
-            <div className="p-2 rounded-xl bg-accent-500/20">
-              <TrendingUp className="h-5 w-5 text-accent-400" />
+            <div className="p-2 rounded-xl bg-copper-dim">
+              <TrendingUp className="h-5 w-5 text-copper" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">
+              <h3 className="text-sm font-semibold font-display text-[--cream]">
                 You&apos;re off to a great start
               </h3>
-              <p className="text-xs text-zinc-400 mt-1">
+              <p className="text-xs font-body text-[--muted] mt-1">
                 You&apos;ve completed {tasksCompleted} task{tasksCompleted !== 1 ? 's' : ''} so far.
                 Unlock everything: partner sync, full timeline, push notifications, and more.
               </p>
@@ -113,8 +114,8 @@ export function UpgradePromptCard() {
           <Link
             href="/upgrade?source=dashboard_usage"
             className={cn(
-              'inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold',
-              'bg-accent-500 text-white hover:bg-accent-600 transition-colors'
+              'inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold font-ui',
+              'bg-copper text-[--white] hover:bg-copper-hover transition-colors'
             )}
           >
             <Sparkles className="h-4 w-4" />
@@ -131,28 +132,29 @@ export function UpgradePromptCard() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
           className={cn(
-            'rounded-[20px] p-5 relative',
-            'bg-gradient-to-br from-amber-600/15 to-orange-600/10',
-            'border border-amber-500/20'
+            'rounded-[20px] p-5 relative card-gold-top',
+            'bg-[--card]',
+            'border border-gold/20',
+            'shadow-gold'
           )}
         >
           <button
             onClick={handleDismissBriefing}
-            className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors"
+            className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-[--card-hover] text-[--muted] hover:text-[--cream] transition-colors"
             aria-label="Maybe later"
           >
             <X className="h-4 w-4" />
           </button>
 
           <div className="flex items-start gap-3 mb-3">
-            <div className="p-2 rounded-xl bg-amber-500/20">
-              <BookOpen className="h-5 w-5 text-amber-400" />
+            <div className="p-2 rounded-xl bg-gold-dim">
+              <BookOpen className="h-5 w-5 text-gold" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-white">
+              <h3 className="text-sm font-semibold font-display text-[--cream]">
                 Your free briefings have ended
               </h3>
-              <p className="text-xs text-zinc-400 mt-1">
+              <p className="text-xs font-body text-[--muted] mt-1">
                 Week {(family?.current_week || 1) + 1} briefing is ready — upgrade to keep getting weekly guidance tailored to your exact week, all the way through age 2.
               </p>
             </div>
@@ -162,8 +164,8 @@ export function UpgradePromptCard() {
             <Link
               href="/upgrade?source=dashboard_briefing"
               className={cn(
-                'inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold',
-                'bg-amber-500 text-black hover:bg-amber-400 transition-colors'
+                'inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold font-ui',
+                'bg-gold text-[--bg] hover:bg-gold-hover transition-colors'
               )}
             >
               <Sparkles className="h-4 w-4" />
@@ -172,7 +174,7 @@ export function UpgradePromptCard() {
             </Link>
             <button
               onClick={handleDismissBriefing}
-              className="text-xs text-zinc-500 hover:text-zinc-400 transition-colors"
+              className="text-xs font-ui text-[--muted] hover:text-[--cream] transition-colors"
             >
               Maybe later
             </button>

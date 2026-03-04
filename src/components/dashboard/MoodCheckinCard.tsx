@@ -80,23 +80,24 @@ export function MoodCheckinCard() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         className={cn(
-          'rounded-[20px] px-5 py-4',
-          'bg-gradient-to-br from-zinc-800 to-zinc-900',
-          'border border-white/[0.06]',
+          'rounded-[20px] px-5 py-4 card-copper-top',
+          'bg-[--card]',
+          'border border-[--border]',
+          'shadow-card',
           'flex items-center justify-between'
         )}
       >
         <div className="flex items-center gap-3">
           <span className="text-2xl">{moodCfg?.emoji}</span>
           <div>
-            <div className="text-sm font-semibold text-white">
+            <div className="text-sm font-semibold font-ui text-[--cream]">
               Today: feeling <span className={moodCfg?.color}>{moodCfg?.label.toLowerCase()}</span>
             </div>
-            <div className="text-xs text-zinc-500">Mood checked in</div>
+            <div className="text-xs text-[--muted] font-body">Mood checked in</div>
           </div>
         </div>
         {streak > 1 && (
-          <div className="flex items-center gap-1.5 text-xs text-amber-400 font-medium">
+          <div className="flex items-center gap-1.5 text-xs text-gold font-medium font-ui">
             <span>🔥</span>
             <span>{streak}-day streak</span>
           </div>
@@ -111,12 +112,13 @@ export function MoodCheckinCard() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        'rounded-[20px] px-4 py-3',
-        'bg-gradient-to-br from-zinc-800 to-zinc-900',
-        'border border-white/[0.06]'
+        'rounded-[20px] px-4 py-3 card-copper-top',
+        'bg-[--card]',
+        'border border-[--border]',
+        'shadow-card'
       )}
     >
-      <div className="text-sm font-semibold text-zinc-300 mb-2.5">
+      <div className="text-sm font-semibold font-ui text-[--cream] mb-2.5">
         How are you feeling today?
       </div>
 
@@ -128,14 +130,14 @@ export function MoodCheckinCard() {
             onClick={() => handleMoodSelect(level)}
             className={cn(
               'flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all',
-              'hover:bg-white/[0.06]',
+              'hover:bg-[--card-hover]',
               selectedMood === level
-                ? 'bg-white/[0.08] ring-1 ring-white/20 scale-110'
+                ? 'bg-[--card-hover] ring-1 ring-copper/30 scale-110'
                 : 'opacity-70 hover:opacity-100'
             )}
           >
             <span className="text-xl">{emoji}</span>
-            <span className="text-[10px] text-zinc-400">{label}</span>
+            <span className="text-[10px] text-[--muted] font-ui">{label}</span>
           </button>
         ))}
       </div>
@@ -149,18 +151,18 @@ export function MoodCheckinCard() {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden mt-2.5"
           >
-            <div className="text-xs text-zinc-500 mb-1.5">Anything going on? (optional)</div>
+            <div className="text-xs text-[--muted] font-body mb-1.5">Anything going on? (optional)</div>
             <div className="flex flex-wrap gap-1.5 mb-3">
               {SITUATION_FLAGS.map(({ key, emoji, label }) => (
                 <button
                   key={key}
                   onClick={() => toggleFlag(key)}
                   className={cn(
-                    'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs transition-all',
+                    'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs transition-all font-ui',
                     'border',
                     selectedFlags.includes(key)
-                      ? 'bg-white/[0.08] border-white/20 text-white'
-                      : 'bg-transparent border-white/[0.06] text-zinc-400 hover:border-white/10'
+                      ? 'bg-copper-dim border-copper/30 text-[--cream]'
+                      : 'bg-transparent border-[--border] text-[--muted] hover:border-[--border-hover]'
                   )}
                 >
                   <span>{emoji}</span>
@@ -172,8 +174,8 @@ export function MoodCheckinCard() {
               onClick={handleSubmit}
               disabled={isSubmitting}
               className={cn(
-                'w-full py-2 rounded-xl text-sm font-semibold transition-all',
-                'bg-amber-500 text-black hover:bg-amber-400',
+                'w-full py-2 rounded-xl text-sm font-semibold transition-all font-ui',
+                'bg-copper text-[--white] hover:bg-copper-hover',
                 'disabled:opacity-50 disabled:cursor-not-allowed'
               )}
             >

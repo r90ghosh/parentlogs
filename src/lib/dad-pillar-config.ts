@@ -1,21 +1,21 @@
 import { PillarConfig, MoodConfig, SituationFlag, DadConcern } from '@/types/dad-journey'
 
 export const PILLAR_CONFIG: PillarConfig[] = [
-  { pillar: 'anxiety', label: 'Anxiety & Fear', icon: '🫣', color: 'amber', gradient: 'from-amber-500/20 to-amber-600/10', borderColor: 'border-l-amber-500' },
-  { pillar: 'baby_bonding', label: 'Baby Bonding', icon: '👶', color: 'blue', gradient: 'from-blue-500/20 to-blue-600/10', borderColor: 'border-l-blue-500' },
-  { pillar: 'relationship', label: 'Relationship', icon: '💑', color: 'pink', gradient: 'from-pink-500/20 to-pink-600/10', borderColor: 'border-l-pink-500' },
-  { pillar: 'finances', label: 'Finances', icon: '💰', color: 'green', gradient: 'from-green-500/20 to-green-600/10', borderColor: 'border-l-green-500' },
-  { pillar: 'knowledge', label: 'Knowledge', icon: '🧠', color: 'purple', gradient: 'from-purple-500/20 to-purple-600/10', borderColor: 'border-l-purple-500' },
-  { pillar: 'planning', label: 'Planning', icon: '📋', color: 'cyan', gradient: 'from-cyan-500/20 to-cyan-600/10', borderColor: 'border-l-cyan-500' },
-  { pillar: 'extended_family', label: 'Extended Family', icon: '👨‍👩‍👦', color: 'orange', gradient: 'from-orange-500/20 to-orange-600/10', borderColor: 'border-l-orange-500' },
+  { pillar: 'anxiety', label: 'Anxiety & Fear', icon: '🫣', color: 'coral', gradient: 'from-coral/15 to-coral/5', borderColor: 'border-l-coral' },
+  { pillar: 'baby_bonding', label: 'Baby Bonding', icon: '👶', color: 'sage', gradient: 'from-sage/15 to-sage/5', borderColor: 'border-l-sage' },
+  { pillar: 'relationship', label: 'Relationship', icon: '💑', color: 'rose', gradient: 'from-rose/15 to-rose/5', borderColor: 'border-l-rose' },
+  { pillar: 'finances', label: 'Finances', icon: '💰', color: 'sky', gradient: 'from-sky/15 to-sky/5', borderColor: 'border-l-sky' },
+  { pillar: 'knowledge', label: 'Knowledge', icon: '🧠', color: 'copper', gradient: 'from-copper/15 to-copper/5', borderColor: 'border-l-copper' },
+  { pillar: 'planning', label: 'Planning', icon: '📋', color: 'gold', gradient: 'from-gold/15 to-gold/5', borderColor: 'border-l-gold' },
+  { pillar: 'extended_family', label: 'Extended Family', icon: '👨‍👩‍👦', color: 'muted', gradient: 'from-[--muted]/15 to-[--muted]/5', borderColor: 'border-l-[--muted]' },
 ]
 
 export const MOOD_CONFIG: MoodConfig[] = [
-  { level: 'struggling', emoji: '😞', label: 'Struggling', color: 'text-red-400' },
-  { level: 'rough', emoji: '😔', label: 'Rough', color: 'text-orange-400' },
-  { level: 'okay', emoji: '😐', label: 'Okay', color: 'text-yellow-400' },
-  { level: 'good', emoji: '🙂', label: 'Good', color: 'text-green-400' },
-  { level: 'great', emoji: '😄', label: 'Great', color: 'text-emerald-400' },
+  { level: 'struggling', emoji: '😞', label: 'Struggling', color: 'text-coral' },
+  { level: 'rough', emoji: '😔', label: 'Rough', color: 'text-copper' },
+  { level: 'okay', emoji: '😐', label: 'Okay', color: 'text-gold' },
+  { level: 'good', emoji: '🙂', label: 'Good', color: 'text-sage' },
+  { level: 'great', emoji: '😄', label: 'Great', color: 'text-[--cream]' },
 ]
 
 export const SITUATION_FLAGS: SituationFlag[] = [

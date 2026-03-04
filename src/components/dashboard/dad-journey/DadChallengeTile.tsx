@@ -27,7 +27,7 @@ export function DadChallengeTile({
         'bg-gradient-to-br',
         config.gradient,
         config.borderColor,
-        'border border-surface-800/50'
+        'border border-[--border] shadow-card'
       )}
     >
       {/* Collapsed / Header row */}
@@ -38,12 +38,12 @@ export function DadChallengeTile({
       >
         <span className="text-2xl flex-shrink-0 leading-none mt-0.5">{content.icon}</span>
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-white leading-snug">{content.headline}</p>
+          <p className="font-semibold font-display text-[--cream] leading-snug">{content.headline}</p>
           {!isExpanded && (
-            <p className="mt-1 text-sm text-surface-400 line-clamp-2">{content.preview}</p>
+            <p className="mt-1 text-sm font-body text-[--muted] line-clamp-2">{content.preview}</p>
           )}
         </div>
-        <div className="flex-shrink-0 text-surface-400 mt-0.5">
+        <div className="flex-shrink-0 text-[--muted] mt-0.5">
           {isExpanded ? (
             <ChevronUp className="h-5 w-5" />
           ) : (
@@ -68,7 +68,7 @@ export function DadChallengeTile({
               {content.narrative && (
                 <div className="space-y-3">
                   {content.narrative.split('\n\n').map((paragraph, i) => (
-                    <p key={i} className="text-sm text-surface-300 leading-relaxed">
+                    <p key={i} className="text-sm font-body text-[--cream] leading-relaxed">
                       {paragraph.trim()}
                     </p>
                   ))}
@@ -78,19 +78,19 @@ export function DadChallengeTile({
               {/* Action Items */}
               {content.action_items && content.action_items.length > 0 && (
                 <div>
-                  <p className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3">
+                  <p className="text-xs font-semibold font-ui text-[--muted] uppercase tracking-wider mb-3">
                     Things you can do right now
                   </p>
                   <div className="space-y-3">
                     {content.action_items.map((item, i) => (
                       <div
                         key={i}
-                        className="flex gap-3 p-3 bg-surface-800/50 rounded-lg"
+                        className="flex gap-3 p-3 bg-[--card]/50 rounded-lg border border-[--border]"
                       >
-                        <CheckCircle className="h-5 w-5 text-accent-500 flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="h-5 w-5 text-copper flex-shrink-0 mt-0.5" />
                         <div>
-                          <p className="font-medium text-white text-sm">{item.title}</p>
-                          <p className="text-sm text-surface-400 mt-0.5">{item.description}</p>
+                          <p className="font-medium font-ui text-[--cream] text-sm">{item.title}</p>
+                          <p className="text-sm font-body text-[--muted] mt-0.5">{item.description}</p>
                         </div>
                       </div>
                     ))}
@@ -101,19 +101,19 @@ export function DadChallengeTile({
               {/* Dad Quotes */}
               {content.dad_quotes && content.dad_quotes.length > 0 && (
                 <div>
-                  <p className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3">
+                  <p className="text-xs font-semibold font-ui text-[--muted] uppercase tracking-wider mb-3">
                     What other dads say
                   </p>
                   <div className="space-y-3">
                     {content.dad_quotes.map((quote, i) => (
                       <blockquote
                         key={i}
-                        className="border-l-2 border-surface-600 pl-4 py-1"
+                        className="border-l-2 border-copper/40 pl-4 py-1"
                       >
-                        <p className="text-surface-200 italic text-sm">
+                        <p className="text-[--cream] italic font-body text-sm">
                           &ldquo;{quote.quote}&rdquo;
                         </p>
-                        <cite className="text-sm text-surface-500 not-italic mt-1 block">
+                        <cite className="text-sm font-ui text-[--muted] not-italic mt-1 block">
                           — {quote.attribution}
                         </cite>
                       </blockquote>

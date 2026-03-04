@@ -84,11 +84,11 @@ export function MoodCheckinWidget() {
   // Loading state
   if (checkinLoading) {
     return (
-      <div className="rounded-xl bg-surface-900 border border-surface-800 p-4 animate-pulse">
-        <div className="h-4 w-40 bg-surface-800 rounded mb-3" />
+      <div className="rounded-xl bg-[--card] border border-[--border] p-4 animate-pulse">
+        <div className="h-4 w-40 bg-[--card-hover] rounded mb-3" />
         <div className="flex gap-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-10 w-10 bg-surface-800 rounded-full" />
+            <div key={i} className="h-10 w-10 bg-[--card-hover] rounded-full" />
           ))}
         </div>
       </div>
@@ -102,22 +102,22 @@ export function MoodCheckinWidget() {
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl bg-surface-900 border border-surface-800 px-4 py-3"
+        className="rounded-xl bg-[--card] border border-[--border] shadow-card px-4 py-3"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xl leading-none">{moodCfg.emoji}</span>
             <div>
-              <span className="text-sm text-surface-400">Today: </span>
-              <span className={cn('text-sm font-medium', moodCfg.color)}>
+              <span className="text-sm font-body text-[--muted]">Today: </span>
+              <span className={cn('text-sm font-medium font-ui', moodCfg.color)}>
                 {moodCfg.label.toLowerCase()}
               </span>
             </div>
           </div>
           {streak > 0 && (
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/20">
-              <Flame className="h-3.5 w-3.5 text-amber-400" />
-              <span className="text-xs font-semibold text-amber-400">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gold-dim border border-gold/20">
+              <Flame className="h-3.5 w-3.5 text-gold" />
+              <span className="text-xs font-semibold font-ui text-gold">
                 {streak}-day streak
               </span>
             </div>
@@ -132,9 +132,9 @@ export function MoodCheckinWidget() {
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-xl bg-surface-900 border border-surface-800 p-4"
+      className="rounded-xl bg-[--card] border border-[--border] shadow-card p-4"
     >
-      <p className="text-sm font-semibold text-white mb-3">How are you feeling today?</p>
+      <p className="text-sm font-semibold font-ui text-[--cream] mb-3">How are you feeling today?</p>
 
       {/* Emoji mood selector */}
       <div className="flex gap-2 mb-4">
@@ -145,14 +145,14 @@ export function MoodCheckinWidget() {
             className={cn(
               'flex-1 flex flex-col items-center gap-1 py-2 rounded-lg transition-colors border',
               selectedMood === cfg.level
-                ? 'bg-surface-800 border-surface-600'
-                : 'border-transparent hover:bg-surface-800/60'
+                ? 'bg-[--card-hover] border-copper/30'
+                : 'border-transparent hover:bg-[--card-hover]/60'
             )}
             title={cfg.label}
             aria-label={cfg.label}
           >
             <span className="text-2xl leading-none">{cfg.emoji}</span>
-            <span className={cn('text-[10px] font-medium', cfg.color)}>
+            <span className={cn('text-[10px] font-medium font-ui', cfg.color)}>
               {cfg.label}
             </span>
           </button>
@@ -169,17 +169,17 @@ export function MoodCheckinWidget() {
             transition={{ duration: 0.25 }}
             className="overflow-hidden"
           >
-            <p className="text-xs text-surface-400 mb-2">Anything going on? (optional)</p>
+            <p className="text-xs font-body text-[--muted] mb-2">Anything going on? (optional)</p>
             <div className="flex flex-wrap gap-2 mb-4">
               {SITUATION_FLAGS.map(flag => (
                 <button
                   key={flag.key}
                   onClick={() => toggleFlag(flag.key)}
                   className={cn(
-                    'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors border',
+                    'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium font-ui transition-colors border',
                     selectedFlags.includes(flag.key)
-                      ? 'bg-accent-500/20 border-accent-500/50 text-accent-400'
-                      : 'bg-surface-800 border-surface-700 text-surface-400 hover:border-surface-600'
+                      ? 'bg-copper-dim border-copper/50 text-copper'
+                      : 'bg-[--card-hover] border-[--border] text-[--muted] hover:border-[--border-hover]'
                   )}
                 >
                   <span>{flag.emoji}</span>
@@ -192,8 +192,8 @@ export function MoodCheckinWidget() {
               onClick={handleSubmit}
               disabled={isSubmitting}
               className={cn(
-                'w-full py-2.5 rounded-lg text-sm font-semibold transition-colors',
-                'bg-accent-500 text-white hover:bg-accent-600',
+                'w-full py-2.5 rounded-lg text-sm font-semibold font-ui transition-colors',
+                'bg-copper text-[--white] hover:bg-copper-hover',
                 'disabled:opacity-60 disabled:cursor-not-allowed'
               )}
             >
