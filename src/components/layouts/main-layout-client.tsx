@@ -134,12 +134,12 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
       {/* Header */}
       <header className="sticky top-0 z-40 bg-[--surface]/95 backdrop-blur-[16px] border-b border-[--border]" style={{ height: 'var(--header-h)' }}>
         <div className="flex items-center justify-between px-4 h-full">
-          <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="font-display font-bold text-[15px] text-[--cream] tracking-[0.08em] hover:text-copper transition-colors">
+          <div className="flex items-baseline gap-3">
+            <Link href="/dashboard" className="font-display font-bold text-[15px] text-[--cream] tracking-[0.08em] hover:text-copper transition-colors leading-none">
               The Dad Center
             </Link>
             {weekDisplay && (
-              <span className="font-ui text-[11px] font-medium tracking-[0.05em] text-[--muted]">
+              <span className="font-ui text-[11px] font-medium tracking-[0.05em] text-[--muted] leading-none">
                 {weekDisplay}
               </span>
             )}
