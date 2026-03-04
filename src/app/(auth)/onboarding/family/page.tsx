@@ -7,9 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Progress } from '@/components/ui/progress'
 import { DateSelect } from '@/components/ui/date-select'
 import { cn } from '@/lib/utils'
 import { Loader2, Baby, Calendar } from 'lucide-react'
@@ -122,44 +120,76 @@ export default function OnboardingFamily() {
   // Brief wait for client-side auth sync
   if (!isReady) {
     return (
-      <Card className="w-full max-w-md bg-surface-900 border-surface-800">
-        <CardContent className="py-8">
-          <div className="flex items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
-          </div>
-        </CardContent>
-      </Card>
+      <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
+        <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
+        <div className="py-12 flex items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-copper" />
+        </div>
+      </div>
     )
   }
 
   if (isGenerating) {
     return (
-      <Card className="w-full max-w-md bg-surface-900 border-surface-800">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-white">Setting up your timeline</CardTitle>
-          <CardDescription>Generating personalized tasks...</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
+      <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
+        <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
+        <div className="px-8 py-10 text-center space-y-6">
+          <div className="mx-auto w-14 h-14 rounded-full bg-[--dim] flex items-center justify-center">
+            <Loader2 className="h-7 w-7 animate-spin text-copper" />
+          </div>
+          <div>
+            <h2 className="font-display text-2xl font-bold text-[--cream] mb-1">
+              Setting up your timeline
+            </h2>
+            <p className="font-body text-sm text-[--muted]">Generating personalized tasks...</p>
+          </div>
           <div className="space-y-2">
-            <Progress value={progress} className="h-2" />
-            <p className="text-sm text-center text-surface-400">
+            {/* Custom progress bar with copper fill */}
+            <div className="h-2 w-full bg-[--dim] rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-copper to-gold rounded-full transition-all duration-500"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <p className="text-xs text-center text-[--muted] font-ui">
               {progress < 50 ? 'Creating your family...' :
                progress < 90 ? 'Generating tasks...' :
                'Almost done...'}
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     )
   }
 
   return (
-    <Card className="w-full max-w-md bg-surface-900 border-surface-800">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl text-white">Tell us about your journey</CardTitle>
-        <CardDescription>We&apos;ll customize your timeline accordingly</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
+    <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
+      {/* Top accent bar */}
+      <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
+
+      {/* Step indicator */}
+      <div className="px-8 pt-6 pb-0">
+        <div className="flex items-center gap-2 mb-6">
+          <div className="flex gap-1.5">
+            <div className="h-1.5 w-6 rounded-full bg-copper" />
+            <div className="h-1.5 w-6 rounded-full bg-copper" />
+            <div className="h-1.5 w-6 rounded-full bg-[--dim]" />
+          </div>
+          <span className="text-xs text-[--muted] font-ui ml-1">Step 2 of 3</span>
+        </div>
+      </div>
+
+      <div className="px-8 pb-8 space-y-6">
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="font-display text-2xl font-bold text-[--cream] mb-2">
+            Tell us about your journey
+          </h1>
+          <p className="font-body text-sm text-[--muted]">
+            We&apos;ll customize your timeline accordingly
+          </p>
+        </div>
+
         {error && (
           <Alert variant="destructive">
             <AlertDescription>{error}</AlertDescription>
@@ -167,15 +197,15 @@ export default function OnboardingFamily() {
         )}
 
         {/* Stage toggle */}
-        <div className="grid grid-cols-2 gap-1 rounded-lg bg-surface-800 p-1">
+        <div className="grid grid-cols-2 gap-1 rounded-xl bg-[--bg] border border-[--border] p-1">
           <button
             type="button"
             onClick={() => setStage('pregnancy')}
             className={cn(
-              'flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+              'flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-ui font-medium transition-all duration-200',
               stage === 'pregnancy'
-                ? 'bg-surface-700 text-white shadow-sm'
-                : 'text-surface-400 hover:text-surface-300'
+                ? 'bg-copper text-[--bg] shadow-copper'
+                : 'text-[--muted] hover:text-[--cream]'
             )}
           >
             <Calendar className="h-4 w-4" />
@@ -185,10 +215,10 @@ export default function OnboardingFamily() {
             type="button"
             onClick={() => setStage('post-birth')}
             className={cn(
-              'flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+              'flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-ui font-medium transition-all duration-200',
               stage === 'post-birth'
-                ? 'bg-surface-700 text-white shadow-sm'
-                : 'text-surface-400 hover:text-surface-300'
+                ? 'bg-copper text-[--bg] shadow-copper'
+                : 'text-[--muted] hover:text-[--cream]'
             )}
           >
             <Baby className="h-4 w-4" />
@@ -199,44 +229,46 @@ export default function OnboardingFamily() {
         {/* Date input — only render the active one */}
         {stage === 'pregnancy' ? (
           <div className="space-y-2">
-            <Label>Due Date</Label>
+            <Label className="font-ui text-[--cream]">Due Date</Label>
             <DateSelect
               value={dueDate}
               onChange={setDueDate}
               mode="future"
             />
-            <p className="text-xs text-surface-400">
+            <p className="text-xs text-[--muted] font-body">
               We&apos;ll calculate your current week and schedule tasks accordingly
             </p>
           </div>
         ) : (
           <div className="space-y-2">
-            <Label>Birth Date</Label>
+            <Label className="font-ui text-[--cream]">Birth Date</Label>
             <DateSelect
               value={birthDate}
               onChange={setBirthDate}
               mode="past"
             />
-            <p className="text-xs text-surface-400">
+            <p className="text-xs text-[--muted] font-body">
               Tasks will be scheduled based on your baby&apos;s age
             </p>
           </div>
         )}
 
         <div className="space-y-2">
-          <Label htmlFor="babyName">Baby&apos;s Name (optional)</Label>
+          <Label htmlFor="babyName" className="font-ui text-[--cream]">
+            Baby&apos;s Name <span className="text-[--muted] font-normal">(optional)</span>
+          </Label>
           <Input
             id="babyName"
             type="text"
             placeholder="Leave blank if not decided yet"
             value={babyName}
             onChange={(e) => setBabyName(e.target.value)}
-            className="bg-surface-800 border-surface-700"
+            className="bg-[--bg] border-[--border] text-[--cream] placeholder:text-[--dim] focus:border-copper focus:ring-copper/20 font-body"
           />
         </div>
 
         <Button
-          className="w-full"
+          className="w-full bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper"
           onClick={handleCreateFamily}
           disabled={isLoading || !(stage === 'pregnancy' ? /^\d{4}-\d{2}-\d{2}$/.test(dueDate) : /^\d{4}-\d{2}-\d{2}$/.test(birthDate))}
         >
@@ -249,7 +281,7 @@ export default function OnboardingFamily() {
             'Continue'
           )}
         </Button>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

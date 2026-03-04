@@ -6,7 +6,6 @@ import { useAuth } from '@/lib/auth/auth-context'
 import { useCompleteOnboarding } from '@/hooks/use-profile'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { CheckCircle, Rocket, ListTodo, BookOpen, Lightbulb, Loader2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -105,35 +104,56 @@ export default function OnboardingReady() {
 
   if (!isReady) {
     return (
-      <Card className="w-full max-w-md bg-surface-900 border-surface-800">
-        <CardContent className="py-8">
-          <div className="flex items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
-          </div>
-        </CardContent>
-      </Card>
+      <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
+        <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
+        <div className="py-12 flex items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-copper" />
+        </div>
+      </div>
     )
   }
 
   return (
-    <Card className="w-full max-w-md bg-surface-900 border-surface-800">
-      <CardHeader className="text-center">
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: 'spring', duration: 0.5 }}
-          className="mx-auto mb-4 h-16 w-16 rounded-full bg-accent-500/20 flex items-center justify-center"
-        >
-          <Rocket className="h-8 w-8 text-accent-500" />
-        </motion.div>
-        <CardTitle className="text-2xl text-white">You&apos;re all set!</CardTitle>
-        <CardDescription>Your parenting command center is ready</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
+    <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
+      {/* Top accent bar */}
+      <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
+
+      {/* Step indicator */}
+      <div className="px-8 pt-6 pb-0">
+        <div className="flex items-center gap-2 mb-6">
+          <div className="flex gap-1.5">
+            <div className="h-1.5 w-6 rounded-full bg-copper" />
+            <div className="h-1.5 w-6 rounded-full bg-copper" />
+            <div className="h-1.5 w-6 rounded-full bg-copper" />
+          </div>
+          <span className="text-xs text-[--muted] font-ui ml-1">All done!</span>
+        </div>
+      </div>
+
+      <div className="px-8 pb-8 space-y-6">
+        {/* Animated icon + header */}
+        <div className="text-center">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', duration: 0.5 }}
+            className="mx-auto mb-5 h-16 w-16 rounded-full bg-copper/20 flex items-center justify-center"
+          >
+            <Rocket className="h-8 w-8 text-copper" />
+          </motion.div>
+          <h1 className="font-display text-2xl font-bold text-[--cream] mb-2">
+            You&apos;re all set!
+          </h1>
+          <p className="font-body text-sm text-[--muted]">
+            Your parenting command center is ready
+          </p>
+        </div>
+
         {error && (
-          <div className="text-red-500 text-sm text-center">{error}</div>
+          <div className="text-coral text-sm text-center font-body">{error}</div>
         )}
 
+        {/* Value items */}
         <div className="space-y-3">
           {valueItems.map((item) => (
             <motion.div
@@ -141,12 +161,12 @@ export default function OnboardingReady() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: item.delay + 0.3 }}
-              className="flex items-center gap-3 p-3 bg-surface-800 rounded-lg"
+              className="flex items-center gap-3 p-3 bg-[--card-hover] border border-[--border] rounded-xl"
             >
-              <div className="h-8 w-8 rounded-full bg-accent-500/20 flex items-center justify-center flex-shrink-0">
-                <CheckCircle className="h-4 w-4 text-accent-500" />
+              <div className="h-8 w-8 rounded-full bg-copper/20 flex items-center justify-center flex-shrink-0">
+                <CheckCircle className="h-4 w-4 text-copper" />
               </div>
-              <span className="text-surface-200">{item.label}</span>
+              <span className="font-body text-sm text-[--cream]">{item.label}</span>
             </motion.div>
           ))}
         </div>
@@ -157,7 +177,7 @@ export default function OnboardingReady() {
           transition={{ delay: 0.8 }}
         >
           <Button
-            className="w-full"
+            className="w-full bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper"
             size="lg"
             onClick={() => router.push('/dashboard')}
             disabled={completeOnboarding.isPending || !isCompleted}
@@ -172,7 +192,7 @@ export default function OnboardingReady() {
             )}
           </Button>
         </motion.div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

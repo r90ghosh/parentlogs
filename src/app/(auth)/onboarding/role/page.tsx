@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth/auth-context'
 import { useUpdateRole } from '@/hooks/use-profile'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -67,57 +66,81 @@ export default function OnboardingRole() {
 
   if (!isReady) {
     return (
-      <Card className="w-full max-w-md bg-surface-900 border-surface-800">
-        <CardContent className="py-8">
-          <div className="flex items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
-          </div>
-        </CardContent>
-      </Card>
+      <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
+        <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
+        <div className="py-12 flex items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-copper" />
+        </div>
+      </div>
     )
   }
 
   return (
-    <Card className="w-full max-w-md bg-surface-900 border-surface-800">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl text-white">What&apos;s your role?</CardTitle>
-        <CardDescription>This helps us personalize your experience</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
+      {/* Top accent bar */}
+      <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
+
+      {/* Step indicator */}
+      <div className="px-8 pt-6 pb-0">
+        <div className="flex items-center gap-2 mb-6">
+          <div className="flex gap-1.5">
+            <div className="h-1.5 w-6 rounded-full bg-copper" />
+            <div className="h-1.5 w-6 rounded-full bg-[--dim]" />
+            <div className="h-1.5 w-6 rounded-full bg-[--dim]" />
+          </div>
+          <span className="text-xs text-[--muted] font-ui ml-1">Step 1 of 3</span>
+        </div>
+      </div>
+
+      <div className="px-8 pb-8">
+        {/* Header */}
+        <div className="text-center mb-6">
+          <h1 className="font-display text-2xl font-bold text-[--cream] mb-2">
+            What&apos;s your role?
+          </h1>
+          <p className="font-body text-sm text-[--muted]">
+            This helps us personalize your experience
+          </p>
+        </div>
+
         {error && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="mb-4">
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           {roles.map((role) => (
             <button
               key={role.id}
               onClick={() => handleRoleSelect(role.id)}
               disabled={updateRole.isPending}
               className={cn(
-                'w-full p-4 rounded-lg border-2 text-left transition-all',
+                'w-full p-4 rounded-xl border text-left transition-all duration-200',
                 updateRole.isPending
-                  ? 'border-surface-700 bg-surface-800 opacity-60 cursor-not-allowed'
-                  : 'border-surface-700 bg-surface-800 hover:border-accent-500 hover:bg-accent-500/10 cursor-pointer'
+                  ? 'border-[--border] bg-[--card-hover] opacity-60 cursor-not-allowed'
+                  : 'border-[--border] bg-[--card-hover] hover:border-copper hover:bg-[--card-hover] cursor-pointer shadow-card hover:shadow-hover'
               )}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 {updateRole.isPending ? (
-                  <Loader2 className="h-6 w-6 animate-spin text-accent-500" />
+                  <div className="h-10 w-10 rounded-full bg-[--dim] flex items-center justify-center flex-shrink-0">
+                    <Loader2 className="h-5 w-5 animate-spin text-copper" />
+                  </div>
                 ) : (
-                  <span className="text-2xl">{role.emoji}</span>
+                  <div className="h-10 w-10 rounded-full bg-[--dim] flex items-center justify-center flex-shrink-0 text-xl">
+                    {role.emoji}
+                  </div>
                 )}
                 <div>
-                  <p className="font-medium text-white">{role.label}</p>
-                  <p className="text-sm text-surface-400">{role.description}</p>
+                  <p className="font-ui font-semibold text-[--cream]">{role.label}</p>
+                  <p className="text-sm font-body text-[--muted]">{role.description}</p>
                 </div>
               </div>
             </button>
           ))}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }

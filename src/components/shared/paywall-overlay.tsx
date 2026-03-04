@@ -36,32 +36,34 @@ export function PaywallOverlay({ feature, message, description, className, inter
 
   return (
     <div className={cn(
-      "absolute inset-0 bg-surface-950/80 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg",
+      "absolute inset-0 bg-[--bg]/80 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg",
       className
     )}>
       <div className="text-center p-6 max-w-sm">
-        <div className="mx-auto w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center mb-4">
-          <Crown className="h-6 w-6 text-amber-400" />
+        {/* Crown icon */}
+        <div className="mx-auto w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center mb-4">
+          <Crown className="h-6 w-6 text-gold" />
         </div>
-        <h3 className="text-lg font-semibold text-white mb-2">
+
+        <h3 className="font-display text-lg font-bold text-[--cream] mb-2">
           {headline}
         </h3>
-        <p className="text-sm text-surface-400 mb-5">
+        <p className="font-body text-sm text-[--muted] mb-5">
           {body}
         </p>
 
         {/* Feature list */}
-        <div className="text-left mb-5 space-y-2">
+        <div className="text-left mb-5 space-y-2 bg-[--card] border border-[--border] rounded-xl p-4">
           {PREMIUM_FEATURES.map(f => (
-            <div key={f} className="flex items-center gap-2 text-xs text-zinc-300">
-              <Check className="h-3.5 w-3.5 text-accent-500 flex-shrink-0" />
+            <div key={f} className="flex items-center gap-2 text-xs font-body text-[--cream]">
+              <Check className="h-3.5 w-3.5 text-copper flex-shrink-0" />
               {f}
             </div>
           ))}
         </div>
 
         {/* Primary CTA: Annual */}
-        <Button asChild className="w-full bg-accent-500 hover:bg-accent-600 text-white mb-2">
+        <Button asChild className="w-full bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper mb-2">
           <Link href={`/upgrade?source=${feature}`}>
             <Sparkles className="h-4 w-4 mr-2" />
             Upgrade — $39.99/yr ($3.33/mo)
@@ -69,14 +71,18 @@ export function PaywallOverlay({ feature, message, description, className, inter
         </Button>
 
         {/* Secondary CTA: Monthly */}
-        <Button asChild variant="outline" className="w-full border-surface-700 text-zinc-400 hover:bg-surface-800 mb-3" size="sm">
+        <Button
+          asChild
+          variant="outline"
+          className="w-full border-[--border-hover] text-[--muted] hover:bg-[--card-hover] hover:text-[--cream] font-ui mb-3"
+          size="sm"
+        >
           <Link href={`/upgrade?source=${feature}`}>
             Or $4.99/month
           </Link>
         </Button>
 
-        {/* Dismiss - not always available for overlays, but available for modals */}
-        <p className="text-xs text-zinc-600">30-day money-back guarantee</p>
+        <p className="text-xs text-[--dim] font-body">30-day money-back guarantee</p>
       </div>
     </div>
   )
@@ -88,19 +94,19 @@ export function PaywallCard({ feature, description, interpolations }: PaywallOve
   const body = description || (copy ? interpolateCopy(copy.body, interpolations) : undefined)
 
   return (
-    <div className="relative p-6 bg-surface-900 border border-surface-800 rounded-lg">
+    <div className="relative p-6 bg-[--card] border border-[--border] rounded-2xl shadow-card">
       <div className="absolute top-3 right-3">
-        <Lock className="h-4 w-4 text-surface-500" />
+        <Lock className="h-4 w-4 text-[--dim]" />
       </div>
       <div className="text-center">
-        <div className="mx-auto w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center mb-3">
-          <Crown className="h-5 w-5 text-amber-400" />
+        <div className="mx-auto w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center mb-3">
+          <Crown className="h-5 w-5 text-gold" />
         </div>
-        <h3 className="font-medium text-white mb-1">{headline}</h3>
+        <h3 className="font-ui font-semibold text-[--cream] mb-1">{headline}</h3>
         {body && (
-          <p className="text-xs text-surface-400 mb-3">{body}</p>
+          <p className="text-xs font-body text-[--muted] mb-3">{body}</p>
         )}
-        <Button asChild size="sm" className="bg-accent-500 hover:bg-accent-600 text-white">
+        <Button asChild size="sm" className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper">
           <Link href={`/upgrade?source=${feature}`}>
             Upgrade — $3.33/mo
           </Link>
@@ -124,36 +130,39 @@ export function PaywallModal({
   const body = copy ? interpolateCopy(copy.body, interpolations) : 'Upgrade to unlock this feature.'
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="relative bg-surface-900 border border-surface-800 rounded-2xl max-w-md w-full p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[--bg]/70 backdrop-blur-sm p-4">
+      <div className="relative bg-[--card] border border-[--border] rounded-2xl max-w-md w-full p-6 shadow-lift overflow-hidden">
+        {/* Top accent bar */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-copper via-gold to-copper" />
+
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors"
+          className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-[--card-hover] text-[--dim] hover:text-[--cream] transition-colors"
         >
           <X className="h-4 w-4" />
         </button>
 
-        <div className="text-center mb-5">
-          <div className="mx-auto w-14 h-14 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-4">
-            <Crown className="h-7 w-7 text-white" />
+        <div className="text-center mb-5 mt-2">
+          <div className="mx-auto w-14 h-14 rounded-full bg-gradient-to-br from-gold/30 to-copper/30 border border-gold/30 flex items-center justify-center mb-4">
+            <Crown className="h-7 w-7 text-gold" />
           </div>
-          <h2 className="text-xl font-bold text-white mb-2">{headline}</h2>
-          <p className="text-sm text-zinc-400">{body}</p>
+          <h2 className="font-display text-xl font-bold text-[--cream] mb-2">{headline}</h2>
+          <p className="font-body text-sm text-[--muted]">{body}</p>
         </div>
 
         {/* Feature list */}
-        <div className="mb-6 space-y-2.5">
+        <div className="mb-6 space-y-2.5 bg-[--card-hover] border border-[--border] rounded-xl p-4">
           {PREMIUM_FEATURES.map(f => (
-            <div key={f} className="flex items-center gap-2.5 text-sm text-zinc-300">
-              <Check className="h-4 w-4 text-accent-500 flex-shrink-0" />
+            <div key={f} className="flex items-center gap-2.5 text-sm font-body text-[--cream]">
+              <Check className="h-4 w-4 text-copper flex-shrink-0" />
               {f}
             </div>
           ))}
         </div>
 
         {/* Primary CTA: Annual */}
-        <Button asChild className="w-full py-5 bg-accent-500 hover:bg-accent-600 text-white text-base mb-2">
+        <Button asChild className="w-full py-5 bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-base shadow-copper mb-2">
           <Link href={`/upgrade?source=${feature}`}>
             <Sparkles className="h-5 w-5 mr-2" />
             Upgrade — $39.99/yr
@@ -161,7 +170,12 @@ export function PaywallModal({
         </Button>
 
         {/* Secondary CTA: Monthly */}
-        <Button asChild variant="outline" className="w-full border-surface-700 text-zinc-400 hover:bg-surface-800" size="sm">
+        <Button
+          asChild
+          variant="outline"
+          className="w-full border-[--border-hover] text-[--muted] hover:bg-[--card-hover] hover:text-[--cream] font-ui"
+          size="sm"
+        >
           <Link href={`/upgrade?source=${feature}`}>
             Or $4.99/month
           </Link>
@@ -170,7 +184,7 @@ export function PaywallModal({
         {/* Maybe later */}
         <button
           onClick={onClose}
-          className="w-full mt-3 text-center text-sm text-zinc-600 hover:text-zinc-400 transition-colors py-2"
+          className="w-full mt-3 text-center text-sm font-ui text-[--dim] hover:text-[--muted] transition-colors py-2"
         >
           Maybe later
         </button>

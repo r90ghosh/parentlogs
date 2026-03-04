@@ -41,8 +41,8 @@ export default async function OnboardingLayout({ children }: { children: ReactNo
   console.log('[OnboardingLayout] ========== RENDER END ==========')
 
   return (
-    <div className="min-h-screen bg-surface-950 flex flex-col">
-      <header className="p-4 flex justify-center">
+    <div className="min-h-screen bg-[--bg] flex flex-col">
+      <header className="p-6 flex justify-center">
         <Logo size="md" variant="dark" />
       </header>
       <main className="flex-1 flex items-center justify-center p-4">
