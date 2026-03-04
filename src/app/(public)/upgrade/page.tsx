@@ -10,6 +10,10 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Check, Crown, Loader2, Sparkles, Zap, ArrowLeft, X } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { MagneticButton } from '@/components/ui/animations/MagneticButton'
+import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 
 function UpgradeContent() {
   const router = useRouter()
@@ -103,169 +107,188 @@ function UpgradeContent() {
         )}
 
         {/* Hero */}
-        <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-copper/15 border border-copper/30 mb-5">
-            <Sparkles className="h-3.5 w-3.5 text-copper" />
-            <span className="text-xs font-ui font-semibold text-copper tracking-wide uppercase">Limited Time Offer</span>
+        <RevealOnScroll delay={0}>
+          <div className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-copper/15 border border-copper/30 mb-5">
+              <Sparkles className="h-3.5 w-3.5 text-copper" />
+              <span className="text-xs font-ui font-semibold text-copper tracking-wide uppercase">Limited Time Offer</span>
+            </div>
+            <h1 className="font-display text-4xl md:text-5xl font-bold text-[--cream] mb-4 leading-tight">
+              Unlock Your Full<br />Parenting Potential
+            </h1>
+            <p className="font-body text-lg text-[--muted] max-w-2xl mx-auto mb-3">
+              Get complete access to all features, unlimited history, and premium content to support your parenting journey.
+            </p>
+            <p className="text-sm text-[--dim] font-body">
+              One subscription per family — both partners share access.
+            </p>
           </div>
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-[--cream] mb-4 leading-tight">
-            Unlock Your Full<br />Parenting Potential
-          </h1>
-          <p className="font-body text-lg text-[--muted] max-w-2xl mx-auto mb-3">
-            Get complete access to all features, unlimited history, and premium content to support your parenting journey.
-          </p>
-          <p className="text-sm text-[--dim] font-body">
-            One subscription per family — both partners share access.
-          </p>
-        </div>
+        </RevealOnScroll>
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           {/* Monthly */}
-          <div
-            className={cn(
-              "bg-[--card] border-2 rounded-2xl cursor-pointer transition-all duration-200 overflow-hidden shadow-card hover:shadow-hover",
-              selectedPlan === 'monthly'
-                ? "border-copper shadow-copper"
-                : "border-[--border] hover:border-[--border-hover]"
-            )}
-            onClick={() => setSelectedPlan('monthly')}
-          >
-            <div className="p-6 space-y-4">
-              <div>
-                <h3 className="font-display text-lg font-bold text-[--cream]">Monthly</h3>
-                <p className="font-body text-xs text-[--muted] mt-0.5">Flexible month-to-month</p>
+          <CardEntrance delay={100}>
+            <Card3DTilt maxTilt={4} gloss>
+              <div
+                className={cn(
+                  "bg-[--card] border-2 rounded-2xl cursor-pointer transition-all duration-200 overflow-hidden shadow-card hover:shadow-hover",
+                  selectedPlan === 'monthly'
+                    ? "border-copper shadow-copper"
+                    : "border-[--border] hover:border-[--border-hover]"
+                )}
+                onClick={() => setSelectedPlan('monthly')}
+              >
+                <div className="p-6 space-y-4">
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-[--cream]">Monthly</h3>
+                    <p className="font-body text-xs text-[--muted] mt-0.5">Flexible month-to-month</p>
+                  </div>
+                  <div>
+                    <span className="font-display text-4xl font-bold text-[--cream]">$4.99</span>
+                    <span className="text-[--muted] font-body text-sm">/month</span>
+                  </div>
+                  <ul className="space-y-2">
+                    <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
+                      <Check className="h-4 w-4 text-copper flex-shrink-0" />
+                      All premium features
+                    </li>
+                    <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
+                      <Check className="h-4 w-4 text-copper flex-shrink-0" />
+                      Cancel anytime
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <div>
-                <span className="font-display text-4xl font-bold text-[--cream]">$4.99</span>
-                <span className="text-[--muted] font-body text-sm">/month</span>
-              </div>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
-                  <Check className="h-4 w-4 text-copper flex-shrink-0" />
-                  All premium features
-                </li>
-                <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
-                  <Check className="h-4 w-4 text-copper flex-shrink-0" />
-                  Cancel anytime
-                </li>
-              </ul>
-            </div>
-          </div>
+            </Card3DTilt>
+          </CardEntrance>
 
           {/* Yearly - Popular */}
-          <div
-            className={cn(
-              "bg-[--card] border-2 rounded-2xl cursor-pointer transition-all duration-200 relative overflow-hidden shadow-card hover:shadow-hover",
-              selectedPlan === 'yearly'
-                ? "border-copper shadow-copper"
-                : "border-[--border] hover:border-[--border-hover]"
-            )}
-            onClick={() => setSelectedPlan('yearly')}
-          >
-            {/* Most Popular badge */}
-            <div className="absolute top-0 left-0 right-0 h-7 bg-copper flex items-center justify-center">
-              <span className="text-xs font-ui font-bold text-[--bg] tracking-wide uppercase">Most Popular</span>
-            </div>
-            <div className="p-6 pt-10 space-y-4">
-              <div>
-                <h3 className="font-display text-lg font-bold text-[--cream]">Yearly</h3>
-                <p className="font-body text-xs text-[--muted] mt-0.5">Best for new parents</p>
+          <CardEntrance delay={200}>
+            <Card3DTilt maxTilt={4} gloss>
+              <div
+                className={cn(
+                  "bg-[--card] border-2 rounded-2xl cursor-pointer transition-all duration-200 relative overflow-hidden shadow-card hover:shadow-hover",
+                  selectedPlan === 'yearly'
+                    ? "border-copper shadow-copper"
+                    : "border-[--border] hover:border-[--border-hover]"
+                )}
+                onClick={() => setSelectedPlan('yearly')}
+              >
+                {/* Most Popular badge */}
+                <div className="absolute top-0 left-0 right-0 h-7 bg-copper flex items-center justify-center">
+                  <span className="text-xs font-ui font-bold text-[--bg] tracking-wide uppercase">Most Popular</span>
+                </div>
+                <div className="p-6 pt-10 space-y-4">
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-[--cream]">Yearly</h3>
+                    <p className="font-body text-xs text-[--muted] mt-0.5">Best for new parents</p>
+                  </div>
+                  <div>
+                    <span className="font-display text-4xl font-bold text-[--cream]">$39.99</span>
+                    <span className="text-[--muted] font-body text-sm">/year</span>
+                  </div>
+                  <div className="p-2.5 bg-copper/15 border border-copper/25 rounded-xl text-center">
+                    <span className="text-copper font-ui font-semibold text-sm">Just $3.33/mo — Save 33%</span>
+                  </div>
+                  <ul className="space-y-2">
+                    <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
+                      <Check className="h-4 w-4 text-copper flex-shrink-0" />
+                      All premium features
+                    </li>
+                    <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
+                      <Check className="h-4 w-4 text-copper flex-shrink-0" />
+                      Priority support
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <div>
-                <span className="font-display text-4xl font-bold text-[--cream]">$39.99</span>
-                <span className="text-[--muted] font-body text-sm">/year</span>
-              </div>
-              <div className="p-2.5 bg-copper/15 border border-copper/25 rounded-xl text-center">
-                <span className="text-copper font-ui font-semibold text-sm">Just $3.33/mo — Save 33%</span>
-              </div>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
-                  <Check className="h-4 w-4 text-copper flex-shrink-0" />
-                  All premium features
-                </li>
-                <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
-                  <Check className="h-4 w-4 text-copper flex-shrink-0" />
-                  Priority support
-                </li>
-              </ul>
-            </div>
-          </div>
+            </Card3DTilt>
+          </CardEntrance>
 
           {/* Lifetime */}
-          <div
-            className={cn(
-              "bg-[--card] border-2 rounded-2xl cursor-pointer transition-all duration-200 relative overflow-hidden shadow-card hover:shadow-hover",
-              selectedPlan === 'lifetime'
-                ? "border-gold shadow-gold"
-                : "border-[--border] hover:border-[--border-hover]"
-            )}
-            onClick={() => setSelectedPlan('lifetime')}
-          >
-            {/* Best Value badge */}
-            <div className="absolute top-0 left-0 right-0 h-7 bg-gold flex items-center justify-center">
-              <span className="text-xs font-ui font-bold text-[--bg] tracking-wide uppercase">Best Value</span>
-            </div>
-            <div className="p-6 pt-10 space-y-4">
-              <div>
-                <h3 className="font-display text-lg font-bold text-[--cream] flex items-center gap-2">
-                  <Crown className="h-5 w-5 text-gold" />
-                  Lifetime
-                </h3>
-                <p className="font-body text-xs text-[--muted] mt-0.5">One-time payment</p>
+          <CardEntrance delay={300}>
+            <Card3DTilt maxTilt={4} gloss>
+              <div
+                className={cn(
+                  "bg-[--card] border-2 rounded-2xl cursor-pointer transition-all duration-200 relative overflow-hidden shadow-card hover:shadow-hover",
+                  selectedPlan === 'lifetime'
+                    ? "border-gold shadow-gold"
+                    : "border-[--border] hover:border-[--border-hover]"
+                )}
+                onClick={() => setSelectedPlan('lifetime')}
+              >
+                {/* Best Value badge */}
+                <div className="absolute top-0 left-0 right-0 h-7 bg-gold flex items-center justify-center">
+                  <span className="text-xs font-ui font-bold text-[--bg] tracking-wide uppercase">Best Value</span>
+                </div>
+                <div className="p-6 pt-10 space-y-4">
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-[--cream] flex items-center gap-2">
+                      <Crown className="h-5 w-5 text-gold" />
+                      Lifetime
+                    </h3>
+                    <p className="font-body text-xs text-[--muted] mt-0.5">One-time payment</p>
+                  </div>
+                  <div>
+                    <span className="font-display text-4xl font-bold text-[--cream]">$99.99</span>
+                    <span className="text-[--muted] font-body text-sm"> once</span>
+                  </div>
+                  <div className="p-2.5 bg-gold/15 border border-gold/25 rounded-xl text-center">
+                    <span className="text-gold font-ui font-semibold text-sm">Never pay again</span>
+                  </div>
+                  <ul className="space-y-2">
+                    <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
+                      <Check className="h-4 w-4 text-gold flex-shrink-0" />
+                      All premium features forever
+                    </li>
+                    <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
+                      <Check className="h-4 w-4 text-gold flex-shrink-0" />
+                      All future updates included
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <div>
-                <span className="font-display text-4xl font-bold text-[--cream]">$99.99</span>
-                <span className="text-[--muted] font-body text-sm"> once</span>
-              </div>
-              <div className="p-2.5 bg-gold/15 border border-gold/25 rounded-xl text-center">
-                <span className="text-gold font-ui font-semibold text-sm">Never pay again</span>
-              </div>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
-                  <Check className="h-4 w-4 text-gold flex-shrink-0" />
-                  All premium features forever
-                </li>
-                <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
-                  <Check className="h-4 w-4 text-gold flex-shrink-0" />
-                  All future updates included
-                </li>
-              </ul>
-            </div>
-          </div>
+            </Card3DTilt>
+          </CardEntrance>
         </div>
 
         {/* CTA Button */}
-        <div className="text-center mb-14">
-          <Button
-            size="lg"
-            className={cn(
-              "px-12 py-6 text-lg font-ui font-semibold",
-              selectedPlan === 'lifetime'
-                ? "bg-gold hover:bg-gold-hover text-[--bg] shadow-gold"
-                : "bg-copper hover:bg-copper-hover text-[--bg] shadow-copper"
-            )}
-            onClick={handleCheckout}
-            disabled={isCheckingOut}
-          >
-            {isCheckingOut ? (
-              <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Processing...
-              </>
-            ) : (
-              <>
-                <Zap className="mr-2 h-5 w-5" />
-                Get {selectedPlan === 'lifetime' ? 'Lifetime' : 'Premium'} Access
-              </>
-            )}
-          </Button>
-          <p className="mt-4 text-sm text-[--dim] font-body">
-            Secure payment powered by Stripe
-          </p>
-        </div>
+        <RevealOnScroll delay={200}>
+          <div className="text-center mb-14">
+            <MagneticButton>
+              <Button
+                size="lg"
+                className={cn(
+                  "px-12 py-6 text-lg font-ui font-semibold",
+                  selectedPlan === 'lifetime'
+                    ? "bg-gold hover:bg-gold-hover text-[--bg] shadow-gold"
+                    : "bg-copper hover:bg-copper-hover text-[--bg] shadow-copper"
+                )}
+                onClick={handleCheckout}
+                disabled={isCheckingOut}
+              >
+                {isCheckingOut ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <Zap className="mr-2 h-5 w-5" />
+                    Get {selectedPlan === 'lifetime' ? 'Lifetime' : 'Premium'} Access
+                  </>
+                )}
+              </Button>
+            </MagneticButton>
+            <p className="mt-4 text-sm text-[--dim] font-body">
+              Secure payment powered by Stripe
+            </p>
+          </div>
+        </RevealOnScroll>
 
         {/* Feature Comparison */}
+        <RevealOnScroll delay={100}>
         <div className="bg-[--card] border border-[--border] rounded-2xl shadow-card overflow-hidden">
           <div className="p-6 border-b border-[--border]">
             <h2 className="font-display text-xl font-bold text-[--cream] text-center">
@@ -301,6 +324,7 @@ function UpgradeContent() {
             </table>
           </div>
         </div>
+        </RevealOnScroll>
 
         {/* Trust signals */}
         <div className="mt-12 text-center space-y-2">

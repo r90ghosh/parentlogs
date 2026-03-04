@@ -49,6 +49,9 @@ import {
 } from '@/lib/task-timeline'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { PaywallOverlay } from '@/components/shared/paywall-overlay'
+import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 import { cn } from '@/lib/utils'
 import { List, CalendarDays, ChevronLeft, ChevronRight, Lock, CheckSquare } from 'lucide-react'
 import Link from 'next/link'
@@ -325,35 +328,37 @@ export function TasksPageClient({
   return (
     <div>
       {/* Header with view toggle */}
-      <div className="flex items-center justify-between mb-4">
-        <TasksHeader currentWeek={currentWeek} daysToGo={daysToGo} />
-        <div className="flex items-center gap-1 bg-[--surface] border border-[--border] rounded-xl p-1">
-          <button
-            onClick={() => handleViewChange('list')}
-            className={cn(
-              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-ui font-medium transition-colors',
-              view === 'list'
-                ? 'bg-copper-dim text-copper'
-                : 'text-[--muted] hover:text-[--cream]'
-            )}
-          >
-            <List className="h-4 w-4" />
-            List
-          </button>
-          <button
-            onClick={() => handleViewChange('calendar')}
-            className={cn(
-              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-ui font-medium transition-colors',
-              view === 'calendar'
-                ? 'bg-copper-dim text-copper'
-                : 'text-[--muted] hover:text-[--cream]'
-            )}
-          >
-            <CalendarDays className="h-4 w-4" />
-            Calendar
-          </button>
+      <RevealOnScroll delay={0}>
+        <div className="flex items-center justify-between mb-4">
+          <TasksHeader currentWeek={currentWeek} daysToGo={daysToGo} />
+          <div className="flex items-center gap-1 bg-[--surface] border border-[--border] rounded-xl p-1">
+            <button
+              onClick={() => handleViewChange('list')}
+              className={cn(
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-ui font-medium transition-colors',
+                view === 'list'
+                  ? 'bg-copper-dim text-copper'
+                  : 'text-[--muted] hover:text-[--cream]'
+              )}
+            >
+              <List className="h-4 w-4" />
+              List
+            </button>
+            <button
+              onClick={() => handleViewChange('calendar')}
+              className={cn(
+                'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-ui font-medium transition-colors',
+                view === 'calendar'
+                  ? 'bg-copper-dim text-copper'
+                  : 'text-[--muted] hover:text-[--cream]'
+              )}
+            >
+              <CalendarDays className="h-4 w-4" />
+              Calendar
+            </button>
+          </div>
         </div>
-      </div>
+      </RevealOnScroll>
 
       {/* Calendar View */}
       {view === 'calendar' && (
@@ -469,64 +474,74 @@ export function TasksPageClient({
         <>
           {/* Timeline bar - Phase filter */}
           {timelineStats && allTasks.length > 0 && (
-            <div className="mb-6">
-              <TaskTimelineBar
-                stats={timelineStats}
-                currentCategory={currentTimelineCategory}
-                selectedCategory={selectedTimelineCategory}
-                onCategoryClick={setSelectedTimelineCategory}
-              />
-            </div>
+            <RevealOnScroll delay={80}>
+              <div className="mb-6">
+                <TaskTimelineBar
+                  stats={timelineStats}
+                  currentCategory={currentTimelineCategory}
+                  selectedCategory={selectedTimelineCategory}
+                  onCategoryClick={setSelectedTimelineCategory}
+                />
+              </div>
+            </RevealOnScroll>
           )}
 
           {/* Catch-up banner */}
           {backlogTasks.length > 0 && (
-            <CatchUpBanner
-              tasksToReview={backlogTasks.length}
-              percentDone={triageProgress}
-              signupWeek={signupWeek}
-            />
+            <RevealOnScroll delay={120}>
+              <CatchUpBanner
+                tasksToReview={backlogTasks.length}
+                percentDone={triageProgress}
+                signupWeek={signupWeek}
+              />
+            </RevealOnScroll>
           )}
 
           {/* Stats bar */}
-          <StatsBar
-            stats={stats}
-            activeCard={activeStatCard}
-            onCardClick={setActiveStatCard}
-          />
+          <RevealOnScroll delay={160}>
+            <StatsBar
+              stats={stats}
+              activeCard={activeStatCard}
+              onCardClick={setActiveStatCard}
+            />
+          </RevealOnScroll>
 
           {/* Filter bar */}
-          <FilterBar
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-            activeCategory={activeCategory}
-            onCategoryChange={setActiveCategory}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            hasCatchUp={backlogTasks.length > 0}
-          />
+          <RevealOnScroll delay={200}>
+            <FilterBar
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              activeCategory={activeCategory}
+              onCategoryChange={setActiveCategory}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              hasCatchUp={backlogTasks.length > 0}
+            />
+          </RevealOnScroll>
 
           {/* 30-day free window upgrade prompt */}
           {hasLockedTasks && (
-            <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-gold-dim to-copper-dim border border-gold/25">
-              <div className="flex items-center gap-3">
-                <Lock className="h-5 w-5 text-gold flex-shrink-0" />
-                <div className="flex-1">
-                  <p className="text-sm font-ui font-medium text-[--cream]">
-                    You&apos;re seeing your 30-day task window
-                  </p>
-                  <p className="text-xs text-[--muted] font-body mt-0.5">
-                    Upgrade to see your full timeline from pregnancy through 24 months.
-                  </p>
+            <RevealOnScroll delay={240}>
+              <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-gold-dim to-copper-dim border border-gold/25">
+                <div className="flex items-center gap-3">
+                  <Lock className="h-5 w-5 text-gold flex-shrink-0" />
+                  <div className="flex-1">
+                    <p className="text-sm font-ui font-medium text-[--cream]">
+                      You&apos;re seeing your 30-day task window
+                    </p>
+                    <p className="text-xs text-[--muted] font-body mt-0.5">
+                      Upgrade to see your full timeline from pregnancy through 24 months.
+                    </p>
+                  </div>
+                  <Link
+                    href="/upgrade?source=tasks"
+                    className="px-4 py-2 rounded-lg bg-copper text-[--bg] text-sm font-ui font-semibold hover:bg-copper-hover transition-colors flex-shrink-0"
+                  >
+                    Upgrade
+                  </Link>
                 </div>
-                <Link
-                  href="/upgrade?source=tasks"
-                  className="px-4 py-2 rounded-lg bg-copper text-[--bg] text-sm font-ui font-semibold hover:bg-copper-hover transition-colors flex-shrink-0"
-                >
-                  Upgrade
-                </Link>
               </div>
-            </div>
+            </RevealOnScroll>
           )}
 
           {/* Main content layout */}
@@ -535,34 +550,40 @@ export function TasksPageClient({
             <div className="space-y-6">
               {/* Catch-up section - only show when no phase filter is active */}
               {activeTab === 'active' && backlogTasks.length > 0 && !selectedTimelineCategory && (
-                <CatchUpSection
-                  tasks={backlogTasks}
-                  currentWeek={currentWeek}
-                  onTriage={handleTriage}
-                  onBulkTriage={handleBulkTriage}
-                  isPending={triageTask.isPending || bulkTriageTasks.isPending}
-                />
+                <CardEntrance delay={0}>
+                  <CatchUpSection
+                    tasks={backlogTasks}
+                    currentWeek={currentWeek}
+                    onTriage={handleTriage}
+                    onBulkTriage={handleBulkTriage}
+                    isPending={triageTask.isPending || bulkTriageTasks.isPending}
+                  />
+                </CardEntrance>
               )}
 
               {/* Phase tasks section - show when a phase filter is active */}
               {selectedTimelineCategory && phaseTasks.length > 0 && (
-                <TaskSection
-                  icon="📋"
-                  title={TIMELINE_CATEGORIES.find(c => c.id === selectedTimelineCategory)?.label || 'Phase Tasks'}
-                  count={phaseTasks.length}
-                  actions={
-                    <SectionAction>Sort by priority</SectionAction>
-                  }
-                >
-                  {phaseTasks.map(task => (
-                    <TaskItem
-                      key={task.id}
-                      task={task}
-                      isHighlighted={task.priority === 'must-do'}
-                      onComplete={() => handleComplete(task.id)}
-                    />
-                  ))}
-                </TaskSection>
+                <CardEntrance delay={0}>
+                  <Card3DTilt maxTilt={3} gloss>
+                    <TaskSection
+                      icon="📋"
+                      title={TIMELINE_CATEGORIES.find(c => c.id === selectedTimelineCategory)?.label || 'Phase Tasks'}
+                      count={phaseTasks.length}
+                      actions={
+                        <SectionAction>Sort by priority</SectionAction>
+                      }
+                    >
+                      {phaseTasks.map(task => (
+                        <TaskItem
+                          key={task.id}
+                          task={task}
+                          isHighlighted={task.priority === 'must-do'}
+                          onComplete={() => handleComplete(task.id)}
+                        />
+                      ))}
+                    </TaskSection>
+                  </Card3DTilt>
+                </CardEntrance>
               )}
 
               {/* Phase tasks empty state */}
@@ -578,44 +599,52 @@ export function TasksPageClient({
 
               {/* This week section - only show when no phase filter is active */}
               {!selectedTimelineCategory && thisWeekTasks.length > 0 && (
-                <TaskSection
-                  icon="📅"
-                  title="This Week"
-                  count={thisWeekTasks.length}
-                  actions={
-                    <SectionAction>Sort by priority</SectionAction>
-                  }
-                >
-                  {thisWeekTasks.map(task => (
-                    <TaskItem
-                      key={task.id}
-                      task={task}
-                      isHighlighted={task.priority === 'must-do'}
-                      onComplete={() => handleComplete(task.id)}
-                    />
-                  ))}
-                </TaskSection>
+                <CardEntrance delay={80}>
+                  <Card3DTilt maxTilt={3} gloss>
+                    <TaskSection
+                      icon="📅"
+                      title="This Week"
+                      count={thisWeekTasks.length}
+                      actions={
+                        <SectionAction>Sort by priority</SectionAction>
+                      }
+                    >
+                      {thisWeekTasks.map(task => (
+                        <TaskItem
+                          key={task.id}
+                          task={task}
+                          isHighlighted={task.priority === 'must-do'}
+                          onComplete={() => handleComplete(task.id)}
+                        />
+                      ))}
+                    </TaskSection>
+                  </Card3DTilt>
+                </CardEntrance>
               )}
 
               {/* Coming up section - only show when no phase filter is active */}
               {!selectedTimelineCategory && comingUpTasks.length > 0 && (
-                <TaskSection
-                  icon="🔮"
-                  title="Coming Up"
-                  count={`Week ${currentWeek + 1}-${currentWeek + 4}`}
-                  actions={
-                    <SectionAction>View all {comingUpTasks.length} →</SectionAction>
-                  }
-                >
-                  {comingUpTasks.slice(0, 3).map(task => (
-                    <TaskItem
-                      key={task.id}
-                      task={task}
-                      isDimmed
-                      onComplete={() => handleComplete(task.id)}
-                    />
-                  ))}
-                </TaskSection>
+                <CardEntrance delay={160}>
+                  <Card3DTilt maxTilt={3} gloss>
+                    <TaskSection
+                      icon="🔮"
+                      title="Coming Up"
+                      count={`Week ${currentWeek + 1}-${currentWeek + 4}`}
+                      actions={
+                        <SectionAction>View all {comingUpTasks.length} →</SectionAction>
+                      }
+                    >
+                      {comingUpTasks.slice(0, 3).map(task => (
+                        <TaskItem
+                          key={task.id}
+                          task={task}
+                          isDimmed
+                          onComplete={() => handleComplete(task.id)}
+                        />
+                      ))}
+                    </TaskSection>
+                  </Card3DTilt>
+                </CardEntrance>
               )}
 
               {/* Empty state - only show when no phase filter is active */}
@@ -631,36 +660,54 @@ export function TasksPageClient({
             {/* Right: Panel */}
             <div className="space-y-5">
               {/* Focus card */}
-              <FocusCard
-                task={focusTask}
-                onDone={() => focusTask && handleComplete(focusTask.id)}
-                onSnooze={() => {
-                  if (!isPremium) return
-                  if (focusTask) handleSnooze(focusTask.id)
-                }}
-              />
+              <CardEntrance delay={100}>
+                <Card3DTilt maxTilt={3} gloss>
+                  <FocusCard
+                    task={focusTask}
+                    onDone={() => focusTask && handleComplete(focusTask.id)}
+                    onSnooze={() => {
+                      if (!isPremium) return
+                      if (focusTask) handleSnooze(focusTask.id)
+                    }}
+                  />
+                </Card3DTilt>
+              </CardEntrance>
 
               {/* Snooze premium badge */}
               {!isPremium && (
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[--surface] border border-[--border]">
-                  <Lock className="h-3.5 w-3.5 text-[--muted]" />
-                  <span className="text-xs text-[--muted] font-body">Snooze & reschedule are premium features</span>
-                </div>
+                <RevealOnScroll delay={150}>
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[--surface] border border-[--border]">
+                    <Lock className="h-3.5 w-3.5 text-[--muted]" />
+                    <span className="text-xs text-[--muted] font-body">Snooze & reschedule are premium features</span>
+                  </div>
+                </RevealOnScroll>
               )}
 
               {/* Week calendar */}
-              <WeekCalendarCard days={weekDays} />
+              <CardEntrance delay={200}>
+                <Card3DTilt maxTilt={3} gloss>
+                  <WeekCalendarCard days={weekDays} />
+                </Card3DTilt>
+              </CardEntrance>
 
               {/* Progress */}
-              <ProgressCard
-                percentComplete={progressPercent}
-                done={stats.completed}
-                active={stats.thisWeek}
-                toTriage={stats.catchUpQueue}
-              />
+              <CardEntrance delay={300}>
+                <Card3DTilt maxTilt={3} gloss>
+                  <ProgressCard
+                    percentComplete={progressPercent}
+                    done={stats.completed}
+                    active={stats.thisWeek}
+                    toTriage={stats.catchUpQueue}
+                  />
+                </Card3DTilt>
+              </CardEntrance>
 
               {/* Streak banner */}
-              <StreakBanner days={3} />
+              <CardEntrance delay={400}>
+                <Card3DTilt maxTilt={3} gloss>
+                  <StreakBanner days={3} />
+                </Card3DTilt>
+              </CardEntrance>
             </div>
           </div>
         </>

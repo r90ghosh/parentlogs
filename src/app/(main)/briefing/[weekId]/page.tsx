@@ -13,6 +13,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { isPregnancyStage } from '@/lib/pregnancy-utils'
 import { getBabySize } from '@/lib/baby-sizes'
+import { RevealOnScroll, Card3DTilt, CardEntrance, ScrollProgressBar } from '@/components/ui/animations'
 
 import {
   BriefingHero,
@@ -135,15 +136,19 @@ export default function BriefingWeekPage() {
 
   return (
     <div className="min-h-screen bg-[--bg] pb-24 md:pb-8">
+      <ScrollProgressBar />
+
       {/* Hero Section */}
-      <BriefingHero
-        briefing={briefing}
-        currentWeek={currentWeek}
-        viewingWeek={localWeek}
-        maxWeek={maxWeek}
-        onNavigate={handleNavigate}
-        isPregnancy={isPregnancy}
-      />
+      <CardEntrance delay={0}>
+        <BriefingHero
+          briefing={briefing}
+          currentWeek={currentWeek}
+          viewingWeek={localWeek}
+          maxWeek={maxWeek}
+          onNavigate={handleNavigate}
+          isPregnancy={isPregnancy}
+        />
+      </CardEntrance>
 
       {/* Content Area */}
       <div className="px-4 md:px-12 py-6 max-w-7xl mx-auto">
@@ -158,52 +163,80 @@ export default function BriefingWeekPage() {
         )}
 
         {/* Progress Bar - only for pregnancy */}
-        {isPregnancy && <BriefingProgressBar currentWeek={localWeek} />}
+        {isPregnancy && (
+          <RevealOnScroll delay={0}>
+            <BriefingProgressBar currentWeek={localWeek} />
+          </RevealOnScroll>
+        )}
 
         {/* Two Column Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 mt-6">
           {/* Main Sections */}
           <div className="space-y-6">
             {/* Baby Update */}
-            <BriefingSection type="baby" title="Baby Update" icon="👶">
-              <p className="whitespace-pre-line">{briefing.baby_update}</p>
-              {localWeek === 12 && (
-                <HighlightBox icon="💡" color="teal">
-                  Miscarriage risk drops to about 2% after seeing a heartbeat at 12 weeks.
-                  This is why many couples choose to announce after this milestone.
-                </HighlightBox>
-              )}
-            </BriefingSection>
+            <RevealOnScroll delay={0}>
+              <Card3DTilt maxTilt={3} gloss>
+                <BriefingSection type="baby" title="Baby Update" icon="👶">
+                  <p className="whitespace-pre-line">{briefing.baby_update}</p>
+                  {localWeek === 12 && (
+                    <HighlightBox icon="💡" color="teal">
+                      Miscarriage risk drops to about 2% after seeing a heartbeat at 12 weeks.
+                      This is why many couples choose to announce after this milestone.
+                    </HighlightBox>
+                  )}
+                </BriefingSection>
+              </Card3DTilt>
+            </RevealOnScroll>
 
             {/* Mom Update */}
-            <BriefingSection type="mom" title="What Mom's Experiencing" icon="💝">
-              <p className="whitespace-pre-line">{briefing.mom_update}</p>
-            </BriefingSection>
+            <RevealOnScroll delay={80}>
+              <Card3DTilt maxTilt={3} gloss>
+                <BriefingSection type="mom" title="What Mom's Experiencing" icon="💝">
+                  <p className="whitespace-pre-line">{briefing.mom_update}</p>
+                </BriefingSection>
+              </Card3DTilt>
+            </RevealOnScroll>
 
             {/* Dad Focus */}
-            <BriefingSection type="dad" title="Your Focus This Week" icon="🎯">
-              <p className="mb-4">Here&apos;s what to focus on this week:</p>
-              <DadFocusList items={briefing.dad_focus} />
-            </BriefingSection>
+            <RevealOnScroll delay={160}>
+              <Card3DTilt maxTilt={3} gloss>
+                <BriefingSection type="dad" title="Your Focus This Week" icon="🎯">
+                  <p className="mb-4">Here&apos;s what to focus on this week:</p>
+                  <DadFocusList items={briefing.dad_focus} />
+                </BriefingSection>
+              </Card3DTilt>
+            </RevealOnScroll>
 
             {/* Inline task completion for this briefing week */}
             {familyId && (
-              <BriefingLinkedTasks
-                weekNumber={localWeek}
-                familyId={familyId}
-              />
+              <RevealOnScroll delay={240}>
+                <Card3DTilt maxTilt={3} gloss>
+                  <BriefingLinkedTasks
+                    weekNumber={localWeek}
+                    familyId={familyId}
+                  />
+                </Card3DTilt>
+              </RevealOnScroll>
             )}
 
             {/* Relationship Tip */}
-            <BriefingSection type="relationship" title="Relationship Check-In" icon="💜">
-              <p className="whitespace-pre-line">{briefing.relationship_tip}</p>
-            </BriefingSection>
+            <RevealOnScroll delay={320}>
+              <Card3DTilt maxTilt={3} gloss>
+                <BriefingSection type="relationship" title="Relationship Check-In" icon="💜">
+                  <p className="whitespace-pre-line">{briefing.relationship_tip}</p>
+                </BriefingSection>
+              </Card3DTilt>
+            </RevealOnScroll>
 
             {/* Coming Up */}
             {briefing.coming_up && (
-              <BriefingSection type="coming" title="Coming Up" icon="📆">
-                <p className="whitespace-pre-line">{briefing.coming_up}</p>
-              </BriefingSection>
+              <RevealOnScroll delay={400}>
+                <Card3DTilt maxTilt={3} gloss>
+                  <BriefingSection type="coming" title="Coming Up" icon="📆">
+                    <p className="whitespace-pre-line">{briefing.coming_up}</p>
+                  </BriefingSection>
+                </Card3DTilt>
+              </RevealOnScroll>
             )}
           </div>
 
@@ -211,67 +244,79 @@ export default function BriefingWeekPage() {
           <div className="space-y-4">
             {/* Baby Size Card */}
             {isPregnancy && babySize && (
-              <BabySizeCard size={babySize} week={localWeek} />
+              <RevealOnScroll delay={80}>
+                <Card3DTilt maxTilt={3} gloss>
+                  <BabySizeCard size={babySize} week={localWeek} />
+                </Card3DTilt>
+              </RevealOnScroll>
             )}
             {/* Quick Stats */}
             {isPregnancy && (
-              <QuickStats
-                week={localWeek}
-                babySize={babySize}
-                dueDate={family?.due_date}
-              />
+              <RevealOnScroll delay={160}>
+                <Card3DTilt maxTilt={3} gloss>
+                  <QuickStats
+                    week={localWeek}
+                    babySize={babySize}
+                    dueDate={family?.due_date}
+                  />
+                </Card3DTilt>
+              </RevealOnScroll>
             )}
           </div>
         </div>
 
         {/* Footer navigation */}
-        <footer className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-10 pt-6 border-t border-[--border]">
-          <div className="flex flex-wrap items-center gap-3 text-sm font-body text-[--muted]">
-            <span className="inline-flex items-center gap-1.5 bg-[--sage-dim] text-[--sage] px-3 py-1 rounded-full text-xs font-medium font-ui">
-              ✓ Medically Reviewed
-            </span>
-            {briefing.medical_source && (
-              <span>Sources: {briefing.medical_source}</span>
-            )}
-          </div>
+        <RevealOnScroll delay={0}>
+          <footer className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-10 pt-6 border-t border-[--border]">
+            <div className="flex flex-wrap items-center gap-3 text-sm font-body text-[--muted]">
+              <span className="inline-flex items-center gap-1.5 bg-[--sage-dim] text-[--sage] px-3 py-1 rounded-full text-xs font-medium font-ui">
+                ✓ Medically Reviewed
+              </span>
+              {briefing.medical_source && (
+                <span>Sources: {briefing.medical_source}</span>
+              )}
+            </div>
 
-          <div className="flex gap-3">
-            <button
-              onClick={() => handleNavigate(localWeek - 1)}
-              disabled={localWeek <= 1}
-              className={cn(
-                'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium font-ui',
-                'bg-[--card] border border-[--border] text-[--muted] hover:bg-[--card-hover] hover:text-[--cream] transition-all',
-                localWeek <= 1 && 'opacity-50 pointer-events-none'
-              )}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Previous Week
-            </button>
-            <button
-              onClick={() => handleNavigate(localWeek + 1)}
-              disabled={localWeek >= maxWeek}
-              className={cn(
-                'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium font-ui',
-                'bg-copper text-[--white] hover:shadow-copper transition-all',
-                localWeek >= maxWeek && 'opacity-50 pointer-events-none'
-              )}
-            >
-              Next Week
-              <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
-        </footer>
+            <div className="flex gap-3">
+              <button
+                onClick={() => handleNavigate(localWeek - 1)}
+                disabled={localWeek <= 1}
+                className={cn(
+                  'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium font-ui',
+                  'bg-[--card] border border-[--border] text-[--muted] hover:bg-[--card-hover] hover:text-[--cream] transition-all',
+                  localWeek <= 1 && 'opacity-50 pointer-events-none'
+                )}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Previous Week
+              </button>
+              <button
+                onClick={() => handleNavigate(localWeek + 1)}
+                disabled={localWeek >= maxWeek}
+                className={cn(
+                  'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium font-ui',
+                  'bg-copper text-[--white] hover:shadow-copper transition-all',
+                  localWeek >= maxWeek && 'opacity-50 pointer-events-none'
+                )}
+              >
+                Next Week
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </footer>
+        </RevealOnScroll>
 
         {/* Archive Link */}
-        <div className="text-center mt-8">
-          <Link
-            href="/briefing/archive"
-            className="text-sm font-ui text-copper hover:text-gold transition-colors"
-          >
-            View All Briefings →
-          </Link>
-        </div>
+        <RevealOnScroll delay={80}>
+          <div className="text-center mt-8">
+            <Link
+              href="/briefing/archive"
+              className="text-sm font-ui text-copper hover:text-gold transition-colors"
+            >
+              View All Briefings →
+            </Link>
+          </div>
+        </RevealOnScroll>
       </div>
     </div>
   )

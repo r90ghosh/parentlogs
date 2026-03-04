@@ -1,13 +1,17 @@
 import { ReactNode } from 'react'
 import { Logo } from '@/components/ui/logo'
+import { WarmBackground } from '@/components/ui/animations/WarmBackground'
+import { FloatingParticles } from '@/components/ui/animations/FloatingParticles'
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-[--bg]">
-      <header className="p-6">
+    <div className="min-h-screen flex flex-col bg-[--bg] relative">
+      <WarmBackground />
+      <FloatingParticles count={8} />
+      <header className="p-6 relative z-10">
         <Logo size="md" variant="dark" />
       </header>
-      <main className="flex-1 flex items-center justify-center p-4">
+      <main className="flex-1 flex items-center justify-center p-4 relative z-10">
         <div className="w-full max-w-md">
           {children}
         </div>

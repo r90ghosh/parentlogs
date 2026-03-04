@@ -18,6 +18,7 @@ import {
 import { cn } from '@/lib/utils'
 import { BriefingTemplate, FamilyStage } from '@/types'
 import { isPregnancyStage, getTrimesterLabel, getTrimesterFromWeek } from '@/lib/pregnancy-utils'
+import { RevealOnScroll, Card3DTilt, CardEntrance } from '@/components/ui/animations'
 
 export default function BriefingArchivePage() {
   const { data: briefings, isLoading } = useBriefings()
@@ -91,42 +92,49 @@ export default function BriefingArchivePage() {
   return (
     <div className="p-4 space-y-6 max-w-4xl">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link
-          href="/briefing"
-          className="p-2 rounded-lg hover:bg-[--card] transition-colors"
-        >
-          <ChevronLeft className="h-5 w-5 text-[--muted]" />
-        </Link>
-        <div>
-          <h1 className="text-2xl font-display font-bold text-[--cream]">Briefing Archive</h1>
-          <p className="text-sm text-[--muted]">
-            Your complete pregnancy and parenting journey
-          </p>
+      <CardEntrance delay={0}>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/briefing"
+            className="p-2 rounded-lg hover:bg-[--card] transition-colors"
+          >
+            <ChevronLeft className="h-5 w-5 text-[--muted]" />
+          </Link>
+          <div>
+            <h1 className="text-2xl font-display font-bold text-[--cream]">Briefing Archive</h1>
+            <p className="text-sm text-[--muted]">
+              Your complete pregnancy and parenting journey
+            </p>
+          </div>
         </div>
-      </div>
+      </CardEntrance>
 
       {/* Current Position Indicator */}
-      <Card className="bg-copper-dim border-copper/30">
-        <CardContent className="py-4 flex items-center gap-3">
-          <Sparkles className="h-5 w-5 text-copper" />
-          <span className="text-[--cream]">
-            You are currently at{' '}
-            <strong className="text-copper">
-              {getTrimesterLabel(currentStage)} Week {currentWeek}
-            </strong>
-          </span>
-        </CardContent>
-      </Card>
+      <RevealOnScroll delay={0}>
+        <Card className="bg-copper-dim border-copper/30">
+          <CardContent className="py-4 flex items-center gap-3">
+            <Sparkles className="h-5 w-5 text-copper" />
+            <span className="text-[--cream]">
+              You are currently at{' '}
+              <strong className="text-copper">
+                {getTrimesterLabel(currentStage)} Week {currentWeek}
+              </strong>
+            </span>
+          </CardContent>
+        </Card>
+      </RevealOnScroll>
 
       {/* Info about content visibility */}
-      <p className="text-sm text-[--dim] flex items-center gap-2">
-        <Lock className="h-4 w-4" />
-        Only your current week shows full content. Other weeks show a preview.
-      </p>
+      <RevealOnScroll delay={80}>
+        <p className="text-sm text-[--dim] flex items-center gap-2">
+          <Lock className="h-4 w-4" />
+          Only your current week shows full content. Other weeks show a preview.
+        </p>
+      </RevealOnScroll>
 
       {/* Tabs for Trimester/Stage */}
-      <Tabs defaultValue={defaultTab} className="w-full">
+      <RevealOnScroll delay={160}>
+        <Tabs defaultValue={defaultTab} className="w-full">
         <TabsList className="bg-[--surface] w-full justify-start gap-1 p-1">
           <TabsTrigger value="first-trimester" className="flex-1">
             T1 ({groupedBriefings['first-trimester'].length})
@@ -173,7 +181,8 @@ export default function BriefingArchivePage() {
             stage="post-birth"
           />
         </TabsContent>
-      </Tabs>
+        </Tabs>
+      </RevealOnScroll>
     </div>
   )
 }
@@ -197,14 +206,17 @@ function BriefingGrid({
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      {briefings.map((briefing) => (
-        <BriefingCard
-          key={briefing.briefing_id}
-          briefing={briefing}
-          isCurrent={briefing.week === currentWeek}
-          isFuture={briefing.week > currentWeek}
-          stage={stage}
-        />
+      {briefings.map((briefing, index) => (
+        <RevealOnScroll key={briefing.briefing_id} delay={index * 60}>
+          <Card3DTilt maxTilt={3} gloss>
+            <BriefingCard
+              briefing={briefing}
+              isCurrent={briefing.week === currentWeek}
+              isFuture={briefing.week > currentWeek}
+              stage={stage}
+            />
+          </Card3DTilt>
+        </RevealOnScroll>
       ))}
     </div>
   )
