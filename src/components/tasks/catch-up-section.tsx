@@ -73,24 +73,24 @@ export function CatchUpSection({
         <div
           className={cn(
             'rounded-2xl overflow-hidden',
-            'bg-gradient-to-br from-zinc-800/60 to-zinc-900/60',
-            'border border-zinc-700/50'
+            'bg-[--surface]',
+            'border border-[--border]'
           )}
         >
           {/* Auto-handled header */}
           <div
-            className="px-4 md:px-5 py-3 md:py-4 cursor-pointer border-b border-white/[0.04]"
+            className="px-4 md:px-5 py-3 md:py-4 cursor-pointer border-b border-[--border]"
             onClick={() => setIsAutoHandledExpanded(!isAutoHandledExpanded)}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-zinc-500" />
-                <h3 className="text-sm font-semibold text-zinc-400">
+                <CheckCircle2 className="h-4 w-4 text-[--muted]" />
+                <h3 className="text-sm font-ui font-semibold text-[--muted]">
                   {autoHandledTasks.length} tasks auto-sorted
                 </h3>
                 <ChevronDown
                   className={cn(
-                    'w-4 h-4 text-zinc-600 transition-transform',
+                    'w-4 h-4 text-[--dim] transition-transform',
                     !isAutoHandledExpanded && '-rotate-90'
                   )}
                 />
@@ -103,8 +103,8 @@ export function CatchUpSection({
                 }}
                 disabled={isPending}
                 className={cn(
-                  'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all',
-                  'bg-white/[0.06] text-zinc-400 hover:bg-white/10 hover:text-zinc-300',
+                  'px-3 py-1.5 rounded-lg text-xs font-ui font-semibold transition-all',
+                  'bg-[--card] text-[--muted] hover:bg-[--card-hover] hover:text-[--cream]',
                   isPending && 'opacity-50 cursor-not-allowed'
                 )}
               >
@@ -112,7 +112,7 @@ export function CatchUpSection({
               </button>
             </div>
 
-            <p className="text-[10px] text-zinc-600 mt-1 ml-6">
+            <p className="text-[10px] text-[--dim] font-body mt-1 ml-6">
               Expired or likely completed tasks — expand to review individually
             </p>
           </div>
@@ -126,15 +126,15 @@ export function CatchUpSection({
                   className="flex items-center justify-between p-3 rounded-xl opacity-50"
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-sm text-zinc-500 line-through truncate">{task.title}</span>
-                    <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-zinc-700/50 text-zinc-500 uppercase tracking-wide flex-shrink-0">
+                    <span className="text-sm text-[--muted] font-body line-through truncate">{task.title}</span>
+                    <span className="text-[9px] font-ui font-semibold px-1.5 py-0.5 rounded-full bg-[--card] text-[--muted] uppercase tracking-wide flex-shrink-0">
                       {categorizeBacklogTask(task, currentWeek) === 'window_passed' ? 'Expired' : 'Likely done'}
                     </span>
                   </div>
                   <button
                     onClick={() => onTriage(task.id, 'added')}
                     disabled={isPending}
-                    className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors flex-shrink-0 ml-2"
+                    className="text-xs text-[--muted] hover:text-[--cream] font-ui transition-colors flex-shrink-0 ml-2"
                   >
                     Un-skip
                   </button>
@@ -150,16 +150,16 @@ export function CatchUpSection({
         <div
           className={cn(
             'rounded-2xl overflow-hidden',
-            'bg-gradient-to-br from-amber-900/20 to-zinc-900',
-            'border border-amber-500/20'
+            'bg-[--surface]',
+            'border border-gold/25'
           )}
         >
           {/* Catch-up header */}
           <div
             className={cn(
               'px-4 md:px-5 py-3 md:py-4 cursor-pointer',
-              'border-b border-white/[0.06]',
-              'bg-gradient-to-r from-amber-500/10 to-orange-500/5'
+              'border-b border-[--border]',
+              'bg-gradient-to-r from-gold-dim to-copper-dim'
             )}
             onClick={() => setIsCatchUpExpanded(!isCatchUpExpanded)}
           >
@@ -167,13 +167,13 @@ export function CatchUpSection({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-base md:text-lg">📋</span>
-                <h3 className="text-sm md:text-[15px] font-semibold text-white">Catch Up</h3>
-                <span className="text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 uppercase tracking-wide">
+                <h3 className="text-sm md:text-[15px] font-ui font-semibold text-[--cream]">Catch Up</h3>
+                <span className="text-[10px] md:text-xs font-ui font-semibold px-1.5 md:px-2 py-0.5 rounded-full bg-gold-dim text-gold uppercase tracking-wide">
                   {catchUpTasks.length} tasks
                 </span>
                 <ChevronDown
                   className={cn(
-                    'w-4 h-4 text-zinc-500 transition-transform',
+                    'w-4 h-4 text-[--muted] transition-transform',
                     !isCatchUpExpanded && '-rotate-90'
                   )}
                 />
@@ -181,7 +181,7 @@ export function CatchUpSection({
             </div>
 
             {/* Subtitle */}
-            <p className="text-[10px] md:text-xs text-zinc-500 mt-1 ml-7">
+            <p className="text-[10px] md:text-xs text-[--muted] font-body mt-1 ml-7">
               These tasks are still actionable — complete them when you&apos;re ready
             </p>
 
@@ -215,7 +215,7 @@ export function CatchUpSection({
               {hasMoreCatchUp && (
                 <button
                   onClick={() => setShowAllCatchUp(!showAllCatchUp)}
-                  className="w-full py-3 text-sm text-amber-400 hover:text-amber-300 transition-colors"
+                  className="w-full py-3 text-sm text-gold hover:text-gold-hover font-ui transition-colors"
                 >
                   {showAllCatchUp
                     ? 'Show less'

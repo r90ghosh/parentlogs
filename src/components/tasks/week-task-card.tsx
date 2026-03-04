@@ -91,18 +91,18 @@ export function WeekTaskCard({
         <>
           {/* Complete background (right swipe) */}
           <motion.div
-            className="absolute inset-0 bg-green-600 rounded-xl flex items-center px-4"
+            className="absolute inset-0 bg-sage rounded-xl flex items-center px-4"
             style={{ opacity: completeOpacity }}
           >
-            <Check className="h-6 w-6 text-white" />
+            <Check className="h-6 w-6 text-[--bg]" />
           </motion.div>
 
           {/* Snooze background (left swipe) */}
           <motion.div
-            className="absolute inset-0 bg-amber-600 rounded-xl flex items-center justify-end px-4"
+            className="absolute inset-0 bg-gold rounded-xl flex items-center justify-end px-4"
             style={{ opacity: snoozeOpacity }}
           >
-            <ArrowRight className="h-6 w-6 text-white" />
+            <ArrowRight className="h-6 w-6 text-[--bg]" />
           </motion.div>
         </>
       )}
@@ -120,10 +120,10 @@ export function WeekTaskCard({
         onClick={() => onClick(task)}
         className={cn(
           'relative rounded-xl p-4 cursor-pointer transition-colors',
-          'bg-surface-800 border',
-          isOverdue && 'border-red-500/50 bg-red-950/10',
-          isDueToday && !isOverdue && 'border-amber-500/50 bg-amber-950/10',
-          !isOverdue && !isDueToday && 'border-surface-700 hover:border-surface-600'
+          'bg-[--card] border',
+          isOverdue && 'border-coral/40 bg-coral-dim',
+          isDueToday && !isOverdue && 'border-gold/40 bg-gold-dim',
+          !isOverdue && !isDueToday && 'border-[--border] hover:border-[--border-hover]'
         )}
       >
         <div className="flex items-center gap-3">
@@ -135,36 +135,36 @@ export function WeekTaskCard({
             className={cn(
               'flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors',
               isCompleting
-                ? 'bg-green-500 border-green-500'
-                : 'border-surface-500 hover:border-surface-400'
+                ? 'bg-sage border-sage'
+                : 'border-[--dim] hover:border-copper'
             )}
           >
-            {isCompleting && <Check className="h-4 w-4 text-white" />}
+            {isCompleting && <Check className="h-4 w-4 text-[--bg]" />}
           </motion.button>
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <p className="text-white font-medium truncate">{task.title}</p>
+            <p className="text-[--cream] font-ui font-medium truncate">{task.title}</p>
             <div className="flex items-center gap-2 mt-1">
               <span
                 className={cn(
-                  'text-xs font-medium',
-                  isOverdue && 'text-red-400',
-                  isDueToday && !isOverdue && 'text-amber-400',
-                  !isOverdue && !isDueToday && 'text-surface-400'
+                  'text-xs font-body font-medium',
+                  isOverdue && 'text-coral',
+                  isDueToday && !isOverdue && 'text-gold',
+                  !isOverdue && !isDueToday && 'text-[--muted]'
                 )}
               >
                 {getDayLabel()}
               </span>
               {task.priority === 'must-do' && (
-                <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                <span className="w-1.5 h-1.5 rounded-full bg-coral" />
               )}
             </div>
           </div>
 
           {/* Category icon */}
-          <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-surface-700 flex items-center justify-center">
-            <CategoryIcon className="h-4 w-4 text-surface-400" />
+          <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-[--card-hover] flex items-center justify-center">
+            <CategoryIcon className="h-4 w-4 text-[--muted]" />
           </div>
         </div>
       </motion.div>

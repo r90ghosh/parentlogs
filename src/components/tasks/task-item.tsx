@@ -53,11 +53,11 @@ export function TaskItem({
   // Get assignee display
   const getAssignee = () => {
     const assignee = task.assigned_to
-    if (assignee === 'both') return { avatar: 'B', label: 'Both', gradient: 'from-amber-500 to-orange-600' }
-    if (assignee === 'mom') return { avatar: 'M', label: 'Mom', gradient: 'from-pink-500 to-rose-500' }
-    if (assignee === 'either') return { avatar: 'E', label: 'Either', gradient: 'from-zinc-500 to-zinc-600' }
+    if (assignee === 'both') return { avatar: 'B', label: 'Both', gradient: 'from-copper to-gold' }
+    if (assignee === 'mom') return { avatar: 'M', label: 'Mom', gradient: 'from-rose to-coral' }
+    if (assignee === 'either') return { avatar: 'E', label: 'Either', gradient: 'from-[--muted] to-[--dim]' }
     // Default: dad (the app user)
-    return { avatar: 'D', label: 'Dad', gradient: 'from-indigo-500 to-purple-500' }
+    return { avatar: 'D', label: 'Dad', gradient: 'from-sky to-copper' }
   }
 
   const assignee = getAssignee()
@@ -68,8 +68,8 @@ export function TaskItem({
     <div
       className={cn(
         'flex items-start gap-4 p-4 rounded-xl cursor-pointer transition-all',
-        isHighlighted && 'bg-amber-500/5 border border-amber-500/20',
-        !isHighlighted && 'hover:bg-white/[0.03]',
+        isHighlighted && 'bg-copper-dim border border-copper/20',
+        !isHighlighted && 'hover:bg-[--card]',
         isDimmed && 'opacity-70'
       )}
     >
@@ -80,9 +80,9 @@ export function TaskItem({
           onComplete()
         }}
         className={cn(
-          'w-[22px] h-[22px] border-2 border-zinc-600 rounded-md flex-shrink-0 mt-0.5',
+          'w-[22px] h-[22px] border-2 border-[--dim] rounded-md flex-shrink-0 mt-0.5',
           'flex items-center justify-center transition-all',
-          'hover:border-green-500 hover:bg-green-500/10',
+          'hover:border-copper hover:bg-copper-dim',
           isDimmed && 'opacity-50'
         )}
       />
@@ -91,20 +91,20 @@ export function TaskItem({
       <div className="flex-1 min-w-0">
         {/* Header with title and badges */}
         <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
-          <span className="text-[15px] font-semibold text-zinc-200">{task.title}</span>
+          <span className="text-[15px] font-ui font-semibold text-[--cream]">{task.title}</span>
           <div className="flex gap-1.5">
             {task.priority === 'must-do' && (
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-[10px] uppercase tracking-wide bg-red-500/15 text-red-400">
+              <span className="text-[10px] font-ui font-semibold px-2 py-0.5 rounded-[10px] uppercase tracking-wide bg-coral-dim text-coral">
                 Must Do
               </span>
             )}
             {task.priority === 'good-to-do' && (
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-[10px] uppercase tracking-wide bg-blue-500/15 text-blue-500">
+              <span className="text-[10px] font-ui font-semibold px-2 py-0.5 rounded-[10px] uppercase tracking-wide bg-sky-dim text-sky">
                 Nice to Have
               </span>
             )}
             {task.is_time_sensitive && (
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-[10px] uppercase tracking-wide bg-amber-500/15 text-amber-500">
+              <span className="text-[10px] font-ui font-semibold px-2 py-0.5 rounded-[10px] uppercase tracking-wide bg-gold-dim text-gold">
                 Time Sensitive
               </span>
             )}
@@ -113,7 +113,7 @@ export function TaskItem({
 
         {/* Description */}
         {task.description && (
-          <p className="text-[13px] text-zinc-500 mb-2.5 line-clamp-2 leading-relaxed">
+          <p className="text-[13px] text-[--muted] font-body mb-2.5 line-clamp-2 leading-relaxed">
             {task.description}
           </p>
         )}
@@ -122,7 +122,7 @@ export function TaskItem({
         <div className="flex items-center gap-4 flex-wrap">
           {/* Category tag */}
           <span className={cn(
-            'inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md',
+            'inline-flex items-center gap-1 text-[11px] font-ui font-medium px-2 py-0.5 rounded-md',
             category.bgClass,
             category.textClass
           )}>
@@ -132,7 +132,7 @@ export function TaskItem({
 
           {/* Time estimate */}
           {timeEstimate && (
-            <div className="flex items-center gap-1.5 text-xs text-zinc-600">
+            <div className="flex items-center gap-1.5 text-xs text-[--dim] font-body">
               <span>⏱️</span>
               <span>{timeEstimate}</span>
             </div>
@@ -140,7 +140,7 @@ export function TaskItem({
 
           {/* Due date */}
           {dueDateDisplay && (
-            <div className="flex items-center gap-1.5 text-xs text-zinc-600">
+            <div className="flex items-center gap-1.5 text-xs text-[--dim] font-body">
               <span>📅</span>
               <span>{dueDateDisplay}</span>
             </div>
@@ -149,12 +149,12 @@ export function TaskItem({
           {/* Assignee */}
           <div className="flex items-center gap-1.5">
             <div className={cn(
-              'w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-semibold text-white bg-gradient-to-br',
+              'w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-ui font-semibold text-[--bg] bg-gradient-to-br',
               assignee.gradient
             )}>
               {assignee.avatar}
             </div>
-            <span className="text-xs text-zinc-600">{assignee.label}</span>
+            <span className="text-xs text-[--dim] font-body">{assignee.label}</span>
           </div>
         </div>
       </div>

@@ -21,36 +21,36 @@ const statCards = [
     id: 'dueToday',
     icon: '🎯',
     label: 'Due Today',
-    iconBg: 'bg-amber-500/15',
-    valueColor: 'text-amber-500',
+    iconBg: 'bg-copper-dim',
+    valueColor: 'text-copper',
   },
   {
     id: 'thisWeek',
     icon: '📅',
     label: 'This Week',
-    iconBg: 'bg-blue-500/15',
-    valueColor: 'text-white',
+    iconBg: 'bg-gold-dim',
+    valueColor: 'text-[--cream]',
   },
   {
     id: 'completed',
     icon: '✅',
     label: 'Completed',
-    iconBg: 'bg-green-500/15',
-    valueColor: 'text-green-500',
+    iconBg: 'bg-[--sage-dim]',
+    valueColor: 'text-sage',
   },
   {
     id: 'partnerTasks',
     icon: '👥',
     label: "Partner's",
-    iconBg: 'bg-purple-500/15',
-    valueColor: 'text-white',
+    iconBg: 'bg-rose-dim',
+    valueColor: 'text-[--cream]',
   },
   {
     id: 'catchUpQueue',
     icon: '📥',
     label: 'Catch-Up Queue',
-    iconBg: 'bg-indigo-500/15',
-    valueColor: 'text-indigo-400',
+    iconBg: 'bg-gold-dim',
+    valueColor: 'text-gold',
   },
 ]
 
@@ -83,11 +83,11 @@ export function StatsBar({ stats, activeCard, onCardClick }: StatsBarProps) {
             onClick={() => onCardClick(card.id)}
             className={cn(
               'flex items-center gap-3 p-3 md:p-4 md:pr-5 rounded-xl cursor-pointer transition-all text-left flex-shrink-0',
-              'bg-gradient-to-br from-zinc-800 to-zinc-900',
+              'bg-[--surface]',
               'border min-w-[140px] md:min-w-0',
               isActive
-                ? 'border-amber-500/50 bg-gradient-to-br from-amber-500/10 to-orange-600/5'
-                : 'border-white/[0.06] hover:border-white/15'
+                ? 'border-copper/40 bg-copper-dim'
+                : 'border-[--border] hover:border-[--border-hover]'
             )}
           >
             <div className={cn(
@@ -97,10 +97,10 @@ export function StatsBar({ stats, activeCard, onCardClick }: StatsBarProps) {
               {card.icon}
             </div>
             <div>
-              <div className={cn('text-xl md:text-2xl font-bold', card.valueColor)}>
+              <div className={cn('text-xl md:text-2xl font-ui font-bold', card.valueColor)}>
                 {value}
               </div>
-              <div className="text-[10px] md:text-xs text-zinc-500">{card.label}</div>
+              <div className="text-[10px] md:text-xs text-[--muted] font-body">{card.label}</div>
             </div>
           </button>
         )

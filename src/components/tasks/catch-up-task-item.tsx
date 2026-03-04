@@ -5,22 +5,22 @@ import { categorizeBacklogTask } from '@/lib/task-utils'
 import { categoryConfig } from '@/lib/design-tokens'
 import { cn } from '@/lib/utils'
 
-// Yellow-themed badge config for catch-up items
+// Gold-themed badge config for catch-up items (Yellow, Not Red)
 const catchUpBadgeConfig: Record<BacklogCategory, { label: string; bgClass: string; textClass: string }> = {
   window_passed: {
     label: 'Expired',
-    bgClass: 'bg-zinc-500/15',
-    textClass: 'text-zinc-400',
+    bgClass: 'bg-[--card]',
+    textClass: 'text-[--muted]',
   },
   still_relevant: {
     label: 'Catch up',
-    bgClass: 'bg-amber-500/15',
-    textClass: 'text-amber-400',
+    bgClass: 'bg-gold-dim',
+    textClass: 'text-gold',
   },
   probably_done: {
     label: 'Likely done',
-    bgClass: 'bg-zinc-500/15',
-    textClass: 'text-zinc-400',
+    bgClass: 'bg-[--card]',
+    textClass: 'text-[--muted]',
   },
 }
 
@@ -59,7 +59,7 @@ export function CatchUpTaskItem({
     <div
       className={cn(
         'p-3 md:p-4 rounded-xl cursor-pointer transition-all',
-        'hover:bg-white/[0.03]',
+        'hover:bg-[--card]',
         isExpired && 'opacity-60'
       )}
     >
@@ -68,13 +68,13 @@ export function CatchUpTaskItem({
         {/* Header with title and badge */}
         <div className="flex items-start gap-2 mb-1.5">
           <span className={cn(
-            'text-sm md:text-[15px] font-semibold flex-1',
-            isExpired ? 'text-zinc-500' : 'text-zinc-200'
+            'text-sm md:text-[15px] font-ui font-semibold flex-1',
+            isExpired ? 'text-[--muted]' : 'text-[--cream]'
           )}>
             {task.title}
           </span>
           <span className={cn(
-            'text-[9px] md:text-[10px] font-semibold px-1.5 md:px-2 py-0.5 rounded-full uppercase tracking-wide flex-shrink-0',
+            'text-[9px] md:text-[10px] font-ui font-semibold px-1.5 md:px-2 py-0.5 rounded-full uppercase tracking-wide flex-shrink-0',
             badgeConfig.bgClass,
             badgeConfig.textClass
           )}>
@@ -84,7 +84,7 @@ export function CatchUpTaskItem({
 
         {/* Description - hidden on mobile for cleaner look */}
         {task.description && (
-          <p className="hidden md:block text-[13px] text-zinc-500 mb-2.5 line-clamp-2 leading-relaxed">
+          <p className="hidden md:block text-[13px] text-[--muted] font-body mb-2.5 line-clamp-2 leading-relaxed">
             {task.description}
           </p>
         )}
@@ -93,7 +93,7 @@ export function CatchUpTaskItem({
         <div className="flex items-center gap-2 md:gap-4 flex-wrap mb-3">
           {/* Category tag */}
           <span className={cn(
-            'inline-flex items-center gap-1 text-[10px] md:text-[11px] font-medium px-1.5 md:px-2 py-0.5 rounded-md',
+            'inline-flex items-center gap-1 text-[10px] md:text-[11px] font-ui font-medium px-1.5 md:px-2 py-0.5 rounded-md',
             category.bgClass,
             category.textClass
           )}>
@@ -102,14 +102,14 @@ export function CatchUpTaskItem({
           </span>
 
           {/* Original week */}
-          <div className="flex items-center gap-1 text-[10px] md:text-xs text-zinc-600">
+          <div className="flex items-center gap-1 text-[10px] md:text-xs text-[--dim] font-body">
             <span>📅</span>
             <span>Week {task.week_due}</span>
           </div>
 
           {/* Time estimate - hidden on mobile */}
           {timeEstimate && (
-            <div className="hidden md:flex items-center gap-1.5 text-xs text-zinc-600">
+            <div className="hidden md:flex items-center gap-1.5 text-xs text-[--dim] font-body">
               <span>⏱️</span>
               <span>{timeEstimate}</span>
             </div>
@@ -125,9 +125,9 @@ export function CatchUpTaskItem({
             }}
             disabled={isPending}
             className={cn(
-              'px-3 py-1.5 md:px-3.5 md:py-2 rounded-lg text-[11px] md:text-xs font-semibold transition-all',
+              'px-3 py-1.5 md:px-3.5 md:py-2 rounded-lg text-[11px] md:text-xs font-ui font-semibold transition-all',
               'flex items-center gap-1',
-              'bg-green-500/15 text-green-400 hover:bg-green-500/25',
+              'bg-[--sage-dim] text-sage hover:bg-sage/25',
               isPending && 'opacity-50 cursor-not-allowed'
             )}
           >
@@ -142,9 +142,9 @@ export function CatchUpTaskItem({
               }}
               disabled={isPending}
               className={cn(
-                'px-3 py-1.5 md:px-3.5 md:py-2 rounded-lg text-[11px] md:text-xs font-semibold transition-all',
+                'px-3 py-1.5 md:px-3.5 md:py-2 rounded-lg text-[11px] md:text-xs font-ui font-semibold transition-all',
                 'flex items-center gap-1',
-                'bg-amber-500/15 text-amber-400 hover:bg-amber-500/25',
+                'bg-gold-dim text-gold hover:bg-gold-glow',
                 isPending && 'opacity-50 cursor-not-allowed'
               )}
             >
@@ -159,9 +159,9 @@ export function CatchUpTaskItem({
             }}
             disabled={isPending}
             className={cn(
-              'px-3 py-1.5 md:px-3.5 md:py-2 rounded-lg text-[11px] md:text-xs font-semibold transition-all',
+              'px-3 py-1.5 md:px-3.5 md:py-2 rounded-lg text-[11px] md:text-xs font-ui font-semibold transition-all',
               'flex items-center gap-1',
-              'bg-white/[0.06] text-zinc-500 hover:bg-white/10 hover:text-zinc-400',
+              'bg-[--card] text-[--muted] hover:bg-[--card-hover] hover:text-[--cream]',
               isPending && 'opacity-50 cursor-not-allowed'
             )}
           >

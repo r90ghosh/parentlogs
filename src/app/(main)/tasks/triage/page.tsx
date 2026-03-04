@@ -53,8 +53,8 @@ export default function TriagePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-zinc-500" />
+      <div className="min-h-screen flex items-center justify-center bg-[--bg]">
+        <Loader2 className="h-6 w-6 animate-spin text-[--muted]" />
       </div>
     )
   }
@@ -63,7 +63,7 @@ export default function TriagePage() {
   const backlogCategory = currentTask ? categorizeBacklogTask(currentTask, currentWeek) : null
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[--bg]">
       <div className="max-w-lg mx-auto px-4 py-6">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
@@ -73,8 +73,8 @@ export default function TriagePage() {
             </Link>
           </Button>
           <div className="flex-1">
-            <h1 className="text-lg font-bold text-white">Quick Triage</h1>
-            <p className="text-xs text-zinc-500">
+            <h1 className="text-lg font-display font-bold text-[--cream]">Quick Triage</h1>
+            <p className="text-xs text-[--muted] font-body">
               {catchUpTasks.length > 0
                 ? `${triagedCount} of ${totalToTriage} reviewed`
                 : 'All caught up!'
@@ -85,17 +85,17 @@ export default function TriagePage() {
 
         {/* Progress bar */}
         <div className="mb-8">
-          <div className="h-2 bg-surface-800 rounded-full overflow-hidden">
+          <div className="h-2 bg-[--card] rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
+              className="h-full bg-gradient-to-r from-gold to-copper rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${progressPercent}%` }}
               transition={{ duration: 0.3 }}
             />
           </div>
           <div className="flex justify-between mt-1.5">
-            <span className="text-[11px] text-zinc-600">{triagedCount} done</span>
-            <span className="text-[11px] text-zinc-600">{catchUpTasks.length} remaining</span>
+            <span className="text-[11px] text-[--dim] font-body">{triagedCount} done</span>
+            <span className="text-[11px] text-[--dim] font-body">{catchUpTasks.length} remaining</span>
           </div>
         </div>
 
@@ -110,8 +110,8 @@ export default function TriagePage() {
               transition={{ duration: 0.2 }}
               className={cn(
                 'rounded-2xl overflow-hidden',
-                'bg-gradient-to-br from-surface-900 to-surface-950',
-                'border border-surface-800'
+                'bg-[--surface]',
+                'border border-[--border]'
               )}
             >
               {/* Card content */}
@@ -119,37 +119,37 @@ export default function TriagePage() {
                 {/* Category + week */}
                 <div className="flex items-center gap-2">
                   <span className={cn(
-                    'inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-md',
+                    'inline-flex items-center gap-1 text-[11px] font-ui font-medium px-2 py-0.5 rounded-md',
                     category.bgClass,
                     category.textClass
                   )}>
                     <span>{category.icon}</span>
                     {category.label}
                   </span>
-                  <span className="text-[11px] text-zinc-600">Week {currentTask.week_due}</span>
+                  <span className="text-[11px] text-[--dim] font-body">Week {currentTask.week_due}</span>
                   <span className={cn(
-                    'ml-auto text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide',
-                    'bg-amber-500/15 text-amber-400'
+                    'ml-auto text-[10px] font-ui font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide',
+                    'bg-gold-dim text-gold'
                   )}>
                     Catch up
                   </span>
                 </div>
 
                 {/* Title */}
-                <h2 className="text-lg font-semibold text-white leading-snug">
+                <h2 className="text-lg font-display font-semibold text-[--cream] leading-snug">
                   {currentTask.title}
                 </h2>
 
                 {/* Description */}
                 {currentTask.description && (
-                  <p className="text-sm text-zinc-400 leading-relaxed">
+                  <p className="text-sm text-[--muted] font-body leading-relaxed">
                     {currentTask.description}
                   </p>
                 )}
 
                 {/* Time estimate */}
                 {currentTask.time_estimate_minutes && (
-                  <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+                  <div className="flex items-center gap-1.5 text-xs text-[--dim] font-body">
                     <span>⏱️</span>
                     <span>
                       {currentTask.time_estimate_minutes < 60
@@ -162,13 +162,13 @@ export default function TriagePage() {
               </div>
 
               {/* Action buttons */}
-              <div className="border-t border-surface-800 p-4 flex gap-3">
+              <div className="border-t border-[--border] p-4 flex gap-3">
                 <button
                   onClick={() => handleTriage(currentTask.id, 'completed')}
                   disabled={triageTask.isPending}
                   className={cn(
-                    'flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all',
-                    'bg-green-500/15 text-green-400 hover:bg-green-500/25',
+                    'flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-ui font-semibold transition-all',
+                    'bg-[--sage-dim] text-sage hover:bg-sage/25',
                     triageTask.isPending && 'opacity-50 cursor-not-allowed'
                   )}
                 >
@@ -180,8 +180,8 @@ export default function TriagePage() {
                   onClick={() => handleTriage(currentTask.id, 'added')}
                   disabled={triageTask.isPending}
                   className={cn(
-                    'flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all',
-                    'bg-amber-500/15 text-amber-400 hover:bg-amber-500/25',
+                    'flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-ui font-semibold transition-all',
+                    'bg-gold-dim text-gold hover:bg-gold-glow',
                     triageTask.isPending && 'opacity-50 cursor-not-allowed'
                   )}
                 >
@@ -193,8 +193,8 @@ export default function TriagePage() {
                   onClick={() => handleTriage(currentTask.id, 'skipped')}
                   disabled={triageTask.isPending}
                   className={cn(
-                    'flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all',
-                    'bg-white/[0.06] text-zinc-500 hover:bg-white/10 hover:text-zinc-400',
+                    'flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-ui font-semibold transition-all',
+                    'bg-[--card] text-[--muted] hover:bg-[--card-hover] hover:text-[--cream]',
                     triageTask.isPending && 'opacity-50 cursor-not-allowed'
                   )}
                 >
@@ -211,11 +211,11 @@ export default function TriagePage() {
               className="text-center py-16"
             >
               <div className="text-5xl mb-4">🎉</div>
-              <h2 className="text-xl font-bold text-white mb-2">All caught up!</h2>
-              <p className="text-sm text-zinc-500 mb-6">
+              <h2 className="text-xl font-display font-bold text-[--cream] mb-2">All caught up!</h2>
+              <p className="text-sm text-[--muted] font-body mb-6">
                 You reviewed {triagedCount} task{triagedCount !== 1 ? 's' : ''}. Nice work!
               </p>
-              <Button asChild>
+              <Button asChild className="bg-copper hover:bg-copper-hover text-[--bg] font-ui">
                 <Link href="/tasks">Back to Tasks</Link>
               </Button>
             </motion.div>
@@ -224,7 +224,7 @@ export default function TriagePage() {
 
         {/* Remaining count */}
         {catchUpTasks.length > 1 && (
-          <p className="text-center text-xs text-zinc-600 mt-4">
+          <p className="text-center text-xs text-[--dim] font-body mt-4">
             {catchUpTasks.length - 1} more after this
           </p>
         )}

@@ -25,19 +25,19 @@ export function ProgressHeader({
       {/* Week and status row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-lg font-semibold text-white">
+          <span className="text-lg font-display font-semibold text-[--cream]">
             Week {currentWeek}
           </span>
-          <span className="text-surface-400">of {totalWeeks}</span>
+          <span className="text-[--muted] font-body">of {totalWeeks}</span>
         </div>
 
         {/* Status badge */}
         <div
           className={cn(
-            'flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium',
+            'flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-ui font-medium',
             isOnTrack
-              ? 'bg-green-500/10 text-green-400'
-              : 'bg-amber-500/10 text-amber-400'
+              ? 'bg-[--sage-dim] text-sage'
+              : 'bg-gold-dim text-gold'
           )}
         >
           {isOnTrack ? (
@@ -55,9 +55,9 @@ export function ProgressHeader({
       </div>
 
       {/* Progress bar */}
-      <div className="relative h-2 bg-surface-800 rounded-full overflow-hidden">
+      <div className="relative h-2 bg-[--card] rounded-full overflow-hidden">
         <motion.div
-          className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
+          className="absolute inset-y-0 left-0 bg-gradient-to-r from-copper to-gold rounded-full"
           initial={{ width: 0 }}
           animate={{ width: `${progressPercent}%` }}
           transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
@@ -65,7 +65,7 @@ export function ProgressHeader({
 
         {/* Current position indicator */}
         <motion.div
-          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-md border-2 border-amber-500"
+          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-[--cream] rounded-full shadow-md border-2 border-copper"
           initial={{ left: 0 }}
           animate={{ left: `calc(${progressPercent}% - 6px)` }}
           transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
@@ -73,7 +73,7 @@ export function ProgressHeader({
       </div>
 
       {/* Timeline labels */}
-      <div className="flex justify-between text-xs text-surface-500">
+      <div className="flex justify-between text-xs text-[--dim] font-body">
         <span>Start</span>
         <span>Halfway</span>
         <span>{totalWeeks === 40 ? 'Due Date' : 'Month 24'}</span>

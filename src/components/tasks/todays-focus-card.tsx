@@ -41,14 +41,14 @@ const categoryIcons: Record<string, typeof Stethoscope> = {
 }
 
 const categoryColors: Record<string, string> = {
-  medical: 'bg-red-500/20 text-red-400',
-  shopping: 'bg-blue-500/20 text-blue-400',
-  documents: 'bg-purple-500/20 text-purple-400',
-  research: 'bg-cyan-500/20 text-cyan-400',
-  'self-care': 'bg-pink-500/20 text-pink-400',
-  relationship: 'bg-rose-500/20 text-rose-400',
-  preparation: 'bg-amber-500/20 text-amber-400',
-  other: 'bg-surface-500/20 text-surface-400',
+  medical: 'bg-coral-dim text-coral',
+  shopping: 'bg-sky-dim text-sky',
+  documents: 'bg-copper-dim text-copper',
+  research: 'bg-sky-dim text-sky',
+  'self-care': 'bg-rose-dim text-rose',
+  relationship: 'bg-rose-dim text-rose',
+  preparation: 'bg-gold-dim text-gold',
+  other: 'bg-[--card] text-[--muted]',
 }
 
 export function TodaysFocusCard({
@@ -87,13 +87,13 @@ export function TodaysFocusCard({
 
   if (!task) {
     return (
-      <div className="relative rounded-2xl bg-surface-800/50 border border-surface-700 p-8 text-center">
+      <div className="relative rounded-2xl bg-[--card] border border-[--border] p-8 text-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center">
-            <Check className="h-8 w-8 text-green-400" />
+          <div className="w-16 h-16 rounded-full bg-[--sage-dim] flex items-center justify-center">
+            <Check className="h-8 w-8 text-sage" />
           </div>
-          <h3 className="text-xl font-semibold text-white">All caught up!</h3>
-          <p className="text-surface-400">
+          <h3 className="text-xl font-display font-semibold text-[--cream]">All caught up!</h3>
+          <p className="text-[--muted] font-body">
             No urgent tasks right now. Check back later or browse upcoming tasks.
           </p>
         </div>
@@ -116,43 +116,43 @@ export function TodaysFocusCard({
             initial="initial"
             animate="enter"
             exit="exit"
-            className="relative rounded-2xl bg-gradient-to-br from-surface-800 to-surface-900 border border-surface-700 shadow-xl overflow-hidden"
+            className="relative rounded-2xl bg-[--surface] border border-[--border] shadow-card overflow-hidden"
           >
             {/* Top accent bar */}
-            <div className="h-1 bg-gradient-to-r from-amber-500 to-orange-500" />
+            <div className="h-1 bg-gradient-to-r from-copper to-gold" />
 
             <div className="p-6 space-y-4">
               {/* Header with category and time */}
               <div className="flex items-center justify-between">
                 <div className={cn('flex items-center gap-2 px-3 py-1.5 rounded-lg', categoryColor)}>
                   <CategoryIcon className="h-4 w-4" />
-                  <span className="text-sm font-medium capitalize">{task.category}</span>
+                  <span className="text-sm font-ui font-medium capitalize">{task.category}</span>
                 </div>
 
                 {task.time_estimate_minutes && (
-                  <div className="flex items-center gap-1.5 text-surface-400">
+                  <div className="flex items-center gap-1.5 text-[--muted]">
                     <Clock className="h-4 w-4" />
-                    <span className="text-sm">~{task.time_estimate_minutes} min</span>
+                    <span className="text-sm font-body">~{task.time_estimate_minutes} min</span>
                   </div>
                 )}
               </div>
 
               {/* Title */}
-              <h2 className="text-2xl font-bold text-white leading-tight">
+              <h2 className="text-2xl font-display font-bold text-[--cream] leading-tight">
                 {task.title}
               </h2>
 
               {/* Description / Context */}
               {task.description && (
-                <p className="text-surface-300 line-clamp-3">
+                <p className="text-[--cream] font-body line-clamp-3">
                   {task.description}
                 </p>
               )}
 
               {/* Priority badge */}
               {task.priority === 'must-do' && (
-                <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-red-500/10 text-red-400 text-xs font-medium">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-coral-dim text-coral text-xs font-ui font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-coral" />
                   Must Do
                 </div>
               )}
@@ -162,7 +162,7 @@ export function TodaysFocusCard({
                 <Button
                   onClick={handleComplete}
                   disabled={isLoading}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold h-12"
+                  className="flex-1 bg-sage hover:bg-sage/90 text-[--bg] font-ui font-semibold h-12"
                 >
                   <Check className="h-5 w-5 mr-2" />
                   Done
@@ -172,7 +172,7 @@ export function TodaysFocusCard({
                   onClick={handleSnooze}
                   disabled={isLoading}
                   variant="outline"
-                  className="flex-1 border-surface-600 hover:bg-surface-700 h-12"
+                  className="flex-1 border-[--border-hover] hover:bg-[--card] h-12 font-ui"
                 >
                   <ArrowRight className="h-5 w-5 mr-2" />
                   Tomorrow
@@ -182,7 +182,7 @@ export function TodaysFocusCard({
                   onClick={handleSkip}
                   disabled={isLoading}
                   variant="ghost"
-                  className="h-12 px-4 text-surface-400 hover:text-white hover:bg-surface-700"
+                  className="h-12 px-4 text-[--muted] hover:text-[--cream] hover:bg-[--card]"
                 >
                   <X className="h-5 w-5" />
                 </Button>

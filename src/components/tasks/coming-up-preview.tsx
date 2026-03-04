@@ -77,22 +77,22 @@ export function ComingUpPreview({ tasks, className }: ComingUpPreviewProps) {
   const totalUpcoming = weekGroups.reduce((sum, g) => sum + g.tasks.length, 0)
 
   return (
-    <div className={cn('rounded-xl bg-surface-800/30 border border-surface-700', className)}>
+    <div className={cn('rounded-xl bg-[--card] border border-[--border]', className)}>
       {/* Header - clickable to expand */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-4 hover:bg-surface-800/50 transition-colors rounded-t-xl"
+        className="w-full flex items-center justify-between p-4 hover:bg-[--card-hover] transition-colors rounded-t-xl"
       >
         <div className="flex items-center gap-2">
-          <Calendar className="h-5 w-5 text-surface-400" />
-          <span className="font-medium text-white">Coming Up</span>
-          <span className="text-sm text-surface-400">({totalUpcoming} tasks)</span>
+          <Calendar className="h-5 w-5 text-[--muted]" />
+          <span className="font-ui font-medium text-[--cream]">Coming Up</span>
+          <span className="text-sm text-[--muted] font-body">({totalUpcoming} tasks)</span>
         </div>
         <motion.div
           animate={{ rotate: isExpanded ? 180 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          <ChevronDown className="h-5 w-5 text-surface-400" />
+          <ChevronDown className="h-5 w-5 text-[--muted]" />
         </motion.div>
       </button>
 
@@ -110,7 +110,7 @@ export function ComingUpPreview({ tasks, className }: ComingUpPreviewProps) {
               {weekGroups.map((group, groupIndex) => (
                 <div key={group.weekStart.toISOString()}>
                   {/* Week label */}
-                  <p className="text-xs font-medium text-surface-400 uppercase tracking-wide mb-2">
+                  <p className="text-xs font-ui font-medium text-[--muted] uppercase tracking-wide mb-2">
                     {group.label}
                   </p>
 
@@ -120,25 +120,25 @@ export function ComingUpPreview({ tasks, className }: ComingUpPreviewProps) {
                       <Link
                         key={task.id}
                         href={`/tasks/${task.id}`}
-                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-700 transition-colors"
+                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-[--card-hover] transition-colors"
                       >
                         <div
                           className={cn(
                             'w-2 h-2 rounded-full flex-shrink-0',
-                            task.priority === 'must-do' ? 'bg-red-400' : 'bg-surface-500'
+                            task.priority === 'must-do' ? 'bg-coral' : 'bg-[--dim]'
                           )}
                         />
-                        <span className="text-sm text-surface-300 truncate flex-1">
+                        <span className="text-sm text-[--cream] font-body truncate flex-1">
                           {task.title}
                         </span>
-                        <span className="text-xs text-surface-500 flex-shrink-0">
+                        <span className="text-xs text-[--muted] font-body flex-shrink-0">
                           {format(new Date(task.due_date), 'EEE')}
                         </span>
                       </Link>
                     ))}
 
                     {group.tasks.length > 3 && (
-                      <p className="text-xs text-surface-500 pl-5">
+                      <p className="text-xs text-[--dim] font-body pl-5">
                         +{group.tasks.length - 3} more
                       </p>
                     )}
@@ -146,7 +146,7 @@ export function ComingUpPreview({ tasks, className }: ComingUpPreviewProps) {
 
                   {/* Divider between weeks */}
                   {groupIndex < weekGroups.length - 1 && (
-                    <div className="border-t border-surface-700 mt-4" />
+                    <div className="border-t border-[--border] mt-4" />
                   )}
                 </div>
               ))}
@@ -154,7 +154,7 @@ export function ComingUpPreview({ tasks, className }: ComingUpPreviewProps) {
               {/* View all link */}
               <Link
                 href="/tasks?filter=upcoming"
-                className="block text-center text-sm text-accent-400 hover:text-accent-300 py-2"
+                className="block text-center text-sm text-copper hover:text-copper-hover font-ui py-2"
               >
                 View all upcoming tasks →
               </Link>

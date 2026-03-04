@@ -14,17 +14,17 @@ export function StreakBanner({ days, message }: StreakBannerProps) {
     <div
       className={cn(
         'rounded-xl p-3.5',
-        'bg-gradient-to-r from-amber-500/15 to-orange-600/10',
-        'border border-amber-500/20',
+        'bg-gradient-to-r from-gold-dim to-copper-dim',
+        'border border-gold/25',
         'flex items-center gap-3'
       )}
     >
       <div className="text-[28px]">🔥</div>
       <div className="flex-1">
-        <div className="text-base font-bold text-amber-500">
+        <div className="text-base font-ui font-bold text-gradient-copper">
           {days} Day Streak!
         </div>
-        <div className="text-xs text-zinc-400">
+        <div className="text-xs text-[--muted] font-body">
           {message || 'Complete 1 task daily to keep it going'}
         </div>
       </div>

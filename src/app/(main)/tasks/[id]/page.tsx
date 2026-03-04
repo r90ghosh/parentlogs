@@ -45,8 +45,8 @@ export default function TaskDetailPage() {
   if (isLoading) {
     return (
       <div className="p-4 space-y-4 max-w-2xl">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-48 w-full" />
+        <Skeleton className="h-8 w-48 bg-[--card]" />
+        <Skeleton className="h-48 w-full bg-[--card]" />
       </div>
     )
   }
@@ -54,7 +54,7 @@ export default function TaskDetailPage() {
   if (!task) {
     return (
       <div className="p-4">
-        <p className="text-surface-400">Task not found</p>
+        <p className="text-[--muted] font-body">Task not found</p>
       </div>
     )
   }
@@ -91,39 +91,39 @@ export default function TaskDetailPage() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <h1 className="text-xl font-bold text-white flex-1">{task.title}</h1>
+        <h1 className="text-xl font-display font-bold text-[--cream] flex-1">{task.title}</h1>
       </div>
 
       {/* Status Badge */}
       <div className="flex items-center gap-2">
-        <Badge variant={task.status === 'completed' ? 'default' : 'outline'}>
+        <Badge variant={task.status === 'completed' ? 'default' : 'outline'} className="font-ui">
           {task.status}
         </Badge>
         {task.priority === 'must-do' && (
-          <Badge variant="destructive">Must-Do</Badge>
+          <Badge variant="destructive" className="font-ui">Must-Do</Badge>
         )}
       </div>
 
       {/* Details Card */}
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardContent className="pt-6 space-y-4">
-          <p className="text-surface-300">{task.description}</p>
+          <p className="text-[--cream] font-body">{task.description}</p>
 
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-surface-400" />
-              <span className="text-surface-400">Due:</span>
-              <span className="text-white">{format(new Date(task.due_date), 'MMMM d, yyyy')}</span>
+              <Calendar className="h-4 w-4 text-[--muted]" />
+              <span className="text-[--muted] font-body">Due:</span>
+              <span className="text-[--cream] font-body">{format(new Date(task.due_date), 'MMMM d, yyyy')}</span>
             </div>
             <div className="flex items-center gap-2">
-              <User className="h-4 w-4 text-surface-400" />
-              <span className="text-surface-400">Assigned to:</span>
-              <span className="text-white capitalize">{task.assigned_to}</span>
+              <User className="h-4 w-4 text-[--muted]" />
+              <span className="text-[--muted] font-body">Assigned to:</span>
+              <span className="text-[--cream] font-body capitalize">{task.assigned_to}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Tag className="h-4 w-4 text-surface-400" />
-              <span className="text-surface-400">Category:</span>
-              <span className="text-white">{task.category}</span>
+              <Tag className="h-4 w-4 text-[--muted]" />
+              <span className="text-[--muted] font-body">Category:</span>
+              <span className="text-[--cream] font-body">{task.category}</span>
             </div>
           </div>
         </CardContent>
@@ -133,7 +133,7 @@ export default function TaskDetailPage() {
       {task.status === 'pending' && (
         <div className="space-y-3">
           <Button
-            className="w-full"
+            className="w-full bg-sage hover:bg-sage/90 text-[--bg] font-ui font-semibold"
             onClick={handleComplete}
             disabled={completeTask.isPending}
           >
@@ -146,6 +146,7 @@ export default function TaskDetailPage() {
               variant="outline"
               onClick={() => handleSnooze(1)}
               disabled={snoozeTask.isPending}
+              className="border-[--border-hover] hover:bg-[--card] font-ui"
             >
               <Clock className="h-4 w-4 mr-1" />
               +1 Day
@@ -154,6 +155,7 @@ export default function TaskDetailPage() {
               variant="outline"
               onClick={() => handleSnooze(3)}
               disabled={snoozeTask.isPending}
+              className="border-[--border-hover] hover:bg-[--card] font-ui"
             >
               <Clock className="h-4 w-4 mr-1" />
               +3 Days
@@ -162,6 +164,7 @@ export default function TaskDetailPage() {
               variant="outline"
               onClick={() => handleSnooze(7)}
               disabled={snoozeTask.isPending}
+              className="border-[--border-hover] hover:bg-[--card] font-ui"
             >
               <Clock className="h-4 w-4 mr-1" />
               +1 Week
@@ -171,7 +174,7 @@ export default function TaskDetailPage() {
           <div className="flex gap-2">
             <Button
               variant="ghost"
-              className="flex-1"
+              className="flex-1 text-[--muted] hover:text-[--cream] hover:bg-[--card] font-ui"
               onClick={handleSkip}
               disabled={skipTask.isPending}
             >
@@ -181,20 +184,20 @@ export default function TaskDetailPage() {
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="ghost" className="text-red-500">
+                <Button variant="ghost" className="text-coral hover:bg-coral-dim font-ui">
                   <Trash className="h-4 w-4" />
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="bg-surface-900 border-surface-800">
+              <AlertDialogContent className="bg-[--surface] border-[--border]">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Delete Task?</AlertDialogTitle>
-                  <AlertDialogDescription>
+                  <AlertDialogTitle className="font-display text-[--cream]">Delete Task?</AlertDialogTitle>
+                  <AlertDialogDescription className="font-body text-[--muted]">
                     This action cannot be undone. This will permanently delete the task.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+                  <AlertDialogCancel className="border-[--border-hover] font-ui">Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete} className="bg-coral hover:bg-coral/90 text-[--bg] font-ui">
                     Delete
                   </AlertDialogAction>
                 </AlertDialogFooter>

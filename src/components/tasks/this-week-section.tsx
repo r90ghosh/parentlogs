@@ -40,11 +40,11 @@ export function ThisWeekSection({
     <div className="space-y-3">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-white">This Week</h3>
+        <h3 className="text-lg font-display font-semibold text-[--cream]">This Week</h3>
         {filteredTasks.length > maxVisible && (
           <Link
             href="/tasks?filter=this-week"
-            className="text-sm text-accent-400 hover:text-accent-300 flex items-center gap-1"
+            className="text-sm text-copper hover:text-copper-hover font-ui flex items-center gap-1"
           >
             View all
             <ChevronRight className="h-4 w-4" />
@@ -73,12 +73,12 @@ export function ThisWeekSection({
               href="/tasks?filter=this-week"
               className="flex-shrink-0 w-[120px] snap-start"
             >
-              <div className="h-full rounded-xl bg-surface-800/50 border border-surface-700 border-dashed flex items-center justify-center hover:bg-surface-800 transition-colors">
+              <div className="h-full rounded-xl bg-[--card] border border-[--border] border-dashed flex items-center justify-center hover:bg-[--card-hover] transition-colors">
                 <div className="text-center">
-                  <span className="text-2xl font-bold text-surface-400">
+                  <span className="text-2xl font-ui font-bold text-[--muted]">
                     +{remainingCount}
                   </span>
-                  <p className="text-xs text-surface-500 mt-1">more</p>
+                  <p className="text-xs text-[--dim] font-body mt-1">more</p>
                 </div>
               </div>
             </Link>
@@ -109,12 +109,12 @@ export function ThisWeekSection({
         {remainingCount > 0 && (
           <motion.div variants={staggerItemVariants}>
             <Link href="/tasks?filter=this-week">
-              <div className="h-full min-h-[80px] rounded-xl bg-surface-800/50 border border-surface-700 border-dashed flex items-center justify-center hover:bg-surface-800 transition-colors">
+              <div className="h-full min-h-[80px] rounded-xl bg-[--card] border border-[--border] border-dashed flex items-center justify-center hover:bg-[--card-hover] transition-colors">
                 <div className="text-center">
-                  <span className="text-xl font-bold text-surface-400">
+                  <span className="text-xl font-ui font-bold text-[--muted]">
                     +{remainingCount}
                   </span>
-                  <p className="text-xs text-surface-500 mt-1">more tasks</p>
+                  <p className="text-xs text-[--dim] font-body mt-1">more tasks</p>
                 </div>
               </div>
             </Link>

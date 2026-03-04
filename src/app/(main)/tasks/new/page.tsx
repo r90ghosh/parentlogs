@@ -97,99 +97,99 @@ export default function NewTaskPage() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <h1 className="text-xl font-bold text-white">New Task</h1>
+        <h1 className="text-xl font-display font-bold text-[--cream]">New Task</h1>
       </div>
 
-      <Card className="bg-surface-900 border-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
         <CardContent className="pt-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Title */}
             <div className="space-y-2">
-              <Label htmlFor="title">Title *</Label>
+              <Label htmlFor="title" className="font-ui text-[--cream]">Title *</Label>
               <Input
                 id="title"
                 {...register('title')}
                 placeholder="What needs to be done?"
-                className="bg-surface-800 border-surface-700"
+                className="bg-[--card] border-[--border] text-[--cream] placeholder:text-[--dim] font-body"
               />
               {errors.title && (
-                <p className="text-sm text-red-500">{errors.title.message}</p>
+                <p className="text-sm text-coral font-body">{errors.title.message}</p>
               )}
             </div>
 
             {/* Description */}
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description" className="font-ui text-[--cream]">Description</Label>
               <Textarea
                 id="description"
                 {...register('description')}
                 placeholder="Add more details..."
-                className="bg-surface-800 border-surface-700 min-h-[100px]"
+                className="bg-[--card] border-[--border] text-[--cream] placeholder:text-[--dim] font-body min-h-[100px]"
               />
             </div>
 
             {/* Due Date */}
             <div className="space-y-2">
-              <Label htmlFor="due_date">Due Date *</Label>
+              <Label htmlFor="due_date" className="font-ui text-[--cream]">Due Date *</Label>
               <Input
                 id="due_date"
                 type="date"
                 {...register('due_date')}
-                className="bg-surface-800 border-surface-700"
+                className="bg-[--card] border-[--border] text-[--cream] font-body"
               />
               {errors.due_date && (
-                <p className="text-sm text-red-500">{errors.due_date.message}</p>
+                <p className="text-sm text-coral font-body">{errors.due_date.message}</p>
               )}
             </div>
 
             {/* Assigned To */}
             <div className="space-y-2">
-              <Label>Assigned To</Label>
+              <Label className="font-ui text-[--cream]">Assigned To</Label>
               <Select
                 value={watch('assigned_to')}
                 onValueChange={(value) => setValue('assigned_to', value as any)}
               >
-                <SelectTrigger className="bg-surface-800 border-surface-700">
+                <SelectTrigger className="bg-[--card] border-[--border] text-[--cream] font-body">
                   <SelectValue placeholder="Who should do this?" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="both">Both Partners</SelectItem>
-                  <SelectItem value="dad">Dad</SelectItem>
-                  <SelectItem value="mom">Mom</SelectItem>
+                <SelectContent className="bg-[--surface] border-[--border]">
+                  <SelectItem value="both" className="font-body">Both Partners</SelectItem>
+                  <SelectItem value="dad" className="font-body">Dad</SelectItem>
+                  <SelectItem value="mom" className="font-body">Mom</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             {/* Priority */}
             <div className="space-y-2">
-              <Label>Priority</Label>
+              <Label className="font-ui text-[--cream]">Priority</Label>
               <Select
                 value={watch('priority')}
                 onValueChange={(value) => setValue('priority', value as any)}
               >
-                <SelectTrigger className="bg-surface-800 border-surface-700">
+                <SelectTrigger className="bg-[--card] border-[--border] text-[--cream] font-body">
                   <SelectValue placeholder="How important is this?" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="must-do">Must-Do</SelectItem>
-                  <SelectItem value="good-to-do">Good-to-Do</SelectItem>
+                <SelectContent className="bg-[--surface] border-[--border]">
+                  <SelectItem value="must-do" className="font-body">Must-Do</SelectItem>
+                  <SelectItem value="good-to-do" className="font-body">Good-to-Do</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             {/* Category */}
             <div className="space-y-2">
-              <Label>Category</Label>
+              <Label className="font-ui text-[--cream]">Category</Label>
               <Select
                 value={watch('category')}
                 onValueChange={(value) => setValue('category', value)}
               >
-                <SelectTrigger className="bg-surface-800 border-surface-700">
+                <SelectTrigger className="bg-[--card] border-[--border] text-[--cream] font-body">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-[--surface] border-[--border]">
                   {categories.map((cat) => (
-                    <SelectItem key={cat} value={cat}>
+                    <SelectItem key={cat} value={cat} className="font-body">
                       {cat}
                     </SelectItem>
                   ))}
@@ -200,7 +200,7 @@ export default function NewTaskPage() {
             {/* Submit */}
             <Button
               type="submit"
-              className="w-full"
+              className="w-full bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold"
               disabled={isSubmitting || createTask.isPending}
             >
               {(isSubmitting || createTask.isPending) ? (

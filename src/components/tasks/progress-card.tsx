@@ -23,12 +23,12 @@ export function ProgressCard({
     <div
       className={cn(
         'rounded-2xl p-5',
-        'bg-gradient-to-br from-zinc-800 to-zinc-900',
-        'border border-white/[0.06]'
+        'bg-[--surface]',
+        'border border-[--border]'
       )}
     >
       {/* Title */}
-      <h3 className="text-sm font-semibold text-white mb-4">📊 Your Progress</h3>
+      <h3 className="text-sm font-ui font-semibold text-[--cream] mb-4">📊 Your Progress</h3>
 
       {/* Progress ring */}
       <div className="flex justify-center mb-4">
@@ -36,8 +36,8 @@ export function ProgressCard({
           <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
             <defs>
               <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#22c55e" />
-                <stop offset="100%" stopColor="#14b8a6" />
+                <stop offset="0%" stopColor="#c4703f" />
+                <stop offset="100%" stopColor="#d4a853" />
               </linearGradient>
             </defs>
             {/* Background circle */}
@@ -46,7 +46,7 @@ export function ProgressCard({
               cy="60"
               r="50"
               fill="none"
-              stroke="rgba(255,255,255,0.1)"
+              stroke="rgba(237,230,220,0.08)"
               strokeWidth="8"
             />
             {/* Progress circle */}
@@ -65,10 +65,10 @@ export function ProgressCard({
           </svg>
           {/* Center text */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="text-[28px] font-extrabold text-white">
+            <div className="text-[28px] font-display font-extrabold text-gradient-copper">
               {Math.round(percentComplete)}%
             </div>
-            <div className="text-[11px] text-zinc-500">complete</div>
+            <div className="text-[11px] text-[--muted] font-body">complete</div>
           </div>
         </div>
       </div>
@@ -76,17 +76,17 @@ export function ProgressCard({
       {/* Stats row */}
       <div className="flex justify-around">
         <div className="text-center">
-          <div className="text-lg font-bold text-green-500">{done}</div>
-          <div className="text-[11px] text-zinc-600">Done</div>
+          <div className="text-lg font-ui font-bold text-sage">{done}</div>
+          <div className="text-[11px] text-[--dim] font-body">Done</div>
         </div>
         <div className="text-center">
-          <div className="text-lg font-bold text-white">{active}</div>
-          <div className="text-[11px] text-zinc-600">Active</div>
+          <div className="text-lg font-ui font-bold text-[--cream]">{active}</div>
+          <div className="text-[11px] text-[--dim] font-body">Active</div>
         </div>
         {toTriage > 0 && (
           <div className="text-center">
-            <div className="text-lg font-bold text-indigo-400">{toTriage}</div>
-            <div className="text-[11px] text-zinc-600">To Triage</div>
+            <div className="text-lg font-ui font-bold text-gold">{toTriage}</div>
+            <div className="text-[11px] text-[--dim] font-body">To Triage</div>
           </div>
         )}
       </div>

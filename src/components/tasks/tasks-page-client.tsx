@@ -317,7 +317,7 @@ export function TasksPageClient({
   if (isLoadingTasks) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-zinc-500">Loading tasks...</div>
+        <div className="text-[--muted] font-body">Loading tasks...</div>
       </div>
     )
   }
@@ -327,14 +327,14 @@ export function TasksPageClient({
       {/* Header with view toggle */}
       <div className="flex items-center justify-between mb-4">
         <TasksHeader currentWeek={currentWeek} daysToGo={daysToGo} />
-        <div className="flex items-center gap-1 bg-surface-900 border border-surface-800 rounded-xl p-1">
+        <div className="flex items-center gap-1 bg-[--surface] border border-[--border] rounded-xl p-1">
           <button
             onClick={() => handleViewChange('list')}
             className={cn(
-              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
+              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-ui font-medium transition-colors',
               view === 'list'
-                ? 'bg-accent-500/15 text-accent-400'
-                : 'text-zinc-500 hover:text-zinc-300'
+                ? 'bg-copper-dim text-copper'
+                : 'text-[--muted] hover:text-[--cream]'
             )}
           >
             <List className="h-4 w-4" />
@@ -343,10 +343,10 @@ export function TasksPageClient({
           <button
             onClick={() => handleViewChange('calendar')}
             className={cn(
-              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
+              'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-ui font-medium transition-colors',
               view === 'calendar'
-                ? 'bg-accent-500/15 text-accent-400'
-                : 'text-zinc-500 hover:text-zinc-300'
+                ? 'bg-copper-dim text-copper'
+                : 'text-[--muted] hover:text-[--cream]'
             )}
           >
             <CalendarDays className="h-4 w-4" />
@@ -362,27 +362,27 @@ export function TasksPageClient({
           <div className="flex items-center justify-between">
             <button
               onClick={() => setCalendarDate(subMonths(calendarDate, 1))}
-              className="p-2 rounded-lg hover:bg-surface-800 text-zinc-500 transition-colors"
+              className="p-2 rounded-lg hover:bg-[--card] text-[--muted] transition-colors"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
-            <h2 className="text-lg font-semibold text-white">
+            <h2 className="text-lg font-display font-semibold text-[--cream]">
               {format(calendarDate, 'MMMM yyyy')}
             </h2>
             <button
               onClick={() => setCalendarDate(addMonths(calendarDate, 1))}
-              className="p-2 rounded-lg hover:bg-surface-800 text-zinc-500 transition-colors"
+              className="p-2 rounded-lg hover:bg-[--card] text-[--muted] transition-colors"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
 
           {/* Calendar grid */}
-          <div className="bg-surface-900 rounded-xl border border-surface-800 overflow-hidden">
+          <div className="bg-[--surface] rounded-xl border border-[--border] overflow-hidden">
             {/* Day headers */}
-            <div className="grid grid-cols-7 border-b border-surface-800">
+            <div className="grid grid-cols-7 border-b border-[--border]">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                <div key={day} className="p-2 text-center text-xs text-surface-400 font-medium">
+                <div key={day} className="p-2 text-center text-xs text-[--muted] font-ui font-medium">
                   {day}
                 </div>
               ))}
@@ -399,15 +399,15 @@ export function TasksPageClient({
                     key={i}
                     onClick={() => setSelectedDate(day)}
                     className={cn(
-                      'min-h-[80px] p-2 border-b border-r border-surface-800 text-left transition-colors hover:bg-surface-800',
-                      !isCurrentMonth && 'bg-surface-950/50',
-                      selectedDate && isSameDay(day, selectedDate) && 'bg-accent-500/10'
+                      'min-h-[80px] p-2 border-b border-r border-[--border] text-left transition-colors hover:bg-[--card]',
+                      !isCurrentMonth && 'bg-[--bg]/50',
+                      selectedDate && isSameDay(day, selectedDate) && 'bg-copper-dim'
                     )}
                   >
                     <span className={cn(
-                      'text-sm',
-                      isToday(day) && 'bg-accent-500 text-white rounded-full w-6 h-6 flex items-center justify-center',
-                      !isCurrentMonth && 'text-surface-600'
+                      'text-sm font-body',
+                      isToday(day) && 'bg-copper text-[--bg] rounded-full w-6 h-6 flex items-center justify-center',
+                      !isCurrentMonth && 'text-[--dim]'
                     )}>
                       {format(day, 'd')}
                     </span>
@@ -417,13 +417,13 @@ export function TasksPageClient({
                       {dayTasks.slice(0, 3).map((task, j) => (
                         <div
                           key={j}
-                          className="text-xs truncate px-1 rounded bg-accent-500/20 text-accent-400"
+                          className="text-xs truncate px-1 rounded bg-copper-dim text-copper"
                         >
                           {task.title}
                         </div>
                       ))}
                       {dayTasks.length > 3 && (
-                        <div className="text-xs text-surface-400">+{dayTasks.length - 3} more</div>
+                        <div className="text-xs text-[--muted] font-body">+{dayTasks.length - 3} more</div>
                       )}
                     </div>
                   </button>
@@ -434,9 +434,9 @@ export function TasksPageClient({
 
           {/* Day detail sheet */}
           <Sheet open={!!selectedDate} onOpenChange={() => setSelectedDate(null)}>
-            <SheetContent className="bg-surface-900 border-surface-800">
+            <SheetContent className="bg-[--surface] border-[--border]">
               <SheetHeader>
-                <SheetTitle className="text-white">
+                <SheetTitle className="text-[--cream] font-display">
                   {selectedDate && format(selectedDate, 'EEEE, MMMM d')}
                 </SheetTitle>
               </SheetHeader>
@@ -446,17 +446,17 @@ export function TasksPageClient({
                     <Link
                       key={task.id}
                       href={`/tasks/${task.id}`}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-surface-800 hover:bg-surface-700 transition-colors"
+                      className="flex items-center gap-3 p-3 rounded-lg bg-[--card] hover:bg-[--card-hover] transition-colors"
                     >
-                      <CheckSquare className="h-4 w-4 text-accent-500 flex-shrink-0" />
+                      <CheckSquare className="h-4 w-4 text-copper flex-shrink-0" />
                       <div className="min-w-0">
-                        <div className="text-sm text-white truncate">{task.title}</div>
-                        <div className="text-xs text-surface-400 capitalize">{task.category}</div>
+                        <div className="text-sm text-[--cream] font-ui truncate">{task.title}</div>
+                        <div className="text-xs text-[--muted] font-body capitalize">{task.category}</div>
                       </div>
                     </Link>
                   ))
                 ) : (
-                  <p className="text-surface-400 text-center py-8">No tasks on this day</p>
+                  <p className="text-[--muted] font-body text-center py-8">No tasks on this day</p>
                 )}
               </div>
             </SheetContent>
@@ -508,20 +508,20 @@ export function TasksPageClient({
 
           {/* 30-day free window upgrade prompt */}
           {hasLockedTasks && (
-            <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/5 border border-amber-500/20">
+            <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-gold-dim to-copper-dim border border-gold/25">
               <div className="flex items-center gap-3">
-                <Lock className="h-5 w-5 text-amber-400 flex-shrink-0" />
+                <Lock className="h-5 w-5 text-gold flex-shrink-0" />
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-white">
+                  <p className="text-sm font-ui font-medium text-[--cream]">
                     You&apos;re seeing your 30-day task window
                   </p>
-                  <p className="text-xs text-zinc-400 mt-0.5">
+                  <p className="text-xs text-[--muted] font-body mt-0.5">
                     Upgrade to see your full timeline from pregnancy through 24 months.
                   </p>
                 </div>
                 <Link
                   href="/upgrade?source=tasks"
-                  className="px-4 py-2 rounded-lg bg-amber-500 text-black text-sm font-semibold hover:bg-amber-400 transition-colors flex-shrink-0"
+                  className="px-4 py-2 rounded-lg bg-copper text-[--bg] text-sm font-ui font-semibold hover:bg-copper-hover transition-colors flex-shrink-0"
                 >
                   Upgrade
                 </Link>
@@ -569,8 +569,8 @@ export function TasksPageClient({
               {selectedTimelineCategory && phaseTasks.length === 0 && (
                 <div className="text-center py-16">
                   <div className="text-5xl mb-4">📭</div>
-                  <h3 className="text-lg font-semibold text-white mb-2">No tasks in this phase</h3>
-                  <p className="text-sm text-zinc-500">
+                  <h3 className="text-lg font-display font-semibold text-[--cream] mb-2">No tasks in this phase</h3>
+                  <p className="text-sm text-[--muted] font-body">
                     There are no pending tasks for {TIMELINE_CATEGORIES.find(c => c.id === selectedTimelineCategory)?.label}.
                   </p>
                 </div>
@@ -622,8 +622,8 @@ export function TasksPageClient({
               {!selectedTimelineCategory && thisWeekTasks.length === 0 && comingUpTasks.length === 0 && activeTab !== 'catchup' && (
                 <div className="text-center py-16">
                   <div className="text-5xl mb-4">🎉</div>
-                  <h3 className="text-lg font-semibold text-white mb-2">All caught up!</h3>
-                  <p className="text-sm text-zinc-500">No pending tasks for now. Great job!</p>
+                  <h3 className="text-lg font-display font-semibold text-[--cream] mb-2">All caught up!</h3>
+                  <p className="text-sm text-[--muted] font-body">No pending tasks for now. Great job!</p>
                 </div>
               )}
             </div>
@@ -642,9 +642,9 @@ export function TasksPageClient({
 
               {/* Snooze premium badge */}
               {!isPremium && (
-                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-900 border border-surface-800">
-                  <Lock className="h-3.5 w-3.5 text-zinc-500" />
-                  <span className="text-xs text-zinc-500">Snooze & reschedule are premium features</span>
+                <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[--surface] border border-[--border]">
+                  <Lock className="h-3.5 w-3.5 text-[--muted]" />
+                  <span className="text-xs text-[--muted] font-body">Snooze & reschedule are premium features</span>
                 </div>
               )}
 

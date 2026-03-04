@@ -28,20 +28,20 @@ export function WeekCalendarCard({
     <div
       className={cn(
         'rounded-2xl p-5',
-        'bg-gradient-to-br from-zinc-800 to-zinc-900',
-        'border border-white/[0.06]'
+        'bg-[--surface]',
+        'border border-[--border]'
       )}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-white">📅 This Week</h3>
+        <h3 className="text-sm font-ui font-semibold text-[--cream]">📅 This Week</h3>
         <div className="flex gap-2">
           <button
             onClick={onPrev}
             className={cn(
               'w-7 h-7 rounded-md flex items-center justify-center',
-              'bg-white/[0.06] text-zinc-500',
-              'hover:bg-white/10 hover:text-zinc-400 transition-all'
+              'bg-[--card] text-[--muted]',
+              'hover:bg-[--card-hover] hover:text-[--cream] transition-all'
             )}
           >
             <ChevronLeft className="w-3.5 h-3.5" />
@@ -50,8 +50,8 @@ export function WeekCalendarCard({
             onClick={onNext}
             className={cn(
               'w-7 h-7 rounded-md flex items-center justify-center',
-              'bg-white/[0.06] text-zinc-500',
-              'hover:bg-white/10 hover:text-zinc-400 transition-all'
+              'bg-[--card] text-[--muted]',
+              'hover:bg-[--card-hover] hover:text-[--cream] transition-all'
             )}
           >
             <ChevronRight className="w-3.5 h-3.5" />
@@ -70,19 +70,19 @@ export function WeekCalendarCard({
               onClick={() => onDayClick?.(day.date)}
               className={cn(
                 'text-center py-2 px-1 rounded-lg transition-all',
-                day.isToday && 'bg-amber-500/15 border border-amber-500/30',
-                !day.isToday && hasTasks && 'bg-blue-500/10',
-                !day.isToday && !hasTasks && 'hover:bg-white/5'
+                day.isToday && 'bg-copper-dim border border-copper/30',
+                !day.isToday && hasTasks && 'bg-gold-dim',
+                !day.isToday && !hasTasks && 'hover:bg-[--card]'
               )}
             >
-              <div className="text-[10px] text-zinc-600 mb-1">{day.label}</div>
+              <div className="text-[10px] text-[--dim] font-body mb-1">{day.label}</div>
               <div className={cn(
-                'text-sm font-semibold',
-                day.isToday ? 'text-amber-500' : hasTasks ? 'text-blue-400' : 'text-zinc-500'
+                'text-sm font-ui font-semibold',
+                day.isToday ? 'text-copper' : hasTasks ? 'text-gold' : 'text-[--muted]'
               )}>
                 {day.num}
               </div>
-              <div className="text-[10px] text-zinc-600 mt-1">
+              <div className="text-[10px] text-[--dim] font-body mt-1">
                 {day.tasks > 0 ? day.tasks : ''}
               </div>
             </button>
@@ -92,12 +92,12 @@ export function WeekCalendarCard({
 
       {/* Legend */}
       <div className="flex items-center justify-center gap-4">
-        <div className="flex items-center gap-1.5 text-[11px] text-zinc-600">
-          <div className="w-2 h-2 rounded-full bg-amber-500" />
+        <div className="flex items-center gap-1.5 text-[11px] text-[--dim] font-body">
+          <div className="w-2 h-2 rounded-full bg-copper" />
           <span>Today</span>
         </div>
-        <div className="flex items-center gap-1.5 text-[11px] text-zinc-600">
-          <div className="w-2 h-2 rounded-full bg-blue-500" />
+        <div className="flex items-center gap-1.5 text-[11px] text-[--dim] font-body">
+          <div className="w-2 h-2 rounded-full bg-gold" />
           <span>Has tasks</span>
         </div>
       </div>

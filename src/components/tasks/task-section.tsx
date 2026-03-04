@@ -33,17 +33,17 @@ export function TaskSection({
     <div
       className={cn(
         'rounded-2xl overflow-hidden',
-        'bg-gradient-to-br from-zinc-800 to-zinc-900',
+        'bg-[--surface]',
         'border',
-        isCatchUp ? 'border-indigo-500/30' : 'border-white/[0.06]'
+        isCatchUp ? 'border-gold/30' : 'border-[--border]'
       )}
     >
       {/* Section header */}
       <div
         className={cn(
           'flex items-center justify-between px-5 py-4',
-          'border-b border-white/[0.06]',
-          isCatchUp && 'bg-gradient-to-r from-indigo-500/10 to-purple-500/5',
+          'border-b border-[--border]',
+          isCatchUp && 'bg-gradient-to-r from-gold-dim to-copper-dim',
           collapsible && 'cursor-pointer'
         )}
         onClick={collapsible ? () => setIsExpanded(!isExpanded) : undefined}
@@ -51,21 +51,21 @@ export function TaskSection({
         <div>
           <div className="flex items-center gap-2.5">
             <span className="text-lg">{icon}</span>
-            <h3 className="text-[15px] font-semibold text-white">{title}</h3>
-            <span className="text-xs text-zinc-500 bg-white/[0.06] px-2 py-0.5 rounded-[10px]">
+            <h3 className="text-[15px] font-ui font-semibold text-[--cream]">{title}</h3>
+            <span className="text-xs text-[--muted] bg-[--card] px-2 py-0.5 rounded-[10px]">
               {typeof count === 'number' ? `${count} tasks` : count}
             </span>
             {collapsible && (
               <ChevronDown
                 className={cn(
-                  'w-4 h-4 text-zinc-500 transition-transform',
+                  'w-4 h-4 text-[--muted] transition-transform',
                   !isExpanded && '-rotate-90'
                 )}
               />
             )}
           </div>
           {subtitle && (
-            <p className="text-xs text-zinc-500 ml-7 mt-1">{subtitle}</p>
+            <p className="text-xs text-[--muted] ml-7 mt-1 font-body">{subtitle}</p>
           )}
         </div>
 
@@ -98,10 +98,10 @@ export function SectionAction({ children, onClick, variant = 'default' }: Sectio
     <button
       onClick={onClick}
       className={cn(
-        'text-xs px-3 py-1.5 rounded-md transition-all',
-        variant === 'default' && 'bg-white/[0.04] text-zinc-500 hover:bg-white/[0.08] hover:text-zinc-400',
-        variant === 'primary' && 'bg-indigo-500/15 text-indigo-400 hover:bg-indigo-500/25',
-        variant === 'success' && 'bg-green-500/15 text-green-400 hover:bg-green-500/25'
+        'text-xs px-3 py-1.5 rounded-md transition-all font-ui',
+        variant === 'default' && 'bg-[--card] text-[--muted] hover:bg-[--card-hover] hover:text-[--cream]',
+        variant === 'primary' && 'bg-copper-dim text-copper hover:bg-copper-glow',
+        variant === 'success' && 'bg-[--sage-dim] text-sage hover:bg-sage/25'
       )}
     >
       {children}

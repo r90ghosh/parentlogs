@@ -12,12 +12,12 @@ interface ConfettiPiece {
 }
 
 const colors = [
-  '#f59e0b', // amber-500
-  '#10b981', // emerald-500
-  '#3b82f6', // blue-500
-  '#8b5cf6', // violet-500
-  '#ec4899', // pink-500
-  '#f97316', // orange-500
+  '#c4703f', // copper
+  '#d4a853', // gold
+  '#6b8f71', // sage
+  '#d4836b', // coral
+  '#c47a8f', // rose
+  '#5b9bd5', // sky
 ]
 
 interface ConfettiProps {
@@ -105,14 +105,14 @@ export function CheckBurst({ isActive }: CheckBurstProps) {
         >
           {/* Expanding ring */}
           <motion.div
-            className="absolute inset-0 rounded-full border-2 border-green-500"
+            className="absolute inset-0 rounded-full border-2 border-sage"
             initial={{ scale: 0.5, opacity: 1 }}
             animate={{ scale: 2, opacity: 0 }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
           />
           {/* Second ring */}
           <motion.div
-            className="absolute inset-0 rounded-full border-2 border-green-400"
+            className="absolute inset-0 rounded-full border-2 border-copper"
             initial={{ scale: 0.5, opacity: 1 }}
             animate={{ scale: 1.5, opacity: 0 }}
             transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}

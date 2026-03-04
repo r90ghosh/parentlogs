@@ -29,14 +29,14 @@ export default function TasksPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-zinc-500">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-[--bg]">
+        <div className="text-[--muted] font-body">Loading...</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[--bg]">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 overflow-x-hidden">
         <TasksPageClient
           currentWeek={currentWeek}
