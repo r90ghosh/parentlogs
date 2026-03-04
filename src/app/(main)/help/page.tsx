@@ -163,7 +163,7 @@ export default function HelpPage() {
   }
 
   return (
-    <div className="p-4 space-y-6 max-w-2xl">
+    <div className="p-4 md:px-8 py-6 space-y-6 max-w-4xl mx-auto">
       {/* Header */}
       <RevealOnScroll delay={0}>
         <div>
