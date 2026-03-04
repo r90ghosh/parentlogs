@@ -140,7 +140,7 @@ function TimelineDotButton({
   const color = DOMAIN_COLORS[dot.domain]
 
   return (
-    <div className="relative flex flex-col items-center">
+    <div className="relative flex flex-col items-center" style={{ zIndex: isActive ? 50 : 1 }}>
       <button
         onClick={() => onToggle(dot.id)}
         aria-label={`${dot.title} — ${DOMAIN_LABELS[dot.domain]}`}
@@ -172,7 +172,7 @@ function TimelineDotButton({
         {isActive && (
           <DotInfoCard
             dot={dot}
-            position={isInUpperHalf ? 'below' : 'above'}
+            position="above"
             onClose={() => onToggle(dot.id)}
           />
         )}
