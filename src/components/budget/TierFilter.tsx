@@ -53,17 +53,17 @@ const tierConfig: Record<DisplayTier, {
     label: 'Budget',
     icon: DollarSign,
     description: 'Affordable options',
-    activeColor: 'from-emerald-500/40 to-green-500/40',
-    borderColor: 'border-emerald-500/50',
-    textColor: 'text-emerald-400',
+    activeColor: 'from-sage/40 to-sage/20',
+    borderColor: 'border-sage/50',
+    textColor: 'text-sage',
   },
   premium: {
     label: 'Premium',
     icon: Crown,
     description: 'Top-tier picks',
-    activeColor: 'from-amber-500/40 to-orange-500/40',
-    borderColor: 'border-amber-500/50',
-    textColor: 'text-amber-400',
+    activeColor: 'from-gold/40 to-gold/20',
+    borderColor: 'border-gold/50',
+    textColor: 'text-gold',
   },
 }
 
@@ -73,7 +73,7 @@ export function TierFilter({ templates, selectedTier, onTierChange }: TierFilter
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xs text-surface-500 mr-1">View:</span>
+      <span className="text-xs text-[--dim] mr-1 font-ui">View:</span>
       {displayTiers.map((tier) => {
         const config = tierConfig[tier]
         const tierStats = stats[tier]
@@ -86,20 +86,20 @@ export function TierFilter({ templates, selectedTier, onTierChange }: TierFilter
             onClick={() => onTierChange(tier)}
             className={cn(
               'flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-200',
-              'backdrop-blur-md border text-sm',
+              'backdrop-blur-md border text-sm font-ui',
               isSelected
                 ? `bg-gradient-to-br ${config.activeColor} ${config.borderColor}`
-                : `bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-white/20`
+                : `bg-white/[0.03] border-[--border] hover:bg-white/[0.06] hover:border-[--border-hover]`
             )}
           >
-            <Icon className={cn('h-3.5 w-3.5', isSelected ? config.textColor : 'text-surface-400')} />
-            <span className={cn('font-medium', isSelected ? 'text-white' : 'text-surface-300')}>
+            <Icon className={cn('h-3.5 w-3.5', isSelected ? config.textColor : 'text-[--muted]')} />
+            <span className={cn('font-medium font-ui', isSelected ? 'text-[--cream]' : 'text-[--cream]')}>
               {config.label}
             </span>
-            <span className={cn('font-bold', isSelected ? config.textColor : 'text-surface-400')}>
+            <span className={cn('font-bold tabular-nums font-ui', isSelected ? config.textColor : 'text-[--muted]')}>
               {formatPrice(tierStats.total)}
             </span>
-            <span className="text-[10px] text-surface-500">
+            <span className="text-[10px] text-[--dim] font-ui">
               ({tierStats.count})
             </span>
           </button>

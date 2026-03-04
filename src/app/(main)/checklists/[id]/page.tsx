@@ -65,14 +65,14 @@ export default function ChecklistDetailPage() {
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
-          <h1 className="text-xl font-bold text-white">Checklist Not Found</h1>
+          <h1 className="text-xl font-bold text-[--cream] font-display">Checklist Not Found</h1>
         </div>
-        <Card className="bg-surface-900 border-surface-800">
+        <Card className="bg-[--surface] border-[--border]">
           <CardContent className="py-12 text-center">
-            <p className="text-surface-400">
+            <p className="text-[--muted] font-body">
               This checklist doesn't exist or requires a premium subscription.
             </p>
-            <Button asChild className="mt-4">
+            <Button asChild className="mt-4 font-ui">
               <Link href="/checklists">Back to Checklists</Link>
             </Button>
           </CardContent>
@@ -93,8 +93,8 @@ export default function ChecklistDetailPage() {
           </Link>
         </Button>
         <div className="flex-1">
-          <h1 className="text-xl font-bold text-white">{checklist.name}</h1>
-          <p className="text-sm text-surface-400">{checklist.description}</p>
+          <h1 className="text-xl font-bold text-[--cream] font-display">{checklist.name}</h1>
+          <p className="text-sm text-[--muted] font-body">{checklist.description}</p>
         </div>
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -102,16 +102,16 @@ export default function ChecklistDetailPage() {
               <RotateCcw className="h-4 w-4" />
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent className="bg-surface-900 border-surface-800">
+          <AlertDialogContent className="bg-[--surface] border-[--border]">
             <AlertDialogHeader>
-              <AlertDialogTitle>Reset Checklist?</AlertDialogTitle>
-              <AlertDialogDescription>
+              <AlertDialogTitle className="font-display text-[--cream]">Reset Checklist?</AlertDialogTitle>
+              <AlertDialogDescription className="font-body text-[--muted]">
                 This will uncheck all items. This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleReset}>Reset</AlertDialogAction>
+              <AlertDialogCancel className="font-ui">Cancel</AlertDialogCancel>
+              <AlertDialogAction className="font-ui" onClick={handleReset}>Reset</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
@@ -119,36 +119,36 @@ export default function ChecklistDetailPage() {
 
       {/* Progress */}
       <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span className="text-surface-400">
+        <div className="flex justify-between text-sm font-ui">
+          <span className="text-[--muted]">
             {checklist.progress.completed} of {checklist.progress.total} items completed
           </span>
-          <span className="text-accent-400">
+          <span className="text-copper">
             {checklist.progress.percentage}%
           </span>
         </div>
         <Progress
           value={checklist.progress.percentage}
-          className="h-2 bg-surface-800"
+          className="h-2 bg-[--card]"
         />
       </div>
 
       {/* Completion Banner */}
       {isComplete && (
-        <Card className="bg-accent-600/20 border-accent-600/30">
+        <Card className="bg-copper/20 border-copper/30">
           <CardContent className="py-4 flex items-center gap-3">
-            <CheckCircle className="h-6 w-6 text-accent-500" />
+            <CheckCircle className="h-6 w-6 text-copper" />
             <div>
-              <p className="font-medium text-accent-400">Checklist Complete!</p>
-              <p className="text-sm text-accent-300/70">Great job preparing for your baby!</p>
+              <p className="font-medium text-copper font-body">Checklist Complete!</p>
+              <p className="text-sm text-copper/70 font-body">Great job preparing for your baby!</p>
             </div>
           </CardContent>
         </Card>
       )}
 
       {/* Items */}
-      <Card className="bg-surface-900 border-surface-800">
-        <CardContent className="pt-6 divide-y divide-surface-800">
+      <Card className="bg-[--surface] border-[--border]">
+        <CardContent className="pt-6 divide-y divide-[--border]">
           {checklist.items.map((item: any, index: number) => (
             <div
               key={item.item_id}
@@ -161,23 +161,23 @@ export default function ChecklistDetailPage() {
                 <Checkbox
                   checked={item.completed}
                   onCheckedChange={() => handleToggle(item.item_id, item.completed)}
-                  className="mt-0.5"
+                  className="mt-0.5 data-[state=checked]:bg-copper data-[state=checked]:border-copper"
                 />
                 <div className="flex-1 min-w-0">
                   <p className={cn(
-                    "text-sm font-medium",
-                    item.completed ? "text-surface-500 line-through" : "text-white"
+                    "text-sm font-medium font-body",
+                    item.completed ? "text-[--dim] line-through" : "text-[--cream]"
                   )}>
                     {item.item}
                   </p>
                   {item.details && (
-                    <p className="text-xs text-surface-400 mt-1">
+                    <p className="text-xs text-[--muted] mt-1 font-body">
                       {item.details}
                     </p>
                   )}
                 </div>
                 {item.required && (
-                  <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded">
+                  <span className="text-xs bg-coral/20 text-coral px-2 py-0.5 rounded font-ui">
                     Essential
                   </span>
                 )}

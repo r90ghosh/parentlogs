@@ -94,15 +94,15 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string
   'Admin': { bg: 'bg-slate-500/20', text: 'text-slate-400', border: 'border-slate-500/30' },
   'Nursery': { bg: 'bg-purple-500/20', text: 'text-purple-400', border: 'border-purple-500/30' },
   'Gear': { bg: 'bg-blue-500/20', text: 'text-blue-400', border: 'border-blue-500/30' },
-  'Health': { bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/30' },
-  'Feeding': { bg: 'bg-amber-500/20', text: 'text-amber-400', border: 'border-amber-500/30' },
+  'Health': { bg: 'bg-coral/20', text: 'text-coral', border: 'border-coral/30' },
+  'Feeding': { bg: 'bg-gold/20', text: 'text-gold', border: 'border-gold/30' },
   'Diapering': { bg: 'bg-cyan-500/20', text: 'text-cyan-400', border: 'border-cyan-500/30' },
   'Tech': { bg: 'bg-indigo-500/20', text: 'text-indigo-400', border: 'border-indigo-500/30' },
   'Safety': { bg: 'bg-orange-500/20', text: 'text-orange-400', border: 'border-orange-500/30' },
   'Clothing': { bg: 'bg-pink-500/20', text: 'text-pink-400', border: 'border-pink-500/30' },
-  'Baby Care': { bg: 'bg-teal-500/20', text: 'text-teal-400', border: 'border-teal-500/30' },
+  'Baby Care': { bg: 'bg-sage/20', text: 'text-sage', border: 'border-sage/30' },
   'Childcare': { bg: 'bg-violet-500/20', text: 'text-violet-400', border: 'border-violet-500/30' },
-  'Travel': { bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/30' },
+  'Travel': { bg: 'bg-sage/20', text: 'text-sage', border: 'border-sage/30' },
   'Maternity': { bg: 'bg-rose-500/20', text: 'text-rose-400', border: 'border-rose-500/30' },
   'Memories': { bg: 'bg-fuchsia-500/20', text: 'text-fuchsia-400', border: 'border-fuchsia-500/30' },
   'Books': { bg: 'bg-lime-500/20', text: 'text-lime-400', border: 'border-lime-500/30' },
@@ -270,12 +270,12 @@ export default function BudgetPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Budget Planner</h1>
-          <p className="text-surface-400 mt-1">
+          <h1 className="text-2xl font-display font-bold text-[--cream]">Budget Planner</h1>
+          <p className="text-[--muted] mt-1 font-body">
             Plan and track your baby expenses
           </p>
         </div>
-        <Button onClick={() => setShowAddCustomDialog(true)}>
+        <Button onClick={() => setShowAddCustomDialog(true)} className="font-ui">
           <Plus className="h-4 w-4 mr-2" />
           Add Custom
         </Button>
@@ -300,7 +300,7 @@ export default function BudgetPage() {
         />
       )}
 
-      {/* Summary Cards - Now showing single tier price */}
+      {/* Summary Cards */}
       {(() => {
         // Calculate totals for current tier (always exclude Admin)
         const tierTotal = allTemplates
@@ -309,17 +309,17 @@ export default function BudgetPage() {
 
         return (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="bg-surface-900 border-surface-800">
+            <Card className="bg-[--surface] border-[--border] card-gold-top">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
                   <div className="p-3 rounded-lg bg-blue-500/20">
                     <TrendingUp className="h-5 w-5 text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-xs text-surface-400">
+                    <p className="text-xs text-[--muted] font-ui">
                       {selectedTier.charAt(0).toUpperCase() + selectedTier.slice(1)} Estimate
                     </p>
-                    <p className="text-xl font-bold text-white">
+                    <p className="text-xl font-bold text-[--cream] tabular-nums">
                       {formatPrice(tierTotal)}
                     </p>
                   </div>
@@ -327,15 +327,15 @@ export default function BudgetPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-surface-900 border-surface-800">
+            <Card className="bg-[--surface] border-[--border] card-gold-top">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
-                  <div className="p-3 rounded-lg bg-green-500/20">
-                    <ShoppingCart className="h-5 w-5 text-green-400" />
+                  <div className="p-3 rounded-lg bg-sage/20">
+                    <ShoppingCart className="h-5 w-5 text-sage" />
                   </div>
                   <div>
-                    <p className="text-xs text-surface-400">Purchased</p>
-                    <p className="text-xl font-bold text-white">
+                    <p className="text-xs text-[--muted] font-ui">Purchased</p>
+                    <p className="text-xl font-bold text-[--cream] tabular-nums">
                       {budgetService.formatPrice(summary?.purchasedTotal || 0)}
                     </p>
                   </div>
@@ -343,15 +343,15 @@ export default function BudgetPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-surface-900 border-surface-800">
+            <Card className="bg-[--surface] border-[--border] card-gold-top">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
-                  <div className="p-3 rounded-lg bg-amber-500/20">
-                    <Wallet className="h-5 w-5 text-amber-400" />
+                  <div className="p-3 rounded-lg bg-gold/20">
+                    <Wallet className="h-5 w-5 text-gold" />
                   </div>
                   <div>
-                    <p className="text-xs text-surface-400">Remaining</p>
-                    <p className="text-xl font-bold text-white">
+                    <p className="text-xs text-[--muted] font-ui">Remaining</p>
+                    <p className="text-xl font-bold text-[--cream] tabular-nums">
                       {formatPrice(Math.max(0, tierTotal - (summary?.purchasedTotal || 0)))}
                     </p>
                   </div>
@@ -364,17 +364,17 @@ export default function BudgetPage() {
 
       {/* Progress */}
       {summary && summary.familyItems.length > 0 && (
-        <Card className="bg-surface-900 border-surface-800">
+        <Card className="bg-[--surface] border-[--border]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-surface-400">Shopping Progress</span>
-              <span className="text-sm font-medium text-white">
+              <span className="text-sm text-[--muted] font-body">Shopping Progress</span>
+              <span className="text-sm font-medium text-[--cream] tabular-nums font-ui">
                 {purchasedItems.length} of {summary.familyItems.length} items
               </span>
             </div>
             <Progress
               value={(purchasedItems.length / summary.familyItems.length) * 100}
-              className="h-2 bg-surface-800"
+              className="h-2 bg-[--dim]"
             />
           </CardContent>
         </Card>
@@ -382,22 +382,22 @@ export default function BudgetPage() {
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="my-budget" className="space-y-4">
-        <TabsList className="bg-surface-900 border border-surface-800">
-          <TabsTrigger value="my-budget">My Budget ({summary?.familyItems.length || 0})</TabsTrigger>
-          <TabsTrigger value="browse">Browse Items</TabsTrigger>
+        <TabsList className="bg-[--surface] border border-[--border]">
+          <TabsTrigger value="my-budget" className="font-ui">My Budget ({summary?.familyItems.length || 0})</TabsTrigger>
+          <TabsTrigger value="browse" className="font-ui">Browse Items</TabsTrigger>
         </TabsList>
 
         {/* My Budget Tab */}
         <TabsContent value="my-budget" className="space-y-4">
           {summary?.familyItems.length === 0 ? (
-            <Card className="bg-surface-900 border-surface-800">
+            <Card className="bg-[--surface] border-[--border]">
               <CardContent className="py-12 text-center">
-                <DollarSign className="h-12 w-12 text-surface-600 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white mb-2">No items yet</h3>
-                <p className="text-surface-400 mb-4">
+                <DollarSign className="h-12 w-12 text-[--dim] mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-[--cream] mb-2 font-display">No items yet</h3>
+                <p className="text-[--muted] mb-4 font-body">
                   Browse our curated list to add items to your budget
                 </p>
-                <Button variant="outline" onClick={() => {
+                <Button variant="outline" className="font-ui" onClick={() => {
                   const tabsList = document.querySelector('[value="browse"]') as HTMLElement
                   tabsList?.click()
                 }}>
@@ -410,7 +410,7 @@ export default function BudgetPage() {
               {/* Pending Items */}
               {pendingItems.length > 0 && (
                 <div className="space-y-3">
-                  <h3 className="text-sm font-medium text-surface-400 flex items-center gap-2">
+                  <h3 className="text-sm font-medium text-[--muted] font-ui flex items-center gap-2">
                     <AlertCircle className="h-4 w-4" />
                     To Buy ({pendingItems.length})
                   </h3>
@@ -428,7 +428,7 @@ export default function BudgetPage() {
               {/* Purchased Items */}
               {purchasedItems.length > 0 && (
                 <div className="space-y-3">
-                  <h3 className="text-sm font-medium text-surface-400 flex items-center gap-2">
+                  <h3 className="text-sm font-medium text-[--muted] font-ui flex items-center gap-2">
                     <Check className="h-4 w-4" />
                     Purchased ({purchasedItems.length})
                   </h3>
@@ -450,9 +450,9 @@ export default function BudgetPage() {
         <TabsContent value="browse" className="space-y-4">
           {/* Stage Filter */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-surface-400">Show:</span>
+            <span className="text-sm text-[--muted] font-ui">Show:</span>
             <Select value={stageFilter} onValueChange={(v) => setStageFilter(v as typeof stageFilter)}>
-              <SelectTrigger className="w-40 bg-surface-900 border-surface-700">
+              <SelectTrigger className="w-40 bg-[--surface] border-[--border-hover]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -477,20 +477,20 @@ export default function BudgetPage() {
                 <AccordionItem
                   key={category.name}
                   value={category.name}
-                  className="bg-surface-900 border border-surface-800 rounded-lg overflow-hidden"
+                  className="bg-[--surface] border border-[--border] rounded-lg overflow-hidden"
                 >
-                  <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-surface-800/50">
+                  <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-[--card]/50">
                     <div className="flex items-center gap-3 flex-1">
                       <div className={cn("p-2 rounded-lg", colors.bg)}>
                         <Icon className={cn("h-5 w-5", colors.text)} />
                       </div>
                       <div className="flex-1 text-left">
-                        <span className="font-medium text-white">{category.name}</span>
-                        <span className="text-xs text-surface-400 ml-2">
+                        <span className="font-medium text-[--cream] font-body">{category.name}</span>
+                        <span className="text-xs text-[--muted] ml-2 font-ui">
                           ({category.items.length} items)
                         </span>
                       </div>
-                      <span className="text-sm text-surface-400 mr-4">
+                      <span className="text-sm text-[--muted] mr-4 tabular-nums font-ui">
                         {formatPrice(categoryTierTotal)}
                       </span>
                     </div>
@@ -508,45 +508,45 @@ export default function BudgetPage() {
                             className={cn(
                               "flex items-start justify-between p-3 rounded-lg border transition-colors relative cursor-pointer",
                               isAdded
-                                ? "bg-accent-500/10 border-accent-500/30"
-                                : "bg-surface-800/50 border-surface-700 hover:border-surface-600"
+                                ? "bg-copper/10 border-copper/30"
+                                : "bg-[--card]/50 border-[--border-hover] hover:border-[--border-hover]"
                             )}
                             onClick={() => setSelectedItemForDetails(template)}
                           >
                             <div className="flex-1 min-w-0 pr-4">
                               <div className="flex items-center gap-2 mb-1">
-                                <span className="font-medium text-sm text-white">
+                                <span className="font-medium text-sm text-[--cream] font-body">
                                   {template.item}
                                 </span>
                                 {template.priority === 'must-have' && (
-                                  <Badge variant="outline" className="text-xs border-red-500/50 text-red-400">
+                                  <Badge variant="outline" className="text-xs border-coral/50 text-coral font-ui">
                                     Must-have
                                   </Badge>
                                 )}
                                 {isAdded && (
-                                  <Badge className="text-xs bg-accent-500/20 text-accent-400 border-0">
+                                  <Badge className="text-xs bg-copper/20 text-copper border-0 font-ui">
                                     Added
                                   </Badge>
                                 )}
                                 {hasProductExamples && (
-                                  <Info className="h-3 w-3 text-amber-400" />
+                                  <Info className="h-3 w-3 text-gold" />
                                 )}
                               </div>
                               {template.description && (
-                                <p className="text-xs text-surface-400 line-clamp-2 mb-1">
+                                <p className="text-xs text-[--muted] line-clamp-2 mb-1 font-body">
                                   {template.description}
                                 </p>
                               )}
-                              <div className="flex items-center gap-3 text-xs text-surface-500">
+                              <div className="flex items-center gap-3 text-xs text-[--dim] font-ui">
                                 <span>
                                   Week {template.week_start}-{template.week_end}
                                 </span>
-                                <span className={selectedTier === 'budget' ? 'text-emerald-400' : 'text-amber-400'}>
+                                <span className={cn("tabular-nums", selectedTier === 'budget' ? 'text-sage' : 'text-gold')}>
                                   {formatPrice(itemPrice)}
                                 </span>
                               </div>
                               {template.notes && (
-                                <p className="text-xs text-amber-400/80 mt-1 italic">
+                                <p className="text-xs text-gold/80 mt-1 italic font-body">
                                   {template.notes}
                                 </p>
                               )}
@@ -561,7 +561,7 @@ export default function BudgetPage() {
                               }}
                             >
                               {isAdded ? (
-                                <Check className="h-4 w-4 text-accent-500" />
+                                <Check className="h-4 w-4 text-copper" />
                               ) : (
                                 <Plus className="h-4 w-4" />
                               )}
@@ -580,34 +580,34 @@ export default function BudgetPage() {
 
       {/* Add Template Dialog */}
       <Dialog open={!!selectedTemplate} onOpenChange={() => setSelectedTemplate(null)}>
-        <DialogContent className="bg-surface-900 border-surface-800">
+        <DialogContent className="bg-[--surface] border-[--border]">
           <DialogHeader>
-            <DialogTitle>Add to Budget</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="font-display text-[--cream]">Add to Budget</DialogTitle>
+            <DialogDescription className="font-body text-[--muted]">
               Add "{selectedTemplate?.item}" to your budget tracker
             </DialogDescription>
           </DialogHeader>
           {selectedTemplate && (
             <div className="space-y-4">
-              <div className="p-4 bg-surface-800 rounded-lg">
-                <h4 className="font-medium text-white mb-2">{selectedTemplate.item}</h4>
-                <p className="text-sm text-surface-400 mb-3">{selectedTemplate.description}</p>
+              <div className="p-4 bg-[--card] rounded-lg">
+                <h4 className="font-medium text-[--cream] mb-2 font-body">{selectedTemplate.item}</h4>
+                <p className="text-sm text-[--muted] mb-3 font-body">{selectedTemplate.description}</p>
                 <div className="grid grid-cols-3 gap-2 text-center">
-                  <div className="p-2 bg-surface-700 rounded">
-                    <p className="text-xs text-surface-400">Budget</p>
-                    <p className="text-sm font-medium text-green-400">
+                  <div className="p-2 bg-[--card-hover] rounded">
+                    <p className="text-xs text-[--muted] font-ui">Budget</p>
+                    <p className="text-sm font-medium text-sage tabular-nums font-ui">
                       {budgetService.formatPrice(selectedTemplate.price_low)}
                     </p>
                   </div>
-                  <div className="p-2 bg-surface-700 rounded border-2 border-accent-500">
-                    <p className="text-xs text-surface-400">Mid-range</p>
-                    <p className="text-sm font-medium text-white">
+                  <div className="p-2 bg-[--card-hover] rounded border-2 border-copper">
+                    <p className="text-xs text-[--muted] font-ui">Mid-range</p>
+                    <p className="text-sm font-medium text-[--cream] tabular-nums font-ui">
                       {budgetService.formatPrice(selectedTemplate.price_mid)}
                     </p>
                   </div>
-                  <div className="p-2 bg-surface-700 rounded">
-                    <p className="text-xs text-surface-400">Premium</p>
-                    <p className="text-sm font-medium text-amber-400">
+                  <div className="p-2 bg-[--card-hover] rounded">
+                    <p className="text-xs text-[--muted] font-ui">Premium</p>
+                    <p className="text-sm font-medium text-gold tabular-nums font-ui">
                       {budgetService.formatPrice(selectedTemplate.price_high)}
                     </p>
                   </div>
@@ -616,10 +616,11 @@ export default function BudgetPage() {
             </div>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setSelectedTemplate(null)}>
+            <Button variant="outline" className="font-ui" onClick={() => setSelectedTemplate(null)}>
               Cancel
             </Button>
             <Button
+              className="font-ui"
               onClick={() => selectedTemplate && handleAddTemplate(selectedTemplate)}
               disabled={addToBudget.isPending}
             >
@@ -631,44 +632,44 @@ export default function BudgetPage() {
 
       {/* Mark as Purchased Dialog */}
       <Dialog open={!!purchaseDialogItem} onOpenChange={() => setPurchaseDialogItem(null)}>
-        <DialogContent className="bg-surface-900 border-surface-800">
+        <DialogContent className="bg-[--surface] border-[--border]">
           <DialogHeader>
-            <DialogTitle>Mark as Purchased</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="font-display text-[--cream]">Mark as Purchased</DialogTitle>
+            <DialogDescription className="font-body text-[--muted]">
               Enter the actual price you paid (optional)
             </DialogDescription>
           </DialogHeader>
           {purchaseDialogItem && (
             <div className="space-y-4">
-              <div className="p-4 bg-surface-800 rounded-lg">
-                <h4 className="font-medium text-white">{purchaseDialogItem.item}</h4>
-                <p className="text-sm text-surface-400">
+              <div className="p-4 bg-[--card] rounded-lg">
+                <h4 className="font-medium text-[--cream] font-body">{purchaseDialogItem.item}</h4>
+                <p className="text-sm text-[--muted] font-body">
                   Estimated: {budgetService.formatPrice(purchaseDialogItem.estimated_price)}
                 </p>
               </div>
               <div>
-                <label className="text-sm text-surface-400 mb-2 block">
+                <label className="text-sm text-[--muted] mb-2 block font-ui">
                   Actual Price (optional)
                 </label>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-500" />
+                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[--dim]" />
                   <Input
                     type="number"
                     step="0.01"
                     placeholder="0.00"
                     value={actualPrice}
                     onChange={(e) => setActualPrice(e.target.value)}
-                    className="pl-9 bg-surface-800 border-surface-700"
+                    className="pl-9 bg-[--card] border-[--border-hover]"
                   />
                 </div>
               </div>
             </div>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setPurchaseDialogItem(null)}>
+            <Button variant="outline" className="font-ui" onClick={() => setPurchaseDialogItem(null)}>
               Cancel
             </Button>
-            <Button onClick={handleMarkPurchased} disabled={markAsPurchased.isPending}>
+            <Button className="font-ui" onClick={handleMarkPurchased} disabled={markAsPurchased.isPending}>
               <Check className="h-4 w-4 mr-2" />
               Mark Purchased
             </Button>
@@ -678,30 +679,30 @@ export default function BudgetPage() {
 
       {/* Add Custom Item Dialog */}
       <Dialog open={showAddCustomDialog} onOpenChange={setShowAddCustomDialog}>
-        <DialogContent className="bg-surface-900 border-surface-800">
+        <DialogContent className="bg-[--surface] border-[--border]">
           <DialogHeader>
-            <DialogTitle>Add Custom Item</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="font-display text-[--cream]">Add Custom Item</DialogTitle>
+            <DialogDescription className="font-body text-[--muted]">
               Add your own item to track in your budget
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-sm text-surface-400 mb-2 block">Item Name</label>
+              <label className="text-sm text-[--muted] mb-2 block font-ui">Item Name</label>
               <Input
                 placeholder="e.g., Baby monitor"
                 value={customItem.item}
                 onChange={(e) => setCustomItem(prev => ({ ...prev, item: e.target.value }))}
-                className="bg-surface-800 border-surface-700"
+                className="bg-[--card] border-[--border-hover]"
               />
             </div>
             <div>
-              <label className="text-sm text-surface-400 mb-2 block">Category</label>
+              <label className="text-sm text-[--muted] mb-2 block font-ui">Category</label>
               <Select
                 value={customItem.category}
                 onValueChange={(v) => setCustomItem(prev => ({ ...prev, category: v }))}
               >
-                <SelectTrigger className="bg-surface-800 border-surface-700">
+                <SelectTrigger className="bg-[--card] border-[--border-hover]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -713,25 +714,26 @@ export default function BudgetPage() {
               </Select>
             </div>
             <div>
-              <label className="text-sm text-surface-400 mb-2 block">Estimated Price</label>
+              <label className="text-sm text-[--muted] mb-2 block font-ui">Estimated Price</label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-500" />
+                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[--dim]" />
                 <Input
                   type="number"
                   step="0.01"
                   placeholder="0.00"
                   value={customItem.price}
                   onChange={(e) => setCustomItem(prev => ({ ...prev, price: e.target.value }))}
-                  className="pl-9 bg-surface-800 border-surface-700"
+                  className="pl-9 bg-[--card] border-[--border-hover]"
                 />
               </div>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowAddCustomDialog(false)}>
+            <Button variant="outline" className="font-ui" onClick={() => setShowAddCustomDialog(false)}>
               Cancel
             </Button>
             <Button
+              className="font-ui"
               onClick={handleAddCustomItem}
               disabled={!customItem.item || !customItem.price || addCustomItem.isPending}
             >
@@ -768,7 +770,7 @@ function BudgetItemCard({
 
   return (
     <Card className={cn(
-      "bg-surface-900 border-surface-800",
+      "bg-[--surface] border-[--border]",
       isPurchased && "opacity-70"
     )}>
       <CardContent className="py-4">
@@ -779,19 +781,19 @@ function BudgetItemCard({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <span className={cn(
-                "font-medium text-sm",
-                isPurchased ? "text-surface-400 line-through" : "text-white"
+                "font-medium text-sm font-body",
+                isPurchased ? "text-[--muted] line-through" : "text-[--cream]"
               )}>
                 {item.item}
               </span>
               {item.is_custom && (
-                <Badge variant="outline" className="text-xs">Custom</Badge>
+                <Badge variant="outline" className="text-xs font-ui">Custom</Badge>
               )}
             </div>
-            <div className="flex items-center gap-2 text-xs text-surface-400">
+            <div className="flex items-center gap-2 text-xs text-[--muted] font-ui">
               <span>{item.category}</span>
               <span>|</span>
-              <span>
+              <span className="tabular-nums">
                 {isPurchased && item.actual_price
                   ? `Paid: ${budgetService.formatPrice(item.actual_price)}`
                   : `Est: ${budgetService.formatPrice(item.estimated_price)}`
@@ -802,11 +804,11 @@ function BudgetItemCard({
           <div className="flex items-center gap-1">
             {!isPurchased && onMarkPurchased && (
               <Button size="icon" variant="ghost" onClick={onMarkPurchased}>
-                <Check className="h-4 w-4 text-green-500" />
+                <Check className="h-4 w-4 text-sage" />
               </Button>
             )}
             <Button size="icon" variant="ghost" onClick={onRemove}>
-              <Trash2 className="h-4 w-4 text-red-500" />
+              <Trash2 className="h-4 w-4 text-coral" />
             </Button>
           </div>
         </div>

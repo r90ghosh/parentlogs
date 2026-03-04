@@ -47,19 +47,19 @@ const CHECKLIST_ICONS: Record<string, any> = {
 const CHECKLIST_COLORS: Record<string, { bg: string; text: string; progress: string }> = {
   'CL-01': { bg: 'bg-blue-500/20', text: 'text-blue-400', progress: 'bg-blue-500' },
   'CL-02': { bg: 'bg-purple-500/20', text: 'text-purple-400', progress: 'bg-purple-500' },
-  'CL-03': { bg: 'bg-amber-500/20', text: 'text-amber-400', progress: 'bg-amber-500' },
-  'CL-04': { bg: 'bg-green-500/20', text: 'text-green-400', progress: 'bg-green-500' },
-  'CL-05': { bg: 'bg-red-500/20', text: 'text-red-400', progress: 'bg-red-500' },
+  'CL-03': { bg: 'bg-gold/20', text: 'text-gold', progress: 'bg-gold' },
+  'CL-04': { bg: 'bg-sage/20', text: 'text-sage', progress: 'bg-sage' },
+  'CL-05': { bg: 'bg-coral/20', text: 'text-coral', progress: 'bg-coral' },
   'CL-06': { bg: 'bg-cyan-500/20', text: 'text-cyan-400', progress: 'bg-cyan-500' },
   'CL-07': { bg: 'bg-orange-500/20', text: 'text-orange-400', progress: 'bg-orange-500' },
   'CL-08': { bg: 'bg-pink-500/20', text: 'text-pink-400', progress: 'bg-pink-500' },
   'CL-09': { bg: 'bg-indigo-500/20', text: 'text-indigo-400', progress: 'bg-indigo-500' },
   'CL-10': { bg: 'bg-rose-500/20', text: 'text-rose-400', progress: 'bg-rose-500' },
-  'CL-11': { bg: 'bg-teal-500/20', text: 'text-teal-400', progress: 'bg-teal-500' },
+  'CL-11': { bg: 'bg-sage/20', text: 'text-sage', progress: 'bg-sage' },
   'CL-12': { bg: 'bg-violet-500/20', text: 'text-violet-400', progress: 'bg-violet-500' },
   'CL-13': { bg: 'bg-slate-500/20', text: 'text-slate-400', progress: 'bg-slate-500' },
-  'CL-14': { bg: 'bg-emerald-500/20', text: 'text-emerald-400', progress: 'bg-emerald-500' },
-  'CL-15': { bg: 'bg-accent-500/20', text: 'text-accent-400', progress: 'bg-accent-500' },
+  'CL-14': { bg: 'bg-sage/20', text: 'text-sage', progress: 'bg-sage' },
+  'CL-15': { bg: 'bg-copper/20', text: 'text-copper', progress: 'bg-copper' },
 }
 
 export default function ChecklistsPage() {
@@ -70,8 +70,8 @@ export default function ChecklistsPage() {
     <div className="p-4 space-y-6 max-w-4xl">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Checklists</h1>
-        <p className="text-surface-400 mt-1">
+        <h1 className="text-2xl font-display font-bold text-[--cream]">Checklists</h1>
+        <p className="text-[--muted] mt-1 font-body">
           Stay organized with our curated preparation checklists
         </p>
       </div>
@@ -97,7 +97,7 @@ export default function ChecklistsPage() {
                 className="block"
               >
                 <Card className={cn(
-                  "bg-surface-900 border-surface-800 h-full transition-all hover:border-surface-700",
+                  "bg-[--surface] border-[--border] h-full transition-all hover:border-[--border-hover]",
                   isLocked && "opacity-70"
                 )}>
                   <CardContent className="pt-6">
@@ -106,21 +106,21 @@ export default function ChecklistsPage() {
                         <Icon className={cn("h-6 w-6", colors.text)} />
                       </div>
                       {isLocked ? (
-                        <Lock className="h-5 w-5 text-surface-500" />
+                        <Lock className="h-5 w-5 text-[--dim]" />
                       ) : checklist.progress.percentage === 100 ? (
-                        <CheckCircle className="h-5 w-5 text-accent-500" />
+                        <CheckCircle className="h-5 w-5 text-copper" />
                       ) : null}
                     </div>
 
-                    <h3 className="font-medium text-white mb-1">{checklist.name}</h3>
-                    <p className="text-xs text-surface-400 mb-4 line-clamp-2">
+                    <h3 className="font-medium text-[--cream] mb-1 font-body">{checklist.name}</h3>
+                    <p className="text-xs text-[--muted] mb-4 line-clamp-2 font-body">
                       {checklist.description}
                     </p>
 
                     {!isLocked && (
                       <div className="space-y-2">
-                        <div className="flex justify-between text-xs">
-                          <span className="text-surface-400">
+                        <div className="flex justify-between text-xs font-ui">
+                          <span className="text-[--muted]">
                             {checklist.progress.completed} of {checklist.progress.total} items
                           </span>
                           <span className={colors.text}>
@@ -129,13 +129,13 @@ export default function ChecklistsPage() {
                         </div>
                         <Progress
                           value={checklist.progress.percentage}
-                          className="h-1.5 bg-surface-800"
+                          className="h-1.5 bg-[--card]"
                         />
                       </div>
                     )}
 
                     {isLocked && (
-                      <p className="text-xs text-surface-500">
+                      <p className="text-xs text-[--dim] font-ui">
                         Premium checklist
                       </p>
                     )}
@@ -146,9 +146,9 @@ export default function ChecklistsPage() {
           })}
         </div>
       ) : (
-        <Card className="bg-surface-900 border-surface-800">
+        <Card className="bg-[--surface] border-[--border]">
           <CardContent className="py-12 text-center">
-            <p className="text-surface-400">No checklists available</p>
+            <p className="text-[--muted] font-body">No checklists available</p>
           </CardContent>
         </Card>
       )}

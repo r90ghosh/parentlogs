@@ -26,14 +26,14 @@ export function BudgetTimelineBar({
   return (
     <div className="space-y-3">
       {/* Label */}
-      <div className="flex items-center justify-between text-xs text-surface-400">
-        <span className="font-medium">Budget by Phase</span>
-        <span className="italic text-surface-500">Median prices shown</span>
+      <div className="flex items-center justify-between text-xs text-[--muted]">
+        <span className="font-medium font-ui">Budget by Phase</span>
+        <span className="italic text-[--dim] font-body">Median prices shown</span>
       </div>
 
       {/* Timeline Bar - Glassmorphism container with horizontal scroll on mobile */}
       <div className="relative overflow-x-auto overflow-y-hidden -mx-4 px-4 md:mx-0 md:px-0 md:overflow-visible" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <div className="flex h-14 rounded-xl overflow-hidden backdrop-blur-md bg-white/[0.03] border border-white/10 shadow-lg shadow-black/20 min-w-[500px] md:min-w-0">
+        <div className="flex h-14 rounded-xl overflow-hidden backdrop-blur-md bg-white/[0.03] border border-[--border] shadow-lg shadow-black/20 min-w-[500px] md:min-w-0">
           {BUDGET_TIMELINE_CATEGORIES.map((category, index) => {
             const stat = stats[category.id]
             const isSelected = selectedCategory === category.id
@@ -57,7 +57,7 @@ export function BudgetTimelineBar({
                   "backdrop-blur-sm",
                   hasNoItems ? "cursor-default opacity-60" : "hover:bg-white/[0.08] cursor-pointer",
                   isSelected && "ring-1 ring-white/60 ring-inset z-10 bg-white/[0.12]",
-                  isCurrent && !isSelected && "ring-1 ring-accent-400/50 ring-inset",
+                  isCurrent && !isSelected && "ring-1 ring-copper/50 ring-inset",
                   isFirst && "rounded-l-xl",
                   isLast && "rounded-r-xl"
                 )}
@@ -67,13 +67,13 @@ export function BudgetTimelineBar({
                 title={`${category.label}: ${stat.itemCount} items, ${formatBudgetPrice(stat.medianTotal)}`}
               >
                 <span className={cn(
-                  "text-sm font-semibold",
+                  "text-sm font-semibold tabular-nums font-ui",
                   hasNoItems ? "text-white/40" : "text-white drop-shadow-sm"
                 )}>
                   {formatBudgetPrice(stat.medianTotal)}
                 </span>
                 <span className={cn(
-                  "text-[10px]",
+                  "text-[10px] font-ui",
                   hasNoItems ? "text-white/30" : "text-white/70"
                 )}>
                   {stat.itemCount} {stat.itemCount === 1 ? 'item' : 'items'}
@@ -91,13 +91,13 @@ export function BudgetTimelineBar({
             transform: 'translateX(-50%)',
           }}
         >
-          <div className="w-0 h-0 border-l-[5px] border-r-[5px] border-b-[5px] border-l-transparent border-r-transparent border-b-accent-400" />
-          <span className="text-[9px] text-accent-400 font-semibold mt-0.5 tracking-wide">NOW</span>
+          <div className="w-0 h-0 border-l-[5px] border-r-[5px] border-b-[5px] border-l-transparent border-r-transparent border-b-copper" />
+          <span className="text-[9px] text-copper font-semibold mt-0.5 tracking-wide font-ui">NOW</span>
         </div>
       </div>
 
       {/* Legend with labels - horizontally scrollable on mobile */}
-      <div className="flex text-[10px] text-surface-500 px-0.5 mt-4 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0.5 md:overflow-visible md:justify-between" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      <div className="flex text-[10px] text-[--dim] px-0.5 mt-4 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0.5 md:overflow-visible md:justify-between" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {BUDGET_TIMELINE_CATEGORIES.map((category) => {
           const stat = stats[category.id]
           const isSelected = selectedCategory === category.id
@@ -113,11 +113,11 @@ export function BudgetTimelineBar({
               }}
               disabled={stat.itemCount === 0}
               className={cn(
-                "flex-shrink-0 min-w-[80px] md:min-w-0 md:flex-1 text-center transition-all py-1 px-2 md:px-0.5 rounded-md",
+                "flex-shrink-0 min-w-[80px] md:min-w-0 md:flex-1 text-center transition-all py-1 px-2 md:px-0.5 rounded-md font-ui",
                 stat.itemCount > 0 && "hover:bg-white/5 cursor-pointer",
                 stat.itemCount === 0 && "opacity-40 cursor-default",
-                isSelected && "bg-white/10 ring-1 ring-white/30 text-white",
-                isCurrent && !isSelected && "text-accent-400"
+                isSelected && "bg-white/10 ring-1 ring-white/30 text-[--cream]",
+                isCurrent && !isSelected && "text-copper"
               )}
             >
               <div className="truncate">{category.label}</div>
@@ -128,10 +128,10 @@ export function BudgetTimelineBar({
 
       {/* Selected filter indicator */}
       {selectedCategory && (
-        <div className="flex items-center justify-center gap-2 text-sm text-surface-400 pt-1">
-          <span>Showing:</span>
+        <div className="flex items-center justify-center gap-2 text-sm text-[--muted] pt-1">
+          <span className="font-body">Showing:</span>
           <span
-            className="px-3 py-1 rounded-full text-white text-xs font-medium backdrop-blur-sm border border-white/20"
+            className="px-3 py-1 rounded-full text-white text-xs font-medium backdrop-blur-sm border border-white/20 font-ui"
             style={{
               backgroundColor: BUDGET_TIMELINE_CATEGORIES.find(c => c.id === selectedCategory)?.color
             }}
@@ -140,7 +140,7 @@ export function BudgetTimelineBar({
           </span>
           <button
             onClick={() => onCategoryClick(null)}
-            className="text-accent-400 hover:text-accent-300 text-xs font-medium hover:underline transition-colors"
+            className="text-copper hover:text-copper/80 text-xs font-medium hover:underline transition-colors font-ui"
           >
             Show all
           </button>
@@ -149,8 +149,8 @@ export function BudgetTimelineBar({
 
       {/* Total budget summary */}
       {!selectedCategory && (
-        <div className="text-center text-xs text-surface-500">
-          Total estimated budget: <span className="text-white/90 font-medium">{formatBudgetPrice(totalBudget)}</span> (median)
+        <div className="text-center text-xs text-[--dim] font-body">
+          Total estimated budget: <span className="text-[--cream] font-medium tabular-nums">{formatBudgetPrice(totalBudget)}</span> (median)
         </div>
       )}
     </div>
