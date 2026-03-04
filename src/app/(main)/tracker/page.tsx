@@ -26,6 +26,9 @@ import {
 import { format, formatDistanceToNow } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { BASIC_LOG_TYPES, PREMIUM_LOG_TYPES, LogType } from '@/services/tracker-service'
+import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 
 const LOG_TYPE_CONFIG: Record<LogType, { icon: any; color: string; bgColor: string; label: string }> = {
   feeding: { icon: Milk, color: 'text-sky', bgColor: 'bg-sky-dim', label: 'Feeding' },
@@ -53,6 +56,7 @@ export default function TrackerPage() {
     <div className="p-4 space-y-6 max-w-2xl overflow-x-hidden">
       {/* Preview Banner for Pregnancy */}
       {isPreview && (
+        <CardEntrance delay={0}>
         <Card className="bg-primary-600/20 border-primary-600/30">
           <CardContent className="py-4 flex items-center gap-3">
             <Lock className="h-6 w-6 text-primary-400" />
@@ -64,6 +68,7 @@ export default function TrackerPage() {
             </div>
           </CardContent>
         </Card>
+        </CardEntrance>
       )}
 
       {/* Header */}
@@ -100,6 +105,8 @@ export default function TrackerPage() {
       </div>
 
       {/* Shift Briefing */}
+      <RevealOnScroll delay={80}>
+      <Card3DTilt maxTilt={3} gloss>
       <Card className={cn("bg-[--surface] border-[--border] shadow-card", isPreview && "opacity-70")}>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-display flex items-center gap-2 text-[--cream]">
@@ -173,8 +180,11 @@ export default function TrackerPage() {
           )}
         </CardContent>
       </Card>
+      </Card3DTilt>
+      </RevealOnScroll>
 
       {/* Quick Log Grid - Basic Types */}
+      <RevealOnScroll delay={160}>
       <div className={cn(isPreview && "opacity-70")}>
         <h2 className="text-lg font-display font-medium text-[--cream] mb-3">Quick Log</h2>
         <div className="grid grid-cols-3 gap-3">
@@ -209,8 +219,10 @@ export default function TrackerPage() {
           })}
         </div>
       </div>
+      </RevealOnScroll>
 
       {/* More Log Types */}
+      <RevealOnScroll delay={240}>
       <div className={cn(isPreview && "opacity-70")}>
         <h2 className="text-lg font-display font-medium text-[--cream] mb-3">More Logs</h2>
         <div className="grid grid-cols-4 gap-2">
@@ -246,8 +258,10 @@ export default function TrackerPage() {
           })}
         </div>
       </div>
+      </RevealOnScroll>
 
       {/* Recent Logs */}
+      <RevealOnScroll delay={320}>
       <div className={cn(isPreview && "opacity-70")}>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-display font-medium text-[--cream]">Recent Activity</h2>
@@ -327,6 +341,7 @@ export default function TrackerPage() {
           </Card>
         )}
       </div>
+      </RevealOnScroll>
     </div>
   )
 }

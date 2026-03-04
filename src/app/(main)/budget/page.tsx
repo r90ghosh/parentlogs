@@ -71,6 +71,9 @@ import {
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import { BudgetTemplate, FamilyBudgetItem, BudgetTier } from '@/types'
+import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
   'Admin': FileText,
@@ -308,7 +311,9 @@ export default function BudgetPage() {
           .reduce((sum, t) => sum + getPriceForTier(t, selectedTier), 0)
 
         return (
+          <RevealOnScroll delay={0}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card3DTilt maxTilt={3} gloss>
             <Card className="bg-[--surface] border-[--border] card-gold-top">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
@@ -326,7 +331,9 @@ export default function BudgetPage() {
                 </div>
               </CardContent>
             </Card>
+            </Card3DTilt>
 
+            <Card3DTilt maxTilt={3} gloss>
             <Card className="bg-[--surface] border-[--border] card-gold-top">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
@@ -342,7 +349,9 @@ export default function BudgetPage() {
                 </div>
               </CardContent>
             </Card>
+            </Card3DTilt>
 
+            <Card3DTilt maxTilt={3} gloss>
             <Card className="bg-[--surface] border-[--border] card-gold-top">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-3">
@@ -358,12 +367,16 @@ export default function BudgetPage() {
                 </div>
               </CardContent>
             </Card>
+            </Card3DTilt>
           </div>
+          </RevealOnScroll>
         )
       })()}
 
       {/* Progress */}
       {summary && summary.familyItems.length > 0 && (
+        <RevealOnScroll delay={80}>
+        <Card3DTilt maxTilt={3} gloss>
         <Card className="bg-[--surface] border-[--border]">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between mb-2">
@@ -378,9 +391,12 @@ export default function BudgetPage() {
             />
           </CardContent>
         </Card>
+        </Card3DTilt>
+        </RevealOnScroll>
       )}
 
       {/* Main Content Tabs */}
+      <RevealOnScroll delay={160}>
       <Tabs defaultValue="my-budget" className="space-y-4">
         <TabsList className="bg-[--surface] border border-[--border]">
           <TabsTrigger value="my-budget" className="font-ui">My Budget ({summary?.familyItems.length || 0})</TabsTrigger>
@@ -577,6 +593,7 @@ export default function BudgetPage() {
           </Accordion>
         </TabsContent>
       </Tabs>
+      </RevealOnScroll>
 
       {/* Add Template Dialog */}
       <Dialog open={!!selectedTemplate} onOpenChange={() => setSelectedTemplate(null)}>

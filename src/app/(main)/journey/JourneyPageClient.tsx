@@ -8,6 +8,8 @@ import { DadChallengeTiles, MoodCheckinWidget } from '@/components/dashboard/dad
 import { MOOD_CONFIG } from '@/lib/dad-pillar-config'
 import { UserRole } from '@/types'
 import { cn } from '@/lib/utils'
+import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 
 interface JourneyPageClientProps {
   userId: string
@@ -65,6 +67,7 @@ export function JourneyPageClient({ userId, userRole }: JourneyPageClientProps) 
 
       {/* Mood history summary (if available) */}
       {moodHistory && moodHistory.length > 0 && (
+        <CardEntrance delay={80}>
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -103,10 +106,12 @@ export function JourneyPageClient({ userId, userRole }: JourneyPageClientProps) 
             })}
           </div>
         </motion.div>
+        </CardEntrance>
       )}
 
       {/* Mood check-in widget (always shown for dads) */}
       {isDad && (
+        <CardEntrance delay={160}>
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -115,9 +120,11 @@ export function JourneyPageClient({ userId, userRole }: JourneyPageClientProps) 
         >
           <MoodCheckinWidget />
         </motion.div>
+        </CardEntrance>
       )}
 
       {/* All 7 challenge tiles */}
+      <RevealOnScroll delay={240}>
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -128,6 +135,7 @@ export function JourneyPageClient({ userId, userRole }: JourneyPageClientProps) 
         </p>
         <DadChallengeTiles maxTiles={7} />
       </motion.div>
+      </RevealOnScroll>
     </main>
   )
 }

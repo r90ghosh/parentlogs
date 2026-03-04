@@ -11,6 +11,8 @@ import { PILLAR_CONFIG } from '@/lib/dad-pillar-config'
 import { DadChallengeTile } from './DadChallengeTile'
 import { DadChallengeContent, DadChallengePillar } from '@/types/dad-journey'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 
 interface DadChallengeTilesProps {
   maxTiles?: number
@@ -95,14 +97,17 @@ export function DadChallengeTiles({ maxTiles = 7 }: DadChallengeTilesProps) {
       {visibleTiles.map((tile, index) => {
         const config = PILLAR_CONFIG.find(c => c.pillar === tile.pillar) ?? PILLAR_CONFIG[0]
         return (
-          <motion.div
-            key={tile.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05, duration: 0.3, ease: 'easeOut' }}
-          >
-            <DadChallengeTile content={tile} config={config} />
-          </motion.div>
+          <CardEntrance key={tile.id} delay={index * 80}>
+            <Card3DTilt maxTilt={3} gloss>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05, duration: 0.3, ease: 'easeOut' }}
+              >
+                <DadChallengeTile content={tile} config={config} />
+              </motion.div>
+            </Card3DTilt>
+          </CardEntrance>
         )
       })}
 

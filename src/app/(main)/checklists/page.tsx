@@ -25,6 +25,9 @@ import {
   CheckCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 
 const CHECKLIST_ICONS: Record<string, any> = {
   'CL-01': Baby,        // Hospital Bag
@@ -69,12 +72,14 @@ export default function ChecklistsPage() {
   return (
     <div className="p-4 space-y-6 max-w-4xl">
       {/* Header */}
+      <RevealOnScroll delay={0}>
       <div>
         <h1 className="text-2xl font-display font-bold text-[--cream]">Checklists</h1>
         <p className="text-[--muted] mt-1 font-body">
           Stay organized with our curated preparation checklists
         </p>
       </div>
+      </RevealOnScroll>
 
       {/* Checklists Grid */}
       {isLoading ? (
@@ -85,14 +90,15 @@ export default function ChecklistsPage() {
         </div>
       ) : checklists && checklists.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {checklists.map((checklist) => {
+          {checklists.map((checklist, index) => {
             const Icon = CHECKLIST_ICONS[checklist.checklist_id] || FileText
             const colors = CHECKLIST_COLORS[checklist.checklist_id] || CHECKLIST_COLORS['CL-15']
             const isLocked = (checklist as any).is_locked
 
             return (
+              <CardEntrance key={checklist.checklist_id} delay={index * 80}>
+              <Card3DTilt maxTilt={3} gloss>
               <Link
-                key={checklist.checklist_id}
                 href={isLocked ? '/settings/subscription' : `/checklists/${checklist.checklist_id}`}
                 className="block"
               >
@@ -142,6 +148,8 @@ export default function ChecklistsPage() {
                   </CardContent>
                 </Card>
               </Link>
+              </Card3DTilt>
+              </CardEntrance>
             )
           })}
         </div>

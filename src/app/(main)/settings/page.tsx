@@ -16,6 +16,8 @@ import {
   Crown,
 } from 'lucide-react'
 import Link from 'next/link'
+import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 
 const settingsItems = [
   {
@@ -70,12 +72,15 @@ export default function SettingsPage() {
   return (
     <div className="p-4 space-y-6 max-w-2xl">
       {/* Header */}
+      <RevealOnScroll delay={0}>
       <div>
         <h1 className="font-display text-2xl font-bold text-white">Settings</h1>
         <p className="font-body text-[--muted]">Manage your account and preferences</p>
       </div>
+      </RevealOnScroll>
 
       {/* Profile Card */}
+      <CardEntrance delay={80}>
       <Card className="bg-[--surface] border-[--border]">
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
@@ -103,11 +108,14 @@ export default function SettingsPage() {
           </div>
         </CardContent>
       </Card>
+      </CardEntrance>
 
       {/* Settings List */}
+      <RevealOnScroll delay={160}>
       <div className="space-y-2">
-        {settingsItems.map((item) => (
-          <Link key={item.href} href={item.href}>
+        {settingsItems.map((item, index) => (
+          <CardEntrance key={item.href} delay={index * 80}>
+          <Link href={item.href}>
             <Card className="bg-[--surface] border-[--border] hover:bg-[--card] transition-colors cursor-pointer">
               <CardContent className="py-4">
                 <div className="flex items-center gap-4">
@@ -123,10 +131,13 @@ export default function SettingsPage() {
               </CardContent>
             </Card>
           </Link>
+          </CardEntrance>
         ))}
       </div>
+      </RevealOnScroll>
 
       {/* App Info */}
+      <RevealOnScroll delay={240}>
       <div className="text-center font-body text-sm text-[--dim] pt-4">
         <p>The Dad Center v1.0.0</p>
         <p className="mt-1">
@@ -137,6 +148,7 @@ export default function SettingsPage() {
           <a href="mailto:support@thedadcenter.com" className="hover:text-[--cream]">Support</a>
         </p>
       </div>
+      </RevealOnScroll>
     </div>
   )
 }
