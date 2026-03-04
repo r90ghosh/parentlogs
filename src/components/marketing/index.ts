@@ -1,5 +1,6 @@
 export { Header } from './Header'
 export { Hero } from './Hero'
+export { SnakeTimeline } from './SnakeTimeline'
 export { ProblemSolution } from './ProblemSolution'
 export { Features } from './Features'
 export { ContentPreview } from './ContentPreview'

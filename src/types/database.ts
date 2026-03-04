@@ -931,6 +931,77 @@ export type Database = {
           },
         ]
       }
+      timeline_dots: {
+        Row: {
+          id: string
+          milestone_id: string
+          title: string
+          description: string
+          domain: string
+          sort_order: number
+          is_active: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          milestone_id: string
+          title: string
+          description: string
+          domain: string
+          sort_order?: number
+          is_active?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          milestone_id?: string
+          title?: string
+          description?: string
+          domain?: string
+          sort_order?: number
+          is_active?: boolean
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "timeline_dots_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "timeline_milestones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      timeline_milestones: {
+        Row: {
+          id: string
+          slug: string
+          label: string
+          sub_label: string
+          sort_order: number
+          direction: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          slug: string
+          label: string
+          sub_label: string
+          sort_order: number
+          direction?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          slug?: string
+          label?: string
+          sub_label?: string
+          sort_order?: number
+          direction?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       task_templates: {
         Row: {
           catch_up_behavior: string | null

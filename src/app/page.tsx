@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { Hero } from '@/components/marketing/Hero'
+import { SnakeTimeline } from '@/components/marketing/SnakeTimeline'
 import { ProblemSolution } from '@/components/marketing/ProblemSolution'
 import { Features } from '@/components/marketing/Features'
 import { ContentPreview } from '@/components/marketing/ContentPreview'
@@ -36,6 +37,7 @@ export default async function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
+        <SnakeTimeline />
         <ProblemSolution />
         <Features />
         <ContentPreview />

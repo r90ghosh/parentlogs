@@ -1,4 +1,5 @@
 import { Hero } from '@/components/marketing/Hero'
+import { SnakeTimeline } from '@/components/marketing/SnakeTimeline'
 import { ProblemSolution } from '@/components/marketing/ProblemSolution'
 import { Features } from '@/components/marketing/Features'
 import { ContentPreview } from '@/components/marketing/ContentPreview'
@@ -11,6 +12,7 @@ export default function LandingPage() {
   return (
     <>
       <Hero />
+      <SnakeTimeline />
       <ProblemSolution />
       <Features />
       <ContentPreview />
