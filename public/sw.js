@@ -1,5 +1,5 @@
 // The Dad Center Service Worker - PWA with Push Notifications
-const CACHE_NAME = 'thedadcenter-v1';
+const CACHE_NAME = 'thedadcenter-v2';
 const OFFLINE_URL = '/offline';
 
 // Assets to precache on install
@@ -81,11 +81,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // For static assets - stale-while-revalidate
+  // For static assets - network first with cache fallback
   if (url.pathname.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2)$/)) {
     event.respondWith(
-      caches.match(request).then((cached) => {
-        const fetchPromise = fetch(request).then((response) => {
+      fetch(request)
+        .then((response) => {
           if (response.ok) {
             const responseClone = response.clone();
             caches.open(CACHE_NAME).then((cache) => {
@@ -93,9 +93,8 @@ self.addEventListener('fetch', (event) => {
             });
           }
           return response;
-        });
-        return cached || fetchPromise;
-      })
+        })
+        .catch(() => caches.match(request))
     );
     return;
   }
