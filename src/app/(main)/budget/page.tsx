@@ -397,7 +397,7 @@ export default function BudgetPage() {
 
       {/* Main Content Tabs */}
       <RevealOnScroll delay={160}>
-      <Tabs defaultValue="my-budget" className="space-y-4">
+      <Tabs defaultValue="browse" className="space-y-4">
         <TabsList className="bg-[--surface] border border-[--border]">
           <TabsTrigger value="my-budget" className="font-ui">My Budget ({summary?.familyItems.length || 0})</TabsTrigger>
           <TabsTrigger value="browse" className="font-ui">Browse Items</TabsTrigger>

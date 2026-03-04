@@ -1,11 +1,25 @@
 'use client'
 
 import { cn } from '@/lib/utils'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import {
   TIMELINE_CATEGORIES,
   TimelineCategory,
   TaskCategoryStats,
 } from '@/lib/task-timeline'
+
+// Short pill labels for each category
+const PILL_LABELS: Record<TimelineCategory, string> = {
+  'first-trimester': 'Trimester 1',
+  'second-trimester': 'Trimester 2',
+  'third-trimester': 'Trimester 3',
+  'delivery': 'Delivery',
+  '0-3 months': '0-3 Months',
+  '3-6 months': '3-6 Months',
+  '6-12 months': '6-12 Months',
+  '12-18 months': '12-18 Months',
+  '18-24 months': '18+ Months',
+}
 
 interface TaskTimelineBarProps {
   stats: Record<TimelineCategory, TaskCategoryStats>
@@ -20,6 +34,24 @@ export function TaskTimelineBar({
   selectedCategory,
   onCategoryClick,
 }: TaskTimelineBarProps) {
+  const currentIndex = TIMELINE_CATEGORIES.findIndex(c => c.id === currentCategory)
+
+  const canGoPrev = currentIndex > 0
+  const canGoNext = currentIndex < TIMELINE_CATEGORIES.length - 1
+
+  const handleNav = (direction: -1 | 1) => {
+    const targetIndex = currentIndex + direction
+    if (targetIndex >= 0 && targetIndex < TIMELINE_CATEGORIES.length) {
+      const targetId = TIMELINE_CATEGORIES[targetIndex].id
+      onCategoryClick(targetId)
+    }
+  }
+
+  // Active category stats (selected or current)
+  const activeId = selectedCategory || currentCategory
+  const activeStat = stats[activeId]
+  const activeInfo = TIMELINE_CATEGORIES.find(c => c.id === activeId)
+
   const totalStats = Object.values(stats).reduce(
     (sum, stat) => ({
       total: sum.total + stat.total,
@@ -34,19 +66,35 @@ export function TaskTimelineBar({
       {/* Label */}
       <div className="flex items-center justify-between text-xs text-[--muted]">
         <span className="font-ui font-medium">Tasks by Phase</span>
-        <span className="italic text-[--dim] font-body">Click to filter</span>
+        {selectedCategory && (
+          <button
+            onClick={() => onCategoryClick(null)}
+            className="text-copper hover:text-copper/80 text-xs font-ui font-medium hover:underline transition-colors"
+          >
+            Show all
+          </button>
+        )}
       </div>
 
-      {/* Timeline Bar - warm glassmorphism container */}
-      <div className="relative overflow-x-auto overflow-y-hidden -mx-4 px-4 md:mx-0 md:px-0 md:overflow-visible">
-        <div className="flex h-14 rounded-xl overflow-hidden md:backdrop-blur-md bg-[--surface] border border-[--border] shadow-card min-w-[500px] md:min-w-0">
-          {TIMELINE_CATEGORIES.map((category, index) => {
+      {/* Pill Navigation */}
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => handleNav(-1)}
+          disabled={!canGoPrev}
+          className={cn(
+            'flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm font-ui text-[--muted] transition-colors',
+            canGoPrev ? 'hover:bg-[--card] hover:text-[--cream]' : 'opacity-30 cursor-not-allowed'
+          )}
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+
+        <div className="flex items-center gap-1 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+          {TIMELINE_CATEGORIES.map((category) => {
             const stat = stats[category.id]
             const isSelected = selectedCategory === category.id
             const isCurrent = currentCategory === category.id
             const hasNoTasks = stat.total === 0
-            const isFirst = index === 0
-            const isLast = index === TIMELINE_CATEGORIES.length - 1
 
             return (
               <button
@@ -57,115 +105,50 @@ export function TaskTimelineBar({
                   }
                 }}
                 disabled={hasNoTasks}
+                title={`${category.label}: ${stat.completed}/${stat.total} tasks`}
                 className={cn(
-                  "relative flex-1 flex flex-col items-center justify-center transition-all duration-200",
-                  "border-r border-[--border] last:border-r-0",
-                  hasNoTasks ? "cursor-default opacity-60" : "hover:bg-[--border-hover]/30 cursor-pointer",
-                  isSelected && "ring-1 ring-[--cream]/40 ring-inset z-10 bg-[--cream]/10",
-                  isCurrent && !isSelected && "ring-1 ring-copper/50 ring-inset",
-                  isFirst && "rounded-l-xl",
-                  isLast && "rounded-r-xl"
+                  'px-2.5 py-1.5 rounded-lg text-xs font-medium font-ui transition-all whitespace-nowrap',
+                  hasNoTasks && 'opacity-30 cursor-default',
+                  !hasNoTasks && !isSelected && !isCurrent && 'text-[--muted] hover:bg-[--card] hover:text-[--cream]',
+                  isCurrent && !isSelected && 'bg-copper/20 text-copper',
+                  isSelected && 'bg-copper text-[--white]',
                 )}
-                style={{
-                  backgroundColor: hasNoTasks ? undefined : category.color,
-                }}
-                title={`${category.label}: ${stat.completed}/${stat.total} tasks completed`}
               >
-                <span className={cn(
-                  "text-sm font-ui font-semibold",
-                  hasNoTasks ? "text-[--cream]/40" : "text-white drop-shadow-sm"
-                )}>
-                  {stat.total}
-                </span>
-                <span className={cn(
-                  "text-[10px] font-body",
-                  hasNoTasks ? "text-[--cream]/30" : "text-white/70"
-                )}>
-                  {stat.completed}/{stat.total}
-                </span>
+                {PILL_LABELS[category.id]}
               </button>
             )
           })}
         </div>
 
-        {/* Current stage indicator */}
-        <div
-          className="absolute -bottom-3 flex flex-col items-center"
-          style={{
-            left: `${getCategoryCenter(currentCategory)}%`,
-            transform: 'translateX(-50%)',
-          }}
+        <button
+          onClick={() => handleNav(1)}
+          disabled={!canGoNext}
+          className={cn(
+            'flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm font-ui text-[--muted] transition-colors',
+            canGoNext ? 'hover:bg-[--card] hover:text-[--cream]' : 'opacity-30 cursor-not-allowed'
+          )}
         >
-          <div className="w-0 h-0 border-l-[5px] border-r-[5px] border-b-[5px] border-l-transparent border-r-transparent border-b-copper" />
-          <span className="text-[9px] text-copper font-ui font-semibold mt-0.5 tracking-wide">NOW</span>
-        </div>
+          <ChevronRight className="h-4 w-4" />
+        </button>
       </div>
 
-      {/* Legend with labels */}
-      <div className="flex justify-between text-[10px] text-[--dim] font-body px-0.5 mt-4 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0.5 md:overflow-visible min-w-0">
-        {TIMELINE_CATEGORIES.map((category) => {
-          const stat = stats[category.id]
-          const isSelected = selectedCategory === category.id
-          const isCurrent = currentCategory === category.id
-
-          return (
-            <button
-              key={category.id}
-              onClick={() => {
-                if (stat.total > 0) {
-                  onCategoryClick(isSelected ? null : category.id)
-                }
-              }}
-              disabled={stat.total === 0}
-              className={cn(
-                "flex-1 text-center transition-all py-1 rounded-md",
-                stat.total > 0 && "hover:bg-[--card] cursor-pointer",
-                stat.total === 0 && "opacity-40 cursor-default",
-                isSelected && "bg-[--card] ring-1 ring-[--border-hover] text-[--cream]",
-                isCurrent && !isSelected && "text-copper"
-              )}
-            >
-              <div className="truncate px-0.5">{category.label}</div>
-            </button>
-          )
-        })}
-      </div>
-
-      {/* Selected filter indicator */}
-      {selectedCategory && (
-        <div className="flex items-center justify-center gap-2 text-sm text-[--muted] pt-1">
-          <span className="font-body">Showing:</span>
-          <span
-            className="px-3 py-1 rounded-full text-white text-xs font-ui font-medium border border-[--border-hover]"
-            style={{
-              backgroundColor: TIMELINE_CATEGORIES.find(c => c.id === selectedCategory)?.color
-            }}
-          >
-            {TIMELINE_CATEGORIES.find(c => c.id === selectedCategory)?.label} ({stats[selectedCategory].completed}/{stats[selectedCategory].total} done)
+      {/* Active phase summary */}
+      <div className="flex items-center justify-center gap-3 text-xs text-[--muted] font-ui">
+        {selectedCategory ? (
+          <>
+            <span className="inline-flex items-center gap-1.5 bg-copper-dim text-copper px-2.5 py-1 rounded-full text-xs font-semibold">
+              {activeInfo?.label}
+            </span>
+            <span>
+              <span className="text-[--cream] font-medium">{activeStat.completed}</span>/{activeStat.total} done
+            </span>
+          </>
+        ) : (
+          <span>
+            <span className="text-[--cream] font-medium">{totalStats.completed}</span>/{totalStats.total} tasks completed
           </span>
-          <button
-            onClick={() => onCategoryClick(null)}
-            className="text-copper hover:text-copper-hover text-xs font-ui font-medium hover:underline transition-colors"
-          >
-            Show all
-          </button>
-        </div>
-      )}
-
-      {/* Total tasks summary */}
-      {!selectedCategory && (
-        <div className="text-center text-xs text-[--dim] font-body">
-          Total: <span className="text-[--cream] font-ui font-medium">{totalStats.completed}/{totalStats.total}</span> tasks completed
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
-}
-
-function getCategoryCenter(category: TimelineCategory): number {
-  const index = TIMELINE_CATEGORIES.findIndex(c => c.id === category)
-  if (index === -1) return 50
-
-  const segmentWidth = 100 / TIMELINE_CATEGORIES.length
-  return (index * segmentWidth) + (segmentWidth / 2)
 }
