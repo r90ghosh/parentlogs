@@ -31,28 +31,40 @@ function SplitLetterHeading() {
   let globalIndex = 0
 
   const renderChars = (text: string, italic = false) => {
-    return text.split('').map((char) => {
-      if (char === ' ') {
+    const words = text.split(' ')
+    const result: React.ReactNode[] = []
+
+    words.forEach((word, wordIndex) => {
+      if (wordIndex > 0) {
         globalIndex++
-        return <span key={`sp-${globalIndex}`} className="inline-block w-[0.28em]" />
+        result.push(<span key={`sp-${globalIndex}`} className="inline-block w-[0.28em]" />)
       }
-      const idx = globalIndex++
-      return (
-        <span
-          key={`ch-${idx}`}
-          className={italic ? 'italic text-copper' : ''}
-          style={{
-            display: 'inline-block',
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0)' : 'translateY(40px)',
-            transition: `opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)`,
-            transitionDelay: `${idx * 30}ms`,
-          }}
-        >
-          {char}
+      const wordChars = word.split('').map((char) => {
+        const idx = globalIndex++
+        return (
+          <span
+            key={`ch-${idx}`}
+            className={italic ? 'italic text-copper' : ''}
+            style={{
+              display: 'inline-block',
+              opacity: visible ? 1 : 0,
+              transform: visible ? 'translateY(0)' : 'translateY(40px)',
+              transition: `opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)`,
+              transitionDelay: `${idx * 30}ms`,
+            }}
+          >
+            {char}
+          </span>
+        )
+      })
+      result.push(
+        <span key={`word-${wordIndex}`} className="inline-flex whitespace-nowrap">
+          {wordChars}
         </span>
       )
     })
+
+    return result
   }
 
   return (
