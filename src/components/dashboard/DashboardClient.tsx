@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { useUser } from '@/components/user-provider'
 import { useFamily } from '@/hooks/use-family'
 import { useDashboardCards } from '@/hooks/use-dashboard-context'
@@ -18,6 +17,8 @@ import { ChecklistProgressCard } from './ChecklistProgressCard'
 import { PartnerActivityCard } from './PartnerActivityCard'
 import { UpgradePromptCard } from './UpgradePromptCard'
 import { Skeleton } from '@/components/ui/skeleton'
+import { CardEntrance } from '@/components/ui/animations/CardEntrance'
+import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 
 interface DashboardClientProps {
   userId: string
@@ -70,9 +71,11 @@ export function DashboardClient({
   const leftCards = cards.filter(c => LEFT_COLUMN_CARDS.includes(c.id))
   const rightCards = cards.filter(c => RIGHT_COLUMN_CARDS.includes(c.id))
 
+  let cardIndex = 0
+
   return (
     <div className="max-w-[1600px] mx-auto px-6 md:px-10 py-8 bg-[--bg]">
-      {/* Header */}
+      {/* Header with TypewriterGreeting + CopperDivider */}
       <DashboardHeader
         userName={userName}
         overdueCount={taskStats.overdue}
@@ -81,19 +84,16 @@ export function DashboardClient({
       {/* Full-width cards (mood check-in, partner activity, shift briefing) */}
       {fullWidthCards.length > 0 && (
         <div className="space-y-4 mb-6">
-          {fullWidthCards.map((card, index) => {
+          {fullWidthCards.map((card) => {
             const component = cardComponents[card.id]
             if (!component) return null
+            const delay = cardIndex++ * 120
             return (
-              <motion.div
-                key={card.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.08 }}
-                className="shadow-card"
-              >
-                {component}
-              </motion.div>
+              <CardEntrance key={card.id} delay={delay}>
+                <Card3DTilt maxTilt={4} gloss>
+                  {component}
+                </Card3DTilt>
+              </CardEntrance>
             )
           })}
         </div>
@@ -101,7 +101,7 @@ export function DashboardClient({
 
       {/* Two-column desktop layout */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
-        {/* Left column: briefing, on-your-mind, invite-partner, personalize */}
+        {/* Left column */}
         <div className="space-y-6">
           {isLoading && leftCards.length === 0 ? (
             <>
@@ -109,24 +109,22 @@ export function DashboardClient({
               <Skeleton className="h-48 w-full rounded-[20px]" />
             </>
           ) : (
-            leftCards.map((card, index) => {
+            leftCards.map((card) => {
               const component = cardComponents[card.id]
               if (!component) return null
+              const delay = cardIndex++ * 120
               return (
-                <motion.div
-                  key={card.id}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: (fullWidthCards.length + index) * 0.08 }}
-                >
-                  {component}
-                </motion.div>
+                <CardEntrance key={card.id} delay={delay}>
+                  <Card3DTilt maxTilt={4} gloss>
+                    {component}
+                  </Card3DTilt>
+                </CardEntrance>
               )
             })
           )}
         </div>
 
-        {/* Right column: tasks, quick-actions, budget, checklist */}
+        {/* Right column */}
         <div className="space-y-5">
           {isLoading && rightCards.length === 0 ? (
             <>
@@ -135,18 +133,16 @@ export function DashboardClient({
               <Skeleton className="h-28 w-full rounded-2xl" />
             </>
           ) : (
-            rightCards.map((card, index) => {
+            rightCards.map((card) => {
               const component = cardComponents[card.id]
               if (!component) return null
+              const delay = cardIndex++ * 120
               return (
-                <motion.div
-                  key={card.id}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: (fullWidthCards.length + leftCards.length + index) * 0.08 }}
-                >
-                  {component}
-                </motion.div>
+                <CardEntrance key={card.id} delay={delay}>
+                  <Card3DTilt maxTilt={4} gloss>
+                    {component}
+                  </Card3DTilt>
+                </CardEntrance>
               )
             })
           )}
