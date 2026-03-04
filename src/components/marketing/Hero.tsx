@@ -24,9 +24,9 @@ function SplitLetterHeading() {
     })
   }, [])
 
-  const line1 = 'Your partner in the'
-  const line2 = 'journey'
-  const line3 = 'to fatherhood'
+  const line1 = 'The operating system'
+  const line2 = 'for modern'
+  const line3 = 'fatherhood'
 
   let globalIndex = 0
 
@@ -71,7 +71,7 @@ function SplitLetterHeading() {
     <h1
       ref={ref}
       className="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[--cream] leading-[1.1] mb-6"
-      aria-label="Your partner in the journey to fatherhood"
+      aria-label="The operating system for modern fatherhood"
     >
       {renderChars(line1)}
       <span className="inline-block w-[0.28em]" />
