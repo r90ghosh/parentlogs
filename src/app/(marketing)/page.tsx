@@ -7,10 +7,12 @@ import { HowItWorks } from '@/components/marketing/HowItWorks'
 import { Testimonials } from '@/components/marketing/Testimonials'
 import { Pricing } from '@/components/marketing/Pricing'
 import { FinalCTA } from '@/components/marketing/FinalCTA'
+import { JsonLd } from '@/components/marketing/JsonLd'
 
 export default function LandingPage() {
   return (
     <>
+      <JsonLd />
       <Hero />
       <SnakeTimeline />
       <ProblemSolution />

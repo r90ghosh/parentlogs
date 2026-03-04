@@ -94,8 +94,37 @@ export default async function ArticlePage({ params }: PageProps) {
   const isLocked = !article.isFree && !isPremium
   const displayContent = isLocked ? truncateContent(article.content) : article.content
 
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.excerpt,
+    author: {
+      '@type': 'Organization',
+      name: 'The Dad Center',
+      url: 'https://thedadcenter.com',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'The Dad Center',
+      url: 'https://thedadcenter.com',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://thedadcenter.com/images/logo.png',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://thedadcenter.com/resources/articles/${slug}`,
+    },
+  }
+
   return (
     <div className="min-h-screen bg-[--bg]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       {/* Header */}
       <div className="bg-gradient-to-b from-[--surface] to-[--bg] pt-24 pb-12 md:pt-32 md:pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

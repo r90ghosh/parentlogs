@@ -4,9 +4,13 @@ import { Footer } from '@/components/marketing/Footer'
 import { MarketingShell } from '@/components/marketing/MarketingShell'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://thedadcenter.com'),
   title: 'The Dad Center - The Operating System for Modern Fatherhood',
   description: 'Finally, a parenting app that respects your intelligence. Week-by-week guidance, actionable tasks, budget planning, and partner sync for tech-savvy dads.',
   keywords: ['parenting app', 'dad app', 'pregnancy tracker', 'new dad', 'father', 'baby planning', 'parenting tasks'],
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: 'The Dad Center - The Operating System for Modern Fatherhood',
     description: 'Finally, a parenting app that respects your intelligence. Week-by-week guidance, actionable tasks, and zero fluff.',
