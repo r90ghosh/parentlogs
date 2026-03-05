@@ -1,6 +1,10 @@
-# The Dad Center — V2 Build Context
+# The Dad Center — Project Context
 
-> Full spec: `@docs/v2_build_commands.md`
+> The operating system for modern fatherhood. Built by dads, for dads who refuse to wing it.
+
+## What This App Is
+
+The Dad Center is a pregnancy & parenting companion app designed primarily for dads (but also moms). It provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and a "dad journey" system with challenge tiles across 7 pillars. One subscription covers the whole family — both partners share access.
 
 ## Branding & Pricing Constants
 
@@ -18,7 +22,7 @@
 |-------|------|
 | Framework | Next.js 16.1.x (App Router) |
 | UI | React 19.x, Tailwind CSS 4.x, Radix UI (shadcn pattern) |
-| Animation | Framer Motion 12.x |
+| Animation | Framer Motion 12.x + custom animation components |
 | DB/Auth | Supabase (PostgreSQL, Auth, Realtime) |
 | State | TanStack React Query 5.x |
 | Payments | Stripe (web) + RevenueCat (mobile) |
@@ -26,6 +30,73 @@
 | Dates | date-fns 4.x |
 | Forms | React Hook Form + Zod |
 | Deploy | Netlify (frontend) + Supabase Cloud (backend) |
+| Fonts | Playfair Display (display), Jost (body), Karla (UI) |
+
+## Design System — "Warm Luxury Editorial"
+
+### Color Palette (CSS Custom Properties)
+
+**Core Surfaces (dark theme):**
+- `--bg`: #12100e (page background)
+- `--surface`: #1a1714 (header, sidebar, nav)
+- `--card`: #201c18 (cards)
+- `--card-hover`: #282420
+
+**Text:**
+- `--white`: #faf6f0 (headings)
+- `--cream`: #ede6dc (body text)
+- `--muted`: #7a6f62 (secondary text)
+- `--dim`: #4a4239 (tertiary/disabled)
+
+**Accent Colors:**
+- `--copper`: #c4703f (primary accent, CTAs, active states)
+- `--gold`: #d4a853 (premium, highlights)
+- `--sage`: #6b8f71 (success, completed)
+- `--coral`: #d4836b (warnings, destructive)
+- `--sky`: #5b9bd5 (info, links)
+- `--rose`: #c47a8f (pregnancy-related)
+
+Each accent has a `-dim` variant (15% opacity) and `-glow` variant (25% opacity).
+
+**Borders & Shadows:**
+- `--border`: rgba(237, 230, 220, 0.08)
+- `--border-hover`: rgba(237, 230, 220, 0.15)
+- `--shadow-card`, `--shadow-hover`, `--shadow-lift`, `--shadow-copper`, `--shadow-gold`
+
+### Font Usage
+- `font-display` — Playfair Display: headings, hero text, card titles
+- `font-body` — Jost: body text, descriptions, paragraphs
+- `font-ui` — Karla: buttons, labels, badges, nav items, stats
+
+### Animation Components (`src/components/ui/animations/`)
+
+All pages use these animation wrappers for visual consistency:
+
+| Component | Purpose | Usage |
+|-----------|---------|-------|
+| `Card3DTilt` | 3D mouse-follow tilt with gloss overlay | Wrap any card (`maxTilt={3-4}`, `gloss`) |
+| `RevealOnScroll` | IntersectionObserver fade-up on scroll | Wrap sections (`delay={ms}`) |
+| `CardEntrance` | "Dealt from deck" perspective+rotateX entrance | Wrap cards with stagger (`delay={index * 120}`) |
+| `TypewriterGreeting` | Character-by-character typing with copper cursor | Dashboard greeting |
+| `CopperDivider` | Animated line draw with traveling glow tip | After TypewriterGreeting |
+| `ScrollProgressBar` | Copper-to-gold gradient progress bar at top | Marketing pages |
+| `MagneticButton` | Slight translate toward cursor on hover | CTAs on marketing pages |
+| `WarmBackground` | Radial gradients + noise texture overlay | Page backgrounds |
+| `FloatingParticles` | CSS-animated copper/gold particles | Page backgrounds |
+| `MoodEmojiPop` | 3D emoji selection with ripple | Mood check-in |
+
+### CSS Keyframes (in `globals.css`)
+- `subtitleGradient` — Animated gradient for hero subtitles
+- `featuredFloat` — Floating animation for featured pricing card
+- `iconPulse` — Pulsing opacity for feature icons
+- `ctaGlowBreath` — Breathing glow for CTA backgrounds
+- `pulseRingExpand` — Ring expansion animation
+- `quoteRotate` — Slow 360deg rotation for decorative quote marks
+
+### Utility Classes
+- `.section-pre` — Section pre-label with `::after` copper line (60px)
+- `.card-*-top` — Colored top border accents (copper, gold, sage, coral, sky, rose)
+- `.text-gradient-copper` — Copper-to-gold gradient text
 
 ## Architecture Patterns
 
@@ -68,50 +139,54 @@ export function useExampleData(id: string) {
 - **Pages**: thin server components passing props to client components
 - **Layouts**: auth checks, data fetching, context providers
 
-### Route Groups
-| Group | Path | Purpose |
-|-------|------|---------|
-| `(auth)` | `/login`, `/signup`, `/onboarding/*` | Auth + onboarding |
-| `(main)` | `/dashboard`, `/tasks`, `/briefing`, etc. | Authenticated app |
-| `(marketing)` | `/`, `/resources` | Public pages |
-| `(public)` | `/upgrade` | Semi-public |
-
-## V2 Phase Tracker
-
-### Group A — Foundation (Sequential)
-- [ ] **Phase 1:** Database Migrations (6 migrations via Supabase MCP)
-- [ ] **Phase 2:** Types, Utilities & Config (`dad-journey.ts`, `phase-utils.ts`, `dad-pillar-config.ts`, `paywall-copy.ts`)
-- [ ] **Phase 3:** Service Layer & Hooks (`dad-journey-service.ts`, `use-dad-journey.ts`)
-
-### Group B — Structure (Phases 4+5 parallel, then 6)
-- [ ] **Phase 4:** Onboarding Redesign (4 screens, ~45s to dashboard)
-- [ ] **Phase 5:** Navigation Restructure (Briefing to bottom nav, Calendar removed)
-- [ ] **Phase 6:** Router & Route Map (new routes: `/journey`, `/onboarding/ready`, `/onboarding/personalize`, `/briefing/[weekId]`)
-
-### Group C — Features (MAX PARALLEL after Group A + Phase 6)
-- [ ] **Phase 7:** Dashboard Redesign (unified feed, priority-ordered cards, role-aware)
-- [ ] **Phase 8:** Dad Journey & Challenge Tiles (7 pillars, expandable tiles, `/journey` page)
-- [ ] **Phase 9:** Mood Check-in System (emoji selector, flags, streaks)
-- [ ] **Phase 10:** Briefings Upgrade (dedicated nav tab, week navigation, inline tasks)
-- [ ] **Phase 11:** Tasks Upgrade (30-day window, calendar toggle, catch-up triage)
-- [ ] **Phase 12:** Mom's Experience (Partner Activity Card, role-aware dashboard)
-- [ ] **Phase 13:** Mid-Pregnancy Catch-Up UX (2-bucket triage, yellow badges)
-- [ ] **Phase 14:** Notification System (premium-only push, 30-day free window)
-
-### Group D — Monetization (Sequential)
-- [ ] **Phase 15:** Free-to-Premium Upgrade Journey (3-phase: invisible → visible → urgent)
-- [ ] **Phase 16:** Subscription & Paywall Implementation ($4.99/$39.99/$99.99)
-
-### Group E — Content (Anytime after Phase 2)
-- [ ] **Phase 17:** Content Generation & Seeding (63 pieces: 7 pillars × 9 phases)
-
-## Phase Dependency Graph
+## Project Structure
 
 ```
-Phase 1 → Phase 2 → Phase 3 ─┬─→ Phase 4 ─┐
-                               ├─→ Phase 5 ─┤→ Phase 6 → Phases 7-14 (parallel)
-                               └─→ Phase 17  └─→ Phases 15 → 16
+src/
+├── app/
+│   ├── (auth)/          # login, signup, onboarding (no nav)
+│   ├── (main)/          # dashboard, tasks, briefing, tracker, etc. (full app chrome)
+│   ├── (marketing)/     # landing page, resources (marketing layout)
+│   ├── (public)/        # upgrade page
+│   └── api/             # stripe webhooks, account deletion
+├── components/
+│   ├── briefings/       # BriefingHero, BriefingSection, BabySizeCard, etc.
+│   ├── budget/          # TierFilter, ProductExamplesDrawer
+│   ├── dashboard/       # 20+ dashboard cards + dad-journey/ subfolder
+│   ├── layouts/         # main-layout-client.tsx (header, sidebar, bottom nav)
+│   ├── marketing/       # Hero, Features, Pricing, Testimonials, etc.
+│   ├── shared/          # timeline bars, paywall overlay, partner activity
+│   ├── tasks/           # task items, filters, progress, animations
+│   └── ui/              # shadcn primitives + animations/ subfolder
+├── hooks/               # 18 React Query hooks
+├── lib/                 # supabase/, auth/, stripe/, utils, config files
+├── services/            # 9 domain services (briefing, budget, task, etc.)
+└── types/               # TypeScript types (database, dashboard, dad-journey)
 ```
+
+### Route Groups & Navigation
+
+| Group | Path | Auth | Layout |
+|-------|------|------|--------|
+| `(auth)` | `/login`, `/signup`, `/onboarding/*` | No (except onboarding) | Minimal (WarmBackground + FloatingParticles) |
+| `(main)` | `/dashboard`, `/tasks`, `/briefing`, `/tracker`, etc. | Yes + family required | Full app chrome (header, sidebar, bottom nav) |
+| `(marketing)` | `/`, `/resources` | No | Marketing (ScrollProgressBar, header, footer) |
+| `(public)` | `/upgrade` | Varies | Minimal |
+
+**Bottom Nav (mobile):** Home | Tasks | Briefing | Tracker | More
+**Sidebar (desktop):** Same items + Tools (Checklists, Budget) + Family + Account sections
+
+### Key Pages
+
+| Page | File | Description |
+|------|------|-------------|
+| Landing | `(marketing)/page.tsx` | Hero, Features, HowItWorks, Testimonials, Pricing, FinalCTA |
+| Dashboard | `(main)/dashboard/page.tsx` | Priority-ordered cards, role-aware |
+| Tasks | `(main)/tasks/page.tsx` | Timeline bar, filters, task sections, calendar toggle |
+| Briefing | `(main)/briefing/page.tsx` | Week navigation pills, hero, sections |
+| Budget | `(main)/budget/page.tsx` | Timeline bar, tier filter, browse/my-budget tabs |
+| Journey | `(main)/journey/page.tsx` | 7 challenge pillar tiles |
+| Tracker | `(main)/tracker/page.tsx` | Baby development tracking |
 
 ## Key Enums (Supabase)
 
@@ -126,11 +201,13 @@ task_assignee: 'mom' | 'dad' | 'both' | 'either'
 user_role: 'mom' | 'dad' | 'other'
 ```
 
-## Bottom Nav (V2)
+## Timeline Categories (Tasks & Budget)
 
-Home | Tasks | **Briefing** | Tracker | More
+Both the tasks and budget pages use 9 timeline categories for phase-based navigation:
+- Trimester 1, Trimester 2, Trimester 3, Delivery
+- 0-3 Months, 3-6 Months, 6-12 Months, 12-18 Months, 18+ Months
 
-Calendar removed from nav → view toggle in Tasks page (`/tasks?view=calendar`).
+These render as pill-button navigation (similar to the Briefing page's week number UI) with copper highlights for current/selected phases.
 
 ## Dashboard Card Priority (Dad)
 
@@ -145,6 +222,26 @@ Calendar removed from nav → view toggle in Tasks page (`/tasks?view=calendar`)
 9. Checklist Progress
 
 Mom sees Partner Activity Card at position 1 instead of Mood Check-in. No On Your Mind tiles.
+
+## V2 Build Phases (All Complete)
+
+All 17 phases have been implemented:
+- **Phases 1-3:** Database migrations, types/config, service layer
+- **Phases 4-6:** Onboarding redesign, navigation restructure, routing
+- **Phases 7-14:** Dashboard, dad journey, mood check-in, briefings, tasks, mom's experience, catch-up UX, notifications
+- **Phases 15-16:** Free-to-premium upgrade journey, subscription & paywall
+- **Phase 17:** Content generation & seeding (63 pieces: 7 pillars x 9 phases)
+
+### Visual Redesign (Post-V2)
+
+A 13-phase "Warm Luxury Editorial" visual redesign was applied across all pages:
+- Custom animation components integrated into every page
+- Card3DTilt + RevealOnScroll + CardEntrance on all card-based UIs
+- TypewriterGreeting + CopperDivider on dashboard header
+- ScrollProgressBar + WarmBackground + FloatingParticles on marketing pages
+- MagneticButton on primary CTAs
+- Section pre-labels with copper accent lines
+- Split-letter heading animation on hero
 
 ## Design Principles
 
@@ -167,3 +264,5 @@ Mom sees Partner Activity Card at position 1 instead of Mood Check-in. No On You
 - Branding: "The Dad Center" everywhere
 - Task window: 30-day (not 14-day)
 - Briefing window: 4 weeks from signup
+- All animation components integrated on every page
+- Header: logo and week badge baseline-aligned
