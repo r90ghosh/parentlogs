@@ -1,5 +1,5 @@
 [build]
-  command = "rm -rf .next && npm run build"
+  command = "rm -rf .next && npm run build && mkdir -p .next/_next && cp -r .next/static .next/_next/"
   publish = ".next"
 
 # Note: SECRETS_SCAN_OMIT_KEYS must be set in Netlify UI (Site settings > Environment variables)
