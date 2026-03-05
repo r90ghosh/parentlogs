@@ -1,5 +1,5 @@
 // The Dad Center Service Worker - PWA with Push Notifications
-const CACHE_NAME = 'thedadcenter-v2';
+const CACHE_NAME = 'thedadcenter-v3';
 const OFFLINE_URL = '/offline';
 
 // Assets to precache on install
@@ -58,6 +58,10 @@ self.addEventListener('fetch', (event) => {
 
   // Skip auth-related paths
   if (url.pathname.startsWith('/auth/')) return;
+
+  // Skip Next.js build assets — let the browser/CDN handle these directly.
+  // These have hashed filenames and become stale after each deployment.
+  if (url.pathname.startsWith('/_next/')) return;
 
   // For navigation requests (HTML pages)
   if (request.mode === 'navigate') {
