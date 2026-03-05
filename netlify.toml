@@ -23,13 +23,14 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# Security headers
+# HTML pages — never serve stale HTML (it references hashed build assets)
 [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 # Next.js plugin
 [[plugins]]
