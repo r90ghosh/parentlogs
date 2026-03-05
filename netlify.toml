@@ -23,7 +23,7 @@
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
-# HTML pages — never serve stale HTML (it references hashed build assets)
+# All pages — prevent Netlify's Durable Cache from storing stale HTML
 [[headers]]
   for = "/*"
   [headers.values]
@@ -31,6 +31,7 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Cache-Control = "public, max-age=0, must-revalidate"
+    Netlify-CDN-Cache-Control = "no-store"
 
 # Next.js plugin
 [[plugins]]
