@@ -2,104 +2,177 @@ import { NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
 
-// This timestamp is baked into the build at compile time
 const BUILD_TIME = new Date().toISOString()
 
+function safeReadJSON(filePath: string) {
+  try {
+    if (fs.existsSync(filePath)) {
+      return JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+    }
+    return { _error: 'file not found: ' + filePath }
+  } catch (e) {
+    return { _error: String(e) }
+  }
+}
+
+function safeReadDir(dirPath: string): string[] | string {
+  try {
+    if (fs.existsSync(dirPath)) {
+      return fs.readdirSync(dirPath)
+    }
+    return 'DIR NOT FOUND: ' + dirPath
+  } catch (e) {
+    return 'ERROR: ' + String(e)
+  }
+}
+
+function safeReadFile(filePath: string, maxLen = 1000): string {
+  try {
+    if (fs.existsSync(filePath)) {
+      return fs.readFileSync(filePath, 'utf-8').substring(0, maxLen)
+    }
+    return 'FILE NOT FOUND: ' + filePath
+  } catch (e) {
+    return 'ERROR: ' + String(e)
+  }
+}
+
+function findFiles(dir: string, pattern: RegExp, maxDepth = 3, depth = 0): string[] {
+  if (depth >= maxDepth) return []
+  try {
+    if (!fs.existsSync(dir)) return []
+    const results: string[] = []
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name)
+      if (entry.isFile() && pattern.test(entry.name)) {
+        results.push(fullPath)
+      } else if (entry.isDirectory() && !entry.name.startsWith('node_modules')) {
+        results.push(...findFiles(fullPath, pattern, maxDepth, depth + 1))
+      }
+    }
+    return results
+  } catch {
+    return []
+  }
+}
+
 export async function GET() {
-  // Check what chunks exist in the build output
-  let chunks: string[] = []
-  let buildId = 'unknown'
-  let loginHtmlSnippet = 'not found'
-  let errors: string[] = []
+  const cwd = process.cwd()
+  const nextDir = path.join(cwd, '.next')
 
-  try {
-    // Try to read build ID
-    const buildIdPath = path.join(process.cwd(), '.next', 'BUILD_ID')
-    if (fs.existsSync(buildIdPath)) {
-      buildId = fs.readFileSync(buildIdPath, 'utf-8').trim()
-    } else {
-      errors.push('BUILD_ID file not found at: ' + buildIdPath)
-    }
-  } catch (e) {
-    errors.push('Error reading BUILD_ID: ' + String(e))
+  // 1. Build manifest — lists all chunks for each page
+  const buildManifest = safeReadJSON(path.join(nextDir, 'build-manifest.json'))
+
+  // 2. Extract login page chunks from build manifest
+  let loginChunksFromManifest = 'not found in manifest'
+  if (buildManifest && !buildManifest._error) {
+    // Check various possible keys
+    const pages = buildManifest.pages || {}
+    const keys = Object.keys(pages)
+    const loginKeys = keys.filter((k: string) => k.toLowerCase().includes('login'))
+    loginChunksFromManifest = loginKeys.length > 0
+      ? JSON.stringify(loginKeys.map((k: string) => ({ key: k, chunks: pages[k] })))
+      : 'No login keys found. All page keys: ' + keys.slice(0, 20).join(', ')
   }
 
-  try {
-    // Try to list chunk files
-    const chunksDir = path.join(process.cwd(), '.next', 'static', 'chunks')
-    if (fs.existsSync(chunksDir)) {
-      chunks = fs.readdirSync(chunksDir).filter(f => f.endsWith('.js')).slice(0, 10)
-    } else {
-      errors.push('Chunks dir not found at: ' + chunksDir)
-      // Try to find .next directory
-      const cwd = process.cwd()
-      const cwdContents = fs.readdirSync(cwd).slice(0, 20)
-      errors.push('CWD contents: ' + cwdContents.join(', '))
-
-      const nextDir = path.join(cwd, '.next')
-      if (fs.existsSync(nextDir)) {
-        const nextContents = fs.readdirSync(nextDir).slice(0, 20)
-        errors.push('.next contents: ' + nextContents.join(', '))
-
-        const staticDir = path.join(nextDir, 'static')
-        if (fs.existsSync(staticDir)) {
-          const staticContents = fs.readdirSync(staticDir).slice(0, 20)
-          errors.push('.next/static contents: ' + staticContents.join(', '))
-        } else {
-          errors.push('.next/static does not exist')
-        }
-      } else {
-        errors.push('.next directory does not exist')
-      }
-    }
-  } catch (e) {
-    errors.push('Error reading chunks dir: ' + String(e))
+  // 3. Prerender manifest — shows which pages are prerendered
+  const prerenderManifest = safeReadJSON(path.join(nextDir, 'prerender-manifest.json'))
+  let loginPrerender = 'not found'
+  if (prerenderManifest && !prerenderManifest._error) {
+    const routes = prerenderManifest.routes || {}
+    const loginRoute = routes['/login'] || 'NOT IN ROUTES'
+    const dynamicRoutes = prerenderManifest.dynamicRoutes || {}
+    loginPrerender = JSON.stringify({
+      loginRoute,
+      allRoutes: Object.keys(routes).slice(0, 20),
+    })
   }
 
-  try {
-    // Try to read first 500 chars of prerendered login HTML
-    const loginPath = path.join(process.cwd(), '.next', 'server', 'app', 'login.html')
-    if (fs.existsSync(loginPath)) {
-      const html = fs.readFileSync(loginPath, 'utf-8')
-      loginHtmlSnippet = html.substring(0, 500)
-    } else {
-      errors.push('login.html not found at: ' + loginPath)
-      // Check alternative paths
-      const serverDir = path.join(process.cwd(), '.next', 'server')
-      if (fs.existsSync(serverDir)) {
-        const serverContents = fs.readdirSync(serverDir).slice(0, 20)
-        errors.push('.next/server contents: ' + serverContents.join(', '))
+  // 4. Find login-related files
+  const loginFiles = findFiles(path.join(nextDir, 'server', 'app'), /login|auth/i)
 
-        const appDir = path.join(serverDir, 'app')
-        if (fs.existsSync(appDir)) {
-          const appContents = fs.readdirSync(appDir).slice(0, 30)
-          errors.push('.next/server/app contents: ' + appContents.join(', '))
-        }
-      }
+  // 5. Check (auth) directory structure
+  const authDir = safeReadDir(path.join(nextDir, 'server', 'app', '(auth)'))
+  let authLoginDir = 'N/A'
+  if (Array.isArray(authDir)) {
+    authLoginDir = JSON.stringify(safeReadDir(path.join(nextDir, 'server', 'app', '(auth)', 'login')))
+  }
+
+  // 6. Read routes-manifest.json
+  const routesManifest = safeReadJSON(path.join(nextDir, 'routes-manifest.json'))
+  let loginRouteInfo = 'not found'
+  if (routesManifest && !routesManifest._error) {
+    const staticRoutes = (routesManifest.staticRoutes || [])
+      .filter((r: { page: string }) => r.page.includes('login'))
+    const dynamicRoutes = (routesManifest.dynamicRoutes || [])
+      .filter((r: { page: string }) => r.page.includes('login'))
+    loginRouteInfo = JSON.stringify({ staticRoutes, dynamicRoutes })
+  }
+
+  // 7. Check required-server-files.json for config
+  const requiredServerFiles = safeReadJSON(path.join(nextDir, 'required-server-files.json'))
+  let nextConfig = 'not found'
+  if (requiredServerFiles && !requiredServerFiles._error) {
+    nextConfig = JSON.stringify(requiredServerFiles.config || 'no config key')
+  }
+
+  // 8. Check Netlify-specific files
+  const netlifyFiles = safeReadDir(cwd)
+  const netlifyMetadata = safeReadFile(path.join(cwd, '___netlify-metadata.json'))
+  const netlifyServerHandler = safeReadFile(path.join(cwd, '___netlify-server-handler.json'))
+
+  // 9. Try to internally fetch the login page to see what HTML the server returns
+  let internalLoginFetch = 'not attempted'
+  try {
+    const url = process.env.URL || process.env.DEPLOY_PRIME_URL || ''
+    if (url) {
+      internalLoginFetch = 'Would fetch from: ' + url + '/login'
+    } else {
+      internalLoginFetch = 'No URL env var found. Available env vars with values: ' +
+        Object.keys(process.env)
+          .filter(k => !k.includes('SECRET') && !k.includes('KEY') && !k.includes('TOKEN') && !k.includes('PASSWORD'))
+          .filter(k => (process.env[k] || '').length < 100)
+          .map(k => k + '=' + process.env[k])
+          .slice(0, 30)
+          .join(', ')
     }
   } catch (e) {
-    errors.push('Error reading login.html: ' + String(e))
+    internalLoginFetch = 'Error: ' + String(e)
   }
+
+  // 10. Check the app-path-routes-manifest
+  const appPathRoutes = safeReadJSON(path.join(nextDir, 'app-path-routes-manifest.json'))
 
   return NextResponse.json({
-    status: 'ok',
     buildTime: BUILD_TIME,
     nodeVersion: process.version,
-    platform: process.platform,
-    cwd: process.cwd(),
-    buildId,
-    chunksInBuild: chunks,
-    loginHtmlSnippet,
-    errors,
+    cwd,
+    buildId: safeReadFile(path.join(nextDir, 'BUILD_ID'), 100),
+    buildManifestPageKeys: buildManifest && !buildManifest._error
+      ? Object.keys(buildManifest.pages || {}).slice(0, 30)
+      : buildManifest,
+    buildManifestLoginChunks: loginChunksFromManifest,
+    loginPrerender,
+    loginRouteInfo,
+    appPathRoutes: appPathRoutes && !appPathRoutes._error
+      ? Object.entries(appPathRoutes).filter(([k]) => k.includes('login') || k.includes('auth'))
+      : appPathRoutes,
+    authDirContents: authDir,
+    authLoginDirContents: authLoginDir,
+    loginRelatedFiles: loginFiles,
+    nextConfig,
+    netlifyMetadata,
+    netlifyServerHandler,
+    internalLoginFetch,
     env: {
       NODE_ENV: process.env.NODE_ENV,
       NETLIFY: process.env.NETLIFY,
       CONTEXT: process.env.CONTEXT,
       DEPLOY_ID: process.env.DEPLOY_ID,
+      URL: process.env.URL,
+      DEPLOY_PRIME_URL: process.env.DEPLOY_PRIME_URL,
     },
   }, {
-    headers: {
-      'Cache-Control': 'no-store',
-    },
+    headers: { 'Cache-Control': 'no-store' },
   })
 }
