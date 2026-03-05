@@ -61,20 +61,13 @@ self.addEventListener('fetch', (event) => {
 
   // Skip Next.js build assets — let the browser/CDN handle these directly.
   // These have hashed filenames and become stale after each deployment.
-  if (url.pathname.startsWith('/_next/')) {
-    console.log('[SW] Skipping _next/ asset:', url.pathname);
-    return;
-  }
-
-  console.log('[SW] Handling fetch:', url.pathname, 'mode:', request.mode);
+  if (url.pathname.startsWith('/_next/')) return;
 
   // For navigation requests (HTML pages)
   if (request.mode === 'navigate') {
-    console.log('[SW] Navigation request:', url.pathname);
     event.respondWith(
       fetch(request)
         .then((response) => {
-          console.log('[SW] Navigation response:', url.pathname, 'status:', response.status);
           if (response.ok) {
             const responseClone = response.clone();
             caches.open(CACHE_NAME).then((cache) => {
@@ -83,10 +76,8 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch((err) => {
-          console.log('[SW] Navigation fetch failed:', url.pathname, err.message);
+        .catch(() => {
           return caches.match(request).then((cached) => {
-            if (cached) console.log('[SW] Serving cached navigation:', url.pathname);
             return cached || caches.match(OFFLINE_URL) || new Response('Offline', { status: 503 });
           });
         })
@@ -96,11 +87,9 @@ self.addEventListener('fetch', (event) => {
 
   // For static assets - network first with cache fallback
   if (url.pathname.match(/\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2)$/)) {
-    console.log('[SW] Static asset request:', url.pathname);
     event.respondWith(
       fetch(request)
         .then((response) => {
-          console.log('[SW] Static asset response:', url.pathname, 'status:', response.status, 'type:', response.headers.get('content-type'));
           if (response.ok) {
             const responseClone = response.clone();
             caches.open(CACHE_NAME).then((cache) => {
@@ -109,10 +98,7 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch((err) => {
-          console.log('[SW] Static asset fetch failed:', url.pathname, err.message);
-          return caches.match(request);
-        })
+        .catch(() => caches.match(request))
     );
     return;
   }
@@ -224,4 +210,4 @@ self.addEventListener('message', (event) => {
   }
 });
 
-console.log('[SW] Service worker loaded, cache version:', CACHE_NAME);
+console.log('[SW] Service worker loaded');

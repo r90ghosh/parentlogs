@@ -58,6 +58,36 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(){
+                var key='__stale_reload';
+                window.addEventListener('error',function(e){
+                  if(e.target&&(e.target.tagName==='SCRIPT'||e.target.tagName==='LINK')){
+                    var src=e.target.src||e.target.href||'';
+                    if(src.indexOf('/_next/')!==-1&&!sessionStorage.getItem(key)){
+                      sessionStorage.setItem(key,'1');
+                      console.log('[Recovery] Stale chunk detected, clearing caches and reloading...');
+                      if('serviceWorker' in navigator){
+                        navigator.serviceWorker.getRegistrations().then(function(r){
+                          r.forEach(function(reg){reg.unregister();});
+                        });
+                      }
+                      if('caches' in window){
+                        caches.keys().then(function(n){
+                          return Promise.all(n.map(function(name){return caches.delete(name);}));
+                        }).then(function(){window.location.reload();});
+                      }else{window.location.reload();}
+                    }
+                  }
+                },true);
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className={`${playfair.variable} ${jost.variable} ${karla.variable} font-body antialiased`}>
         <Providers>
           <FloatingParticles count={12} />
