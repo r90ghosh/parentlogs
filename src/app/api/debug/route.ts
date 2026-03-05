@@ -4,173 +4,149 @@ import path from 'path'
 
 const BUILD_TIME = new Date().toISOString()
 
-function safeReadJSON(filePath: string) {
+function safeReadFile(filePath: string, maxLen = 2000): string {
   try {
     if (fs.existsSync(filePath)) {
-      return JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+      return fs.readFileSync(filePath, 'utf-8').substring(0, maxLen)
     }
-    return { _error: 'file not found: ' + filePath }
+    return 'NOT FOUND: ' + filePath
   } catch (e) {
-    return { _error: String(e) }
+    return 'ERROR: ' + String(e)
   }
 }
 
 function safeReadDir(dirPath: string): string[] | string {
   try {
-    if (fs.existsSync(dirPath)) {
-      return fs.readdirSync(dirPath)
-    }
-    return 'DIR NOT FOUND: ' + dirPath
+    if (fs.existsSync(dirPath)) return fs.readdirSync(dirPath)
+    return 'NOT FOUND: ' + dirPath
   } catch (e) {
     return 'ERROR: ' + String(e)
   }
 }
 
-function safeReadFile(filePath: string, maxLen = 1000): string {
-  try {
-    if (fs.existsSync(filePath)) {
-      return fs.readFileSync(filePath, 'utf-8').substring(0, maxLen)
-    }
-    return 'FILE NOT FOUND: ' + filePath
-  } catch (e) {
-    return 'ERROR: ' + String(e)
-  }
-}
-
-function findFiles(dir: string, pattern: RegExp, maxDepth = 3, depth = 0): string[] {
+function findAllFiles(dir: string, maxDepth = 4, depth = 0): string[] {
   if (depth >= maxDepth) return []
   try {
     if (!fs.existsSync(dir)) return []
     const results: string[] = []
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const fullPath = path.join(dir, entry.name)
-      if (entry.isFile() && pattern.test(entry.name)) {
-        results.push(fullPath)
-      } else if (entry.isDirectory() && !entry.name.startsWith('node_modules')) {
-        results.push(...findFiles(fullPath, pattern, maxDepth, depth + 1))
-      }
+      const full = path.join(dir, entry.name)
+      if (entry.isFile()) results.push(full)
+      else if (entry.isDirectory() && entry.name !== 'node_modules' && entry.name !== '.git')
+        results.push(...findAllFiles(full, maxDepth, depth + 1))
     }
     return results
-  } catch {
-    return []
-  }
+  } catch { return [] }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const cwd = process.cwd()
   const nextDir = path.join(cwd, '.next')
+  const url = new URL(request.url)
+  const baseUrl = url.origin
 
-  // 1. Build manifest — lists all chunks for each page
-  const buildManifest = safeReadJSON(path.join(nextDir, 'build-manifest.json'))
+  // 1. Build ID
+  const buildId = safeReadFile(path.join(nextDir, 'BUILD_ID'), 100).trim()
 
-  // 2. Extract login page chunks from build manifest
-  let loginChunksFromManifest = 'not found in manifest'
-  if (buildManifest && !buildManifest._error) {
-    // Check various possible keys
-    const pages = buildManifest.pages || {}
-    const keys = Object.keys(pages)
-    const loginKeys = keys.filter((k: string) => k.toLowerCase().includes('login'))
-    loginChunksFromManifest = loginKeys.length > 0
-      ? JSON.stringify(loginKeys.map((k: string) => ({ key: k, chunks: pages[k] })))
-      : 'No login keys found. All page keys: ' + keys.slice(0, 20).join(', ')
-  }
+  // 2. Read the login page's client-reference-manifest to find chunk hashes
+  const manifestPath = path.join(nextDir, 'server', 'app', '(auth)', 'login', 'page_client-reference-manifest.js')
+  const manifestContent = safeReadFile(manifestPath, 5000)
 
-  // 3. Prerender manifest — shows which pages are prerendered
-  const prerenderManifest = safeReadJSON(path.join(nextDir, 'prerender-manifest.json'))
-  let loginPrerender = 'not found'
-  if (prerenderManifest && !prerenderManifest._error) {
-    const routes = prerenderManifest.routes || {}
-    const loginRoute = routes['/login'] || 'NOT IN ROUTES'
-    const dynamicRoutes = prerenderManifest.dynamicRoutes || {}
-    loginPrerender = JSON.stringify({
-      loginRoute,
-      allRoutes: Object.keys(routes).slice(0, 20),
-    })
-  }
+  // Extract chunk paths from the manifest
+  const chunkMatches = manifestContent.match(/static\/chunks\/[a-f0-9]+\.js/g) || []
+  const uniqueChunks = [...new Set(chunkMatches)].slice(0, 15)
 
-  // 4. Find login-related files
-  const loginFiles = findFiles(path.join(nextDir, 'server', 'app'), /login|auth/i)
+  // 3. Check .next/_next/static/ exists (our copy fix)
+  const copyFixDir = path.join(nextDir, '_next', 'static')
+  const copyFixExists = fs.existsSync(copyFixDir)
+  const copyFixChunksDir = path.join(copyFixDir, 'chunks')
+  const copyFixChunks = copyFixExists && fs.existsSync(copyFixChunksDir)
+    ? fs.readdirSync(copyFixChunksDir).slice(0, 10)
+    : 'NOT FOUND'
 
-  // 5. Check (auth) directory structure
-  const authDir = safeReadDir(path.join(nextDir, 'server', 'app', '(auth)'))
-  let authLoginDir = 'N/A'
-  if (Array.isArray(authDir)) {
-    authLoginDir = JSON.stringify(safeReadDir(path.join(nextDir, 'server', 'app', '(auth)', 'login')))
-  }
+  // 4. Check .next/static/chunks/ exists (original build output)
+  const origChunksDir = path.join(nextDir, 'static', 'chunks')
+  const origChunks = fs.existsSync(origChunksDir)
+    ? fs.readdirSync(origChunksDir).slice(0, 10)
+    : 'NOT FOUND'
 
-  // 6. Read routes-manifest.json
-  const routesManifest = safeReadJSON(path.join(nextDir, 'routes-manifest.json'))
-  let loginRouteInfo = 'not found'
-  if (routesManifest && !routesManifest._error) {
-    const staticRoutes = (routesManifest.staticRoutes || [])
-      .filter((r: { page: string }) => r.page.includes('login'))
-    const dynamicRoutes = (routesManifest.dynamicRoutes || [])
-      .filter((r: { page: string }) => r.page.includes('login'))
-    loginRouteInfo = JSON.stringify({ staticRoutes, dynamicRoutes })
-  }
-
-  // 7. Check required-server-files.json for config
-  const requiredServerFiles = safeReadJSON(path.join(nextDir, 'required-server-files.json'))
-  let nextConfig = 'not found'
-  if (requiredServerFiles && !requiredServerFiles._error) {
-    nextConfig = JSON.stringify(requiredServerFiles.config || 'no config key')
-  }
-
-  // 8. Check Netlify-specific files
-  const netlifyFiles = safeReadDir(cwd)
-  const netlifyMetadata = safeReadFile(path.join(cwd, '___netlify-metadata.json'))
-  const netlifyServerHandler = safeReadFile(path.join(cwd, '___netlify-server-handler.json'))
-
-  // 9. Try to internally fetch the login page to see what HTML the server returns
-  let internalLoginFetch = 'not attempted'
-  try {
-    const url = process.env.URL || process.env.DEPLOY_PRIME_URL || ''
-    if (url) {
-      internalLoginFetch = 'Would fetch from: ' + url + '/login'
-    } else {
-      internalLoginFetch = 'No URL env var found. Available env vars with values: ' +
-        Object.keys(process.env)
-          .filter(k => !k.includes('SECRET') && !k.includes('KEY') && !k.includes('TOKEN') && !k.includes('PASSWORD'))
-          .filter(k => (process.env[k] || '').length < 100)
-          .map(k => k + '=' + process.env[k])
-          .slice(0, 30)
-          .join(', ')
+  // 5. Try to fetch chunks from CDN to see if they're accessible
+  const cdnTests: Record<string, string> = {}
+  const testChunks = uniqueChunks.slice(0, 3)
+  for (const chunk of testChunks) {
+    const chunkUrl = `${baseUrl}/_next/${chunk}`
+    try {
+      const resp = await fetch(chunkUrl, { method: 'HEAD' })
+      cdnTests[chunk] = `status=${resp.status}, content-type=${resp.headers.get('content-type')}`
+    } catch (e) {
+      cdnTests[chunk] = 'FETCH ERROR: ' + String(e)
     }
-  } catch (e) {
-    internalLoginFetch = 'Error: ' + String(e)
   }
 
-  // 10. Check the app-path-routes-manifest
-  const appPathRoutes = safeReadJSON(path.join(nextDir, 'app-path-routes-manifest.json'))
+  // Also test the build manifest
+  try {
+    const bmUrl = `${baseUrl}/_next/static/${buildId}/_buildManifest.js`
+    const resp = await fetch(bmUrl, { method: 'HEAD' })
+    cdnTests['_buildManifest.js'] = `status=${resp.status} url=${bmUrl}`
+  } catch (e) {
+    cdnTests['_buildManifest.js'] = 'FETCH ERROR: ' + String(e)
+  }
+
+  // 6. List ALL files in .next/_next/ to verify what was copied
+  const copiedFiles = findAllFiles(path.join(nextDir, '_next'), 3)
+    .map(f => f.replace(path.join(nextDir, '_next') + '/', ''))
+    .slice(0, 30)
+
+  // 7. List files in the publish directory root that might be served as static
+  const publishDirFiles = safeReadDir(nextDir)
+
+  // 8. Check what the Netlify plugin actually published
+  const netlifyDir = path.join(cwd, '.netlify')
+  const netlifyDirContents = safeReadDir(netlifyDir)
+
+  // 9. Find any .html files in .next/server/app
+  const htmlFiles = findAllFiles(path.join(nextDir, 'server', 'app'), 3)
+    .filter(f => f.endsWith('.html'))
+    .map(f => f.replace(path.join(nextDir, 'server', 'app') + '/', ''))
+
+  // 10. Prerender manifest - login route details
+  let prerenderInfo = 'not found'
+  try {
+    const pm = JSON.parse(fs.readFileSync(path.join(nextDir, 'prerender-manifest.json'), 'utf-8'))
+    prerenderInfo = JSON.stringify(pm.routes?.['/login'] || 'NOT IN ROUTES')
+  } catch (e) {
+    prerenderInfo = 'ERROR: ' + String(e)
+  }
 
   return NextResponse.json({
     buildTime: BUILD_TIME,
+    buildId,
     nodeVersion: process.version,
     cwd,
-    buildId: safeReadFile(path.join(nextDir, 'BUILD_ID'), 100),
-    buildManifestPageKeys: buildManifest && !buildManifest._error
-      ? Object.keys(buildManifest.pages || {}).slice(0, 30)
-      : buildManifest,
-    buildManifestLoginChunks: loginChunksFromManifest,
-    loginPrerender,
-    loginRouteInfo,
-    appPathRoutes: appPathRoutes && !appPathRoutes._error
-      ? Object.entries(appPathRoutes).filter(([k]) => k.includes('login') || k.includes('auth'))
-      : appPathRoutes,
-    authDirContents: authDir,
-    authLoginDirContents: authLoginDir,
-    loginRelatedFiles: loginFiles,
-    nextConfig,
-    netlifyMetadata,
-    netlifyServerHandler,
-    internalLoginFetch,
+
+    // Chunk analysis
+    chunkHashesFromManifest: uniqueChunks,
+    cdnAccessibilityTests: cdnTests,
+
+    // File structure
+    copyFixExists,
+    copyFixChunks,
+    origChunks,
+    copiedFilesUnderNextNext: copiedFiles,
+    publishDirContents: publishDirFiles,
+    htmlFilesInServerApp: htmlFiles,
+
+    // Netlify
+    netlifyDirContents,
+    prerenderInfo,
+
+    // Plugin info
+    pluginVersion: '@netlify/plugin-nextjs@5.15.8',
+
     env: {
       NODE_ENV: process.env.NODE_ENV,
-      NETLIFY: process.env.NETLIFY,
-      CONTEXT: process.env.CONTEXT,
       DEPLOY_ID: process.env.DEPLOY_ID,
       URL: process.env.URL,
-      DEPLOY_PRIME_URL: process.env.DEPLOY_PRIME_URL,
     },
   }, {
     headers: { 'Cache-Control': 'no-store' },
