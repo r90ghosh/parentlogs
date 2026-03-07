@@ -118,7 +118,7 @@ export function Header() {
                 <Button asChild variant="ghost" className="font-ui text-base text-[--cream]/70 hover:text-[--cream] hover:bg-[--card]">
                   <Link href="/login">Log In</Link>
                 </Button>
-                <Button asChild className="bg-[--sage] hover:bg-[--sage]/80 text-[--bg] font-ui font-semibold shadow-[0_4px_20px_rgba(107,143,113,0.3)]">
+                <Button asChild className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper">
                   <Link href="/signup">Get Started Free</Link>
                 </Button>
               </>
@@ -164,7 +164,7 @@ export function Header() {
                 <Button asChild variant="outline" className="w-full border-[--border] text-[--cream] hover:bg-[--card] font-ui">
                   <Link href="/login">Log In</Link>
                 </Button>
-                <Button asChild className="w-full bg-[--sage] hover:bg-[--sage]/80 text-[--bg] font-ui font-semibold">
+                <Button asChild className="w-full bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold">
                   <Link href="/signup">Get Started Free</Link>
                 </Button>
               </>
