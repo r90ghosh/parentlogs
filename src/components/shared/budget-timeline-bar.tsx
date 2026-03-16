@@ -9,19 +9,6 @@ import {
   formatBudgetPrice,
 } from '@/lib/budget-timeline'
 
-// Short pill labels for each category
-const PILL_LABELS: Record<BudgetTimelineCategory, string> = {
-  'first-trimester': 'Trimester 1',
-  'second-trimester': 'Trimester 2',
-  'third-trimester': 'Trimester 3',
-  'delivery': 'Delivery',
-  '0-3 months': '0-3 Months',
-  '3-6 months': '3-6 Months',
-  '6-12 months': '6-12 Months',
-  '12-18 months': '12-18 Months',
-  '18-24 months': '18+ Months',
-}
-
 interface BudgetTimelineBarProps {
   stats: Record<BudgetTimelineCategory, BudgetCategoryStats>
   currentCategory: BudgetTimelineCategory
@@ -53,7 +40,8 @@ export function BudgetTimelineBar({
   const activeStat = stats[activeId]
   const activeInfo = BUDGET_TIMELINE_CATEGORIES.find(c => c.id === activeId)
 
-  const totalBudget = Object.values(stats).reduce((sum, s) => sum + s.medianTotal, 0)
+  const totalMin = Object.values(stats).reduce((sum, s) => sum + s.totalMin, 0)
+  const totalMax = Object.values(stats).reduce((sum, s) => sum + s.totalMax, 0)
   const totalItems = Object.values(stats).reduce((sum, s) => sum + s.itemCount, 0)
 
   return (
@@ -100,7 +88,7 @@ export function BudgetTimelineBar({
                   }
                 }}
                 disabled={hasNoItems}
-                title={`${category.label}: ${stat.itemCount} items, ${formatBudgetPrice(stat.medianTotal)}`}
+                title={`${category.label}: ${stat.itemCount} items, ${formatBudgetPrice(stat.totalMin)}-${formatBudgetPrice(stat.totalMax)}`}
                 className={cn(
                   'px-2.5 py-1.5 rounded-lg text-xs font-medium font-ui transition-all whitespace-nowrap',
                   hasNoItems && 'opacity-30 cursor-default',
@@ -109,7 +97,7 @@ export function BudgetTimelineBar({
                   isSelected && 'bg-copper text-[--white]',
                 )}
               >
-                {PILL_LABELS[category.id]}
+                {category.label}
               </button>
             )
           })}
@@ -135,12 +123,15 @@ export function BudgetTimelineBar({
               {activeInfo?.label}
             </span>
             <span>
-              <span className="text-[--cream] font-medium">{formatBudgetPrice(activeStat.medianTotal)}</span> &middot; {activeStat.itemCount} {activeStat.itemCount === 1 ? 'item' : 'items'}
+              <span className="text-[--cream] font-medium">
+                {formatBudgetPrice(activeStat.totalMin)}-{formatBudgetPrice(activeStat.totalMax)}
+              </span>
+              {' '}&middot; {activeStat.itemCount} {activeStat.itemCount === 1 ? 'item' : 'items'}
             </span>
           </>
         ) : (
           <span>
-            Est. total: <span className="text-[--cream] font-medium">{formatBudgetPrice(totalBudget)}</span> &middot; {totalItems} items
+            Est. total: <span className="text-[--cream] font-medium">{formatBudgetPrice(totalMin)}-{formatBudgetPrice(totalMax)}</span> &middot; {totalItems} items
           </span>
         )}
       </div>

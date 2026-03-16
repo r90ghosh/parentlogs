@@ -163,58 +163,88 @@ export type Database = {
       }
       budget_templates: {
         Row: {
+          affiliate_url_premium: string | null
+          affiliate_url_value: string | null
+          brand_premium: string | null
+          brand_value: string | null
           budget_id: string
           category: string
           created_at: string | null
           description: string | null
           is_premium: boolean | null
+          is_recurring: boolean | null
           item: string
           notes: string | null
+          period: string | null
           price_currency: string | null
+          price_display: string | null
           price_high: number | null
           price_low: number | null
+          price_max: number | null
           price_mid: number | null
+          price_min: number | null
           priority: string | null
           product_examples: Json | null
-          stage: Database["public"]["Enums"]["family_stage"]
+          recurring_frequency: string | null
+          stage: Database["public"]["Enums"]["family_stage"] | null
           subcategory: string | null
           week_end: number | null
           week_start: number | null
         }
         Insert: {
+          affiliate_url_premium?: string | null
+          affiliate_url_value?: string | null
+          brand_premium?: string | null
+          brand_value?: string | null
           budget_id: string
           category: string
           created_at?: string | null
           description?: string | null
           is_premium?: boolean | null
+          is_recurring?: boolean | null
           item: string
           notes?: string | null
+          period?: string | null
           price_currency?: string | null
+          price_display?: string | null
           price_high?: number | null
           price_low?: number | null
+          price_max?: number | null
           price_mid?: number | null
+          price_min?: number | null
           priority?: string | null
           product_examples?: Json | null
-          stage: Database["public"]["Enums"]["family_stage"]
+          recurring_frequency?: string | null
+          stage?: Database["public"]["Enums"]["family_stage"] | null
           subcategory?: string | null
           week_end?: number | null
           week_start?: number | null
         }
         Update: {
+          affiliate_url_premium?: string | null
+          affiliate_url_value?: string | null
+          brand_premium?: string | null
+          brand_value?: string | null
           budget_id?: string
           category?: string
           created_at?: string | null
           description?: string | null
           is_premium?: boolean | null
+          is_recurring?: boolean | null
           item?: string
           notes?: string | null
+          period?: string | null
           price_currency?: string | null
+          price_display?: string | null
           price_high?: number | null
           price_low?: number | null
+          price_max?: number | null
           price_mid?: number | null
+          price_min?: number | null
           priority?: string | null
           product_examples?: Json | null
-          stage?: Database["public"]["Enums"]["family_stage"]
+          recurring_frequency?: string | null
+          stage?: Database["public"]["Enums"]["family_stage"] | null
           subcategory?: string | null
           week_end?: number | null
           week_start?: number | null
@@ -552,6 +582,7 @@ export type Database = {
           id: string
           is_custom: boolean | null
           is_purchased: boolean | null
+          is_recurring: boolean | null
           item: string
           notes: string | null
           purchased_at: string | null
@@ -567,6 +598,7 @@ export type Database = {
           id?: string
           is_custom?: boolean | null
           is_purchased?: boolean | null
+          is_recurring?: boolean | null
           item: string
           notes?: string | null
           purchased_at?: string | null
@@ -582,6 +614,7 @@ export type Database = {
           id?: string
           is_custom?: boolean | null
           is_purchased?: boolean | null
+          is_recurring?: boolean | null
           item?: string
           notes?: string | null
           purchased_at?: string | null
@@ -818,6 +851,50 @@ export type Database = {
             foreignKeyName: "notification_preferences_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          read_at: string | null
+          title: string
+          type: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          read_at?: string | null
+          title: string
+          type: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          read_at?: string | null
+          title?: string
+          type?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },

@@ -163,55 +163,88 @@ export type Database = {
       }
       budget_templates: {
         Row: {
+          affiliate_url_premium: string | null
+          affiliate_url_value: string | null
+          brand_premium: string | null
+          brand_value: string | null
           budget_id: string
           category: string
           created_at: string | null
           description: string | null
           is_premium: boolean | null
+          is_recurring: boolean | null
           item: string
           notes: string | null
+          period: string | null
           price_currency: string | null
+          price_display: string | null
           price_high: number | null
           price_low: number | null
+          price_max: number | null
           price_mid: number | null
+          price_min: number | null
           priority: string | null
-          stage: Database["public"]["Enums"]["family_stage"]
+          product_examples: Json | null
+          recurring_frequency: string | null
+          stage: Database["public"]["Enums"]["family_stage"] | null
           subcategory: string | null
           week_end: number | null
           week_start: number | null
         }
         Insert: {
+          affiliate_url_premium?: string | null
+          affiliate_url_value?: string | null
+          brand_premium?: string | null
+          brand_value?: string | null
           budget_id: string
           category: string
           created_at?: string | null
           description?: string | null
           is_premium?: boolean | null
+          is_recurring?: boolean | null
           item: string
           notes?: string | null
+          period?: string | null
           price_currency?: string | null
+          price_display?: string | null
           price_high?: number | null
           price_low?: number | null
+          price_max?: number | null
           price_mid?: number | null
+          price_min?: number | null
           priority?: string | null
-          stage: Database["public"]["Enums"]["family_stage"]
+          product_examples?: Json | null
+          recurring_frequency?: string | null
+          stage?: Database["public"]["Enums"]["family_stage"] | null
           subcategory?: string | null
           week_end?: number | null
           week_start?: number | null
         }
         Update: {
+          affiliate_url_premium?: string | null
+          affiliate_url_value?: string | null
+          brand_premium?: string | null
+          brand_value?: string | null
           budget_id?: string
           category?: string
           created_at?: string | null
           description?: string | null
           is_premium?: boolean | null
+          is_recurring?: boolean | null
           item?: string
           notes?: string | null
+          period?: string | null
           price_currency?: string | null
+          price_display?: string | null
           price_high?: number | null
           price_low?: number | null
+          price_max?: number | null
           price_mid?: number | null
+          price_min?: number | null
           priority?: string | null
-          stage?: Database["public"]["Enums"]["family_stage"]
+          product_examples?: Json | null
+          recurring_frequency?: string | null
+          stage?: Database["public"]["Enums"]["family_stage"] | null
           subcategory?: string | null
           week_end?: number | null
           week_start?: number | null
@@ -357,6 +390,137 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_messages: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          message: string
+          name: string
+          status: string
+          subject: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          message: string
+          name: string
+          status?: string
+          subject: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          status?: string
+          subject?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      dad_challenge_content: {
+        Row: {
+          action_items: Json
+          created_at: string | null
+          dad_quotes: Json
+          headline: string
+          icon: string
+          id: string
+          is_premium: boolean
+          narrative: string
+          phase: string
+          pillar: Database["public"]["Enums"]["dad_challenge_pillar"]
+          preview: string
+          sort_order: number
+          updated_at: string | null
+        }
+        Insert: {
+          action_items?: Json
+          created_at?: string | null
+          dad_quotes?: Json
+          headline: string
+          icon: string
+          id?: string
+          is_premium?: boolean
+          narrative: string
+          phase: string
+          pillar: Database["public"]["Enums"]["dad_challenge_pillar"]
+          preview: string
+          sort_order?: number
+          updated_at?: string | null
+        }
+        Update: {
+          action_items?: Json
+          created_at?: string | null
+          dad_quotes?: Json
+          headline?: string
+          icon?: string
+          id?: string
+          is_premium?: boolean
+          narrative?: string
+          phase?: string
+          pillar?: Database["public"]["Enums"]["dad_challenge_pillar"]
+          preview?: string
+          sort_order?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      dad_profiles: {
+        Row: {
+          concerns: string[] | null
+          created_at: string | null
+          family_nearby: boolean | null
+          has_friend_support: boolean | null
+          id: string
+          is_first_time_dad: boolean | null
+          partner_relationship: string | null
+          updated_at: string | null
+          user_id: string
+          work_situation: string | null
+        }
+        Insert: {
+          concerns?: string[] | null
+          created_at?: string | null
+          family_nearby?: boolean | null
+          has_friend_support?: boolean | null
+          id?: string
+          is_first_time_dad?: boolean | null
+          partner_relationship?: string | null
+          updated_at?: string | null
+          user_id: string
+          work_situation?: string | null
+        }
+        Update: {
+          concerns?: string[] | null
+          created_at?: string | null
+          family_nearby?: boolean | null
+          has_friend_support?: boolean | null
+          id?: string
+          is_first_time_dad?: boolean | null
+          partner_relationship?: string | null
+          updated_at?: string | null
+          user_id?: string
+          work_situation?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dad_profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       families: {
         Row: {
           baby_name: string | null
@@ -418,6 +582,7 @@ export type Database = {
           id: string
           is_custom: boolean | null
           is_purchased: boolean | null
+          is_recurring: boolean | null
           item: string
           notes: string | null
           purchased_at: string | null
@@ -433,6 +598,7 @@ export type Database = {
           id?: string
           is_custom?: boolean | null
           is_purchased?: boolean | null
+          is_recurring?: boolean | null
           item: string
           notes?: string | null
           purchased_at?: string | null
@@ -448,6 +614,7 @@ export type Database = {
           id?: string
           is_custom?: boolean | null
           is_purchased?: boolean | null
+          is_recurring?: boolean | null
           item?: string
           notes?: string | null
           purchased_at?: string | null
@@ -576,6 +743,57 @@ export type Database = {
           },
         ]
       }
+      mood_checkins: {
+        Row: {
+          checked_in_at: string
+          created_at: string | null
+          family_id: string
+          id: string
+          mood: string
+          note: string | null
+          phase: string | null
+          situation_flags: string[] | null
+          user_id: string
+        }
+        Insert: {
+          checked_in_at?: string
+          created_at?: string | null
+          family_id: string
+          id?: string
+          mood: string
+          note?: string | null
+          phase?: string | null
+          situation_flags?: string[] | null
+          user_id: string
+        }
+        Update: {
+          checked_in_at?: string
+          created_at?: string | null
+          family_id?: string
+          id?: string
+          mood?: string
+          note?: string | null
+          phase?: string | null
+          situation_flags?: string[] | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mood_checkins_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mood_checkins_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_preferences: {
         Row: {
           created_at: string | null
@@ -633,6 +851,50 @@ export type Database = {
             foreignKeyName: "notification_preferences_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          body: string
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          read_at: string | null
+          title: string
+          type: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          read_at?: string | null
+          title: string
+          type: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          read_at?: string | null
+          title?: string
+          type?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -784,6 +1046,7 @@ export type Database = {
       }
       task_templates: {
         Row: {
+          catch_up_behavior: string | null
           category: string | null
           commonly_completed_early: boolean | null
           created_at: string | null
@@ -804,6 +1067,7 @@ export type Database = {
           window_weeks: number | null
         }
         Insert: {
+          catch_up_behavior?: string | null
           category?: string | null
           commonly_completed_early?: boolean | null
           created_at?: string | null
@@ -824,6 +1088,7 @@ export type Database = {
           window_weeks?: number | null
         }
         Update: {
+          catch_up_behavior?: string | null
           category?: string | null
           commonly_completed_early?: boolean | null
           created_at?: string | null
@@ -842,6 +1107,77 @@ export type Database = {
           week?: number | null
           why_it_matters?: string | null
           window_weeks?: number | null
+        }
+        Relationships: []
+      }
+      timeline_dots: {
+        Row: {
+          created_at: string | null
+          description: string
+          domain: string
+          id: string
+          is_active: boolean
+          milestone_id: string | null
+          sort_order: number
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          domain: string
+          id?: string
+          is_active?: boolean
+          milestone_id?: string | null
+          sort_order?: number
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          domain?: string
+          id?: string
+          is_active?: boolean
+          milestone_id?: string | null
+          sort_order?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "timeline_dots_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "timeline_milestones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      timeline_milestones: {
+        Row: {
+          created_at: string | null
+          direction: string
+          id: string
+          label: string
+          slug: string
+          sort_order: number
+          sub_label: string
+        }
+        Insert: {
+          created_at?: string | null
+          direction?: string
+          id?: string
+          label: string
+          slug: string
+          sort_order: number
+          sub_label: string
+        }
+        Update: {
+          created_at?: string | null
+          direction?: string
+          id?: string
+          label?: string
+          slug?: string
+          sort_order?: number
+          sub_label?: string
         }
         Relationships: []
       }
@@ -934,6 +1270,14 @@ export type Database = {
       regenerate_invite_code: { Args: { p_family_id: string }; Returns: string }
     }
     Enums: {
+      dad_challenge_pillar:
+        | "knowledge"
+        | "planning"
+        | "finances"
+        | "anxiety"
+        | "baby_bonding"
+        | "relationship"
+        | "extended_family"
       family_stage:
         | "pregnancy"
         | "post-birth"
@@ -1084,6 +1428,15 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      dad_challenge_pillar: [
+        "knowledge",
+        "planning",
+        "finances",
+        "anxiety",
+        "baby_bonding",
+        "relationship",
+        "extended_family",
+      ],
       family_stage: [
         "pregnancy",
         "post-birth",

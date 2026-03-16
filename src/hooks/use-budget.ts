@@ -2,12 +2,12 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { budgetService } from '@/services/budget-service'
-import { FamilyStage } from '@/types'
+import { BudgetPeriod } from '@/types'
 
-export function useBudgetTemplates(stage?: FamilyStage) {
+export function useBudgetTemplates(period?: BudgetPeriod) {
   return useQuery({
-    queryKey: ['budget-templates', stage],
-    queryFn: () => budgetService.getBudgetTemplates(stage),
+    queryKey: ['budget-templates', period],
+    queryFn: () => budgetService.getBudgetTemplates(period),
   })
 }
 

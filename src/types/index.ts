@@ -181,14 +181,18 @@ export interface SleepLogData {
 }
 
 // Budget Types
-export type BudgetTier = 'budget' | 'premium'
+export type BudgetPeriod =
+  | '1st Trimester'
+  | '2nd Trimester'
+  | '3rd Trimester'
+  | '0-3 Months'
+  | '3-6 Months'
+  | '6-12 Months'
+  | '12+ Months'
 
-export interface ProductExample {
-  brand: string
-  product: string
-  price: number // in cents
-  url?: string
-}
+export type BudgetPriority = 'must-have' | 'good-to-have' | 'tip' | 'doctor'
+
+export type BudgetBrandView = 'premium' | 'value'
 
 export interface BudgetTemplate {
   budget_id: string
@@ -196,17 +200,27 @@ export interface BudgetTemplate {
   subcategory: string
   item: string
   description: string
-  stage: FamilyStage
-  week_start: number
-  week_end: number
-  priority: 'must-have' | 'good-to-have'
-  price_low: number
-  price_mid: number
-  price_high: number
-  price_currency: string
+  period: BudgetPeriod
+  priority: BudgetPriority
+  price_min: number
+  price_max: number
+  price_display: string
+  is_recurring: boolean
+  recurring_frequency?: 'monthly' | 'quarterly' | 'as-needed' | null
+  brand_premium?: string | null
+  brand_value?: string | null
+  affiliate_url_premium?: string | null
+  affiliate_url_value?: string | null
   notes?: string
   is_premium: boolean
-  product_examples?: ProductExample[]
+  price_currency: string
+  // Legacy fields (nullable, for backward compat)
+  stage?: FamilyStage | null
+  week_start?: number | null
+  week_end?: number | null
+  price_low?: number | null
+  price_mid?: number | null
+  price_high?: number | null
 }
 
 export interface FamilyBudgetItem {
@@ -221,6 +235,7 @@ export interface FamilyBudgetItem {
   purchased_at?: string
   notes?: string
   is_custom: boolean
+  is_recurring?: boolean
 }
 
 // Checklist Types
@@ -270,6 +285,21 @@ export interface NotificationPreferences {
   weekly_briefing_time: string
   quiet_hours_start?: string | null
   quiet_hours_end?: string | null
+}
+
+// Notification History Types
+export type NotificationType = 'daily_digest' | 'task_reminder' | 'overdue_alert' | 'weekly_briefing' | 'partner_activity' | 'system'
+
+export interface Notification {
+  id: string
+  user_id: string
+  type: NotificationType
+  title: string
+  body: string
+  url: string
+  is_read: boolean
+  read_at: string | null
+  created_at: string
 }
 
 // Subscription Types

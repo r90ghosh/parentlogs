@@ -1,36 +1,37 @@
 import { createClient } from '@/lib/supabase/client'
-import { BudgetTemplate, FamilyBudgetItem, FamilyStage } from '@/types'
+import { BudgetTemplate, BudgetPeriod, FamilyBudgetItem } from '@/types'
 
 const supabase = createClient()
 
 export interface BudgetCategory {
   name: string
   items: BudgetTemplate[]
-  totalLow: number
-  totalMid: number
-  totalHigh: number
+  totalMin: number
+  totalMax: number
 }
 
 export interface BudgetSummary {
   categories: BudgetCategory[]
-  grandTotalLow: number
-  grandTotalMid: number
-  grandTotalHigh: number
+  grandTotalMin: number
+  grandTotalMax: number
+  monthlyRecurringMin: number
+  monthlyRecurringMax: number
   familyItems: FamilyBudgetItem[]
   purchasedTotal: number
   remainingTotal: number
 }
 
 export const budgetService = {
-  async getBudgetTemplates(stage?: FamilyStage): Promise<BudgetTemplate[]> {
+  async getBudgetTemplates(period?: BudgetPeriod): Promise<BudgetTemplate[]> {
     let query = supabase
       .from('budget_templates')
       .select('*')
+      .not('period', 'is', null)
       .order('category', { ascending: true })
-      .order('week_start', { ascending: true })
+      .order('price_min', { ascending: true })
 
-    if (stage) {
-      query = query.eq('stage', stage)
+    if (period) {
+      query = query.eq('period', period)
     }
 
     const { data } = await query
@@ -51,12 +52,13 @@ export const budgetService = {
 
     const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
 
-    // Get all templates
+    // Get all templates (only V2 rows with period set)
     const { data: templates } = await supabase
       .from('budget_templates')
       .select('*')
+      .not('period', 'is', null)
       .order('category', { ascending: true })
-      .order('week_start', { ascending: true })
+      .order('price_min', { ascending: true })
 
     // Get family's budget items
     const { data: familyItems } = await supabase
@@ -79,14 +81,19 @@ export const budgetService = {
         ...item,
         is_premium: !isPremium && item.is_premium,
       })),
-      totalLow: items.reduce((sum, i) => sum + (i.price_low || 0), 0),
-      totalMid: items.reduce((sum, i) => sum + (i.price_mid || 0), 0),
-      totalHigh: items.reduce((sum, i) => sum + (i.price_high || 0), 0),
+      // Exclude tip items from totals
+      totalMin: items.filter(i => i.priority !== 'tip').reduce((sum, i) => sum + (i.price_min || 0), 0),
+      totalMax: items.filter(i => i.priority !== 'tip').reduce((sum, i) => sum + (i.price_max || 0), 0),
     }))
 
-    const grandTotalLow = categories.reduce((sum, c) => sum + c.totalLow, 0)
-    const grandTotalMid = categories.reduce((sum, c) => sum + c.totalMid, 0)
-    const grandTotalHigh = categories.reduce((sum, c) => sum + c.totalHigh, 0)
+    const nonTipTemplates = (templates || []).filter(t => t.priority !== 'tip') as unknown as BudgetTemplate[]
+    const grandTotalMin = nonTipTemplates.reduce((sum, t) => sum + (t.price_min || 0), 0)
+    const grandTotalMax = nonTipTemplates.reduce((sum, t) => sum + (t.price_max || 0), 0)
+
+    // Monthly recurring costs
+    const recurringItems = nonTipTemplates.filter(t => t.is_recurring && t.recurring_frequency === 'monthly')
+    const monthlyRecurringMin = recurringItems.reduce((sum, t) => sum + (t.price_min || 0), 0)
+    const monthlyRecurringMax = recurringItems.reduce((sum, t) => sum + (t.price_max || 0), 0)
 
     const purchasedItems = familyItems?.filter(i => i.is_purchased) || []
     const purchasedTotal = purchasedItems.reduce((sum, i) => sum + (i.actual_price || i.estimated_price || 0), 0)
@@ -96,9 +103,10 @@ export const budgetService = {
 
     return {
       categories,
-      grandTotalLow,
-      grandTotalMid,
-      grandTotalHigh,
+      grandTotalMin,
+      grandTotalMax,
+      monthlyRecurringMin,
+      monthlyRecurringMax,
       familyItems: (familyItems || []) as FamilyBudgetItem[],
       purchasedTotal,
       remainingTotal,
@@ -143,9 +151,10 @@ export const budgetService = {
         budget_template_id: templateId,
         item: template.item,
         category: template.category,
-        estimated_price: estimatedPrice || template.price_mid,
+        estimated_price: estimatedPrice || template.price_min || 0,
         is_purchased: false,
         is_custom: false,
+        is_recurring: template.is_recurring || false,
       })
 
     return { error: error as Error | null }
@@ -172,6 +181,7 @@ export const budgetService = {
         estimated_price: estimatedPrice,
         is_purchased: false,
         is_custom: true,
+        is_recurring: false,
       })
 
     return { error: error as Error | null }
@@ -225,8 +235,8 @@ export const budgetService = {
     }).format(cents / 100)
   },
 
-  formatPriceRange(low: number, high: number): string {
-    if (low === high || high === 0) return this.formatPrice(low)
-    return `${this.formatPrice(low)} - ${this.formatPrice(high)}`
+  formatPriceRange(min: number, max: number): string {
+    if (min === max || max === 0) return this.formatPrice(min)
+    return `${this.formatPrice(min)} - ${this.formatPrice(max)}`
   },
 }

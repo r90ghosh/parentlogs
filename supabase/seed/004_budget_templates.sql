@@ -1,8 +1,14 @@
--- Budget Templates Seed Data
--- Generated: 2025-12-30T17:43:56.347Z
--- Source: content/budget.json
+-- Budget Templates Seed Data (V2)
+-- Updated: 2026-03-16
+-- Includes: 29 original items with V2 columns + 13 new recurring items + 5 tip/advice items
+-- Uses ON CONFLICT (budget_id) DO UPDATE to backfill new columns on existing rows
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- =============================================================================
+-- ORIGINAL 29 ITEMS (updated with V2 columns)
+-- =============================================================================
+
+-- 001: Daycare Deposit
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-CHI-001',
   'Admin',
@@ -18,10 +24,29 @@ VALUES (
   150000,
   'USD',
   'Non-refundable. Do this immediately after the 12-week scan.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '2nd Trimester',
+  10000,
+  150000,
+  '$100-$1,500',
+  false,
+  NULL,
+  'Bright Horizons',
+  'Local Home Daycare'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 002: Life Insurance
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-LEG-002',
   'Admin',
@@ -37,10 +62,29 @@ VALUES (
   120000,
   'USD',
   'Price is annual premium. Apply before birth to avoid medical delays.',
-  false
-) ON CONFLICT (budget_id) DO NOTHING;
+  false,
+  '3rd Trimester',
+  30000,
+  120000,
+  '$300-$1,200/year',
+  false,
+  NULL,
+  'Northwestern Mutual',
+  'Haven Life'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 003: Will & Estate Plan
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-LEG-003',
   'Admin',
@@ -56,10 +100,29 @@ VALUES (
   200000,
   'USD',
   'LegalZoom (Low) vs. Attorney (High). Essential for asset protection.',
-  false
-) ON CONFLICT (budget_id) DO NOTHING;
+  false,
+  '3rd Trimester',
+  10000,
+  200000,
+  '$100-$2,000',
+  false,
+  NULL,
+  'Trust & Will Attorney',
+  'LegalZoom'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 004: Crib
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-FUR-004',
   'Nursery',
@@ -75,10 +138,29 @@ VALUES (
   80000,
   'USD',
   'Order early. Supply chain lead times can be 8-12 weeks for furniture.',
-  false
-) ON CONFLICT (budget_id) DO NOTHING;
+  false,
+  '3rd Trimester',
+  15000,
+  80000,
+  '$150-$800',
+  false,
+  NULL,
+  'Pottery Barn Kids',
+  'IKEA Sniglar'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 005: Crib Mattress
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-FUR-005',
   'Nursery',
@@ -94,10 +176,29 @@ VALUES (
   35000,
   'USD',
   'Two-finger test'': no more than 2 fingers width between mattress and crib.',
-  false
-) ON CONFLICT (budget_id) DO NOTHING;
+  false,
+  '3rd Trimester',
+  5000,
+  35000,
+  '$50-$350',
+  false,
+  NULL,
+  'Newton Baby',
+  'Graco Premium'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 006: Glider/Rocker
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-FUR-006',
   'Nursery',
@@ -113,10 +214,29 @@ VALUES (
   120000,
   'USD',
   'Test for ability to stand up without using hands (you will be holding a baby).',
-  false
-) ON CONFLICT (budget_id) DO NOTHING;
+  false,
+  '3rd Trimester',
+  20000,
+  120000,
+  '$200-$1,200',
+  false,
+  NULL,
+  'Nursery Works',
+  'IKEA Poang'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 007: Blackout Curtains
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-DEC-007',
   'Nursery',
@@ -132,10 +252,29 @@ VALUES (
   15000,
   'USD',
   'Protocol Hack: Pitch black room = longer naps.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '3rd Trimester',
+  3000,
+  15000,
+  '$30-$150',
+  false,
+  NULL,
+  'Pottery Barn Kids',
+  'Nicetown'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 008: Infant Car Seat
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-TRA-008',
   'Gear',
@@ -151,10 +290,29 @@ VALUES (
   55000,
   'USD',
   'DO NOT BUY USED. Expired/crashed seats are invisible risks.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '3rd Trimester',
+  15000,
+  55000,
+  '$150-$550',
+  false,
+  NULL,
+  'Nuna PIPA',
+  'Chicco KeyFit 30'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 009: Stroller
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-TRA-009',
   'Gear',
@@ -170,16 +328,35 @@ VALUES (
   120000,
   'USD',
   'Look for ''one-hand fold'' capability. Test trunk fit before buying.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '3rd Trimester',
+  25000,
+  120000,
+  '$250-$1,200',
+  false,
+  NULL,
+  'UPPAbaby Vista',
+  'Graco Modes Nest'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 010: Baby Carrier
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-WEA-010',
   'Gear',
   'Wearable',
   'Baby Carrier',
-  'Soft structured carrier or wrap for ''baby wearing''.',
+  'Soft structured carrier or wrap for baby wearing.',
   'pregnancy',
   32,
   38,
@@ -188,11 +365,30 @@ VALUES (
   12000,
   20000,
   'USD',
-  'Essential for ''Dad Ops''â€”allows gaming/working while holding baby.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  'Essential for Dad Ops -- allows hands-free while holding baby.',
+  true,
+  '3rd Trimester',
+  4000,
+  20000,
+  '$40-$200',
+  false,
+  NULL,
+  'Ergobaby Omni 360',
+  'Infantino Flip'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 011: Bassinet
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-SLE-011',
   'Gear',
@@ -207,11 +403,30 @@ VALUES (
   20000,
   160000,
   'USD',
-  'High end includes ''Snoo'' (smart bassinet). AAP recs room sharing for 6mo.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  'High end includes SNOO (smart bassinet). AAP recs room sharing for 6 months.',
+  true,
+  '3rd Trimester',
+  8000,
+  160000,
+  '$80-$1,600',
+  false,
+  NULL,
+  'SNOO',
+  'Halo BassiNest'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 012: Postpartum Kit
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-HEA-REC-012',
   'Health',
@@ -227,10 +442,29 @@ VALUES (
   15000,
   'USD',
   'FridaMom makes a standard kit. Do not skimp on this.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '3rd Trimester',
+  4000,
+  15000,
+  '$40-$150',
+  false,
+  NULL,
+  'FridaMom',
+  'Medline'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 013: Breast Pump
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-FEE-LAC-013',
   'Feeding',
@@ -246,10 +480,29 @@ VALUES (
   50000,
   'USD',
   'Often free via insurance (ACA). Check coverage first before buying.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '3rd Trimester',
+  0,
+  50000,
+  'Free via insurance',
+  false,
+  NULL,
+  'Spectra S1',
+  'Medela Pump In Style'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 014: Bottle Starter Set
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-FEE-BOT-014',
   'Feeding',
@@ -264,11 +517,30 @@ VALUES (
   6000,
   10000,
   'USD',
-  'Get a ''sampler pack'' first; babies are picky about nipple shape.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  'Get a sampler pack first; babies are picky about nipple shape.',
+  true,
+  '3rd Trimester',
+  3000,
+  10000,
+  '$30-$100',
+  false,
+  NULL,
+  'Dr. Brown''s Options+',
+  'Philips Avent Natural'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 015: Diaper Pail
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-DIA-SET-015',
   'Diapering',
@@ -284,10 +556,29 @@ VALUES (
   12000,
   'USD',
   'Ubbi (steel) vs. Diaper Genie (plastic). Factor in cost of specialty bags.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '3rd Trimester',
+  4000,
+  12000,
+  '$40-$120',
+  false,
+  NULL,
+  'Ubbi Steel',
+  'Diaper Genie Complete'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 016: Diapers (Month 1)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-DIA-CON-016',
   'Diapering',
@@ -303,10 +594,29 @@ VALUES (
   10000,
   'USD',
   'Don''t overbuy NB size; they grow out of it in 2-4 weeks.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '3rd Trimester',
+  5000,
+  10000,
+  '$50-$100',
+  false,
+  NULL,
+  'Pampers Pure',
+  'Kirkland (Costco)'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 017: Baby Monitor
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-TEC-MON-017',
   'Tech',
@@ -322,10 +632,29 @@ VALUES (
   35000,
   'USD',
   'WiFi (Nanit) vs. Local RF (Infant Optics). WiFi has latency; RF is bulletproof.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '3rd Trimester',
+  5000,
+  35000,
+  '$50-$350',
+  false,
+  NULL,
+  'Nanit Pro',
+  'Infant Optics DXR-8'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 018: Infant Medical Kit
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-HEA-SAF-018',
   'Health',
@@ -341,10 +670,29 @@ VALUES (
   8000,
   'USD',
   'Fever in newborn (<3mo) is an ER trip. Accurate thermometer is vital.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '3rd Trimester',
+  2500,
+  8000,
+  '$25-$80',
+  false,
+  NULL,
+  'FridaBaby',
+  'Safety 1st'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 019: Birth Certificate
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-DOC-019',
   'Admin',
@@ -360,10 +708,29 @@ VALUES (
   10000,
   'USD',
   'Order multiple copies immediately. Needed for insurance/passport.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '0-3 Months',
+  2500,
+  10000,
+  '$25-$100',
+  false,
+  NULL,
+  NULL,
+  NULL
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 020: Passport
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-DOC-020',
   'Admin',
@@ -379,10 +746,29 @@ VALUES (
   20000,
   'USD',
   'Both parents must be present at application. Photos are tricky.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '0-3 Months',
+  13500,
+  20000,
+  '$135-$200',
+  false,
+  NULL,
+  NULL,
+  NULL
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 021: High Chair
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-FEE-SOL-021',
   'Feeding',
@@ -398,10 +784,29 @@ VALUES (
   40000,
   'USD',
   'Footrest is critical for safe swallowing (posture). IKEA Antilop is the budget king.',
-  false
-) ON CONFLICT (budget_id) DO NOTHING;
+  false,
+  '3-6 Months',
+  3000,
+  40000,
+  '$30-$400',
+  false,
+  NULL,
+  'Stokke Tripp Trapp',
+  'IKEA Antilop'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 022: Feeding Gear
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-FEE-SOL-022',
   'Feeding',
@@ -416,11 +821,30 @@ VALUES (
   5000,
   10000,
   'USD',
-  'Look for ''open cups'' to teach oral motor skills.',
-  false
-) ON CONFLICT (budget_id) DO NOTHING;
+  'Look for open cups to teach oral motor skills.',
+  false,
+  '3-6 Months',
+  2000,
+  10000,
+  '$20-$100',
+  false,
+  NULL,
+  'ezpz',
+  'Munchkin'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 023: Baby Gates
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-HOM-023',
   'Safety',
@@ -436,10 +860,29 @@ VALUES (
   30000,
   'USD',
   'Install BEFORE they crawl. Top of stairs MUST be hardware mounted.',
-  false
-) ON CONFLICT (budget_id) DO NOTHING;
+  false,
+  '3-6 Months',
+  5000,
+  30000,
+  '$50-$300',
+  false,
+  NULL,
+  'Regalo',
+  'Summer Infant'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 024: Cabinet Locks
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-HOM-024',
   'Safety',
@@ -454,11 +897,30 @@ VALUES (
   4000,
   10000,
   'USD',
-  'Focus on ''kill zones'': under sink and knife drawers.',
-  false
-) ON CONFLICT (budget_id) DO NOTHING;
+  'Focus on kill zones: under sink and knife drawers.',
+  false,
+  '3-6 Months',
+  2000,
+  10000,
+  '$20-$100',
+  false,
+  NULL,
+  'Safety 1st Magnetic',
+  'Jool Baby'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 025: Convertible Car Seat
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-TRA-025',
   'Gear',
@@ -474,10 +936,29 @@ VALUES (
   60000,
   'USD',
   'Replaces infant bucket seat when height limit reached (~1 year).',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '6-12 Months',
+  15000,
+  60000,
+  '$150-$600',
+  false,
+  NULL,
+  'Nuna RAVA',
+  'Graco 4Ever'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 026: Travel Stroller
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-TRA-026',
   'Gear',
@@ -493,10 +974,29 @@ VALUES (
   50000,
   'USD',
   'Fits in overhead bin (e.g., Babyzen Yoyo).',
-  false
-) ON CONFLICT (budget_id) DO NOTHING;
+  false,
+  '6-12 Months',
+  10000,
+  50000,
+  '$100-$500',
+  false,
+  NULL,
+  'Babyzen Yoyo2',
+  'Summer Infant 3Dlite'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 027: Walking Shoes
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-CLO-SHO-027',
   'Clothing',
@@ -512,10 +1012,29 @@ VALUES (
   6000,
   'USD',
   'Wait until they are actually walking outside. Barefoot is best indoors.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '12+ Months',
+  2000,
+  6000,
+  '$20-$60',
+  false,
+  NULL,
+  'Stride Rite',
+  'See Kai Run'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 028: Sick Day Buffer
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-HEA-MED-028',
   'Health',
@@ -531,10 +1050,29 @@ VALUES (
   20000,
   'USD',
   'Tylenol, Motrin, Pedialyte. Stock before the fever hits at 2 AM.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '0-3 Months',
+  5000,
+  20000,
+  '$50-$200',
+  false,
+  NULL,
+  NULL,
+  NULL
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium)
+-- 029: 529 Contribution
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-EDU-029',
   'Admin',
@@ -550,6 +1088,753 @@ VALUES (
   500000,
   'USD',
   'Compound interest is the goal. Set auto-draft.',
-  true
-) ON CONFLICT (budget_id) DO NOTHING;
+  true,
+  '0-3 Months',
+  5000,
+  500000,
+  '$50-$5,000',
+  false,
+  NULL,
+  'Vanguard 529',
+  'Fidelity 529'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
 
+-- =============================================================================
+-- NEW RECURRING ITEMS
+-- =============================================================================
+
+-- Diapers (monthly) — 0-3 Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-DIA-CON-030-0-3M',
+  'Diapering',
+  'Consumable',
+  'Diapers (Monthly)',
+  'Ongoing diaper supply. Newborns use 10-12 diapers/day.',
+  'post-birth',
+  1,
+  12,
+  'must-have',
+  4000,
+  6000,
+  8000,
+  'USD',
+  'Subscribe & Save on Amazon or Costco bulk buys for best value.',
+  false,
+  '0-3 Months',
+  4000,
+  8000,
+  '$40-$80/month',
+  true,
+  'monthly',
+  'Pampers Pure',
+  'Kirkland (Costco)'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Diapers (monthly) — 3-6 Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-DIA-CON-030-3-6M',
+  'Diapering',
+  'Consumable',
+  'Diapers (Monthly)',
+  'Ongoing diaper supply. Usage drops to 8-10 diapers/day.',
+  'post-birth',
+  13,
+  24,
+  'must-have',
+  4000,
+  5500,
+  7000,
+  'USD',
+  'Size 2-3 transition. Buy in bulk when on sale.',
+  false,
+  '3-6 Months',
+  4000,
+  7000,
+  '$40-$70/month',
+  true,
+  'monthly',
+  'Pampers Pure',
+  'Kirkland (Costco)'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Diapers (monthly) — 6-12 Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-DIA-CON-030-6-12M',
+  'Diapering',
+  'Consumable',
+  'Diapers (Monthly)',
+  'Ongoing diaper supply. Usage drops to 6-8 diapers/day.',
+  'post-birth',
+  25,
+  52,
+  'must-have',
+  3500,
+  5000,
+  6500,
+  'USD',
+  'Size 3-4. Consider starting potty readiness cues around 12 months.',
+  false,
+  '6-12 Months',
+  3500,
+  6500,
+  '$35-$65/month',
+  true,
+  'monthly',
+  'Pampers Pure',
+  'Kirkland (Costco)'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Diapers (monthly) — 12+ Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-DIA-CON-030-12M',
+  'Diapering',
+  'Consumable',
+  'Diapers (Monthly)',
+  'Ongoing diaper supply. Usage drops to 5-7 diapers/day as potty training begins.',
+  'post-birth',
+  53,
+  100,
+  'must-have',
+  3000,
+  4500,
+  6000,
+  'USD',
+  'Size 4-5. Start potty training around 18-24 months when they show signs.',
+  false,
+  '12+ Months',
+  3000,
+  6000,
+  '$30-$60/month',
+  true,
+  'monthly',
+  'Pampers Pure',
+  'Kirkland (Costco)'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Formula (monthly) — 0-3 Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-FEE-FOR-031-0-3M',
+  'Feeding',
+  'Formula',
+  'Formula (Monthly)',
+  'Infant formula supply if not exclusively breastfeeding. Newborns consume 20-28 oz/day.',
+  'post-birth',
+  1,
+  12,
+  'must-have',
+  10000,
+  15000,
+  25000,
+  'USD',
+  'Have at least 1 can on hand even if breastfeeding as backup. Check WIC eligibility.',
+  false,
+  '0-3 Months',
+  10000,
+  25000,
+  '$100-$250/month',
+  true,
+  'monthly',
+  'Enfamil NeuroPro',
+  'Kirkland Infant Formula'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Formula (monthly) — 3-6 Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-FEE-FOR-031-3-6M',
+  'Feeding',
+  'Formula',
+  'Formula (Monthly)',
+  'Infant formula supply. Intake increases to 28-32 oz/day before solids begin.',
+  'post-birth',
+  13,
+  24,
+  'must-have',
+  12000,
+  18000,
+  28000,
+  'USD',
+  'Cost peaks here before solids reduce formula intake around 6 months.',
+  false,
+  '3-6 Months',
+  12000,
+  28000,
+  '$120-$280/month',
+  true,
+  'monthly',
+  'Enfamil NeuroPro',
+  'Kirkland Infant Formula'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Childcare/Daycare (monthly) — 0-3 Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-ADM-CHI-032-0-3M',
+  'Admin',
+  'Childcare',
+  'Childcare/Daycare (Monthly)',
+  'Full-time daycare or nanny share. Infant rooms are the most expensive age group.',
+  'post-birth',
+  1,
+  12,
+  'must-have',
+  80000,
+  150000,
+  300000,
+  'USD',
+  'Average US infant daycare is $1,300/month. Major metros can exceed $2,500/month.',
+  false,
+  '0-3 Months',
+  80000,
+  300000,
+  '$800-$3,000/month',
+  true,
+  'monthly',
+  'Bright Horizons',
+  'Local Home Daycare'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Childcare/Daycare (monthly) — 3-6 Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-ADM-CHI-032-3-6M',
+  'Admin',
+  'Childcare',
+  'Childcare/Daycare (Monthly)',
+  'Full-time daycare or nanny share. Many families start daycare after parental leave ends.',
+  'post-birth',
+  13,
+  24,
+  'must-have',
+  80000,
+  150000,
+  300000,
+  'USD',
+  'Check employer Dependent Care FSA ($5,000/yr pre-tax). File for Child Care Tax Credit.',
+  false,
+  '3-6 Months',
+  80000,
+  300000,
+  '$800-$3,000/month',
+  true,
+  'monthly',
+  'Bright Horizons',
+  'Local Home Daycare'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Childcare/Daycare (monthly) — 6-12 Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-ADM-CHI-032-6-12M',
+  'Admin',
+  'Childcare',
+  'Childcare/Daycare (Monthly)',
+  'Full-time daycare. Cost may decrease slightly as child transitions from infant room.',
+  'post-birth',
+  25,
+  52,
+  'must-have',
+  70000,
+  130000,
+  280000,
+  'USD',
+  'Toddler rooms are typically 10-15% cheaper than infant rooms.',
+  false,
+  '6-12 Months',
+  70000,
+  280000,
+  '$700-$2,800/month',
+  true,
+  'monthly',
+  'Bright Horizons',
+  'Local Home Daycare'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Childcare/Daycare (monthly) — 12+ Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-ADM-CHI-032-12M',
+  'Admin',
+  'Childcare',
+  'Childcare/Daycare (Monthly)',
+  'Full-time daycare for toddlers. Costs start to decrease in toddler/preschool rooms.',
+  'post-birth',
+  53,
+  100,
+  'must-have',
+  60000,
+  120000,
+  250000,
+  'USD',
+  'Start researching preschool programs. Some have waitlists that require early enrollment.',
+  false,
+  '12+ Months',
+  60000,
+  250000,
+  '$600-$2,500/month',
+  true,
+  'monthly',
+  'Bright Horizons',
+  'Local Home Daycare'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Wipes (monthly) — 0-3 Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-DIA-CON-033-0-3M',
+  'Diapering',
+  'Consumable',
+  'Wipes (Monthly)',
+  'Baby wipes for diaper changes. Newborns need 8-12 wipes per change.',
+  'post-birth',
+  1,
+  12,
+  'must-have',
+  1500,
+  2500,
+  4000,
+  'USD',
+  'Fragrance-free for newborns. Costco bulk packs are the best value.',
+  false,
+  '0-3 Months',
+  1500,
+  4000,
+  '$15-$40/month',
+  true,
+  'monthly',
+  'WaterWipes',
+  'Kirkland Baby Wipes'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Wipes (monthly) — 3-6 Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-DIA-CON-033-3-6M',
+  'Diapering',
+  'Consumable',
+  'Wipes (Monthly)',
+  'Baby wipes for diaper changes and starting solids cleanup.',
+  'post-birth',
+  13,
+  24,
+  'must-have',
+  1500,
+  2500,
+  4000,
+  'USD',
+  'Usage increases once solids start. Keep packs in multiple rooms.',
+  false,
+  '3-6 Months',
+  1500,
+  4000,
+  '$15-$40/month',
+  true,
+  'monthly',
+  'WaterWipes',
+  'Kirkland Baby Wipes'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Wipes (monthly) — 6-12 Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-DIA-CON-033-6-12M',
+  'Diapering',
+  'Consumable',
+  'Wipes (Monthly)',
+  'Baby wipes for diaper changes and meal cleanup.',
+  'post-birth',
+  25,
+  52,
+  'must-have',
+  1500,
+  2500,
+  4000,
+  'USD',
+  'You will use even more wipes once they are eating solids regularly.',
+  false,
+  '6-12 Months',
+  1500,
+  4000,
+  '$15-$40/month',
+  true,
+  'monthly',
+  'WaterWipes',
+  'Kirkland Baby Wipes'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Wipes (monthly) — 12+ Months
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-DIA-CON-033-12M',
+  'Diapering',
+  'Consumable',
+  'Wipes (Monthly)',
+  'Baby wipes for diaper changes, meals, and general toddler messes.',
+  'post-birth',
+  53,
+  100,
+  'must-have',
+  1500,
+  2500,
+  4000,
+  'USD',
+  'Wipes remain essential even after potty training for hands, face, and spills.',
+  false,
+  '12+ Months',
+  1500,
+  4000,
+  '$15-$40/month',
+  true,
+  'monthly',
+  'WaterWipes',
+  'Kirkland Baby Wipes'
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- =============================================================================
+-- NEW TIP / ADVICE ITEMS ($0)
+-- =============================================================================
+
+-- Tip: Register for Baby Shower
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-TIP-REG-034',
+  'Tips',
+  'Savings',
+  'Register for Baby Shower',
+  'Create registries at Amazon, Target, and/or Babylist. Share early so family can buy big-ticket items.',
+  'pregnancy',
+  16,
+  24,
+  'tip',
+  0,
+  0,
+  0,
+  'USD',
+  'Babylist lets you add items from any store. Completion discounts (15%) kick in 60 days before due date.',
+  false,
+  '2nd Trimester',
+  0,
+  0,
+  '$0',
+  false,
+  NULL,
+  NULL,
+  NULL
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Tip: Discuss Parental Leave Plan
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-TIP-LEA-035',
+  'Tips',
+  'Planning',
+  'Discuss Parental Leave Plan',
+  'Review your employer''s parental leave policy. Plan coverage for your absence and negotiate timing with your manager.',
+  'pregnancy',
+  16,
+  24,
+  'tip',
+  0,
+  0,
+  0,
+  'USD',
+  'Check FMLA eligibility (12 weeks unpaid). Some states have paid family leave. File paperwork early.',
+  false,
+  '2nd Trimester',
+  0,
+  0,
+  '$0',
+  false,
+  NULL,
+  NULL,
+  NULL
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Doctor: Ask About Cord Blood Banking
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-TIP-CBB-036',
+  'Tips',
+  'Medical',
+  'Ask About Cord Blood Banking',
+  'Discuss cord blood banking with your OB. Must decide before delivery day.',
+  'pregnancy',
+  28,
+  36,
+  'doctor',
+  0,
+  0,
+  0,
+  'USD',
+  'Private banking costs $1,500-$2,500 upfront + $150/yr storage. Public donation is free and helps others.',
+  false,
+  '3rd Trimester',
+  0,
+  0,
+  '$0',
+  false,
+  NULL,
+  NULL,
+  NULL
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Tip: Take a Childbirth Class
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-TIP-CBC-037',
+  'Tips',
+  'Education',
+  'Take a Childbirth Class',
+  'Attend a childbirth education class as a couple. Covers labor stages, breathing, pain management, and partner support.',
+  'pregnancy',
+  28,
+  36,
+  'tip',
+  0,
+  0,
+  0,
+  'USD',
+  'Many hospitals offer free classes. Online options: Tinyhood, The Bump. Dads: this is your playbook for delivery day.',
+  false,
+  '3rd Trimester',
+  0,
+  0,
+  '$0',
+  false,
+  NULL,
+  NULL,
+  NULL
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
+
+-- Tip: Set Up College Savings Early
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+VALUES (
+  'BUD-TIP-529-038',
+  'Tips',
+  'Savings',
+  'Set Up College Savings Early',
+  'Open a 529 plan as soon as you have the SSN. Even $25/month from birth grows significantly with compound interest.',
+  'post-birth',
+  1,
+  12,
+  'tip',
+  0,
+  0,
+  0,
+  'USD',
+  '$50/month from birth = ~$20k by age 18 (7% avg return). Share the account info with grandparents for gift contributions.',
+  false,
+  '0-3 Months',
+  0,
+  0,
+  '$0',
+  false,
+  NULL,
+  NULL,
+  NULL
+) ON CONFLICT (budget_id) DO UPDATE SET
+  period = EXCLUDED.period,
+  price_min = EXCLUDED.price_min,
+  price_max = EXCLUDED.price_max,
+  price_display = EXCLUDED.price_display,
+  is_recurring = EXCLUDED.is_recurring,
+  recurring_frequency = EXCLUDED.recurring_frequency,
+  brand_premium = EXCLUDED.brand_premium,
+  brand_value = EXCLUDED.brand_value,
+  description = EXCLUDED.description,
+  notes = EXCLUDED.notes;
