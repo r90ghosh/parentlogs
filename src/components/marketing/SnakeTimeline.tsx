@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, ChevronDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
@@ -10,7 +10,7 @@ import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 import { useSnakeTimeline } from '@/hooks/use-snake-timeline'
 import type { TimelineDomain, TimelineMilestone, TimelineDot } from '@/types/timeline'
 
-/* ── Domain color map (amber/orange family) ── */
+/* ── Domain color map ── */
 const DOMAIN_COLORS: Record<TimelineDomain, string> = {
   health: '#c4703f',
   budget: '#d4a853',
@@ -29,8 +29,10 @@ const DOMAIN_LABELS: Record<TimelineDomain, string> = {
 
 const ALL_DOMAINS: TimelineDomain[] = ['health', 'budget', 'childcare', 'relationship', 'logistics']
 
+const MAX_VISIBLE_TASKS = 6
+
 /* ── Skeleton ── */
-function SnakeTimelineSkeleton() {
+function TimelineSkeleton() {
   return (
     <section className="py-24 md:py-32">
       <div className="max-w-[1100px] mx-auto px-6">
@@ -46,235 +48,233 @@ function SnakeTimelineSkeleton() {
             <div key={i} className="h-8 w-24 rounded-full bg-[--surface] animate-pulse" />
           ))}
         </div>
-        {/* Rows skeleton */}
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="mb-10">
-            <div className="h-6 w-40 mb-4 rounded bg-[--surface] animate-pulse" />
-            <div className="flex gap-6">
-              {Array.from({ length: 3 }).map((_, j) => (
-                <div key={j} className="w-10 h-10 rounded-full bg-[--surface] animate-pulse" />
-              ))}
-            </div>
-          </div>
-        ))}
+        {/* Phase card skeletons */}
+        <div className="space-y-4 pl-10 sm:pl-14">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="rounded-xl bg-[--surface] animate-pulse h-20" />
+          ))}
+        </div>
       </div>
     </section>
   )
 }
 
-/* ── Info Card ── */
-function DotInfoCard({
-  dot,
-  position,
-  onClose,
-}: {
-  dot: TimelineDot
-  position: 'above' | 'below'
-  onClose: () => void
-}) {
-  const cardRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (cardRef.current && !cardRef.current.contains(e.target as Node)) {
-        onClose()
-      }
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [onClose])
-
+/* ── Task Card ── */
+function TaskCard({ dot, isDimmed }: { dot: TimelineDot; isDimmed: boolean }) {
   const color = DOMAIN_COLORS[dot.domain]
 
   return (
     <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, scale: 0.85, y: position === 'below' ? -8 : 8 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.85, y: position === 'below' ? -8 : 8 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-      className={`absolute z-50 w-64 sm:w-72 rounded-lg border border-[--border] bg-[--card] shadow-lift p-4 ${
-        position === 'below' ? 'top-full mt-3' : 'bottom-full mb-3'
-      }`}
-      style={{
-        left: '50%',
-        transform: 'translateX(-50%)',
-      }}
+      layout
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: isDimmed ? 0.15 : 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.25 }}
+      className="rounded-lg border border-[--border] bg-[--card] p-3.5 transition-colors duration-200 hover:bg-[--card-hover]"
     >
-      {/* Domain badge */}
       <div className="flex items-center gap-2 mb-2">
         <span
           className="w-2 h-2 rounded-full flex-shrink-0"
           style={{ backgroundColor: color }}
         />
-        <span className="font-ui text-[10px] uppercase tracking-[0.08em]" style={{ color }}>
+        <span
+          className="font-ui text-[10px] uppercase tracking-[0.08em]"
+          style={{ color }}
+        >
           {DOMAIN_LABELS[dot.domain]}
         </span>
       </div>
-      {/* Title */}
-      <p className="font-display font-bold text-sm text-[--cream] mb-1.5 leading-snug">
+      <p className="font-display font-bold text-sm text-[--cream] leading-snug mb-1">
         {dot.title}
       </p>
-      {/* Description */}
-      <p className="font-body text-xs text-[--muted] leading-relaxed">
+      <p className="font-body text-xs text-[--muted] leading-relaxed line-clamp-2">
         {dot.description}
       </p>
     </motion.div>
   )
 }
 
-/* ── Single Dot Button ── */
-function TimelineDotButton({
-  dot,
-  isActive,
-  isDimmed,
-  isInUpperHalf,
-  onToggle,
+/* ── Expanded Phase Content ── */
+function PhaseContent({
+  dots,
+  domainFilter,
 }: {
-  dot: TimelineDot
-  isActive: boolean
-  isDimmed: boolean
-  isInUpperHalf: boolean
-  onToggle: (dotId: string) => void
+  dots: TimelineDot[]
+  domainFilter: TimelineDomain | null
 }) {
-  const color = DOMAIN_COLORS[dot.domain]
+  const filteredDots = useMemo(
+    () => (domainFilter ? dots.filter((d) => d.domain === domainFilter) : dots),
+    [dots, domainFilter]
+  )
+
+  const visibleDots = filteredDots.slice(0, MAX_VISIBLE_TASKS)
+  const remainingCount = filteredDots.length - visibleDots.length
 
   return (
-    <div className="relative flex flex-col items-center" style={{ zIndex: isActive ? 50 : 1 }}>
-      <button
-        onClick={() => onToggle(dot.id)}
-        aria-label={`${dot.title} — ${DOMAIN_LABELS[dot.domain]}`}
-        className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full border-2 flex items-center justify-center transition-all duration-300 cursor-pointer"
-        style={{
-          borderColor: color,
-          backgroundColor: isActive ? color : 'transparent',
-          opacity: isDimmed ? 0.12 : 1,
-          boxShadow: isActive ? `0 0 12px ${color}50, 0 0 24px ${color}25` : 'none',
-          transform: isActive ? 'scale(1.3)' : 'scale(1)',
-        }}
-      >
-        <span
-          className="w-2.5 h-2.5 rounded-full transition-colors duration-300"
-          style={{
-            backgroundColor: isActive ? '#12100e' : color,
-          }}
-        />
-      </button>
-      {/* Dot title label on hover/active — desktop only */}
-      <span
-        className="hidden sm:block absolute top-full mt-1.5 font-ui text-[9px] text-[--muted] whitespace-nowrap transition-opacity duration-200"
-        style={{ opacity: isActive ? 1 : 0 }}
-      >
-        {dot.title}
-      </span>
-
-      <AnimatePresence>
-        {isActive && (
-          <DotInfoCard
-            dot={dot}
-            position="above"
-            onClose={() => onToggle(dot.id)}
-          />
+    <motion.div
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: 'auto', opacity: 1 }}
+      exit={{ height: 0, opacity: 0 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      className="overflow-hidden"
+    >
+      <div className="pt-4 pb-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <AnimatePresence mode="popLayout">
+            {visibleDots.map((dot) => (
+              <TaskCard
+                key={dot.id}
+                dot={dot}
+                isDimmed={false}
+              />
+            ))}
+          </AnimatePresence>
+        </div>
+        {remainingCount > 0 && (
+          <p className="font-ui text-xs text-[--muted] mt-3 pl-1">
+            +{remainingCount} more task{remainingCount !== 1 ? 's' : ''}
+          </p>
         )}
-      </AnimatePresence>
+      </div>
+    </motion.div>
+  )
+}
+
+/* ── Domain Dots Preview (collapsed state) ── */
+function DomainDotsPreview({ dots }: { dots: TimelineDot[] }) {
+  const domains = useMemo(() => {
+    const seen = new Set<TimelineDomain>()
+    for (const dot of dots) {
+      seen.add(dot.domain)
+    }
+    return ALL_DOMAINS.filter((d) => seen.has(d))
+  }, [dots])
+
+  return (
+    <div className="flex items-center gap-1.5">
+      {domains.map((domain) => (
+        <span
+          key={domain}
+          className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+          style={{ backgroundColor: DOMAIN_COLORS[domain] }}
+        />
+      ))}
     </div>
   )
 }
 
-/* ── Milestone Row ── */
-function MilestoneRow({
+/* ── Phase Card ── */
+function PhaseCard({
   milestone,
   index,
-  activeDotId,
+  isExpanded,
   domainFilter,
-  onDotToggle,
-  totalMilestones,
+  onToggle,
 }: {
   milestone: TimelineMilestone
   index: number
-  activeDotId: string | null
+  isExpanded: boolean
   domainFilter: TimelineDomain | null
-  onDotToggle: (dotId: string) => void
-  totalMilestones: number
+  onToggle: (id: string) => void
 }) {
-  const isRtl = milestone.direction === 'rtl'
-  const isInUpperHalf = index < totalMilestones / 2
-  const hasActiveCard = milestone.dots.some((d) => d.id === activeDotId)
+  const taskCount = domainFilter
+    ? milestone.dots.filter((d) => d.domain === domainFilter).length
+    : milestone.dots.length
 
   return (
-    <RevealOnScroll delay={index * 100}>
-      <div className="relative" style={{ zIndex: hasActiveCard ? 40 : 1 }}>
-        {/* Row content */}
-        <div
-          className={`flex items-center gap-4 sm:gap-6 ${isRtl ? 'flex-row-reverse' : 'flex-row'}`}
-        >
-          {/* Milestone label card */}
-          <div
-            className="flex-shrink-0 w-28 sm:w-36 rounded-lg border border-copper/20 bg-[--card] px-3 py-2.5 text-center"
-          >
-            <p className="font-display font-bold text-xs sm:text-sm text-[--cream] leading-tight">
-              {milestone.label}
-            </p>
-            <p className="font-ui text-[9px] sm:text-[10px] text-[--muted] mt-0.5">
-              {milestone.sub_label}
-            </p>
-          </div>
-
-          {/* Track line + dots */}
-          <div className="flex-1 relative flex items-center">
-            {/* Horizontal track */}
+    <RevealOnScroll delay={index * 80}>
+      <div className="flex items-stretch gap-0">
+        {/* Timeline line + numbered circle */}
+        <div className="relative flex flex-col items-center w-8 sm:w-12 flex-shrink-0">
+          {/* Vertical line segment above */}
+          {index > 0 && (
             <div
-              className="absolute inset-x-0 h-[1.5px] rounded-full"
+              className="w-[1.5px] flex-1"
               style={{
-                background: isRtl
-                  ? 'linear-gradient(90deg, var(--copper) 0%, transparent 100%)'
-                  : 'linear-gradient(90deg, transparent 0%, var(--copper) 100%)',
+                background: 'linear-gradient(180deg, var(--copper), var(--copper))',
                 opacity: 0.25,
               }}
             />
+          )}
+          {index === 0 && <div className="flex-1" />}
 
-            {/* Dots */}
-            <div
-              className={`relative flex w-full justify-evenly py-6 ${
-                isRtl ? 'flex-row-reverse' : 'flex-row'
+          {/* Numbered circle */}
+          <div
+            className={`relative z-10 flex items-center justify-center rounded-full border-2 transition-all duration-300 flex-shrink-0 ${
+              isExpanded
+                ? 'w-8 h-8 sm:w-10 sm:h-10'
+                : 'w-7 h-7 sm:w-9 sm:h-9'
+            }`}
+            style={{
+              borderColor: isExpanded ? 'var(--copper)' : 'rgba(196, 112, 63, 0.3)',
+              backgroundColor: isExpanded ? 'var(--copper)' : 'transparent',
+              boxShadow: isExpanded ? '0 0 16px rgba(196, 112, 63, 0.3)' : 'none',
+            }}
+          >
+            <span
+              className={`font-ui font-bold text-xs transition-colors duration-300 ${
+                isExpanded ? 'text-[--bg]' : 'text-[--muted]'
               }`}
             >
-              {milestone.dots.map((dot) => (
-                <TimelineDotButton
-                  key={dot.id}
-                  dot={dot}
-                  isActive={activeDotId === dot.id}
-                  isDimmed={domainFilter !== null && domainFilter !== dot.domain}
-                  isInUpperHalf={isInUpperHalf}
-                  onToggle={onDotToggle}
-                />
-              ))}
-            </div>
+              {index + 1}
+            </span>
           </div>
+
+          {/* Vertical line segment below */}
+          <div
+            className="w-[1.5px] flex-1"
+            style={{
+              background: 'linear-gradient(180deg, var(--copper), var(--copper))',
+              opacity: 0.25,
+            }}
+          />
         </div>
 
-        {/* Snake turn connector */}
-        {index < totalMilestones - 1 && (
-          <div
-            className={`flex ${isRtl ? 'justify-start pl-14 sm:pl-18' : 'justify-end pr-14 sm:pr-18'}`}
+        {/* Phase card */}
+        <div className="flex-1 py-2 pl-3 sm:pl-5">
+          <button
+            onClick={() => onToggle(milestone.id)}
+            className="w-full text-left rounded-xl border border-[--border] bg-[--surface] p-4 sm:p-5 transition-all duration-200 hover:border-[--border-hover] hover:bg-[--card] cursor-pointer"
+            aria-expanded={isExpanded}
           >
-            <svg
-              width="24"
-              height="32"
-              viewBox="0 0 24 32"
-              fill="none"
-              className="text-copper/20"
-            >
-              <path
-                d="M12 0 C12 16, 12 16, 12 32"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeDasharray="4 3"
-                strokeLinecap="round"
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <h3 className="font-display font-bold text-base sm:text-lg text-[--cream] leading-tight">
+                  {milestone.label}
+                </h3>
+                <p className="font-ui text-[11px] sm:text-xs text-[--muted] mt-1">
+                  {milestone.sub_label}
+                  {taskCount > 0 && (
+                    <span className="text-[--dim]">
+                      {' '}· {taskCount} key task{taskCount !== 1 ? 's' : ''}
+                    </span>
+                  )}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3 flex-shrink-0">
+                {!isExpanded && <DomainDotsPreview dots={milestone.dots} />}
+                <motion.div
+                  animate={{ rotate: isExpanded ? 180 : 0 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <ChevronDown className="h-4 w-4 text-[--muted]" />
+                </motion.div>
+              </div>
+            </div>
+
+            {/* Expanded content — rendered inside button for full-card click area, but using div via onClick stop */}
+          </button>
+
+          <AnimatePresence initial={false}>
+            {isExpanded && (
+              <PhaseContent
+                dots={milestone.dots}
+                domainFilter={domainFilter}
               />
-            </svg>
-          </div>
-        )}
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </RevealOnScroll>
   )
@@ -283,21 +283,24 @@ function MilestoneRow({
 /* ── Main Component ── */
 export function SnakeTimeline() {
   const { milestones, loading, error } = useSnakeTimeline()
-  const [activeDotId, setActiveDotId] = useState<string | null>(null)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
   const [domainFilter, setDomainFilter] = useState<TimelineDomain | null>(null)
 
-  const handleDotToggle = useCallback((dotId: string) => {
-    setActiveDotId((prev) => (prev === dotId ? null : dotId))
+  // Expand first milestone by default once data loads
+  const effectiveExpandedId = expandedId === null && milestones.length > 0
+    ? milestones[0].id
+    : expandedId
+
+  const handleToggle = useCallback((id: string) => {
+    setExpandedId((prev) => (prev === id ? '' : id))
   }, [])
 
   const handleFilterClick = useCallback((domain: TimelineDomain) => {
     setDomainFilter((prev) => (prev === domain ? null : domain))
-    setActiveDotId(null)
   }, [])
 
-  // Fail silently on error
   if (error) return null
-  if (loading) return <SnakeTimelineSkeleton />
+  if (loading) return <TimelineSkeleton />
   if (milestones.length === 0) return null
 
   const totalDots = milestones.reduce((sum, m) => sum + m.dots.length, 0)
@@ -354,33 +357,17 @@ export function SnakeTimeline() {
           </div>
         </RevealOnScroll>
 
-        {/* ── Snake Body ── */}
-        <div className="space-y-2">
+        {/* ── Vertical Accordion Timeline ── */}
+        <div>
           {milestones.map((milestone, index) => (
-            <MilestoneRow
+            <PhaseCard
               key={milestone.id}
               milestone={milestone}
               index={index}
-              activeDotId={activeDotId}
+              isExpanded={effectiveExpandedId === milestone.id}
               domainFilter={domainFilter}
-              onDotToggle={handleDotToggle}
-              totalMilestones={milestones.length}
+              onToggle={handleToggle}
             />
-          ))}
-        </div>
-
-        {/* ── Domain Legend (mobile) ── */}
-        <div className="flex flex-wrap justify-center gap-4 mt-10 sm:hidden">
-          {ALL_DOMAINS.map((domain) => (
-            <div key={domain} className="flex items-center gap-1.5">
-              <span
-                className="w-2 h-2 rounded-full"
-                style={{ backgroundColor: DOMAIN_COLORS[domain] }}
-              />
-              <span className="font-ui text-[10px] text-[--muted]">
-                {DOMAIN_LABELS[domain]}
-              </span>
-            </div>
           ))}
         </div>
 
