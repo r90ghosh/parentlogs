@@ -260,6 +260,15 @@ export interface ChecklistItemTemplate {
   sort_order: number
 }
 
+export interface PublicChecklist {
+  checklist_id: string
+  name: string
+  description: string
+  stage: FamilyStage
+  is_premium: boolean
+  itemCount: number
+}
+
 export interface ChecklistProgress {
   id: string
   family_id: string

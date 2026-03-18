@@ -201,7 +201,7 @@ export function TaskDetailSheet({
           {/* Related article link */}
           {task.related_article_slug && (
             <Link
-              href={`/resources/articles/${task.related_article_slug}`}
+              href={`/content/articles/${task.related_article_slug}`}
               className="flex items-center gap-3 p-3 rounded-lg bg-[--card] hover:bg-[--card-hover] transition-colors"
             >
               <FileText className="h-5 w-5 text-copper" />

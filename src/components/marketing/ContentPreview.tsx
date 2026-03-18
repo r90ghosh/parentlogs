@@ -211,7 +211,7 @@ export function ContentPreview() {
         {/* CTA */}
         <div className="mt-12 text-center">
           <Button asChild variant="outline" size="lg" className="border-[--border-hover] text-[--cream] hover:bg-[--card] hover:border-[--border-hover] font-ui">
-            <Link href="/resources">
+            <Link href="/content">
               Browse All Resources
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>

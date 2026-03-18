@@ -12,7 +12,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/resources`,
+      url: `${baseUrl}/content`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/budget-guide`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/baby-checklists`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
@@ -33,7 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     if (data) {
       articlePages = data.map((article) => ({
-        url: `${baseUrl}/resources/articles/${article.slug}`,
+        url: `${baseUrl}/content/articles/${article.slug}`,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.7,
@@ -43,5 +55,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Error fetching articles for sitemap:', error)
   }
 
-  return [...staticPages, ...articlePages]
+  // Checklist detail pages
+  const checklistPages: MetadataRoute.Sitemap = Array.from({ length: 15 }, (_, i) => ({
+    url: `${baseUrl}/baby-checklists/CL-${String(i + 1).padStart(2, '0')}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }))
+
+  return [...staticPages, ...articlePages, ...checklistPages]
 }

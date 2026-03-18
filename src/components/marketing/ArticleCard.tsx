@@ -28,7 +28,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
 
   return (
     <Link
-      href={`/resources/articles/${article.slug}`}
+      href={`/content/articles/${article.slug}`}
       className="group relative flex flex-col p-6 rounded-2xl bg-[--surface]/50 border border-[--border] hover:border-[--border-hover] transition-all duration-300"
     >
       {/* Stage badge */}

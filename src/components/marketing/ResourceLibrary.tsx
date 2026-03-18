@@ -70,7 +70,7 @@ export function ResourceLibrary({
         </p>
         <Button
           variant="outline"
-          onClick={() => (window.location.href = '/resources')}
+          onClick={() => (window.location.href = '/content')}
           className="border-[--border] text-[--cream] hover:bg-[--card] font-ui font-semibold"
         >
           Clear Filters

@@ -8,7 +8,9 @@ const footerLinks = {
   product: [
     { label: 'Features', href: '/#features' },
     { label: 'Pricing', href: '/#pricing' },
-    { label: 'Resources', href: '/resources' },
+    { label: 'Content', href: '/content' },
+    { label: 'Budget Guide', href: '/budget-guide' },
+    { label: 'Checklists', href: '/baby-checklists' },
     { label: 'Dashboard', href: '/dashboard' },
   ],
   company: [

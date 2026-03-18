@@ -42,8 +42,8 @@ export async function updateSession(request: NextRequest) {
   if (error) console.error('[Middleware] getUser error:', error.message)
 
   // Protected routes
-  const protectedPaths = ['/dashboard', '/tasks', '/calendar', '/tracker', '/briefing', '/budget', '/checklists', '/settings']
-  const isProtectedPath = protectedPaths.some(path => pathname.startsWith(path))
+  const protectedPaths = ['/dashboard', '/tasks', '/calendar', '/tracker', '/briefing', '/budget', '/checklists', '/settings', '/journey', '/notifications']
+  const isProtectedPath = protectedPaths.some(path => pathname === path || pathname.startsWith(path + '/'))
 
   if (isProtectedPath && !user) {
     console.log('[Middleware] Protected path accessed without user, redirecting to /login')

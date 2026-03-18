@@ -115,7 +115,7 @@ export default async function ArticlePage({ params }: PageProps) {
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://thedadcenter.com/resources/articles/${slug}`,
+      '@id': `https://thedadcenter.com/content/articles/${slug}`,
     },
   }
 
@@ -130,11 +130,11 @@ export default async function ArticlePage({ params }: PageProps) {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back link */}
           <Link
-            href="/resources"
+            href="/content"
             className="inline-flex items-center gap-2 font-ui text-[--muted] hover:text-white transition-colors mb-8"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Resources
+            Back to Content
           </Link>
 
           {/* Article metadata */}

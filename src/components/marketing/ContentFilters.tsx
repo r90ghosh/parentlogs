@@ -35,7 +35,7 @@ export function ContentFilters({
       }
 
       const queryString = params.toString()
-      router.push(`/resources${queryString ? `?${queryString}` : ''}`, { scroll: false })
+      router.push(`/content${queryString ? `?${queryString}` : ''}`, { scroll: false })
     },
     [router, searchParams]
   )
@@ -53,7 +53,7 @@ export function ContentFilters({
   }
 
   const handleClearFilters = () => {
-    router.push('/resources', { scroll: false })
+    router.push('/content', { scroll: false })
   }
 
   const hasActiveFilters = currentStage !== 'all' || currentFormat !== 'all' || searchQuery !== ''
