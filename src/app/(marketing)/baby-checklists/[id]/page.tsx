@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, ArrowRight, Crown, CheckCircle2, FileText } from 'lucide-react'
@@ -8,13 +9,16 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
+const getCachedChecklist = cache(getPublicChecklistById)
+const getCachedChecklists = cache(getPublicChecklists)
+
 interface PageProps {
   params: Promise<{ id: string }>
 }
 
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params
-  const checklist = await getPublicChecklistById(id)
+  const checklist = await getCachedChecklist(id)
 
   if (!checklist) {
     return { title: 'Checklist Not Found | The Dad Center' }
@@ -39,8 +43,8 @@ export async function generateStaticParams() {
 export default async function ChecklistDetailPage({ params }: PageProps) {
   const { id } = await params
   const [checklist, allChecklists] = await Promise.all([
-    getPublicChecklistById(id),
-    getPublicChecklists(),
+    getCachedChecklist(id),
+    getCachedChecklists(),
   ])
 
   if (!checklist) {

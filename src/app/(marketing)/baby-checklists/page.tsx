@@ -83,7 +83,7 @@ export default async function PublicChecklistsPage() {
             const colors = CHECKLIST_COLORS[checklist.checklist_id] || CHECKLIST_COLORS['CL-15']
 
             return (
-              <CardEntrance key={checklist.checklist_id} delay={index * 80}>
+              <CardEntrance key={checklist.checklist_id} delay={Math.min(index * 80, 600)}>
                 <Link href={`/baby-checklists/${checklist.checklist_id}`} className="block h-full">
                   <Card className="bg-[--surface] border-[--border] h-full transition-all hover:border-[--border-hover] hover:shadow-lg">
                     <CardContent className="pt-6">

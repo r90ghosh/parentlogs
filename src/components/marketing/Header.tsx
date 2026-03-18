@@ -120,13 +120,16 @@ export function Header() {
                   onMouseEnter={() => setIsDropdownOpen(true)}
                   onMouseLeave={() => setIsDropdownOpen(false)}
                 >
-                  <a
-                    role="button"
-                    className="nav-underline-flip font-ui text-base font-medium text-[--cream]/70 hover:text-[--cream] transition-colors cursor-pointer inline-flex items-baseline gap-1"
+                  <button
+                    type="button"
+                    className="nav-underline-flip font-ui text-base font-medium text-[--cream]/70 hover:text-[--cream] transition-colors cursor-pointer appearance-none bg-transparent border-0 p-0 m-0"
+                    style={{ font: 'inherit', lineHeight: 'inherit' }}
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    aria-expanded={isDropdownOpen}
+                    aria-haspopup="true"
                   >
                     {link.label}
-                  </a>
+                  </button>
                   {isDropdownOpen && (
                     <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2">
                       <div className="bg-[--surface] border border-[--border] rounded-xl shadow-lg py-2 min-w-[180px]">

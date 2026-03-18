@@ -1,4 +1,3 @@
-import { Suspense } from 'react'
 import Link from 'next/link'
 import { DollarSign, TrendingUp, ArrowRight } from 'lucide-react'
 import { getPublicBudgetTemplates } from '@/lib/public-data'
@@ -91,15 +90,7 @@ export default async function PublicBudgetPage() {
 
       {/* Browser */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center py-20">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-copper" />
-            </div>
-          }
-        >
-          <PublicBudgetBrowser templates={templates} />
-        </Suspense>
+        <PublicBudgetBrowser templates={templates} />
       </div>
 
       {/* Bottom CTA */}

@@ -1,8 +1,6 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { PREMIUM_CHECKLIST_IDS } from '@/lib/checklist-constants'
 import { BudgetTemplate } from '@/types'
-
-// Premium checklists: CL-05 through CL-11
-const PREMIUM_CHECKLIST_IDS = ['CL-05', 'CL-06', 'CL-07', 'CL-08', 'CL-09', 'CL-10', 'CL-11']
 
 /**
  * Fetch all V2 budget templates (public, no auth required)
@@ -13,7 +11,7 @@ export async function getPublicBudgetTemplates(): Promise<BudgetTemplate[]> {
 
   const { data, error } = await supabase
     .from('budget_templates')
-    .select('*')
+    .select('budget_id, category, subcategory, item, description, period, priority, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value, notes, is_premium, price_currency')
     .not('period', 'is', null)
     .order('category', { ascending: true })
     .order('price_min', { ascending: true })
@@ -28,25 +26,13 @@ export async function getPublicBudgetTemplates(): Promise<BudgetTemplate[]> {
 export async function getPublicChecklists() {
   const supabase = await createServerSupabaseClient()
 
-  const { data: checklists, error: clError } = await supabase
+  const { data: checklists, error } = await supabase
     .from('checklist_templates')
-    .select('*')
+    .select('*, checklist_item_templates(count)')
     .order('checklist_id', { ascending: true })
 
-  if (clError) throw clError
+  if (error) throw error
   if (!checklists) return []
-
-  // Get item counts per checklist
-  const { data: items, error: itemError } = await supabase
-    .from('checklist_item_templates')
-    .select('checklist_id')
-
-  if (itemError) throw itemError
-
-  const countMap = new Map<string, number>()
-  items?.forEach(item => {
-    countMap.set(item.checklist_id, (countMap.get(item.checklist_id) || 0) + 1)
-  })
 
   return checklists.map(cl => ({
     checklist_id: cl.checklist_id,
@@ -54,7 +40,7 @@ export async function getPublicChecklists() {
     description: cl.description,
     stage: cl.stage,
     is_premium: PREMIUM_CHECKLIST_IDS.includes(cl.checklist_id),
-    itemCount: countMap.get(cl.checklist_id) || 0,
+    itemCount: cl.checklist_item_templates?.[0]?.count ?? 0,
   }))
 }
 
@@ -62,6 +48,8 @@ export async function getPublicChecklists() {
  * Fetch a single checklist with all its items (public, no auth required)
  */
 export async function getPublicChecklistById(id: string) {
+  if (!/^CL-\d{2}$/.test(id)) return null
+
   const supabase = await createServerSupabaseClient()
 
   const { data: checklist, error: clError } = await supabase
