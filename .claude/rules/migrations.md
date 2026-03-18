@@ -51,7 +51,7 @@ CREATE POLICY "Users can read family data" ON table_name
 3. Run `get_advisors` (security) to check for missing RLS
 4. Test with `execute_sql` query
 
-## V2 Migrations (Phase 1)
+## Dad Journey Migrations
 1. `dad_challenge_content` table + `dad_challenge_pillar` enum
 2. `dad_profiles` table (user_id FK to profiles)
 3. `mood_checkins` table (user_id + family_id FKs)

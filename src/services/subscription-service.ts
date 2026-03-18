@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
 import { Subscription, SubscriptionTier, PremiumFeature } from '@/types'
+import { isPremiumTier } from '@/lib/subscription-utils'
 
 const supabase = createClient()
 
@@ -99,7 +100,7 @@ export const subscriptionService = {
   // Check if user is premium (any paid tier)
   async isPremium(): Promise<boolean> {
     const tier = await this.getSubscriptionTier()
-    return tier === 'premium' || tier === 'lifetime'
+    return isPremiumTier(tier)
   },
 
   // Create checkout session

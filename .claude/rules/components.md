@@ -39,14 +39,14 @@ globs: src/components/**
 - Import from `lucide-react`
 - Size: `h-5 w-5` for nav, `h-4 w-4` for inline
 
-## Dashboard Cards (V2)
+## Dashboard Cards
 - Each card is a self-contained component in `src/components/dashboard/`
 - Cards receive props from the priority engine (`src/hooks/use-dashboard-context.ts`)
 - Cards handle their own loading/empty states
 - Role-aware: check `profile.role` for dad/mom differences
 - Naming: `MoodCheckinCard.tsx`, `BriefingTeaserCard.tsx`, etc.
 
-## Dad Journey Components (V2)
+## Dad Journey Components
 - Directory: `src/components/dashboard/dad-journey/`
 - `DadChallengeTiles.tsx` — container with stagger animation
 - `DadChallengeTile.tsx` — expandable tile (color-coded border, gradient bg)

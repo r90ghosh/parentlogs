@@ -19,8 +19,6 @@ import Link from 'next/link'
  * Protected by onboarding layout (server-side auth check).
  */
 function OnboardingJoinContent() {
-  console.log('[OnboardingJoin] ========== RENDER ==========')
-
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user } = useAuth()
@@ -31,19 +29,10 @@ function OnboardingJoinContent() {
   const [error, setError] = useState<string | null>(null)
   const [familyInfo, setFamilyInfo] = useState<{ name: string | null; stage: string | null } | null>(null)
 
-  console.log('[OnboardingJoin] Current state:', {
-    userId: user?.id || 'null',
-    inviteCode,
-    isLoading,
-    familyInfo
-  })
-
   // Wait for client-side auth state to sync
   const [isReady, setIsReady] = useState(false)
   useEffect(() => {
-    console.log('[OnboardingJoin] useEffect - user changed:', user?.id || 'null')
     if (user) {
-      console.log('[OnboardingJoin] User available, setting isReady=true')
       setIsReady(true)
     }
   }, [user])
@@ -56,7 +45,6 @@ function OnboardingJoinContent() {
         return
       }
 
-      console.log('[OnboardingJoin] Validating invite code:', inviteCode)
       const { data, error } = await supabase
         .from('families')
         .select('name, stage')
@@ -64,11 +52,9 @@ function OnboardingJoinContent() {
         .single()
 
       if (!error && data) {
-        console.log('[OnboardingJoin] Valid code, family found:', data)
         setFamilyInfo(data)
         setError(null)
       } else {
-        console.log('[OnboardingJoin] Invalid code or error:', error)
         setFamilyInfo(null)
       }
     }
@@ -78,18 +64,12 @@ function OnboardingJoinContent() {
   }, [inviteCode, supabase])
 
   const handleJoin = async () => {
-    console.log('[OnboardingJoin] handleJoin called')
-    if (!user || !familyInfo) {
-      console.log('[OnboardingJoin] Cannot join - no user or familyInfo')
-      return
-    }
+    if (!user || !familyInfo) return
 
     setIsLoading(true)
     setError(null)
 
     try {
-      // Get family ID
-      console.log('[OnboardingJoin] Fetching family by invite code...')
       const { data: family, error: familyError } = await supabase
         .from('families')
         .select('id')
@@ -97,27 +77,20 @@ function OnboardingJoinContent() {
         .single()
 
       if (familyError) {
-        console.error('[OnboardingJoin] Family fetch error:', familyError)
         throw new Error('Invalid invite code')
       }
-      console.log('[OnboardingJoin] Family found:', family.id)
 
-      // Update profile with family_id
-      console.log('[OnboardingJoin] Updating profile with family_id...')
       const { error: profileError } = await supabase
         .from('profiles')
         .update({ family_id: family.id })
         .eq('id', user.id)
 
       if (profileError) {
-        console.error('[OnboardingJoin] Profile update error:', profileError)
         throw profileError
       }
-      console.log('[OnboardingJoin] Profile updated, navigating to /onboarding/complete')
 
       router.push('/onboarding/complete')
     } catch (err) {
-      console.error('[OnboardingJoin] Error:', err)
       setError(err instanceof Error ? err.message : 'Failed to join family')
       setIsLoading(false)
     }
@@ -125,7 +98,6 @@ function OnboardingJoinContent() {
 
   // Brief wait for client-side auth sync
   if (!isReady) {
-    console.log('[OnboardingJoin] Not ready yet, showing loader')
     return (
       <Card className="w-full max-w-md bg-[--surface] border-[--border]">
         <CardContent className="py-8">
@@ -136,8 +108,6 @@ function OnboardingJoinContent() {
       </Card>
     )
   }
-
-  console.log('[OnboardingJoin] Rendering join form')
 
   return (
     <Card className="w-full max-w-md bg-[--surface] border-[--border]">

@@ -1,5 +1,3 @@
-'use client'
-
 import Link from 'next/link'
 import { BookOpen, Clock, Lock } from 'lucide-react'
 import type { Article } from '@/lib/content'

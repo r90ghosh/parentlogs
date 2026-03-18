@@ -42,7 +42,7 @@ export default async function Layout({ children }) {
 | `(marketing)` | No | Marketing layout |
 | `(public)` | Varies | Minimal |
 
-## V2 New Routes
+## Additional Routes
 | Route | File | Notes |
 |-------|------|-------|
 | `/onboarding/ready` | `(auth)/onboarding/ready/page.tsx` | Replaces invite + complete |
@@ -50,7 +50,7 @@ export default async function Layout({ children }) {
 | `/onboarding/personalize` | `(main)/onboarding/personalize/page.tsx` | Dad profile (from dashboard card) |
 | `/briefing/[weekId]` | `(main)/briefing/[weekId]/page.tsx` | Specific week briefing |
 
-## Navigation (V2)
+## Navigation
 - Bottom nav: Home, Tasks, Briefing, Tracker, More
 - Calendar removed from nav → `/tasks?view=calendar`
 - Briefing promoted from More drawer to bottom nav

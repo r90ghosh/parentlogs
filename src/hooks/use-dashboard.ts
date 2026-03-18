@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { isPast, isToday, differenceInDays, differenceInWeeks, format } from 'date-fns'
 import { PriorityTask, TaskStats, UpcomingEvent, PartnerActivity, WeeklyBriefing, Achievement } from '@/types/dashboard'
 import { getAchievement } from '@/lib/baby-development-data'
+import { taskService } from '@/services/task-service'
 
 const supabase = createClient()
 
@@ -271,24 +272,11 @@ export function useCompleteDashboardTask() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (taskId: string) => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
-
-      const { error } = await supabase
-        .from('family_tasks')
-        .update({
-          status: 'completed',
-          completed_by: user.id,
-          completed_at: new Date().toISOString(),
-        })
-        .eq('id', taskId)
-
-      if (error) throw error
-    },
+    mutationFn: (taskId: string) => taskService.completeTask(taskId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dashboard'] })
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
     },
   })
 }
@@ -300,24 +288,16 @@ export function useSnoozeDashboardTask() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (taskId: string) => {
+    mutationFn: (taskId: string) => {
       const tomorrow = new Date()
       tomorrow.setDate(tomorrow.getDate() + 1)
       const untilDate = tomorrow.toISOString().split('T')[0]
-
-      const { error } = await supabase
-        .from('family_tasks')
-        .update({
-          due_date: untilDate,
-          status: 'pending',
-        })
-        .eq('id', taskId)
-
-      if (error) throw error
+      return taskService.snoozeTask(taskId, untilDate)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dashboard'] })
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
     },
   })
 }

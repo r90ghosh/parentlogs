@@ -9,20 +9,22 @@ export const briefingService = {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return null
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('family_id')
       .eq('id', user.id)
       .single()
 
+    if (profileError && profileError.code !== 'PGRST116') throw profileError
     if (!profile?.family_id) return null
 
-    const { data: family } = await supabase
+    const { data: family, error: familyError } = await supabase
       .from('families')
       .select('current_week, stage')
       .eq('id', profile.family_id)
       .single()
 
+    if (familyError && familyError.code !== 'PGRST116') throw familyError
     if (!family || family.current_week === null) return null
 
     const currentWeek = family.current_week
@@ -41,12 +43,13 @@ export const briefingService = {
       }
     }
 
-    const { data: briefing } = await supabase
+    const { data: briefing, error: briefingError } = await supabase
       .from('briefing_templates')
       .select('*')
       .eq('briefing_id', briefingId)
       .maybeSingle()
 
+    if (briefingError) throw briefingError
     return briefing as BriefingTemplate | null
   },
 
@@ -64,22 +67,24 @@ export const briefingService = {
       }
     }
 
-    const { data: briefing } = await supabase
+    const { data: briefing, error } = await supabase
       .from('briefing_templates')
       .select('*')
       .eq('briefing_id', briefingId)
       .maybeSingle()
 
+    if (error) throw error
     return briefing as BriefingTemplate | null
   },
 
   async getAllBriefings(): Promise<BriefingTemplate[]> {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('briefing_templates')
       .select('*')
       .order('stage', { ascending: true })
       .order('week', { ascending: true })
 
+    if (error) throw error
     return (data || []) as BriefingTemplate[]
   },
 }

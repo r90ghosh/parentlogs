@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
 import { BabyLog } from '@/types'
+import { isPremiumTier } from '@/lib/subscription-utils'
 
 const supabase = createClient()
 
@@ -76,8 +77,7 @@ export const trackerService = {
     }
 
     // Premium gating: free users only see last 7 days
-    const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
-    if (!isPremium && !filters.date_from) {
+    if (!isPremiumTier(profile.subscription_tier) && !filters.date_from) {
       const sevenDaysAgo = new Date()
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
       query = query.gte('logged_at', sevenDaysAgo.toISOString())
@@ -133,20 +133,41 @@ export const trackerService = {
     return { log: data as BabyLog | null, error: error as Error | null }
   },
 
-  async updateLog(id: string, updates: Partial<BabyLog>): Promise<{ error: Error | null }> {
+  async updateLog(
+    id: string,
+    updates: Partial<Pick<BabyLog, 'log_type' | 'log_data' | 'logged_at' | 'notes'>>
+  ): Promise<{ error: Error | null }> {
+    const safeUpdates: Record<string, unknown> = {}
+    if (updates.log_type !== undefined) safeUpdates.log_type = updates.log_type
+    if (updates.log_data !== undefined) safeUpdates.log_data = updates.log_data
+    if (updates.logged_at !== undefined) safeUpdates.logged_at = updates.logged_at
+    if (updates.notes !== undefined) safeUpdates.notes = updates.notes
+
     const { error } = await supabase
       .from('baby_logs')
-      .update(updates)
+      .update(safeUpdates)
       .eq('id', id)
 
     return { error: error as Error | null }
   },
 
   async deleteLog(id: string): Promise<{ error: Error | null }> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: new Error('Not authenticated') }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('family_id')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile?.family_id) return { error: new Error('No family found') }
+
     const { error } = await supabase
       .from('baby_logs')
       .delete()
       .eq('id', id)
+      .eq('family_id', profile.family_id)
 
     return { error: error as Error | null }
   },
@@ -166,71 +187,72 @@ export const trackerService = {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     const todayStr = today.toISOString()
+    const familyId = profile.family_id
 
-    // Get last feeding
-    const { data: lastFeeding } = await supabase
-      .from('baby_logs')
-      .select('*')
-      .eq('family_id', profile.family_id)
-      .eq('log_type', 'feeding')
-      .order('logged_at', { ascending: false })
-      .limit(1)
-      .single()
+    // Parallelize all 6 independent queries
+    const [
+      lastFeedingResult,
+      lastDiaperResult,
+      lastSleepResult,
+      feedingCountResult,
+      diaperCountResult,
+      sleepLogsResult,
+    ] = await Promise.all([
+      supabase
+        .from('baby_logs')
+        .select('*')
+        .eq('family_id', familyId)
+        .eq('log_type', 'feeding')
+        .order('logged_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      supabase
+        .from('baby_logs')
+        .select('*')
+        .eq('family_id', familyId)
+        .eq('log_type', 'diaper')
+        .order('logged_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      supabase
+        .from('baby_logs')
+        .select('*')
+        .eq('family_id', familyId)
+        .eq('log_type', 'sleep')
+        .order('logged_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      supabase
+        .from('baby_logs')
+        .select('*', { count: 'exact', head: true })
+        .eq('family_id', familyId)
+        .eq('log_type', 'feeding')
+        .gte('logged_at', todayStr),
+      supabase
+        .from('baby_logs')
+        .select('*', { count: 'exact', head: true })
+        .eq('family_id', familyId)
+        .eq('log_type', 'diaper')
+        .gte('logged_at', todayStr),
+      supabase
+        .from('baby_logs')
+        .select('log_data')
+        .eq('family_id', familyId)
+        .eq('log_type', 'sleep')
+        .gte('logged_at', todayStr),
+    ])
 
-    // Get last diaper
-    const { data: lastDiaper } = await supabase
-      .from('baby_logs')
-      .select('*')
-      .eq('family_id', profile.family_id)
-      .eq('log_type', 'diaper')
-      .order('logged_at', { ascending: false })
-      .limit(1)
-      .single()
-
-    // Get last sleep
-    const { data: lastSleep } = await supabase
-      .from('baby_logs')
-      .select('*')
-      .eq('family_id', profile.family_id)
-      .eq('log_type', 'sleep')
-      .order('logged_at', { ascending: false })
-      .limit(1)
-      .single()
-
-    // Get today's counts
-    const { count: feedingCount } = await supabase
-      .from('baby_logs')
-      .select('*', { count: 'exact', head: true })
-      .eq('family_id', profile.family_id)
-      .eq('log_type', 'feeding')
-      .gte('logged_at', todayStr)
-
-    const { count: diaperCount } = await supabase
-      .from('baby_logs')
-      .select('*', { count: 'exact', head: true })
-      .eq('family_id', profile.family_id)
-      .eq('log_type', 'diaper')
-      .gte('logged_at', todayStr)
-
-    // Get today's sleep logs and calculate total hours
-    const { data: sleepLogs } = await supabase
-      .from('baby_logs')
-      .select('log_data')
-      .eq('family_id', profile.family_id)
-      .eq('log_type', 'sleep')
-      .gte('logged_at', todayStr)
-
-    const totalSleepMinutes = (sleepLogs || []).reduce((total, log) => {
+    const totalSleepMinutes = (sleepLogsResult.data || []).reduce((total, log) => {
       const duration = (log.log_data as Record<string, any>)?.duration_minutes || 0
       return total + duration
     }, 0)
 
     return {
-      last_feeding: lastFeeding as BabyLog | null,
-      last_diaper: lastDiaper as BabyLog | null,
-      last_sleep: lastSleep as BabyLog | null,
-      total_feedings_today: feedingCount || 0,
-      total_diapers_today: diaperCount || 0,
+      last_feeding: lastFeedingResult.data as BabyLog | null,
+      last_diaper: lastDiaperResult.data as BabyLog | null,
+      last_sleep: lastSleepResult.data as BabyLog | null,
+      total_feedings_today: feedingCountResult.count || 0,
+      total_diapers_today: diaperCountResult.count || 0,
       total_sleep_hours_today: Math.round((totalSleepMinutes / 60) * 10) / 10,
     }
   },
@@ -284,8 +306,7 @@ export const trackerService = {
     if (!profile?.family_id) return null
 
     // Premium feature
-    const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
-    if (!isPremium) return { error: 'Premium feature' }
+    if (!isPremiumTier(profile.subscription_tier)) return { error: 'Premium feature' }
 
     const sevenDaysAgo = new Date()
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)

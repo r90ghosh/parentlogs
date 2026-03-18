@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
 import { ChecklistTemplate, ChecklistItemTemplate } from '@/types'
+import { isPremiumTier } from '@/lib/subscription-utils'
 
 const supabase = createClient()
 
@@ -39,7 +40,7 @@ export const checklistService = {
 
     if (!profile?.family_id) return []
 
-    const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
+    const isPremium = isPremiumTier(profile.subscription_tier)
 
     // Get all checklist templates
     const { data: checklists } = await supabase
@@ -98,7 +99,7 @@ export const checklistService = {
 
     if (!profile?.family_id) return null
 
-    const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
+    const isPremium = isPremiumTier(profile.subscription_tier)
 
     // Check if locked
     if (!isPremium && PREMIUM_CHECKLIST_IDS.includes(checklistId)) {

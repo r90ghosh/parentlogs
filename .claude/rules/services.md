@@ -56,6 +56,6 @@ export const exampleService = {
   - Lists: `Promise<Type[]>` (return `data || []`)
   - Mutations: `Promise<Type>` (return created/updated item)
 
-## V2 New Services
+## Additional Services
 - `src/services/dad-journey-service.ts` — challenge content, dad profiles, mood check-ins
-- Notification service and subscription service get modifications (free window checks)
+- Notification + subscription services handle free window checks

@@ -48,6 +48,6 @@ export function useUpdateExample() {
   - Challenge content: 10 minutes (changes rarely)
   - Mood check-in (today's): 30 seconds
 
-## V2 New Hooks
+## Additional Hooks
 - `src/hooks/use-dad-journey.ts` — challenge content, dad profile, mood check-ins
 - `src/hooks/use-dashboard-context.ts` — card priority engine

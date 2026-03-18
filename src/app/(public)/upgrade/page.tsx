@@ -129,11 +129,14 @@ function UpgradeContent() {
         </RevealOnScroll>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <div className="grid md:grid-cols-3 gap-6 mb-12" role="radiogroup" aria-label="Select a pricing plan">
           {/* Monthly */}
           <CardEntrance delay={100}>
             <Card3DTilt maxTilt={4} gloss>
               <div
+                role="radio"
+                aria-checked={selectedPlan === 'monthly'}
+                tabIndex={0}
                 className={cn(
                   "bg-[--card] border-2 rounded-2xl cursor-pointer transition-all duration-200 overflow-hidden shadow-card hover:shadow-hover",
                   selectedPlan === 'monthly'
@@ -141,6 +144,7 @@ function UpgradeContent() {
                     : "border-[--border] hover:border-[--border-hover]"
                 )}
                 onClick={() => setSelectedPlan('monthly')}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedPlan('monthly') } }}
               >
                 <div className="p-6 space-y-4">
                   <div>
@@ -170,6 +174,9 @@ function UpgradeContent() {
           <CardEntrance delay={200}>
             <Card3DTilt maxTilt={4} gloss>
               <div
+                role="radio"
+                aria-checked={selectedPlan === 'yearly'}
+                tabIndex={0}
                 className={cn(
                   "bg-[--card] border-2 rounded-2xl cursor-pointer transition-all duration-200 relative overflow-hidden shadow-card hover:shadow-hover",
                   selectedPlan === 'yearly'
@@ -177,6 +184,7 @@ function UpgradeContent() {
                     : "border-[--border] hover:border-[--border-hover]"
                 )}
                 onClick={() => setSelectedPlan('yearly')}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedPlan('yearly') } }}
               >
                 {/* Most Popular badge */}
                 <div className="absolute top-0 left-0 right-0 h-7 bg-copper flex items-center justify-center">
@@ -213,6 +221,9 @@ function UpgradeContent() {
           <CardEntrance delay={300}>
             <Card3DTilt maxTilt={4} gloss>
               <div
+                role="radio"
+                aria-checked={selectedPlan === 'lifetime'}
+                tabIndex={0}
                 className={cn(
                   "bg-[--card] border-2 rounded-2xl cursor-pointer transition-all duration-200 relative overflow-hidden shadow-card hover:shadow-hover",
                   selectedPlan === 'lifetime'
@@ -220,6 +231,7 @@ function UpgradeContent() {
                     : "border-[--border] hover:border-[--border-hover]"
                 )}
                 onClick={() => setSelectedPlan('lifetime')}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedPlan('lifetime') } }}
               >
                 {/* Best Value badge */}
                 <div className="absolute top-0 left-0 right-0 h-7 bg-gold flex items-center justify-center">

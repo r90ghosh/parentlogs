@@ -2,7 +2,6 @@
 
 import { ReactNode, useState, useEffect, Suspense } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ThemeProvider } from 'next-themes'
 import { AuthProvider } from '@/lib/auth/auth-context'
 import { PartnerActivityProvider } from '@/components/shared/partner-activity'
 import { ErrorBoundary } from '@/components/error/error-boundary'
@@ -25,15 +24,13 @@ function ServiceWorkerRegistration() {
       navigator.serviceWorker
         .register('/sw.js')
         .then((registration) => {
-          console.log('[SW] Registered:', registration.scope)
-
           // Check for updates periodically
           setInterval(() => {
             registration.update()
           }, 60 * 60 * 1000) // Every hour
         })
-        .catch((error) => {
-          console.error('[SW] Registration failed:', error)
+        .catch(() => {
+          // Service worker registration failed silently
         })
     }
   }, [])
@@ -45,12 +42,10 @@ function ServiceWorkerRegistration() {
 function OnlineStatusTracker() {
   useEffect(() => {
     const handleOnline = () => {
-      console.log('[App] Online')
       // Could show toast notification
     }
 
     const handleOffline = () => {
-      console.log('[App] Offline')
       // Could show toast notification
     }
 
@@ -67,12 +62,6 @@ function OnlineStatusTracker() {
 }
 
 export function Providers({ children }: { children: ReactNode }) {
-  console.log('[Providers] Rendering Providers component')
-
-  useEffect(() => {
-    console.log('[Providers] Providers component mounted')
-  }, [])
-
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
@@ -96,18 +85,16 @@ export function Providers({ children }: { children: ReactNode }) {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <AuthProvider>
-            <PartnerActivityProvider>
-              <Suspense fallback={<PageLoading />}>
-                {children}
-              </Suspense>
-              <AnalyticsInitializer />
-              <ServiceWorkerRegistration />
-              <OnlineStatusTracker />
-            </PartnerActivityProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <AuthProvider>
+          <PartnerActivityProvider>
+            <Suspense fallback={<PageLoading />}>
+              {children}
+            </Suspense>
+            <AnalyticsInitializer />
+            <ServiceWorkerRegistration />
+            <OnlineStatusTracker />
+          </PartnerActivityProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   )

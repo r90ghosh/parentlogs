@@ -59,16 +59,6 @@ interface UserProviderProps {
  * }
  */
 export function UserProvider({ user, profile, family, children }: UserProviderProps) {
-  console.log('[UserProvider] ========== RENDER ==========')
-  console.log('[UserProvider] User:', { id: user.id, email: user.email })
-  console.log('[UserProvider] Profile:', {
-    id: profile.id,
-    role: profile.role,
-    family_id: profile.family_id,
-    onboarding_completed: profile.onboarding_completed
-  })
-  console.log('[UserProvider] Family:', family ? { id: family.id, stage: family.stage } : 'null')
-
   return (
     <UserContext.Provider value={{ user, profile, family }}>
       {children}
@@ -91,18 +81,15 @@ export function UserProvider({ user, profile, family, children }: UserProviderPr
  * }
  */
 export function useUser(): UserContextValue {
-  console.log('[useUser] Hook called')
   const context = useContext(UserContext)
 
   if (!context) {
-    console.error('[useUser] ERROR: No UserContext found - component not wrapped in UserProvider')
     throw new Error(
       'useUser must be used within a UserProvider. ' +
       'Make sure this component is wrapped in the (main) layout.'
     )
   }
 
-  console.log('[useUser] Context found:', { userId: context.user.id, profileId: context.profile.id })
   return context
 }
 
@@ -122,7 +109,5 @@ export function useUser(): UserContextValue {
  * }
  */
 export function useOptionalUser(): UserContextValue | null {
-  const context = useContext(UserContext)
-  console.log('[useOptionalUser] Hook called, context:', context ? 'exists' : 'null')
-  return context
+  return useContext(UserContext)
 }

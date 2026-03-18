@@ -4,8 +4,7 @@ import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { useBriefingByWeek } from '@/hooks/use-briefings'
-import { useFamily } from '@/hooks/use-family'
-import { useRequirePremium } from '@/hooks/use-require-auth'
+import { useRequirePremium } from '@/hooks/use-subscription'
 import { useUser } from '@/components/user-provider'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PaywallOverlay } from '@/components/shared/paywall-overlay'
@@ -31,9 +30,8 @@ export default function BriefingWeekPage() {
   const rawWeekId = params.weekId as string
   const parsedWeek = parseInt(rawWeekId, 10)
 
-  const { data: family } = useFamily()
   const { isPremium } = useRequirePremium()
-  const { profile, family: userFamily } = useUser()
+  const { profile, family } = useUser()
 
   const stage = family?.stage || 'first-trimester'
   const currentWeek = family?.current_week || 1
@@ -57,7 +55,7 @@ export default function BriefingWeekPage() {
   const isPremiumLocked = !isPremium && Math.abs(localWeek - freeWindowAnchor) > 4
 
   // Family ID for linked tasks
-  const familyId = userFamily?.id ?? profile.family_id
+  const familyId = family?.id ?? profile.family_id
 
   const handleNavigate = (week: number) => {
     if (week >= 1 && week <= maxWeek) {

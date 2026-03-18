@@ -19,43 +19,27 @@ import { MainLayoutClient } from '@/components/layouts/main-layout-client'
  * - Can be cached at edge for returning users
  */
 export default async function MainLayout({ children }: { children: ReactNode }) {
-  console.log('[MainLayout] ========== RENDER START ==========')
-
   const { user, profile, family } = await getServerAuth()
-
-  console.log('[MainLayout] Auth result:', {
-    hasUser: !!user,
-    hasProfile: !!profile,
-    hasFamily: !!family,
-    onboardingCompleted: profile?.onboarding_completed
-  })
 
   // Not authenticated - redirect to login
   if (!user) {
-    console.log('[MainLayout] No user -> redirecting to /login')
     redirect('/login')
   }
 
   // No profile (edge case - new user, trigger may have failed)
   if (!profile) {
-    console.log('[MainLayout] No profile -> redirecting to /onboarding')
     redirect('/onboarding')
   }
 
   // Onboarding not completed - redirect to onboarding
   if (!profile.onboarding_completed) {
-    console.log('[MainLayout] Onboarding not completed -> redirecting to /onboarding')
     redirect('/onboarding')
   }
 
   // No family set up (edge case)
   if (!family) {
-    console.log('[MainLayout] No family -> redirecting to /onboarding/family')
     redirect('/onboarding/family')
   }
-
-  console.log('[MainLayout] All checks passed, rendering main layout')
-  console.log('[MainLayout] ========== RENDER END ==========')
 
   return (
     <UserProvider user={user} profile={profile} family={family}>

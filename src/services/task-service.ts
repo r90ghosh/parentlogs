@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
 import { FamilyTask, TaskStatus, TaskAssignee, TriageAction } from '@/types'
+import { isPremiumTier } from '@/lib/subscription-utils'
 
 const supabase = createClient()
 
@@ -45,7 +46,8 @@ export const taskService = {
     }
 
     if (filters.search) {
-      query = query.ilike('title', `%${filters.search}%`)
+      const escaped = filters.search.replace(/[%_\\]/g, '\\$&')
+      query = query.ilike('title', `%${escaped}%`)
     }
 
     if (filters.limit) {
@@ -57,7 +59,7 @@ export const taskService = {
     }
 
     // Premium gating: free users only see 30-day rolling window
-    const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
+    const isPremium = isPremiumTier(profile.subscription_tier)
     if (!isPremium) {
       const today = new Date()
       const thirtyDaysFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
@@ -157,20 +159,45 @@ export const taskService = {
     return { task: data as FamilyTask | null, error: error as Error | null }
   },
 
-  async updateTask(id: string, updates: Partial<FamilyTask>): Promise<{ error: Error | null }> {
+  async updateTask(
+    id: string,
+    updates: Partial<Pick<FamilyTask, 'title' | 'description' | 'due_date' | 'assigned_to' | 'priority' | 'category' | 'status' | 'notes'>>
+  ): Promise<{ error: Error | null }> {
+    const safeUpdates: Record<string, unknown> = {}
+    if (updates.title !== undefined) safeUpdates.title = updates.title
+    if (updates.description !== undefined) safeUpdates.description = updates.description
+    if (updates.due_date !== undefined) safeUpdates.due_date = updates.due_date
+    if (updates.assigned_to !== undefined) safeUpdates.assigned_to = updates.assigned_to
+    if (updates.priority !== undefined) safeUpdates.priority = updates.priority
+    if (updates.category !== undefined) safeUpdates.category = updates.category
+    if (updates.status !== undefined) safeUpdates.status = updates.status
+    if (updates.notes !== undefined) safeUpdates.notes = updates.notes
+
     const { error } = await supabase
       .from('family_tasks')
-      .update(updates)
+      .update(safeUpdates)
       .eq('id', id)
 
     return { error: error as Error | null }
   },
 
   async deleteTask(id: string): Promise<{ error: Error | null }> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: new Error('Not authenticated') }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('family_id')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile?.family_id) return { error: new Error('No family found') }
+
     const { error } = await supabase
       .from('family_tasks')
       .delete()
       .eq('id', id)
+      .eq('family_id', profile.family_id)
 
     return { error: error as Error | null }
   },
@@ -217,22 +244,16 @@ export const taskService = {
 
     if (!profile?.family_id) return []
 
-    // Query backlog tasks - fields may not exist until migration is applied
     const { data, error } = await supabase
       .from('family_tasks')
       .select('*')
       .eq('family_id', profile.family_id)
+      .eq('is_backlog', true)
+      .eq('backlog_status', 'pending')
       .order('due_date', { ascending: true })
 
     if (error) return []
-
-    // Filter for backlog tasks (is_backlog = true, backlog_status = 'pending')
-    // If is_backlog field doesn't exist, return empty array
-    const backlogTasks = (data || []).filter((task: Record<string, unknown>) =>
-      task.is_backlog === true && task.backlog_status === 'pending'
-    )
-
-    return backlogTasks as FamilyTask[]
+    return (data || []) as FamilyTask[]
   },
 
   /**
@@ -310,19 +331,14 @@ export const taskService = {
 
     if (!profile?.family_id) return 0
 
-    // Get all tasks and count backlog ones
-    const { data, error } = await supabase
+    const { count, error } = await supabase
       .from('family_tasks')
-      .select('*')
+      .select('*', { count: 'exact', head: true })
       .eq('family_id', profile.family_id)
+      .eq('is_backlog', true)
+      .eq('backlog_status', 'pending')
 
     if (error) return 0
-
-    // Count backlog tasks - if field doesn't exist, return 0
-    const count = (data || []).filter((task: Record<string, unknown>) =>
-      task.is_backlog === true && task.backlog_status === 'pending'
-    ).length
-
-    return count
+    return count || 0
   },
 }

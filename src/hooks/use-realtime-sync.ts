@@ -8,6 +8,8 @@ import { useFamily, useFamilyMembers } from '@/hooks/use-family'
 import { toast } from 'sonner'
 import { RealtimeChannel } from '@supabase/supabase-js'
 
+const supabase = createClient()
+
 type RealtimePayload = {
   eventType: 'INSERT' | 'UPDATE' | 'DELETE'
   new: Record<string, any>
@@ -15,7 +17,6 @@ type RealtimePayload = {
 }
 
 export function useRealtimeSync() {
-  const supabase = createClient()
   const queryClient = useQueryClient()
   const { user } = useAuth()
   const { data: family } = useFamily()
@@ -127,7 +128,7 @@ export function useRealtimeSync() {
       if (logsChannel) supabase.removeChannel(logsChannel)
       if (checklistChannel) supabase.removeChannel(checklistChannel)
     }
-  }, [family?.id, user?.id, queryClient, supabase, getMemberName])
+  }, [family?.id, user?.id, queryClient, getMemberName])
 }
 
 function formatLogDetails(log: Record<string, any>): string {
@@ -149,7 +150,6 @@ function formatLogDetails(log: Record<string, any>): string {
 
 // Hook to get real-time presence (who's online)
 export function usePartnerPresence() {
-  const supabase = createClient()
   const { user } = useAuth()
   const { data: family } = useFamily()
   const { data: members } = useFamilyMembers()
@@ -161,9 +161,7 @@ export function usePartnerPresence() {
 
     channel
       .on('presence', { event: 'sync' }, () => {
-        const state = channel.presenceState()
-        // Handle presence state changes
-        console.log('Presence state:', state)
+        // Presence state synced
       })
       .on('presence', { event: 'join' }, ({ key: _key, newPresences }: { key: string; newPresences: { user_id?: string }[] }) => {
         const joiner = newPresences[0]
@@ -188,5 +186,5 @@ export function usePartnerPresence() {
     return () => {
       channel.unsubscribe()
     }
-  }, [family?.id, user?.id, members, supabase])
+  }, [family?.id, user?.id, members])
 }

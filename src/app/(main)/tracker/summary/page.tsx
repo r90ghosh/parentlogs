@@ -2,12 +2,13 @@
 
 import { useState } from 'react'
 import { useWeeklySummary, useTrackerLogs } from '@/hooks/use-tracker'
-import { useRequirePremium } from '@/hooks/use-require-auth'
+import { useRequirePremium } from '@/hooks/use-subscription'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { PaywallOverlay } from '@/components/shared/paywall-overlay'
+import { type LucideIcon } from 'lucide-react'
 import {
   ArrowLeft,
   Baby,
@@ -248,7 +249,7 @@ function SummaryCard({
   unit,
   trend,
 }: {
-  icon: any
+  icon: LucideIcon
   iconColor: string
   bgColor: string
   label: string

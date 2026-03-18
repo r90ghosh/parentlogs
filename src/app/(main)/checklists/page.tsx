@@ -1,7 +1,7 @@
 'use client'
 
 import { useChecklists } from '@/hooks/use-checklists'
-import { useRequirePremium } from '@/hooks/use-require-auth'
+import { useRequirePremium } from '@/hooks/use-subscription'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Progress } from '@/components/ui/progress'

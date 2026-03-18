@@ -44,6 +44,43 @@ export async function DELETE(request: NextRequest) {
       .eq('id', user.id)
       .single()
 
+    // Delete user-scoped data (child tables first)
+    const { error: notifError } = await supabaseAdmin
+      .from('notifications')
+      .delete()
+      .eq('user_id', user.id)
+    if (notifError) console.error('Failed to delete notifications:', notifError)
+
+    const { error: moodError } = await supabaseAdmin
+      .from('mood_checkins')
+      .delete()
+      .eq('user_id', user.id)
+    if (moodError) console.error('Failed to delete mood_checkins:', moodError)
+
+    const { error: dadProfileError } = await supabaseAdmin
+      .from('dad_profiles')
+      .delete()
+      .eq('user_id', user.id)
+    if (dadProfileError) console.error('Failed to delete dad_profiles:', dadProfileError)
+
+    const { error: notifPrefError } = await supabaseAdmin
+      .from('notification_preferences')
+      .delete()
+      .eq('user_id', user.id)
+    if (notifPrefError) console.error('Failed to delete notification_preferences:', notifPrefError)
+
+    const { error: pushSubError } = await supabaseAdmin
+      .from('push_subscriptions')
+      .delete()
+      .eq('user_id', user.id)
+    if (pushSubError) console.error('Failed to delete push_subscriptions:', pushSubError)
+
+    const { error: subError } = await supabaseAdmin
+      .from('subscriptions')
+      .delete()
+      .eq('user_id', user.id)
+    if (subError) console.error('Failed to delete subscriptions:', subError)
+
     if (profile?.family_id) {
       // Check if user is family owner
       const { data: family } = await supabaseAdmin
@@ -70,58 +107,46 @@ export async function DELETE(request: NextRequest) {
 
       // If owner and sole member, delete the family
       if (isOwner && !hasOtherMembers) {
-        // Delete family-related data
-        await supabaseAdmin
-          .from('family_tasks')
-          .delete()
-          .eq('family_id', profile.family_id)
-
-        await supabaseAdmin
-          .from('baby_logs')
-          .delete()
-          .eq('family_id', profile.family_id)
-
-        await supabaseAdmin
-          .from('family_budget_items')
-          .delete()
-          .eq('family_id', profile.family_id)
-
-        await supabaseAdmin
+        // Delete family-scoped data (child tables first)
+        const { error: checklistError } = await supabaseAdmin
           .from('checklist_progress')
           .delete()
           .eq('family_id', profile.family_id)
+        if (checklistError) console.error('Failed to delete checklist_progress:', checklistError)
+
+        const { error: budgetError } = await supabaseAdmin
+          .from('family_budget')
+          .delete()
+          .eq('family_id', profile.family_id)
+        if (budgetError) console.error('Failed to delete family_budget:', budgetError)
+
+        const { error: babyLogsError } = await supabaseAdmin
+          .from('baby_logs')
+          .delete()
+          .eq('family_id', profile.family_id)
+        if (babyLogsError) console.error('Failed to delete baby_logs:', babyLogsError)
+
+        const { error: tasksError } = await supabaseAdmin
+          .from('family_tasks')
+          .delete()
+          .eq('family_id', profile.family_id)
+        if (tasksError) console.error('Failed to delete family_tasks:', tasksError)
 
         // Delete the family
-        await supabaseAdmin
+        const { error: familyError } = await supabaseAdmin
           .from('families')
           .delete()
           .eq('id', profile.family_id)
+        if (familyError) console.error('Failed to delete family:', familyError)
       }
     }
 
-    // Delete user's notification preferences
-    await supabaseAdmin
-      .from('notification_preferences')
-      .delete()
-      .eq('user_id', user.id)
-
-    // Delete user's subscription
-    await supabaseAdmin
-      .from('subscriptions')
-      .delete()
-      .eq('user_id', user.id)
-
-    // Delete user's push subscriptions
-    await supabaseAdmin
-      .from('push_subscriptions')
-      .delete()
-      .eq('user_id', user.id)
-
-    // Delete user's profile
-    await supabaseAdmin
+    // Delete user's profile (must be after family handling)
+    const { error: profileError } = await supabaseAdmin
       .from('profiles')
       .delete()
       .eq('id', user.id)
+    if (profileError) console.error('Failed to delete profile:', profileError)
 
     // Delete the auth user (this is the final step)
     const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(user.id)

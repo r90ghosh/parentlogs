@@ -35,6 +35,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WarmBackground } from '@/components/ui/animations/WarmBackground'
+import { useUnreadNotificationCount } from '@/hooks/use-notifications'
 
 const mainNavItems = [
   { href: '/dashboard', label: 'Home', icon: Home },
@@ -118,6 +119,7 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
   const { signOut } = useAuth()
   const { profile, family } = useUser()
 
+  const { data: unreadCount } = useUnreadNotificationCount()
   const weekDisplay = family ? `Week ${family.current_week}` : ''
 
   // Find active nav index for sliding indicator
@@ -145,8 +147,13 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
 
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon" asChild className="relative">
-              <Link href="/notifications">
+              <Link href="/notifications" aria-label={`Notifications${(unreadCount ?? 0) > 0 ? `, ${unreadCount} unread` : ''}`}>
                 <Bell className="h-[22px] w-[22px] text-copper" />
+                {(unreadCount ?? 0) > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] rounded-full bg-copper text-[10px] font-ui font-bold text-white flex items-center justify-center px-1">
+                    {unreadCount! > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
               </Link>
             </Button>
 
@@ -201,7 +208,7 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
       </main>
 
       {/* Bottom Navigation - Mobile */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-[--surface]/95 backdrop-blur-[16px] border-t border-[--border] md:hidden" style={{ paddingBottom: 'calc(8px + env(safe-area-inset-bottom))' }}>
+      <nav aria-label="Main navigation" className="fixed bottom-0 left-0 right-0 z-40 bg-[--surface]/95 backdrop-blur-[16px] border-t border-[--border] md:hidden" style={{ paddingBottom: 'calc(8px + env(safe-area-inset-bottom))' }}>
         <div className="relative flex items-center justify-around pt-2 pb-1" style={{ height: 'var(--nav-h)' }}>
           <NavIndicator activeIndex={activeIndex} />
 
@@ -275,8 +282,8 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
       </nav>
 
       {/* Sidebar Navigation - Desktop */}
-      <aside className="hidden md:flex fixed left-0 bottom-0 w-64 bg-[--surface] border-r border-[--border] flex-col p-4 overflow-y-auto" style={{ top: 'var(--header-h)' }}>
-        <nav className="space-y-1">
+      <aside className="hidden md:flex fixed left-0 bottom-0 w-64 bg-[--surface] border-r border-[--border] flex-col p-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" style={{ top: 'var(--header-h)' }}>
+        <nav aria-label="Sidebar navigation" className="space-y-1">
           {mainNavItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
             return (

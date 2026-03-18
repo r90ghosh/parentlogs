@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { startOfWeek, endOfWeek, isPast, isToday, addDays } from 'date-fns'
 import { taskService, TaskFilters } from '@/services/task-service'
@@ -38,6 +38,8 @@ export function useCompleteTask() {
     mutationFn: (id: string) => taskService.completeTask(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
   })
 }
@@ -50,6 +52,8 @@ export function useSnoozeTask() {
       taskService.snoozeTask(id, until),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
   })
 }
@@ -61,6 +65,8 @@ export function useSkipTask() {
     mutationFn: (id: string) => taskService.skipTask(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
   })
 }
@@ -72,6 +78,8 @@ export function useCreateTask() {
     mutationFn: (task: CreateTaskInput) => taskService.createTask(task),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
   })
 }
@@ -80,10 +88,12 @@ export function useUpdateTask() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Partial<FamilyTask> }) =>
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<Pick<FamilyTask, 'title' | 'description' | 'due_date' | 'assigned_to' | 'priority' | 'category' | 'status' | 'notes'>> }) =>
       taskService.updateTask(id, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
   })
 }
@@ -95,6 +105,8 @@ export function useDeleteTask() {
     mutationFn: (id: string) => taskService.deleteTask(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
   })
 }
@@ -226,28 +238,24 @@ export function useTaskProgress() {
  * Snooze a task to tomorrow (convenience wrapper)
  */
 export function useSnoozeToTomorrow() {
-  const snoozeTask = useSnoozeTask()
-
-  return useMutation({
-    mutationFn: (taskId: string) => {
-      const tomorrow = addDays(new Date(), 1).toISOString().split('T')[0]
-      return snoozeTask.mutateAsync({ id: taskId, until: tomorrow })
-    },
-  })
+  const snooze = useSnoozeTask()
+  const snoozeToTomorrow = useCallback((taskId: string) => {
+    const tomorrow = addDays(new Date(), 1).toISOString().split('T')[0]
+    return snooze.mutate({ id: taskId, until: tomorrow })
+  }, [snooze])
+  return { snoozeToTomorrow, ...snooze }
 }
 
 /**
  * Snooze a task by a number of days
  */
 export function useSnoozeDays() {
-  const snoozeTask = useSnoozeTask()
-
-  return useMutation({
-    mutationFn: ({ taskId, days }: { taskId: string; days: number }) => {
-      const until = addDays(new Date(), days).toISOString().split('T')[0]
-      return snoozeTask.mutateAsync({ id: taskId, until })
-    },
-  })
+  const snooze = useSnoozeTask()
+  const snoozeDays = useCallback(({ taskId, days }: { taskId: string; days: number }) => {
+    const until = addDays(new Date(), days).toISOString().split('T')[0]
+    return snooze.mutate({ id: taskId, until })
+  }, [snooze])
+  return { snoozeDays, ...snooze }
 }
 
 /**
@@ -281,9 +289,10 @@ export function useTriageTask() {
       taskService.triageTask(id, action),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
       queryClient.invalidateQueries({ queryKey: ['backlog-tasks'] })
       queryClient.invalidateQueries({ queryKey: ['backlog-count'] })
-      queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
     },
   })
 }
@@ -299,9 +308,10 @@ export function useBulkTriageTasks() {
       taskService.bulkTriageTasks(ids, action),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
       queryClient.invalidateQueries({ queryKey: ['backlog-tasks'] })
       queryClient.invalidateQueries({ queryKey: ['backlog-count'] })
-      queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
     },
   })
 }

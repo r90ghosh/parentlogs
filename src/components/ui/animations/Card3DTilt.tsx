@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode } from 'react'
+import { type ReactNode, useState, useEffect } from 'react'
 import { use3DTilt } from '@/hooks/use-3d-tilt'
 
 interface Card3DTiltProps {
@@ -12,6 +12,15 @@ interface Card3DTiltProps {
 
 export function Card3DTilt({ children, className = '', maxTilt = 6, gloss = true }: Card3DTiltProps) {
   const { ref, onPointerMove, onPointerLeave } = use3DTilt(maxTilt)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    setIsMobile(window.matchMedia('(pointer: coarse)').matches)
+  }, [])
+
+  if (isMobile) {
+    return <div className={`relative ${className}`}>{children}</div>
+  }
 
   return (
     <div

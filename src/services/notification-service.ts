@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
 import { NotificationPreferences } from '@/types'
+import { isPremiumTier } from '@/lib/subscription-utils'
 
 const supabase = createClient()
 
@@ -29,10 +30,8 @@ export const notificationService = {
 
     try {
       const registration = await navigator.serviceWorker.register('/sw.js')
-      console.log('Service Worker registered:', registration.scope)
       return registration
-    } catch (error) {
-      console.error('Service Worker registration failed:', error)
+    } catch {
       return null
     }
   },
@@ -58,14 +57,15 @@ export const notificationService = {
       await this.saveSubscription(subscription)
 
       return subscription
-    } catch (error) {
-      console.error('Push subscription failed:', error)
+    } catch {
       return null
     }
   },
 
   // Unsubscribe from push notifications
   async unsubscribeFromPush(): Promise<boolean> {
+    if (!this.isSupported()) return false
+
     const registration = await navigator.serviceWorker.ready
     const subscription = await registration.pushManager.getSubscription()
 
@@ -79,6 +79,10 @@ export const notificationService = {
   },
 
   // Save subscription to Supabase
+  // NOTE: onConflict uses 'endpoint' to support multiple devices per user.
+  // Requires a unique constraint on the endpoint column in push_subscriptions.
+  // If the current DB schema only has a unique constraint on user_id, a migration
+  // adding a unique constraint on endpoint is needed.
   async saveSubscription(subscription: PushSubscription): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
@@ -91,7 +95,7 @@ export const notificationService = {
       p256dh: subscriptionJson.keys?.p256dh || '',
       auth: subscriptionJson.keys?.auth || '',
     }, {
-      onConflict: 'user_id',
+      onConflict: 'endpoint',
     })
   },
 
@@ -100,9 +104,12 @@ export const notificationService = {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
+    const subscriptionJson = subscription.toJSON()
+
     await supabase
       .from('push_subscriptions')
       .delete()
+      .eq('endpoint', subscriptionJson.endpoint!)
       .eq('user_id', user.id)
   },
 
@@ -115,7 +122,7 @@ export const notificationService = {
       .from('notification_preferences')
       .select('*')
       .eq('user_id', user.id)
-      .single()
+      .maybeSingle()
 
     return data as NotificationPreferences | null
   },
@@ -165,9 +172,7 @@ export const notificationService = {
     if (!profile) return false
 
     // Premium users always have push access
-    if (profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime') {
-      return true
-    }
+    if (isPremiumTier(profile.subscription_tier)) return true
 
     // Free users: 30-day window from signup
     if (!profile.created_at) return true // If no signup date, grant access
@@ -191,8 +196,9 @@ export const notificationService = {
 
     if (!profile) return { isActive: false, daysRemaining: null, isPremium: false }
 
-    const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
-    if (isPremium) return { isActive: true, daysRemaining: null, isPremium: true }
+    if (isPremiumTier(profile.subscription_tier)) {
+      return { isActive: true, daysRemaining: null, isPremium: true }
+    }
 
     if (!profile.created_at) return { isActive: true, daysRemaining: 30, isPremium: false }
 
@@ -201,7 +207,8 @@ export const notificationService = {
     const daysSinceSignup = Math.floor((now.getTime() - signupDate.getTime()) / (1000 * 60 * 60 * 24))
     const daysRemaining = Math.max(0, 30 - daysSinceSignup)
 
-    return { isActive: daysRemaining > 0, daysRemaining, isPremium: false }
+    // Consistent with isPushWindowActive: day 30 is active (daysRemaining >= 0 means <= 30 days)
+    return { isActive: daysRemaining >= 0, daysRemaining, isPremium: false }
   },
 
   // Helper: Convert VAPID key

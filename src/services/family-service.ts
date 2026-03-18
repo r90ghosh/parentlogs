@@ -116,13 +116,20 @@ export const familyService = {
     return (members || []) as FamilyMember[]
   },
 
-  async updateFamily(updates: Partial<Family>): Promise<{ error: Error | null }> {
+  async updateFamily(updates: Partial<Pick<Family, 'due_date' | 'birth_date' | 'baby_name' | 'stage'>>): Promise<{ error: Error | null }> {
     const family = await this.getFamily()
     if (!family) return { error: new Error('No family found') }
 
+    // Only allow safe fields
+    const safeUpdates: Record<string, unknown> = {}
+    if (updates.due_date !== undefined) safeUpdates.due_date = updates.due_date
+    if (updates.birth_date !== undefined) safeUpdates.birth_date = updates.birth_date
+    if (updates.baby_name !== undefined) safeUpdates.baby_name = updates.baby_name
+    if (updates.stage !== undefined) safeUpdates.stage = updates.stage
+
     const { error } = await supabase
       .from('families')
-      .update(updates)
+      .update(safeUpdates)
       .eq('id', family.id)
 
     return { error: error as Error | null }

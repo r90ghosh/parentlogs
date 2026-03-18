@@ -16,9 +16,7 @@ const features = [
 ]
 
 export default function OnboardingWelcome() {
-  console.log('[OnboardingWelcome] ========== RENDER START ==========')
   const router = useRouter()
-  console.log('[OnboardingWelcome] Router obtained, rendering page')
 
   return (
     <CardEntrance delay={100}>

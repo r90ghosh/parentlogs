@@ -8,6 +8,7 @@ export function useFamily() {
   return useQuery({
     queryKey: ['family'],
     queryFn: () => familyService.getFamily(),
+    staleTime: 1000 * 60 * 5, // 5 minutes - family data rarely changes
   })
 }
 
@@ -15,6 +16,7 @@ export function useFamilyMembers() {
   return useQuery({
     queryKey: ['family-members'],
     queryFn: () => familyService.getFamilyMembers(),
+    staleTime: 1000 * 60 * 5, // 5 minutes - family members rarely change
   })
 }
 
@@ -47,7 +49,8 @@ export function useUpdateFamily() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (updates: Partial<Family>) => familyService.updateFamily(updates),
+    mutationFn: (updates: Partial<Pick<Family, 'due_date' | 'birth_date' | 'baby_name' | 'stage'>>) =>
+      familyService.updateFamily(updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['family'] })
     },

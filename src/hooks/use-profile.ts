@@ -26,7 +26,6 @@ export function useProfile(userId: string | undefined) {
   return useQuery({
     queryKey: ['profile', userId],
     queryFn: async () => {
-      console.log('[useProfile] Fetching profile for userId:', userId)
       if (!userId) return null
 
       const { data, error } = await supabase
@@ -35,11 +34,7 @@ export function useProfile(userId: string | undefined) {
         .eq('id', userId)
         .single()
 
-      if (error) {
-        console.error('[useProfile] Error fetching profile:', error.message)
-        throw error
-      }
-      console.log('[useProfile] Profile fetched successfully:', data?.id)
+      if (error) throw error
       return data as AppUser
     },
     enabled: !!userId,
@@ -56,7 +51,6 @@ export function useUpdateRole() {
 
   return useMutation({
     mutationFn: async ({ userId, role }: { userId: string; role: UserRole }) => {
-      console.log('[useUpdateRole] Updating role:', { userId, role })
       const { data, error } = await supabase
         .from('profiles')
         .update({ role })
@@ -64,20 +58,12 @@ export function useUpdateRole() {
         .select()
         .single()
 
-      if (error) {
-        console.error('[useUpdateRole] Error:', error.message)
-        throw error
-      }
-      console.log('[useUpdateRole] Role updated successfully')
+      if (error) throw error
       return data as AppUser
     },
     onSuccess: (data) => {
-      console.log('[useUpdateRole] onSuccess - invalidating queries')
       queryClient.setQueryData(['profile', data.id], data)
       queryClient.invalidateQueries({ queryKey: ['profile'] })
-    },
-    onError: (error) => {
-      console.error('[useUpdateRole] onError:', error)
     },
   })
 }
@@ -91,7 +77,6 @@ export function useUpdateProfile() {
 
   return useMutation({
     mutationFn: async ({ userId, updates }: { userId: string; updates: Partial<AppUser> }) => {
-      console.log('[useUpdateProfile] Updating profile:', { userId, updates })
       const { data, error } = await supabase
         .from('profiles')
         .update(updates)
@@ -99,20 +84,12 @@ export function useUpdateProfile() {
         .select()
         .single()
 
-      if (error) {
-        console.error('[useUpdateProfile] Error:', error.message)
-        throw error
-      }
-      console.log('[useUpdateProfile] Profile updated successfully')
+      if (error) throw error
       return data as AppUser
     },
     onSuccess: (data) => {
-      console.log('[useUpdateProfile] onSuccess - invalidating queries')
       queryClient.setQueryData(['profile', data.id], data)
       queryClient.invalidateQueries({ queryKey: ['profile'] })
-    },
-    onError: (error) => {
-      console.error('[useUpdateProfile] onError:', error)
     },
   })
 }
@@ -126,7 +103,6 @@ export function useCompleteOnboarding() {
 
   return useMutation({
     mutationFn: async (userId: string) => {
-      console.log('[useCompleteOnboarding] Completing onboarding for userId:', userId)
       const { data, error } = await supabase
         .from('profiles')
         .update({ onboarding_completed: true })
@@ -134,20 +110,12 @@ export function useCompleteOnboarding() {
         .select()
         .single()
 
-      if (error) {
-        console.error('[useCompleteOnboarding] Error:', error.message)
-        throw error
-      }
-      console.log('[useCompleteOnboarding] Onboarding completed successfully')
+      if (error) throw error
       return data as AppUser
     },
     onSuccess: (data) => {
-      console.log('[useCompleteOnboarding] onSuccess - invalidating queries')
       queryClient.setQueryData(['profile', data.id], data)
       queryClient.invalidateQueries({ queryKey: ['profile'] })
-    },
-    onError: (error) => {
-      console.error('[useCompleteOnboarding] onError:', error)
     },
   })
 }
@@ -171,10 +139,7 @@ export function useCurrentProfile() {
         .eq('id', user.id)
         .single()
 
-      if (error) {
-        console.error('[useCurrentProfile] Error fetching profile:', error.message)
-        return null
-      }
+      if (error) return null
       return data as AppUser
     },
     staleTime: 5 * 60 * 1000,

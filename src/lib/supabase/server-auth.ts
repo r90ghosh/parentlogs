@@ -1,6 +1,8 @@
 import { createServerSupabaseClient } from './server'
 import { User as AppUser, Family } from '@/types'
 
+const isDev = process.env.NODE_ENV === 'development'
+
 /**
  * Server-side authentication utility
  *
@@ -35,31 +37,26 @@ export interface ServerAuthResult {
  * if (!profile?.onboarding_completed) redirect('/onboarding')
  */
 export async function getServerAuth(): Promise<ServerAuthResult> {
-  console.log('[ServerAuth] ========== getServerAuth START ==========')
+  if (isDev) console.log('[ServerAuth] getServerAuth START')
 
   const supabase = await createServerSupabaseClient()
-  console.log('[ServerAuth] Supabase client created')
 
   // Get authenticated user from session cookies
-  console.log('[ServerAuth] Calling supabase.auth.getUser()...')
   const { data: { user }, error: authError } = await supabase.auth.getUser()
 
   if (authError) {
-    console.error('[ServerAuth] Auth error:', authError.message)
-    console.log('[ServerAuth] ========== getServerAuth END (auth error) ==========')
+    if (isDev) console.error('[ServerAuth] Auth error:', authError.message)
     return { user: null, profile: null, family: null }
   }
 
   if (!user) {
-    console.log('[ServerAuth] No user found (not authenticated)')
-    console.log('[ServerAuth] ========== getServerAuth END (no user) ==========')
+    if (isDev) console.log('[ServerAuth] No user found')
     return { user: null, profile: null, family: null }
   }
 
-  console.log('[ServerAuth] User found:', { id: user.id, email: user.email })
+  if (isDev) console.log('[ServerAuth] User found:', user.id)
 
   // Fetch profile data
-  console.log('[ServerAuth] Fetching profile...')
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
     .select('*')
@@ -67,13 +64,12 @@ export async function getServerAuth(): Promise<ServerAuthResult> {
     .single()
 
   if (profileError) {
-    console.error('[ServerAuth] Profile fetch error:', profileError.message, profileError.code)
+    if (isDev) console.error('[ServerAuth] Profile fetch error:', profileError.message, profileError.code)
   }
 
   if (profileError || !profile) {
     // User exists but no profile (edge case - trigger may have failed)
-    console.warn('[ServerAuth] User exists but profile not found:', user.id)
-    console.log('[ServerAuth] ========== getServerAuth END (no profile) ==========')
+    if (isDev) console.warn('[ServerAuth] User exists but profile not found:', user.id)
     return {
       user: { id: user.id, email: user.email! },
       profile: null,
@@ -81,18 +77,9 @@ export async function getServerAuth(): Promise<ServerAuthResult> {
     }
   }
 
-  console.log('[ServerAuth] Profile found:', {
-    id: profile.id,
-    email: profile.email,
-    role: profile.role,
-    family_id: profile.family_id,
-    onboarding_completed: profile.onboarding_completed
-  })
-
   // Fetch family data if user has a family
   let family: Family | null = null
   if (profile.family_id) {
-    console.log('[ServerAuth] Fetching family:', profile.family_id)
     const { data: familyData, error: familyError } = await supabase
       .from('families')
       .select('*')
@@ -100,20 +87,13 @@ export async function getServerAuth(): Promise<ServerAuthResult> {
       .single()
 
     if (familyError) {
-      console.error('[ServerAuth] Family fetch error:', familyError.message)
+      if (isDev) console.error('[ServerAuth] Family fetch error:', familyError.message)
     } else if (familyData) {
       family = familyData as Family
-      console.log('[ServerAuth] Family found:', {
-        id: family.id,
-        stage: family.stage,
-        current_week: family.current_week
-      })
     }
-  } else {
-    console.log('[ServerAuth] No family_id on profile')
   }
 
-  console.log('[ServerAuth] ========== getServerAuth END (success) ==========')
+  if (isDev) console.log('[ServerAuth] getServerAuth END (success)')
   return {
     user: { id: user.id, email: user.email! },
     profile: profile as AppUser,

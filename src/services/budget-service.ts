@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
 import { BudgetTemplate, BudgetPeriod, FamilyBudgetItem } from '@/types'
+import { isPremiumTier } from '@/lib/subscription-utils'
 
 const supabase = createClient()
 
@@ -34,7 +35,8 @@ export const budgetService = {
       query = query.eq('period', period)
     }
 
-    const { data } = await query
+    const { data, error } = await query
+    if (error) throw error
     return (data || []) as unknown as BudgetTemplate[]
   },
 
@@ -42,30 +44,35 @@ export const budgetService = {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return null
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('family_id, subscription_tier')
       .eq('id', user.id)
       .single()
 
+    if (profileError && profileError.code !== 'PGRST116') throw profileError
     if (!profile?.family_id) return null
 
-    const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
+    const isPremium = isPremiumTier(profile.subscription_tier)
 
     // Get all templates (only V2 rows with period set)
-    const { data: templates } = await supabase
+    const { data: templates, error: templatesError } = await supabase
       .from('budget_templates')
       .select('*')
       .not('period', 'is', null)
       .order('category', { ascending: true })
       .order('price_min', { ascending: true })
 
+    if (templatesError) throw templatesError
+
     // Get family's budget items
-    const { data: familyItems } = await supabase
+    const { data: familyItems, error: familyItemsError } = await supabase
       .from('family_budget')
       .select('*')
       .eq('family_id', profile.family_id)
       .order('created_at', { ascending: true })
+
+    if (familyItemsError) throw familyItemsError
 
     // Group templates by category
     const categoryMap = new Map<string, BudgetTemplate[]>()
@@ -117,31 +124,34 @@ export const budgetService = {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return { error: new Error('Not authenticated') }
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('family_id')
       .eq('id', user.id)
       .single()
 
+    if (profileError && profileError.code !== 'PGRST116') return { error: profileError as Error }
     if (!profile?.family_id) return { error: new Error('No family found') }
 
     // Get template details
-    const { data: template } = await supabase
+    const { data: template, error: templateError } = await supabase
       .from('budget_templates')
       .select('*')
       .eq('budget_id', templateId)
       .single()
 
+    if (templateError && templateError.code !== 'PGRST116') return { error: templateError as Error }
     if (!template) return { error: new Error('Template not found') }
 
     // Check if already added
-    const { data: existing } = await supabase
+    const { data: existing, error: existingError } = await supabase
       .from('family_budget')
       .select('id')
       .eq('family_id', profile.family_id)
       .eq('budget_template_id', templateId)
-      .single()
+      .maybeSingle()
 
+    if (existingError) return { error: existingError as Error }
     if (existing) return { error: new Error('Item already in your budget') }
 
     const { error } = await supabase
@@ -164,12 +174,13 @@ export const budgetService = {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return { error: new Error('Not authenticated') }
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('family_id')
       .eq('id', user.id)
       .single()
 
+    if (profileError && profileError.code !== 'PGRST116') return { error: profileError as Error }
     if (!profile?.family_id) return { error: new Error('No family found') }
 
     const { error } = await supabase
@@ -195,8 +206,10 @@ export const budgetService = {
     if (!user) return { error: new Error('Not authenticated') }
 
     const updateData: Record<string, unknown> = { ...updates }
-    if (updates.is_purchased) {
+    if (updates.is_purchased === true) {
       updateData.purchased_at = new Date().toISOString()
+    } else if (updates.is_purchased === false) {
+      updateData.purchased_at = null
     }
 
     const { error } = await supabase
@@ -211,10 +224,19 @@ export const budgetService = {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return { error: new Error('Not authenticated') }
 
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('family_id')
+      .eq('id', user.id)
+      .single()
+
+    if (!profile?.family_id) return { error: new Error('No family found') }
+
     const { error } = await supabase
       .from('family_budget')
       .delete()
       .eq('id', itemId)
+      .eq('family_id', profile.family_id)
 
     return { error: error as Error | null }
   },

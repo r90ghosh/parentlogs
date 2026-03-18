@@ -69,58 +69,6 @@
     --input: rgba(237, 230, 220, 0.08);
     --ring: #c4703f;
   }
-
-  /* Keep .dark class pointing to same warm values for backward compat */
-  .dark {
-    --bg: #12100e;
-    --surface: #1a1714;
-    --card: #201c18;
-    --card-hover: #282420;
-    --white: #faf6f0;
-    --cream: #ede6dc;
-    --muted: #7a6f62;
-    --dim: #4a4239;
-    --copper: #c4703f;
-    --copper-dim: rgba(196, 112, 63, 0.15);
-    --copper-glow: rgba(196, 112, 63, 0.25);
-    --gold: #d4a853;
-    --gold-dim: rgba(212, 168, 83, 0.15);
-    --gold-glow: rgba(212, 168, 83, 0.25);
-    --sage: #6b8f71;
-    --sage-dim: rgba(107, 143, 113, 0.15);
-    --coral: #d4836b;
-    --coral-dim: rgba(212, 131, 107, 0.15);
-    --sky: #5b9bd5;
-    --sky-dim: rgba(91, 155, 213, 0.15);
-    --rose: #c47a8f;
-    --rose-dim: rgba(196, 122, 143, 0.15);
-    --border: rgba(237, 230, 220, 0.08);
-    --border-hover: rgba(237, 230, 220, 0.15);
-    --shadow-card: 0 2px 16px rgba(0,0,0,0.35), 0 1px 4px rgba(0,0,0,0.2);
-    --shadow-hover: 0 6px 28px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.3);
-    --shadow-lift: 0 6px 24px rgba(0,0,0,0.28), 0 16px 48px rgba(0,0,0,0.36);
-    --shadow-copper: 0 4px 20px rgba(196,112,63,0.18);
-    --shadow-gold: 0 4px 20px rgba(212,168,83,0.18);
-    --background: #12100e;
-    --foreground: #ede6dc;
-    --card-foreground: #ede6dc;
-    --popover: #201c18;
-    --popover-foreground: #ede6dc;
-    --primary: #c4703f;
-    --primary-foreground: #12100e;
-    --secondary: #d4a853;
-    --secondary-foreground: #12100e;
-    --muted-foreground: #7a6f62;
-    --accent-foreground: #c4703f;
-    --destructive: #d4836b;
-    --destructive-foreground: #faf6f0;
-    --input: rgba(237, 230, 220, 0.08);
-    --ring: #c4703f;
-    --radius: 12px;
-    --radius-sm: 8px;
-    --radius-xs: 4px;
-    --radius-lg: 16px;
-  }
 }
 
 @layer base {
@@ -261,7 +209,29 @@
   animation: buttonGlowRotate 4s linear infinite;
 }
 
-/* Custom scrollbar */
+/* Global dark scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--dim);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--dim) transparent;
+}
+
+/* Custom scrollbar utility (for explicit use) */
 @layer utilities {
   .scrollbar-thin::-webkit-scrollbar {
     width: 6px;

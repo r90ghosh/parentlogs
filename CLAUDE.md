@@ -21,7 +21,7 @@ The Dad Center is a pregnancy & parenting companion app designed primarily for d
 | Layer | Tech |
 |-------|------|
 | Framework | Next.js 16.1.x (App Router) |
-| UI | React 19.x, Tailwind CSS 4.x, Radix UI (shadcn pattern) |
+| UI | React 19.x, Tailwind CSS 3.x, Radix UI (shadcn pattern) |
 | Animation | Framer Motion 12.x + custom animation components |
 | DB/Auth | Supabase (PostgreSQL, Auth, Realtime) |
 | State | TanStack React Query 5.x |
@@ -33,70 +33,8 @@ The Dad Center is a pregnancy & parenting companion app designed primarily for d
 | Fonts | Playfair Display (display), Jost (body), Karla (UI) |
 
 ## Design System — "Warm Luxury Editorial"
-
-### Color Palette (CSS Custom Properties)
-
-**Core Surfaces (dark theme):**
-- `--bg`: #12100e (page background)
-- `--surface`: #1a1714 (header, sidebar, nav)
-- `--card`: #201c18 (cards)
-- `--card-hover`: #282420
-
-**Text:**
-- `--white`: #faf6f0 (headings)
-- `--cream`: #ede6dc (body text)
-- `--muted`: #7a6f62 (secondary text)
-- `--dim`: #4a4239 (tertiary/disabled)
-
-**Accent Colors:**
-- `--copper`: #c4703f (primary accent, CTAs, active states)
-- `--gold`: #d4a853 (premium, highlights)
-- `--sage`: #6b8f71 (success, completed)
-- `--coral`: #d4836b (warnings, destructive)
-- `--sky`: #5b9bd5 (info, links)
-- `--rose`: #c47a8f (pregnancy-related)
-
-Each accent has a `-dim` variant (15% opacity) and `-glow` variant (25% opacity).
-
-**Borders & Shadows:**
-- `--border`: rgba(237, 230, 220, 0.08)
-- `--border-hover`: rgba(237, 230, 220, 0.15)
-- `--shadow-card`, `--shadow-hover`, `--shadow-lift`, `--shadow-copper`, `--shadow-gold`
-
-### Font Usage
-- `font-display` — Playfair Display: headings, hero text, card titles
-- `font-body` — Jost: body text, descriptions, paragraphs
-- `font-ui` — Karla: buttons, labels, badges, nav items, stats
-
-### Animation Components (`src/components/ui/animations/`)
-
-All pages use these animation wrappers for visual consistency:
-
-| Component | Purpose | Usage |
-|-----------|---------|-------|
-| `Card3DTilt` | 3D mouse-follow tilt with gloss overlay | Wrap any card (`maxTilt={3-4}`, `gloss`) |
-| `RevealOnScroll` | IntersectionObserver fade-up on scroll | Wrap sections (`delay={ms}`) |
-| `CardEntrance` | "Dealt from deck" perspective+rotateX entrance | Wrap cards with stagger (`delay={index * 120}`) |
-| `TypewriterGreeting` | Character-by-character typing with copper cursor | Dashboard greeting |
-| `CopperDivider` | Animated line draw with traveling glow tip | After TypewriterGreeting |
-| `ScrollProgressBar` | Copper-to-gold gradient progress bar at top | Marketing pages |
-| `MagneticButton` | Slight translate toward cursor on hover | CTAs on marketing pages |
-| `WarmBackground` | Radial gradients + noise texture overlay | Page backgrounds |
-| `FloatingParticles` | CSS-animated copper/gold particles | Page backgrounds |
-| `MoodEmojiPop` | 3D emoji selection with ripple | Mood check-in |
-
-### CSS Keyframes (in `globals.css`)
-- `subtitleGradient` — Animated gradient for hero subtitles
-- `featuredFloat` — Floating animation for featured pricing card
-- `iconPulse` — Pulsing opacity for feature icons
-- `ctaGlowBreath` — Breathing glow for CTA backgrounds
-- `pulseRingExpand` — Ring expansion animation
-- `quoteRotate` — Slow 360deg rotation for decorative quote marks
-
-### Utility Classes
-- `.section-pre` — Section pre-label with `::after` copper line (60px)
-- `.card-*-top` — Colored top border accents (copper, gold, sage, coral, sky, rose)
-- `.text-gradient-copper` — Copper-to-gold gradient text
+See `.claude/rules/design-system.md` for full color palette, fonts, animation components, and CSS details.
+Key: Dark theme, copper/gold accents, Playfair Display + Jost + Karla fonts, 10 animation wrapper components.
 
 ## Architecture Patterns
 
@@ -107,37 +45,8 @@ Request → Middleware → Server Layout → getServerAuth()
 ```
 All protected routes fetch auth server-side. No client-side auth loading spinners.
 
-### Service Pattern (`src/services/`)
-```typescript
-import { createClient } from '@/lib/supabase/client'
-const supabase = createClient()
-export const exampleService = {
-  async getData(): Promise<Type | null> {
-    const { data, error } = await supabase.from('table').select('*')
-    if (error) throw error
-    return data
-  },
-}
-```
-
-### Hook Pattern (`src/hooks/`)
-```typescript
-'use client'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-export function useExampleData(id: string) {
-  return useQuery({
-    queryKey: ['example', id],
-    queryFn: () => exampleService.getData(id),
-    enabled: !!id,
-  })
-}
-```
-
-### Component Pattern
-- **Server Components** (default): layouts, pages that fetch data
-- **Client Components** (`'use client'`): interactive UI
-- **Pages**: thin server components passing props to client components
-- **Layouts**: auth checks, data fetching, context providers
+### Patterns
+See `.claude/rules/` for detailed service, hook, component, migration, and page patterns.
 
 ## Project Structure
 
@@ -223,25 +132,8 @@ These render as pill-button navigation (similar to the Briefing page's week numb
 
 Mom sees Partner Activity Card at position 1 instead of Mood Check-in. No On Your Mind tiles.
 
-## V2 Build Phases (All Complete)
-
-All 17 phases have been implemented:
-- **Phases 1-3:** Database migrations, types/config, service layer
-- **Phases 4-6:** Onboarding redesign, navigation restructure, routing
-- **Phases 7-14:** Dashboard, dad journey, mood check-in, briefings, tasks, mom's experience, catch-up UX, notifications
-- **Phases 15-16:** Free-to-premium upgrade journey, subscription & paywall
-- **Phase 17:** Content generation & seeding (63 pieces: 7 pillars x 9 phases)
-
-### Visual Redesign (Post-V2)
-
-A 13-phase "Warm Luxury Editorial" visual redesign was applied across all pages:
-- Custom animation components integrated into every page
-- Card3DTilt + RevealOnScroll + CardEntrance on all card-based UIs
-- TypewriterGreeting + CopperDivider on dashboard header
-- ScrollProgressBar + WarmBackground + FloatingParticles on marketing pages
-- MagneticButton on primary CTAs
-- Section pre-labels with copper accent lines
-- Split-letter heading animation on hero
+## Build Status
+V2 complete (17 phases) + "Warm Luxury Editorial" visual redesign (13 phases). All animation components integrated across every page.
 
 ## Design Principles
 
@@ -252,6 +144,22 @@ A 13-phase "Warm Luxury Editorial" visual redesign was applied across all pages:
 5. **Role-Agnostic Navigation, Role-Aware Content**
 6. **Dad-First, Not Dad-Only**
 7. **Free Should Feel Complete**
+
+## Gotchas
+- Brand is "The Dad Center" — NEVER use "ParentLogs" anywhere user-facing
+- Free task window is **30-day rolling**, not 14-day
+- Free briefing window: **4 weeks from signup**, not unlimited
+- Tailwind CSS **v3.4.x** — uses `tailwind.config.ts` with v3 plugin pattern
+- React **19** — new hooks and features available (use, useActionState, etc.)
+- Framer Motion **12.x** — API changes from v10/v11
+- Animation components are wrappers — use `<FadeIn>`, `<SlideUp>`, etc., don't write raw framer-motion
+- Pricing is $4.99/$39.99/$99.99 — triple-check any pricing display
+
+## Session Checklist
+- Is Build Status / Current Status still accurate?
+- Any new patterns discovered? → update .claude/rules/ or Conventions
+- Any recurring issues? → add to Gotchas
+- Any architectural decisions made? → update Architecture section
 
 ## Verification Checklist
 

@@ -8,6 +8,7 @@ export function useBudgetTemplates(period?: BudgetPeriod) {
   return useQuery({
     queryKey: ['budget-templates', period],
     queryFn: () => budgetService.getBudgetTemplates(period),
+    staleTime: 1000 * 60 * 10, // 10 minutes - templates rarely change
   })
 }
 

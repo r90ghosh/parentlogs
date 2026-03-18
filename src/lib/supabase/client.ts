@@ -11,7 +11,6 @@ let browserClient: SupabaseClient<Database> | null = null
  */
 export function createClient(): SupabaseClient<Database> {
   if (!browserClient) {
-    console.log('[SupabaseClient] Creating singleton browser client')
     browserClient = createBrowserClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!

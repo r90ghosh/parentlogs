@@ -50,7 +50,7 @@ export function useUpdateLog() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Partial<BabyLog> }) =>
+    mutationFn: ({ id, updates }: { id: string; updates: Partial<Pick<BabyLog, 'log_type' | 'log_data' | 'logged_at' | 'notes'>> }) =>
       trackerService.updateLog(id, updates),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tracker-logs'] })

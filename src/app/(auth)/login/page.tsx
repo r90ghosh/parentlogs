@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useState, useEffect } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -220,10 +220,6 @@ function LoginContent() {
 }
 
 export default function LoginPage() {
-  useEffect(() => {
-    console.log('[LoginPage] Page loaded')
-  }, [])
-
   return (
     <Suspense fallback={
       <div className="w-full bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">

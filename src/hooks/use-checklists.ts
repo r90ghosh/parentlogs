@@ -1,7 +1,10 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { checklistService } from '@/services/checklist-service'
+import { checklistService, ChecklistWithItems } from '@/services/checklist-service'
+import { ChecklistItemTemplate } from '@/types'
+
+type ChecklistItem = ChecklistItemTemplate & { completed?: boolean }
 
 export function useChecklists() {
   return useQuery({
@@ -37,14 +40,14 @@ export function useToggleChecklistItem() {
       const previousChecklist = queryClient.getQueryData(['checklist', checklistId])
 
       // Optimistically update the cache
-      queryClient.setQueryData(['checklist', checklistId], (old: any) => {
+      queryClient.setQueryData<ChecklistWithItems | null>(['checklist', checklistId], (old) => {
         if (!old) return old
 
-        const updatedItems = old.items.map((item: any) =>
+        const updatedItems = old.items.map((item: ChecklistItem) =>
           item.item_id === itemId ? { ...item, completed } : item
         )
 
-        const completedCount = updatedItems.filter((i: any) => i.completed).length
+        const completedCount = updatedItems.filter((item: ChecklistItem) => item.completed).length
 
         return {
           ...old,
