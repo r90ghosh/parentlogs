@@ -20,6 +20,7 @@ import { format, formatDistanceToNow } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { BASIC_LOG_TYPES, PREMIUM_LOG_TYPES, LogType } from '@/services/tracker-service'
 import { LOG_TYPE_CONFIG } from '@/lib/tracker-constants'
+import { MedicalDisclaimerFooter } from '@/components/shared/medical-disclaimer'
 import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { CardEntrance } from '@/components/ui/animations/CardEntrance'
@@ -322,6 +323,9 @@ export default function TrackerPage() {
         )}
       </div>
       </RevealOnScroll>
+
+      {/* Medical Disclaimer */}
+      <MedicalDisclaimerFooter className="mt-8 pb-2" />
     </div>
   )
 }

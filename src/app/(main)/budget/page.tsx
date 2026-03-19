@@ -3,10 +3,13 @@
 import { useState, useMemo } from 'react'
 import { useBudgetSummary, useAddToBudget, useMarkAsPurchased, useRemoveBudgetItem, useAddCustomBudgetItem } from '@/hooks/use-budget'
 import { useFamily } from '@/hooks/use-family'
+import { useIsPremium } from '@/hooks/use-subscription'
 import { budgetService } from '@/services/budget-service'
 import { BudgetTimelineBar } from '@/components/shared/budget-timeline-bar'
 import { BrandToggleFilter } from '@/components/budget/BrandToggleFilter'
 import { BrandRecommendationDrawer } from '@/components/budget/BrandRecommendationDrawer'
+import { PaywallOverlay, PaywallModal } from '@/components/shared/paywall-overlay'
+import { PaywallBanner } from '@/components/shared/paywall-banner'
 import {
   BudgetTimelineCategory,
   getBudgetStatsByCategory,
@@ -55,6 +58,7 @@ import {
   Lightbulb,
   Stethoscope,
   Crown,
+  Lock,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -68,6 +72,7 @@ type RecurringFilter = 'all' | 'one-time' | 'recurring'
 export default function BudgetPage() {
   const { data: summary, isLoading } = useBudgetSummary()
   const { data: family } = useFamily()
+  const { isPremium, isLoading: isPremiumLoading } = useIsPremium()
   const addToBudget = useAddToBudget()
   const markAsPurchased = useMarkAsPurchased()
   const removeBudgetItem = useRemoveBudgetItem()
@@ -100,13 +105,24 @@ export default function BudgetPage() {
     return getCurrentBudgetCategory(family)
   }, [family])
 
+  // Free users can only view their current period
+  const isViewingNonCurrentPeriod = !isPremium && selectedTimelineCategory !== null && selectedTimelineCategory !== currentBudgetCategory
+
   const addedTemplateIds = new Set(
     summary?.familyItems
       .filter(i => i.budget_template_id)
       .map(i => i.budget_template_id)
   )
 
+  // State for showing paywall modal when free user tries a premium action
+  const [showPaywallForAction, setShowPaywallForAction] = useState(false)
+
   const handleAddTemplate = async (template: BudgetTemplate) => {
+    if (!isPremium) {
+      setShowPaywallForAction(true)
+      setSelectedTemplate(null)
+      return
+    }
     const result = await addToBudget.mutateAsync({
       templateId: template.budget_id,
       estimatedPrice: template.price_min,
@@ -122,6 +138,11 @@ export default function BudgetPage() {
 
   const handleMarkPurchased = async () => {
     if (!purchaseDialogItem) return
+    if (!isPremium) {
+      setShowPaywallForAction(true)
+      setPurchaseDialogItem(null)
+      return
+    }
 
     const priceInCents = actualPrice ? Math.round(parseFloat(actualPrice) * 100) : undefined
     const result = await markAsPurchased.mutateAsync({
@@ -139,6 +160,10 @@ export default function BudgetPage() {
   }
 
   const handleRemoveItem = async (itemId: string) => {
+    if (!isPremium) {
+      setShowPaywallForAction(true)
+      return
+    }
     const result = await removeBudgetItem.mutateAsync(itemId)
     if (result.error) {
       toast.error(result.error.message)
@@ -149,6 +174,11 @@ export default function BudgetPage() {
 
   const handleAddCustomItem = async () => {
     if (!customItem.item || !customItem.price) return
+    if (!isPremium) {
+      setShowPaywallForAction(true)
+      setShowAddCustomDialog(false)
+      return
+    }
 
     const priceInCents = Math.round(parseFloat(customItem.price) * 100)
     const result = await addCustomItem.mutateAsync({
@@ -215,11 +245,27 @@ export default function BudgetPage() {
             Plan and track your baby expenses
           </p>
         </div>
-        <Button onClick={() => setShowAddCustomDialog(true)} className="font-ui">
-          <Plus className="h-4 w-4 mr-2" />
-          Add Custom
-        </Button>
+        {isPremium ? (
+          <Button onClick={() => setShowAddCustomDialog(true)} className="font-ui">
+            <Plus className="h-4 w-4 mr-2" />
+            Add Custom
+          </Button>
+        ) : (
+          <Button
+            onClick={() => setShowPaywallForAction(true)}
+            variant="outline"
+            className="font-ui border-[--border-hover] text-[--muted]"
+          >
+            <Lock className="h-4 w-4 mr-2" />
+            Add Custom
+          </Button>
+        )}
       </div>
+
+      {/* Free tier banner */}
+      {!isPremium && !isPremiumLoading && (
+        <PaywallBanner feature="budget_full_access" />
+      )}
 
       {/* Brand Toggle Filter */}
       {allTemplates.length > 0 && (
@@ -392,8 +438,9 @@ export default function BudgetPage() {
                       <BudgetItemCard
                         key={item.id}
                         item={item}
-                        onMarkPurchased={() => setPurchaseDialogItem(item)}
+                        onMarkPurchased={() => isPremium ? setPurchaseDialogItem(item) : setShowPaywallForAction(true)}
                         onRemove={() => handleRemoveItem(item.id)}
+                        isLocked={!isPremium}
                       />
                     ))}
                   </div>
@@ -412,6 +459,7 @@ export default function BudgetPage() {
                         item={item}
                         isPurchased
                         onRemove={() => handleRemoveItem(item.id)}
+                        isLocked={!isPremium}
                       />
                     ))}
                   </div>
@@ -422,77 +470,85 @@ export default function BudgetPage() {
 
           {/* Browse Items Tab */}
           <TabsContent value="browse" className="space-y-4">
-            {/* Recurring Filter */}
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-[--muted] font-ui">Show:</span>
-              <Select value={recurringFilter} onValueChange={(v) => setRecurringFilter(v as RecurringFilter)}>
-                <SelectTrigger className="w-40 bg-[--surface] border-[--border-hover]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Items</SelectItem>
-                  <SelectItem value="one-time">One-time</SelectItem>
-                  <SelectItem value="recurring">Recurring</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <div className="relative">
+              {/* Recurring Filter */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-[--muted] font-ui">Show:</span>
+                <Select value={recurringFilter} onValueChange={(v) => setRecurringFilter(v as RecurringFilter)}>
+                  <SelectTrigger className="w-40 bg-[--surface] border-[--border-hover]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Items</SelectItem>
+                    <SelectItem value="one-time">One-time</SelectItem>
+                    <SelectItem value="recurring">Recurring</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <Accordion
-              type="multiple"
-              key={`accordion-${selectedTimelineCategory || 'all'}-${recurringFilter}`}
-              defaultValue={filteredCategories?.map(c => c.name)}
-              className="space-y-2"
-            >
-              {filteredCategories?.map((category) => {
-                const { Icon, colors } = getCategoryStyle(category.name)
-                const categoryTotalMin = category.items
-                  .filter(i => i.priority !== 'tip')
-                  .reduce((sum, item) => sum + (item.price_min || 0), 0)
-                const categoryTotalMax = category.items
-                  .filter(i => i.priority !== 'tip')
-                  .reduce((sum, item) => sum + (item.price_max || 0), 0)
+              <Accordion
+                type="multiple"
+                key={`accordion-${selectedTimelineCategory || 'all'}-${recurringFilter}`}
+                defaultValue={filteredCategories?.map(c => c.name)}
+                className="space-y-2 mt-4"
+              >
+                {filteredCategories?.map((category) => {
+                  const { Icon, colors } = getCategoryStyle(category.name)
+                  const categoryTotalMin = category.items
+                    .filter(i => i.priority !== 'tip')
+                    .reduce((sum, item) => sum + (item.price_min || 0), 0)
+                  const categoryTotalMax = category.items
+                    .filter(i => i.priority !== 'tip')
+                    .reduce((sum, item) => sum + (item.price_max || 0), 0)
 
-                return (
-                  <AccordionItem
-                    key={category.name}
-                    value={category.name}
-                    className="bg-[--surface] border border-[--border] rounded-lg overflow-hidden"
-                  >
-                    <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-[--card]/50">
-                      <div className="flex items-center gap-3 flex-1">
-                        <div className={cn("p-2 rounded-lg", colors.bg)}>
-                          <Icon className={cn("h-5 w-5", colors.text)} />
-                        </div>
-                        <div className="flex-1 text-left">
-                          <span className="font-medium text-[--cream] font-body">{category.name}</span>
-                          <span className="text-xs text-[--muted] ml-2 font-ui">
-                            ({category.items.length} items)
+                  return (
+                    <AccordionItem
+                      key={category.name}
+                      value={category.name}
+                      className="bg-[--surface] border border-[--border] rounded-lg overflow-hidden"
+                    >
+                      <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-[--card]/50">
+                        <div className="flex items-center gap-3 flex-1">
+                          <div className={cn("p-2 rounded-lg", colors.bg)}>
+                            <Icon className={cn("h-5 w-5", colors.text)} />
+                          </div>
+                          <div className="flex-1 text-left">
+                            <span className="font-medium text-[--cream] font-body">{category.name}</span>
+                            <span className="text-xs text-[--muted] ml-2 font-ui">
+                              ({category.items.length} items)
+                            </span>
+                          </div>
+                          <span className="text-sm text-[--muted] mr-4 tabular-nums font-ui">
+                            {budgetService.formatPriceRange(categoryTotalMin, categoryTotalMax)}
                           </span>
                         </div>
-                        <span className="text-sm text-[--muted] mr-4 tabular-nums font-ui">
-                          {budgetService.formatPriceRange(categoryTotalMin, categoryTotalMax)}
-                        </span>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="px-4 pb-4">
-                      <div className="space-y-2 pt-2">
-                        {category.items.map((template) => (
-                          <BrowseItemRow
-                            key={template.budget_id}
-                            template={template}
-                            isAdded={addedTemplateIds.has(template.budget_id)}
-                            brandView={selectedBrandView}
-                            onSelect={() => setSelectedItemForDetails(template)}
-                            onAdd={() => setSelectedTemplate(template)}
-                            isAddPending={addToBudget.isPending}
-                          />
-                        ))}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                )
-              })}
-            </Accordion>
+                      </AccordionTrigger>
+                      <AccordionContent className="px-4 pb-4">
+                        <div className="space-y-2 pt-2">
+                          {category.items.map((template) => (
+                            <BrowseItemRow
+                              key={template.budget_id}
+                              template={template}
+                              isAdded={addedTemplateIds.has(template.budget_id)}
+                              brandView={selectedBrandView}
+                              onSelect={() => setSelectedItemForDetails(template)}
+                              onAdd={() => isPremium ? setSelectedTemplate(template) : setShowPaywallForAction(true)}
+                              isAddPending={addToBudget.isPending}
+                              isLocked={!isPremium}
+                            />
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  )
+                })}
+              </Accordion>
+
+              {/* Paywall overlay when free user views a non-current period */}
+              {isViewingNonCurrentPeriod && (
+                <PaywallOverlay feature="budget_full_access" />
+              )}
+            </div>
           </TabsContent>
         </Tabs>
       </RevealOnScroll>
@@ -660,6 +716,14 @@ export default function BudgetPage() {
         isOpen={!!selectedItemForDetails}
         onClose={() => setSelectedItemForDetails(null)}
       />
+
+      {/* Paywall modal for free user premium actions */}
+      {showPaywallForAction && (
+        <PaywallModal
+          feature="budget_full_access"
+          onClose={() => setShowPaywallForAction(false)}
+        />
+      )}
     </div>
   )
 }
@@ -672,6 +736,7 @@ function BrowseItemRow({
   onSelect,
   onAdd,
   isAddPending,
+  isLocked = false,
 }: {
   template: BudgetTemplate
   isAdded: boolean
@@ -679,6 +744,7 @@ function BrowseItemRow({
   onSelect: () => void
   onAdd: () => void
   isAddPending: boolean
+  isLocked?: boolean
 }) {
   const isTip = template.priority === 'tip'
   const brandName = brandView === 'premium' ? template.brand_premium : template.brand_value
@@ -763,6 +829,8 @@ function BrowseItemRow({
         >
           {isAdded ? (
             <Check className="h-4 w-4 text-copper" />
+          ) : isLocked ? (
+            <Lock className="h-4 w-4 text-[--dim]" />
           ) : (
             <Plus className="h-4 w-4" />
           )}
@@ -778,11 +846,13 @@ function BudgetItemCard({
   isPurchased = false,
   onMarkPurchased,
   onRemove,
+  isLocked = false,
 }: {
   item: FamilyBudgetItem
   isPurchased?: boolean
   onMarkPurchased?: () => void
   onRemove: () => void
+  isLocked?: boolean
 }) {
   const { Icon, colors } = getCategoryStyle(item.category)
 
@@ -827,11 +897,19 @@ function BudgetItemCard({
           <div className="flex items-center gap-1">
             {!isPurchased && onMarkPurchased && (
               <Button size="icon" variant="ghost" onClick={onMarkPurchased}>
-                <Check className="h-4 w-4 text-sage" />
+                {isLocked ? (
+                  <Lock className="h-4 w-4 text-[--dim]" />
+                ) : (
+                  <Check className="h-4 w-4 text-sage" />
+                )}
               </Button>
             )}
             <Button size="icon" variant="ghost" onClick={onRemove}>
-              <Trash2 className="h-4 w-4 text-coral" />
+              {isLocked ? (
+                <Lock className="h-4 w-4 text-[--dim]" />
+              ) : (
+                <Trash2 className="h-4 w-4 text-coral" />
+              )}
             </Button>
           </div>
         </div>

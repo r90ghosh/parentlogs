@@ -9,13 +9,15 @@ TRUNCATE task_templates, briefing_templates, budget_templates, checklist_templat
 \i 002_briefing_templates.sql
 \i 003_checklist_templates.sql
 \i 004_budget_templates.sql
+\i 005_dad_challenge_content.sql
 
 -- Verify counts
 SELECT 'Task templates:' as table_name, COUNT(*) as count FROM task_templates
 UNION ALL SELECT 'Briefing templates:', COUNT(*) FROM briefing_templates
 UNION ALL SELECT 'Budget templates:', COUNT(*) FROM budget_templates
 UNION ALL SELECT 'Checklists:', COUNT(*) FROM checklist_templates
-UNION ALL SELECT 'Checklist items:', COUNT(*) FROM checklist_item_templates;
+UNION ALL SELECT 'Checklist items:', COUNT(*) FROM checklist_item_templates
+UNION ALL SELECT 'Dad challenge content:', COUNT(*) FROM dad_challenge_content;
 
 -- Expected counts:
 -- Tasks: 215
@@ -23,3 +25,4 @@ UNION ALL SELECT 'Checklist items:', COUNT(*) FROM checklist_item_templates;
 -- Budget items: 29
 -- Checklists: 15
 -- Checklist items: 352
+-- Dad challenge content: 63

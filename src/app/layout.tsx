@@ -4,6 +4,7 @@ import './globals.css'
 import { Providers } from '@/components/providers'
 import { Toaster } from '@/components/ui/sonner'
 import { FloatingParticles } from '@/components/ui/animations/FloatingParticles'
+import { CookieConsent } from '@/components/shared/cookie-consent'
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -92,6 +93,7 @@ export default function RootLayout({
           <FloatingParticles count={12} />
           {children}
           <Toaster />
+          <CookieConsent />
         </Providers>
       </body>
     </html>

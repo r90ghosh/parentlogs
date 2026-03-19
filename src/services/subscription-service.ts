@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
 import { Subscription, SubscriptionTier, PremiumFeature } from '@/types'
-import { isPremiumTier } from '@/lib/subscription-utils'
+import { isPremiumTier, isInGracePeriod } from '@/lib/subscription-utils'
 
 const supabase = createClient()
 
@@ -80,10 +80,14 @@ export const subscriptionService = {
 
     if (!profile) return 'free'
 
-    // Check if subscription has expired
-    if (profile.subscription_expires_at) {
+    // Check if subscription has expired (with 7-day grace period)
+    if (profile.subscription_expires_at && profile.subscription_tier !== 'lifetime') {
       const expiresAt = new Date(profile.subscription_expires_at)
-      if (expiresAt < new Date() && profile.subscription_tier !== 'lifetime') {
+      if (expiresAt < new Date()) {
+        // Expired — check if still within grace period
+        if (isInGracePeriod(profile.subscription_expires_at)) {
+          return (profile.subscription_tier as SubscriptionTier) || 'free'
+        }
         return 'free'
       }
     }

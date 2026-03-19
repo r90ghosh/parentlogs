@@ -4,7 +4,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { subscriptionService, PricingPlan } from '@/services/subscription-service'
 import { PremiumFeature, SubscriptionTier } from '@/types'
 import { useRouter } from 'next/navigation'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
+import { useUser } from '@/components/user-provider'
+import { isInGracePeriod, gracePeriodDaysRemaining } from '@/lib/subscription-utils'
 
 export function useSubscription() {
   return useQuery({
@@ -113,4 +115,20 @@ export function usePremiumGate() {
     tier,
     shouldShowPaywall: !isLoading && !isPremium,
   }
+}
+
+// Grace period status for showing renewal banners
+export function useGracePeriodStatus() {
+  const { profile } = useUser()
+  const expiresAt = profile.subscription_expires_at ?? null
+
+  return useMemo(() => {
+    const inGrace = isInGracePeriod(expiresAt)
+    const daysRemaining = gracePeriodDaysRemaining(expiresAt)
+    return {
+      isInGracePeriod: inGrace,
+      daysRemaining,
+      expiresAt,
+    }
+  }, [expiresAt])
 }

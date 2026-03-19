@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils'
 import { isPregnancyStage } from '@/lib/pregnancy-utils'
 import { getBabySize } from '@/lib/baby-sizes'
 import { RevealOnScroll, Card3DTilt, CardEntrance, ScrollProgressBar } from '@/components/ui/animations'
+import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 
 import {
   BriefingHero,
@@ -168,6 +169,9 @@ export default function BriefingPage() {
             ← Back to current week (Week {currentWeek})
           </button>
         )}
+
+        {/* Medical Disclaimer */}
+        <MedicalDisclaimer className="mb-4" />
 
         {/* Progress Bar - only for pregnancy */}
         {isPregnancy && (

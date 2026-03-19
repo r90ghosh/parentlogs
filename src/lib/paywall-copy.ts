@@ -47,4 +47,8 @@ export const PAYWALL_COPY: Record<string, { headline: string; body: string }> = 
     headline: 'Unlock your full history',
     body: 'Triage all past tasks and catch up on everything you might have missed.',
   },
+  budget_full_access: {
+    headline: 'Plan your full baby budget',
+    body: 'Unlock all periods, custom items, and purchase tracking — so you can plan from pregnancy through year one.',
+  },
 }

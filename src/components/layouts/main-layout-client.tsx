@@ -36,6 +36,7 @@ import {
 import { cn } from '@/lib/utils'
 import { WarmBackground } from '@/components/ui/animations/WarmBackground'
 import { useUnreadNotificationCount } from '@/hooks/use-notifications'
+import { GracePeriodBanner } from '@/components/shared/grace-period-banner'
 
 const mainNavItems = [
   { href: '/dashboard', label: 'Home', icon: Home },
@@ -204,6 +205,7 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
 
       {/* Main Content */}
       <main className="relative z-[2] pb-24 md:pb-4 md:ml-64">
+        <GracePeriodBanner />
         {children}
       </main>
 
