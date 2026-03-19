@@ -44,6 +44,30 @@ export async function DELETE(request: NextRequest) {
       .eq('id', user.id)
       .single()
 
+    // Check family ownership BEFORE any deletions
+    if (profile?.family_id) {
+      const { data: family } = await supabaseAdmin
+        .from('families')
+        .select('owner_id')
+        .eq('id', profile.family_id)
+        .single()
+
+      const { count } = await supabaseAdmin
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .eq('family_id', profile.family_id)
+
+      const isOwner = family?.owner_id === user.id
+      const hasOtherMembers = (count || 0) > 1
+
+      if (isOwner && hasOtherMembers) {
+        return NextResponse.json(
+          { error: 'Cannot delete account while other family members exist. Transfer ownership first.' },
+          { status: 400 }
+        )
+      }
+    }
+
     // Delete user-scoped data (child tables first)
     const { error: notifError } = await supabaseAdmin
       .from('notifications')
@@ -82,14 +106,13 @@ export async function DELETE(request: NextRequest) {
     if (subError) console.error('Failed to delete subscriptions:', subError)
 
     if (profile?.family_id) {
-      // Check if user is family owner
+      // Re-check ownership for family cleanup (already validated above)
       const { data: family } = await supabaseAdmin
         .from('families')
         .select('owner_id')
         .eq('id', profile.family_id)
         .single()
 
-      // Count family members
       const { count } = await supabaseAdmin
         .from('profiles')
         .select('*', { count: 'exact', head: true })
@@ -97,13 +120,6 @@ export async function DELETE(request: NextRequest) {
 
       const isOwner = family?.owner_id === user.id
       const hasOtherMembers = (count || 0) > 1
-
-      if (isOwner && hasOtherMembers) {
-        return NextResponse.json(
-          { error: 'Cannot delete account while other family members exist. Transfer ownership first.' },
-          { status: 400 }
-        )
-      }
 
       // If owner and sole member, delete the family
       if (isOwner && !hasOtherMembers) {

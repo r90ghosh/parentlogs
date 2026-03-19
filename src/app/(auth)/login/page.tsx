@@ -24,10 +24,18 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>
 
+function getSafeRedirect(redirect: string | null): string {
+  if (!redirect) return '/dashboard'
+  if (redirect.startsWith('/') && !redirect.startsWith('//')) {
+    return redirect
+  }
+  return '/dashboard'
+}
+
 function LoginContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams.get('redirect') || '/dashboard'
+  const redirect = getSafeRedirect(searchParams.get('redirect'))
   const urlError = searchParams.get('error')
   const { signIn, signInWithGoogle } = useAuth()
   const [isLoading, setIsLoading] = useState(false)

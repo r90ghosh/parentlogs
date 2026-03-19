@@ -21,12 +21,8 @@ import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 
 interface DashboardClientProps {
-  userId: string
   familyId: string
   userName: string
-  partnerName: string
-  currentWeek: number
-  dueDate: string
 }
 
 // Full-width card IDs (render at top, spanning both columns)

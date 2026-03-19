@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import type { IllustrationComponent } from '@/types/tips'
@@ -8,55 +9,36 @@ import { dadTips } from '@/data/dadTips'
 import { TopicSelector } from '@/components/features/tips/TopicSelector'
 import { InfographicView } from '@/components/features/tips/InfographicView'
 
-import {
-  BabyChangingSection1,
-  BabyChangingSection2,
-  BabyChangingSection3,
-  BabyChangingSection4,
-  BabyChangingSection5,
-} from '@/components/features/tips/illustrations/BabyChanging'
-
-import {
-  BottlePrepSection1,
-  BottlePrepSection2,
-} from '@/components/features/tips/illustrations/BottlePrep'
-
-import {
-  SwaddlingSection1,
-  SwaddlingSection2,
-} from '@/components/features/tips/illustrations/Swaddling'
-
-import {
-  BathTimeSection1,
-  BathTimeSection2,
-} from '@/components/features/tips/illustrations/BathTime'
-
-import {
-  CarSeatSection1,
-  CarSeatSection2,
-} from '@/components/features/tips/illustrations/CarSeat'
-
-import {
-  BurpingSection1,
-  BurpingSection2,
-} from '@/components/features/tips/illustrations/Burping'
-
-const illustrations: Record<string, IllustrationComponent> = {
-  'baby-changing-1': BabyChangingSection1,
-  'baby-changing-2': BabyChangingSection2,
-  'baby-changing-3': BabyChangingSection3,
-  'baby-changing-4': BabyChangingSection4,
-  'baby-changing-5': BabyChangingSection5,
-  'bottle-prep-1': BottlePrepSection1,
-  'bottle-prep-2': BottlePrepSection2,
-  'swaddling-1': SwaddlingSection1,
-  'swaddling-2': SwaddlingSection2,
-  'bath-time-1': BathTimeSection1,
-  'bath-time-2': BathTimeSection2,
-  'car-seat-1': CarSeatSection1,
-  'car-seat-2': CarSeatSection2,
-  'burping-1': BurpingSection1,
-  'burping-2': BurpingSection2,
+// Dynamically import illustration components grouped by topic.
+// Only the active topic's illustrations are loaded.
+const illustrationsByTopic: Record<string, Record<string, IllustrationComponent>> = {
+  'baby-changing': {
+    'baby-changing-1': dynamic(() => import('./illustrations/BabyChanging').then(m => ({ default: m.BabyChangingSection1 }))),
+    'baby-changing-2': dynamic(() => import('./illustrations/BabyChanging').then(m => ({ default: m.BabyChangingSection2 }))),
+    'baby-changing-3': dynamic(() => import('./illustrations/BabyChanging').then(m => ({ default: m.BabyChangingSection3 }))),
+    'baby-changing-4': dynamic(() => import('./illustrations/BabyChanging').then(m => ({ default: m.BabyChangingSection4 }))),
+    'baby-changing-5': dynamic(() => import('./illustrations/BabyChanging').then(m => ({ default: m.BabyChangingSection5 }))),
+  },
+  'bottle-prep': {
+    'bottle-prep-1': dynamic(() => import('./illustrations/BottlePrep').then(m => ({ default: m.BottlePrepSection1 }))),
+    'bottle-prep-2': dynamic(() => import('./illustrations/BottlePrep').then(m => ({ default: m.BottlePrepSection2 }))),
+  },
+  'swaddling': {
+    'swaddling-1': dynamic(() => import('./illustrations/Swaddling').then(m => ({ default: m.SwaddlingSection1 }))),
+    'swaddling-2': dynamic(() => import('./illustrations/Swaddling').then(m => ({ default: m.SwaddlingSection2 }))),
+  },
+  'bath-time': {
+    'bath-time-1': dynamic(() => import('./illustrations/BathTime').then(m => ({ default: m.BathTimeSection1 }))),
+    'bath-time-2': dynamic(() => import('./illustrations/BathTime').then(m => ({ default: m.BathTimeSection2 }))),
+  },
+  'car-seat': {
+    'car-seat-1': dynamic(() => import('./illustrations/CarSeat').then(m => ({ default: m.CarSeatSection1 }))),
+    'car-seat-2': dynamic(() => import('./illustrations/CarSeat').then(m => ({ default: m.CarSeatSection2 }))),
+  },
+  'burping': {
+    'burping-1': dynamic(() => import('./illustrations/Burping').then(m => ({ default: m.BurpingSection1 }))),
+    'burping-2': dynamic(() => import('./illustrations/Burping').then(m => ({ default: m.BurpingSection2 }))),
+  },
 }
 
 export function DadTipsClient() {
@@ -64,6 +46,12 @@ export function DadTipsClient() {
 
   const activeTopic = useMemo(
     () => dadTips.find((t) => t.id === activeTopicId) ?? dadTips[0],
+    [activeTopicId]
+  )
+
+  // Only pass illustrations for the active topic
+  const illustrations = useMemo(
+    () => illustrationsByTopic[activeTopicId] ?? {},
     [activeTopicId]
   )
 

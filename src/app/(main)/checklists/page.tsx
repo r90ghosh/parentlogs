@@ -45,7 +45,7 @@ export default function ChecklistsPage() {
           {checklists.map((checklist, index) => {
             const Icon = CHECKLIST_ICONS[checklist.checklist_id] || FileText
             const colors = CHECKLIST_COLORS[checklist.checklist_id] || CHECKLIST_COLORS['CL-15']
-            const isLocked = (checklist as any).is_locked
+            const isLocked = checklist.is_locked
 
             return (
               <CardEntrance key={checklist.checklist_id} delay={index * 80}>

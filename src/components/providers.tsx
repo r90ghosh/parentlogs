@@ -38,29 +38,6 @@ function ServiceWorkerRegistration() {
   return null
 }
 
-// Online/offline status tracker
-function OnlineStatusTracker() {
-  useEffect(() => {
-    const handleOnline = () => {
-      // Could show toast notification
-    }
-
-    const handleOffline = () => {
-      // Could show toast notification
-    }
-
-    window.addEventListener('online', handleOnline)
-    window.addEventListener('offline', handleOffline)
-
-    return () => {
-      window.removeEventListener('online', handleOnline)
-      window.removeEventListener('offline', handleOffline)
-    }
-  }, [])
-
-  return null
-}
-
 export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
@@ -92,7 +69,6 @@ export function Providers({ children }: { children: ReactNode }) {
             </Suspense>
             <AnalyticsInitializer />
             <ServiceWorkerRegistration />
-            <OnlineStatusTracker />
           </PartnerActivityProvider>
         </AuthProvider>
       </QueryClientProvider>

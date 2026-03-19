@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   try {
     // Get user from auth header
     const authHeader = request.headers.get('authorization')
-    const token = authHeader?.replace('Bearer ', '') || request.cookies.get('sb-access-token')?.value
+    const token = authHeader?.replace('Bearer ', '')
 
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

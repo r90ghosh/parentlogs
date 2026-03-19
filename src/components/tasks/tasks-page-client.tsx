@@ -37,6 +37,8 @@ import {
   useTriageTask,
   useBulkTriageTasks,
   useAllTasksForTimeline,
+  useCompleteTask,
+  useSnoozeToTomorrow,
 } from '@/hooks/use-tasks'
 import { useFamily } from '@/hooks/use-family'
 import { TaskTimelineBar } from '@/components/shared/task-timeline-bar'
@@ -94,6 +96,8 @@ export function TasksPageClient({
   const { data: family } = useFamily()
   const triageTask = useTriageTask()
   const bulkTriageTasks = useBulkTriageTasks()
+  const completeTask = useCompleteTask()
+  const snoozeToTomorrow = useSnoozeToTomorrow()
 
   // Sync URL with view toggle
   const handleViewChange = useCallback((newView: 'list' | 'calendar') => {
@@ -112,16 +116,14 @@ export function TasksPageClient({
 
   // Handle task completion
   const handleComplete = useCallback((taskId: string) => {
-    // TODO: Implement complete task mutation
-    console.log('Complete task:', taskId)
-  }, [])
+    completeTask.mutate(taskId)
+  }, [completeTask])
 
   // Handle snooze — premium only
   const handleSnooze = useCallback((taskId: string) => {
     if (!isPremium) return
-    // TODO: Implement snooze mutation
-    console.log('Snooze task:', taskId)
-  }, [isPremium])
+    snoozeToTomorrow.snoozeToTomorrow(taskId)
+  }, [isPremium, snoozeToTomorrow])
 
   // 30-day free window: compute which tasks are visible for free users
   const freeWindowCutoff = useMemo(() => {
@@ -182,7 +184,7 @@ export function TasksPageClient({
   const { thisWeekTasks, comingUpTasks, focusTask, filteredTasks, phaseTasks } = useMemo(() => {
     // When a timeline category is selected, use ALL tasks (including future) from allTasks
     // Otherwise use the regular tasks list
-    let baseList = selectedTimelineCategory ? allTasks : tasks
+    const baseList = selectedTimelineCategory ? allTasks : tasks
 
     let filtered = baseList.filter(t => t.status === 'pending' && !t.is_backlog)
 

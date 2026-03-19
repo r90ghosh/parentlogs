@@ -1,5 +1,9 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 
+function sanitizeSearchQuery(input: string): string {
+  return input.replace(/[%_.,()\\*]/g, '')
+}
+
 export interface Article {
   slug: string
   title: string
@@ -227,16 +231,18 @@ export async function searchContent(
 ): Promise<{ articles: Article[]; videos: Video[] }> {
   const supabase = await createServerSupabaseClient()
 
+  const safe = sanitizeSearchQuery(query)
+
   const [articlesResult, videosResult] = await Promise.all([
     supabase
       .from('articles')
       .select('*')
-      .or(`title.ilike.%${query}%,excerpt.ilike.%${query}%`)
+      .or(`title.ilike.%${safe}%,excerpt.ilike.%${safe}%`)
       .limit(20),
     supabase
       .from('videos')
       .select('*')
-      .or(`title.ilike.%${query}%,description.ilike.%${query}%,source.ilike.%${query}%`)
+      .or(`title.ilike.%${safe}%,description.ilike.%${safe}%,source.ilike.%${safe}%`)
       .limit(20),
   ])
 
@@ -272,7 +278,7 @@ export async function getFilteredContent(options: {
 
   // Filter by search
   if (options.search) {
-    const search = options.search
+    const search = sanitizeSearchQuery(options.search)
     articleQuery = articleQuery.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%`)
     videoQuery = videoQuery.or(`title.ilike.%${search}%,description.ilike.%${search}%,source.ilike.%${search}%`)
   }

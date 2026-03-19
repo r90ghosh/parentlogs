@@ -14,6 +14,8 @@ export interface ChecklistWithItems extends ChecklistTemplate {
     total: number
     percentage: number
   }
+  is_premium: boolean
+  is_locked: boolean
 }
 
 export interface ChecklistProgress {
@@ -151,6 +153,8 @@ export const checklistService = {
           ? Math.round((completedCount / itemsWithProgress.length) * 100)
           : 0,
       },
+      is_premium: PREMIUM_CHECKLIST_IDS.includes(checklistId),
+      is_locked: false, // If we got here, the checklist is accessible
     } as ChecklistWithItems
   },
 

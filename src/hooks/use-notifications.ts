@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { notificationService } from '@/services/notification-service'
-import { NotificationPreferences } from '@/types'
+import { notificationHistoryService } from '@/services/notification-history-service'
+import { NotificationPreferences, Notification } from '@/types'
 
 export function useNotificationPermission() {
   const [permission, setPermission] = useState<NotificationPermission>('default')
@@ -33,17 +34,17 @@ export function usePushSubscription() {
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    checkSubscription()
-  }, [])
-
-  const checkSubscription = async () => {
+  const checkSubscription = useCallback(async () => {
     if (!('serviceWorker' in navigator)) return
 
     const registration = await navigator.serviceWorker.ready
     const subscription = await registration.pushManager.getSubscription()
     setIsSubscribed(!!subscription)
-  }
+  }, [])
+
+  useEffect(() => {
+    checkSubscription()
+  }, [checkSubscription])
 
   const subscribe = async () => {
     setIsLoading(true)
@@ -111,9 +112,6 @@ export function usePushWindowStatus() {
 }
 
 // --- Notification Inbox Hooks ---
-
-import { notificationHistoryService } from '@/services/notification-history-service'
-import { Notification } from '@/types'
 
 export function useNotificationFeed(limit = 30) {
   return useQuery({

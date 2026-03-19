@@ -20,6 +20,7 @@ export function useTasks(filters: TaskFilters = {}) {
   return useQuery({
     queryKey: ['tasks', filters],
     queryFn: () => taskService.getTasks(filters),
+    enabled: typeof window !== 'undefined',
   })
 }
 
@@ -118,6 +119,7 @@ export function useAllTasksForTimeline() {
   return useQuery({
     queryKey: ['tasks-timeline'],
     queryFn: () => taskService.getAllTasksForTimeline(),
+    enabled: typeof window !== 'undefined',
   })
 }
 
@@ -265,6 +267,7 @@ export function useBacklogTasks() {
   return useQuery({
     queryKey: ['backlog-tasks'],
     queryFn: () => taskService.getBacklogTasks(),
+    enabled: typeof window !== 'undefined',
   })
 }
 
@@ -275,6 +278,7 @@ export function useBacklogCount() {
   return useQuery({
     queryKey: ['backlog-count'],
     queryFn: () => taskService.getBacklogCount(),
+    enabled: typeof window !== 'undefined',
   })
 }
 

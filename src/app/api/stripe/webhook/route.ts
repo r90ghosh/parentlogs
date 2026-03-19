@@ -176,21 +176,28 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
 
   if (!subRecord) return
 
-  // Update subscription to canceled/free
+  // Calculate grace period: use current_period_end or 7 days from now, whichever is later
+  const currentPeriodEnd = subscription.items?.data[0]?.current_period_end
+    ?? Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60 // fallback to 7 days
+  const periodEnd = new Date(currentPeriodEnd * 1000)
+  const sevenDaysFromNow = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  const expiresAt = periodEnd > sevenDaysFromNow ? periodEnd : sevenDaysFromNow
+
+  // Update subscription to canceled but keep premium until grace period expires
   await supabaseAdmin
     .from('subscriptions')
     .update({
-      tier: 'free',
       status: 'canceled',
+      current_period_end: expiresAt.toISOString(),
       updated_at: new Date().toISOString(),
     })
     .eq('user_id', subRecord.user_id)
 
-  // Update profile
+  // Set expiration date — grace period logic will handle the actual downgrade
   await supabaseAdmin
     .from('profiles')
     .update({
-      subscription_tier: 'free',
+      subscription_expires_at: expiresAt.toISOString(),
     })
     .eq('id', subRecord.user_id)
 }

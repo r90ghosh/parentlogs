@@ -186,5 +186,6 @@ export function usePartnerPresence() {
     return () => {
       channel.unsubscribe()
     }
-  }, [family?.id, user?.id, members])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [family?.id, user?.id, members?.length])
 }

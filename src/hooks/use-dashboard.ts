@@ -19,18 +19,6 @@ interface DashboardQueryResult {
 }
 
 /**
- * Format time estimate for display
- */
-function formatTimeEstimate(minutes: number | null): string {
-  if (!minutes) return '~10 min'
-  if (minutes < 60) return `${minutes} min`
-  const hours = Math.floor(minutes / 60)
-  const mins = minutes % 60
-  if (mins === 0) return `${hours} hour${hours > 1 ? 's' : ''}`
-  return `${hours}h ${mins}m`
-}
-
-/**
  * Get due label for a task
  */
 function getDueLabel(dueDate: string, currentWeek: number): string {
@@ -91,51 +79,49 @@ export function useDashboardData(familyId: string | undefined, currentWeek: numb
       const today = new Date()
       today.setHours(0, 0, 0, 0)
 
-      // Fetch priority tasks (pending tasks, ordered by priority and due date)
-      const { data: tasks } = await supabase
-        .from('family_tasks')
-        .select('id, title, category, due_date, priority')
-        .eq('family_id', familyId)
-        .eq('status', 'pending')
-        .order('priority', { ascending: false })
-        .order('due_date', { ascending: true })
-        .limit(5)
+      // Run independent queries in parallel
+      const [
+        { data: tasks },
+        { data: allTasks },
+        { data: briefingData },
+        partnerResult,
+      ] = await Promise.all([
+        // Priority tasks
+        supabase
+          .from('family_tasks')
+          .select('id, title, category, due_date, priority')
+          .eq('family_id', familyId)
+          .eq('status', 'pending')
+          .order('priority', { ascending: false })
+          .order('due_date', { ascending: true })
+          .limit(5),
+        // All tasks for stats
+        supabase
+          .from('family_tasks')
+          .select('id, status, due_date')
+          .eq('family_id', familyId),
+        // Briefing
+        supabase
+          .from('briefing_templates')
+          .select('title, baby_update')
+          .eq('stage', 'pregnancy')
+          .eq('week', currentWeek)
+          .maybeSingle(),
+        // Partner info (needs sequential sub-queries but runs in parallel with others)
+        (async (): Promise<PartnerActivity | null> => {
+          try {
+            const { data: { user } } = await supabase.auth.getUser()
+            if (!user) return null
 
-      // Fetch all tasks for stats
-      const { data: allTasks } = await supabase
-        .from('family_tasks')
-        .select('id, status, due_date')
-        .eq('family_id', familyId)
+            const { data: partnerProfile } = await supabase
+              .from('profiles')
+              .select('id, full_name, updated_at')
+              .eq('family_id', familyId)
+              .neq('id', user.id)
+              .single()
 
-      // Calculate stats
-      const completed = allTasks?.filter(t => t.status === 'completed').length || 0
-      const pending = allTasks?.filter(t => t.status === 'pending').length || 0
-      const overdue = allTasks?.filter(t => {
-        if (t.status !== 'pending') return false
-        const dueDate = new Date(t.due_date)
-        dueDate.setHours(0, 0, 0, 0)
-        return isPast(dueDate) && !isToday(dueDate)
-      }).length || 0
+            if (!partnerProfile) return null
 
-      // Upcoming events - placeholder for future implementation
-      // TODO: Add calendar_events table and fetch events here
-      const upcomingEvents: UpcomingEvent[] = []
-
-      // Fetch partner info
-      let partner: PartnerActivity | null = null
-      try {
-        const { data: { user } } = await supabase.auth.getUser()
-        if (user) {
-          // Get partner profile (other member of the family)
-          const { data: partnerProfile } = await supabase
-            .from('profiles')
-            .select('id, full_name, updated_at')
-            .eq('family_id', familyId)
-            .neq('id', user.id)
-            .single()
-
-          if (partnerProfile) {
-            // Get partner's recent completed tasks
             const { data: partnerTasks } = await supabase
               .from('family_tasks')
               .select('title, status, completed_at')
@@ -150,7 +136,7 @@ export function useDashboardData(familyId: string | undefined, currentWeek: numb
 
             const partnerName = partnerProfile.full_name?.split(' ')[0] || 'Partner'
 
-            partner = {
+            return {
               name: partnerName,
               initial: partnerName[0].toUpperCase(),
               lastActive,
@@ -161,13 +147,26 @@ export function useDashboardData(familyId: string | undefined, currentWeek: numb
                 time: t.completed_at ? formatTaskTime(new Date(t.completed_at)) : 'In progress',
               })) || [],
             }
+          } catch {
+            return null
           }
-        }
-      } catch {
-        // Partner fetch failed, continue without partner data
-      }
+        })(),
+      ])
 
-      // Fetch current week briefing
+      // Calculate stats
+      const completed = allTasks?.filter(t => t.status === 'completed').length || 0
+      const pending = allTasks?.filter(t => t.status === 'pending').length || 0
+      const overdue = allTasks?.filter(t => {
+        if (t.status !== 'pending') return false
+        const dueDate = new Date(t.due_date)
+        dueDate.setHours(0, 0, 0, 0)
+        return isPast(dueDate) && !isToday(dueDate)
+      }).length || 0
+
+      const upcomingEvents: UpcomingEvent[] = []
+
+      const partner = partnerResult
+
       let briefing: WeeklyBriefing = {
         week: currentWeek,
         title: `Week ${currentWeek}`,
@@ -175,24 +174,13 @@ export function useDashboardData(familyId: string | undefined, currentWeek: numb
         isNew: true,
       }
 
-      try {
-        const { data: briefingData } = await supabase
-          .from('briefing_templates')
-          .select('title, baby_update')
-          .eq('stage', 'pregnancy')
-          .eq('week', currentWeek)
-          .single()
-
-        if (briefingData) {
-          briefing = {
-            week: currentWeek,
-            title: briefingData.title || `Week ${currentWeek}`,
-            excerpt: briefingData.baby_update?.substring(0, 150) + '...' || '',
-            isNew: true,
-          }
+      if (briefingData) {
+        briefing = {
+          week: currentWeek,
+          title: briefingData.title || `Week ${currentWeek}`,
+          excerpt: briefingData.baby_update?.substring(0, 150) + '...' || '',
+          isNew: true,
         }
-      } catch {
-        // Briefing fetch failed, use defaults
       }
 
       // Get achievement for current week
