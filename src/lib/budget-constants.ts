@@ -15,6 +15,7 @@ import {
   Camera,
   BookOpen,
   PersonStanding,
+  Dumbbell,
 } from 'lucide-react'
 
 // Extract primary category from compound names like "Baby Care - Diapering"
@@ -38,6 +39,8 @@ export const CATEGORY_ICONS: Record<string, React.ElementType> = {
   'Maternity': PersonStanding,
   'Memories': Camera,
   'Books': BookOpen,
+  'Mom': PersonStanding,
+  'Activities': Dumbbell,
 }
 
 export const CATEGORY_COLORS: Record<string, { bg: string; text: string; border: string }> = {
@@ -56,6 +59,8 @@ export const CATEGORY_COLORS: Record<string, { bg: string; text: string; border:
   'Maternity': { bg: 'bg-rose-500/20', text: 'text-rose-400', border: 'border-rose-500/30' },
   'Memories': { bg: 'bg-fuchsia-500/20', text: 'text-fuchsia-400', border: 'border-fuchsia-500/30' },
   'Books': { bg: 'bg-lime-500/20', text: 'text-lime-400', border: 'border-lime-500/30' },
+  'Mom': { bg: 'bg-rose-500/20', text: 'text-rose-400', border: 'border-rose-500/30' },
+  'Activities': { bg: 'bg-emerald-500/20', text: 'text-emerald-400', border: 'border-emerald-500/30' },
 }
 
 export function getCategoryStyle(category: string) {
