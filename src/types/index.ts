@@ -129,7 +129,7 @@ export interface BriefingTemplate {
   medical_source: string
   linked_task_ids: string[]
   is_premium: boolean
-  field_notes?: string
+  field_notes?: string | null
 }
 
 // Baby Tracker Types

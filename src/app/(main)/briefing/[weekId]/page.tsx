@@ -221,29 +221,29 @@ export default function BriefingWeekPage() {
               </RevealOnScroll>
             )}
 
+            {/* Field Notes — real dad perspective interstitial */}
+            {briefing.field_notes && (
+              <RevealOnScroll delay={320}>
+                <div className="rounded-xl border-l-4 border-copper bg-copper/[0.04] p-5 md:p-6">
+                  <div className="flex items-start gap-3">
+                    <span className="text-lg mt-0.5 shrink-0">📝</span>
+                    <div>
+                      <h3 className="font-ui text-xs font-semibold uppercase tracking-wider text-copper mb-2">From the Trenches</h3>
+                      <p className="font-body text-[15px] text-[--cream] leading-relaxed italic whitespace-pre-line">{briefing.field_notes}</p>
+                    </div>
+                  </div>
+                </div>
+              </RevealOnScroll>
+            )}
+
             {/* Relationship Tip */}
-            <RevealOnScroll delay={320}>
+            <RevealOnScroll delay={360}>
               <Card3DTilt maxTilt={3} gloss>
                 <BriefingSection type="relationship" title="Relationship Check-In" icon="💜">
                   <p className="whitespace-pre-line">{briefing.relationship_tip}</p>
                 </BriefingSection>
               </Card3DTilt>
             </RevealOnScroll>
-
-            {/* Field Notes */}
-            {briefing.field_notes && (
-              <RevealOnScroll delay={360}>
-                <div className="rounded-xl border border-copper/20 bg-gradient-to-br from-copper/5 to-transparent p-5">
-                  <div className="flex items-start gap-3">
-                    <span className="text-copper text-lg mt-0.5">📋</span>
-                    <div>
-                      <h3 className="font-ui text-sm font-semibold text-copper mb-2">Field Notes</h3>
-                      <p className="font-body text-sm text-[--cream] leading-relaxed whitespace-pre-line">{briefing.field_notes}</p>
-                    </div>
-                  </div>
-                </div>
-              </RevealOnScroll>
-            )}
 
             {/* Coming Up */}
             {briefing.coming_up && (
