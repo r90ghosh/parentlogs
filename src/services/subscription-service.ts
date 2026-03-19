@@ -4,6 +4,18 @@ import { isPremiumTier, isInGracePeriod } from '@/lib/subscription-utils'
 
 const supabase = createClient()
 
+export interface ServiceContext {
+  userId: string
+  familyId: string
+  subscriptionTier?: string
+}
+
+async function resolveUserId(ctx?: Partial<ServiceContext>): Promise<string | null> {
+  if (ctx?.userId) return ctx.userId
+  const { data: { user } } = await supabase.auth.getUser()
+  return user?.id ?? null
+}
+
 // Define which features are available for each tier
 const PREMIUM_FEATURES: PremiumFeature[] = [
   'tasks_beyond_14_days', // Legacy key — now means 30-day window
@@ -53,14 +65,14 @@ export type PricingPlan = keyof typeof PRICING
 
 export const subscriptionService = {
   // Get current user's subscription
-  async getSubscription(): Promise<Subscription | null> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return null
+  async getSubscription(ctx?: Partial<ServiceContext>): Promise<Subscription | null> {
+    const userId = await resolveUserId(ctx)
+    if (!userId) return null
 
     const { data, error } = await supabase
       .from('subscriptions')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .single()
 
     if (error || !data) return null
@@ -68,14 +80,14 @@ export const subscriptionService = {
   },
 
   // Get user's subscription tier from profile
-  async getSubscriptionTier(): Promise<SubscriptionTier> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return 'free'
+  async getSubscriptionTier(ctx?: Partial<ServiceContext>): Promise<SubscriptionTier> {
+    const userId = await resolveUserId(ctx)
+    if (!userId) return 'free'
 
     const { data: profile } = await supabase
       .from('profiles')
       .select('subscription_tier, subscription_expires_at')
-      .eq('id', user.id)
+      .eq('id', userId)
       .single()
 
     if (!profile) return 'free'
@@ -96,14 +108,14 @@ export const subscriptionService = {
   },
 
   // Check if user has access to a specific feature
-  async hasFeature(feature: PremiumFeature): Promise<boolean> {
-    const tier = await this.getSubscriptionTier()
+  async hasFeature(feature: PremiumFeature, ctx?: Partial<ServiceContext>): Promise<boolean> {
+    const tier = await this.getSubscriptionTier(ctx)
     return TIER_FEATURES[tier].includes(feature)
   },
 
   // Check if user is premium (any paid tier)
-  async isPremium(): Promise<boolean> {
-    const tier = await this.getSubscriptionTier()
+  async isPremium(ctx?: Partial<ServiceContext>): Promise<boolean> {
+    const tier = await this.getSubscriptionTier(ctx)
     return isPremiumTier(tier)
   },
 

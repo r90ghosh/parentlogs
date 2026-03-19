@@ -6,6 +6,18 @@ const supabase = createClient()
 
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''
 
+export interface ServiceContext {
+  userId: string
+  familyId: string
+  subscriptionTier?: string
+}
+
+async function resolveUserId(ctx?: Partial<ServiceContext>): Promise<string | null> {
+  if (ctx?.userId) return ctx.userId
+  const { data: { user } } = await supabase.auth.getUser()
+  return user?.id ?? null
+}
+
 export const notificationService = {
   // Check if browser supports push notifications
   isSupported(): boolean {
@@ -83,14 +95,14 @@ export const notificationService = {
   // Requires a unique constraint on the endpoint column in push_subscriptions.
   // If the current DB schema only has a unique constraint on user_id, a migration
   // adding a unique constraint on endpoint is needed.
-  async saveSubscription(subscription: PushSubscription): Promise<void> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+  async saveSubscription(subscription: PushSubscription, ctx?: Partial<ServiceContext>): Promise<void> {
+    const userId = await resolveUserId(ctx)
+    if (!userId) return
 
     const subscriptionJson = subscription.toJSON()
 
     await supabase.from('push_subscriptions').upsert({
-      user_id: user.id,
+      user_id: userId,
       endpoint: subscriptionJson.endpoint!,
       p256dh: subscriptionJson.keys?.p256dh || '',
       auth: subscriptionJson.keys?.auth || '',
@@ -100,9 +112,9 @@ export const notificationService = {
   },
 
   // Remove subscription from Supabase
-  async removeSubscription(subscription: PushSubscription): Promise<void> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+  async removeSubscription(subscription: PushSubscription, ctx?: Partial<ServiceContext>): Promise<void> {
+    const userId = await resolveUserId(ctx)
+    if (!userId) return
 
     const subscriptionJson = subscription.toJSON()
 
@@ -110,32 +122,32 @@ export const notificationService = {
       .from('push_subscriptions')
       .delete()
       .eq('endpoint', subscriptionJson.endpoint!)
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
   },
 
   // Get notification preferences
-  async getPreferences(): Promise<NotificationPreferences | null> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return null
+  async getPreferences(ctx?: Partial<ServiceContext>): Promise<NotificationPreferences | null> {
+    const userId = await resolveUserId(ctx)
+    if (!userId) return null
 
     const { data } = await supabase
       .from('notification_preferences')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .maybeSingle()
 
     return data as NotificationPreferences | null
   },
 
   // Update notification preferences
-  async updatePreferences(preferences: Partial<NotificationPreferences>): Promise<{ error: Error | null }> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { error: new Error('Not authenticated') }
+  async updatePreferences(preferences: Partial<NotificationPreferences>, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
+    const userId = await resolveUserId(ctx)
+    if (!userId) return { error: new Error('Not authenticated') }
 
     const { error } = await supabase
       .from('notification_preferences')
       .upsert({
-        user_id: user.id,
+        user_id: userId,
         ...preferences,
         updated_at: new Date().toISOString(),
       }, {
@@ -159,14 +171,14 @@ export const notificationService = {
   },
 
   // Check if user is within the 30-day free push notification window
-  async isPushWindowActive(): Promise<boolean> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return false
+  async isPushWindowActive(ctx?: Partial<ServiceContext>): Promise<boolean> {
+    const userId = await resolveUserId(ctx)
+    if (!userId) return false
 
     const { data: profile } = await supabase
       .from('profiles')
       .select('subscription_tier, created_at')
-      .eq('id', user.id)
+      .eq('id', userId)
       .single()
 
     if (!profile) return false
@@ -184,14 +196,14 @@ export const notificationService = {
   },
 
   // Get detailed push notification window status
-  async getPushWindowStatus(): Promise<{ isActive: boolean; daysRemaining: number | null; isPremium: boolean }> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { isActive: false, daysRemaining: null, isPremium: false }
+  async getPushWindowStatus(ctx?: Partial<ServiceContext>): Promise<{ isActive: boolean; daysRemaining: number | null; isPremium: boolean }> {
+    const userId = await resolveUserId(ctx)
+    if (!userId) return { isActive: false, daysRemaining: null, isPremium: false }
 
     const { data: profile } = await supabase
       .from('profiles')
       .select('subscription_tier, created_at')
-      .eq('id', user.id)
+      .eq('id', userId)
       .single()
 
     if (!profile) return { isActive: false, daysRemaining: null, isPremium: false }

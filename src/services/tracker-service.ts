@@ -4,6 +4,31 @@ import { isPremiumTier } from '@/lib/subscription-utils'
 
 const supabase = createClient()
 
+interface ServiceContext {
+  userId: string
+  familyId: string
+  subscriptionTier?: string
+}
+
+async function resolveContext(ctx?: Partial<ServiceContext>): Promise<ServiceContext | null> {
+  if (ctx?.userId && ctx?.familyId) {
+    return ctx as ServiceContext
+  }
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('family_id, subscription_tier')
+    .eq('id', user.id)
+    .single()
+  if (!profile?.family_id) return null
+  return {
+    userId: user.id,
+    familyId: profile.family_id,
+    subscriptionTier: profile.subscription_tier ?? undefined,
+  }
+}
+
 export type LogType =
   | 'feeding'
   | 'diaper'
@@ -38,22 +63,14 @@ export interface ShiftBriefing {
 }
 
 export const trackerService = {
-  async getLogs(filters: LogFilters = {}): Promise<BabyLog[]> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return []
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('family_id, subscription_tier')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile?.family_id) return []
+  async getLogs(filters: LogFilters = {}, ctx?: Partial<ServiceContext>): Promise<BabyLog[]> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return []
 
     let query = supabase
       .from('baby_logs')
       .select('*')
-      .eq('family_id', profile.family_id)
+      .eq('family_id', resolved.familyId)
       .order('logged_at', { ascending: false })
 
     if (filters.log_type) {
@@ -77,7 +94,7 @@ export const trackerService = {
     }
 
     // Premium gating: free users only see last 7 days
-    if (!isPremiumTier(profile.subscription_tier) && !filters.date_from) {
+    if (!isPremiumTier(resolved.subscriptionTier) && !filters.date_from) {
       const sevenDaysAgo = new Date()
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
       query = query.gte('logged_at', sevenDaysAgo.toISOString())
@@ -105,17 +122,9 @@ export const trackerService = {
     log_data: Record<string, any>
     logged_at?: string
     notes?: string
-  }): Promise<{ log: BabyLog | null; error: Error | null }> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { log: null, error: new Error('Not authenticated') }
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('family_id, subscription_tier')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile?.family_id) return { log: null, error: new Error('No family found') }
+  }, ctx?: Partial<ServiceContext>): Promise<{ log: BabyLog | null; error: Error | null }> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return { log: null, error: new Error('Not authenticated') }
 
     const { data, error } = await supabase
       .from('baby_logs')
@@ -123,8 +132,8 @@ export const trackerService = {
         log_type: log.log_type,
         log_data: log.log_data,
         notes: log.notes,
-        family_id: profile.family_id,
-        logged_by: user.id,
+        family_id: resolved.familyId,
+        logged_by: resolved.userId,
         logged_at: log.logged_at || new Date().toISOString(),
       })
       .select()
@@ -151,43 +160,27 @@ export const trackerService = {
     return { error: error as Error | null }
   },
 
-  async deleteLog(id: string): Promise<{ error: Error | null }> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { error: new Error('Not authenticated') }
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('family_id')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile?.family_id) return { error: new Error('No family found') }
+  async deleteLog(id: string, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return { error: new Error('Not authenticated') }
 
     const { error } = await supabase
       .from('baby_logs')
       .delete()
       .eq('id', id)
-      .eq('family_id', profile.family_id)
+      .eq('family_id', resolved.familyId)
 
     return { error: error as Error | null }
   },
 
-  async getShiftBriefing(): Promise<ShiftBriefing | null> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return null
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('family_id')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile?.family_id) return null
+  async getShiftBriefing(ctx?: Partial<ServiceContext>): Promise<ShiftBriefing | null> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return null
 
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     const todayStr = today.toISOString()
-    const familyId = profile.family_id
+    const familyId = resolved.familyId
 
     // Parallelize all 6 independent queries
     const [
@@ -257,17 +250,9 @@ export const trackerService = {
     }
   },
 
-  async getDailySummary(date: string): Promise<any> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return null
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('family_id')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile?.family_id) return null
+  async getDailySummary(date: string, ctx?: Partial<ServiceContext>): Promise<any> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return null
 
     const startOfDay = new Date(date)
     startOfDay.setHours(0, 0, 0, 0)
@@ -277,7 +262,7 @@ export const trackerService = {
     const { data: logs } = await supabase
       .from('baby_logs')
       .select('*')
-      .eq('family_id', profile.family_id)
+      .eq('family_id', resolved.familyId)
       .gte('logged_at', startOfDay.toISOString())
       .lte('logged_at', endOfDay.toISOString())
       .order('logged_at', { ascending: true })
@@ -293,20 +278,12 @@ export const trackerService = {
     return summary
   },
 
-  async getWeeklySummary(): Promise<any> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return null
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('family_id, subscription_tier')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile?.family_id) return null
+  async getWeeklySummary(ctx?: Partial<ServiceContext>): Promise<any> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return null
 
     // Premium feature
-    if (!isPremiumTier(profile.subscription_tier)) return { error: 'Premium feature' }
+    if (!isPremiumTier(resolved.subscriptionTier)) return { error: 'Premium feature' }
 
     const sevenDaysAgo = new Date()
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
@@ -314,7 +291,7 @@ export const trackerService = {
     const { data: logs } = await supabase
       .from('baby_logs')
       .select('*')
-      .eq('family_id', profile.family_id)
+      .eq('family_id', resolved.familyId)
       .gte('logged_at', sevenDaysAgo.toISOString())
       .order('logged_at', { ascending: true })
 

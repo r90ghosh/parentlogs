@@ -1,25 +1,41 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { subscriptionService, PricingPlan } from '@/services/subscription-service'
+import { subscriptionService, PricingPlan, ServiceContext } from '@/services/subscription-service'
 import { PremiumFeature, SubscriptionTier } from '@/types'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo } from 'react'
 import { useUser } from '@/components/user-provider'
 import { isInGracePeriod, gracePeriodDaysRemaining } from '@/lib/subscription-utils'
 
+function useServiceContext(): Partial<ServiceContext> | undefined {
+  const { user, profile } = useUser()
+  if (!user) return undefined
+  return {
+    userId: user.id,
+    familyId: profile?.family_id ?? undefined,
+    subscriptionTier: profile?.subscription_tier ?? undefined,
+  } as Partial<ServiceContext>
+}
+
 export function useSubscription() {
+  const ctx = useServiceContext()
+
   return useQuery({
     queryKey: ['subscription'],
-    queryFn: () => subscriptionService.getSubscription(),
+    queryFn: () => subscriptionService.getSubscription(ctx),
+    enabled: !!ctx,
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
   })
 }
 
 export function useSubscriptionTier() {
+  const ctx = useServiceContext()
+
   return useQuery({
     queryKey: ['subscription-tier'],
-    queryFn: () => subscriptionService.getSubscriptionTier(),
+    queryFn: () => subscriptionService.getSubscriptionTier(ctx),
+    enabled: !!ctx,
     staleTime: 1000 * 60 * 5,
   })
 }

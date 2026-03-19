@@ -4,6 +4,31 @@ import { isPremiumTier } from '@/lib/subscription-utils'
 
 const supabase = createClient()
 
+interface ServiceContext {
+  userId: string
+  familyId: string
+  subscriptionTier?: string
+}
+
+async function resolveContext(ctx?: Partial<ServiceContext>): Promise<ServiceContext | null> {
+  if (ctx?.userId && ctx?.familyId) {
+    return ctx as ServiceContext
+  }
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('family_id, subscription_tier')
+    .eq('id', user.id)
+    .single()
+  if (!profile?.family_id) return null
+  return {
+    userId: user.id,
+    familyId: profile.family_id,
+    subscriptionTier: profile.subscription_tier ?? undefined,
+  }
+}
+
 export interface BudgetCategory {
   name: string
   items: BudgetTemplate[]
@@ -40,20 +65,11 @@ export const budgetService = {
     return (data || []) as unknown as BudgetTemplate[]
   },
 
-  async getBudgetSummary(): Promise<BudgetSummary | null> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return null
+  async getBudgetSummary(ctx?: Partial<ServiceContext>): Promise<BudgetSummary | null> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return null
 
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('family_id, subscription_tier')
-      .eq('id', user.id)
-      .single()
-
-    if (profileError && profileError.code !== 'PGRST116') throw profileError
-    if (!profile?.family_id) return null
-
-    const isPremium = isPremiumTier(profile.subscription_tier)
+    const isPremium = isPremiumTier(resolved.subscriptionTier)
 
     // Get all templates (only V2 rows with period set)
     const { data: templates, error: templatesError } = await supabase
@@ -69,7 +85,7 @@ export const budgetService = {
     const { data: familyItems, error: familyItemsError } = await supabase
       .from('family_budget')
       .select('*')
-      .eq('family_id', profile.family_id)
+      .eq('family_id', resolved.familyId)
       .order('created_at', { ascending: true })
 
     if (familyItemsError) throw familyItemsError
@@ -120,18 +136,9 @@ export const budgetService = {
     }
   },
 
-  async addToFamilyBudget(templateId: string, estimatedPrice?: number): Promise<{ error: Error | null }> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { error: new Error('Not authenticated') }
-
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('family_id')
-      .eq('id', user.id)
-      .single()
-
-    if (profileError && profileError.code !== 'PGRST116') return { error: profileError as Error }
-    if (!profile?.family_id) return { error: new Error('No family found') }
+  async addToFamilyBudget(templateId: string, estimatedPrice?: number, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return { error: new Error('Not authenticated') }
 
     // Get template details
     const { data: template, error: templateError } = await supabase
@@ -147,7 +154,7 @@ export const budgetService = {
     const { data: existing, error: existingError } = await supabase
       .from('family_budget')
       .select('id')
-      .eq('family_id', profile.family_id)
+      .eq('family_id', resolved.familyId)
       .eq('budget_template_id', templateId)
       .maybeSingle()
 
@@ -157,7 +164,7 @@ export const budgetService = {
     const { error } = await supabase
       .from('family_budget')
       .insert({
-        family_id: profile.family_id,
+        family_id: resolved.familyId,
         budget_template_id: templateId,
         item: template.item,
         category: template.category,
@@ -170,23 +177,14 @@ export const budgetService = {
     return { error: error as Error | null }
   },
 
-  async addCustomItem(item: string, category: string, estimatedPrice: number): Promise<{ error: Error | null }> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { error: new Error('Not authenticated') }
-
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('family_id')
-      .eq('id', user.id)
-      .single()
-
-    if (profileError && profileError.code !== 'PGRST116') return { error: profileError as Error }
-    if (!profile?.family_id) return { error: new Error('No family found') }
+  async addCustomItem(item: string, category: string, estimatedPrice: number, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return { error: new Error('Not authenticated') }
 
     const { error } = await supabase
       .from('family_budget')
       .insert({
-        family_id: profile.family_id,
+        family_id: resolved.familyId,
         item,
         category,
         estimated_price: estimatedPrice,
@@ -200,10 +198,11 @@ export const budgetService = {
 
   async updateBudgetItem(
     itemId: string,
-    updates: Partial<Pick<FamilyBudgetItem, 'estimated_price' | 'actual_price' | 'is_purchased' | 'notes'>>
+    updates: Partial<Pick<FamilyBudgetItem, 'estimated_price' | 'actual_price' | 'is_purchased' | 'notes'>>,
+    ctx?: Partial<ServiceContext>
   ): Promise<{ error: Error | null }> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { error: new Error('Not authenticated') }
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return { error: new Error('Not authenticated') }
 
     const updateData: Record<string, unknown> = { ...updates }
     if (updates.is_purchased === true) {
@@ -220,32 +219,24 @@ export const budgetService = {
     return { error: error as Error | null }
   },
 
-  async removeBudgetItem(itemId: string): Promise<{ error: Error | null }> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { error: new Error('Not authenticated') }
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('family_id')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile?.family_id) return { error: new Error('No family found') }
+  async removeBudgetItem(itemId: string, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return { error: new Error('Not authenticated') }
 
     const { error } = await supabase
       .from('family_budget')
       .delete()
       .eq('id', itemId)
-      .eq('family_id', profile.family_id)
+      .eq('family_id', resolved.familyId)
 
     return { error: error as Error | null }
   },
 
-  async markAsPurchased(itemId: string, actualPrice?: number): Promise<{ error: Error | null }> {
+  async markAsPurchased(itemId: string, actualPrice?: number, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
     return this.updateBudgetItem(itemId, {
       is_purchased: true,
       actual_price: actualPrice,
-    })
+    }, ctx)
   },
 
   formatPrice(cents: number): string {

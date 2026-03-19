@@ -2,9 +2,20 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { notificationService } from '@/services/notification-service'
+import { notificationService, ServiceContext } from '@/services/notification-service'
 import { notificationHistoryService } from '@/services/notification-history-service'
 import { NotificationPreferences, Notification } from '@/types'
+import { useOptionalUser } from '@/components/user-provider'
+
+function useServiceContext(): Partial<ServiceContext> | undefined {
+  const userData = useOptionalUser()
+  if (!userData?.user) return undefined
+  return {
+    userId: userData.user.id,
+    familyId: userData.profile?.family_id ?? undefined,
+    subscriptionTier: userData.profile?.subscription_tier ?? undefined,
+  } as Partial<ServiceContext>
+}
 
 export function useNotificationPermission() {
   const [permission, setPermission] = useState<NotificationPermission>('default')
@@ -77,18 +88,22 @@ export function usePushSubscription() {
 }
 
 export function useNotificationPreferences() {
+  const ctx = useServiceContext()
+
   return useQuery({
     queryKey: ['notification-preferences'],
-    queryFn: () => notificationService.getPreferences(),
+    queryFn: () => notificationService.getPreferences(ctx),
+    enabled: !!ctx,
   })
 }
 
 export function useUpdateNotificationPreferences() {
   const queryClient = useQueryClient()
+  const ctx = useServiceContext()
 
   return useMutation({
     mutationFn: (preferences: Partial<NotificationPreferences>) =>
-      notificationService.updatePreferences(preferences),
+      notificationService.updatePreferences(preferences, ctx),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notification-preferences'] })
     },
@@ -104,9 +119,12 @@ export function useLocalNotification() {
 }
 
 export function usePushWindowStatus() {
+  const ctx = useServiceContext()
+
   return useQuery({
     queryKey: ['push-window-status'],
-    queryFn: () => notificationService.getPushWindowStatus(),
+    queryFn: () => notificationService.getPushWindowStatus(ctx),
+    enabled: !!ctx,
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 }

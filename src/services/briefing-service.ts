@@ -4,41 +4,60 @@ import { isPregnancyStage } from '@/lib/pregnancy-utils'
 
 const supabase = createClient()
 
+export interface ServiceContext {
+  userId: string
+  familyId: string
+  subscriptionTier?: string
+}
+
+interface BriefingContext extends ServiceContext {
+  stage: string
+  currentWeek: number
+}
+
+async function resolveBriefingContext(ctx?: Partial<BriefingContext>): Promise<BriefingContext | null> {
+  if (ctx?.userId && ctx?.familyId && ctx?.stage && ctx?.currentWeek) {
+    return ctx as BriefingContext
+  }
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('family_id, subscription_tier')
+    .eq('id', user.id)
+    .single()
+  if (!profile?.family_id) return null
+  const { data: family, error: familyError } = await supabase
+    .from('families')
+    .select('current_week, stage')
+    .eq('id', profile.family_id)
+    .single()
+  if (familyError && familyError.code !== 'PGRST116') throw familyError
+  if (!family || family.current_week === null || !family.stage) return null
+  return {
+    userId: user.id,
+    familyId: profile.family_id,
+    subscriptionTier: profile.subscription_tier ?? undefined,
+    stage: family.stage,
+    currentWeek: family.current_week,
+  }
+}
+
 export const briefingService = {
-  async getCurrentBriefing(): Promise<BriefingTemplate | null> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return null
-
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('family_id')
-      .eq('id', user.id)
-      .single()
-
-    if (profileError && profileError.code !== 'PGRST116') throw profileError
-    if (!profile?.family_id) return null
-
-    const { data: family, error: familyError } = await supabase
-      .from('families')
-      .select('current_week, stage')
-      .eq('id', profile.family_id)
-      .single()
-
-    if (familyError && familyError.code !== 'PGRST116') throw familyError
-    if (!family || family.current_week === null) return null
-
-    const currentWeek = family.current_week
+  async getCurrentBriefing(ctx?: Partial<BriefingContext>): Promise<BriefingTemplate | null> {
+    const resolved = await resolveBriefingContext(ctx)
+    if (!resolved) return null
 
     // Build briefing_id based on stage and week
     let briefingId: string
-    if (isPregnancyStage(family.stage as FamilyStage)) {
-      briefingId = `PREG-W${String(currentWeek).padStart(2, '0')}`
+    if (isPregnancyStage(resolved.stage as FamilyStage)) {
+      briefingId = `PREG-W${String(resolved.currentWeek).padStart(2, '0')}`
     } else {
       // Post-birth: weeks 1-12 use W format, after that use month format
-      if (currentWeek <= 12) {
-        briefingId = `POST-W${String(currentWeek).padStart(2, '0')}`
+      if (resolved.currentWeek <= 12) {
+        briefingId = `POST-W${String(resolved.currentWeek).padStart(2, '0')}`
       } else {
-        const month = Math.ceil(currentWeek / 4)
+        const month = Math.ceil(resolved.currentWeek / 4)
         briefingId = `POST-M${String(month).padStart(2, '0')}`
       }
     }

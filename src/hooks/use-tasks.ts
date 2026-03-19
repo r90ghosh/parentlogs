@@ -3,8 +3,9 @@
 import { useMemo, useCallback } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { startOfWeek, endOfWeek, isPast, isToday, addDays } from 'date-fns'
-import { taskService, TaskFilters } from '@/services/task-service'
+import { taskService, TaskFilters, ServiceContext } from '@/services/task-service'
 import { FamilyTask, TaskAssignee, TaskStatus, TriageAction } from '@/types'
+import { useUser } from '@/components/user-provider'
 
 export type CreateTaskInput = {
   title: string
@@ -16,11 +17,24 @@ export type CreateTaskInput = {
   status: TaskStatus
 }
 
+function useServiceContext(): Partial<ServiceContext> | undefined {
+  const { user, profile } = useUser()
+  if (!user || !profile?.family_id) return undefined
+  return {
+    userId: user.id,
+    familyId: profile.family_id,
+    subscriptionTier: profile.subscription_tier ?? undefined,
+  }
+}
+
 export function useTasks(filters: TaskFilters = {}) {
+  const { profile } = useUser()
+  const ctx = useServiceContext()
+
   return useQuery({
-    queryKey: ['tasks', filters],
-    queryFn: () => taskService.getTasks(filters),
-    enabled: typeof window !== 'undefined',
+    queryKey: ['tasks', profile?.family_id, filters],
+    queryFn: () => taskService.getTasks(filters, ctx),
+    enabled: !!profile?.family_id,
   })
 }
 
@@ -34,9 +48,10 @@ export function useTask(id: string) {
 
 export function useCompleteTask() {
   const queryClient = useQueryClient()
+  const ctx = useServiceContext()
 
   return useMutation({
-    mutationFn: (id: string) => taskService.completeTask(id),
+    mutationFn: (id: string) => taskService.completeTask(id, ctx),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
       queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
@@ -74,9 +89,10 @@ export function useSkipTask() {
 
 export function useCreateTask() {
   const queryClient = useQueryClient()
+  const ctx = useServiceContext()
 
   return useMutation({
-    mutationFn: (task: CreateTaskInput) => taskService.createTask(task),
+    mutationFn: (task: CreateTaskInput) => taskService.createTask(task, ctx),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
       queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
@@ -101,9 +117,10 @@ export function useUpdateTask() {
 
 export function useDeleteTask() {
   const queryClient = useQueryClient()
+  const ctx = useServiceContext()
 
   return useMutation({
-    mutationFn: (id: string) => taskService.deleteTask(id),
+    mutationFn: (id: string) => taskService.deleteTask(id, ctx),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
       queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
@@ -116,10 +133,13 @@ export function useDeleteTask() {
  * Fetch all tasks for timeline display (ignores premium gating)
  */
 export function useAllTasksForTimeline() {
+  const { profile } = useUser()
+  const ctx = useServiceContext()
+
   return useQuery({
-    queryKey: ['tasks-timeline'],
-    queryFn: () => taskService.getAllTasksForTimeline(),
-    enabled: typeof window !== 'undefined',
+    queryKey: ['tasks-timeline', profile?.family_id],
+    queryFn: () => taskService.getAllTasksForTimeline(ctx),
+    enabled: !!profile?.family_id,
   })
 }
 
@@ -264,10 +284,13 @@ export function useSnoozeDays() {
  * Get backlog tasks (tasks from before signup week that need triage)
  */
 export function useBacklogTasks() {
+  const { profile } = useUser()
+  const ctx = useServiceContext()
+
   return useQuery({
-    queryKey: ['backlog-tasks'],
-    queryFn: () => taskService.getBacklogTasks(),
-    enabled: typeof window !== 'undefined',
+    queryKey: ['backlog-tasks', profile?.family_id],
+    queryFn: () => taskService.getBacklogTasks(ctx),
+    enabled: !!profile?.family_id,
   })
 }
 
@@ -275,10 +298,13 @@ export function useBacklogTasks() {
  * Get count of pending backlog tasks
  */
 export function useBacklogCount() {
+  const { profile } = useUser()
+  const ctx = useServiceContext()
+
   return useQuery({
-    queryKey: ['backlog-count'],
-    queryFn: () => taskService.getBacklogCount(),
-    enabled: typeof window !== 'undefined',
+    queryKey: ['backlog-count', profile?.family_id],
+    queryFn: () => taskService.getBacklogCount(ctx),
+    enabled: !!profile?.family_id,
   })
 }
 
@@ -287,10 +313,11 @@ export function useBacklogCount() {
  */
 export function useTriageTask() {
   const queryClient = useQueryClient()
+  const ctx = useServiceContext()
 
   return useMutation({
     mutationFn: ({ id, action }: { id: string; action: TriageAction }) =>
-      taskService.triageTask(id, action),
+      taskService.triageTask(id, action, ctx),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
       queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
@@ -306,10 +333,11 @@ export function useTriageTask() {
  */
 export function useBulkTriageTasks() {
   const queryClient = useQueryClient()
+  const ctx = useServiceContext()
 
   return useMutation({
     mutationFn: ({ ids, action }: { ids: string[]; action: TriageAction }) =>
-      taskService.bulkTriageTasks(ids, action),
+      taskService.bulkTriageTasks(ids, action, ctx),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
       queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })

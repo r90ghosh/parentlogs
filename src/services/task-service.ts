@@ -14,23 +14,42 @@ export interface TaskFilters {
   includeBacklog?: boolean
 }
 
+export interface ServiceContext {
+  userId: string
+  familyId: string
+  subscriptionTier?: string
+}
+
+async function resolveContext(ctx?: Partial<ServiceContext>): Promise<ServiceContext | null> {
+  if (ctx?.userId && ctx?.familyId) {
+    return ctx as ServiceContext
+  }
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('family_id, subscription_tier')
+    .eq('id', user.id)
+    .single()
+  if (!profile?.family_id) return null
+  return {
+    userId: user.id,
+    familyId: profile.family_id,
+    subscriptionTier: profile.subscription_tier ?? undefined,
+  }
+}
+
 export const taskService = {
-  async getTasks(filters: TaskFilters = {}): Promise<FamilyTask[]> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return []
+  async getTasks(filters: TaskFilters = {}, ctx?: Partial<ServiceContext>): Promise<FamilyTask[]> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return []
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('family_id, subscription_tier')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile?.family_id) return []
+    const { familyId, subscriptionTier } = resolved
 
     let query = supabase
       .from('family_tasks')
       .select('*')
-      .eq('family_id', profile.family_id)
+      .eq('family_id', familyId)
       .order('due_date', { ascending: true })
 
     if (filters.status && filters.status !== 'all') {
@@ -59,7 +78,7 @@ export const taskService = {
     }
 
     // Premium gating: free users only see 30-day rolling window
-    const isPremium = isPremiumTier(profile.subscription_tier)
+    const isPremium = isPremiumTier(subscriptionTier ?? null)
     if (!isPremium) {
       const today = new Date()
       const thirtyDaysFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
@@ -83,15 +102,15 @@ export const taskService = {
     return data as FamilyTask
   },
 
-  async completeTask(id: string): Promise<{ error: Error | null }> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { error: new Error('Not authenticated') }
+  async completeTask(id: string, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return { error: new Error('Not authenticated') }
 
     const { error } = await supabase
       .from('family_tasks')
       .update({
         status: 'completed',
-        completed_by: user.id,
+        completed_by: resolved.userId,
         completed_at: new Date().toISOString(),
       })
       .eq('id', id)
@@ -128,17 +147,9 @@ export const taskService = {
     priority: 'must-do' | 'good-to-do'
     category: string
     status: TaskStatus
-  }): Promise<{ task: FamilyTask | null; error: Error | null }> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { task: null, error: new Error('Not authenticated') }
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('family_id')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile?.family_id) return { task: null, error: new Error('No family found') }
+  }, ctx?: Partial<ServiceContext>): Promise<{ task: FamilyTask | null; error: Error | null }> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return { task: null, error: new Error('Not authenticated') }
 
     const { data, error } = await supabase
       .from('family_tasks')
@@ -150,7 +161,7 @@ export const taskService = {
         priority: task.priority,
         category: task.category,
         status: task.status,
-        family_id: profile.family_id,
+        family_id: resolved.familyId,
         is_custom: true,
       })
       .select()
@@ -181,23 +192,15 @@ export const taskService = {
     return { error: error as Error | null }
   },
 
-  async deleteTask(id: string): Promise<{ error: Error | null }> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { error: new Error('Not authenticated') }
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('family_id')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile?.family_id) return { error: new Error('No family found') }
+  async deleteTask(id: string, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return { error: new Error('Not authenticated') }
 
     const { error } = await supabase
       .from('family_tasks')
       .delete()
       .eq('id', id)
-      .eq('family_id', profile.family_id)
+      .eq('family_id', resolved.familyId)
 
     return { error: error as Error | null }
   },
@@ -206,22 +209,14 @@ export const taskService = {
    * Get all tasks for timeline display (ignores premium gating)
    * Used to show the complete journey timeline bar
    */
-  async getAllTasksForTimeline(): Promise<FamilyTask[]> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return []
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('family_id')
-      .eq('id', user.id)
-      .maybeSingle()
-
-    if (!profile?.family_id) return []
+  async getAllTasksForTimeline(ctx?: Partial<ServiceContext>): Promise<FamilyTask[]> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return []
 
     const { data, error } = await supabase
       .from('family_tasks')
       .select('*')
-      .eq('family_id', profile.family_id)
+      .eq('family_id', resolved.familyId)
       .order('due_date', { ascending: true })
 
     if (error) return []
@@ -232,22 +227,14 @@ export const taskService = {
    * Get backlog tasks (tasks from before signup week that need triage)
    * Note: Requires the catch-up migration to be applied for full functionality
    */
-  async getBacklogTasks(): Promise<FamilyTask[]> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return []
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('family_id')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile?.family_id) return []
+  async getBacklogTasks(ctx?: Partial<ServiceContext>): Promise<FamilyTask[]> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return []
 
     const { data, error } = await supabase
       .from('family_tasks')
       .select('*')
-      .eq('family_id', profile.family_id)
+      .eq('family_id', resolved.familyId)
       .eq('is_backlog', true)
       .eq('backlog_status', 'pending')
       .order('due_date', { ascending: true })
@@ -259,9 +246,9 @@ export const taskService = {
   /**
    * Triage a single backlog task
    */
-  async triageTask(id: string, action: TriageAction): Promise<{ error: Error | null }> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { error: new Error('Not authenticated') }
+  async triageTask(id: string, action: TriageAction, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return { error: new Error('Not authenticated') }
 
     const updates: Record<string, unknown> = {
       backlog_status: 'triaged',
@@ -272,7 +259,7 @@ export const taskService = {
     if (action === 'completed') {
       updates.status = 'completed'
       updates.completed_at = new Date().toISOString()
-      updates.completed_by = user.id
+      updates.completed_by = resolved.userId
     } else if (action === 'added') {
       updates.is_backlog = false
     }
@@ -289,9 +276,9 @@ export const taskService = {
   /**
    * Bulk triage multiple tasks with the same action
    */
-  async bulkTriageTasks(ids: string[], action: TriageAction): Promise<{ error: Error | null }> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return { error: new Error('Not authenticated') }
+  async bulkTriageTasks(ids: string[], action: TriageAction, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return { error: new Error('Not authenticated') }
 
     const updates: Record<string, unknown> = {
       backlog_status: 'triaged',
@@ -302,7 +289,7 @@ export const taskService = {
     if (action === 'completed') {
       updates.status = 'completed'
       updates.completed_at = new Date().toISOString()
-      updates.completed_by = user.id
+      updates.completed_by = resolved.userId
     } else if (action === 'added') {
       updates.is_backlog = false
     }
@@ -319,22 +306,14 @@ export const taskService = {
    * Get count of pending backlog tasks
    * Note: Requires the catch-up migration to be applied for full functionality
    */
-  async getBacklogCount(): Promise<number> {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return 0
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('family_id')
-      .eq('id', user.id)
-      .single()
-
-    if (!profile?.family_id) return 0
+  async getBacklogCount(ctx?: Partial<ServiceContext>): Promise<number> {
+    const resolved = await resolveContext(ctx)
+    if (!resolved) return 0
 
     const { count, error } = await supabase
       .from('family_tasks')
       .select('*', { count: 'exact', head: true })
-      .eq('family_id', profile.family_id)
+      .eq('family_id', resolved.familyId)
       .eq('is_backlog', true)
       .eq('backlog_status', 'pending')
 
