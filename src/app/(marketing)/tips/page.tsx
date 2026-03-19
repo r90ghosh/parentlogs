@@ -1,116 +1,133 @@
-'use client'
-
-import { useState, useMemo } from 'react'
-import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
-import type { IllustrationComponent } from '@/types/tips'
+import type { Metadata } from 'next'
+import { DadTipsClient } from '@/components/features/tips/DadTipsClient'
 import { dadTips } from '@/data/dadTips'
-import { TopicSelector } from '@/components/features/tips/TopicSelector'
-import { InfographicView } from '@/components/features/tips/InfographicView'
 
-import {
-  BabyChangingSection1,
-  BabyChangingSection2,
-  BabyChangingSection3,
-  BabyChangingSection4,
-  BabyChangingSection5,
-} from '@/components/features/tips/illustrations/BabyChanging'
+export const metadata: Metadata = {
+  title: 'Dad Tips — Visual Step-by-Step Parenting Guides | The Dad Center',
+  description:
+    'Illustrated how-to guides for new dads: diaper changing, bottle prep, swaddling, bath time, car seat installation, and burping. Simple visual steps you can follow at 3am.',
+  keywords: [
+    'new dad tips',
+    'how to change a diaper',
+    'bottle feeding guide',
+    'how to swaddle a baby',
+    'baby bath time tips',
+    'car seat installation guide',
+    'how to burp a baby',
+    'parenting tips for dads',
+    'newborn care guide',
+    'first-time dad advice',
+    'diaper changing steps',
+    'baby care instructions',
+  ],
+  alternates: {
+    canonical: '/tips',
+  },
+  openGraph: {
+    title: 'Dad Tips — Visual Step-by-Step Parenting Guides',
+    description:
+      'Illustrated how-to guides for new dads. Diaper changes, bottle prep, swaddling, bath time, car seats, and burping — visual steps you can follow at 3am.',
+    type: 'website',
+    url: 'https://thedadcenter.com/tips',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Dad Tips — Visual Step-by-Step Parenting Guides',
+    description:
+      'Illustrated how-to guides for new dads. Simple visual steps for diaper changes, bottle prep, swaddling, and more.',
+  },
+}
 
-import {
-  BottlePrepSection1,
-  BottlePrepSection2,
-} from '@/components/features/tips/illustrations/BottlePrep'
+function buildHowToJsonLd() {
+  const baseUrl = 'https://thedadcenter.com'
 
-import {
-  SwaddlingSection1,
-  SwaddlingSection2,
-} from '@/components/features/tips/illustrations/Swaddling'
+  return dadTips.map((topic) => ({
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: `How to ${topic.name === 'Car Seat' ? 'Install a Car Seat' : topic.name}${topic.name === 'Burping' ? ' a Baby' : ''}`,
+    description: `Step-by-step visual guide for ${topic.name.toLowerCase()} — practical tips for new dads.`,
+    url: `${baseUrl}/tips`,
+    totalTime: topic.sections.length <= 2 ? 'PT5M' : 'PT10M',
+    supply: topic.id === 'baby-changing'
+      ? [
+          { '@type': 'HowToSupply', name: 'Clean diaper' },
+          { '@type': 'HowToSupply', name: 'Baby wipes' },
+          { '@type': 'HowToSupply', name: 'Barrier cream' },
+          { '@type': 'HowToSupply', name: 'Spare outfit' },
+        ]
+      : topic.id === 'bottle-prep'
+      ? [
+          { '@type': 'HowToSupply', name: 'Baby bottle' },
+          { '@type': 'HowToSupply', name: 'Formula' },
+          { '@type': 'HowToSupply', name: 'Boiled water' },
+        ]
+      : topic.id === 'swaddling'
+      ? [{ '@type': 'HowToSupply', name: 'Muslin or cotton blanket' }]
+      : topic.id === 'bath-time'
+      ? [
+          { '@type': 'HowToSupply', name: 'Baby tub' },
+          { '@type': 'HowToSupply', name: 'Washcloth' },
+          { '@type': 'HowToSupply', name: 'Mild baby soap' },
+          { '@type': 'HowToSupply', name: 'Towel' },
+        ]
+      : undefined,
+    step: topic.sections.map((section) => ({
+      '@type': 'HowToStep',
+      name: section.title,
+      text: section.points.join(' '),
+      ...(section.proTip && {
+        tip: { '@type': 'HowToTip', text: section.proTip },
+      }),
+    })),
+  }))
+}
 
-import {
-  BathTimeSection1,
-  BathTimeSection2,
-} from '@/components/features/tips/illustrations/BathTime'
-
-import {
-  CarSeatSection1,
-  CarSeatSection2,
-} from '@/components/features/tips/illustrations/CarSeat'
-
-import {
-  BurpingSection1,
-  BurpingSection2,
-} from '@/components/features/tips/illustrations/Burping'
-
-const illustrations: Record<string, IllustrationComponent> = {
-  'baby-changing-1': BabyChangingSection1,
-  'baby-changing-2': BabyChangingSection2,
-  'baby-changing-3': BabyChangingSection3,
-  'baby-changing-4': BabyChangingSection4,
-  'baby-changing-5': BabyChangingSection5,
-  'bottle-prep-1': BottlePrepSection1,
-  'bottle-prep-2': BottlePrepSection2,
-  'swaddling-1': SwaddlingSection1,
-  'swaddling-2': SwaddlingSection2,
-  'bath-time-1': BathTimeSection1,
-  'bath-time-2': BathTimeSection2,
-  'car-seat-1': CarSeatSection1,
-  'car-seat-2': CarSeatSection2,
-  'burping-1': BurpingSection1,
-  'burping-2': BurpingSection2,
+function buildCollectionJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Dad Tips — Visual Parenting Guides',
+    description:
+      'A collection of illustrated step-by-step parenting guides for new dads, covering diaper changing, bottle prep, swaddling, bath time, car seat installation, and burping.',
+    url: 'https://thedadcenter.com/tips',
+    isPartOf: {
+      '@type': 'WebSite',
+      name: 'The Dad Center',
+      url: 'https://thedadcenter.com',
+    },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: dadTips.length,
+      itemListElement: dadTips.map((topic, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: topic.name,
+        description: `${topic.sections.length}-step visual guide for ${topic.name.toLowerCase()}`,
+      })),
+    },
+  }
 }
 
 export default function DadTipsPage() {
-  const [activeTopicId, setActiveTopicId] = useState(dadTips[0].id)
-
-  const activeTopic = useMemo(
-    () => dadTips.find((t) => t.id === activeTopicId) ?? dadTips[0],
-    [activeTopicId]
-  )
+  const howToSchemas = buildHowToJsonLd()
+  const collectionSchema = buildCollectionJsonLd()
 
   return (
-    <div className="min-h-screen">
-      {/* Hero area */}
-      <section className="relative pt-20 pb-4 md:pt-28 md:pb-6">
-        <div className="absolute inset-0 bg-gradient-to-b from-zinc-900 to-transparent" />
-
-        <div className="relative max-w-2xl mx-auto px-4">
-          {/* Back link */}
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground text-sm transition-colors mb-6 min-h-[44px]"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
-
-          {/* Title */}
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-            Dad Tips
-          </h1>
-          <p className="text-base text-muted-foreground leading-relaxed">
-            Step-by-step visual guides for hands-on skills.
-          </p>
-        </div>
-      </section>
-
-      {/* Topic selector — sticky */}
-      <div className="sticky top-0 z-20 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800">
-        <div className="max-w-2xl mx-auto">
-          <TopicSelector
-            topics={dadTips}
-            activeId={activeTopicId}
-            onSelect={setActiveTopicId}
-          />
-        </div>
-      </div>
-
-      {/* Infographic */}
-      <div className="max-w-2xl mx-auto pt-6 pb-12">
-        <InfographicView
-          topic={activeTopic}
-          illustrations={illustrations}
+    <>
+      {/* HowTo structured data — one per topic */}
+      {howToSchemas.map((schema, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
-      </div>
-    </div>
+      ))}
+      {/* CollectionPage structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <DadTipsClient />
+    </>
   )
 }

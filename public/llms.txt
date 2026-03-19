@@ -1,0 +1,46 @@
+# The Dad Center
+
+> The operating system for modern fatherhood. Built by dads, for dads who refuse to wing it.
+
+The Dad Center is a pregnancy and parenting companion app designed primarily for dads (but also moms). It provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and visual how-to guides.
+
+## Key Pages
+
+- [Home](https://thedadcenter.com/): Landing page with features, pricing, and testimonials
+- [Dad Tips](https://thedadcenter.com/tips): Illustrated step-by-step parenting guides (diaper changing, bottle prep, swaddling, bath time, car seat installation, burping)
+- [Budget Guide](https://thedadcenter.com/budget-guide): Comprehensive baby budget planner with 200+ items and real price ranges
+- [Baby Checklists](https://thedadcenter.com/baby-checklists): 15 curated preparation checklists (hospital bag, nursery, registry, baby-proofing, and more)
+- [Articles](https://thedadcenter.com/content): 50+ parenting articles with practical advice for new dads
+
+## Dad Tips Topics
+
+### Baby Changing
+5-step visual guide to confident diaper changes: prep your station, lift and position, open up and swap, clean and protect, button up. Covers front-to-back wiping, air-dry technique for rash prevention, two-finger gap rule for diaper fit.
+
+### Bottle Prep
+2-step guide to safe formula preparation: clean and mix (sterilization, water temp, scoop leveling), test and feed (wrist temperature test, 45-degree hold angle, 1-hour formula shelf life).
+
+### Swaddling
+2-step diamond swaddle technique: set up the diamond (blanket positioning, shoulder placement), wrap and tuck (left-right-bottom sequence, two-finger chest check, hip-safe wrapping).
+
+### Bath Time
+2-step safe bathing guide: set up and lower in (37C water, elbow test, feet-first entry), wash and dry (cleanest-to-dirtiest order, towel wrap, 5-10 minute limit).
+
+### Car Seat Installation
+2-step rear-facing install guide: install the base (LATCH vs seatbelt, less-than-1-inch movement test), secure baby (chest clip at armpit level, pinch test for strap tightness, no bulky coats).
+
+### Burping
+2-step burping positions: over the shoulder (firm patting, burp cloth), sitting and face-down (chin support technique, 2-3 minute attempts per position).
+
+## Pricing
+
+- Monthly: $4.99/month
+- Annual: $39.99/year ($3.33/month)
+- Lifetime: $99.99 one-time
+- Free tier: 30-day task window, 4 weeks of briefings, 30 days of push notifications
+- One subscription covers the whole family (both partners)
+
+## Contact
+
+- Website: https://thedadcenter.com
+- Support: support@thedadcenter.com
