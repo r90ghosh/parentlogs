@@ -239,9 +239,24 @@ export default function BriefingPage() {
               </Card3DTilt>
             </RevealOnScroll>
 
+            {/* Field Notes */}
+            {displayBriefing.field_notes && (
+              <RevealOnScroll delay={360}>
+                <div className="rounded-xl border border-copper/20 bg-gradient-to-br from-copper/5 to-transparent p-5">
+                  <div className="flex items-start gap-3">
+                    <span className="text-copper text-lg mt-0.5">📋</span>
+                    <div>
+                      <h3 className="font-ui text-sm font-semibold text-copper mb-2">Field Notes</h3>
+                      <p className="font-body text-sm text-[--cream] leading-relaxed whitespace-pre-line">{displayBriefing.field_notes}</p>
+                    </div>
+                  </div>
+                </div>
+              </RevealOnScroll>
+            )}
+
             {/* Coming Up */}
             {displayBriefing.coming_up && (
-              <RevealOnScroll delay={400}>
+              <RevealOnScroll delay={440}>
                 <Card3DTilt maxTilt={3} gloss>
                   <BriefingSection type="coming" title="Coming Up" icon="📆">
                     <p className="whitespace-pre-line">{displayBriefing.coming_up}</p>
