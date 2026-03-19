@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useEffect } from 'react'
-import { cn } from '@/lib/utils'
+import { motion } from 'framer-motion'
 import type { TipTopic } from '@/types/tips'
 
 interface TopicSelectorProps {
@@ -11,23 +11,24 @@ interface TopicSelectorProps {
 }
 
 export function TopicSelector({ topics, activeId, onSelect }: TopicSelectorProps) {
-  const scrollRef = useRef<HTMLDivElement>(null)
   const activeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
-    if (activeRef.current && scrollRef.current) {
-      const container = scrollRef.current
-      const pill = activeRef.current
-      const scrollLeft = pill.offsetLeft - container.offsetWidth / 2 + pill.offsetWidth / 2
-      container.scrollTo({ left: scrollLeft, behavior: 'smooth' })
-    }
+    activeRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center',
+    })
   }, [activeId])
 
   return (
     <div
-      ref={scrollRef}
-      className="flex gap-2.5 overflow-x-auto px-4 py-3"
-      style={{ scrollSnapType: 'x mandatory', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
+      className="flex gap-2 px-4 py-3 overflow-x-auto [&::-webkit-scrollbar]:hidden"
+      style={{
+        WebkitOverflowScrolling: 'touch',
+        scrollbarWidth: 'none',
+        scrollSnapType: 'x mandatory',
+      }}
     >
       {topics.map((topic) => {
         const isActive = topic.id === activeId
@@ -36,17 +37,25 @@ export function TopicSelector({ topics, activeId, onSelect }: TopicSelectorProps
             key={topic.id}
             ref={isActive ? activeRef : undefined}
             onClick={() => onSelect(topic.id)}
-            className={cn(
-              'flex items-center gap-2 whitespace-nowrap rounded-full px-4 font-ui text-sm font-medium transition-all duration-200 shrink-0',
-              'min-h-[44px] min-w-[44px]',
-              isActive
-                ? 'bg-copper text-[--bg] shadow-copper'
-                : 'bg-[--card] text-[--muted] border border-[--border] hover:border-[--border-hover] hover:text-[--cream]'
-            )}
+            className={`
+              relative flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-medium
+              whitespace-nowrap min-h-[44px] transition-colors shrink-0
+              ${isActive ? 'text-zinc-950' : 'text-muted-foreground hover:text-foreground'}
+            `}
             style={{ scrollSnapAlign: 'center' }}
           >
-            <span className="text-base leading-none">{topic.emoji}</span>
-            <span>{topic.name}</span>
+            {isActive && (
+              <motion.span
+                layoutId="topic-pill"
+                className="absolute inset-0 bg-teal-500 rounded-full"
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              />
+            )}
+            {!isActive && (
+              <span className="absolute inset-0 bg-card border border-border rounded-full" />
+            )}
+            <span className="relative z-10">{topic.emoji}</span>
+            <span className="relative z-10">{topic.name}</span>
           </button>
         )
       })}

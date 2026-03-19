@@ -1,15 +1,22 @@
-export interface TipStep {
-  stepNumber: number
+import type { ComponentType } from 'react'
+
+export interface TipSection {
+  number: number
   title: string
-  description: string
-  proTip?: string
   illustrationId: string
+  points: string[]
+  proTip: string
 }
 
 export interface TipTopic {
   id: string
   emoji: string
   name: string
-  description: string
-  steps: TipStep[]
+  sections: TipSection[]
 }
+
+export interface IllustrationProps {
+  className?: string
+}
+
+export type IllustrationComponent = ComponentType<IllustrationProps>

@@ -25,6 +25,7 @@ const navLinks: NavLink[] = [
       { href: '/content', label: 'Content' },
       { href: '/budget-guide', label: 'Budget Guide' },
       { href: '/baby-checklists', label: 'Checklists' },
+      { href: '/tips', label: 'Tips' },
     ],
   },
 ]
