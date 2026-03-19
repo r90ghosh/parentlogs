@@ -120,6 +120,7 @@ export type Database = {
           coming_up: string | null
           created_at: string | null
           dad_focus: string[] | null
+          field_notes: string | null
           is_premium: boolean | null
           linked_task_ids: string[] | null
           medical_source: string | null
@@ -135,6 +136,7 @@ export type Database = {
           coming_up?: string | null
           created_at?: string | null
           dad_focus?: string[] | null
+          field_notes?: string | null
           is_premium?: boolean | null
           linked_task_ids?: string[] | null
           medical_source?: string | null
@@ -150,6 +152,7 @@ export type Database = {
           coming_up?: string | null
           created_at?: string | null
           dad_focus?: string[] | null
+          field_notes?: string | null
           is_premium?: boolean | null
           linked_task_ids?: string[] | null
           medical_source?: string | null
