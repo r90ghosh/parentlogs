@@ -3,8 +3,6 @@ import { Header } from '@/components/marketing/Header'
 import { Footer } from '@/components/marketing/Footer'
 import { MarketingShell } from '@/components/marketing/MarketingShell'
 
-export const dynamic = 'force-dynamic'
-
 export const metadata: Metadata = {
   metadataBase: new URL('https://thedadcenter.com'),
   title: 'The Dad Center - The Operating System for Modern Fatherhood',

@@ -53,6 +53,15 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // Redirect logged-in users from landing page to dashboard
+  // (main layout handles onboarding redirect if profile incomplete)
+  if (pathname === '/' && user) {
+    if (isDev) console.log('[Middleware] redirecting logged-in user to /dashboard')
+    const url = request.nextUrl.clone()
+    url.pathname = '/dashboard'
+    return NextResponse.redirect(url)
+  }
+
   // Redirect logged-in users away from auth pages (but not onboarding)
   const authPaths = ['/login', '/signup']
   const isAuthPath = authPaths.some(path => pathname.startsWith(path))
