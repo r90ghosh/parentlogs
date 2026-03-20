@@ -4,13 +4,10 @@ import { useState, useMemo } from 'react'
 import { useBudgetSummary, useAddToBudget, useMarkAsPurchased, useRemoveBudgetItem, useAddCustomBudgetItem } from '@/hooks/use-budget'
 import { useUser } from '@/components/user-provider'
 import { useFamily } from '@/hooks/use-family'
-import { useIsPremium } from '@/hooks/use-subscription'
 import { budgetService } from '@/services/budget-service'
 import { BudgetTimelineBar } from '@/components/shared/budget-timeline-bar'
 import { BrandToggleFilter } from '@/components/budget/BrandToggleFilter'
 import { BrandRecommendationDrawer } from '@/components/budget/BrandRecommendationDrawer'
-import { PaywallOverlay, PaywallModal } from '@/components/shared/paywall-overlay'
-import { PaywallBanner } from '@/components/shared/paywall-banner'
 import {
   BudgetTimelineCategory,
   getBudgetStatsByCategory,
@@ -74,7 +71,6 @@ export default function BudgetClient() {
   const { data: summary, isLoading } = useBudgetSummary()
   const { activeBaby } = useUser()
   const { data: family } = useFamily()
-  const { isPremium, isLoading: isPremiumLoading } = useIsPremium()
   const addToBudget = useAddToBudget()
   const markAsPurchased = useMarkAsPurchased()
   const removeBudgetItem = useRemoveBudgetItem()
@@ -108,8 +104,6 @@ export default function BudgetClient() {
     return getCurrentBudgetCategory(budgetSource)
   }, [budgetSource])
 
-  // Free users can only view their current period
-  const isViewingNonCurrentPeriod = !isPremium && selectedTimelineCategory !== null && selectedTimelineCategory !== currentBudgetCategory
 
   const addedTemplateIds = new Set(
     summary?.familyItems
@@ -117,15 +111,7 @@ export default function BudgetClient() {
       .map(i => i.budget_template_id)
   )
 
-  // State for showing paywall modal when free user tries a premium action
-  const [showPaywallForAction, setShowPaywallForAction] = useState(false)
-
   const handleAddTemplate = async (template: BudgetTemplate) => {
-    if (!isPremium) {
-      setShowPaywallForAction(true)
-      setSelectedTemplate(null)
-      return
-    }
     const result = await addToBudget.mutateAsync({
       templateId: template.budget_id,
       estimatedPrice: template.price_min,
@@ -141,11 +127,6 @@ export default function BudgetClient() {
 
   const handleMarkPurchased = async () => {
     if (!purchaseDialogItem) return
-    if (!isPremium) {
-      setShowPaywallForAction(true)
-      setPurchaseDialogItem(null)
-      return
-    }
 
     const priceInCents = actualPrice ? Math.round(parseFloat(actualPrice) * 100) : undefined
     const result = await markAsPurchased.mutateAsync({
@@ -163,10 +144,6 @@ export default function BudgetClient() {
   }
 
   const handleRemoveItem = async (itemId: string) => {
-    if (!isPremium) {
-      setShowPaywallForAction(true)
-      return
-    }
     const result = await removeBudgetItem.mutateAsync(itemId)
     if (result.error) {
       toast.error(result.error.message)
@@ -177,11 +154,6 @@ export default function BudgetClient() {
 
   const handleAddCustomItem = async () => {
     if (!customItem.item || !customItem.price) return
-    if (!isPremium) {
-      setShowPaywallForAction(true)
-      setShowAddCustomDialog(false)
-      return
-    }
 
     const priceInCents = Math.round(parseFloat(customItem.price) * 100)
     const result = await addCustomItem.mutateAsync({
@@ -248,27 +220,11 @@ export default function BudgetClient() {
             Plan and track your baby expenses
           </p>
         </div>
-        {isPremium ? (
-          <Button onClick={() => setShowAddCustomDialog(true)} className="font-ui">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Custom
-          </Button>
-        ) : (
-          <Button
-            onClick={() => setShowPaywallForAction(true)}
-            variant="outline"
-            className="font-ui border-[--border-hover] text-[--muted]"
-          >
-            <Lock className="h-4 w-4 mr-2" />
-            Add Custom
-          </Button>
-        )}
+        <Button onClick={() => setShowAddCustomDialog(true)} className="font-ui">
+          <Plus className="h-4 w-4 mr-2" />
+          Add Custom
+        </Button>
       </div>
-
-      {/* Free tier banner */}
-      {!isPremium && !isPremiumLoading && (
-        <PaywallBanner feature="budget_full_access" />
-      )}
 
       {/* Brand Toggle Filter */}
       {allTemplates.length > 0 && (
@@ -441,9 +397,8 @@ export default function BudgetClient() {
                       <BudgetItemCard
                         key={item.id}
                         item={item}
-                        onMarkPurchased={() => isPremium ? setPurchaseDialogItem(item) : setShowPaywallForAction(true)}
+                        onMarkPurchased={() => setPurchaseDialogItem(item)}
                         onRemove={() => handleRemoveItem(item.id)}
-                        isLocked={!isPremium}
                       />
                     ))}
                   </div>
@@ -462,7 +417,6 @@ export default function BudgetClient() {
                         item={item}
                         isPurchased
                         onRemove={() => handleRemoveItem(item.id)}
-                        isLocked={!isPremium}
                       />
                     ))}
                   </div>
@@ -535,9 +489,8 @@ export default function BudgetClient() {
                               isAdded={addedTemplateIds.has(template.budget_id)}
                               brandView={selectedBrandView}
                               onSelect={() => setSelectedItemForDetails(template)}
-                              onAdd={() => isPremium ? setSelectedTemplate(template) : setShowPaywallForAction(true)}
+                              onAdd={() => setSelectedTemplate(template)}
                               isAddPending={addToBudget.isPending}
-                              isLocked={!isPremium}
                             />
                           ))}
                         </div>
@@ -547,10 +500,6 @@ export default function BudgetClient() {
                 })}
               </Accordion>
 
-              {/* Paywall overlay when free user views a non-current period */}
-              {isViewingNonCurrentPeriod && (
-                <PaywallOverlay feature="budget_full_access" />
-              )}
             </div>
           </TabsContent>
         </Tabs>
@@ -720,13 +669,6 @@ export default function BudgetClient() {
         onClose={() => setSelectedItemForDetails(null)}
       />
 
-      {/* Paywall modal for free user premium actions */}
-      {showPaywallForAction && (
-        <PaywallModal
-          feature="budget_full_access"
-          onClose={() => setShowPaywallForAction(false)}
-        />
-      )}
     </div>
   )
 }
