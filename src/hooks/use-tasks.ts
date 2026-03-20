@@ -24,6 +24,7 @@ function useServiceContext(): Partial<ServiceContext> | undefined {
     userId: user.id,
     familyId: profile.family_id,
     subscriptionTier: profile.subscription_tier ?? undefined,
+    babyId: profile.active_baby_id ?? undefined,
   }
 }
 
@@ -32,7 +33,7 @@ export function useTasks(filters: TaskFilters = {}) {
   const ctx = useServiceContext()
 
   return useQuery({
-    queryKey: ['tasks', profile?.family_id, filters],
+    queryKey: ['tasks', profile?.family_id, profile?.active_baby_id, filters],
     queryFn: () => taskService.getTasks(filters, ctx),
     enabled: !!profile?.family_id,
   })
@@ -137,7 +138,7 @@ export function useAllTasksForTimeline() {
   const ctx = useServiceContext()
 
   return useQuery({
-    queryKey: ['tasks-timeline', profile?.family_id],
+    queryKey: ['tasks-timeline', profile?.family_id, profile?.active_baby_id],
     queryFn: () => taskService.getAllTasksForTimeline(ctx),
     enabled: !!profile?.family_id,
   })
@@ -288,7 +289,7 @@ export function useBacklogTasks() {
   const ctx = useServiceContext()
 
   return useQuery({
-    queryKey: ['backlog-tasks', profile?.family_id],
+    queryKey: ['backlog-tasks', profile?.family_id, profile?.active_baby_id],
     queryFn: () => taskService.getBacklogTasks(ctx),
     enabled: !!profile?.family_id,
   })
@@ -302,7 +303,7 @@ export function useBacklogCount() {
   const ctx = useServiceContext()
 
   return useQuery({
-    queryKey: ['backlog-count', profile?.family_id],
+    queryKey: ['backlog-count', profile?.family_id, profile?.active_baby_id],
     queryFn: () => taskService.getBacklogCount(ctx),
     enabled: !!profile?.family_id,
   })

@@ -6,15 +6,8 @@ import { useUser } from '@/components/user-provider'
 import { useMoodHistory } from '@/hooks/use-dad-journey'
 import { DadChallengeTiles, MoodCheckinWidget } from '@/components/dashboard/dad-journey'
 import { MOOD_CONFIG } from '@/lib/dad-pillar-config'
-import { UserRole } from '@/types'
-import { cn } from '@/lib/utils'
 import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
 import { CardEntrance } from '@/components/ui/animations/CardEntrance'
-
-interface JourneyPageClientProps {
-  userId: string
-  userRole: UserRole
-}
 
 /**
  * Calculate consecutive-day streak (same logic as MoodCheckinWidget)
@@ -43,8 +36,10 @@ function calculateStreak(checkins: { checked_in_at: string }[]): number {
   return streak
 }
 
-export function JourneyPageClient({ userId, userRole }: JourneyPageClientProps) {
-  const { profile } = useUser()
+export function JourneyPageClient() {
+  const { user, profile } = useUser()
+  const userId = user.id
+  const userRole = profile.role
   const { data: moodHistory } = useMoodHistory(userId, 7)
 
   const streak = calculateStreak(moodHistory ?? [])

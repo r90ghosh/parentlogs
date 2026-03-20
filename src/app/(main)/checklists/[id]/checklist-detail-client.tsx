@@ -1,0 +1,191 @@
+'use client'
+
+import { useParams, useRouter } from 'next/navigation'
+import { useChecklist, useToggleChecklistItem, useResetChecklist } from '@/hooks/use-checklists'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Progress } from '@/components/ui/progress'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import { ArrowLeft, RotateCcw, CheckCircle } from 'lucide-react'
+import Link from 'next/link'
+import { cn } from '@/lib/utils'
+import { useToast } from '@/hooks/use-toast'
+
+export default function ChecklistDetailClient() {
+  const params = useParams()
+  const router = useRouter()
+  const { toast } = useToast()
+  const checklistId = params.id as string
+
+  const { data: checklist, isLoading } = useChecklist(checklistId)
+  const toggleItem = useToggleChecklistItem()
+  const resetChecklist = useResetChecklist()
+
+  const handleToggle = async (itemId: string, currentValue: boolean) => {
+    await toggleItem.mutateAsync({
+      checklistId,
+      itemId,
+      completed: !currentValue,
+    })
+  }
+
+  const handleReset = async () => {
+    await resetChecklist.mutateAsync(checklistId)
+    toast({ title: 'Checklist reset' })
+  }
+
+  if (isLoading) {
+    return (
+      <div className="p-4 space-y-4 max-w-2xl">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-64 w-full" />
+      </div>
+    )
+  }
+
+  if (!checklist) {
+    return (
+      <div className="p-4 space-y-4 max-w-2xl">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" asChild>
+            <Link href="/checklists">
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+          </Button>
+          <h1 className="text-xl font-bold text-[--cream] font-display">Checklist Not Found</h1>
+        </div>
+        <Card className="bg-[--surface] border-[--border]">
+          <CardContent className="py-12 text-center">
+            <p className="text-[--muted] font-body">
+              This checklist doesn't exist or requires a premium subscription.
+            </p>
+            <Button asChild className="mt-4 font-ui">
+              <Link href="/checklists">Back to Checklists</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const isComplete = checklist.progress.percentage === 100
+
+  return (
+    <div className="p-4 space-y-6 max-w-2xl">
+      {/* Header */}
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" asChild>
+          <Link href="/checklists">
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+        </Button>
+        <div className="flex-1">
+          <h1 className="text-xl font-bold text-[--cream] font-display">{checklist.name}</h1>
+          <p className="text-sm text-[--muted] font-body">{checklist.description}</p>
+        </div>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="bg-[--surface] border-[--border]">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="font-display text-[--cream]">Reset Checklist?</AlertDialogTitle>
+              <AlertDialogDescription className="font-body text-[--muted]">
+                This will uncheck all items. This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="font-ui">Cancel</AlertDialogCancel>
+              <AlertDialogAction className="font-ui" onClick={handleReset}>Reset</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+
+      {/* Progress */}
+      <div className="space-y-2">
+        <div className="flex justify-between text-sm font-ui">
+          <span className="text-[--muted]">
+            {checklist.progress.completed} of {checklist.progress.total} items completed
+          </span>
+          <span className="text-copper">
+            {checklist.progress.percentage}%
+          </span>
+        </div>
+        <Progress
+          value={checklist.progress.percentage}
+          className="h-2 bg-[--card]"
+        />
+      </div>
+
+      {/* Completion Banner */}
+      {isComplete && (
+        <Card className="bg-copper/20 border-copper/30">
+          <CardContent className="py-4 flex items-center gap-3">
+            <CheckCircle className="h-6 w-6 text-copper" />
+            <div>
+              <p className="font-medium text-copper font-body">Checklist Complete!</p>
+              <p className="text-sm text-copper/70 font-body">Great job preparing for your baby!</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Items */}
+      <Card className="bg-[--surface] border-[--border]">
+        <CardContent className="pt-6 divide-y divide-[--border]">
+          {checklist.items.map((item: any, index: number) => (
+            <div
+              key={item.item_id}
+              className={cn(
+                "py-4 first:pt-0 last:pb-0",
+                item.completed && "opacity-60"
+              )}
+            >
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  checked={item.completed}
+                  onCheckedChange={() => handleToggle(item.item_id, item.completed)}
+                  className="mt-0.5 data-[state=checked]:bg-copper data-[state=checked]:border-copper"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className={cn(
+                    "text-sm font-medium font-body",
+                    item.completed ? "text-[--dim] line-through" : "text-[--cream]"
+                  )}>
+                    {item.item}
+                  </p>
+                  {item.details && (
+                    <p className="text-xs text-[--muted] mt-1 font-body">
+                      {item.details}
+                    </p>
+                  )}
+                </div>
+                {item.required && (
+                  <span className="text-xs bg-coral/20 text-coral px-2 py-0.5 rounded font-ui">
+                    Essential
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+    </div>
+  )
+}

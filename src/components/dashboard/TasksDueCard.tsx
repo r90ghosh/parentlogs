@@ -10,11 +10,12 @@ import { useFamily } from '@/hooks/use-family'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export function TasksDueCard() {
-  const { profile } = useUser()
+  const { profile, activeBaby } = useUser()
   const { data: family } = useFamily()
+  const currentWeek = activeBaby?.current_week ?? family?.current_week ?? 1
   const { data: dashboardData, isLoading } = useDashboardData(
     profile.family_id,
-    family?.current_week || 1
+    currentWeek
   )
   const completeTask = useCompleteDashboardTask()
   const snoozeTask = useSnoozeDashboardTask()

@@ -37,6 +37,7 @@ import { cn } from '@/lib/utils'
 import { WarmBackground } from '@/components/ui/animations/WarmBackground'
 import { useUnreadNotificationCount } from '@/hooks/use-notifications'
 import { GracePeriodBanner } from '@/components/shared/grace-period-banner'
+import { BabySwitcher } from '@/components/layouts/baby-switcher'
 
 const mainNavItems = [
   { href: '/dashboard', label: 'Home', icon: Home },
@@ -118,10 +119,9 @@ function SectionItems({
 export function MainLayoutClient({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const { signOut } = useAuth()
-  const { profile, family } = useUser()
+  const { profile } = useUser()
 
   const { data: unreadCount } = useUnreadNotificationCount()
-  const weekDisplay = family ? `Week ${family.current_week}` : ''
 
   // Find active nav index for sliding indicator
   const activeIndex = mainNavItems.findIndex(
@@ -139,11 +139,7 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
             <Link href="/dashboard" className="font-display font-bold text-[15px] text-[--cream] tracking-[0.08em] hover:text-copper transition-colors leading-none">
               The Dad Center
             </Link>
-            {weekDisplay && (
-              <span className="font-ui text-[11px] font-medium tracking-[0.05em] text-[--muted] leading-none">
-                {weekDisplay}
-              </span>
-            )}
+            <BabySwitcher />
           </div>
 
           <div className="flex items-center gap-2">

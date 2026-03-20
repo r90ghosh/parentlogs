@@ -12,10 +12,12 @@ import { getContentPhase } from '@/lib/phase-utils'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export function OnYourMindCard() {
-  const { profile } = useUser()
+  const { profile, activeBaby } = useUser()
   const { data: family } = useFamily()
 
-  const phase = family ? getContentPhase(family.stage, family.current_week) : undefined
+  const stage = activeBaby?.stage || family?.stage
+  const currentWeek = activeBaby?.current_week ?? family?.current_week
+  const phase = stage && currentWeek != null ? getContentPhase(stage, currentWeek) : undefined
   const { data: content, isLoading } = useDadChallengeContent(phase!)
 
   if (isLoading) {

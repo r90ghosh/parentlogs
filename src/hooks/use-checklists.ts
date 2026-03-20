@@ -14,24 +14,27 @@ function useServiceContext(): Partial<ServiceContext> | undefined {
     userId: user.id,
     familyId: profile.family_id,
     subscriptionTier: profile.subscription_tier ?? undefined,
+    babyId: profile.active_baby_id ?? undefined,
   }
 }
 
 export function useChecklists() {
+  const { profile } = useUser()
   const ctx = useServiceContext()
 
   return useQuery({
-    queryKey: ['checklists'],
+    queryKey: ['checklists', profile?.active_baby_id],
     queryFn: () => checklistService.getChecklists(ctx),
     enabled: !!ctx,
   })
 }
 
 export function useChecklist(checklistId: string) {
+  const { profile } = useUser()
   const ctx = useServiceContext()
 
   return useQuery({
-    queryKey: ['checklist', checklistId],
+    queryKey: ['checklist', checklistId, profile?.active_baby_id],
     queryFn: () => checklistService.getChecklistById(checklistId, ctx),
     enabled: !!checklistId && !!ctx,
   })

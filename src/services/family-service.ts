@@ -66,15 +66,36 @@ export const familyService = {
 
     if (profileError) return { family: null, error: profileError as Error }
 
-    // Generate tasks with proper week_due and catch-up handling
-    const referenceDate = data.due_date || data.birth_date
-    if (referenceDate) {
-      const currentWeek = family.current_week || 1
-      await supabase.rpc('initialize_family_tasks_with_catchup', {
-        p_family_id: family.id,
-        p_due_date: referenceDate,
-        p_signup_week: currentWeek,
+    // Create baby record for the new family
+    const { data: babyData } = await supabase
+      .from('babies')
+      .insert({
+        family_id: family.id,
+        baby_name: data.baby_name,
+        due_date: data.due_date,
+        birth_date: data.birth_date,
+        stage: data.birth_date ? 'post-birth' : 'pregnancy',
+        sort_order: 0,
+        is_active: true,
       })
+      .select()
+      .single()
+
+    // Set active baby on the user's profile
+    if (babyData) {
+      await supabase
+        .from('profiles')
+        .update({ active_baby_id: babyData.id })
+        .eq('id', userId)
+
+      // Generate tasks scoped to the baby (with catch-up handling)
+      if (data.due_date) {
+        const currentWeek = babyData.current_week || 1
+        await supabase.rpc('initialize_baby_tasks_with_catchup', {
+          p_baby_id: babyData.id,
+          p_signup_week: currentWeek,
+        })
+      }
     }
 
     return { family: family as Family, error: null }
@@ -102,6 +123,22 @@ export const familyService = {
       .eq('id', userId)
 
     if (updateError) return { family: null, error: updateError as Error }
+
+    // Set active_baby_id to the family's primary baby
+    const { data: primaryBaby } = await supabase
+      .from('babies')
+      .select('id')
+      .eq('family_id', family.id)
+      .eq('sort_order', 0)
+      .eq('is_active', true)
+      .single()
+
+    if (primaryBaby) {
+      await supabase
+        .from('profiles')
+        .update({ active_baby_id: primaryBaby.id })
+        .eq('id', userId)
+    }
 
     return { family: family as Family, error: null }
   },

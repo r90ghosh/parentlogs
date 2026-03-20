@@ -12,14 +12,15 @@ export interface DashboardCard {
 }
 
 export function useDashboardCards(): DashboardCard[] {
-  const { profile } = useUser()
+  const { profile, activeBaby } = useUser()
   const { data: family } = useFamily()
   const { data: lastCheckin } = useLastCheckin(profile.id)
   const { data: dadProfile } = useDadProfile(profile.id)
-  const { data: dashboardData } = useDashboardData(profile.family_id, family?.current_week || 1)
+  const currentWeek = activeBaby?.current_week ?? family?.current_week ?? 1
+  const { data: dashboardData } = useDashboardData(profile.family_id, currentWeek, activeBaby?.id)
 
   const isDad = profile.role === 'dad'
-  const isPostBirth = family?.stage === 'post-birth'
+  const isPostBirth = (activeBaby?.stage || family?.stage) === 'post-birth'
   const hasPartner = !!dashboardData?.partner
   const hasCheckedIn = !!lastCheckin
   const hasCompletedProfile = !!dadProfile?.work_situation

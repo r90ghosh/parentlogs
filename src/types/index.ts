@@ -13,6 +13,7 @@ export interface User {
   subscription_expires_at?: string
   onboarding_completed?: boolean
   signup_week?: number
+  active_baby_id?: string
   created_at: string
   updated_at: string
 }
@@ -36,6 +37,21 @@ export interface Family {
   stage: FamilyStage
   current_week: number
   invite_code: string
+  created_at: string
+  updated_at: string
+}
+
+export interface Baby {
+  id: string
+  family_id: string
+  baby_name?: string
+  due_date?: string
+  birth_date?: string
+  stage: FamilyStage
+  current_week: number
+  signup_week?: number
+  sort_order: number
+  is_active: boolean
   created_at: string
   updated_at: string
 }
@@ -77,6 +93,7 @@ export interface TaskTemplate {
 export interface FamilyTask {
   id: string
   family_id: string
+  baby_id?: string
   task_template_id?: string
   title: string
   description: string
@@ -153,6 +170,7 @@ export type MoodType = 'happy' | 'calm' | 'fussy' | 'crying' | 'sleepy'
 export interface BabyLog {
   id: string
   family_id: string
+  baby_id?: string
   logged_by: string
   log_type: LogType
   log_data: Record<string, any>
@@ -273,6 +291,7 @@ export interface PublicChecklist {
 export interface ChecklistProgress {
   id: string
   family_id: string
+  baby_id?: string
   checklist_id: string
   item_id: string
   is_checked: boolean

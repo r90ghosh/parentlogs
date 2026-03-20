@@ -7,6 +7,7 @@ const supabase = createClient()
 export interface ServiceContext {
   userId: string
   familyId: string
+  babyId?: string
   subscriptionTier?: string
 }
 
@@ -23,10 +24,32 @@ async function resolveBriefingContext(ctx?: Partial<BriefingContext>): Promise<B
   if (!user) return null
   const { data: profile } = await supabase
     .from('profiles')
-    .select('family_id, subscription_tier')
+    .select('family_id, subscription_tier, active_baby_id')
     .eq('id', user.id)
     .single()
   if (!profile?.family_id) return null
+
+  const babyId = ctx?.babyId || profile.active_baby_id
+
+  if (babyId) {
+    const { data: baby, error: babyError } = await supabase
+      .from('babies')
+      .select('current_week, stage')
+      .eq('id', babyId)
+      .single()
+    if (babyError && babyError.code !== 'PGRST116') throw babyError
+    if (baby && baby.current_week !== null && baby.stage) {
+      return {
+        userId: user.id,
+        familyId: profile.family_id,
+        babyId,
+        subscriptionTier: profile.subscription_tier ?? undefined,
+        stage: baby.stage,
+        currentWeek: baby.current_week,
+      }
+    }
+  }
+
   const { data: family, error: familyError } = await supabase
     .from('families')
     .select('current_week, stage')

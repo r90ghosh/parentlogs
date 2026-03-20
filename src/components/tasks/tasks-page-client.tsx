@@ -40,10 +40,12 @@ import {
   useCompleteTask,
   useSnoozeToTomorrow,
 } from '@/hooks/use-tasks'
+import { useUser } from '@/components/user-provider'
 import { useFamily } from '@/hooks/use-family'
 import { TaskTimelineBar } from '@/components/shared/task-timeline-bar'
 import {
   TimelineCategory,
+  TimelineSource,
   TIMELINE_CATEGORIES,
   getTaskStatsByCategory,
   getCurrentTimelineCategory,
@@ -93,11 +95,15 @@ export function TasksPageClient({
   const { data: tasks = [], isLoading: isLoadingTasks } = useTasks()
   const { data: allTasks = [] } = useAllTasksForTimeline()
   const { data: backlogTasks = [] } = useBacklogTasks()
+  const { activeBaby } = useUser()
   const { data: family } = useFamily()
   const triageTask = useTriageTask()
   const bulkTriageTasks = useBulkTriageTasks()
   const completeTask = useCompleteTask()
   const snoozeToTomorrow = useSnoozeToTomorrow()
+
+  // Prefer activeBaby for timeline calculations (multi-baby support)
+  const timelineSource: TimelineSource | null = activeBaby || family || null
 
   // Sync URL with view toggle
   const handleViewChange = useCallback((newView: 'list' | 'calendar') => {
@@ -133,14 +139,15 @@ export function TasksPageClient({
   }, [isPremium, currentWeek])
 
   // Compute effective week for a task (fallback to due_date calculation if week_due is null)
+  const effectiveDueDate = activeBaby?.due_date || family?.due_date
   const getEffectiveWeek = useCallback((task: FamilyTask): number | null => {
     if (task.week_due != null) return task.week_due
-    if (!task.due_date || !family?.due_date) return null
-    const dueDate = new Date(family.due_date)
+    if (!task.due_date || !effectiveDueDate) return null
+    const dueDate = new Date(effectiveDueDate)
     const taskDate = new Date(task.due_date)
     const daysDiff = Math.floor((dueDate.getTime() - taskDate.getTime()) / (1000 * 60 * 60 * 24))
     return 40 - Math.floor(daysDiff / 7)
-  }, [family?.due_date])
+  }, [effectiveDueDate])
 
   // Computed stats
   const stats = useMemo(() => {
@@ -170,15 +177,15 @@ export function TasksPageClient({
 
   // Calculate timeline stats for the phase filter bar
   const timelineStats = useMemo(() => {
-    if (!family) return null
-    return getTaskStatsByCategory(allTasks, family)
-  }, [allTasks, family])
+    if (!timelineSource) return null
+    return getTaskStatsByCategory(allTasks, timelineSource)
+  }, [allTasks, timelineSource])
 
   // Get current timeline category
   const currentTimelineCategory = useMemo(() => {
-    if (!family) return 'first-trimester' as TimelineCategory
-    return getCurrentTimelineCategory(family)
-  }, [family])
+    if (!timelineSource) return 'first-trimester' as TimelineCategory
+    return getCurrentTimelineCategory(timelineSource)
+  }, [timelineSource])
 
   // Filter and sort tasks
   const { thisWeekTasks, comingUpTasks, focusTask, filteredTasks, phaseTasks } = useMemo(() => {
@@ -220,9 +227,9 @@ export function TasksPageClient({
     }
 
     // Apply timeline category filter
-    if (selectedTimelineCategory && family) {
+    if (selectedTimelineCategory && timelineSource) {
       filtered = filtered.filter(t => {
-        const taskCategory = getTaskTimelineCategory(t.due_date, family)
+        const taskCategory = getTaskTimelineCategory(t.due_date, timelineSource)
         return taskCategory === selectedTimelineCategory
       })
     }
@@ -266,7 +273,7 @@ export function TasksPageClient({
       filteredTasks: filtered,
       phaseTasks: [],
     }
-  }, [tasks, allTasks, activeTab, activeCategory, searchQuery, currentWeek, selectedTimelineCategory, family, freeWindowCutoff, getEffectiveWeek])
+  }, [tasks, allTasks, activeTab, activeCategory, searchQuery, currentWeek, selectedTimelineCategory, timelineSource, freeWindowCutoff, getEffectiveWeek])
 
   // Calculate triage progress
   const triageProgress = useMemo(() => {

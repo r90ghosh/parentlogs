@@ -61,9 +61,9 @@ function mapCategory(category: string): PriorityTask['category'] {
   return categoryMap[category?.toLowerCase()] || 'planning'
 }
 
-export function useDashboardData(familyId: string | undefined, currentWeek: number) {
+export function useDashboardData(familyId: string | undefined, currentWeek: number, babyId?: string) {
   return useQuery<DashboardQueryResult>({
-    queryKey: ['dashboard', familyId, currentWeek],
+    queryKey: ['dashboard', familyId, currentWeek, babyId],
     queryFn: async () => {
       if (!familyId) {
         return {
@@ -79,6 +79,24 @@ export function useDashboardData(familyId: string | undefined, currentWeek: numb
       const today = new Date()
       today.setHours(0, 0, 0, 0)
 
+      // Build task queries with optional baby_id filter
+      let priorityQuery = supabase
+        .from('family_tasks')
+        .select('id, title, category, due_date, priority')
+        .eq('family_id', familyId)
+        .eq('status', 'pending')
+      if (babyId) priorityQuery = priorityQuery.eq('baby_id', babyId)
+      priorityQuery = priorityQuery
+        .order('priority', { ascending: false })
+        .order('due_date', { ascending: true })
+        .limit(5)
+
+      let allTasksQuery = supabase
+        .from('family_tasks')
+        .select('id, status, due_date')
+        .eq('family_id', familyId)
+      if (babyId) allTasksQuery = allTasksQuery.eq('baby_id', babyId)
+
       // Run independent queries in parallel
       const [
         { data: tasks },
@@ -86,20 +104,8 @@ export function useDashboardData(familyId: string | undefined, currentWeek: numb
         { data: briefingData },
         partnerResult,
       ] = await Promise.all([
-        // Priority tasks
-        supabase
-          .from('family_tasks')
-          .select('id, title, category, due_date, priority')
-          .eq('family_id', familyId)
-          .eq('status', 'pending')
-          .order('priority', { ascending: false })
-          .order('due_date', { ascending: true })
-          .limit(5),
-        // All tasks for stats
-        supabase
-          .from('family_tasks')
-          .select('id, status, due_date')
-          .eq('family_id', familyId),
+        priorityQuery,
+        allTasksQuery,
         // Briefing
         supabase
           .from('briefing_templates')

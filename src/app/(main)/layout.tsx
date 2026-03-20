@@ -19,7 +19,7 @@ import { MainLayoutClient } from '@/components/layouts/main-layout-client'
  * - Can be cached at edge for returning users
  */
 export default async function MainLayout({ children }: { children: ReactNode }) {
-  const { user, profile, family } = await getServerAuth()
+  const { user, profile, family, activeBaby } = await getServerAuth()
 
   // Not authenticated - redirect to login
   if (!user) {
@@ -42,7 +42,7 @@ export default async function MainLayout({ children }: { children: ReactNode }) 
   }
 
   return (
-    <UserProvider user={user} profile={profile} family={family}>
+    <UserProvider user={user} profile={profile} family={family} activeBaby={activeBaby}>
       <MainLayoutClient>{children}</MainLayoutClient>
     </UserProvider>
   )

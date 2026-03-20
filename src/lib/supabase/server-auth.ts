@@ -1,5 +1,5 @@
 import { createServerSupabaseClient } from './server'
-import { User as AppUser, Family } from '@/types'
+import { User as AppUser, Family, Baby } from '@/types'
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -22,6 +22,7 @@ export interface ServerAuthResult {
   } | null
   profile: AppUser | null
   family: Family | null
+  activeBaby: Baby | null
 }
 
 /**
@@ -46,12 +47,12 @@ export async function getServerAuth(): Promise<ServerAuthResult> {
 
   if (authError) {
     if (isDev) console.error('[ServerAuth] Auth error:', authError.message)
-    return { user: null, profile: null, family: null }
+    return { user: null, profile: null, family: null, activeBaby: null }
   }
 
   if (!user) {
     if (isDev) console.log('[ServerAuth] No user found')
-    return { user: null, profile: null, family: null }
+    return { user: null, profile: null, family: null, activeBaby: null }
   }
 
   if (isDev) console.log('[ServerAuth] User found:', user.id)
@@ -73,7 +74,8 @@ export async function getServerAuth(): Promise<ServerAuthResult> {
     return {
       user: { id: user.id, email: user.email! },
       profile: null,
-      family: null
+      family: null,
+      activeBaby: null
     }
   }
 
@@ -93,11 +95,28 @@ export async function getServerAuth(): Promise<ServerAuthResult> {
     }
   }
 
+  // Fetch active baby
+  let activeBaby: Baby | null = null
+  if (profile.active_baby_id) {
+    const { data: babyData, error: babyError } = await supabase
+      .from('babies')
+      .select('*')
+      .eq('id', profile.active_baby_id)
+      .single()
+
+    if (babyError) {
+      if (isDev) console.error('[ServerAuth] Baby fetch error:', babyError.message)
+    } else if (babyData) {
+      activeBaby = babyData as Baby
+    }
+  }
+
   if (isDev) console.log('[ServerAuth] getServerAuth END (success)')
   return {
     user: { id: user.id, email: user.email! },
     profile: profile as AppUser,
-    family
+    family,
+    activeBaby
   }
 }
 

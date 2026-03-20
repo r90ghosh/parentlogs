@@ -20,11 +20,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 
-interface DashboardClientProps {
-  familyId: string
-  userName: string
-}
-
 // Full-width card IDs (render at top, spanning both columns)
 const FULL_WIDTH_CARDS = ['mood', 'partner-activity', 'shift-briefing']
 
@@ -34,16 +29,17 @@ const LEFT_COLUMN_CARDS = ['briefing-teaser', 'on-your-mind', 'upgrade-prompt', 
 // Right column card IDs
 const RIGHT_COLUMN_CARDS = ['tasks-due', 'quick-actions', 'budget-snapshot', 'checklist-progress']
 
-export function DashboardClient({
-  familyId,
-  userName,
-}: DashboardClientProps) {
-  useUser() // ensures UserProvider context is available for child card components
+export function DashboardClient() {
+  const { profile, activeBaby } = useUser()
+  const familyId = profile.family_id!
+  const userName = profile?.full_name?.split(' ')[0] || 'there'
   const { data: family } = useFamily()
   const cards = useDashboardCards()
+  const currentWeek = activeBaby?.current_week ?? family?.current_week ?? 1
   const { data: dashboardData, isLoading } = useDashboardData(
     familyId,
-    family?.current_week || 1
+    currentWeek,
+    activeBaby?.id
   )
 
   const taskStats = dashboardData?.taskStats || { completed: 0, remaining: 0, overdue: 0 }

@@ -1,15 +1,10 @@
-'use client'
-
-import { useUser } from '@/components/user-provider'
+import type { Metadata } from 'next'
 import { JourneyPageClient } from './JourneyPageClient'
 
-export default function JourneyPage() {
-  const { user, profile } = useUser()
+export const metadata: Metadata = {
+  title: 'Dad Journey | The Dad Center',
+}
 
-  return (
-    <JourneyPageClient
-      userId={user.id}
-      userRole={profile.role}
-    />
-  )
+export default function JourneyPage() {
+  return <JourneyPageClient />
 }

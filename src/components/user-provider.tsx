@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, ReactNode } from 'react'
-import { User as AppUser, Family } from '@/types'
+import { User as AppUser, Family, Baby } from '@/types'
 
 /**
  * User context for server-fetched data
@@ -28,6 +28,8 @@ interface UserContextValue {
   profile: AppUser
   // Family data (null if not set up yet)
   family: Family | null
+  // Active baby (null if none selected)
+  activeBaby: Baby | null
 }
 
 const UserContext = createContext<UserContextValue | null>(null)
@@ -39,6 +41,7 @@ interface UserProviderProps {
   }
   profile: AppUser
   family: Family | null
+  activeBaby: Baby | null
   children: ReactNode
 }
 
@@ -58,9 +61,9 @@ interface UserProviderProps {
  *   )
  * }
  */
-export function UserProvider({ user, profile, family, children }: UserProviderProps) {
+export function UserProvider({ user, profile, family, activeBaby, children }: UserProviderProps) {
   return (
-    <UserContext.Provider value={{ user, profile, family }}>
+    <UserContext.Provider value={{ user, profile, family, activeBaby }}>
       {children}
     </UserContext.Provider>
   )

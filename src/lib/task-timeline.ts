@@ -2,6 +2,9 @@ import { FamilyTask, Family } from '@/types'
 import { differenceInDays, startOfDay, endOfWeek, startOfWeek } from 'date-fns'
 import { isPregnancyStage } from './pregnancy-utils'
 
+/** Shared shape for anything that provides stage/week/date context (Family or Baby) */
+export type TimelineSource = Pick<Family, 'stage' | 'due_date' | 'birth_date' | 'current_week'>
+
 export type TimelineCategory =
   | 'first-trimester'
   | 'second-trimester'
@@ -51,13 +54,13 @@ function getPregnancyWeekFromDays(daysFromDueDate: number): number {
  */
 export function getTaskTimelineCategory(
   taskDueDate: string,
-  family: Family
+  source: TimelineSource
 ): TimelineCategory {
   const dueDate = new Date(taskDueDate)
-  const isPregnancy = isPregnancyStage(family.stage)
+  const isPregnancy = isPregnancyStage(source.stage)
   const referenceDate = isPregnancy
-    ? new Date(family.due_date!)
-    : new Date(family.birth_date!)
+    ? new Date(source.due_date!)
+    : new Date(source.birth_date!)
 
   const daysFromReference = differenceInDays(dueDate, referenceDate)
 
@@ -102,12 +105,12 @@ export function getTaskTimelineCategory(
 /**
  * Get the current timeline category based on today's date
  */
-export function getCurrentTimelineCategory(family: Family): TimelineCategory {
+export function getCurrentTimelineCategory(source: TimelineSource): TimelineCategory {
   const today = new Date()
-  const isPregnancy = isPregnancyStage(family.stage)
+  const isPregnancy = isPregnancyStage(source.stage)
   const referenceDate = isPregnancy
-    ? new Date(family.due_date!)
-    : new Date(family.birth_date!)
+    ? new Date(source.due_date!)
+    : new Date(source.birth_date!)
 
   const daysFromReference = differenceInDays(today, referenceDate)
 
@@ -119,7 +122,7 @@ export function getCurrentTimelineCategory(family: Family): TimelineCategory {
 
     // Before delivery window - determine trimester by current week
     if (daysFromReference < -7) {
-      const currentWeek = family.current_week || 1
+      const currentWeek = source.current_week || 1
       if (currentWeek <= 13) return 'first-trimester'
       if (currentWeek <= 27) return 'second-trimester'
       return 'third-trimester'
@@ -152,7 +155,7 @@ export interface TaskCategoryStats {
  */
 export function getTaskStatsByCategory(
   tasks: FamilyTask[],
-  family: Family
+  source: TimelineSource
 ): Record<TimelineCategory, TaskCategoryStats> {
   const stats: Record<TimelineCategory, TaskCategoryStats> = {
     'first-trimester': { total: 0, completed: 0, pending: 0 },
@@ -170,7 +173,7 @@ export function getTaskStatsByCategory(
     // Skip backlog tasks that are pending triage
     if (task.is_backlog && task.backlog_status === 'pending') return
 
-    const category = getTaskTimelineCategory(task.due_date, family)
+    const category = getTaskTimelineCategory(task.due_date, source)
     stats[category].total++
 
     if (task.status === 'completed') {
@@ -188,7 +191,7 @@ export function getTaskStatsByCategory(
  */
 export function getTaskCountsByCategory(
   tasks: FamilyTask[],
-  family: Family
+  source: TimelineSource
 ): Record<TimelineCategory, number> {
   const counts: Record<TimelineCategory, number> = {
     'first-trimester': 0,
@@ -203,7 +206,7 @@ export function getTaskCountsByCategory(
   }
 
   tasks.forEach(task => {
-    const category = getTaskTimelineCategory(task.due_date, family)
+    const category = getTaskTimelineCategory(task.due_date, source)
     counts[category]++
   })
 

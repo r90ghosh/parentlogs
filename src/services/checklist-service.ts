@@ -10,6 +10,7 @@ const PREMIUM_CHECKLIST_IDS = ['CL-05', 'CL-06', 'CL-07', 'CL-08', 'CL-09', 'CL-
 export interface ServiceContext {
   userId: string
   familyId: string
+  babyId?: string
   subscriptionTier?: string
 }
 
@@ -21,13 +22,14 @@ async function resolveContext(ctx?: Partial<ServiceContext>): Promise<ServiceCon
   if (!user) return null
   const { data: profile } = await supabase
     .from('profiles')
-    .select('family_id, subscription_tier')
+    .select('family_id, subscription_tier, active_baby_id')
     .eq('id', user.id)
     .single()
   if (!profile?.family_id) return null
   return {
     userId: user.id,
     familyId: profile.family_id,
+    babyId: profile.active_baby_id ?? undefined,
     subscriptionTier: profile.subscription_tier ?? undefined,
   }
 }
@@ -76,10 +78,16 @@ export const checklistService = {
       .order('sort_order', { ascending: true })
 
     // Get user's progress
-    const { data: progressData } = await supabase
+    let progressQuery = supabase
       .from('checklist_progress')
       .select('*')
       .eq('family_id', resolved.familyId)
+
+    if (resolved.babyId) {
+      progressQuery = progressQuery.eq('baby_id', resolved.babyId)
+    }
+
+    const { data: progressData } = await progressQuery
 
     const progressMap = new Map<string, boolean>()
     progressData?.forEach(p => {
@@ -134,11 +142,17 @@ export const checklistService = {
       .order('sort_order', { ascending: true })
 
     // Get progress
-    const { data: progressData } = await supabase
+    let progressQuery = supabase
       .from('checklist_progress')
       .select('*')
       .eq('family_id', resolved.familyId)
       .eq('checklist_id', checklistId)
+
+    if (resolved.babyId) {
+      progressQuery = progressQuery.eq('baby_id', resolved.babyId)
+    }
+
+    const { data: progressData } = await progressQuery
 
     const progressMap = new Map<string, ChecklistProgress>()
     progressData?.forEach(p => {
@@ -176,13 +190,14 @@ export const checklistService = {
       .from('checklist_progress')
       .upsert({
         family_id: resolved.familyId,
+        baby_id: resolved.babyId,
         checklist_id: checklistId,
         item_id: itemId,
         is_checked: completed,
         checked_at: completed ? new Date().toISOString() : null,
         checked_by: completed ? resolved.userId : null,
       }, {
-        onConflict: 'family_id,checklist_id,item_id',
+        onConflict: 'family_id,baby_id,checklist_id,item_id',
       })
 
     return { error: error as Error | null }
@@ -192,11 +207,17 @@ export const checklistService = {
     const resolved = await resolveContext(ctx)
     if (!resolved) return { error: new Error('Not authenticated') }
 
-    const { error } = await supabase
+    let query = supabase
       .from('checklist_progress')
       .delete()
       .eq('family_id', resolved.familyId)
       .eq('checklist_id', checklistId)
+
+    if (resolved.babyId) {
+      query = query.eq('baby_id', resolved.babyId)
+    }
+
+    const { error } = await query
 
     return { error: error as Error | null }
   },

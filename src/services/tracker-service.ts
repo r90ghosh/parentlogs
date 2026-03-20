@@ -7,6 +7,7 @@ const supabase = createClient()
 interface ServiceContext {
   userId: string
   familyId: string
+  babyId?: string
   subscriptionTier?: string
 }
 
@@ -18,13 +19,14 @@ async function resolveContext(ctx?: Partial<ServiceContext>): Promise<ServiceCon
   if (!user) return null
   const { data: profile } = await supabase
     .from('profiles')
-    .select('family_id, subscription_tier')
+    .select('family_id, subscription_tier, active_baby_id')
     .eq('id', user.id)
     .single()
   if (!profile?.family_id) return null
   return {
     userId: user.id,
     familyId: profile.family_id,
+    babyId: profile.active_baby_id ?? undefined,
     subscriptionTier: profile.subscription_tier ?? undefined,
   }
 }
@@ -72,6 +74,10 @@ export const trackerService = {
       .select('*')
       .eq('family_id', resolved.familyId)
       .order('logged_at', { ascending: false })
+
+    if (resolved.babyId) {
+      query = query.eq('baby_id', resolved.babyId)
+    }
 
     if (filters.log_type) {
       query = query.eq('log_type', filters.log_type)
@@ -133,6 +139,7 @@ export const trackerService = {
         log_data: log.log_data,
         notes: log.notes,
         family_id: resolved.familyId,
+        baby_id: resolved.babyId,
         logged_by: resolved.userId,
         logged_at: log.logged_at || new Date().toISOString(),
       })
@@ -181,6 +188,24 @@ export const trackerService = {
     today.setHours(0, 0, 0, 0)
     const todayStr = today.toISOString()
     const familyId = resolved.familyId
+    const babyId = resolved.babyId
+
+    // Build base queries for each of the 6 parallel queries
+    let q1 = supabase.from('baby_logs').select('*').eq('family_id', familyId).eq('log_type', 'feeding')
+    let q2 = supabase.from('baby_logs').select('*').eq('family_id', familyId).eq('log_type', 'diaper')
+    let q3 = supabase.from('baby_logs').select('*').eq('family_id', familyId).eq('log_type', 'sleep')
+    let q4 = supabase.from('baby_logs').select('*', { count: 'exact', head: true }).eq('family_id', familyId).eq('log_type', 'feeding')
+    let q5 = supabase.from('baby_logs').select('*', { count: 'exact', head: true }).eq('family_id', familyId).eq('log_type', 'diaper')
+    let q6 = supabase.from('baby_logs').select('log_data').eq('family_id', familyId).eq('log_type', 'sleep')
+
+    if (babyId) {
+      q1 = q1.eq('baby_id', babyId)
+      q2 = q2.eq('baby_id', babyId)
+      q3 = q3.eq('baby_id', babyId)
+      q4 = q4.eq('baby_id', babyId)
+      q5 = q5.eq('baby_id', babyId)
+      q6 = q6.eq('baby_id', babyId)
+    }
 
     // Parallelize all 6 independent queries
     const [
@@ -191,48 +216,12 @@ export const trackerService = {
       diaperCountResult,
       sleepLogsResult,
     ] = await Promise.all([
-      supabase
-        .from('baby_logs')
-        .select('*')
-        .eq('family_id', familyId)
-        .eq('log_type', 'feeding')
-        .order('logged_at', { ascending: false })
-        .limit(1)
-        .maybeSingle(),
-      supabase
-        .from('baby_logs')
-        .select('*')
-        .eq('family_id', familyId)
-        .eq('log_type', 'diaper')
-        .order('logged_at', { ascending: false })
-        .limit(1)
-        .maybeSingle(),
-      supabase
-        .from('baby_logs')
-        .select('*')
-        .eq('family_id', familyId)
-        .eq('log_type', 'sleep')
-        .order('logged_at', { ascending: false })
-        .limit(1)
-        .maybeSingle(),
-      supabase
-        .from('baby_logs')
-        .select('*', { count: 'exact', head: true })
-        .eq('family_id', familyId)
-        .eq('log_type', 'feeding')
-        .gte('logged_at', todayStr),
-      supabase
-        .from('baby_logs')
-        .select('*', { count: 'exact', head: true })
-        .eq('family_id', familyId)
-        .eq('log_type', 'diaper')
-        .gte('logged_at', todayStr),
-      supabase
-        .from('baby_logs')
-        .select('log_data')
-        .eq('family_id', familyId)
-        .eq('log_type', 'sleep')
-        .gte('logged_at', todayStr),
+      q1.order('logged_at', { ascending: false }).limit(1).maybeSingle(),
+      q2.order('logged_at', { ascending: false }).limit(1).maybeSingle(),
+      q3.order('logged_at', { ascending: false }).limit(1).maybeSingle(),
+      q4.gte('logged_at', todayStr),
+      q5.gte('logged_at', todayStr),
+      q6.gte('logged_at', todayStr),
     ])
 
     const totalSleepMinutes = (sleepLogsResult.data || []).reduce((total, log) => {
@@ -259,10 +248,16 @@ export const trackerService = {
     const endOfDay = new Date(date)
     endOfDay.setHours(23, 59, 59, 999)
 
-    const { data: logs } = await supabase
+    let query = supabase
       .from('baby_logs')
       .select('*')
       .eq('family_id', resolved.familyId)
+
+    if (resolved.babyId) {
+      query = query.eq('baby_id', resolved.babyId)
+    }
+
+    const { data: logs } = await query
       .gte('logged_at', startOfDay.toISOString())
       .lte('logged_at', endOfDay.toISOString())
       .order('logged_at', { ascending: true })
@@ -288,10 +283,16 @@ export const trackerService = {
     const sevenDaysAgo = new Date()
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
 
-    const { data: logs } = await supabase
+    let query = supabase
       .from('baby_logs')
       .select('*')
       .eq('family_id', resolved.familyId)
+
+    if (resolved.babyId) {
+      query = query.eq('baby_id', resolved.babyId)
+    }
+
+    const { data: logs } = await query
       .gte('logged_at', sevenDaysAgo.toISOString())
       .order('logged_at', { ascending: true })
 

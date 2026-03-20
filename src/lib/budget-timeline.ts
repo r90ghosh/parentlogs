@@ -1,6 +1,9 @@
 import { BudgetTemplate, BudgetPeriod, Family } from '@/types'
 import { isPregnancyStage } from './pregnancy-utils'
 
+/** Shared shape for anything that provides stage/week context (Family or Baby) */
+type BudgetSource = Pick<Family, 'stage' | 'current_week'>
+
 export type BudgetTimelineCategory = BudgetPeriod
 
 export interface BudgetTimelineCategoryInfo {
@@ -33,8 +36,8 @@ export function getBudgetTimelineCategory(
 /**
  * Get the current budget timeline category based on family stage and week
  */
-export function getCurrentBudgetCategory(family: Family): BudgetTimelineCategory {
-  const { stage, current_week } = family
+export function getCurrentBudgetCategory(source: BudgetSource): BudgetTimelineCategory {
+  const { stage, current_week } = source
 
   if (isPregnancyStage(stage)) {
     if (stage === 'first-trimester' || (stage === 'pregnancy' && current_week <= 13)) {

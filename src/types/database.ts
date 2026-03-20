@@ -65,8 +65,62 @@ export type Database = {
         }
         Relationships: []
       }
+      babies: {
+        Row: {
+          baby_name: string | null
+          birth_date: string | null
+          created_at: string
+          current_week: number
+          due_date: string | null
+          family_id: string
+          id: string
+          is_active: boolean
+          signup_week: number | null
+          sort_order: number
+          stage: Database["public"]["Enums"]["family_stage"]
+          updated_at: string
+        }
+        Insert: {
+          baby_name?: string | null
+          birth_date?: string | null
+          created_at?: string
+          current_week?: number
+          due_date?: string | null
+          family_id: string
+          id?: string
+          is_active?: boolean
+          signup_week?: number | null
+          sort_order?: number
+          stage?: Database["public"]["Enums"]["family_stage"]
+          updated_at?: string
+        }
+        Update: {
+          baby_name?: string | null
+          birth_date?: string | null
+          created_at?: string
+          current_week?: number
+          due_date?: string | null
+          family_id?: string
+          id?: string
+          is_active?: boolean
+          signup_week?: number | null
+          sort_order?: number
+          stage?: Database["public"]["Enums"]["family_stage"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "babies_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       baby_logs: {
         Row: {
+          baby_id: string | null
           created_at: string | null
           family_id: string
           id: string
@@ -77,6 +131,7 @@ export type Database = {
           notes: string | null
         }
         Insert: {
+          baby_id?: string | null
           created_at?: string | null
           family_id: string
           id?: string
@@ -87,6 +142,7 @@ export type Database = {
           notes?: string | null
         }
         Update: {
+          baby_id?: string | null
           created_at?: string | null
           family_id?: string
           id?: string
@@ -300,6 +356,7 @@ export type Database = {
       }
       checklist_progress: {
         Row: {
+          baby_id: string | null
           checked_at: string | null
           checked_by: string | null
           checklist_id: string
@@ -310,6 +367,7 @@ export type Database = {
           item_id: string
         }
         Insert: {
+          baby_id?: string | null
           checked_at?: string | null
           checked_by?: string | null
           checklist_id: string
@@ -320,6 +378,7 @@ export type Database = {
           item_id: string
         }
         Update: {
+          baby_id?: string | null
           checked_at?: string | null
           checked_by?: string | null
           checklist_id?: string
@@ -643,6 +702,7 @@ export type Database = {
       family_tasks: {
         Row: {
           assigned_to: Database["public"]["Enums"]["task_assignee"] | null
+          baby_id: string | null
           backlog_status: string | null
           category: string | null
           completed_at: string | null
@@ -670,6 +730,7 @@ export type Database = {
         }
         Insert: {
           assigned_to?: Database["public"]["Enums"]["task_assignee"] | null
+          baby_id?: string | null
           backlog_status?: string | null
           category?: string | null
           completed_at?: string | null
@@ -697,6 +758,7 @@ export type Database = {
         }
         Update: {
           assigned_to?: Database["public"]["Enums"]["task_assignee"] | null
+          baby_id?: string | null
           backlog_status?: string | null
           category?: string | null
           completed_at?: string | null
@@ -905,6 +967,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          active_baby_id: string | null
           avatar_url: string | null
           created_at: string | null
           email: string
@@ -921,6 +984,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          active_baby_id?: string | null
           avatar_url?: string | null
           created_at?: string | null
           email: string
@@ -937,6 +1001,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          active_baby_id?: string | null
           avatar_url?: string | null
           created_at?: string | null
           email?: string
@@ -1258,12 +1323,18 @@ export type Database = {
         }
         Returns: number
       }
-      get_shift_briefing: { Args: { p_family_id: string }; Returns: Json }
+      get_shift_briefing:
+        | { Args: { p_family_id: string }; Returns: Json }
+        | { Args: { p_baby_id?: string; p_family_id: string }; Returns: Json }
       get_trimester_from_week: {
         Args: { pregnancy_week: number }
         Returns: Database["public"]["Enums"]["family_stage"]
       }
       get_user_family_id: { Args: { user_uuid: string }; Returns: string }
+      initialize_baby_tasks_with_catchup: {
+        Args: { p_baby_id: string; p_signup_week: number }
+        Returns: number
+      }
       initialize_family_tasks_with_catchup: {
         Args: { p_due_date: string; p_family_id: string; p_signup_week: number }
         Returns: number

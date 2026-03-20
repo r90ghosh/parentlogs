@@ -17,6 +17,7 @@ export interface TaskFilters {
 export interface ServiceContext {
   userId: string
   familyId: string
+  babyId?: string
   subscriptionTier?: string
 }
 
@@ -28,13 +29,14 @@ async function resolveContext(ctx?: Partial<ServiceContext>): Promise<ServiceCon
   if (!user) return null
   const { data: profile } = await supabase
     .from('profiles')
-    .select('family_id, subscription_tier')
+    .select('family_id, subscription_tier, active_baby_id')
     .eq('id', user.id)
     .single()
   if (!profile?.family_id) return null
   return {
     userId: user.id,
     familyId: profile.family_id,
+    babyId: profile.active_baby_id ?? undefined,
     subscriptionTier: profile.subscription_tier ?? undefined,
   }
 }
@@ -44,13 +46,17 @@ export const taskService = {
     const resolved = await resolveContext(ctx)
     if (!resolved) return []
 
-    const { familyId, subscriptionTier } = resolved
+    const { familyId, babyId, subscriptionTier } = resolved
 
     let query = supabase
       .from('family_tasks')
       .select('*')
       .eq('family_id', familyId)
       .order('due_date', { ascending: true })
+
+    if (babyId) {
+      query = query.eq('baby_id', babyId)
+    }
 
     if (filters.status && filters.status !== 'all') {
       query = query.eq('status', filters.status)
@@ -162,6 +168,7 @@ export const taskService = {
         category: task.category,
         status: task.status,
         family_id: resolved.familyId,
+        baby_id: resolved.babyId,
         is_custom: true,
       })
       .select()
@@ -213,11 +220,17 @@ export const taskService = {
     const resolved = await resolveContext(ctx)
     if (!resolved) return []
 
-    const { data, error } = await supabase
+    let query = supabase
       .from('family_tasks')
       .select('*')
       .eq('family_id', resolved.familyId)
       .order('due_date', { ascending: true })
+
+    if (resolved.babyId) {
+      query = query.eq('baby_id', resolved.babyId)
+    }
+
+    const { data, error } = await query
 
     if (error) return []
     return data as FamilyTask[]
@@ -231,13 +244,19 @@ export const taskService = {
     const resolved = await resolveContext(ctx)
     if (!resolved) return []
 
-    const { data, error } = await supabase
+    let query = supabase
       .from('family_tasks')
       .select('*')
       .eq('family_id', resolved.familyId)
       .eq('is_backlog', true)
       .eq('backlog_status', 'pending')
       .order('due_date', { ascending: true })
+
+    if (resolved.babyId) {
+      query = query.eq('baby_id', resolved.babyId)
+    }
+
+    const { data, error } = await query
 
     if (error) return []
     return (data || []) as FamilyTask[]
@@ -310,12 +329,18 @@ export const taskService = {
     const resolved = await resolveContext(ctx)
     if (!resolved) return 0
 
-    const { count, error } = await supabase
+    let query = supabase
       .from('family_tasks')
       .select('*', { count: 'exact', head: true })
       .eq('family_id', resolved.familyId)
       .eq('is_backlog', true)
       .eq('backlog_status', 'pending')
+
+    if (resolved.babyId) {
+      query = query.eq('baby_id', resolved.babyId)
+    }
+
+    const { count, error } = await query
 
     if (error) return 0
     return count || 0

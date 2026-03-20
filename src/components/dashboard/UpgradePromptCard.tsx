@@ -21,11 +21,12 @@ const DISMISS_KEY_USAGE = 'upgrade_prompt_usage_dismissed'
 const DISMISS_KEY_BRIEFING = 'upgrade_prompt_briefing_dismissed'
 
 export function UpgradePromptCard() {
-  const { profile } = useUser()
+  const { profile, activeBaby } = useUser()
   const { data: family } = useFamily()
+  const currentWeek = activeBaby?.current_week ?? family?.current_week ?? 1
   const { data: dashboardData } = useDashboardData(
     profile.family_id,
-    family?.current_week || 1
+    currentWeek
   )
 
   const [usageDismissed, setUsageDismissed] = useState(true)
@@ -155,7 +156,7 @@ export function UpgradePromptCard() {
                 Your free briefings have ended
               </h3>
               <p className="text-xs font-body text-[--muted] mt-1">
-                Week {(family?.current_week || 1) + 1} briefing is ready — upgrade to keep getting weekly guidance tailored to your exact week, all the way through age 2.
+                Week {currentWeek + 1} briefing is ready — upgrade to keep getting weekly guidance tailored to your exact week, all the way through age 2.
               </p>
             </div>
           </div>

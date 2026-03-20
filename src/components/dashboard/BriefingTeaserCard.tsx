@@ -10,11 +10,12 @@ import { useFamily } from '@/hooks/use-family'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export function BriefingTeaserCard() {
-  const { profile } = useUser()
+  const { profile, activeBaby } = useUser()
   const { data: family } = useFamily()
+  const currentWeek = activeBaby?.current_week ?? family?.current_week ?? 1
   const { data: dashboardData, isLoading } = useDashboardData(
     profile.family_id,
-    family?.current_week || 1
+    currentWeek
   )
 
   if (isLoading) {
@@ -37,7 +38,7 @@ export function BriefingTeaserCard() {
       <div className="flex items-center gap-2 mb-3">
         <BookOpen className="h-4 w-4 text-gold" />
         <span className="text-xs font-semibold font-ui text-gold uppercase tracking-wide">
-          Week {family?.current_week || 1} Briefing
+          Week {currentWeek} Briefing
         </span>
         {briefing?.isNew && (
           <span className="ml-auto px-2 py-0.5 rounded-full text-[10px] font-semibold font-ui bg-gold-dim text-gold">
@@ -47,7 +48,7 @@ export function BriefingTeaserCard() {
       </div>
 
       <h3 className="text-base font-display font-bold text-[--cream] mb-2 leading-snug">
-        {briefing?.title || `Week ${family?.current_week || 1}`}
+        {briefing?.title || `Week ${currentWeek}`}
       </h3>
 
       {briefing?.excerpt && (
