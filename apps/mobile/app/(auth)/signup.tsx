@@ -13,6 +13,8 @@ import {
 } from 'react-native'
 import { Link } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
+import * as Linking from 'expo-linking'
+import * as WebBrowser from 'expo-web-browser'
 import { supabase } from '@/lib/supabase'
 
 export default function SignupScreen() {
@@ -20,6 +22,43 @@ export default function SignupScreen() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+
+  const handleGoogleSignIn = async () => {
+    if (isGoogleLoading) return
+    setIsGoogleLoading(true)
+    try {
+      const redirectUrl = Linking.createURL('auth/callback')
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+          skipBrowserRedirect: true,
+        },
+      })
+
+      if (error) {
+        Alert.alert('Google sign in failed', error.message)
+        return
+      }
+
+      if (data?.url) {
+        const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl)
+        if (result.type === 'success' && result.url) {
+          const parsedUrl = Linking.parse(result.url)
+          const accessToken = (parsedUrl.queryParams as Record<string, string>)?.access_token
+          const refreshToken = (parsedUrl.queryParams as Record<string, string>)?.refresh_token
+          if (accessToken && refreshToken) {
+            await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken })
+          }
+        }
+      }
+    } catch (err) {
+      Alert.alert('Error', 'Could not sign in with Google. Please try again.')
+    } finally {
+      setIsGoogleLoading(false)
+    }
+  }
 
   const handleSignup = async () => {
     if (isLoading) return
@@ -131,6 +170,30 @@ export default function SignupScreen() {
                 <Text style={styles.buttonText}>Create Account</Text>
               )}
             </Pressable>
+
+            {/* Divider */}
+            <View style={styles.divider}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>or</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            {/* Google Sign In */}
+            <Pressable
+              onPress={handleGoogleSignIn}
+              disabled={isGoogleLoading}
+              style={({ pressed }) => [
+                styles.googleButton,
+                pressed && styles.buttonPressed,
+                isGoogleLoading && styles.buttonDisabled,
+              ]}
+            >
+              {isGoogleLoading ? (
+                <ActivityIndicator color="#ede6dc" />
+              ) : (
+                <Text style={styles.googleButtonText}>Continue with Google</Text>
+              )}
+            </Pressable>
           </View>
 
           {/* Footer */}
@@ -218,6 +281,35 @@ const styles = StyleSheet.create({
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
     color: '#faf6f0',
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(237,230,220,0.08)',
+  },
+  dividerText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 13,
+    color: '#4a4239',
+  },
+  googleButton: {
+    backgroundColor: '#201c18',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(237,230,220,0.12)',
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  googleButtonText: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 16,
+    color: '#ede6dc',
   },
   footer: {
     flexDirection: 'row',
