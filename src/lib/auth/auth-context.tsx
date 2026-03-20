@@ -47,9 +47,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(session)
         setUser(session?.user ?? null)
 
-        // Handle sign out - redirect to login
+        // Handle sign out - redirect to landing page
         if (event === 'SIGNED_OUT') {
-          window.location.href = '/login'
+          window.location.href = '/'
         }
       }
     )
