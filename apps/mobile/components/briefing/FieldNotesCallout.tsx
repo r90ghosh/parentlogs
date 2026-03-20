@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   label: {
-    fontFamily: 'Karla-Bold',
+    fontFamily: 'Karla-SemiBold',
     fontSize: 11,
     letterSpacing: 1.2,
     color: '#c4703f',

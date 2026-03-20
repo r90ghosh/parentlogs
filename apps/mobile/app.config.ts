@@ -42,7 +42,7 @@ export default (): ExpoConfig => ({
     "expo-font",
     "expo-secure-store",
     ["expo-notifications", {
-      icon: "./assets/images/notification-icon.png",
+      icon: "./assets/images/icon.png",
       color: "#c4703f",
     }],
   ],

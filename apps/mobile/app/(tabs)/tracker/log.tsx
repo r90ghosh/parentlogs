@@ -609,7 +609,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   fieldLabel: {
-    fontFamily: 'Karla-Bold',
+    fontFamily: 'Karla-SemiBold',
     fontSize: 13,
     color: '#ede6dc',
     marginBottom: 8,
@@ -709,7 +709,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   submitButtonText: {
-    fontFamily: 'Karla-Bold',
+    fontFamily: 'Karla-SemiBold',
     fontSize: 16,
     color: '#faf6f0',
   },

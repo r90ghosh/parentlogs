@@ -92,49 +92,47 @@ export default function BudgetScreen() {
     ({ item, index }: { item: BudgetTemplate; index: number }) => {
       const isAdded = addedTemplateIds.has(item.budget_id)
       return (
-        <CardEntrance delay={index * 60}>
-          <GlassCard style={styles.budgetItemCard}>
-            <View style={styles.budgetItemHeader}>
-              <View style={styles.budgetItemInfo}>
-                <Text style={styles.budgetItemName}>{item.item}</Text>
-                <Text style={styles.budgetItemCategory}>{item.category}</Text>
-              </View>
-              <View style={styles.budgetItemPriceCol}>
-                <Text style={styles.budgetItemPrice}>
-                  {formatRange(item.price_min, item.price_max)}
-                </Text>
-                {item.priority === 'must-have' && (
-                  <View style={styles.mustHaveBadge}>
-                    <Text style={styles.mustHaveText}>Must-have</Text>
-                  </View>
-                )}
-              </View>
+        <GlassCard style={styles.budgetItemCard}>
+          <View style={styles.budgetItemHeader}>
+            <View style={styles.budgetItemInfo}>
+              <Text style={styles.budgetItemName}>{item.item}</Text>
+              <Text style={styles.budgetItemCategory}>{item.category}</Text>
             </View>
-            {item.description ? (
-              <Text style={styles.budgetItemDesc} numberOfLines={2}>
-                {item.description}
+            <View style={styles.budgetItemPriceCol}>
+              <Text style={styles.budgetItemPrice}>
+                {formatRange(item.price_min, item.price_max)}
               </Text>
-            ) : null}
-            <View style={styles.budgetItemFooter}>
-              <Text style={styles.budgetItemPeriod}>{item.period}</Text>
-              {!isAdded ? (
-                <Pressable
-                  onPress={() => handleAddItem(item.budget_id)}
-                  style={styles.addButton}
-                  disabled={addToBudget.isPending}
-                >
-                  <Plus size={14} color="#c4703f" />
-                  <Text style={styles.addButtonText}>Add</Text>
-                </Pressable>
-              ) : (
-                <View style={styles.addedBadge}>
-                  <Check size={12} color="#6b8f71" />
-                  <Text style={styles.addedText}>Added</Text>
+              {item.priority === 'must-have' && (
+                <View style={styles.mustHaveBadge}>
+                  <Text style={styles.mustHaveText}>Must-have</Text>
                 </View>
               )}
             </View>
-          </GlassCard>
-        </CardEntrance>
+          </View>
+          {item.description ? (
+            <Text style={styles.budgetItemDesc} numberOfLines={2}>
+              {item.description}
+            </Text>
+          ) : null}
+          <View style={styles.budgetItemFooter}>
+            <Text style={styles.budgetItemPeriod}>{item.period}</Text>
+            {!isAdded ? (
+              <Pressable
+                onPress={() => handleAddItem(item.budget_id)}
+                style={styles.addButton}
+                disabled={addToBudget.isPending}
+              >
+                <Plus size={14} color="#c4703f" />
+                <Text style={styles.addButtonText}>Add</Text>
+              </Pressable>
+            ) : (
+              <View style={styles.addedBadge}>
+                <Check size={12} color="#6b8f71" />
+                <Text style={styles.addedText}>Added</Text>
+              </View>
+            )}
+          </View>
+        </GlassCard>
       )
     },
     [addedTemplateIds, addToBudget.isPending]
@@ -142,51 +140,49 @@ export default function BudgetScreen() {
 
   const renderMyBudgetItem = useCallback(
     ({ item, index }: { item: FamilyBudgetItem; index: number }) => (
-      <CardEntrance delay={index * 60}>
-        <Pressable
-          onPress={() => handleTogglePurchased(item.id, item.is_purchased)}
+      <Pressable
+        onPress={() => handleTogglePurchased(item.id, item.is_purchased)}
+      >
+        <GlassCard
+          style={[
+            styles.budgetItemCard,
+            item.is_purchased && styles.budgetItemPurchased,
+          ]}
         >
-          <GlassCard
-            style={[
-              styles.budgetItemCard,
-              item.is_purchased && styles.budgetItemPurchased,
-            ]}
-          >
-            <View style={styles.budgetItemHeader}>
-              <View style={styles.myBudgetLeft}>
-                <View
+          <View style={styles.budgetItemHeader}>
+            <View style={styles.myBudgetLeft}>
+              <View
+                style={[
+                  styles.checkbox,
+                  item.is_purchased && styles.checkboxChecked,
+                ]}
+              >
+                {item.is_purchased && (
+                  <Check size={12} color="#12100e" />
+                )}
+              </View>
+              <View style={styles.budgetItemInfo}>
+                <Text
                   style={[
-                    styles.checkbox,
-                    item.is_purchased && styles.checkboxChecked,
+                    styles.budgetItemName,
+                    item.is_purchased && styles.budgetItemNamePurchased,
                   ]}
                 >
-                  {item.is_purchased && (
-                    <Check size={12} color="#12100e" />
-                  )}
-                </View>
-                <View style={styles.budgetItemInfo}>
-                  <Text
-                    style={[
-                      styles.budgetItemName,
-                      item.is_purchased && styles.budgetItemNamePurchased,
-                    ]}
-                  >
-                    {item.item}
-                  </Text>
-                  <Text style={styles.budgetItemCategory}>
-                    {item.category}
-                  </Text>
-                </View>
+                  {item.item}
+                </Text>
+                <Text style={styles.budgetItemCategory}>
+                  {item.category}
+                </Text>
               </View>
-              <Text style={styles.budgetItemPrice}>
-                {formatPrice(
-                  item.actual_price || item.estimated_price || 0
-                )}
-              </Text>
             </View>
-          </GlassCard>
-        </Pressable>
-      </CardEntrance>
+            <Text style={styles.budgetItemPrice}>
+              {formatPrice(
+                item.actual_price || item.estimated_price || 0
+              )}
+            </Text>
+          </View>
+        </GlassCard>
+      </Pressable>
     ),
     [togglePurchased]
   )

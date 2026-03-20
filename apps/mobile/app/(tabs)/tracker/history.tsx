@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   dateHeader: {
-    fontFamily: 'Karla-Bold',
+    fontFamily: 'Karla-SemiBold',
     fontSize: 13,
     color: '#7a6f62',
     marginBottom: 8,
@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   logEntryType: {
-    fontFamily: 'Karla-Bold',
+    fontFamily: 'Karla-SemiBold',
     fontSize: 14,
     color: '#faf6f0',
   },

@@ -85,15 +85,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (isLoading) return
     const inAuthGroup = segments[0] === '(auth)'
     const inOnboarding = segments[0] === '(onboarding)'
+    const inApp = segments[0] === '(tabs)' || segments[0] === '(screens)'
+    const atRoot = !segments[0]
 
     if (!session && !inAuthGroup) {
       router.replace('/(auth)/login')
-    } else if (session && inAuthGroup) {
+    } else if (session && (inAuthGroup || atRoot)) {
       if (!profile?.onboarding_completed) {
         router.replace('/(onboarding)/role')
       } else {
         router.replace('/(tabs)')
       }
+    } else if (session && inApp && profile && !profile.onboarding_completed) {
+      router.replace('/(onboarding)/role')
     }
   }, [session, profile, isLoading, segments])
 

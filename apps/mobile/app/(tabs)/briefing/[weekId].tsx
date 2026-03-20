@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   weekLabel: {
-    fontFamily: 'Karla-Bold',
+    fontFamily: 'Karla-SemiBold',
     fontSize: 12,
     letterSpacing: 1.5,
     color: '#c4703f',

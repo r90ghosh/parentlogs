@@ -498,7 +498,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   previewTitle: {
-    fontFamily: 'Karla-Bold',
+    fontFamily: 'Karla-SemiBold',
     fontSize: 14,
     color: '#c4703f',
     marginBottom: 4,
@@ -542,7 +542,7 @@ const styles = StyleSheet.create({
     color: '#7a6f62',
   },
   shiftStatValue: {
-    fontFamily: 'Karla-Bold',
+    fontFamily: 'Karla-SemiBold',
     fontSize: 13,
     color: '#faf6f0',
     textAlign: 'center',
@@ -628,7 +628,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   logEntryType: {
-    fontFamily: 'Karla-Bold',
+    fontFamily: 'Karla-SemiBold',
     fontSize: 14,
     color: '#faf6f0',
     textTransform: 'capitalize',
