@@ -566,6 +566,7 @@ export function TasksPageClient({
                     onTriage={handleTriage}
                     onBulkTriage={handleBulkTriage}
                     isPending={triageTask.isPending || bulkTriageTasks.isPending}
+                    onTaskClick={(taskId) => router.push(`/tasks/${taskId}`)}
                   />
                 </CardEntrance>
               )}
@@ -588,6 +589,7 @@ export function TasksPageClient({
                           task={task}
                           isHighlighted={task.priority === 'must-do'}
                           onComplete={() => handleComplete(task.id)}
+                          onClick={() => router.push(`/tasks/${task.id}`)}
                         />
                       ))}
                     </TaskSection>
@@ -624,6 +626,7 @@ export function TasksPageClient({
                           task={task}
                           isHighlighted={task.priority === 'must-do'}
                           onComplete={() => handleComplete(task.id)}
+                          onClick={() => router.push(`/tasks/${task.id}`)}
                         />
                       ))}
                     </TaskSection>
@@ -649,6 +652,7 @@ export function TasksPageClient({
                           task={task}
                           isDimmed
                           onComplete={() => handleComplete(task.id)}
+                          onClick={() => router.push(`/tasks/${task.id}`)}
                         />
                       ))}
                     </TaskSection>

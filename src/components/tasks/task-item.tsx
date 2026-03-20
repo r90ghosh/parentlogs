@@ -10,6 +10,7 @@ interface TaskItemProps {
   isDimmed?: boolean
   onComplete: () => void
   onSnooze?: () => void
+  onClick?: () => void
 }
 
 export function TaskItem({
@@ -17,6 +18,7 @@ export function TaskItem({
   isHighlighted = false,
   isDimmed = false,
   onComplete,
+  onClick,
 }: TaskItemProps) {
   const category = categoryConfig[task.category] || categoryConfig.planning
 
@@ -66,6 +68,7 @@ export function TaskItem({
 
   return (
     <div
+      onClick={onClick}
       className={cn(
         'flex items-start gap-4 p-4 rounded-xl cursor-pointer transition-all',
         isHighlighted && 'bg-copper-dim border border-copper/20',

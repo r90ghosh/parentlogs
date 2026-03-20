@@ -29,6 +29,7 @@ interface CatchUpTaskItemProps {
   currentWeek: number
   onTriage: (taskId: string, action: TriageAction) => void
   isPending?: boolean
+  onClick?: () => void
 }
 
 export function CatchUpTaskItem({
@@ -36,6 +37,7 @@ export function CatchUpTaskItem({
   currentWeek,
   onTriage,
   isPending = false,
+  onClick,
 }: CatchUpTaskItemProps) {
   const backlogCategory = categorizeBacklogTask(task, currentWeek)
   const category = categoryConfig[task.category] || categoryConfig.planning
@@ -57,6 +59,7 @@ export function CatchUpTaskItem({
 
   return (
     <div
+      onClick={onClick}
       className={cn(
         'p-3 md:p-4 rounded-xl cursor-pointer transition-all',
         'hover:bg-[--card]',
@@ -84,7 +87,7 @@ export function CatchUpTaskItem({
 
         {/* Description - hidden on mobile for cleaner look */}
         {task.description && (
-          <p className="hidden md:block text-[13px] text-[--muted] font-body mb-2.5 line-clamp-2 leading-relaxed">
+          <p className="text-[13px] text-[--muted] font-body mb-2.5 line-clamp-2 leading-relaxed">
             {task.description}
           </p>
         )}
@@ -109,7 +112,7 @@ export function CatchUpTaskItem({
 
           {/* Time estimate - hidden on mobile */}
           {timeEstimate && (
-            <div className="hidden md:flex items-center gap-1.5 text-xs text-[--dim] font-body">
+            <div className="flex items-center gap-1.5 text-xs text-[--dim] font-body">
               <span>⏱️</span>
               <span>{timeEstimate}</span>
             </div>

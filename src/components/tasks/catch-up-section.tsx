@@ -16,6 +16,7 @@ interface CatchUpSectionProps {
   onBulkTriage: (taskIds: string[], action: TriageAction) => void
   isPending?: boolean
   maxVisible?: number
+  onTaskClick?: (taskId: string) => void
 }
 
 export function CatchUpSection({
@@ -25,6 +26,7 @@ export function CatchUpSection({
   onBulkTriage,
   isPending = false,
   maxVisible = 5,
+  onTaskClick,
 }: CatchUpSectionProps) {
   const [isCatchUpExpanded, setIsCatchUpExpanded] = useState(true)
   const [isAutoHandledExpanded, setIsAutoHandledExpanded] = useState(false)
@@ -208,6 +210,7 @@ export function CatchUpSection({
                   currentWeek={currentWeek}
                   onTriage={onTriage}
                   isPending={isPending}
+                  onClick={onTaskClick ? () => onTaskClick(task.id) : undefined}
                 />
               ))}
 
