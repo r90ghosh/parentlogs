@@ -143,7 +143,6 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
             <Link href="/dashboard" className="font-display font-bold text-[15px] text-[--cream] tracking-[0.08em] hover:text-copper transition-colors leading-none">
               The Dad Center
             </Link>
-            <BabySwitcher />
           </div>
 
           <div className="flex items-center gap-2">
@@ -249,6 +248,12 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
               <div className="w-12 h-1 bg-[--dim] rounded-full mx-auto mb-4" />
 
               <div className="pb-6 safe-area-bottom space-y-1">
+                {/* Baby Switcher */}
+                <div className="px-1 pb-2">
+                  <BabySwitcher />
+                </div>
+                <div className="border-t border-[--border] my-2" />
+
                 {/* Tools Section */}
                 <p className="font-ui font-semibold text-[10px] uppercase tracking-[0.12em] text-[--muted] px-3 py-2">
                   Tools
@@ -285,6 +290,11 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
 
       {/* Sidebar Navigation - Desktop */}
       <aside className="hidden md:flex fixed left-0 bottom-0 w-64 bg-[--surface] border-r border-[--border] flex-col p-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" style={{ top: 'var(--header-h)' }}>
+        {/* Baby Switcher */}
+        <div className="mb-3">
+          <BabySwitcher />
+        </div>
+
         <nav aria-label="Sidebar navigation" className="space-y-1">
           {mainNavItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/')

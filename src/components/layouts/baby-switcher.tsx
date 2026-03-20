@@ -32,24 +32,33 @@ function getStageBadge(baby: BabyType): string {
   return 'Born'
 }
 
+function BabyInfoBlock({ baby }: { baby: BabyType }) {
+  return (
+    <div className="flex items-center gap-3 min-w-0">
+      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-copper-dim flex items-center justify-center">
+        <Baby className="h-4 w-4 text-copper" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="font-body text-sm font-medium text-[--cream] truncate">
+          {baby.baby_name || 'Baby'}
+        </p>
+        <p className="font-ui text-[10px] text-[--muted] tracking-wide">
+          {getStageBadge(baby)} &middot; {getWeekLabel(baby)}
+        </p>
+      </div>
+    </div>
+  )
+}
+
 export function BabySwitcher() {
   const { activeBaby } = useUser()
   const { data: babies } = useBabies()
   const switchBaby = useSwitchBaby()
   const [open, setOpen] = useState(false)
 
-  // Don't render if no babies or only one baby
-  if (!babies || babies.length <= 1) {
-    // Still show the week display for single baby
-    if (activeBaby) {
-      return (
-        <span className="font-ui text-[11px] font-medium tracking-[0.05em] text-[--muted] leading-none">
-          {activeBaby.baby_name ? `${activeBaby.baby_name} \u00b7 ` : ''}{getWeekLabel(activeBaby)}
-        </span>
-      )
-    }
-    return null
-  }
+  if (!activeBaby) return null
+
+  const isMultiBaby = babies && babies.length > 1
 
   const handleSwitch = (babyId: string) => {
     if (babyId !== activeBaby?.id) {
@@ -58,12 +67,27 @@ export function BabySwitcher() {
     setOpen(false)
   }
 
+  // Single baby — static info block
+  if (!isMultiBaby) {
+    return (
+      <div className="bg-[--card] border border-[--border] rounded-lg p-3">
+        <BabyInfoBlock baby={activeBaby} />
+      </div>
+    )
+  }
+
+  // Multi baby — dropdown trigger
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-1.5 font-ui text-[11px] font-medium tracking-[0.05em] text-[--muted] leading-none hover:text-copper transition-colors">
-          {activeBaby?.baby_name ? `${activeBaby.baby_name} \u00b7 ` : ''}{activeBaby ? getWeekLabel(activeBaby) : ''}
-          <ChevronDown className="h-3 w-3" />
+        <button className="w-full bg-[--card] border border-[--border] rounded-lg p-3 hover:bg-[--card-hover] hover:border-[--border-hover] transition-colors text-left">
+          <div className="flex items-center justify-between gap-2">
+            <BabyInfoBlock baby={activeBaby} />
+            <ChevronDown className={cn(
+              'h-4 w-4 text-[--muted] flex-shrink-0 transition-transform duration-200',
+              open && 'rotate-180'
+            )} />
+          </div>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-56">

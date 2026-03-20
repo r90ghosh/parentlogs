@@ -57,6 +57,7 @@ import {
   Stethoscope,
   Crown,
   Lock,
+  Download,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -195,6 +196,29 @@ export default function BudgetClient() {
 
   const pendingItems = summary?.familyItems.filter(i => !i.is_purchased) || []
   const purchasedItems = summary?.familyItems.filter(i => i.is_purchased) || []
+
+  const handleExportCSV = () => {
+    if (!summary?.familyItems.length) return
+    const headers = ['Item', 'Category', 'Status', 'Estimated Price', 'Actual Price', 'Recurring', 'Custom']
+    const rows = summary.familyItems.map(item => [
+      `"${item.item.replace(/"/g, '""')}"`,
+      `"${item.category}"`,
+      item.is_purchased ? 'Purchased' : 'To Buy',
+      (item.estimated_price / 100).toFixed(2),
+      item.actual_price ? (item.actual_price / 100).toFixed(2) : '',
+      item.is_recurring ? 'Yes' : 'No',
+      item.is_custom ? 'Yes' : 'No',
+    ])
+    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `budget-${new Date().toISOString().slice(0, 10)}.csv`
+    link.click()
+    URL.revokeObjectURL(url)
+    toast.success('Budget exported to CSV')
+  }
 
   if (isLoading) {
     return (
@@ -368,6 +392,14 @@ export default function BudgetClient() {
 
           {/* My Budget Tab */}
           <TabsContent value="my-budget" className="space-y-4">
+            {(summary?.familyItems.length ?? 0) > 0 && (
+              <div className="flex justify-end">
+                <Button variant="outline" size="sm" className="font-ui" onClick={handleExportCSV}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export CSV
+                </Button>
+              </div>
+            )}
             {summary?.familyItems.length === 0 ? (
               <Card className="bg-[--surface] border-[--border]">
                 <CardContent className="py-12 text-center">

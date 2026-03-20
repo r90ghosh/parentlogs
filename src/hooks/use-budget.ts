@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query'
 import { budgetService } from '@/services/budget-service'
 import { BudgetPeriod } from '@/types'
 import { useUser } from '@/components/user-provider'
@@ -31,6 +31,8 @@ export function useBudgetSummary() {
     queryKey: ['budget-summary', profile?.family_id],
     queryFn: () => budgetService.getBudgetSummary(ctx),
     enabled: !!profile?.family_id,
+    staleTime: 1000 * 60 * 2, // 2 minutes - avoid refetching on every focus/tab switch
+    placeholderData: keepPreviousData, // show cached data while refetching
   })
 }
 
@@ -111,5 +113,6 @@ export function useBudgetItems() {
       return summary?.familyItems || []
     },
     enabled: !!profile?.family_id,
+    staleTime: 1000 * 60 * 2,
   })
 }
