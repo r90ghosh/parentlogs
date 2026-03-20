@@ -1,29 +1,34 @@
-import { useState, useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import {
   View,
   Text,
   ScrollView,
   RefreshControl,
+  Pressable,
   ActivityIndicator,
   StyleSheet,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useQueryClient } from '@tanstack/react-query'
+import { ChevronLeft, ChevronRight } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
-import { useCurrentBriefing, useBriefingByWeek } from '@/hooks/use-briefings'
+import { useBriefingByWeek } from '@/hooks/use-briefings'
 import { isPregnancyStage } from '@tdc/shared/utils/pregnancy-utils'
-import { getBabySize, formatWeight, formatLength } from '@tdc/shared/utils/baby-sizes'
+import {
+  getBabySize,
+  formatWeight,
+  formatLength,
+} from '@tdc/shared/utils/baby-sizes'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance, StaggerList } from '@/components/animations'
-import {
-  WeekNavPills,
-  BriefingSection,
-  FieldNotesCallout,
-} from '@/components/briefing'
+import { BriefingSection, FieldNotesCallout } from '@/components/briefing'
 import type { FamilyStage } from '@tdc/shared/types'
 
-export default function BriefingScreen() {
+export default function BriefingWeekScreen() {
+  const { weekId } = useLocalSearchParams<{ weekId: string }>()
+  const router = useRouter()
   const insets = useSafeAreaInsets()
   const queryClient = useQueryClient()
   const { family, profile } = useAuth()
@@ -32,33 +37,24 @@ export default function BriefingScreen() {
   const currentWeek = (family as any)?.current_week ?? 1
   const isPregnancy = isPregnancyStage(stage)
   const maxWeek = isPregnancy ? 40 : 104
+  const week = parseInt(weekId, 10) || currentWeek
 
-  const [selectedWeek, setSelectedWeek] = useState<number>(currentWeek)
   const [refreshing, setRefreshing] = useState(false)
 
-  const { data: currentBriefing, isLoading: currentLoading } = useCurrentBriefing()
-  const isViewingCurrent = selectedWeek === currentWeek
-  const { data: weekBriefing, isLoading: weekLoading } = useBriefingByWeek(
-    stage,
-    selectedWeek
-  )
-
-  const briefing = isViewingCurrent ? currentBriefing : weekBriefing
-  const isLoading = isViewingCurrent ? currentLoading : weekLoading
-
-  const babySize = isPregnancy ? getBabySize(selectedWeek) : undefined
+  const { data: briefing, isLoading } = useBriefingByWeek(stage, week)
+  const babySize = isPregnancy ? getBabySize(week) : undefined
   const role = profile?.role ?? 'dad'
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true)
-    await queryClient.invalidateQueries({ queryKey: ['current-briefing'] })
-    await queryClient.invalidateQueries({ queryKey: ['briefing'] })
+    await queryClient.invalidateQueries({ queryKey: ['briefing', stage, week] })
     setRefreshing(false)
-  }, [queryClient])
+  }, [queryClient, stage, week])
 
-  const handleWeekSelect = (week: number) => {
-    if (week >= 1 && week <= maxWeek) {
-      setSelectedWeek(week)
+  const navigateWeek = (direction: -1 | 1) => {
+    const next = week + direction
+    if (next >= 1 && next <= maxWeek) {
+      router.setParams({ weekId: String(next) })
     }
   }
 
@@ -69,11 +65,45 @@ export default function BriefingScreen() {
         style={StyleSheet.absoluteFill}
       />
 
+      {/* Fixed Header */}
+      <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
+        <Pressable onPress={() => router.back()} style={styles.backButton}>
+          <ChevronLeft size={22} color="#faf6f0" />
+        </Pressable>
+        <View style={styles.headerNav}>
+          <Pressable
+            onPress={() => navigateWeek(-1)}
+            disabled={week <= 1}
+            style={[styles.navButton, week <= 1 && styles.navButtonDisabled]}
+          >
+            <ChevronLeft size={18} color={week <= 1 ? '#4a4239' : '#ede6dc'} />
+          </Pressable>
+          <Text style={styles.headerTitle}>Week {week}</Text>
+          <Pressable
+            onPress={() => navigateWeek(1)}
+            disabled={week >= maxWeek}
+            style={[
+              styles.navButton,
+              week >= maxWeek && styles.navButtonDisabled,
+            ]}
+          >
+            <ChevronRight
+              size={18}
+              color={week >= maxWeek ? '#4a4239' : '#ede6dc'}
+            />
+          </Pressable>
+        </View>
+        <View style={styles.headerSpacer} />
+      </View>
+
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingTop: insets.top + 12, paddingBottom: insets.bottom + 90 },
+          {
+            paddingTop: insets.top + 60,
+            paddingBottom: insets.bottom + 90,
+          },
         ]}
         refreshControl={
           <RefreshControl
@@ -84,57 +114,30 @@ export default function BriefingScreen() {
         }
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
-        <CardEntrance delay={0}>
-          <Text style={styles.pageTitle}>Briefing</Text>
-        </CardEntrance>
-
-        {/* Week Navigation Pills */}
-        <CardEntrance delay={80}>
-          <WeekNavPills
-            currentWeek={currentWeek}
-            selectedWeek={selectedWeek}
-            maxWeek={maxWeek}
-            onSelect={handleWeekSelect}
-          />
-        </CardEntrance>
-
-        {/* Loading State */}
         {isLoading && (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#c4703f" />
-            <Text style={styles.loadingText}>Loading briefing...</Text>
           </View>
         )}
 
-        {/* No Briefing Available */}
         {!isLoading && !briefing && (
-          <CardEntrance delay={160}>
+          <CardEntrance delay={0}>
             <GlassCard style={styles.emptyCard}>
               <Text style={styles.emptyText}>
-                No briefing available for Week {selectedWeek}.
+                No briefing available for Week {week}.
               </Text>
-              {!isViewingCurrent && (
-                <Text
-                  style={styles.backLink}
-                  onPress={() => setSelectedWeek(currentWeek)}
-                >
-                  Back to current week
-                </Text>
-              )}
             </GlassCard>
           </CardEntrance>
         )}
 
-        {/* Briefing Content */}
         {!isLoading && briefing && (
           <>
             {/* Hero */}
-            <CardEntrance delay={120}>
+            <CardEntrance delay={0}>
               <View style={styles.hero}>
                 <Text style={styles.weekLabel}>
                   WEEK {briefing.week}
-                  {selectedWeek === currentWeek && (
+                  {week === currentWeek && (
                     <Text style={styles.currentBadge}> — THIS WEEK</Text>
                   )}
                 </Text>
@@ -147,8 +150,7 @@ export default function BriefingScreen() {
                         Baby is the size of a {babySize.fruit}
                       </Text>
                       <Text style={styles.babySizeDetail}>
-                        {formatLength(babySize)} long,{' '}
-                        {formatWeight(babySize)}
+                        {formatLength(babySize)} long, {formatWeight(babySize)}
                       </Text>
                     </View>
                   </View>
@@ -156,45 +158,19 @@ export default function BriefingScreen() {
               </View>
             </CardEntrance>
 
-            {/* Back to current week */}
-            {!isViewingCurrent && (
-              <CardEntrance delay={160}>
-                <Text
-                  style={styles.backLinkInline}
-                  onPress={() => setSelectedWeek(currentWeek)}
-                >
-                  ← Back to current week (Week {currentWeek})
-                </Text>
-              </CardEntrance>
-            )}
-
-            {/* Sections */}
             <StaggerList staggerMs={100}>
-              {/* Baby Update */}
-              <BriefingSection
-                title="Baby Update"
-                icon="👶"
-                accentColor="#5b9bd5"
-              >
-                <Text style={styles.sectionBody}>
-                  {briefing.baby_update}
-                </Text>
+              <BriefingSection title="Baby Update" icon="👶" accentColor="#5b9bd5">
+                <Text style={styles.sectionBody}>{briefing.baby_update}</Text>
               </BriefingSection>
 
-              {/* Mom / Her Body */}
               <BriefingSection
-                title={
-                  role === 'dad' ? "What She's Experiencing" : 'Your Body'
-                }
+                title={role === 'dad' ? "What She's Experiencing" : 'Your Body'}
                 icon="💝"
                 accentColor="#c47a8f"
               >
-                <Text style={styles.sectionBody}>
-                  {briefing.mom_update}
-                </Text>
+                <Text style={styles.sectionBody}>{briefing.mom_update}</Text>
               </BriefingSection>
 
-              {/* Dad Focus */}
               <BriefingSection
                 title="Your Focus This Week"
                 icon="🎯"
@@ -211,12 +187,10 @@ export default function BriefingScreen() {
                 ))}
               </BriefingSection>
 
-              {/* Field Notes */}
               {briefing.field_notes && (
                 <FieldNotesCallout notes={briefing.field_notes} />
               )}
 
-              {/* Relationship Tip */}
               <BriefingSection
                 title="Relationship Check-In"
                 icon="💜"
@@ -227,21 +201,17 @@ export default function BriefingScreen() {
                 </Text>
               </BriefingSection>
 
-              {/* Coming Up */}
               {briefing.coming_up && (
                 <BriefingSection
                   title="Coming Up"
                   icon="📆"
                   accentColor="#d4a853"
                 >
-                  <Text style={styles.sectionBody}>
-                    {briefing.coming_up}
-                  </Text>
+                  <Text style={styles.sectionBody}>{briefing.coming_up}</Text>
                 </BriefingSection>
               )}
             </StaggerList>
 
-            {/* Source Footer */}
             {briefing.medical_source && (
               <CardEntrance delay={400}>
                 <View style={styles.sourceFooter}>
@@ -268,28 +238,62 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#12100e',
   },
+  header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    backgroundColor: 'rgba(18,16,14,0.9)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(237,230,220,0.08)',
+  },
+  backButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(237,230,220,0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerNav: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  navButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(237,230,220,0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navButtonDisabled: {
+    opacity: 0.4,
+  },
+  headerTitle: {
+    fontFamily: 'PlayfairDisplay-Bold',
+    fontSize: 18,
+    color: '#faf6f0',
+  },
+  headerSpacer: {
+    width: 36,
+  },
   scroll: {
     flex: 1,
   },
   scrollContent: {
     paddingHorizontal: 16,
   },
-  pageTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 28,
-    color: '#faf6f0',
-    marginBottom: 4,
-    paddingHorizontal: 4,
-  },
   loadingContainer: {
     paddingVertical: 80,
     alignItems: 'center',
-    gap: 16,
-  },
-  loadingText: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 14,
-    color: '#7a6f62',
   },
   emptyCard: {
     padding: 32,
@@ -301,19 +305,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#7a6f62',
     textAlign: 'center',
-  },
-  backLink: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 14,
-    color: '#c4703f',
-    marginTop: 12,
-  },
-  backLinkInline: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 13,
-    color: '#c4703f',
-    marginBottom: 12,
-    paddingHorizontal: 4,
   },
   hero: {
     paddingVertical: 16,
