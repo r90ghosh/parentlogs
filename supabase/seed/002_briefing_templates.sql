@@ -14,7 +14,7 @@ VALUES (
   'Don''t pressure her to feel ''happy'' immediately. Fear is normal.',
   'First prenatal appointment (Week 8).',
   'Mayo Clinic',
-  ARRAY['PREG-W04-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -30,7 +30,7 @@ VALUES (
   'Ask ''How are you feeling?'' and accept ''Terrible'' as an answer.',
   'Heartbeat visualization.',
   'ACOG',
-  ARRAY['PREG-W05-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -46,7 +46,7 @@ VALUES (
   'Bring her water before she asks. Hydration is critical.',
   'First Ultrasound window opens.',
   'AAP',
-  ARRAY['PREG-W06-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -62,7 +62,7 @@ VALUES (
   'Don''t joke about the mood swings. Just ride the wave.',
   'Early ultrasound to confirm viability.',
   'WebMD',
-  ARRAY['PREG-W07-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -78,7 +78,7 @@ VALUES (
   'Watch a movie she picks. Low energy activity is key.',
   'NIPT (Genetic Testing) decision.',
   'Mayo Clinic',
-  ARRAY['PREG-W08-01'],
+  ARRAY['PREG-W08-001'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -94,7 +94,7 @@ VALUES (
   'Tell her she''s doing a good job growing a human.',
   'Doppler heartbeat check.',
   'ACOG',
-  ARRAY['PREG-W09-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -110,7 +110,7 @@ VALUES (
   'Offer a back rub. Her posture is starting to shift.',
   'Nuchal Translucency Scan (Week 11-13).',
   'RadiologyInfo',
-  ARRAY['PREG-W10-01'],
+  ARRAY['PREG-W10-001'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -126,7 +126,7 @@ VALUES (
   'Compliment her changes. ''You look glowing'' > ''You look big''.',
   'End of First Trimester approaching.',
   'CDC',
-  ARRAY['PREG-W11-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -142,7 +142,7 @@ VALUES (
   'Celebrate the milestone. Dinner out (if she can eat).',
   'Second Trimester Energy Surge.',
   'NIH',
-  ARRAY['PREG-W12-01'],
+  ARRAY['PREG-W12-001', 'PREG-W12-002', 'PREG-W12-003'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -158,7 +158,7 @@ VALUES (
   'Intimacy may change. Follow her lead and comfort level.',
   'Gender Reveal window.',
   'AAP',
-  ARRAY['PREG-W13-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -174,7 +174,7 @@ VALUES (
   'Validate her body image. It''s a major psychological shift.',
   'Quad Screen (Week 15-20).',
   'Mayo Clinic',
-  ARRAY['PREG-W14-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -190,7 +190,7 @@ VALUES (
   'Write things down for her. Don''t mock the forgetfulness.',
   '16 Week Appointment.',
   'ACOG',
-  ARRAY['PREG-W15-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -206,7 +206,7 @@ VALUES (
   'Ask to feel the belly. Connect with the physical reality.',
   'Anatomy Scan (Week 20).',
   'APA',
-  ARRAY['PREG-W16-01'],
+  ARRAY['PREG-W16-001', 'PREG-W16-002', 'PREG-W16-003'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -222,7 +222,7 @@ VALUES (
   'Listen to her dreams. They are processing anxiety.',
   'Mid-pregnancy ultrasound.',
   'Sleep Foundation',
-  ARRAY['PREG-W17-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -238,7 +238,7 @@ VALUES (
   'Massage her lower back. Sciatica risk increases.',
   'Anatomy Scan.',
   'Mayo Clinic',
-  ARRAY['PREG-W18-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -254,7 +254,7 @@ VALUES (
   'Cook low-acid meals. Avoid spicy/tomato based dinners.',
   'Halfway point.',
   'WebMD',
-  ARRAY['PREG-W19-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -270,7 +270,7 @@ VALUES (
   'Take a ''Halfway There'' photo. Mark the occasion.',
   'Viability (Week 24).',
   'RadiologyInfo',
-  ARRAY['PREG-W20-01'],
+  ARRAY['PREG-W20-001', 'PREG-W20-002', 'PREG-W20-003', 'PREG-W20-004', 'PREG-W20-005', 'PREG-W20-006'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -286,7 +286,7 @@ VALUES (
   'Buy her cocoa butter/bio-oil. Offer to apply it.',
   'Glucose Test.',
   'AAD',
-  ARRAY['PREG-W21-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -302,7 +302,7 @@ VALUES (
   'Plan a ''Babymoon'' weekend. Travel gets hard soon.',
   'Ear development.',
   'LegalZoom',
-  ARRAY['PREG-W22-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -318,7 +318,7 @@ VALUES (
   'Get her water if she cramps. Dehydration triggers contractions.',
   'Viability next week.',
   'ACOG',
-  ARRAY['PREG-W23-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -334,7 +334,7 @@ VALUES (
   'Rub her feet. Edema is painful.',
   '3rd Trimester.',
   'ACOG',
-  ARRAY['PREG-W24-01'],
+  ARRAY['PREG-W24-001', 'PREG-W24-002'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -350,7 +350,7 @@ VALUES (
   'Do not mention the hemorrhoids. Just help.',
   'Tdap Vaccine window.',
   'Mayo Clinic',
-  ARRAY['PREG-W25-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -366,7 +366,7 @@ VALUES (
   'Help her put on socks/shoes. She can''t reach.',
   'Third Trimester.',
   'NHTSA',
-  ARRAY['PREG-W26-01'],
+  ARRAY['PREG-W26-001'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -382,7 +382,7 @@ VALUES (
   'Ask about her labor fears. Just listen.',
   'Rhogam shot (if blood type negative).',
   'AAP',
-  ARRAY['PREG-W27-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -398,7 +398,7 @@ VALUES (
   'Take over floor-level chores (vacuuming).',
   'Baby Shower.',
   'CDC',
-  ARRAY['PREG-W28-01'],
+  ARRAY['PREG-W28-001', 'PREG-W28-002', 'PREG-W28-003', 'PREG-W28-004', 'PREG-W28-005', 'PREG-W28-006'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -414,7 +414,7 @@ VALUES (
   'Don''t complain about your sleep if she wakes up 4x.',
   'Growth Scan.',
   'WebMD',
-  ARRAY['PREG-W29-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -430,7 +430,7 @@ VALUES (
   'Cook mild food. Late night snacks.',
   'Fetal position check.',
   'Sleep Fnd',
-  ARRAY['PREG-W30-01'],
+  ARRAY['PREG-W30-001', 'PREG-W30-002'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -446,7 +446,7 @@ VALUES (
   'Support the nesting. Don''t fight the cleaning.',
   'Baby drops soon.',
   'APA',
-  ARRAY['PREG-W31-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -462,7 +462,7 @@ VALUES (
   'Buy nursing pads for leaks.',
   'Pertussis immunity.',
   'ACOG',
-  ARRAY['PREG-W32-01'],
+  ARRAY['PREG-W32-001'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -478,7 +478,7 @@ VALUES (
   'Keep house cool. She is a radiator.',
   'GBS Test.',
   'CDC',
-  ARRAY['PREG-W33-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -494,7 +494,7 @@ VALUES (
   'Massage hips/glutes.',
   'Late Pre-term.',
   'Mayo Clinic',
-  ARRAY['PREG-W34-01'],
+  ARRAY['PREG-W34-001'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -510,7 +510,7 @@ VALUES (
   'Encourage rest. Marathon soon.',
   'GBS Swab.',
   'NHTSA',
-  ARRAY['PREG-W35-01'],
+  ARRAY['PREG-W35-001', 'PREG-W35-002'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -526,7 +526,7 @@ VALUES (
   'Discuss labor support role.',
   'Early Term.',
   'ACOG',
-  ARRAY['PREG-W36-01'],
+  ARRAY['PREG-W36-001', 'PREG-W36-002', 'PREG-W36-003', 'PREG-W36-004', 'PREG-W36-005', 'PREG-W36-006', 'PREG-W36-007', 'PREG-W36-008', 'PREG-W36-009'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -542,7 +542,7 @@ VALUES (
   'Be patient. She is done being pregnant.',
   'Full Term.',
   'ACOG',
-  ARRAY['PREG-W37-01'],
+  ARRAY['PREG-W37-001', 'PREG-W37-002', 'PREG-W37-003', 'PREG-W37-004', 'PREG-W37-005'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -558,7 +558,7 @@ VALUES (
   'Distraction duty. Movie/Walk.',
   'Delivery Day?',
   'WebMD',
-  ARRAY['PREG-W38-01'],
+  ARRAY['PREG-W38-001', 'PREG-W38-002', 'PREG-W38-003', 'PREG-W38-004', 'PREG-W38-005', 'PREG-W38-006', 'PREG-W38-007', 'PREG-W38-008'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -574,7 +574,7 @@ VALUES (
   'Tell her you trust her strength.',
   'Due Date.',
   'Mayo Clinic',
-  ARRAY['PREG-W39-01'],
+  ARRAY['PREG-W39-001', 'PREG-W39-002', 'PREG-W39-003', 'PREG-W39-004'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
@@ -590,14 +590,14 @@ VALUES (
   'You got this.',
   'Fourth Trimester.',
   'ACOG',
-  ARRAY['PREG-W40-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-W01',
-  'post-birth',
+  'newborn',
   1,
   'Survival Week',
   'Stomach cherry sized. Needs food q2h.',
@@ -606,14 +606,14 @@ VALUES (
   'Hydrate her while she feeds.',
   'Umbilical cord.',
   'AAP',
-  ARRAY['POST-W01-01'],
+  ARRAY['POST-W01-001', 'POST-W01-002', 'POST-W01-003', 'POST-W01-004', 'POST-W01-005', 'POST-W01-006', 'POST-W01-007', 'POST-W01-008', 'POST-W01-009', 'POST-W01-010', 'POST-W01-011', 'POST-W01-012', 'POST-W01-013', 'POST-W01-014', 'POST-W01-015', 'POST-W01-016'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-W02',
-  'post-birth',
+  'newborn',
   2,
   'Cluster Feed',
   'Growth spurt. Eating constantly.',
@@ -622,14 +622,14 @@ VALUES (
   'Check HER recovery.',
   'Peak Crying.',
   'WIC',
-  ARRAY['POST-W02-01'],
+  ARRAY['POST-W02-001', 'POST-W02-002', 'POST-W02-003'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-W03',
-  'post-birth',
+  'newborn',
   3,
   'The Awakening',
   'Awake periods longer.',
@@ -638,14 +638,14 @@ VALUES (
   'Bring snacks. Breastfeeding burns 500cal.',
   'Social Smile.',
   'Sleep Fnd',
-  ARRAY['POST-W03-01'],
+  ARRAY['POST-W03-001'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-W04',
-  'post-birth',
+  'newborn',
   4,
   'One Month Mark',
   'Head control improving.',
@@ -654,14 +654,14 @@ VALUES (
   'Encourage her to leave house solo.',
   'Vaccines.',
   'Postpartum',
-  ARRAY['POST-W04-01'],
+  ARRAY['POST-W04-001', 'POST-W04-002', 'POST-W04-003', 'POST-W04-004', 'POST-W04-005', 'POST-W04-006', 'POST-W04-007', 'POST-W04-008'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-W05',
-  'post-birth',
+  'newborn',
   5,
   'The Peak',
   'Peak fussiness (Purple Crying).',
@@ -670,14 +670,14 @@ VALUES (
   'Take baby for a walk so she can shower.',
   'Smile.',
   'Happiest Baby',
-  ARRAY['POST-W05-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-W06',
-  'post-birth',
+  'newborn',
   6,
   'The Smile',
   'Social smiles appear. Tracking objects.',
@@ -686,14 +686,14 @@ VALUES (
   'Date Night In.',
   '2 Month Shots.',
   'AAP',
-  ARRAY['POST-W06-01'],
+  ARRAY['POST-W06-001', 'POST-W06-002'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-W07',
-  'post-birth',
+  'newborn',
   7,
   'The Hands',
   'Batting at objects. Hands open.',
@@ -702,14 +702,14 @@ VALUES (
   'Take photos of them together.',
   'Sleep stretches.',
   'Pathways',
-  ARRAY['POST-W07-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-W08',
-  'post-birth',
+  'newborn',
   8,
   'Vaccine Week',
   '2 Month Shots (fever common).',
@@ -718,14 +718,14 @@ VALUES (
   'Comfort baby post-shots.',
   'Return to work.',
   'CDC',
-  ARRAY['POST-W08-01'],
+  ARRAY['POST-W08-001', 'POST-W08-002', 'POST-W08-003', 'POST-W08-004'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-W09',
-  'post-birth',
+  'newborn',
   9,
   'Patterns',
   'Sleep cycles maturing.',
@@ -734,14 +734,14 @@ VALUES (
   'Ask about her day (adult conversation).',
   'Rolling over.',
   'Sleep Fnd',
-  ARRAY['POST-W09-01'],
+  ARRAY[]::TEXT[],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-W10',
-  'post-birth',
+  'newborn',
   10,
   'The Voice',
   'Cooing/Babbling.',
@@ -750,14 +750,14 @@ VALUES (
   'Tell her she''s beautiful (hair loss is hard).',
   'Grabbing.',
   'Zero to Three',
-  ARRAY['POST-W10-01'],
+  ARRAY['POST-W10-001', 'POST-W10-002'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-W11',
-  'post-birth',
+  'newborn',
   11,
   'The Roll',
   'Rolling belly to back.',
@@ -766,14 +766,14 @@ VALUES (
   'Plan weekend activity.',
   '4 Month Regression.',
   'AAP',
-  ARRAY['POST-W11-01'],
+  ARRAY['POST-W11-001', 'POST-W11-002'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-W12',
-  'post-birth',
+  'newborn',
   12,
   'Graduation',
   'Exiting 4th Trimester. Laughing.',
@@ -782,14 +782,14 @@ VALUES (
   'Celebrate surviving 3 months.',
   'Solids soon.',
   'CDC',
-  ARRAY['POST-W12-01'],
+  ARRAY['POST-W12-001', 'POST-W12-002', 'POST-W12-003', 'POST-W12-004', 'POST-W12-005', 'POST-W12-006'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-M04',
-  'post-birth',
+  'infant',
   16,
   'Sleep Regression',
   'Adult sleep cycles. Waking up.',
@@ -798,14 +798,14 @@ VALUES (
   'Don''t fight at 3am.',
   'Solids (M6).',
   'Sleep Fnd',
-  ARRAY['POST-M04-01'],
+  ARRAY['POST-W17-001'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-M05',
-  'post-birth',
+  'infant',
   20,
   'The Core',
   'Sitting with support.',
@@ -814,14 +814,14 @@ VALUES (
   'Plan a date.',
   'Teething.',
   'AAP',
-  ARRAY['POST-M05-01'],
+  ARRAY['POST-W21-001', 'POST-W21-002', 'POST-W21-003', 'POST-W21-004'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-M06',
-  'post-birth',
+  'infant',
   24,
   'Solids Boot',
   'Sitting up. Tongue thrust gone.',
@@ -830,14 +830,14 @@ VALUES (
   'Watch for allergies.',
   'Crawling.',
   'CDC',
-  ARRAY['POST-M06-01'],
+  ARRAY['POST-W25-001', 'POST-W25-002', 'POST-W25-003', 'POST-W25-004', 'POST-W25-005', 'POST-W25-006', 'POST-W25-007', 'POST-W25-008', 'POST-W25-009', 'POST-W25-010', 'POST-W25-011', 'POST-W25-012'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-M07',
-  'post-birth',
+  'infant',
   28,
   'Teething',
   'First tooth? Drooling.',
@@ -846,14 +846,14 @@ VALUES (
   'Give her a break.',
   'Mobility.',
   'ADA',
-  ARRAY['POST-M07-01'],
+  ARRAY['POST-W30-001', 'POST-W30-002'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-M08',
-  'post-birth',
+  'infant',
   32,
   'The Crawl',
   'Scooting/Crawling. Pincer grasp.',
@@ -862,14 +862,14 @@ VALUES (
   'Plan family outing.',
   'Separation Anxiety.',
   'AAP',
-  ARRAY['POST-M08-01'],
+  ARRAY['POST-W34-001', 'POST-W34-002', 'POST-W34-003', 'POST-W34-004'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-M09',
-  'post-birth',
+  'infant',
   36,
   'Separation',
   'Object permanence (cries when you leave).',
@@ -878,14 +878,14 @@ VALUES (
   'Play Peek-a-boo.',
   'Standing.',
   'Zero to Three',
-  ARRAY['POST-M09-01'],
+  ARRAY['POST-W38-001', 'POST-W38-002', 'POST-W38-003'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-M10',
-  'post-birth',
+  'infant',
   40,
   'Cruising',
   'Pulling to stand. Cruising furniture.',
@@ -894,14 +894,14 @@ VALUES (
   'Take videos.',
   'Walking.',
   'AAP',
-  ARRAY['POST-M10-01'],
+  ARRAY['POST-W42-001', 'POST-W42-002', 'POST-W42-003'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-M11',
-  'post-birth',
+  'infant',
   44,
   'First Words',
   'Mama/Dada. Pointing.',
@@ -910,14 +910,14 @@ VALUES (
   'Help with party logistics.',
   '1 Year.',
   'CDC',
-  ARRAY['POST-M11-01'],
+  ARRAY['POST-W47-001', 'POST-W47-002'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-M12',
-  'post-birth',
+  'toddler',
   48,
   'The Toddler',
   'Walking. Cow''s milk transition.',
@@ -926,14 +926,14 @@ VALUES (
   'Celebrate HER year.',
   'Tantrums.',
   'AAP',
-  ARRAY['POST-M12-01'],
+  ARRAY['POST-W51-001', 'POST-W51-002', 'POST-W51-003', 'POST-W51-004', 'POST-W51-005', 'POST-W51-006', 'POST-W51-007'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-M15',
-  'post-birth',
+  'toddler',
   60,
   'The Climber',
   'Climbing everything. 5-10 words.',
@@ -942,14 +942,14 @@ VALUES (
   'Playground duty.',
   '18mo check.',
   'CDC',
-  ARRAY['POST-M15-01'],
+  ARRAY['POST-W64-001'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-M18',
-  'post-birth',
+  'toddler',
   72,
   'The Independence',
   'Running. ''No''. Tantrums.',
@@ -958,14 +958,14 @@ VALUES (
   'Patience.',
   'Potty Train (M24).',
   'Zero to Three',
-  ARRAY['POST-M18-01'],
+  ARRAY['POST-W77-001', 'POST-W77-002', 'POST-W77-003'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-M21',
-  'post-birth',
+  'toddler',
   84,
   'The Mimic',
   'Copying everything. 20+ words.',
@@ -974,14 +974,14 @@ VALUES (
   'One-on-one dates.',
   '2 Year.',
   'AAP',
-  ARRAY['POST-M21-01'],
+  ARRAY['POST-W85-001', 'POST-W94-001', 'POST-W94-002'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 
 INSERT INTO briefing_templates (briefing_id, stage, week, title, baby_update, mom_update, dad_focus, relationship_tip, coming_up, medical_source, linked_task_ids, is_premium)
 VALUES (
   'POST-M24',
-  'post-birth',
+  'toddler',
   96,
   'The Two Year Old',
   '2-word sentences. Jumping.',
@@ -990,7 +990,7 @@ VALUES (
   'Celebrate 2 years.',
   'Preschool.',
   'CDC',
-  ARRAY['POST-M24-01'],
+  ARRAY['POST-W102-001', 'POST-W102-002', 'POST-W102-003', 'POST-W102-004', 'POST-W102-005', 'POST-W102-006'],
   FALSE
 ) ON CONFLICT (briefing_id) DO NOTHING;
 

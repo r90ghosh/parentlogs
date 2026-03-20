@@ -16,9 +16,7 @@
     "relationship_tip": "Don't pressure her to feel 'happy' immediately. Fear is normal.",
     "coming_up": "First prenatal appointment (Week 8).",
     "medical_source": "Mayo Clinic",
-    "linked_task_ids": [
-      "PREG-W04-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W05",
@@ -37,9 +35,7 @@
     "relationship_tip": "Ask 'How are you feeling?' and accept 'Terrible' as an answer.",
     "coming_up": "Heartbeat visualization.",
     "medical_source": "ACOG",
-    "linked_task_ids": [
-      "PREG-W05-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W06",
@@ -58,9 +54,7 @@
     "relationship_tip": "Bring her water before she asks. Hydration is critical.",
     "coming_up": "First Ultrasound window opens.",
     "medical_source": "AAP",
-    "linked_task_ids": [
-      "PREG-W06-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W07",
@@ -79,9 +73,7 @@
     "relationship_tip": "Don't joke about the mood swings. Just ride the wave.",
     "coming_up": "Early ultrasound to confirm viability.",
     "medical_source": "WebMD",
-    "linked_task_ids": [
-      "PREG-W07-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W08",
@@ -100,7 +92,7 @@
     "coming_up": "NIPT (Genetic Testing) decision.",
     "medical_source": "Mayo Clinic",
     "linked_task_ids": [
-      "PREG-W08-01"
+      "PREG-W08-001"
     ]
   },
   {
@@ -120,9 +112,7 @@
     "relationship_tip": "Tell her she's doing a good job growing a human.",
     "coming_up": "Doppler heartbeat check.",
     "medical_source": "ACOG",
-    "linked_task_ids": [
-      "PREG-W09-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W10",
@@ -141,7 +131,7 @@
     "coming_up": "Nuchal Translucency Scan (Week 11-13).",
     "medical_source": "RadiologyInfo",
     "linked_task_ids": [
-      "PREG-W10-01"
+      "PREG-W10-001"
     ]
   },
   {
@@ -160,9 +150,7 @@
     "relationship_tip": "Compliment her changes. 'You look glowing' > 'You look big'.",
     "coming_up": "End of First Trimester approaching.",
     "medical_source": "CDC",
-    "linked_task_ids": [
-      "PREG-W11-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W12",
@@ -181,7 +169,9 @@
     "coming_up": "Second Trimester Energy Surge.",
     "medical_source": "NIH",
     "linked_task_ids": [
-      "PREG-W12-01"
+      "PREG-W12-001",
+      "PREG-W12-002",
+      "PREG-W12-003"
     ]
   },
   {
@@ -200,9 +190,7 @@
     "relationship_tip": "Intimacy may change. Follow her lead and comfort level.",
     "coming_up": "Gender Reveal window.",
     "medical_source": "AAP",
-    "linked_task_ids": [
-      "PREG-W13-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W14",
@@ -219,9 +207,7 @@
     "relationship_tip": "Validate her body image. It's a major psychological shift.",
     "coming_up": "Quad Screen (Week 15-20).",
     "medical_source": "Mayo Clinic",
-    "linked_task_ids": [
-      "PREG-W14-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W15",
@@ -239,9 +225,7 @@
     "relationship_tip": "Write things down for her. Don't mock the forgetfulness.",
     "coming_up": "16 Week Appointment.",
     "medical_source": "ACOG",
-    "linked_task_ids": [
-      "PREG-W15-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W16",
@@ -260,7 +244,9 @@
     "coming_up": "Anatomy Scan (Week 20).",
     "medical_source": "APA",
     "linked_task_ids": [
-      "PREG-W16-01"
+      "PREG-W16-001",
+      "PREG-W16-002",
+      "PREG-W16-003"
     ]
   },
   {
@@ -279,9 +265,7 @@
     "relationship_tip": "Listen to her dreams. They are processing anxiety.",
     "coming_up": "Mid-pregnancy ultrasound.",
     "medical_source": "Sleep Foundation",
-    "linked_task_ids": [
-      "PREG-W17-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W18",
@@ -299,9 +283,7 @@
     "relationship_tip": "Massage her lower back. Sciatica risk increases.",
     "coming_up": "Anatomy Scan.",
     "medical_source": "Mayo Clinic",
-    "linked_task_ids": [
-      "PREG-W18-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W19",
@@ -319,9 +301,7 @@
     "relationship_tip": "Cook low-acid meals. Avoid spicy/tomato based dinners.",
     "coming_up": "Halfway point.",
     "medical_source": "WebMD",
-    "linked_task_ids": [
-      "PREG-W19-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W20",
@@ -341,7 +321,12 @@
     "coming_up": "Viability (Week 24).",
     "medical_source": "RadiologyInfo",
     "linked_task_ids": [
-      "PREG-W20-01"
+      "PREG-W20-001",
+      "PREG-W20-002",
+      "PREG-W20-003",
+      "PREG-W20-004",
+      "PREG-W20-005",
+      "PREG-W20-006"
     ]
   },
   {
@@ -360,9 +345,7 @@
     "relationship_tip": "Buy her cocoa butter/bio-oil. Offer to apply it.",
     "coming_up": "Glucose Test.",
     "medical_source": "AAD",
-    "linked_task_ids": [
-      "PREG-W21-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W22",
@@ -380,9 +363,7 @@
     "relationship_tip": "Plan a 'Babymoon' weekend. Travel gets hard soon.",
     "coming_up": "Ear development.",
     "medical_source": "LegalZoom",
-    "linked_task_ids": [
-      "PREG-W22-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W23",
@@ -400,9 +381,7 @@
     "relationship_tip": "Get her water if she cramps. Dehydration triggers contractions.",
     "coming_up": "Viability next week.",
     "medical_source": "ACOG",
-    "linked_task_ids": [
-      "PREG-W23-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W24",
@@ -421,7 +400,8 @@
     "coming_up": "3rd Trimester.",
     "medical_source": "ACOG",
     "linked_task_ids": [
-      "PREG-W24-01"
+      "PREG-W24-001",
+      "PREG-W24-002"
     ]
   },
   {
@@ -440,9 +420,7 @@
     "relationship_tip": "Do not mention the hemorrhoids. Just help.",
     "coming_up": "Tdap Vaccine window.",
     "medical_source": "Mayo Clinic",
-    "linked_task_ids": [
-      "PREG-W25-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W26",
@@ -461,7 +439,7 @@
     "coming_up": "Third Trimester.",
     "medical_source": "NHTSA",
     "linked_task_ids": [
-      "PREG-W26-01"
+      "PREG-W26-001"
     ]
   },
   {
@@ -479,9 +457,7 @@
     "relationship_tip": "Ask about her labor fears. Just listen.",
     "coming_up": "Rhogam shot (if blood type negative).",
     "medical_source": "AAP",
-    "linked_task_ids": [
-      "PREG-W27-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W28",
@@ -500,7 +476,12 @@
     "coming_up": "Baby Shower.",
     "medical_source": "CDC",
     "linked_task_ids": [
-      "PREG-W28-01"
+      "PREG-W28-001",
+      "PREG-W28-002",
+      "PREG-W28-003",
+      "PREG-W28-004",
+      "PREG-W28-005",
+      "PREG-W28-006"
     ]
   },
   {
@@ -518,9 +499,7 @@
     "relationship_tip": "Don't complain about your sleep if she wakes up 4x.",
     "coming_up": "Growth Scan.",
     "medical_source": "WebMD",
-    "linked_task_ids": [
-      "PREG-W29-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W30",
@@ -539,7 +518,8 @@
     "coming_up": "Fetal position check.",
     "medical_source": "Sleep Fnd",
     "linked_task_ids": [
-      "PREG-W30-01"
+      "PREG-W30-001",
+      "PREG-W30-002"
     ]
   },
   {
@@ -558,9 +538,7 @@
     "relationship_tip": "Support the nesting. Don't fight the cleaning.",
     "coming_up": "Baby drops soon.",
     "medical_source": "APA",
-    "linked_task_ids": [
-      "PREG-W31-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W32",
@@ -579,7 +557,7 @@
     "coming_up": "Pertussis immunity.",
     "medical_source": "ACOG",
     "linked_task_ids": [
-      "PREG-W32-01"
+      "PREG-W32-001"
     ]
   },
   {
@@ -597,9 +575,7 @@
     "relationship_tip": "Keep house cool. She is a radiator.",
     "coming_up": "GBS Test.",
     "medical_source": "CDC",
-    "linked_task_ids": [
-      "PREG-W33-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "PREG-W34",
@@ -618,7 +594,7 @@
     "coming_up": "Late Pre-term.",
     "medical_source": "Mayo Clinic",
     "linked_task_ids": [
-      "PREG-W34-01"
+      "PREG-W34-001"
     ]
   },
   {
@@ -638,7 +614,8 @@
     "coming_up": "GBS Swab.",
     "medical_source": "NHTSA",
     "linked_task_ids": [
-      "PREG-W35-01"
+      "PREG-W35-001",
+      "PREG-W35-002"
     ]
   },
   {
@@ -658,7 +635,15 @@
     "coming_up": "Early Term.",
     "medical_source": "ACOG",
     "linked_task_ids": [
-      "PREG-W36-01"
+      "PREG-W36-001",
+      "PREG-W36-002",
+      "PREG-W36-003",
+      "PREG-W36-004",
+      "PREG-W36-005",
+      "PREG-W36-006",
+      "PREG-W36-007",
+      "PREG-W36-008",
+      "PREG-W36-009"
     ]
   },
   {
@@ -678,7 +663,11 @@
     "coming_up": "Full Term.",
     "medical_source": "ACOG",
     "linked_task_ids": [
-      "PREG-W37-01"
+      "PREG-W37-001",
+      "PREG-W37-002",
+      "PREG-W37-003",
+      "PREG-W37-004",
+      "PREG-W37-005"
     ]
   },
   {
@@ -698,7 +687,14 @@
     "coming_up": "Delivery Day?",
     "medical_source": "WebMD",
     "linked_task_ids": [
-      "PREG-W38-01"
+      "PREG-W38-001",
+      "PREG-W38-002",
+      "PREG-W38-003",
+      "PREG-W38-004",
+      "PREG-W38-005",
+      "PREG-W38-006",
+      "PREG-W38-007",
+      "PREG-W38-008"
     ]
   },
   {
@@ -717,7 +713,10 @@
     "coming_up": "Due Date.",
     "medical_source": "Mayo Clinic",
     "linked_task_ids": [
-      "PREG-W39-01"
+      "PREG-W39-001",
+      "PREG-W39-002",
+      "PREG-W39-003",
+      "PREG-W39-004"
     ]
   },
   {
@@ -736,9 +735,7 @@
     "relationship_tip": "You got this.",
     "coming_up": "Fourth Trimester.",
     "medical_source": "ACOG",
-    "linked_task_ids": [
-      "PREG-W40-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "POST-W01",
@@ -757,7 +754,22 @@
     "coming_up": "Umbilical cord.",
     "medical_source": "AAP",
     "linked_task_ids": [
-      "POST-W01-01"
+      "POST-W01-001",
+      "POST-W01-002",
+      "POST-W01-003",
+      "POST-W01-004",
+      "POST-W01-005",
+      "POST-W01-006",
+      "POST-W01-007",
+      "POST-W01-008",
+      "POST-W01-009",
+      "POST-W01-010",
+      "POST-W01-011",
+      "POST-W01-012",
+      "POST-W01-013",
+      "POST-W01-014",
+      "POST-W01-015",
+      "POST-W01-016"
     ]
   },
   {
@@ -777,7 +789,9 @@
     "coming_up": "Peak Crying.",
     "medical_source": "WIC",
     "linked_task_ids": [
-      "POST-W02-01"
+      "POST-W02-001",
+      "POST-W02-002",
+      "POST-W02-003"
     ]
   },
   {
@@ -797,7 +811,7 @@
     "coming_up": "Social Smile.",
     "medical_source": "Sleep Fnd",
     "linked_task_ids": [
-      "POST-W03-01"
+      "POST-W03-001"
     ]
   },
   {
@@ -816,7 +830,14 @@
     "coming_up": "Vaccines.",
     "medical_source": "Postpartum",
     "linked_task_ids": [
-      "POST-W04-01"
+      "POST-W04-001",
+      "POST-W04-002",
+      "POST-W04-003",
+      "POST-W04-004",
+      "POST-W04-005",
+      "POST-W04-006",
+      "POST-W04-007",
+      "POST-W04-008"
     ]
   },
   {
@@ -834,9 +855,7 @@
     "relationship_tip": "Take baby for a walk so she can shower.",
     "coming_up": "Smile.",
     "medical_source": "Happiest Baby",
-    "linked_task_ids": [
-      "POST-W05-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "POST-W06",
@@ -855,7 +874,8 @@
     "coming_up": "2 Month Shots.",
     "medical_source": "AAP",
     "linked_task_ids": [
-      "POST-W06-01"
+      "POST-W06-001",
+      "POST-W06-002"
     ]
   },
   {
@@ -873,9 +893,7 @@
     "relationship_tip": "Take photos of them together.",
     "coming_up": "Sleep stretches.",
     "medical_source": "Pathways",
-    "linked_task_ids": [
-      "POST-W07-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "POST-W08",
@@ -894,7 +912,10 @@
     "coming_up": "Return to work.",
     "medical_source": "CDC",
     "linked_task_ids": [
-      "POST-W08-01"
+      "POST-W08-001",
+      "POST-W08-002",
+      "POST-W08-003",
+      "POST-W08-004"
     ]
   },
   {
@@ -912,9 +933,7 @@
     "relationship_tip": "Ask about her day (adult conversation).",
     "coming_up": "Rolling over.",
     "medical_source": "Sleep Fnd",
-    "linked_task_ids": [
-      "POST-W09-01"
-    ]
+    "linked_task_ids": []
   },
   {
     "briefing_id": "POST-W10",
@@ -933,7 +952,8 @@
     "coming_up": "Grabbing.",
     "medical_source": "Zero to Three",
     "linked_task_ids": [
-      "POST-W10-01"
+      "POST-W10-001",
+      "POST-W10-002"
     ]
   },
   {
@@ -952,7 +972,8 @@
     "coming_up": "4 Month Regression.",
     "medical_source": "AAP",
     "linked_task_ids": [
-      "POST-W11-01"
+      "POST-W11-001",
+      "POST-W11-002"
     ]
   },
   {
@@ -972,7 +993,12 @@
     "coming_up": "Solids soon.",
     "medical_source": "CDC",
     "linked_task_ids": [
-      "POST-W12-01"
+      "POST-W12-001",
+      "POST-W12-002",
+      "POST-W12-003",
+      "POST-W12-004",
+      "POST-W12-005",
+      "POST-W12-006"
     ]
   },
   {
@@ -992,7 +1018,7 @@
     "coming_up": "Solids (M6).",
     "medical_source": "Sleep Fnd",
     "linked_task_ids": [
-      "POST-M04-01"
+      "POST-W17-001"
     ]
   },
   {
@@ -1012,7 +1038,10 @@
     "coming_up": "Teething.",
     "medical_source": "AAP",
     "linked_task_ids": [
-      "POST-M05-01"
+      "POST-W21-001",
+      "POST-W21-002",
+      "POST-W21-003",
+      "POST-W21-004"
     ]
   },
   {
@@ -1032,7 +1061,18 @@
     "coming_up": "Crawling.",
     "medical_source": "CDC",
     "linked_task_ids": [
-      "POST-M06-01"
+      "POST-W25-001",
+      "POST-W25-002",
+      "POST-W25-003",
+      "POST-W25-004",
+      "POST-W25-005",
+      "POST-W25-006",
+      "POST-W25-007",
+      "POST-W25-008",
+      "POST-W25-009",
+      "POST-W25-010",
+      "POST-W25-011",
+      "POST-W25-012"
     ]
   },
   {
@@ -1052,7 +1092,8 @@
     "coming_up": "Mobility.",
     "medical_source": "ADA",
     "linked_task_ids": [
-      "POST-M07-01"
+      "POST-W30-001",
+      "POST-W30-002"
     ]
   },
   {
@@ -1072,7 +1113,10 @@
     "coming_up": "Separation Anxiety.",
     "medical_source": "AAP",
     "linked_task_ids": [
-      "POST-M08-01"
+      "POST-W34-001",
+      "POST-W34-002",
+      "POST-W34-003",
+      "POST-W34-004"
     ]
   },
   {
@@ -1092,7 +1136,9 @@
     "coming_up": "Standing.",
     "medical_source": "Zero to Three",
     "linked_task_ids": [
-      "POST-M09-01"
+      "POST-W38-001",
+      "POST-W38-002",
+      "POST-W38-003"
     ]
   },
   {
@@ -1112,7 +1158,9 @@
     "coming_up": "Walking.",
     "medical_source": "AAP",
     "linked_task_ids": [
-      "POST-M10-01"
+      "POST-W42-001",
+      "POST-W42-002",
+      "POST-W42-003"
     ]
   },
   {
@@ -1132,7 +1180,8 @@
     "coming_up": "1 Year.",
     "medical_source": "CDC",
     "linked_task_ids": [
-      "POST-M11-01"
+      "POST-W47-001",
+      "POST-W47-002"
     ]
   },
   {
@@ -1153,7 +1202,13 @@
     "coming_up": "Tantrums.",
     "medical_source": "AAP",
     "linked_task_ids": [
-      "POST-M12-01"
+      "POST-W51-001",
+      "POST-W51-002",
+      "POST-W51-003",
+      "POST-W51-004",
+      "POST-W51-005",
+      "POST-W51-006",
+      "POST-W51-007"
     ]
   },
   {
@@ -1173,7 +1228,7 @@
     "coming_up": "18mo check.",
     "medical_source": "CDC",
     "linked_task_ids": [
-      "POST-M15-01"
+      "POST-W64-001"
     ]
   },
   {
@@ -1193,7 +1248,9 @@
     "coming_up": "Potty Train (M24).",
     "medical_source": "Zero to Three",
     "linked_task_ids": [
-      "POST-M18-01"
+      "POST-W77-001",
+      "POST-W77-002",
+      "POST-W77-003"
     ]
   },
   {
@@ -1213,7 +1270,9 @@
     "coming_up": "2 Year.",
     "medical_source": "AAP",
     "linked_task_ids": [
-      "POST-M21-01"
+      "POST-W85-001",
+      "POST-W94-001",
+      "POST-W94-002"
     ]
   },
   {
@@ -1233,7 +1292,12 @@
     "coming_up": "Preschool.",
     "medical_source": "CDC",
     "linked_task_ids": [
-      "POST-M24-01"
+      "POST-W102-001",
+      "POST-W102-002",
+      "POST-W102-003",
+      "POST-W102-004",
+      "POST-W102-005",
+      "POST-W102-006"
     ]
   }
 ]

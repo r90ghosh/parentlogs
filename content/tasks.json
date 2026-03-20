@@ -15,7 +15,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-10-the-genetic-testing-decision"
   },
   {
     "task_id": "PREG-W12-001",
@@ -33,7 +35,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-12-the-safe-zone"
   },
   {
     "task_id": "PREG-W08-001",
@@ -51,7 +55,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "week-8-the-first-ultrasound"
   },
   {
     "task_id": "PREG-W20-001",
@@ -69,7 +75,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "week-20-the-anatomy-scan"
   },
   {
     "task_id": "PREG-W12-002",
@@ -87,7 +95,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 90,
+    "related_article_slug": "week-12-the-safe-zone"
   },
   {
     "task_id": "PREG-W16-001",
@@ -105,7 +115,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-16-the-quickening"
   },
   {
     "task_id": "PREG-W16-002",
@@ -123,7 +135,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45,
+    "related_article_slug": "week-16-the-quickening"
   },
   {
     "task_id": "PREG-W12-003",
@@ -141,7 +155,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "week-10-the-genetic-testing-decision"
   },
   {
     "task_id": "PREG-W20-002",
@@ -159,7 +175,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-20-the-anatomy-scan"
   },
   {
     "task_id": "PREG-W20-003",
@@ -177,7 +195,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-20-the-anatomy-scan"
   },
   {
     "task_id": "PREG-W16-003",
@@ -195,7 +215,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 90,
+    "related_article_slug": "week-16-the-quickening"
   },
   {
     "task_id": "PREG-W20-004",
@@ -213,7 +235,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "week-20-the-anatomy-scan"
   },
   {
     "task_id": "PREG-W26-001",
@@ -231,7 +255,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-24-viability-week"
   },
   {
     "task_id": "PREG-W24-001",
@@ -249,7 +275,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 120,
+    "related_article_slug": "week-22-the-nursery-project"
   },
   {
     "task_id": "PREG-W28-001",
@@ -267,7 +295,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45,
+    "related_article_slug": "week-27-third-trimester-prep"
   },
   {
     "task_id": "PREG-W28-002",
@@ -285,7 +315,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "week-22-the-nursery-project"
   },
   {
     "task_id": "PREG-W28-003",
@@ -303,7 +335,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-22-the-nursery-project"
   },
   {
     "task_id": "PREG-W20-005",
@@ -321,7 +355,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "week-20-the-anatomy-scan"
   },
   {
     "task_id": "PREG-W20-006",
@@ -339,7 +375,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60
   },
   {
     "task_id": "PREG-W24-002",
@@ -357,7 +394,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "week-24-viability-week"
   },
   {
     "task_id": "PREG-W28-004",
@@ -375,7 +414,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45,
+    "related_article_slug": "week-27-third-trimester-prep"
   },
   {
     "task_id": "PREG-W28-005",
@@ -393,7 +434,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-27-third-trimester-prep"
   },
   {
     "task_id": "PREG-W28-006",
@@ -411,7 +454,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-27-third-trimester-prep"
   },
   {
     "task_id": "PREG-W30-001",
@@ -429,7 +474,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "week-22-the-nursery-project"
   },
   {
     "task_id": "PREG-W30-002",
@@ -447,7 +494,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 240,
+    "related_article_slug": "week-22-the-nursery-project"
   },
   {
     "task_id": "PREG-W32-001",
@@ -465,7 +514,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-34-the-lung-milestone"
   },
   {
     "task_id": "PREG-W36-001",
@@ -483,7 +534,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-36-early-term-territory"
   },
   {
     "task_id": "PREG-W36-002",
@@ -501,7 +554,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-36-early-term-territory"
   },
   {
     "task_id": "PREG-W36-003",
@@ -519,7 +574,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45,
+    "related_article_slug": "week-36-early-term-territory"
   },
   {
     "task_id": "PREG-W37-001",
@@ -537,7 +594,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-36-early-term-territory"
   },
   {
     "task_id": "PREG-W35-001",
@@ -555,7 +614,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 90,
+    "related_article_slug": "week-36-early-term-territory"
   },
   {
     "task_id": "PREG-W35-002",
@@ -573,7 +634,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "week-36-early-term-territory"
   },
   {
     "task_id": "PREG-W36-004",
@@ -591,7 +654,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-36-early-term-territory"
   },
   {
     "task_id": "PREG-W36-005",
@@ -609,7 +674,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "week-36-early-term-territory"
   },
   {
     "task_id": "PREG-W34-001",
@@ -627,7 +694,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-34-the-lung-milestone"
   },
   {
     "task_id": "PREG-W38-001",
@@ -645,7 +714,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "week-38-any-day-now"
   },
   {
     "task_id": "PREG-W38-002",
@@ -663,7 +734,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-38-any-day-now"
   },
   {
     "task_id": "PREG-W36-006",
@@ -681,7 +754,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-36-early-term-territory"
   },
   {
     "task_id": "PREG-W36-007",
@@ -699,7 +774,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-36-early-term-territory"
   },
   {
     "task_id": "PREG-W36-008",
@@ -717,7 +794,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 90,
+    "related_article_slug": "week-36-early-term-territory"
   },
   {
     "task_id": "PREG-W38-003",
@@ -735,7 +814,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 180,
+    "related_article_slug": "week-38-any-day-now"
   },
   {
     "task_id": "PREG-W37-002",
@@ -753,7 +834,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 240,
+    "related_article_slug": "week-38-any-day-now"
   },
   {
     "task_id": "PREG-W37-003",
@@ -771,7 +854,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "week-38-any-day-now"
   },
   {
     "task_id": "PREG-W38-004",
@@ -789,7 +874,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-38-any-day-now"
   },
   {
     "task_id": "PREG-W38-005",
@@ -807,7 +894,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "week-38-any-day-now"
   },
   {
     "task_id": "PREG-W38-006",
@@ -825,7 +914,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-38-any-day-now"
   },
   {
     "task_id": "PREG-W38-007",
@@ -843,7 +934,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-38-any-day-now"
   },
   {
     "task_id": "PREG-W37-004",
@@ -861,7 +954,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "PREG-W38-008",
@@ -879,7 +973,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-22-the-nursery-project"
   },
   {
     "task_id": "PREG-W37-005",
@@ -897,7 +993,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 120,
+    "related_article_slug": "week-38-any-day-now"
   },
   {
     "task_id": "PREG-W36-009",
@@ -915,7 +1013,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-36-early-term-territory"
   },
   {
     "task_id": "PREG-W39-001",
@@ -933,7 +1033,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "week-40-due-date-and-beyond"
   },
   {
     "task_id": "PREG-W39-002",
@@ -951,7 +1053,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5
   },
   {
     "task_id": "PREG-W39-003",
@@ -969,7 +1072,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45,
+    "related_article_slug": "week-38-any-day-now"
   },
   {
     "task_id": "PREG-W39-004",
@@ -987,7 +1092,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5,
+    "related_article_slug": "week-40-due-date-and-beyond"
   },
   {
     "task_id": "POST-W01-001",
@@ -1005,7 +1112,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "the-first-24-hours"
   },
   {
     "task_id": "POST-W01-002",
@@ -1023,7 +1132,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5,
+    "related_article_slug": "the-first-24-hours"
   },
   {
     "task_id": "POST-W01-003",
@@ -1041,7 +1152,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "the-first-24-hours"
   },
   {
     "task_id": "POST-W01-004",
@@ -1059,7 +1172,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "the-first-week-survival-guide"
   },
   {
     "task_id": "POST-W01-005",
@@ -1077,7 +1192,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "the-first-24-hours"
   },
   {
     "task_id": "POST-W01-006",
@@ -1095,7 +1212,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "coming-home-days-2-4"
   },
   {
     "task_id": "POST-W01-007",
@@ -1113,7 +1232,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "the-first-week-survival-guide"
   },
   {
     "task_id": "POST-W02-001",
@@ -1131,7 +1252,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "week-2-the-weight-check"
   },
   {
     "task_id": "POST-W02-002",
@@ -1149,7 +1272,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-2-the-weight-check"
   },
   {
     "task_id": "POST-W03-001",
@@ -1167,7 +1292,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "POST-W01-008",
@@ -1185,7 +1311,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "the-first-week-survival-guide"
   },
   {
     "task_id": "POST-W01-009",
@@ -1203,7 +1331,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "the-first-week-survival-guide"
   },
   {
     "task_id": "POST-W01-010",
@@ -1221,7 +1351,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5,
+    "related_article_slug": "the-first-week-survival-guide"
   },
   {
     "task_id": "POST-W02-003",
@@ -1239,7 +1371,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5,
+    "related_article_slug": "week-2-the-weight-check"
   },
   {
     "task_id": "POST-W04-001",
@@ -1257,7 +1391,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5,
+    "related_article_slug": "week-4-6-the-first-real-smile"
   },
   {
     "task_id": "POST-W04-002",
@@ -1275,7 +1411,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "week-4-6-the-first-real-smile"
   },
   {
     "task_id": "POST-W08-001",
@@ -1293,7 +1431,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-8-the-two-month-vaccines"
   },
   {
     "task_id": "POST-W12-001",
@@ -1311,7 +1451,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "week-12-fourth-trimester-graduation"
   },
   {
     "task_id": "POST-W12-002",
@@ -1329,7 +1471,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45,
+    "related_article_slug": "week-12-fourth-trimester-graduation"
   },
   {
     "task_id": "POST-W12-003",
@@ -1347,7 +1491,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-12-fourth-trimester-graduation"
   },
   {
     "task_id": "POST-W04-003",
@@ -1365,7 +1511,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5
   },
   {
     "task_id": "POST-W12-004",
@@ -1383,7 +1530,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-12-fourth-trimester-graduation"
   },
   {
     "task_id": "POST-W12-005",
@@ -1401,7 +1550,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5
   },
   {
     "task_id": "POST-W06-001",
@@ -1419,7 +1569,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-8-the-two-month-vaccines"
   },
   {
     "task_id": "POST-W06-002",
@@ -1437,7 +1589,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-4-6-the-first-real-smile"
   },
   {
     "task_id": "POST-W08-002",
@@ -1455,7 +1609,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "week-8-the-two-month-vaccines"
   },
   {
     "task_id": "POST-W10-001",
@@ -1473,7 +1629,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-10-finding-your-groove"
   },
   {
     "task_id": "POST-W11-001",
@@ -1491,7 +1649,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-10-finding-your-groove"
   },
   {
     "task_id": "POST-W11-002",
@@ -1509,7 +1669,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "week-10-finding-your-groove"
   },
   {
     "task_id": "POST-W10-002",
@@ -1527,7 +1689,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "week-10-finding-your-groove"
   },
   {
     "task_id": "TASK-GEN-001",
@@ -1545,7 +1709,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-4-the-sleep-regression"
   },
   {
     "task_id": "POST-W17-001",
@@ -1563,7 +1729,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45,
+    "related_article_slug": "month-4-the-sleep-regression"
   },
   {
     "task_id": "TASK-GEN-002",
@@ -1581,7 +1749,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-4-the-sleep-regression"
   },
   {
     "task_id": "POST-W21-001",
@@ -1599,7 +1769,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "month-5-the-mobility-begins"
   },
   {
     "task_id": "TASK-GEN-003",
@@ -1617,7 +1789,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "month-6-first-foods"
   },
   {
     "task_id": "TASK-GEN-004",
@@ -1635,7 +1809,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-6-first-foods"
   },
   {
     "task_id": "POST-W25-001",
@@ -1653,7 +1829,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "month-6-first-foods"
   },
   {
     "task_id": "TASK-GEN-005",
@@ -1671,7 +1849,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-6-the-six-month-checkup"
   },
   {
     "task_id": "TASK-GEN-006",
@@ -1689,7 +1869,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "month-6-first-foods"
   },
   {
     "task_id": "POST-W30-001",
@@ -1707,7 +1889,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-7-8-the-crawling-revolution"
   },
   {
     "task_id": "POST-W30-002",
@@ -1725,7 +1909,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "month-7-8-the-crawling-revolution"
   },
   {
     "task_id": "POST-W25-002",
@@ -1743,7 +1929,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "month-5-the-mobility-begins"
   },
   {
     "task_id": "POST-W34-001",
@@ -1761,7 +1949,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5,
+    "related_article_slug": "month-9-understanding-separation-anxiety"
   },
   {
     "task_id": "TASK-GEN-007",
@@ -1779,7 +1969,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-9-understanding-separation-anxiety"
   },
   {
     "task_id": "POST-W38-001",
@@ -1797,7 +1989,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "month-10-the-cruiser"
   },
   {
     "task_id": "POST-W38-002",
@@ -1815,7 +2009,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "POST-W42-001",
@@ -1833,7 +2028,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45,
+    "related_article_slug": "month-10-the-cruiser"
   },
   {
     "task_id": "POST-W47-001",
@@ -1851,7 +2048,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "month-11-first-words"
   },
   {
     "task_id": "POST-W47-002",
@@ -1869,7 +2068,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-11-first-words"
   },
   {
     "task_id": "POST-W42-002",
@@ -1887,7 +2088,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "month-12-the-first-birthday"
   },
   {
     "task_id": "TASK-GEN-008",
@@ -1905,7 +2108,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-12-the-first-birthday"
   },
   {
     "task_id": "POST-W51-001",
@@ -1923,7 +2128,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-12-the-first-birthday"
   },
   {
     "task_id": "POST-W51-002",
@@ -1941,7 +2148,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "month-12-the-first-birthday"
   },
   {
     "task_id": "POST-W51-003",
@@ -1959,7 +2168,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "month-13-14-the-new-walker"
   },
   {
     "task_id": "POST-W51-004",
@@ -1977,7 +2188,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-12-the-first-birthday"
   },
   {
     "task_id": "POST-W51-005",
@@ -1995,7 +2208,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5,
+    "related_article_slug": "month-12-the-first-birthday"
   },
   {
     "task_id": "TASK-GEN-001",
@@ -2013,7 +2228,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Quarterly"
+    "recurrence_pattern": "Quarterly",
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "TASK-GEN-002",
@@ -2031,7 +2247,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Monthly"
+    "recurrence_pattern": "Monthly",
+    "time_estimate_minutes": 5
   },
   {
     "task_id": "POST-W25-003",
@@ -2049,7 +2266,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5,
+    "related_article_slug": "month-6-the-six-month-checkup"
   },
   {
     "task_id": "TASK-GEN-003",
@@ -2067,12 +2286,13 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Seasonal"
+    "recurrence_pattern": "Seasonal",
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "POST-W01-011",
     "title": "Set Water Heater Temp",
-    "description": "Lower water heater thermostat to 120Â°F (49Â°C) to prevent accidental scalding.",
+    "description": "Lower water heater thermostat to 120\u00c2\u00b0F (49\u00c2\u00b0C) to prevent accidental scalding.",
     "stage": "post-birth",
     "due_date_logic": "BD + 1 Week",
     "due_date_offset_days": 7,
@@ -2085,7 +2305,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5,
+    "related_article_slug": "the-first-week-survival-guide"
   },
   {
     "task_id": "POST-W01-012",
@@ -2103,7 +2325,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "the-first-week-survival-guide"
   },
   {
     "task_id": "POST-W01-013",
@@ -2121,7 +2345,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "the-first-week-survival-guide"
   },
   {
     "task_id": "POST-W01-014",
@@ -2139,7 +2365,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5,
+    "related_article_slug": "the-first-week-survival-guide"
   },
   {
     "task_id": "POST-W04-004",
@@ -2157,7 +2385,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "POST-W08-003",
@@ -2175,7 +2404,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 120,
+    "related_article_slug": "week-8-the-two-month-vaccines"
   },
   {
     "task_id": "POST-W21-002",
@@ -2193,7 +2424,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "month-5-the-mobility-begins"
   },
   {
     "task_id": "POST-W21-003",
@@ -2211,7 +2444,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "month-5-the-mobility-begins"
   },
   {
     "task_id": "POST-W25-004",
@@ -2229,7 +2464,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "month-7-8-the-crawling-revolution"
   },
   {
     "task_id": "POST-W25-005",
@@ -2247,7 +2484,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45,
+    "related_article_slug": "month-7-8-the-crawling-revolution"
   },
   {
     "task_id": "POST-W25-006",
@@ -2265,7 +2504,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45,
+    "related_article_slug": "month-7-8-the-crawling-revolution"
   },
   {
     "task_id": "POST-W34-002",
@@ -2283,7 +2524,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "POST-W38-003",
@@ -2301,7 +2543,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "POST-W34-003",
@@ -2319,7 +2562,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "POST-W21-004",
@@ -2337,7 +2581,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5,
+    "related_article_slug": "month-5-the-mobility-begins"
   },
   {
     "task_id": "POST-W34-004",
@@ -2355,7 +2601,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-9-understanding-separation-anxiety"
   },
   {
     "task_id": "POST-W25-007",
@@ -2373,7 +2621,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "month-7-8-the-crawling-revolution"
   },
   {
     "task_id": "POST-W42-003",
@@ -2391,7 +2641,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45,
+    "related_article_slug": "month-10-the-cruiser"
   },
   {
     "task_id": "POST-W25-008",
@@ -2409,7 +2661,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 120
   },
   {
     "task_id": "POST-W25-009",
@@ -2427,7 +2680,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "POST-W08-004",
@@ -2445,7 +2699,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "POST-W25-010",
@@ -2463,7 +2718,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5
   },
   {
     "task_id": "POST-W01-015",
@@ -2481,7 +2737,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "TASK-GEN-004",
@@ -2499,7 +2756,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Quarterly"
+    "recurrence_pattern": "Quarterly",
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "TASK-GEN-005",
@@ -2517,7 +2775,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Quarterly"
+    "recurrence_pattern": "Quarterly",
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "TASK-GEN-006",
@@ -2535,7 +2794,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Weekly"
+    "recurrence_pattern": "Weekly",
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "TASK-GEN-007",
@@ -2553,7 +2813,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Monthly"
+    "recurrence_pattern": "Monthly",
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "TASK-GEN-008",
@@ -2571,7 +2832,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Quarterly"
+    "recurrence_pattern": "Quarterly",
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "POST-W25-011",
@@ -2589,7 +2851,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "month-6-the-six-month-checkup"
   },
   {
     "task_id": "POST-W04-005",
@@ -2607,7 +2871,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "week-4-6-the-first-real-smile"
   },
   {
     "task_id": "POST-W77-001",
@@ -2625,7 +2891,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "month-18-the-developmental-screening"
   },
   {
     "task_id": "POST-W85-001",
@@ -2643,7 +2911,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "POST-W102-001",
@@ -2661,7 +2930,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45
   },
   {
     "task_id": "POST-W51-006",
@@ -2679,7 +2949,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "month-12-the-first-birthday"
   },
   {
     "task_id": "POST-W51-007",
@@ -2697,7 +2969,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-11-first-words"
   },
   {
     "task_id": "POST-W64-001",
@@ -2715,7 +2989,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "month-15-the-opinion-era"
   },
   {
     "task_id": "TASK-GEN-009",
@@ -2733,7 +3009,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Weekly"
+    "recurrence_pattern": "Weekly",
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "POST-W12-006",
@@ -2751,7 +3028,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45,
+    "related_article_slug": "week-12-fourth-trimester-graduation"
   },
   {
     "task_id": "POST-W25-012",
@@ -2769,7 +3048,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "POST-W94-001",
@@ -2787,7 +3067,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-22-23-potty-training-readiness"
   },
   {
     "task_id": "POST-W94-002",
@@ -2805,7 +3087,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "month-22-23-potty-training-readiness"
   },
   {
     "task_id": "POST-W102-002",
@@ -2823,7 +3107,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-22-23-potty-training-readiness"
   },
   {
     "task_id": "POST-W102-003",
@@ -2841,7 +3127,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "month-22-23-potty-training-readiness"
   },
   {
     "task_id": "POST-W102-004",
@@ -2859,7 +3147,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "month-22-23-potty-training-readiness"
   },
   {
     "task_id": "POST-W128-001",
@@ -2877,7 +3167,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15,
+    "related_article_slug": "month-24-the-second-birthday"
   },
   {
     "task_id": "TASK-GEN-009",
@@ -2895,7 +3187,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-18-the-developmental-screening"
   },
   {
     "task_id": "TASK-GEN-010",
@@ -2913,7 +3207,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-24-the-second-birthday"
   },
   {
     "task_id": "POST-W102-005",
@@ -2931,7 +3227,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "month-24-the-second-birthday"
   },
   {
     "task_id": "POST-W128-002",
@@ -2949,7 +3247,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "month-24-the-second-birthday"
   },
   {
     "task_id": "POST-W102-006",
@@ -2967,7 +3267,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "TASK-GEN-011",
@@ -2985,7 +3286,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "TASK-GEN-012",
@@ -3003,7 +3305,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45
   },
   {
     "task_id": "TASK-GEN-013",
@@ -3021,7 +3324,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "TASK-GEN-014",
@@ -3039,7 +3343,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "TASK-GEN-015",
@@ -3057,7 +3362,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "TASK-GEN-010",
@@ -3075,7 +3381,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Seasonal"
+    "recurrence_pattern": "Seasonal",
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "TASK-GEN-011",
@@ -3093,7 +3400,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Monthly"
+    "recurrence_pattern": "Monthly",
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "POST-W77-002",
@@ -3111,7 +3419,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "month-18-the-developmental-screening"
   },
   {
     "task_id": "TASK-GEN-012",
@@ -3129,7 +3439,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Monthly"
+    "recurrence_pattern": "Monthly",
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "POST-W77-003",
@@ -3147,7 +3458,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30,
+    "related_article_slug": "month-19-20-peak-tantrum-season"
   },
   {
     "task_id": "TASK-GEN-016",
@@ -3165,7 +3478,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "TASK-GEN-017",
@@ -3183,7 +3497,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 5
   },
   {
     "task_id": "TASK-GEN-018",
@@ -3201,7 +3516,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "TASK-GEN-019",
@@ -3219,7 +3535,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "TASK-GEN-020",
@@ -3237,7 +3554,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60
   },
   {
     "task_id": "TASK-GEN-013",
@@ -3255,7 +3573,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Weekly"
+    "recurrence_pattern": "Weekly",
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "TASK-GEN-014",
@@ -3273,7 +3592,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Monthly"
+    "recurrence_pattern": "Monthly",
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "TASK-GEN-021",
@@ -3291,7 +3611,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "TASK-GEN-015",
@@ -3309,7 +3630,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Monthly"
+    "recurrence_pattern": "Monthly",
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "TASK-GEN-016",
@@ -3327,7 +3649,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Monthly"
+    "recurrence_pattern": "Monthly",
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "TASK-GEN-017",
@@ -3345,7 +3668,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Weekly"
+    "recurrence_pattern": "Weekly",
+    "time_estimate_minutes": 5
   },
   {
     "task_id": "TASK-GEN-022",
@@ -3363,7 +3687,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "TASK-GEN-023",
@@ -3381,7 +3706,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60
   },
   {
     "task_id": "TASK-GEN-024",
@@ -3399,7 +3725,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60
   },
   {
     "task_id": "TASK-GEN-018",
@@ -3417,7 +3744,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Monthly"
+    "recurrence_pattern": "Monthly",
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "TASK-GEN-019",
@@ -3435,7 +3763,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Relative"
+    "recurrence_pattern": "Relative",
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "TASK-GEN-025",
@@ -3453,7 +3782,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60
   },
   {
     "task_id": "TASK-GEN-020",
@@ -3471,7 +3801,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Quarterly"
+    "recurrence_pattern": "Quarterly",
+    "time_estimate_minutes": 60
   },
   {
     "task_id": "TASK-GEN-021",
@@ -3489,7 +3820,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Quarterly"
+    "recurrence_pattern": "Quarterly",
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "TASK-GEN-022",
@@ -3507,7 +3839,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Quarterly"
+    "recurrence_pattern": "Quarterly",
+    "time_estimate_minutes": 45
   },
   {
     "task_id": "TASK-GEN-023",
@@ -3525,7 +3858,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Semi-Annual"
+    "recurrence_pattern": "Semi-Annual",
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "TASK-GEN-024",
@@ -3543,7 +3877,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Semi-Annual"
+    "recurrence_pattern": "Semi-Annual",
+    "time_estimate_minutes": 60
   },
   {
     "task_id": "TASK-GEN-026",
@@ -3561,7 +3896,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 45
   },
   {
     "task_id": "TASK-GEN-027",
@@ -3579,7 +3915,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60
   },
   {
     "task_id": "POST-W04-006",
@@ -3597,7 +3934,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-4-6-the-first-real-smile"
   },
   {
     "task_id": "POST-W04-007",
@@ -3615,7 +3954,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-4-6-the-first-real-smile"
   },
   {
     "task_id": "POST-W04-008",
@@ -3633,7 +3974,9 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10,
+    "related_article_slug": "week-4-6-the-first-real-smile"
   },
   {
     "task_id": "TASK-GEN-025",
@@ -3651,7 +3994,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Annual"
+    "recurrence_pattern": "Annual",
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "TASK-GEN-026",
@@ -3669,7 +4013,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Monthly"
+    "recurrence_pattern": "Monthly",
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "TASK-GEN-027",
@@ -3687,7 +4032,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Relative"
+    "recurrence_pattern": "Relative",
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "TASK-GEN-028",
@@ -3705,7 +4051,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60
   },
   {
     "task_id": "TASK-GEN-029",
@@ -3723,7 +4070,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "TASK-GEN-028",
@@ -3741,7 +4089,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Monthly"
+    "recurrence_pattern": "Monthly",
+    "time_estimate_minutes": 45
   },
   {
     "task_id": "TASK-GEN-029",
@@ -3759,7 +4108,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Quarterly"
+    "recurrence_pattern": "Quarterly",
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "TASK-GEN-030",
@@ -3777,7 +4127,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Semi-Annual"
+    "recurrence_pattern": "Semi-Annual",
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "TASK-GEN-031",
@@ -3795,7 +4146,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Annual"
+    "recurrence_pattern": "Annual",
+    "time_estimate_minutes": 10
   },
   {
     "task_id": "TASK-GEN-032",
@@ -3813,7 +4165,8 @@
       1
     ],
     "is_recurring": true,
-    "recurrence_pattern": "Semi-Annual"
+    "recurrence_pattern": "Semi-Annual",
+    "time_estimate_minutes": 15
   },
   {
     "task_id": "TASK-GEN-030",
@@ -3831,7 +4184,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60
   },
   {
     "task_id": "TASK-GEN-031",
@@ -3849,7 +4203,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 30
   },
   {
     "task_id": "POST-W01-016",
@@ -3867,6 +4222,8 @@
       1
     ],
     "is_recurring": false,
-    "recurrence_pattern": null
+    "recurrence_pattern": null,
+    "time_estimate_minutes": 60,
+    "related_article_slug": "month-12-the-first-birthday"
   }
 ]

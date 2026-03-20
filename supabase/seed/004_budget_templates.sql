@@ -8,7 +8,7 @@
 -- =============================================================================
 
 -- 001: Prenatal Vitamins & Folic Acid
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-MED-001',
   'Admin',
@@ -19,9 +19,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -31,8 +28,8 @@ VALUES (
   'Varies',
   false,
   NULL,
-  NULL,
-  'Nature Made; Garden of Life'
+  'Ritual Prenatal',
+  'Nature Made, Garden of Life'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
   price_min = EXCLUDED.price_min,
@@ -46,7 +43,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 002: OB-GYN / Midwife Selection
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-MED-002',
   'Admin',
@@ -57,9 +54,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -84,7 +78,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 003: Daycare Deposit
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-CHI-003',
   'Admin',
@@ -95,9 +89,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -122,7 +113,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 004: Housing Assessment
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-PLN-004',
   'Admin',
@@ -133,9 +124,6 @@ VALUES (
   NULL,
   NULL,
   'tip',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -160,7 +148,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 005: Maternity Clothes
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-MOM-MAT-005',
   'Mom',
@@ -171,9 +159,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -184,7 +169,7 @@ VALUES (
   false,
   NULL,
   'Seraphine',
-  'Target, Ingrid & Isabel, Amazon Motherhood Maternity'
+  'Target Ingrid & Isabel, Amazon Motherhood Maternity'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
   price_min = EXCLUDED.price_min,
@@ -198,7 +183,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 006: Maternity Bras
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-MOM-MAT-006',
   'Mom',
@@ -209,9 +194,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -236,7 +218,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 007: Maternity Underwear
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-MOM-MAT-007',
   'Mom',
@@ -247,9 +229,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -278,7 +257,7 @@ VALUES (
 -- =============================================================================
 
 -- 008: Life Insurance
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-LEG-008',
   'Admin',
@@ -289,9 +268,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -316,7 +292,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 009: Will & Estate Plan
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-LEG-009',
   'Admin',
@@ -327,9 +303,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -354,7 +327,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 010: Changing Station
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-010',
   'Baby Care',
@@ -365,9 +338,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -392,7 +362,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 011: Diapers (Newborn → age appropriate)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-011',
   'Baby Care',
@@ -403,9 +373,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -416,7 +383,7 @@ VALUES (
   false,
   NULL,
   'Coterie',
-  'Target Up & Up, Amazon Mama Bear, Costco Kirkland'
+  'Target Up & Up , Amazon Mama Bear, Costco Kirkland'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
   price_min = EXCLUDED.price_min,
@@ -430,7 +397,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 012: Diaper Cream
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-012',
   'Baby Care',
@@ -441,9 +408,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -468,7 +432,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 013: Wet Wipes
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-013',
   'Baby Care',
@@ -479,9 +443,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -506,7 +467,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 014: Washcloths
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-014',
   'Baby Care',
@@ -517,9 +478,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -544,7 +502,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 015: Diaper Pail
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-015',
   'Baby Care',
@@ -555,9 +513,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -582,7 +537,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 016: Diaper Bag
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-016',
   'Baby Care',
@@ -593,9 +548,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -620,7 +572,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 017: Portable Changing Pad
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-017',
   'Baby Care',
@@ -631,9 +583,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -658,7 +607,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 018: Bottles (Nipples: Newborn → age appropriate) 8
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-018',
   'Baby Care',
@@ -669,9 +618,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -696,7 +642,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 019: Formula
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-019',
   'Baby Care',
@@ -707,9 +653,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -734,7 +677,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 020: Breast Pump
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-020',
   'Baby Care',
@@ -745,9 +688,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -772,7 +712,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 021: Bottle Cleaner / Sterilizer
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-021',
   'Baby Care',
@@ -783,9 +723,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -810,7 +747,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 022: Bottle Soap / Cleaner Agent
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-022',
   'Baby Care',
@@ -821,9 +758,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -848,7 +782,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 023: Nursing Pillow
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-023',
   'Baby Care',
@@ -859,9 +793,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -886,7 +817,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 024: Breast Milk Storage Bags
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-024',
   'Baby Care',
@@ -897,9 +828,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -924,7 +852,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 025: Nursing Pads
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-025',
   'Baby Care',
@@ -935,9 +863,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -962,7 +887,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 026: Nipple Cream
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-026',
   'Baby Care',
@@ -973,9 +898,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1000,7 +922,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 027: Burp Cloths
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-027',
   'Baby Care',
@@ -1011,9 +933,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1038,7 +957,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 028: Portable Bottle Warmer
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-028',
   'Baby Care',
@@ -1049,9 +968,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1076,7 +992,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 029: Baby Bathwash Gel
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-029',
   'Baby Care',
@@ -1087,9 +1003,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1114,7 +1027,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 030: Baby Shampoo
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-030',
   'Baby Care',
@@ -1125,9 +1038,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1152,7 +1062,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 031: Baby Body Cream / Lotion
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-031',
   'Baby Care',
@@ -1163,9 +1073,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1190,7 +1097,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 032: Baby Towel
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-032',
   'Baby Care',
@@ -1201,9 +1108,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1228,7 +1132,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 033: Baby Bathtub
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-033',
   'Baby Care',
@@ -1239,9 +1143,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1266,7 +1167,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 034: Bath Toys
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-034',
   'Baby Care',
@@ -1277,9 +1178,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1304,7 +1202,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 035: Baby Bandaids
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FAI-035',
   'Baby Care',
@@ -1315,9 +1213,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1342,7 +1237,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 036: Thermometer (armpit + forehead)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FAI-036',
   'Baby Care',
@@ -1353,9 +1248,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1380,7 +1272,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 037: Baby Tylenol
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FAI-037',
   'Baby Care',
@@ -1391,9 +1283,6 @@ VALUES (
   NULL,
   NULL,
   'doctor',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1418,7 +1307,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 038: Nasal Aspirator (NoseFrida)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FAI-038',
   'Baby Care',
@@ -1429,9 +1318,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1456,7 +1342,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 039: Nail Clippers / File
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FAI-039',
   'Baby Care',
@@ -1467,9 +1353,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1494,7 +1377,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 040: Saline Drops
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FAI-040',
   'Baby Care',
@@ -1505,9 +1388,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1532,7 +1412,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 041: Humidifier (Cool Mist)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FAI-041',
   'Baby Care',
@@ -1543,9 +1423,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1570,7 +1447,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 042: Pacifiers
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FAI-042',
   'Baby Care',
@@ -1581,9 +1458,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1608,7 +1482,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 043: Crib
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-FUR-043',
   'Nursery',
@@ -1619,9 +1493,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1631,7 +1502,7 @@ VALUES (
   '$240-$1200',
   false,
   NULL,
-  'SNOO Smart Bassinet; CradleWise',
+  'SNOO Smart Bassinet, CradleWise',
   'Chicco Lullaby Playard'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
@@ -1646,7 +1517,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 044: Crib Mattress
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-FUR-044',
   'Nursery',
@@ -1657,9 +1528,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1684,7 +1552,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 045: Crib Sheets
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-FUR-045',
   'Nursery',
@@ -1695,9 +1563,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1722,7 +1587,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 046: Dresser / Changing Table Combo
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-FUR-046',
   'Nursery',
@@ -1733,9 +1598,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1760,7 +1622,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 047: Glider / Rocker
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-FUR-047',
   'Nursery',
@@ -1771,9 +1633,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1798,7 +1657,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 048: Blackout Curtains
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-DEC-048',
   'Nursery',
@@ -1809,9 +1668,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1836,7 +1692,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 049: Wallpapers / Wall Decals
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-DEC-049',
   'Nursery',
@@ -1847,9 +1703,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1874,7 +1727,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 050: Sound Machine
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-DEC-050',
   'Nursery',
@@ -1885,9 +1738,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1912,7 +1762,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 051: Night Light
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-DEC-051',
   'Nursery',
@@ -1923,9 +1773,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1950,7 +1797,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 052: Open Space Planning
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-PLN-052',
   'Nursery',
@@ -1961,9 +1808,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -1988,7 +1832,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 053: Baby Swaddles
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-SLP-053',
   'Baby Care',
@@ -1999,9 +1843,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2026,7 +1867,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 054: Sleep Sacks
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-SLP-054',
   'Baby Care',
@@ -2037,9 +1878,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2064,7 +1902,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 055: Onesies (7)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-055',
   'Baby Care',
@@ -2075,9 +1913,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2102,7 +1937,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 056: Pyjamas (7)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-056',
   'Baby Care',
@@ -2113,9 +1948,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2140,7 +1972,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 057: Hats / Mittens / Socks (5)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-057',
   'Baby Care',
@@ -2151,9 +1983,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2178,7 +2007,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 058: Sweater / Jacket (Newborn) (2)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-058',
   'Baby Care',
@@ -2189,9 +2018,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2216,7 +2042,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 059: Baby-Safe Laundry Detergent
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-059',
   'Baby Care',
@@ -2227,9 +2053,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2254,7 +2077,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 060: Infant Car Seat
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-TRA-060',
   'Gear',
@@ -2265,9 +2088,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2277,7 +2097,7 @@ VALUES (
   '$250-$1100',
   false,
   NULL,
-  'Babyark; Nuna Pipa RX',
+  'Babyark, Nuna Pipa RX',
   'Graco'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
@@ -2292,7 +2112,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 061: Stroller
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-TRA-061',
   'Gear',
@@ -2303,9 +2123,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2315,7 +2132,7 @@ VALUES (
   '$300-$1500',
   false,
   NULL,
-  'UPPAbaby Vista V3; Cybex Gazelle S',
+  'UPPAbaby Vista V3, Cybex Gazelle S',
   'Graco'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
@@ -2330,7 +2147,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 062: Baby Car Mirror
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-TRA-062',
   'Gear',
@@ -2341,9 +2158,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2368,7 +2182,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 063: Baby Carrier
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-WEA-063',
   'Gear',
@@ -2379,9 +2193,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2406,7 +2217,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 064: Baby Monitor
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-TEC-MON-064',
   'Tech',
@@ -2417,9 +2228,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2444,7 +2252,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 065: Playmat
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-PLY-065',
   'Baby Care',
@@ -2455,9 +2263,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2482,7 +2287,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 066: Playpen
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-PLY-066',
   'Baby Care',
@@ -2493,9 +2298,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2520,7 +2322,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 067: Toys (Newborn)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-PLY-067',
   'Baby Care',
@@ -2531,9 +2333,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2558,7 +2357,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 068: Audio Books
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-PLY-068',
   'Baby Care',
@@ -2569,9 +2368,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2596,7 +2392,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 069: Toys that Move / Make Sounds
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-PLY-069',
   'Baby Care',
@@ -2607,9 +2403,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2634,7 +2427,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 070: Sensory Toys
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-PLY-070',
   'Baby Care',
@@ -2645,9 +2438,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2672,7 +2462,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 071: Sensory Books
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-PLY-071',
   'Baby Care',
@@ -2683,9 +2473,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2710,7 +2497,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 072: Baby Audio Books for Nursery
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-EXT-072',
   'Nursery',
@@ -2721,9 +2508,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2748,7 +2532,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 073: Travel Crib
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-PLY-073',
   'Baby Care',
@@ -2759,9 +2543,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2786,7 +2567,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 074: Maternity Clothes (2nd Trimester Update)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-MOM-MAT-074',
   'Mom',
@@ -2797,9 +2578,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2810,7 +2588,7 @@ VALUES (
   false,
   NULL,
   'Seraphine',
-  'Target, Ingrid & Isabel, Amazon Motherhood Maternity'
+  'Target Ingrid & Isabel, Amazon Motherhood Maternity'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
   price_min = EXCLUDED.price_min,
@@ -2824,7 +2602,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 075: Nursing Bras (Buy Ahead)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-MOM-MAT-075',
   'Mom',
@@ -2835,9 +2613,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2862,7 +2637,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 076: Baby Shusher
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-SOO-076',
   'Baby Care',
@@ -2873,9 +2648,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2900,7 +2672,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 077: Bassinet
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-SLP-077',
   'Baby Care',
@@ -2911,9 +2683,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2923,8 +2692,8 @@ VALUES (
   '$200-$1500',
   false,
   NULL,
-  'SNOO Smart Bassinet; CradleWise',
-  'Halo BassiNest; Chicco LullaGo'
+  'SNOO Smart Bassinet, CradleWise',
+  'Halo BassiNest, Chicco LullaGo'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
   price_min = EXCLUDED.price_min,
@@ -2938,7 +2707,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 078: Baby Bouncer / Infant Swing
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-SOO-078',
   'Baby Care',
@@ -2949,9 +2718,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -2976,7 +2742,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 079: Waterproof Crib Mattress Pad
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-BED-079',
   'Nursery',
@@ -2987,9 +2753,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3014,7 +2777,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 080: Gas Drops / Gripe Water
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FAI-080',
   'Baby Care',
@@ -3025,9 +2788,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3052,7 +2812,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 081: Stroller Rain Cover
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-TRA-081',
   'Gear',
@@ -3063,9 +2823,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3090,7 +2847,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 082: Nursing Cover
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-MOM-NRS-082',
   'Mom',
@@ -3101,9 +2858,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3128,7 +2882,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 083: Waterproof Changing Pad Liners
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-083',
   'Baby Care',
@@ -3139,9 +2893,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3166,7 +2917,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 084: Crib Mobile
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-NUR-DEC-084',
   'Nursery',
@@ -3177,9 +2928,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3204,7 +2952,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 085: Baby Memory Book / Milestone Cards
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-KEP-085',
   'Baby Care',
@@ -3215,9 +2963,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3242,7 +2987,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 086: Stroller Organizer / Cup Holder
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-TRA-086',
   'Gear',
@@ -3253,9 +2998,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3280,7 +3022,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 087: Bottle Drying Rack
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-087',
   'Baby Care',
@@ -3291,9 +3033,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3322,7 +3061,7 @@ VALUES (
 -- =============================================================================
 
 -- 088: Postpartum Kit (for Mom)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-HEA-REC-088',
   'Health',
@@ -3333,9 +3072,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3360,7 +3096,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 089: Mimi Belt (Pregnancy Seatbelt)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-HEA-COM-089',
   'Health',
@@ -3371,9 +3107,6 @@ VALUES (
   NULL,
   NULL,
   'tip',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3398,7 +3131,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 090: Hospital Bag (Mom + Dad)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-PLN-090',
   'Admin',
@@ -3409,9 +3142,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3436,7 +3166,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 091: Delivery Preferences Document
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-PLN-091',
   'Admin',
@@ -3447,9 +3177,6 @@ VALUES (
   NULL,
   NULL,
   'tip',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3474,7 +3201,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 092: Car Seat Installation & Verification
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-PLN-092',
   'Admin',
@@ -3485,9 +3212,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3512,7 +3236,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 093: Hospital Tour / Visit
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-PLN-093',
   'Admin',
@@ -3523,9 +3247,6 @@ VALUES (
   NULL,
   NULL,
   'tip',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3550,7 +3271,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 094: Pediatrician Selection
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-PLN-094',
   'Admin',
@@ -3561,9 +3282,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3588,7 +3306,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 095: LifeVac Choking Rescue Device
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-EMR-095',
   'Safety',
@@ -3599,9 +3317,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3626,7 +3341,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 096: Pregnancy Pillow
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-MOM-MAT-096',
   'Mom',
@@ -3637,9 +3352,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3664,7 +3376,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 097: Postpartum Recovery Belt / Belly Band
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-HEA-REC-097',
   'Health',
@@ -3675,9 +3387,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3706,7 +3415,7 @@ VALUES (
 -- =============================================================================
 
 -- 098: Birth Certificate (x3 copies)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-DOC-098',
   'Admin',
@@ -3717,9 +3426,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3744,7 +3450,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 099: Social Security Card
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-DOC-099',
   'Admin',
@@ -3755,9 +3461,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3782,7 +3485,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 100: Add Baby to Health Insurance
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-INS-100',
   'Admin',
@@ -3793,9 +3496,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3820,7 +3520,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 101: Passport
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-DOC-101',
   'Admin',
@@ -3831,9 +3531,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3858,7 +3555,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 102: 529 College Savings Fund
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ADM-FIN-102',
   'Admin',
@@ -3869,9 +3566,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3896,7 +3590,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 103: Diapers (Size 1-2) — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-103',
   'Baby Care',
@@ -3907,9 +3601,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3920,7 +3611,7 @@ VALUES (
   true,
   'monthly',
   'Coterie',
-  'Target Up & Up, Amazon Mama Bear, Costco Kirkland'
+  'Target Up & Up , Amazon Mama Bear, Costco Kirkland'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
   price_min = EXCLUDED.price_min,
@@ -3934,7 +3625,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 104: Diaper Cream — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-104-03M',
   'Baby Care',
@@ -3945,9 +3636,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -3972,7 +3660,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 105: Wet Wipes — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-105-03M',
   'Baby Care',
@@ -3983,9 +3671,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4010,7 +3695,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 106: Formula — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-106-03M',
   'Baby Care',
@@ -4021,9 +3706,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4048,7 +3730,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 107: Bottle Soap / Cleaner Agent — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-107-03M',
   'Baby Care',
@@ -4059,9 +3741,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4086,7 +3765,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 108: Bottles — Size 1 Nipples
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-108',
   'Baby Care',
@@ -4097,9 +3776,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4124,7 +3800,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 109: Baby Bathwash Gel — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-109-03M',
   'Baby Care',
@@ -4135,9 +3811,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4162,7 +3835,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 110: Baby Shampoo — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-110-03M',
   'Baby Care',
@@ -4173,9 +3846,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4200,7 +3870,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 111: Baby Body Cream / Lotion — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-111-03M',
   'Baby Care',
@@ -4211,9 +3881,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4238,7 +3905,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 112: Vitamin D Drops — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-112-03M',
   'Baby Care',
@@ -4249,9 +3916,6 @@ VALUES (
   NULL,
   NULL,
   'doctor',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4276,7 +3940,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 113: Onesies (0-3mo size) (7)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-113',
   'Baby Care',
@@ -4287,9 +3951,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4314,7 +3975,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 114: Pyjamas (0-3mo size) (7)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-114',
   'Baby Care',
@@ -4325,9 +3986,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4352,7 +4010,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 115: Diaper Pail Refill Bags — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-115-03M',
   'Baby Care',
@@ -4363,9 +4021,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4394,7 +4049,7 @@ VALUES (
 -- =============================================================================
 
 -- 116: High Chair
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-FEE-SOL-116',
   'Feeding',
@@ -4405,9 +4060,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4417,8 +4069,8 @@ VALUES (
   '$100-$450',
   false,
   NULL,
-  'Stokke Tripp Trapp; Lalo The Chair',
-  'IKEA Antilop; Ingenuity SmartClean'
+  'Stokke Tripp Trapp, Lalo The Chair',
+  'IKEA Antilop, Ingenuity SmartClean'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
   price_min = EXCLUDED.price_min,
@@ -4432,7 +4084,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 117: Feeding Gear (Bibs / Plates / Cups)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-FEE-SOL-117',
   'Feeding',
@@ -4443,9 +4095,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4470,7 +4119,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 118: Baby Food Maker
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-FEE-SOL-118',
   'Feeding',
@@ -4481,9 +4130,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4508,7 +4154,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 119: Baby Spoons (Soft Tip)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-FEE-SOL-119',
   'Feeding',
@@ -4519,9 +4165,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4546,7 +4189,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 120: Teethers
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-TEE-120',
   'Baby Care',
@@ -4557,9 +4200,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4584,7 +4224,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 121: Diapers (Size 2-3) — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-121',
   'Baby Care',
@@ -4595,9 +4235,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4608,7 +4245,7 @@ VALUES (
   true,
   'monthly',
   'Coterie',
-  'Target Up & Up, Amazon Mama Bear, Costco Kirkland'
+  'Target Up & Up , Amazon Mama Bear, Costco Kirkland'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
   price_min = EXCLUDED.price_min,
@@ -4622,7 +4259,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 122: Diaper Cream — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-122-36M',
   'Baby Care',
@@ -4633,9 +4270,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4660,7 +4294,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 123: Wet Wipes — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-123-36M',
   'Baby Care',
@@ -4671,9 +4305,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4698,7 +4329,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 124: Formula — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-124-36M',
   'Baby Care',
@@ -4709,9 +4340,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4736,7 +4364,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 125: Bottle Soap / Cleaner Agent — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-125-36M',
   'Baby Care',
@@ -4747,9 +4375,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4774,7 +4399,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 126: Bottles — Size 2 Nipples
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-126',
   'Baby Care',
@@ -4785,9 +4410,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4812,7 +4434,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 127: Baby Bathwash Gel — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-127-36M',
   'Baby Care',
@@ -4823,9 +4445,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4850,7 +4469,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 128: Baby Shampoo — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-128-36M',
   'Baby Care',
@@ -4861,9 +4480,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4888,7 +4504,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 129: Baby Body Cream / Lotion — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-129-36M',
   'Baby Care',
@@ -4899,9 +4515,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4926,7 +4539,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 130: Vitamin D Drops — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-130-36M',
   'Baby Care',
@@ -4937,9 +4550,6 @@ VALUES (
   NULL,
   NULL,
   'doctor',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -4964,7 +4574,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 131: Onesies (3-6mo size) (7)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-131',
   'Baby Care',
@@ -4975,9 +4585,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5002,7 +4609,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 132: Pyjamas (3-6mo size) (7)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-132',
   'Baby Care',
@@ -5013,9 +4620,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5040,7 +4644,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 133: Sleep Sacks (Medium)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-SLP-133',
   'Baby Care',
@@ -5051,9 +4655,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5078,7 +4679,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 134: Sweater / Jacket (3-6mo) (2)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-134',
   'Baby Care',
@@ -5089,9 +4690,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5116,7 +4714,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 135: Toys — Age Appropriate Refresh
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-PLY-135-36M',
   'Baby Care',
@@ -5127,9 +4725,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5154,7 +4749,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 136: Diaper Pail Refill Bags — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-136-36M',
   'Baby Care',
@@ -5165,9 +4760,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5196,7 +4788,7 @@ VALUES (
 -- =============================================================================
 
 -- 137: Baby Gates
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-HOM-137',
   'Safety',
@@ -5207,9 +4799,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5234,7 +4823,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 138: Cabinet Locks
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-HOM-138',
   'Safety',
@@ -5245,9 +4834,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5272,7 +4858,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 139: Outlet Covers
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-HOM-139',
   'Safety',
@@ -5283,9 +4869,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5310,7 +4893,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 140: Corner Protectors
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-HOM-140',
   'Safety',
@@ -5321,9 +4904,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5348,7 +4928,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 141: Travel Stroller
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-TRA-141',
   'Gear',
@@ -5359,9 +4939,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5386,7 +4963,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 142: Sick Day Buffer
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-HEA-MED-142',
   'Health',
@@ -5397,9 +4974,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5424,7 +4998,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 143: Baby Hairbrush / Comb
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-HYG-143',
   'Baby Care',
@@ -5435,9 +5009,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5462,7 +5033,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 144: Baby Toothbrush & Toothpaste
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-HYG-144',
   'Baby Care',
@@ -5473,9 +5044,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5500,7 +5068,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 145: Diapers (Size 3-4) — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-145',
   'Baby Care',
@@ -5511,9 +5079,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5524,7 +5089,7 @@ VALUES (
   true,
   'monthly',
   'Coterie',
-  'Target Up & Up, Amazon Mama Bear, Costco Kirkland'
+  'Target Up & Up , Amazon Mama Bear, Costco Kirkland'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
   price_min = EXCLUDED.price_min,
@@ -5538,7 +5103,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 146: Diaper Cream — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-146-612M',
   'Baby Care',
@@ -5549,9 +5114,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5576,7 +5138,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 147: Wet Wipes — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-147-612M',
   'Baby Care',
@@ -5587,9 +5149,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5614,7 +5173,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 148: Formula — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-148-612M',
   'Baby Care',
@@ -5625,9 +5184,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5652,7 +5208,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 149: Bottle Soap / Cleaner Agent — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-149-612M',
   'Baby Care',
@@ -5663,9 +5219,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5690,7 +5243,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 150: Bottles — Size 3 Nipples + Sippy Cup Intro
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-150',
   'Baby Care',
@@ -5701,9 +5254,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5728,7 +5278,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 151: Baby Bathwash Gel — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-151-612M',
   'Baby Care',
@@ -5739,9 +5289,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5766,7 +5313,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 152: Baby Shampoo — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-152-612M',
   'Baby Care',
@@ -5777,9 +5324,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5804,7 +5348,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 153: Baby Body Cream / Lotion — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-153-612M',
   'Baby Care',
@@ -5815,9 +5359,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5842,7 +5383,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 154: Vitamin D Drops — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-154-612M',
   'Baby Care',
@@ -5853,9 +5394,6 @@ VALUES (
   NULL,
   NULL,
   'doctor',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5880,7 +5418,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 155: Onesies (6-12mo size) (7)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-155',
   'Baby Care',
@@ -5891,9 +5429,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5918,7 +5453,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 156: Pyjamas (6-12mo size) (7)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-156',
   'Baby Care',
@@ -5929,9 +5464,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5956,7 +5488,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 157: Sleep Sacks (Large)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-SLP-157',
   'Baby Care',
@@ -5967,9 +5499,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -5994,7 +5523,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 158: Baby Tylenol / Motrin — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FAI-158',
   'Baby Care',
@@ -6005,9 +5534,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6032,7 +5558,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 159: Baby Sunscreen
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-HEA-SKN-159',
   'Health',
@@ -6043,9 +5569,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6070,7 +5593,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 160: Sweater / Jacket (6-12mo) (2)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-160',
   'Baby Care',
@@ -6081,9 +5604,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6108,7 +5628,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 161: Toys — Age Appropriate Refresh
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-PLY-161-612M',
   'Baby Care',
@@ -6119,9 +5639,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6146,7 +5663,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 162: Baby Toothpaste — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-HYG-162-612M',
   'Baby Care',
@@ -6157,9 +5674,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6184,7 +5698,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 163: Teethers — Restock / New Types
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-TEE-163',
   'Baby Care',
@@ -6195,9 +5709,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6222,7 +5733,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 164: Baby Swim / Gym / Activity Classes
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ACT-CLS-164-612M',
   'Activities',
@@ -6233,9 +5744,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6260,7 +5768,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 165: Furniture Anchors / Anti-Tip Straps
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-BPR-165',
   'Safety',
@@ -6271,9 +5779,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6298,7 +5803,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 166: Stove Knob Covers
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-BPR-166',
   'Safety',
@@ -6309,9 +5814,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6336,7 +5838,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 167: Oven Door Lock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-BPR-167',
   'Safety',
@@ -6347,9 +5849,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6374,7 +5873,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 168: Toilet Locks
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-BPR-168',
   'Safety',
@@ -6385,9 +5884,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6412,7 +5908,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 169: Door Knob Covers
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-BPR-169',
   'Safety',
@@ -6423,9 +5919,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6450,7 +5943,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 170: Window Guards / Stops
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-BPR-170',
   'Safety',
@@ -6461,9 +5954,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6488,7 +5978,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 171: Cord Covers / Management Kit
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-BPR-171',
   'Safety',
@@ -6499,9 +5989,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6526,7 +6013,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 172: Non-Slip Bath Mat
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-BPR-172',
   'Safety',
@@ -6537,9 +6024,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6564,7 +6048,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 173: Appliance Latches (Dishwasher / Fridge)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-SAF-BPR-173',
   'Safety',
@@ -6575,9 +6059,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6602,7 +6083,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 174: Activity Center / Exersaucer
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-PLY-174',
   'Baby Care',
@@ -6613,9 +6094,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6640,7 +6118,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 175: Diaper Pail Refill Bags — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-175-612M',
   'Baby Care',
@@ -6651,9 +6129,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6682,7 +6157,7 @@ VALUES (
 -- =============================================================================
 
 -- 176: Convertible Car Seat
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-GEA-TRA-176',
   'Gear',
@@ -6693,9 +6168,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6705,7 +6177,7 @@ VALUES (
   '$300-$600',
   false,
   NULL,
-  'Nuna Rava; Clek Fllo',
+  'Nuna Rava, Clek Fllo',
   'Graco Extend2Fit, Chicco NextFit'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
@@ -6720,7 +6192,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 177: Walking Shoes
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-CLO-SHO-177',
   'Clothing',
@@ -6731,9 +6203,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6758,7 +6227,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 178: Toddler Toys & Books
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-PLY-178',
   'Baby Care',
@@ -6769,9 +6238,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6796,7 +6262,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 179: Diapers (Size 4-5) — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-179',
   'Baby Care',
@@ -6807,9 +6273,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6820,7 +6283,7 @@ VALUES (
   true,
   'monthly',
   'Coterie',
-  'Target Up & Up, Amazon Mama Bear, Costco Kirkland'
+  'Target Up & Up , Amazon Mama Bear, Costco Kirkland'
 ) ON CONFLICT (budget_id) DO UPDATE SET
   period = EXCLUDED.period,
   price_min = EXCLUDED.price_min,
@@ -6834,7 +6297,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 180: Diaper Cream — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-180-12M',
   'Baby Care',
@@ -6845,9 +6308,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6872,7 +6332,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 181: Wet Wipes — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-181-12M',
   'Baby Care',
@@ -6883,9 +6343,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6910,7 +6367,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 182: Whole Milk Transition
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-182',
   'Baby Care',
@@ -6921,9 +6378,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6948,7 +6402,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 183: Sippy Cups / Straw Cups
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-183',
   'Baby Care',
@@ -6959,9 +6413,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -6986,7 +6437,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 184: Bottle Soap / Cleaner Agent — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FED-184-12M',
   'Baby Care',
@@ -6997,9 +6448,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7024,7 +6472,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 185: Baby Bathwash Gel — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-185-12M',
   'Baby Care',
@@ -7035,9 +6483,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7062,7 +6507,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 186: Baby Shampoo — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-186-12M',
   'Baby Care',
@@ -7073,9 +6518,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7100,7 +6542,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 187: Baby Body Cream / Lotion — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-BAT-187-12M',
   'Baby Care',
@@ -7111,9 +6553,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7138,7 +6577,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 188: Onesies / Toddler Clothes (12-18mo size) (7)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-188',
   'Baby Care',
@@ -7149,9 +6588,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7176,7 +6612,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 189: Pyjamas (12-18mo size) (7)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-189',
   'Baby Care',
@@ -7187,9 +6623,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7214,7 +6647,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 190: Sleep Sacks (XL / Toddler)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-SLP-190',
   'Baby Care',
@@ -7225,9 +6658,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7252,7 +6682,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 191: Tylenol / Motrin — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-FAI-191',
   'Baby Care',
@@ -7263,9 +6693,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7290,7 +6717,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 192: Baby Sunscreen — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-HEA-SKN-192',
   'Health',
@@ -7301,9 +6728,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7328,7 +6752,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 193: Sweater / Jacket (12-18mo) (2)
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DLY-193',
   'Baby Care',
@@ -7339,9 +6763,6 @@ VALUES (
   NULL,
   NULL,
   'good-to-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7366,7 +6787,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 194: Toys — Age Appropriate Refresh
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-PLY-194-12M',
   'Baby Care',
@@ -7377,9 +6798,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7404,7 +6822,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 195: Baby Toothpaste — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-HYG-195-12M',
   'Baby Care',
@@ -7415,9 +6833,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7442,7 +6857,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 196: Toddler Toothbrush — Replace
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-HYG-196',
   'Baby Care',
@@ -7453,9 +6868,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7480,7 +6892,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 197: Teethers — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-TEE-197',
   'Baby Care',
@@ -7491,9 +6903,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7518,7 +6927,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 198: Baby Swim / Gym / Activity Classes
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-ACT-CLS-198-12M',
   'Activities',
@@ -7529,9 +6938,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7556,7 +6962,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 199: Walking Shoes — Size Up
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-CLO-SHO-199',
   'Clothing',
@@ -7567,9 +6973,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,
@@ -7594,7 +6997,7 @@ VALUES (
   notes = EXCLUDED.notes;
 
 -- 200: Diaper Pail Refill Bags — Restock
-INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_low, price_mid, price_high, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
+INSERT INTO budget_templates (budget_id, category, subcategory, item, description, stage, week_start, week_end, priority, price_currency, notes, is_premium, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value)
 VALUES (
   'BUD-BAB-DIA-200-12M',
   'Baby Care',
@@ -7605,9 +7008,6 @@ VALUES (
   NULL,
   NULL,
   'must-have',
-  NULL,
-  NULL,
-  NULL,
   'USD',
   NULL,
   false,

@@ -237,9 +237,6 @@ export interface BudgetTemplate {
   stage?: FamilyStage | null
   week_start?: number | null
   week_end?: number | null
-  price_low?: number | null
-  price_mid?: number | null
-  price_high?: number | null
 }
 
 export interface FamilyBudgetItem {

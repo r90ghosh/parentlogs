@@ -69,44 +69,44 @@ export type Database = {
         Row: {
           baby_name: string | null
           birth_date: string | null
-          created_at: string
-          current_week: number
+          created_at: string | null
+          current_week: number | null
           due_date: string | null
           family_id: string
           id: string
-          is_active: boolean
+          is_active: boolean | null
           signup_week: number | null
-          sort_order: number
-          stage: Database["public"]["Enums"]["family_stage"]
-          updated_at: string
+          sort_order: number | null
+          stage: Database["public"]["Enums"]["family_stage"] | null
+          updated_at: string | null
         }
         Insert: {
           baby_name?: string | null
           birth_date?: string | null
-          created_at?: string
-          current_week?: number
+          created_at?: string | null
+          current_week?: number | null
           due_date?: string | null
           family_id: string
           id?: string
-          is_active?: boolean
+          is_active?: boolean | null
           signup_week?: number | null
-          sort_order?: number
-          stage?: Database["public"]["Enums"]["family_stage"]
-          updated_at?: string
+          sort_order?: number | null
+          stage?: Database["public"]["Enums"]["family_stage"] | null
+          updated_at?: string | null
         }
         Update: {
           baby_name?: string | null
           birth_date?: string | null
-          created_at?: string
-          current_week?: number
+          created_at?: string | null
+          current_week?: number | null
           due_date?: string | null
           family_id?: string
           id?: string
-          is_active?: boolean
+          is_active?: boolean | null
           signup_week?: number | null
-          sort_order?: number
-          stage?: Database["public"]["Enums"]["family_stage"]
-          updated_at?: string
+          sort_order?: number | null
+          stage?: Database["public"]["Enums"]["family_stage"] | null
+          updated_at?: string | null
         }
         Relationships: [
           {
@@ -153,6 +153,13 @@ export type Database = {
           notes?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "baby_logs_baby_id_fkey"
+            columns: ["baby_id"]
+            isOneToOne: false
+            referencedRelation: "babies"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "baby_logs_family_id_fkey"
             columns: ["family_id"]
@@ -237,10 +244,7 @@ export type Database = {
           period: string | null
           price_currency: string | null
           price_display: string | null
-          price_high: number | null
-          price_low: number | null
           price_max: number | null
-          price_mid: number | null
           price_min: number | null
           priority: string | null
           product_examples: Json | null
@@ -266,10 +270,7 @@ export type Database = {
           period?: string | null
           price_currency?: string | null
           price_display?: string | null
-          price_high?: number | null
-          price_low?: number | null
           price_max?: number | null
-          price_mid?: number | null
           price_min?: number | null
           priority?: string | null
           product_examples?: Json | null
@@ -295,10 +296,7 @@ export type Database = {
           period?: string | null
           price_currency?: string | null
           price_display?: string | null
-          price_high?: number | null
-          price_low?: number | null
           price_max?: number | null
-          price_mid?: number | null
           price_min?: number | null
           priority?: string | null
           product_examples?: Json | null
@@ -389,6 +387,13 @@ export type Database = {
           item_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "checklist_progress_baby_id_fkey"
+            columns: ["baby_id"]
+            isOneToOne: false
+            referencedRelation: "babies"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "checklist_progress_checked_by_fkey"
             columns: ["checked_by"]
@@ -786,6 +791,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "family_tasks_baby_id_fkey"
+            columns: ["baby_id"]
+            isOneToOne: false
+            referencedRelation: "babies"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "family_tasks_completed_by_fkey"
             columns: ["completed_by"]
             isOneToOne: false
@@ -1023,6 +1035,13 @@ export type Database = {
             columns: ["family_id"]
             isOneToOne: false
             referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_active_baby_id_fkey"
+            columns: ["active_baby_id"]
+            isOneToOne: false
+            referencedRelation: "babies"
             referencedColumns: ["id"]
           },
         ]
