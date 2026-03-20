@@ -1,6 +1,7 @@
 import { useEffect, useState, createContext, useContext } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useSegments } from 'expo-router'
+import { pushNotificationService } from '@/services/push-notification-service'
 import type { Session, User } from '@supabase/supabase-js'
 
 interface Profile {
@@ -67,6 +68,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session)
       if (session?.user) {
         await fetchProfile(session.user.id)
+        // Register for push notifications (fire and forget)
+        pushNotificationService.register(session.user.id).catch(() => {})
       } else {
         setProfile(null)
         setFamily(null)
@@ -95,6 +98,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [session, profile, isLoading, segments])
 
   const signOut = async () => {
+    // Deactivate device token before signing out
+    const token = pushNotificationService.getCurrentToken()
+    if (token && session?.user) {
+      await pushNotificationService.unregister(session.user.id, token).catch(() => {})
+    }
     await supabase.auth.signOut()
     setProfile(null)
     setFamily(null)

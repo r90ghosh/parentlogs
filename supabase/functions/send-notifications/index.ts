@@ -31,7 +31,8 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const { type } = await req.json();
+    const body = await req.json();
+    const { type } = body;
 
     switch (type) {
       case "daily_digest":
@@ -46,6 +47,19 @@ Deno.serve(async (req: Request) => {
       case "weekly_briefing":
         await sendWeeklyBriefingAlerts();
         break;
+      // Note: 'direct' type only sends push — does not persist to notifications table.
+      // Callers (e.g. partner-activity) are responsible for persisting the in-app notification.
+      case "direct": {
+        const { user_id, title, body: messageBody, url } = body;
+        if (!user_id || !title || !messageBody) {
+          return new Response(JSON.stringify({ error: "Missing user_id, title, or body" }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+        await sendPushNotification(user_id, { title, body: messageBody, url });
+        break;
+      }
       default:
         return new Response(JSON.stringify({ error: "Unknown notification type" }), {
           status: 400,
@@ -317,31 +331,90 @@ async function persistNotification(userId: string, type: string, payload: Notifi
 }
 
 async function sendPushNotification(userId: string, payload: NotificationPayload): Promise<void> {
-  // Get user's push subscription
+  // Web push via VAPID
   const { data: subscription } = await supabase
     .from("push_subscriptions")
     .select("endpoint, p256dh, auth")
     .eq("user_id", userId)
     .single();
 
-  if (!subscription) return;
+  if (subscription) {
+    const pushSubscription = {
+      endpoint: subscription.endpoint,
+      keys: {
+        p256dh: subscription.p256dh,
+        auth: subscription.auth,
+      },
+    };
 
-  const pushSubscription = {
-    endpoint: subscription.endpoint,
-    keys: {
-      p256dh: subscription.p256dh,
-      auth: subscription.auth,
-    },
-  };
+    try {
+      await webpush.sendNotification(pushSubscription, JSON.stringify(payload));
+    } catch (error) {
+      console.error(`Failed to send web push to user ${userId}:`, error);
+      if (error.statusCode === 404 || error.statusCode === 410) {
+        await supabase.from("push_subscriptions").delete().eq("user_id", userId);
+      }
+    }
+  }
 
-  try {
-    await webpush.sendNotification(pushSubscription, JSON.stringify(payload));
-  } catch (error) {
-    console.error(`Failed to send notification to user ${userId}:`, error);
+  // Mobile push via Expo Push API
+  const { data: mobileTokens } = await supabase
+    .from("device_tokens")
+    .select("id, token, platform")
+    .eq("user_id", userId)
+    .eq("is_active", true);
 
-    // Remove invalid subscriptions
-    if (error.statusCode === 404 || error.statusCode === 410) {
-      await supabase.from("push_subscriptions").delete().eq("user_id", userId);
+  if (mobileTokens?.length) {
+    await sendExpoPush(userId, mobileTokens, payload);
+  }
+}
+
+async function sendExpoPush(
+  userId: string,
+  tokens: Array<{ id: string; token: string; platform: string }>,
+  payload: NotificationPayload
+): Promise<void> {
+  const messages = tokens.map((t) => ({
+    to: t.token,
+    title: payload.title,
+    body: payload.body,
+    data: { url: payload.url || "/dashboard" },
+    sound: "default" as const,
+    badge: 1,
+    channelId: payload.tag || "default",
+  }));
+
+  // Expo Push API accepts max 100 messages per request
+  for (let i = 0; i < messages.length; i += 100) {
+    const chunk = messages.slice(i, i + 100);
+
+    try {
+      const response = await fetch("https://exp.host/--/api/v2/push/send", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Accept-Encoding": "gzip, deflate",
+        },
+        body: JSON.stringify(chunk),
+      });
+
+      const result = await response.json();
+
+      if (result.data) {
+        for (let j = 0; j < result.data.length; j++) {
+          const ticket = result.data[j];
+          const tokenRecord = tokens[i + j];
+          if (ticket.status === "error" && ticket.details?.error === "DeviceNotRegistered") {
+            await supabase
+              .from("device_tokens")
+              .update({ is_active: false })
+              .eq("id", tokenRecord.id);
+          }
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to send Expo push to user ${userId}:`, error);
     }
   }
 }
