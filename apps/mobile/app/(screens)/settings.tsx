@@ -1,12 +1,173 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native'
+import { useState } from 'react'
+import {
+  View,
+  Text,
+  Pressable,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+  Share,
+} from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
-import { X } from 'lucide-react-native'
+import {
+  X,
+  ChevronRight,
+  User,
+  Users,
+  UserPlus,
+  Bell,
+  CreditCard,
+  LogOut,
+  Trash2,
+  Copy,
+  Crown,
+  Share2,
+} from 'lucide-react-native'
+import { useAuth } from '@/components/providers/AuthProvider'
+import { GlassCard } from '@/components/glass'
+import { CardEntrance } from '@/components/animations'
+import * as Haptics from 'expo-haptics'
+
+interface SettingsRowProps {
+  icon: React.ReactNode
+  label: string
+  value?: string
+  onPress?: () => void
+  color?: string
+  danger?: boolean
+}
+
+function SettingsRow({
+  icon,
+  label,
+  value,
+  onPress,
+  color,
+  danger,
+}: SettingsRowProps) {
+  return (
+    <Pressable
+      onPress={() => {
+        if (onPress) {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+          onPress()
+        }
+      }}
+      disabled={!onPress}
+      style={({ pressed }) => [
+        styles.settingsRow,
+        pressed && onPress && styles.settingsRowPressed,
+      ]}
+    >
+      <View style={styles.settingsRowLeft}>
+        {icon}
+        <Text
+          style={[
+            styles.settingsRowLabel,
+            danger && styles.dangerText,
+            color ? { color } : null,
+          ]}
+        >
+          {label}
+        </Text>
+      </View>
+      <View style={styles.settingsRowRight}>
+        {value && <Text style={styles.settingsRowValue}>{value}</Text>}
+        {onPress && <ChevronRight size={16} color="#4a4239" />}
+      </View>
+    </Pressable>
+  )
+}
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const { signOut, profile, family, user } = useAuth()
+  const [deletingAccount, setDeletingAccount] = useState(false)
+
+  const tierLabel =
+    profile?.subscription_tier === 'premium'
+      ? 'Premium'
+      : profile?.subscription_tier === 'lifetime'
+        ? 'Lifetime'
+        : 'Free'
+
+  async function handleCopyInviteCode() {
+    if (!family?.invite_code) return
+    try {
+      await Share.share({
+        message: family.invite_code,
+      })
+    } catch {
+      // User cancelled
+    }
+  }
+
+  async function handleShareInviteCode() {
+    if (!family?.invite_code) return
+    try {
+      await Share.share({
+        message: `Join me on The Dad Center! Use invite code: ${family.invite_code}\n\nDownload at thedadcenter.com`,
+      })
+    } catch {
+      // User cancelled
+    }
+  }
+
+  function handleSignOut() {
+    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Sign Out',
+        style: 'destructive',
+        onPress: signOut,
+      },
+    ])
+  }
+
+  function handleDeleteAccount() {
+    Alert.alert(
+      'Delete Account',
+      'This will permanently delete your account and all associated data. This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete Account',
+          style: 'destructive',
+          onPress: async () => {
+            setDeletingAccount(true)
+            try {
+              const response = await fetch(
+                `${process.env.EXPO_PUBLIC_SUPABASE_URL}/functions/v1/delete-account`,
+                {
+                  method: 'POST',
+                  headers: {
+                    Authorization: `Bearer ${(await (await import('@/lib/supabase')).supabase.auth.getSession()).data.session?.access_token}`,
+                    'Content-Type': 'application/json',
+                  },
+                }
+              )
+              if (response.ok) {
+                await signOut()
+              } else {
+                Alert.alert(
+                  'Error',
+                  'Failed to delete account. Please try again or contact support.'
+                )
+              }
+            } catch {
+              Alert.alert('Error', 'Something went wrong. Please try again.')
+            } finally {
+              setDeletingAccount(false)
+            }
+          },
+        },
+      ]
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -14,16 +175,180 @@ export default function SettingsScreen() {
         colors={['#12100e', '#1a1714', '#12100e']}
         style={StyleSheet.absoluteFill}
       />
+
+      {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
         <Text style={styles.headerTitle}>Settings</Text>
         <Pressable onPress={() => router.back()} style={styles.closeButton}>
           <X size={20} color="#7a6f62" />
         </Pressable>
       </View>
-      <View style={styles.content}>
-        <Text style={styles.title}>Settings</Text>
-        <Text style={styles.subtitle}>Coming soon</Text>
-      </View>
+
+      <ScrollView
+        style={styles.flex}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: insets.bottom + 24 },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Profile Section */}
+        <CardEntrance delay={0}>
+          <Text style={styles.sectionTitle}>Profile</Text>
+          <GlassCard style={styles.section}>
+            <SettingsRow
+              icon={<User size={18} color="#ede6dc" />}
+              label="Name"
+              value={profile?.full_name || 'Not set'}
+            />
+            <SettingsRow
+              icon={<User size={18} color="#7a6f62" />}
+              label="Role"
+              value={
+                profile?.role === 'dad'
+                  ? 'Dad'
+                  : profile?.role === 'mom'
+                    ? 'Mom'
+                    : profile?.role || 'Not set'
+              }
+            />
+          </GlassCard>
+        </CardEntrance>
+
+        {/* Family Section */}
+        <CardEntrance delay={80}>
+          <Text style={styles.sectionTitle}>Family</Text>
+          <GlassCard style={styles.section}>
+            <SettingsRow
+              icon={<Users size={18} color="#c47a8f" />}
+              label="Family Members"
+              onPress={() => {}}
+            />
+            {family?.invite_code && (
+              <>
+                <View style={styles.inviteCodeRow}>
+                  <View style={styles.settingsRowLeft}>
+                    <UserPlus size={18} color="#6b8f71" />
+                    <View>
+                      <Text style={styles.settingsRowLabel}>Invite Code</Text>
+                      <Text style={styles.inviteCode}>
+                        {family.invite_code}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.inviteActions}>
+                    <Pressable
+                      onPress={handleCopyInviteCode}
+                      style={styles.inviteActionButton}
+                    >
+                      <Copy size={16} color="#6b8f71" />
+                    </Pressable>
+                    <Pressable
+                      onPress={handleShareInviteCode}
+                      style={styles.inviteActionButton}
+                    >
+                      <Share2 size={16} color="#6b8f71" />
+                    </Pressable>
+                  </View>
+                </View>
+              </>
+            )}
+          </GlassCard>
+        </CardEntrance>
+
+        {/* Notifications */}
+        <CardEntrance delay={160}>
+          <Text style={styles.sectionTitle}>Notifications</Text>
+          <GlassCard style={styles.section}>
+            <SettingsRow
+              icon={<Bell size={18} color="#5b9bd5" />}
+              label="Notification Preferences"
+              onPress={() => router.push('/(screens)/notifications')}
+            />
+          </GlassCard>
+        </CardEntrance>
+
+        {/* Subscription */}
+        <CardEntrance delay={240}>
+          <Text style={styles.sectionTitle}>Subscription</Text>
+          <GlassCard style={styles.section}>
+            <View style={styles.subscriptionRow}>
+              <View style={styles.settingsRowLeft}>
+                <CreditCard size={18} color="#d4a853" />
+                <View>
+                  <Text style={styles.settingsRowLabel}>Current Plan</Text>
+                  <View style={styles.tierBadgeRow}>
+                    {(profile?.subscription_tier === 'premium' ||
+                      profile?.subscription_tier === 'lifetime') && (
+                      <Crown size={12} color="#d4a853" />
+                    )}
+                    <Text
+                      style={[
+                        styles.tierBadgeText,
+                        (profile?.subscription_tier === 'premium' ||
+                          profile?.subscription_tier === 'lifetime') &&
+                          styles.tierBadgeTextPremium,
+                      ]}
+                    >
+                      {tierLabel}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+            {profile?.subscription_tier !== 'premium' &&
+              profile?.subscription_tier !== 'lifetime' && (
+                <SettingsRow
+                  icon={<Crown size={18} color="#d4a853" />}
+                  label="Upgrade to Premium"
+                  onPress={() => router.push('/(screens)/upgrade')}
+                  color="#d4a853"
+                />
+              )}
+          </GlassCard>
+        </CardEntrance>
+
+        {/* Sign Out */}
+        <CardEntrance delay={320}>
+          <GlassCard style={styles.section}>
+            <SettingsRow
+              icon={<LogOut size={18} color="#d4836b" />}
+              label="Sign Out"
+              onPress={handleSignOut}
+              danger
+            />
+          </GlassCard>
+        </CardEntrance>
+
+        {/* Danger Zone */}
+        <CardEntrance delay={400}>
+          <Text style={styles.dangerSectionTitle}>Danger Zone</Text>
+          <GlassCard style={styles.dangerSection}>
+            <Pressable
+              onPress={handleDeleteAccount}
+              disabled={deletingAccount}
+              style={({ pressed }) => [
+                styles.settingsRow,
+                pressed && styles.settingsRowPressed,
+              ]}
+            >
+              <View style={styles.settingsRowLeft}>
+                <Trash2 size={18} color="#d4836b" />
+                <Text style={[styles.settingsRowLabel, styles.dangerText]}>
+                  Delete Account
+                </Text>
+              </View>
+              {deletingAccount && (
+                <ActivityIndicator size="small" color="#d4836b" />
+              )}
+            </Pressable>
+            <Text style={styles.dangerDescription}>
+              Permanently delete your account, family data, and all associated
+              information. This cannot be undone.
+            </Text>
+          </GlassCard>
+        </CardEntrance>
+      </ScrollView>
     </View>
   )
 }
@@ -32,6 +357,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#12100e',
+  },
+  flex: {
+    flex: 1,
   },
   header: {
     flexDirection: 'row',
@@ -53,21 +381,142 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  content: {
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+  },
+
+  // Section
+  sectionTitle: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 13,
+    color: '#7a6f62',
+    textTransform: 'uppercase',
+    letterSpacing: 1.2,
+    marginBottom: 12,
+    marginTop: 8,
+  },
+  section: {
+    overflow: 'hidden',
+    marginBottom: 24,
+    padding: 0,
+  },
+
+  // Settings row
+  settingsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(237,230,220,0.06)',
+  },
+  settingsRowPressed: {
+    backgroundColor: 'rgba(237,230,220,0.04)',
+  },
+  settingsRowLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
     flex: 1,
+  },
+  settingsRowRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  settingsRowLabel: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 15,
+    color: '#ede6dc',
+  },
+  settingsRowValue: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 14,
+    color: '#7a6f62',
+  },
+
+  // Invite code
+  inviteCodeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(237,230,220,0.06)',
+  },
+  inviteCode: {
+    fontFamily: 'Jost-Medium',
+    fontSize: 18,
+    color: '#6b8f71',
+    letterSpacing: 2,
+    marginTop: 4,
+  },
+  inviteActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  inviteActionButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(107,143,113,0.12)',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 24,
   },
-  title: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 28,
-    color: '#faf6f0',
-    marginBottom: 8,
+
+  // Subscription
+  subscriptionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
-  subtitle: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+  tierBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 4,
+  },
+  tierBadgeText: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 13,
     color: '#7a6f62',
+  },
+  tierBadgeTextPremium: {
+    color: '#d4a853',
+  },
+
+  // Danger
+  dangerSectionTitle: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 13,
+    color: '#d4836b',
+    textTransform: 'uppercase',
+    letterSpacing: 1.2,
+    marginBottom: 12,
+    marginTop: 8,
+  },
+  dangerSection: {
+    overflow: 'hidden',
+    marginBottom: 24,
+    padding: 0,
+    borderColor: 'rgba(212,131,107,0.15)',
+  },
+  dangerText: {
+    color: '#d4836b',
+  },
+  dangerDescription: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 12,
+    color: '#4a4239',
+    lineHeight: 18,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
 })

@@ -14,6 +14,7 @@ export default function ScreensLayout() {
       <Stack.Screen name="checklists" />
       <Stack.Screen name="journey" />
       <Stack.Screen name="settings" />
+      <Stack.Screen name="notifications" />
       <Stack.Screen name="upgrade" />
     </Stack>
   )

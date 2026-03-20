@@ -10,8 +10,15 @@ import {
   Crown,
   LogOut,
   ChevronRight,
+  Users,
+  UserPlus,
+  User,
+  Bell,
+  CreditCard,
 } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { GlassCard } from '@/components/glass'
+import { CardEntrance } from '@/components/animations'
 import * as Haptics from 'expo-haptics'
 
 interface MenuItemProps {
@@ -19,9 +26,10 @@ interface MenuItemProps {
   label: string
   onPress: () => void
   color?: string
+  showChevron?: boolean
 }
 
-function MenuItem({ icon, label, onPress, color }: MenuItemProps) {
+function MenuItem({ icon, label, onPress, color, showChevron = true }: MenuItemProps) {
   return (
     <Pressable
       onPress={() => {
@@ -39,7 +47,7 @@ function MenuItem({ icon, label, onPress, color }: MenuItemProps) {
           {label}
         </Text>
       </View>
-      <ChevronRight size={18} color="#4a4239" />
+      {showChevron && <ChevronRight size={18} color="#4a4239" />}
     </Pressable>
   )
 }
@@ -47,7 +55,14 @@ function MenuItem({ icon, label, onPress, color }: MenuItemProps) {
 export default function MoreScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
-  const { signOut, profile } = useAuth()
+  const { signOut, profile, family } = useAuth()
+
+  const tierLabel =
+    profile?.subscription_tier === 'premium'
+      ? 'Premium'
+      : profile?.subscription_tier === 'lifetime'
+        ? 'Lifetime'
+        : 'Free Plan'
 
   return (
     <View style={styles.container}>
@@ -64,65 +79,133 @@ export default function MoreScreen() {
             paddingBottom: insets.bottom + 100,
           },
         ]}
+        showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>More</Text>
+        {/* Profile header */}
+        <CardEntrance delay={0}>
+          <View style={styles.profileHeader}>
+            <View style={styles.avatarCircle}>
+              <Text style={styles.avatarText}>
+                {(profile?.full_name || 'U').charAt(0).toUpperCase()}
+              </Text>
+            </View>
+            <View style={styles.profileHeaderInfo}>
+              <Text style={styles.profileName}>
+                {profile?.full_name || 'User'}
+              </Text>
+              <Text style={styles.profileTier}>{tierLabel}</Text>
+            </View>
+          </View>
+        </CardEntrance>
 
         {/* Tools section */}
-        <Text style={styles.sectionTitle}>Tools</Text>
-        <View style={styles.section}>
-          <MenuItem
-            icon={<DollarSign size={20} color="#d4a853" />}
-            label="Budget Planner"
-            onPress={() => router.push('/(screens)/budget')}
-          />
-          <MenuItem
-            icon={<ClipboardList size={20} color="#6b8f71" />}
-            label="Checklists"
-            onPress={() => router.push('/(screens)/checklists')}
-          />
-          <MenuItem
-            icon={<Compass size={20} color="#5b9bd5" />}
-            label="Dad Journey"
-            onPress={() => router.push('/(screens)/journey')}
-          />
-        </View>
+        <CardEntrance delay={80}>
+          <Text style={styles.sectionTitle}>Tools</Text>
+          <GlassCard style={styles.section}>
+            <MenuItem
+              icon={<DollarSign size={20} color="#d4a853" />}
+              label="Budget Planner"
+              onPress={() => router.push('/(screens)/budget')}
+            />
+            <MenuItem
+              icon={<ClipboardList size={20} color="#6b8f71" />}
+              label="Checklists"
+              onPress={() => router.push('/(screens)/checklists')}
+            />
+            <MenuItem
+              icon={<Compass size={20} color="#5b9bd5" />}
+              label="Dad Journey"
+              onPress={() => router.push('/(screens)/journey')}
+            />
+          </GlassCard>
+        </CardEntrance>
+
+        {/* Family section */}
+        <CardEntrance delay={160}>
+          <Text style={styles.sectionTitle}>Family</Text>
+          <GlassCard style={styles.section}>
+            <MenuItem
+              icon={<Users size={20} color="#c47a8f" />}
+              label="Family Members"
+              onPress={() => router.push('/(screens)/settings')}
+            />
+            <MenuItem
+              icon={<UserPlus size={20} color="#6b8f71" />}
+              label="Invite Partner"
+              onPress={() => router.push('/(screens)/settings')}
+            />
+          </GlassCard>
+        </CardEntrance>
 
         {/* Account section */}
-        <Text style={styles.sectionTitle}>Account</Text>
-        <View style={styles.section}>
-          <MenuItem
-            icon={<Crown size={20} color="#d4a853" />}
-            label="Upgrade to Premium"
-            onPress={() => router.push('/(screens)/upgrade')}
-          />
-          <MenuItem
-            icon={<Settings size={20} color="#7a6f62" />}
-            label="Settings"
-            onPress={() => router.push('/(screens)/settings')}
-          />
-          <MenuItem
-            icon={<LogOut size={20} color="#d4836b" />}
-            label="Sign Out"
-            onPress={signOut}
-            color="#d4836b"
-          />
-        </View>
+        <CardEntrance delay={240}>
+          <Text style={styles.sectionTitle}>Account</Text>
+          <GlassCard style={styles.section}>
+            <MenuItem
+              icon={<User size={20} color="#ede6dc" />}
+              label="Profile"
+              onPress={() => router.push('/(screens)/settings')}
+            />
+            <MenuItem
+              icon={<Bell size={20} color="#5b9bd5" />}
+              label="Notifications"
+              onPress={() => router.push('/(screens)/notifications')}
+            />
+            <MenuItem
+              icon={<CreditCard size={20} color="#d4a853" />}
+              label="Subscription"
+              onPress={() => router.push('/(screens)/upgrade')}
+            />
+            <MenuItem
+              icon={<Settings size={20} color="#7a6f62" />}
+              label="Settings"
+              onPress={() => router.push('/(screens)/settings')}
+            />
+          </GlassCard>
+        </CardEntrance>
 
-        {/* Profile info */}
-        {profile && (
-          <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>
-              {profile.full_name || 'User'}
-            </Text>
-            <Text style={styles.profileTier}>
-              {profile.subscription_tier === 'premium'
-                ? 'Premium'
-                : profile.subscription_tier === 'lifetime'
-                  ? 'Lifetime'
-                  : 'Free Plan'}
-            </Text>
-          </View>
-        )}
+        {/* Upgrade CTA for free users */}
+        {profile?.subscription_tier !== 'premium' &&
+          profile?.subscription_tier !== 'lifetime' && (
+            <CardEntrance delay={320}>
+              <Pressable
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+                  router.push('/(screens)/upgrade')
+                }}
+                style={styles.upgradeCard}
+              >
+                <LinearGradient
+                  colors={['rgba(196,112,63,0.15)', 'rgba(212,168,83,0.1)']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.upgradeGradient}
+                >
+                  <Crown size={22} color="#d4a853" />
+                  <View style={styles.upgradeInfo}>
+                    <Text style={styles.upgradeTitle}>Upgrade to Premium</Text>
+                    <Text style={styles.upgradeSubtitle}>
+                      Full timeline, partner sync & more
+                    </Text>
+                  </View>
+                  <ChevronRight size={18} color="#d4a853" />
+                </LinearGradient>
+              </Pressable>
+            </CardEntrance>
+          )}
+
+        {/* Sign Out */}
+        <CardEntrance delay={400}>
+          <GlassCard style={styles.section}>
+            <MenuItem
+              icon={<LogOut size={20} color="#d4836b" />}
+              label="Sign Out"
+              onPress={signOut}
+              color="#d4836b"
+              showChevron={false}
+            />
+          </GlassCard>
+        </CardEntrance>
       </ScrollView>
     </View>
   )
@@ -139,12 +222,45 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
   },
-  title: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 28,
-    color: '#faf6f0',
+
+  // Profile header
+  profileHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 32,
+    gap: 14,
   },
+  avatarCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(196,112,63,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(196,112,63,0.3)',
+  },
+  avatarText: {
+    fontFamily: 'PlayfairDisplay-Bold',
+    fontSize: 20,
+    color: '#c4703f',
+  },
+  profileHeaderInfo: {
+    flex: 1,
+  },
+  profileName: {
+    fontFamily: 'PlayfairDisplay-Bold',
+    fontSize: 22,
+    color: '#faf6f0',
+  },
+  profileTier: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 13,
+    color: '#7a6f62',
+    marginTop: 2,
+  },
+
+  // Section
   sectionTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
@@ -155,13 +271,12 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   section: {
-    backgroundColor: '#201c18',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
     overflow: 'hidden',
     marginBottom: 24,
+    padding: 0,
   },
+
+  // Menu items
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -184,19 +299,34 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#ede6dc',
   },
-  profileInfo: {
+
+  // Upgrade CTA
+  upgradeCard: {
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(212,168,83,0.2)',
+  },
+  upgradeGradient: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 16,
-    gap: 4,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    gap: 14,
   },
-  profileName: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 14,
-    color: '#7a6f62',
+  upgradeInfo: {
+    flex: 1,
   },
-  profileTier: {
+  upgradeTitle: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 16,
+    color: '#d4a853',
+  },
+  upgradeSubtitle: {
     fontFamily: 'Karla-Regular',
-    fontSize: 12,
-    color: '#4a4239',
+    fontSize: 13,
+    color: '#7a6f62',
+    marginTop: 2,
   },
 })
