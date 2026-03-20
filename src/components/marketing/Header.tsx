@@ -93,7 +93,7 @@ export function Header() {
       className={cn(
         'fixed top-0 left-0 right-0 z-50',
         isScrolled
-          ? 'bg-[--bg]/88 backdrop-blur-[20px] border-b border-[--border] shadow-card'
+          ? 'bg-[--surface]/95 backdrop-blur-[16px] border-b border-[--border] shadow-card'
           : 'bg-transparent'
       )}
       style={{ transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)' }}

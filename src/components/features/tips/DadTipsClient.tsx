@@ -81,8 +81,8 @@ export function DadTipsClient() {
         </div>
       </section>
 
-      {/* Topic selector — sticky */}
-      <div className="sticky top-0 z-20 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800">
+      {/* Topic selector — sticky below marketing header */}
+      <div className="sticky top-12 md:top-14 z-20 bg-[--surface]/95 backdrop-blur-[16px] border-b border-[--border]">
         <div className="max-w-2xl mx-auto">
           <TopicSelector
             topics={dadTips}
