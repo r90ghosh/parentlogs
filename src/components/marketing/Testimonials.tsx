@@ -27,19 +27,19 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section className="relative py-24 md:py-32">
-      <div className="max-w-[1100px] mx-auto px-6">
+    <section className="relative py-16 sm:py-24 md:py-32">
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Section header */}
         <RevealOnScroll className="text-center mb-16">
           <span className="section-pre justify-center">Testimonials</span>
-          <h2 className="font-display font-bold text-4xl text-[--cream] leading-[1.2] mb-12">
+          <h2 className="font-display font-bold text-3xl sm:text-4xl text-[--cream] leading-[1.2] mb-12">
             Trusted by 10,000+ dads
           </h2>
         </RevealOnScroll>
 
         {/* Single featured testimonial - like mockup */}
         <RevealOnScroll>
-          <div className="relative max-w-3xl mx-auto text-center p-8 md:p-12">
+          <div className="relative max-w-3xl mx-auto text-center p-4 sm:p-8 md:p-12">
             {/* Rotating quote mark */}
             <div
               className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/4 font-display text-[120px] leading-none text-[--cream] pointer-events-none select-none"
@@ -57,7 +57,7 @@ export function Testimonials() {
             </div>
 
             {/* Quote */}
-            <blockquote className="font-body text-xl md:text-2xl text-[--cream] leading-relaxed mb-8 italic">
+            <blockquote className="font-body text-base sm:text-xl md:text-2xl text-[--cream] leading-relaxed mb-8 italic">
               &ldquo;{testimonials[0].quote}&rdquo;
             </blockquote>
 

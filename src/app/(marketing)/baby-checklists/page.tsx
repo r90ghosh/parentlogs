@@ -38,7 +38,7 @@ export default async function PublicChecklistsPage() {
               Preparation Checklists
             </span>
 
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
               Never forget a{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-copper to-gold">
                 thing
@@ -51,20 +51,20 @@ export default async function PublicChecklistsPage() {
             </p>
 
             {/* Stats */}
-            <div className="flex items-center justify-center gap-6 md:gap-10">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 md:gap-10">
               <div className="text-center">
                 <span className="font-display text-3xl font-bold text-white">{checklists.length}</span>
                 <span className="font-ui text-sm text-[--dim] block">Checklists</span>
               </div>
 
-              <div className="w-px h-12 bg-[--border]" />
+              <div className="hidden sm:block w-px h-12 bg-[--border]" />
 
               <div className="text-center">
                 <span className="font-display text-3xl font-bold text-white">{totalItems}+</span>
                 <span className="font-ui text-sm text-[--dim] block">Items</span>
               </div>
 
-              <div className="w-px h-12 bg-[--border]" />
+              <div className="hidden sm:block w-px h-12 bg-[--border]" />
 
               <div className="text-center">
                 <span className="font-display text-3xl font-bold text-white">{freeCount}</span>

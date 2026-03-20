@@ -23,7 +23,7 @@ export function PriorityTasksCard({ tasks, onComplete, onSnooze }: PriorityTasks
   return (
     <div
       className={cn(
-        'rounded-[20px] p-6',
+        'rounded-[20px] p-4 sm:p-6',
         'bg-gradient-to-br from-[--card] to-[--surface]',
         'border border-[--border]'
       )}
@@ -71,7 +71,7 @@ export function PriorityTasksCard({ tasks, onComplete, onSnooze }: PriorityTasks
                   <div className="text-[15px] font-semibold text-[--cream] mb-1 truncate">
                     {task.title}
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-[--dim]">
+                  <div className="flex items-center gap-2 sm:gap-3 text-xs text-[--dim] flex-wrap">
                     <span className={cn('px-2 py-0.5 rounded-md text-[11px] font-medium', style.bg, style.text)}>
                       {style.icon} {task.category.replace('_', ' ')}
                     </span>

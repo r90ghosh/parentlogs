@@ -66,7 +66,7 @@ export function DashboardClient() {
   let cardIndex = 0
 
   return (
-    <div className="max-w-[1600px] mx-auto px-6 md:px-10 py-8 bg-[--bg]">
+    <div className="max-w-[1600px] mx-auto px-4 md:px-6 lg:px-10 py-6 md:py-8 bg-[--bg]">
       {/* Header with TypewriterGreeting + CopperDivider */}
       <DashboardHeader
         userName={userName}
@@ -92,7 +92,7 @@ export function DashboardClient() {
       )}
 
       {/* Two-column desktop layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4 sm:gap-6">
         {/* Left column */}
         <div className="space-y-6">
           {isLoading && leftCards.length === 0 ? (

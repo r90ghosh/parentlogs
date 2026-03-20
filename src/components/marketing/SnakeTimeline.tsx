@@ -34,8 +34,8 @@ const MAX_VISIBLE_TASKS = 6
 /* ── Skeleton ── */
 function TimelineSkeleton() {
   return (
-    <section className="py-24 md:py-32">
-      <div className="max-w-[1100px] mx-auto px-6">
+    <section className="py-16 sm:py-24 md:py-32">
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Header skeleton */}
         <div className="text-center mb-16">
           <div className="h-3 w-32 mx-auto mb-5 rounded bg-[--surface] animate-pulse" />
@@ -306,8 +306,8 @@ export function SnakeTimeline() {
   const totalDots = milestones.reduce((sum, m) => sum + m.dots.length, 0)
 
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden">
-      <div className="max-w-[1100px] mx-auto px-6">
+    <section className="py-16 sm:py-24 md:py-32 relative overflow-hidden">
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* ── Section Header ── */}
         <div className="text-center mb-14">
           <RevealOnScroll>

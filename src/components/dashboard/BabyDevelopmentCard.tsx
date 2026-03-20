@@ -27,7 +27,7 @@ export function BabyDevelopmentCard({ baby }: BabyDevelopmentCardProps) {
   return (
     <div
       className={cn(
-        'rounded-[20px] p-7 flex gap-6',
+        'rounded-[20px] p-4 sm:p-7 flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-start',
         'bg-gradient-to-br from-sage/10 to-[--card]',
         'border border-sage/20'
       )}
@@ -35,12 +35,12 @@ export function BabyDevelopmentCard({ baby }: BabyDevelopmentCardProps) {
       {/* Baby visual */}
       <div
         className={cn(
-          'w-[140px] h-[140px] rounded-full flex-shrink-0',
+          'w-24 h-24 sm:w-[140px] sm:h-[140px] rounded-full flex-shrink-0',
           'bg-gradient-to-br from-sage/20 to-sage/10',
           'flex flex-col items-center justify-center'
         )}
       >
-        <span className="text-[56px] mb-1">{baby.sizeEmoji}</span>
+        <span className="text-4xl sm:text-[56px] mb-1">{baby.sizeEmoji}</span>
         <span className="text-[13px] text-sage font-semibold">
           Size of a {baby.sizeComparison}
         </span>
@@ -54,7 +54,7 @@ export function BabyDevelopmentCard({ baby }: BabyDevelopmentCardProps) {
         </div>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
           <div className="bg-[--card-hover] p-3 rounded-xl">
             <div className="text-lg font-bold text-white">
               {baby.lengthInches}"

@@ -27,8 +27,8 @@ const painPoints = [
 
 export function ProblemSolution() {
   return (
-    <section className="relative py-24 md:py-32">
-      <div className="max-w-[1100px] mx-auto px-6">
+    <section className="relative py-16 sm:py-24 md:py-32">
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Section header */}
         <RevealOnScroll className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="font-display font-bold text-3xl md:text-4xl text-[--cream] mb-6 leading-[1.2]">

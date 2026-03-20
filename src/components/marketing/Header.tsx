@@ -182,14 +182,25 @@ export function Header() {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-[--muted] hover:text-[--cream]"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          {/* Mobile Auth + Menu */}
+          <div className="flex md:hidden items-center gap-2">
+            {isLoggedIn === true ? (
+              <Button asChild size="sm" className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-xs">
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+            ) : isLoggedIn === false ? (
+              <Button asChild variant="ghost" size="sm" className="font-ui text-sm text-[--cream]/70 hover:text-[--cream]">
+                <Link href="/login">Log In</Link>
+              </Button>
+            ) : null}
+            <button
+              className="p-2 text-[--muted] hover:text-[--cream]"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
       </div>
 

@@ -43,7 +43,7 @@ export function BriefingHero({
   }
 
   return (
-    <div className="relative bg-[--surface] border-b border-[--border] px-6 md:px-12 py-5 overflow-hidden">
+    <div className="relative bg-[--surface] border-b border-[--border] px-4 sm:px-6 md:px-12 py-5 overflow-hidden">
       {/* Radial gradient overlay */}
       <div className="absolute top-[-50%] right-[-10%] w-[400px] h-[400px] bg-[radial-gradient(circle,var(--copper-glow)_0%,transparent_70%)] pointer-events-none" />
 
@@ -62,7 +62,7 @@ export function BriefingHero({
         </button>
 
         {/* Week Numbers Navigation */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5 sm:gap-1">
           {visibleWeeks[0] > 1 && (
             <span className="text-[--dim] text-xs px-1">...</span>
           )}
@@ -71,7 +71,7 @@ export function BriefingHero({
               key={week}
               onClick={() => onNavigate(week)}
               className={cn(
-                'w-8 h-8 rounded-lg text-sm font-medium font-ui transition-all',
+                'w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-xs sm:text-sm font-medium font-ui transition-all',
                 week === viewingWeek
                   ? 'bg-copper text-[--white]'
                   : 'text-[--muted] hover:bg-[--card] hover:text-[--cream]'

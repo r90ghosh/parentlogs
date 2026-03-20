@@ -19,7 +19,7 @@ export function GracePeriodBanner() {
     <div className="bg-[--card] border border-coral/25 rounded-2xl shadow-card overflow-hidden mx-4 mt-4">
       <div className="flex items-center gap-4 p-4 pl-0">
         <div className="w-1 self-stretch bg-gradient-to-b from-coral to-gold rounded-full ml-0 flex-shrink-0" />
-        <div className="flex items-center justify-between gap-4 flex-1 pr-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 flex-1 pr-4">
           <div className="flex items-center gap-3 min-w-0">
             <div className="p-2 rounded-xl bg-coral/15 flex-shrink-0">
               <AlertTriangle className="h-5 w-5 text-coral" />

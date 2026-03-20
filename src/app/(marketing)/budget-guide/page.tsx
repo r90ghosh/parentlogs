@@ -42,7 +42,7 @@ export default async function PublicBudgetPage() {
             </span>
 
             {/* Title */}
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
               What you&apos;ll{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-copper to-gold">
                 actually spend
@@ -56,7 +56,7 @@ export default async function PublicBudgetPage() {
             </p>
 
             {/* Stats */}
-            <div className="flex items-center justify-center gap-6 md:gap-10">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 md:gap-10">
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
                   <DollarSign className="h-5 w-5 text-copper" />
@@ -65,7 +65,7 @@ export default async function PublicBudgetPage() {
                 <span className="font-ui text-sm text-[--dim]">Items Tracked</span>
               </div>
 
-              <div className="w-px h-12 bg-[--border]" />
+              <div className="hidden sm:block w-px h-12 bg-[--border]" />
 
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
@@ -75,7 +75,7 @@ export default async function PublicBudgetPage() {
                 <span className="font-ui text-sm text-[--dim]">Categories</span>
               </div>
 
-              <div className="w-px h-12 bg-[--border]" />
+              <div className="hidden sm:block w-px h-12 bg-[--border]" />
 
               <div className="text-center">
                 <span className="font-display text-2xl font-bold text-white">

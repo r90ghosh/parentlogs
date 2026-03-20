@@ -71,8 +71,8 @@ const colorClasses = {
 
 export function ContentPreview() {
   return (
-    <section className="relative py-24 md:py-32">
-      <div className="max-w-[1100px] mx-auto px-6">
+    <section className="relative py-16 sm:py-24 md:py-32">
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Section header */}
         <RevealOnScroll className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>

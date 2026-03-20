@@ -13,7 +13,7 @@ export function MomStatusCard({ partnerName, symptoms, dadTip }: MomStatusCardPr
   return (
     <div
       className={cn(
-        'rounded-[20px] p-7',
+        'rounded-[20px] p-4 sm:p-7',
         'bg-gradient-to-br from-[--rose-dim] to-[--card]',
         'border border-[--rose-dim]'
       )}

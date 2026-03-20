@@ -129,7 +129,7 @@ export function MoodCheckinCard() {
             key={level}
             onClick={() => handleMoodSelect(level)}
             className={cn(
-              'flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all',
+              'flex flex-col items-center gap-1 px-2 sm:px-3 py-1.5 rounded-xl transition-all',
               'hover:bg-[--card-hover]',
               selectedMood === level
                 ? 'bg-[--card-hover] ring-1 ring-copper/30 scale-110'

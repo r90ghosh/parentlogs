@@ -50,22 +50,22 @@ const features = [
 
 export function Features() {
   return (
-    <section id="features" className="relative py-24 md:py-32">
-      <div className="max-w-[1100px] mx-auto px-6">
+    <section id="features" className="relative py-16 sm:py-24 md:py-32">
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Section header */}
         <RevealOnScroll className="text-center mb-12">
           <span className="section-pre justify-center">Features</span>
-          <h2 className="font-display font-bold text-4xl text-[--cream] leading-[1.2] mb-12">
+          <h2 className="font-display font-bold text-3xl sm:text-4xl text-[--cream] leading-[1.2] mb-12">
             Everything you need,<br />nothing you don&apos;t
           </h2>
         </RevealOnScroll>
 
         {/* Features grid - 2 columns like mockup */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5">
           {features.map((feature, index) => (
             <RevealOnScroll key={index} delay={80 + index * 80}>
               <Card3DTilt maxTilt={3} gloss>
-                <div className="card-copper-top p-8 rounded-xl bg-[--card] border border-[--border] hover:border-[--border-hover] shadow-card transition-all duration-300 cursor-default">
+                <div className="card-copper-top p-5 sm:p-8 rounded-xl bg-[--card] border border-[--border] hover:border-[--border-hover] shadow-card transition-all duration-300 cursor-default">
                   {/* Icon */}
                   <div
                     className="w-11 h-11 rounded-full flex items-center justify-center mb-4"

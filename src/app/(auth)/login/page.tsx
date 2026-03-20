@@ -77,7 +77,7 @@ function LoginContent() {
           {/* Top accent bar */}
           <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
 
-          <div className="px-8 py-8 space-y-6">
+          <div className="px-5 sm:px-8 py-6 sm:py-8 space-y-6">
             {/* Header */}
             <motion.div
               initial={{ opacity: 0, y: -10 }}

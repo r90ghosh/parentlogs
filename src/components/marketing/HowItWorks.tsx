@@ -27,12 +27,12 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative py-24 md:py-32 overflow-hidden">
-      <div className="max-w-[1100px] mx-auto px-6">
+    <section id="how-it-works" className="relative py-16 sm:py-24 md:py-32 overflow-hidden">
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Section header */}
         <RevealOnScroll className="text-center mb-16">
           <span className="section-pre justify-center">How It Works</span>
-          <h2 className="font-display font-bold text-4xl text-[--cream] leading-[1.2] mb-12">
+          <h2 className="font-display font-bold text-3xl sm:text-4xl text-[--cream] leading-[1.2] mb-12">
             Up and running in 2 minutes
           </h2>
         </RevealOnScroll>
@@ -58,7 +58,7 @@ export function HowItWorks() {
                 <div className="relative text-center">
                   {/* Step number - flip in */}
                   <div
-                    className="font-display font-bold text-[56px] text-copper leading-none mb-4"
+                    className="font-display font-bold text-4xl sm:text-[56px] text-copper leading-none mb-4"
                     style={{ opacity: 0.3 }}
                   >
                     {step.number}

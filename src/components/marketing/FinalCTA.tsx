@@ -8,7 +8,7 @@ import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 
 export function FinalCTA() {
   return (
-    <section className="relative py-24 md:py-32 overflow-hidden">
+    <section className="relative py-16 sm:py-24 md:py-32 overflow-hidden">
       {/* Breathing glow behind */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] rounded-full pointer-events-none"
@@ -19,7 +19,7 @@ export function FinalCTA() {
         aria-hidden="true"
       />
 
-      <div className="relative max-w-[560px] mx-auto px-6 text-center z-[1]">
+      <div className="relative max-w-[560px] mx-auto px-4 sm:px-6 text-center z-[1]">
         <RevealOnScroll>
           <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-[--cream] leading-[1.2] mb-6">
             Ready to step up?

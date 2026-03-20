@@ -178,7 +178,7 @@ export function TaskDetailSheet({
           )}
 
           {/* Details grid */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {task.time_estimate_minutes && (
               <div className="rounded-lg bg-[--card] p-3">
                 <div className="flex items-center gap-2 text-[--muted] mb-1">
@@ -245,7 +245,7 @@ export function TaskDetailSheet({
               </Button>
 
               {/* Snooze options */}
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <Button
                   variant="outline"
                   onClick={() => {

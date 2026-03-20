@@ -70,7 +70,7 @@ function SplitLetterHeading() {
   return (
     <h1
       ref={ref}
-      className="font-display font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[--cream] leading-[1.1] mb-6"
+      className="font-display font-bold text-3xl sm:text-4xl md:text-5xl lg:text-7xl text-[--cream] leading-[1.1] mb-6"
       aria-label="The operating system for modern fatherhood"
     >
       {renderChars(line1)}
@@ -252,7 +252,7 @@ export function Hero() {
     <section className="relative min-h-screen flex flex-col justify-center overflow-hidden" style={{ padding: '100px 0 80px' }}>
       <ParallaxOrbs />
 
-      <div className="relative max-w-[1100px] mx-auto px-6 z-[1]">
+      <div className="relative max-w-[1100px] mx-auto px-4 sm:px-6 z-[1]">
         <div className="text-center">
           {/* Pre-label */}
           <RevealOnScroll>
@@ -299,7 +299,7 @@ export function Hero() {
 
           {/* Trust bar stats */}
           <RevealOnScroll delay={400}>
-            <div className="mt-16 flex flex-wrap justify-center gap-8 md:gap-12">
+            <div className="mt-12 sm:mt-16 flex flex-wrap justify-center gap-4 sm:gap-8 md:gap-12">
               {[
                 { value: '10,000+', label: 'Active Dads' },
                 { value: '200+', label: 'Pre-loaded Tasks' },
@@ -307,7 +307,7 @@ export function Hero() {
                 { value: '4.9/5', label: 'User Rating' },
               ].map((stat, i) => (
                 <div key={i} className="text-center">
-                  <p className="font-display font-bold text-3xl md:text-4xl text-[--cream] mb-1">{stat.value}</p>
+                  <p className="font-display font-bold text-2xl sm:text-3xl md:text-4xl text-[--cream] mb-1">{stat.value}</p>
                   <p className="font-ui text-[11px] uppercase tracking-[0.08em] text-[--muted]">{stat.label}</p>
                 </div>
               ))}

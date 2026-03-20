@@ -64,23 +64,23 @@ const plans = [
 
 export function Pricing() {
   return (
-    <section id="pricing" className="relative py-24 md:py-32">
-      <div className="max-w-[1100px] mx-auto px-6">
+    <section id="pricing" className="relative py-16 sm:py-24 md:py-32">
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Section header */}
         <RevealOnScroll className="text-center mb-16">
           <span className="section-pre justify-center">Pricing</span>
-          <h2 className="font-display font-bold text-4xl text-[--cream] leading-[1.2] mb-12">
+          <h2 className="font-display font-bold text-3xl sm:text-4xl text-[--cream] leading-[1.2] mb-12">
             Choose your plan
           </h2>
         </RevealOnScroll>
 
         {/* Pricing cards — 3 columns */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 items-start">
           {plans.map((plan, index) => (
             <RevealOnScroll key={index} delay={80 + index * 120}>
               <Card3DTilt maxTilt={plan.highlighted ? 4 : 3} gloss>
                 <div
-                  className={`relative rounded-2xl flex flex-col p-8 transition-all duration-300 ${
+                  className={`relative rounded-2xl flex flex-col p-5 sm:p-8 transition-all duration-300 ${
                     plan.highlighted
                       ? 'bg-gradient-to-b from-gold/8 to-[--card] border-2 border-gold/40 shadow-gold'
                       : 'bg-[--card] border border-[--border] shadow-card'
@@ -114,7 +114,7 @@ export function Pricing() {
 
                   {/* Price */}
                   <div className="mb-1">
-                    <span className="font-display font-bold text-4xl text-[--cream]">{plan.price}</span>
+                    <span className="font-display font-bold text-3xl sm:text-4xl text-[--cream]">{plan.price}</span>
                     {plan.period && <span className="font-ui text-[--muted] text-sm">{plan.period}</span>}
                   </div>
                   <p className="font-ui text-xs text-[--muted] mb-6">{plan.periodNote}</p>
