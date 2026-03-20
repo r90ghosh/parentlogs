@@ -28,6 +28,8 @@ import {
   ClipboardList,
   Bell,
   BookOpen,
+  FileText,
+  Lightbulb,
   UserPlus,
   Users,
   Crown,
@@ -49,6 +51,8 @@ const mainNavItems = [
 const moreToolItems = [
   { href: '/checklists', label: 'Checklists', icon: ClipboardList },
   { href: '/budget', label: 'Budget', icon: DollarSign },
+  { href: '/content', label: 'Articles', icon: FileText },
+  { href: '/tips', label: 'Dad Tips', icon: Lightbulb },
 ]
 
 const moreFamilyItems = [
