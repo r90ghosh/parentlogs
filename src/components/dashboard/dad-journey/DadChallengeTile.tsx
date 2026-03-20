@@ -2,10 +2,47 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import ReactMarkdown from 'react-markdown'
 import { ChevronDown, ChevronUp, CheckCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { PaywallOverlay } from '@/components/shared/paywall-overlay'
 import { DadChallengeContent, PillarConfig } from '@/types/dad-journey'
+
+function Markdown({ children }: { children: string }) {
+  return (
+    <ReactMarkdown
+      components={{
+        h2: ({ children }) => (
+          <h4 className="font-display text-base font-semibold text-white mt-4 mb-2 first:mt-0">{children}</h4>
+        ),
+        h3: ({ children }) => (
+          <h5 className="font-display text-sm font-semibold text-white mt-3 mb-1">{children}</h5>
+        ),
+        p: ({ children }) => (
+          <p className="text-sm font-body text-[--cream] leading-relaxed mb-3 last:mb-0">{children}</p>
+        ),
+        strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+        em: ({ children }) => <em className="italic">{children}</em>,
+        ul: ({ children }) => <ul className="list-disc pl-5 mb-3 space-y-1 text-sm font-body text-[--cream]">{children}</ul>,
+        ol: ({ children }) => <ol className="list-decimal pl-5 mb-3 space-y-1 text-sm font-body text-[--cream]">{children}</ol>,
+        li: ({ children }) => <li>{children}</li>,
+        blockquote: ({ children }) => (
+          <blockquote className="border-l-2 border-copper/40 pl-3 my-2 italic text-sm font-body text-[--cream]">{children}</blockquote>
+        ),
+        a: ({ href, children }) => (
+          <a href={href} target="_blank" rel="noopener noreferrer" className="text-copper hover:text-copper/80 underline underline-offset-2">{children}</a>
+        ),
+        hr: () => <hr className="my-3 border-[--border]/60" />,
+        // Downgrade h1 to h4 since this is inside a tile
+        h1: ({ children }) => (
+          <h4 className="font-display text-base font-semibold text-white mt-4 mb-2 first:mt-0">{children}</h4>
+        ),
+      }}
+    >
+      {children}
+    </ReactMarkdown>
+  )
+}
 
 interface DadChallengeTileProps {
   content: DadChallengeContent
@@ -66,13 +103,7 @@ export function DadChallengeTile({
             <div className="px-4 pb-5 space-y-6">
               {/* Narrative */}
               {content.narrative && (
-                <div className="space-y-3">
-                  {content.narrative.split('\n\n').map((paragraph, i) => (
-                    <p key={i} className="text-sm font-body text-[--cream] leading-relaxed">
-                      {paragraph.trim()}
-                    </p>
-                  ))}
-                </div>
+                <Markdown>{content.narrative}</Markdown>
               )}
 
               {/* Action Items */}
@@ -90,7 +121,9 @@ export function DadChallengeTile({
                         <CheckCircle className="h-5 w-5 text-copper flex-shrink-0 mt-0.5" />
                         <div>
                           <p className="font-medium font-ui text-[--cream] text-sm">{item.title}</p>
-                          <p className="text-sm font-body text-[--muted] mt-0.5">{item.description}</p>
+                          <div className="text-sm font-body text-[--muted] mt-0.5">
+                            <Markdown>{item.description}</Markdown>
+                          </div>
                         </div>
                       </div>
                     ))}
