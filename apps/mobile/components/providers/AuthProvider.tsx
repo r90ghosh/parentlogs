@@ -89,7 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const atRoot = !segments[0]
 
     if (!session && !inAuthGroup) {
-      router.replace('/(auth)/login')
+      router.replace('/(auth)/landing')
     } else if (session && (inAuthGroup || atRoot)) {
       if (!profile?.onboarding_completed) {
         router.replace('/(onboarding)/role')
@@ -110,7 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await supabase.auth.signOut()
     setProfile(null)
     setFamily(null)
-    router.replace('/(auth)/login')
+    router.replace('/(auth)/landing')
   }
 
   const refreshProfile = async () => {

@@ -46,6 +46,11 @@ export default (): ExpoConfig => ({
       color: "#c4703f",
     }],
   ],
+  extra: {
+    eas: {
+      projectId: "4ae2d850-713c-45fb-9756-4d5cf606299d",
+    },
+  },
   experiments: {
     typedRoutes: true,
   },
