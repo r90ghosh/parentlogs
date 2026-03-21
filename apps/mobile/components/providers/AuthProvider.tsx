@@ -2,6 +2,7 @@ import { useEffect, useState, createContext, useContext } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useSegments } from 'expo-router'
 import { pushNotificationService } from '@/services/push-notification-service'
+import { initRevenueCat } from './RevenueCatProvider'
 import type { Session, User } from '@supabase/supabase-js'
 
 interface Profile {
@@ -68,6 +69,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(session)
       if (session?.user) {
         await fetchProfile(session.user.id)
+        // Initialize RevenueCat with user ID
+        initRevenueCat(session.user.id)
         // Register for push notifications (fire and forget)
         pushNotificationService.register(session.user.id).catch(() => {})
       } else {

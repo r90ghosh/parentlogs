@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   View,
   Text,
@@ -26,6 +26,7 @@ import type { PurchasesOffering, PurchasesPackage } from 'react-native-purchases
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { useRevenueCat, ENTITLEMENT_ID } from '@/components/providers/RevenueCatProvider'
 import { subscriptionMobileService } from '@/services/subscription-mobile-service'
 
 type PlanKey = 'monthly' | 'annual' | 'lifetime'
@@ -96,18 +97,14 @@ export default function UpgradeScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { user, refreshProfile } = useAuth()
-  const [offering, setOffering] = useState<PurchasesOffering | null>(null)
+  const { currentOffering } = useRevenueCat()
   const [selectedPlan, setSelectedPlan] = useState<PlanKey>('annual')
   const [purchasing, setPurchasing] = useState(false)
   const [restoring, setRestoring] = useState(false)
 
-  useEffect(() => {
-    subscriptionMobileService.getOfferings().then(setOffering)
-  }, [])
-
-  const plans: PlanConfig[] = offering
+  const plans: PlanConfig[] = currentOffering
     ? FALLBACK_PLANS.map((plan) => {
-        const pkg = getPackageForPlan(offering, plan.key)
+        const pkg = getPackageForPlan(currentOffering, plan.key)
         if (!pkg) return plan
         return {
           ...plan,
@@ -122,7 +119,7 @@ export default function UpgradeScreen() {
     : FALLBACK_PLANS
 
   async function handlePurchase() {
-    const pkg = getPackageForPlan(offering, selectedPlan)
+    const pkg = getPackageForPlan(currentOffering, selectedPlan)
     if (!pkg) {
       Alert.alert(
         'Not Available',
@@ -152,7 +149,7 @@ export default function UpgradeScreen() {
     setRestoring(true)
     try {
       const customerInfo = await subscriptionMobileService.restorePurchases()
-      if (customerInfo.entitlements.active['premium']) {
+      if (customerInfo.entitlements.active[ENTITLEMENT_ID]) {
         await refreshProfile()
         Alert.alert('Restored!', 'Your premium access has been restored.', [
           { text: 'OK', onPress: () => router.back() },

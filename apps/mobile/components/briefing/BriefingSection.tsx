@@ -25,23 +25,15 @@ export function BriefingSection({
 }: BriefingSectionProps) {
   const [expanded, setExpanded] = useState(defaultExpanded)
   const rotation = useSharedValue(defaultExpanded ? 180 : 0)
-  const height = useSharedValue(defaultExpanded ? 1 : 0)
 
   const toggleExpanded = () => {
     const next = !expanded
     setExpanded(next)
     rotation.value = withTiming(next ? 180 : 0, { duration: 250 })
-    height.value = withTiming(next ? 1 : 0, { duration: 250 })
   }
 
   const chevronStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${rotation.value}deg` }],
-  }))
-
-  const contentStyle = useAnimatedStyle(() => ({
-    opacity: height.value,
-    maxHeight: height.value === 0 ? 0 : undefined,
-    overflow: 'hidden' as const,
   }))
 
   return (
@@ -56,9 +48,9 @@ export function BriefingSection({
         </Animated.View>
       </Pressable>
       {expanded && (
-        <Animated.View style={[styles.content, contentStyle]}>
+        <View style={styles.content}>
           {children}
-        </Animated.View>
+        </View>
       )}
     </GlassCard>
   )

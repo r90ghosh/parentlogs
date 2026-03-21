@@ -8,6 +8,7 @@ import {
   Alert,
   ActivityIndicator,
   Share,
+  Linking,
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -25,8 +26,10 @@ import {
   Copy,
   Crown,
   Share2,
+  ExternalLink,
 } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { useRevenueCat } from '@/components/providers/RevenueCatProvider'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import * as Haptics from 'expo-haptics'
@@ -86,6 +89,7 @@ export default function SettingsScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { signOut, profile, family, user } = useAuth()
+  const { isPro } = useRevenueCat()
   const [deletingAccount, setDeletingAccount] = useState(false)
 
   const tierLabel =
@@ -296,8 +300,25 @@ export default function SettingsScreen() {
                 </View>
               </View>
             </View>
-            {profile?.subscription_tier !== 'premium' &&
-              profile?.subscription_tier !== 'lifetime' && (
+            {isPro || profile?.subscription_tier === 'premium' || profile?.subscription_tier === 'lifetime' ? (
+                <SettingsRow
+                  icon={<ExternalLink size={18} color="#d4a853" />}
+                  label="Manage Subscription"
+                  onPress={() => {
+                    Alert.alert(
+                      'Manage Subscription',
+                      'You can manage or cancel your subscription in your device settings.',
+                      [
+                        { text: 'Cancel', style: 'cancel' },
+                        {
+                          text: 'Open Settings',
+                          onPress: () => Linking.openURL('https://apps.apple.com/account/subscriptions'),
+                        },
+                      ]
+                    )
+                  }}
+                />
+              ) : (
                 <SettingsRow
                   icon={<Crown size={18} color="#d4a853" />}
                   label="Upgrade to Premium"
