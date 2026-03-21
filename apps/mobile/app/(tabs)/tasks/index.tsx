@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import {
   View,
   Text,
@@ -11,11 +11,17 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useQueryClient } from '@tanstack/react-query'
-import { ListFilter } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useTasks, useCompleteTask, useSnoozeTask } from '@/hooks/use-tasks'
 import { CardEntrance, StaggerList } from '@/components/animations'
-import { TaskItem } from '@/components/tasks'
+import {
+  TaskItem,
+  TaskStatsRow,
+  TaskFilterTabs,
+  TaskSectionHeader,
+} from '@/components/tasks'
+import type { StatFilter } from '@/components/tasks'
+import type { TaskTab } from '@/components/tasks'
 import {
   TIMELINE_CATEGORIES,
   getCurrentTimelineCategory,
@@ -23,27 +29,27 @@ import {
   groupTasksByTimePeriod,
 } from '@tdc/shared/utils/task-timeline'
 import type { TimelineCategory } from '@tdc/shared/utils/task-timeline'
-import type { TaskAssignee, FamilyTask, FamilyStage } from '@tdc/shared/types'
-
-const ASSIGNEE_FILTERS: { label: string; value: TaskAssignee | undefined }[] = [
-  { label: 'All', value: undefined },
-  { label: 'Dad', value: 'dad' },
-  { label: 'Mom', value: 'mom' },
-  { label: 'Both', value: 'both' },
-]
+import type { FamilyStage, TaskStats } from '@tdc/shared/types'
+import {
+  isToday,
+  isPast,
+  startOfDay,
+  startOfWeek,
+  endOfWeek,
+  addWeeks,
+} from 'date-fns'
 
 export default function TasksScreen() {
   const insets = useSafeAreaInsets()
   const queryClient = useQueryClient()
-  const { family } = useAuth()
+  const { family, profile } = useAuth()
   const timelineScrollRef = useRef<ScrollView>(null)
 
-  const [selectedAssignee, setSelectedAssignee] = useState<TaskAssignee | undefined>(undefined)
+  const [activeTab, setActiveTab] = useState<TaskTab>('active')
+  const [statFilter, setStatFilter] = useState<StatFilter | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<TimelineCategory | null>(null)
 
-  const { data: tasks, isLoading, isRefetching } = useTasks({
-    assignee: selectedAssignee,
-  })
+  const { data: tasks, isLoading, isRefetching } = useTasks()
   const completeTask = useCompleteTask()
   const snoozeTask = useSnoozeTask()
 
@@ -61,19 +67,11 @@ export default function TasksScreen() {
     ? getCurrentTimelineCategory(timelineSource)
     : null
 
-  // Auto-select current category on mount
-  useEffect(() => {
-    if (currentCategory && !selectedCategory) {
-      setSelectedCategory(currentCategory)
-    }
-  }, [currentCategory])
-
   // Auto-scroll timeline to current category
   useEffect(() => {
     if (currentCategory && timelineScrollRef.current) {
       const idx = TIMELINE_CATEGORIES.findIndex((c) => c.id === currentCategory)
       if (idx >= 0) {
-        // Each pill is ~100px wide, scroll to center it
         const offset = Math.max(0, idx * 100 - 60)
         timelineScrollRef.current.scrollTo({ x: offset, animated: true })
       }
@@ -84,30 +82,152 @@ export default function TasksScreen() {
     queryClient.invalidateQueries({ queryKey: ['tasks'] })
   }, [queryClient])
 
-  // Filter tasks by selected timeline category
-  const filteredTasks = (tasks ?? []).filter((task) => {
-    if (!selectedCategory || !timelineSource) return true
-    const category = getTaskTimelineCategory(task.due_date, timelineSource)
-    return category === selectedCategory
-  })
+  // Determine user role for partner filtering
+  const userRole = profile?.role ?? 'dad'
+  const partnerRole = userRole === 'dad' ? 'mom' : 'dad'
 
-  // Group filtered tasks by time period
-  const pendingTasks = filteredTasks.filter(
-    (t) => t.status === 'pending' || t.status === 'snoozed'
-  )
-  const groups = groupTasksByTimePeriod(pendingTasks)
+  // Compute task stats
+  const allTasks = tasks ?? []
+  const stats: TaskStats = useMemo(() => {
+    const today = startOfDay(new Date())
+    const weekStart = startOfWeek(today, { weekStartsOn: 1 })
+    const weekEnd = endOfWeek(today, { weekStartsOn: 1 })
+
+    const pending = allTasks.filter(
+      (t) => t.status === 'pending' || t.status === 'snoozed'
+    )
+
+    return {
+      dueToday: pending.filter((t) => isToday(new Date(t.due_date))).length,
+      thisWeek: pending.filter((t) => {
+        const d = new Date(t.due_date)
+        return d >= weekStart && d <= weekEnd
+      }).length,
+      completed: allTasks.filter((t) => t.status === 'completed').length,
+      partnerTasks: pending.filter(
+        (t) => t.assigned_to === partnerRole
+      ).length,
+      catchUpQueue: pending.filter((t) => {
+        const d = new Date(t.due_date)
+        return isPast(d) && !isToday(d)
+      }).length,
+    }
+  }, [allTasks, partnerRole])
+
+  // When a stat card is tapped, override tab + clear timeline
+  const handleStatFilter = useCallback((filter: StatFilter | null) => {
+    setStatFilter(filter)
+    if (filter) {
+      // Map stat filter to the matching tab
+      const tabMap: Record<StatFilter, TaskTab> = {
+        'due-today': 'active',
+        'this-week': 'active',
+        completed: 'completed',
+        partner: 'partner',
+        'catch-up': 'catch-up',
+      }
+      setActiveTab(tabMap[filter])
+      setSelectedCategory(null)
+    }
+  }, [])
+
+  // When a tab is tapped, clear stat filter
+  const handleTabChange = useCallback((tab: TaskTab) => {
+    setActiveTab(tab)
+    setStatFilter(null)
+    setSelectedCategory(null)
+  }, [])
+
+  // Filter tasks based on active tab, stat filter, and timeline
+  const filteredTasks = useMemo(() => {
+    let result = [...allTasks]
+    const today = startOfDay(new Date())
+    const weekEnd = endOfWeek(today, { weekStartsOn: 1 })
+    const comingUpEnd = addWeeks(today, 4)
+
+    // Step 1: Filter by tab
+    switch (activeTab) {
+      case 'active':
+        result = result.filter(
+          (t) => t.status === 'pending' || t.status === 'snoozed'
+        )
+        break
+      case 'my-tasks':
+        result = result.filter(
+          (t) =>
+            (t.status === 'pending' || t.status === 'snoozed') &&
+            (t.assigned_to === userRole ||
+              t.assigned_to === 'both' ||
+              t.assigned_to === 'either')
+        )
+        break
+      case 'partner':
+        result = result.filter(
+          (t) =>
+            (t.status === 'pending' || t.status === 'snoozed') &&
+            (t.assigned_to === partnerRole || t.assigned_to === 'both')
+        )
+        break
+      case 'completed':
+        result = result.filter((t) => t.status === 'completed')
+        break
+      case 'catch-up':
+        result = result.filter((t) => {
+          const d = new Date(t.due_date)
+          return (
+            (t.status === 'pending' || t.status === 'snoozed') &&
+            isPast(d) &&
+            !isToday(d)
+          )
+        })
+        break
+    }
+
+    // Step 2: Apply stat filter refinement (narrower than tab)
+    if (statFilter === 'due-today') {
+      result = result.filter((t) => isToday(new Date(t.due_date)))
+    } else if (statFilter === 'this-week') {
+      result = result.filter((t) => {
+        const d = new Date(t.due_date)
+        return d >= today && d <= weekEnd
+      })
+    }
+
+    // Step 3: Apply timeline category filter
+    if (selectedCategory && timelineSource) {
+      result = result.filter((task) => {
+        const category = getTaskTimelineCategory(task.due_date, timelineSource)
+        return category === selectedCategory
+      })
+    }
+
+    return result
+  }, [allTasks, activeTab, statFilter, selectedCategory, userRole, partnerRole, timelineSource])
+
+  // Group tasks by time period for the default active view
+  const showGroupedView =
+    activeTab === 'active' && !selectedCategory && !statFilter
+  const groups = useMemo(() => {
+    if (!showGroupedView) return null
+    return groupTasksByTimePeriod(filteredTasks)
+  }, [filteredTasks, showGroupedView])
+
+  // For "Coming Up" section — limit to 5 tasks with a max 4 week window
+  const comingUpTasks = useMemo(() => {
+    if (!groups) return []
+    const cutoff = addWeeks(new Date(), 4)
+    return groups.future
+      .filter((t) => new Date(t.due_date) <= cutoff)
+      .slice(0, 5)
+  }, [groups])
 
   const handleComplete = useCallback(
-    (id: string) => {
-      completeTask.mutate(id)
-    },
+    (id: string) => completeTask.mutate(id),
     [completeTask]
   )
 
   const handleSnooze = useCallback(
-    (id: string) => {
-      snoozeTask.mutate(id)
-    },
+    (id: string) => snoozeTask.mutate(id),
     [snoozeTask]
   )
 
@@ -118,8 +238,25 @@ export default function TasksScreen() {
         style={StyleSheet.absoluteFill}
       />
 
+      {/* Sticky header area */}
       <View style={[styles.headerArea, { paddingTop: insets.top + 12 }]}>
         <Text style={styles.pageTitle}>Tasks</Text>
+
+        {/* Stats Row */}
+        <TaskStatsRow
+          stats={stats}
+          activeFilter={statFilter}
+          onFilterPress={handleStatFilter}
+        />
+
+        {/* Filter Tabs */}
+        <View style={styles.filterTabsWrap}>
+          <TaskFilterTabs
+            activeTab={activeTab}
+            onTabPress={handleTabChange}
+            catchUpCount={stats.catchUpQueue}
+          />
+        </View>
 
         {/* Timeline bar */}
         <ScrollView
@@ -135,7 +272,11 @@ export default function TasksScreen() {
             return (
               <Pressable
                 key={cat.id}
-                onPress={() => setSelectedCategory(cat.id)}
+                onPress={() =>
+                  setSelectedCategory(
+                    selectedCategory === cat.id ? null : cat.id
+                  )
+                }
                 style={[
                   styles.timelinePill,
                   isSelected && styles.timelinePillSelected,
@@ -146,45 +287,21 @@ export default function TasksScreen() {
                   style={[
                     styles.timelinePillText,
                     isSelected && styles.timelinePillTextSelected,
+                    isCurrent && !isSelected && styles.timelinePillTextCurrent,
                   ]}
                 >
                   {cat.label}
                 </Text>
-              </Pressable>
-            )
-          })}
-        </ScrollView>
-
-        {/* Assignee filter chips */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filterContent}
-          style={styles.filterScroll}
-        >
-          <ListFilter size={14} color="#7a6f62" style={{ marginRight: 8 }} />
-          {ASSIGNEE_FILTERS.map((filter) => {
-            const isActive = selectedAssignee === filter.value
-            return (
-              <Pressable
-                key={filter.label}
-                onPress={() => setSelectedAssignee(filter.value)}
-                style={[styles.filterChip, isActive && styles.filterChipActive]}
-              >
-                <Text
-                  style={[
-                    styles.filterChipText,
-                    isActive && styles.filterChipTextActive,
-                  ]}
-                >
-                  {filter.label}
-                </Text>
+                {isCurrent && (
+                  <View style={styles.currentDot} />
+                )}
               </Pressable>
             )
           })}
         </ScrollView>
       </View>
 
+      {/* Task content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#c4703f" />
@@ -206,93 +323,240 @@ export default function TasksScreen() {
             />
           }
         >
-          {/* Catch Up (previous tasks) */}
-          {groups.previous.length > 0 && (
-            <TaskSection
-              title="Catch Up"
-              titleColor="#d4a853"
-              tasks={groups.previous}
-              onComplete={handleComplete}
-              onSnooze={handleSnooze}
-            />
-          )}
+          {showGroupedView && groups ? (
+            /* Grouped view: Due Today / This Week / Coming Up */
+            <>
+              {/* Due Today */}
+              {groups.current.filter((t) =>
+                isToday(new Date(t.due_date))
+              ).length > 0 && (
+                <CardEntrance delay={0}>
+                  <View style={styles.section}>
+                    <TaskSectionHeader
+                      title="Due Today"
+                      count={
+                        groups.current.filter((t) =>
+                          isToday(new Date(t.due_date))
+                        ).length
+                      }
+                      accentColor="#c4703f"
+                    />
+                    <StaggerList staggerMs={60}>
+                      {groups.current
+                        .filter((t) => isToday(new Date(t.due_date)))
+                        .map((task) => (
+                          <View key={task.id} style={styles.taskItemWrapper}>
+                            <TaskItem
+                              task={task}
+                              onComplete={handleComplete}
+                              onSnooze={handleSnooze}
+                            />
+                          </View>
+                        ))}
+                    </StaggerList>
+                  </View>
+                </CardEntrance>
+              )}
 
-          {/* This Week */}
-          {groups.current.length > 0 && (
-            <TaskSection
-              title="This Week"
-              titleColor="#faf6f0"
-              tasks={groups.current}
-              onComplete={handleComplete}
-              onSnooze={handleSnooze}
-            />
-          )}
+              {/* Catch Up (past due) */}
+              {groups.previous.length > 0 && (
+                <CardEntrance delay={80}>
+                  <View style={styles.section}>
+                    <TaskSectionHeader
+                      title="Catch Up"
+                      count={groups.previous.length}
+                      accentColor="#d4a853"
+                    />
+                    <StaggerList staggerMs={60}>
+                      {groups.previous.map((task) => (
+                        <View key={task.id} style={styles.taskItemWrapper}>
+                          <TaskItem
+                            task={task}
+                            onComplete={handleComplete}
+                            onSnooze={handleSnooze}
+                          />
+                        </View>
+                      ))}
+                    </StaggerList>
+                  </View>
+                </CardEntrance>
+              )}
 
-          {/* Coming Up */}
-          {groups.future.length > 0 && (
-            <TaskSection
-              title="Coming Up"
-              titleColor="#7a6f62"
-              tasks={groups.future}
-              onComplete={handleComplete}
-              onSnooze={handleSnooze}
-            />
+              {/* This Week (excluding today's tasks already shown above) */}
+              {groups.current.filter(
+                (t) => !isToday(new Date(t.due_date))
+              ).length > 0 && (
+                <CardEntrance delay={160}>
+                  <View style={styles.section}>
+                    <TaskSectionHeader
+                      title="This Week"
+                      count={
+                        groups.current.filter(
+                          (t) => !isToday(new Date(t.due_date))
+                        ).length
+                      }
+                    />
+                    <StaggerList staggerMs={60}>
+                      {groups.current
+                        .filter((t) => !isToday(new Date(t.due_date)))
+                        .map((task) => (
+                          <View key={task.id} style={styles.taskItemWrapper}>
+                            <TaskItem
+                              task={task}
+                              onComplete={handleComplete}
+                              onSnooze={handleSnooze}
+                            />
+                          </View>
+                        ))}
+                    </StaggerList>
+                  </View>
+                </CardEntrance>
+              )}
+
+              {/* Coming Up */}
+              {comingUpTasks.length > 0 && (
+                <CardEntrance delay={240}>
+                  <View style={styles.section}>
+                    <TaskSectionHeader
+                      title="Coming Up"
+                      count={comingUpTasks.length}
+                      accentColor="#7a6f62"
+                      dimmed
+                    />
+                    <StaggerList staggerMs={60}>
+                      {comingUpTasks.map((task) => (
+                        <View key={task.id} style={styles.taskItemWrapper}>
+                          <TaskItem
+                            task={task}
+                            onComplete={handleComplete}
+                            onSnooze={handleSnooze}
+                          />
+                        </View>
+                      ))}
+                    </StaggerList>
+                    {groups.future.length > 5 && (
+                      <Text style={styles.moreText}>
+                        +{groups.future.length - 5} more tasks ahead
+                      </Text>
+                    )}
+                  </View>
+                </CardEntrance>
+              )}
+            </>
+          ) : (
+            /* Flat list view: filtered/tab/timeline results */
+            <>
+              {filteredTasks.length > 0 ? (
+                <View style={styles.section}>
+                  <TaskSectionHeader
+                    title={getSectionTitle(activeTab, statFilter, selectedCategory)}
+                    count={filteredTasks.length}
+                    accentColor={getSectionColor(activeTab, statFilter)}
+                  />
+                  <StaggerList staggerMs={50}>
+                    {filteredTasks.map((task) => (
+                      <View key={task.id} style={styles.taskItemWrapper}>
+                        <TaskItem
+                          task={task}
+                          onComplete={handleComplete}
+                          onSnooze={handleSnooze}
+                        />
+                      </View>
+                    ))}
+                  </StaggerList>
+                </View>
+              ) : null}
+            </>
           )}
 
           {/* Empty state */}
-          {pendingTasks.length === 0 && (
+          {filteredTasks.length === 0 && !showGroupedView && (
             <CardEntrance delay={100}>
               <View style={styles.emptyState}>
-                <Text style={styles.emptyEmoji}>🎉</Text>
-                <Text style={styles.emptyTitle}>No tasks right now</Text>
+                <Text style={styles.emptyEmoji}>
+                  {activeTab === 'completed' ? '🏆' : '🎉'}
+                </Text>
+                <Text style={styles.emptyTitle}>
+                  {activeTab === 'completed'
+                    ? 'No completed tasks yet'
+                    : 'All caught up'}
+                </Text>
                 <Text style={styles.emptySubtitle}>
-                  {selectedCategory
-                    ? 'No tasks for this phase. Try another timeline.'
-                    : 'All caught up! Check back soon.'}
+                  {activeTab === 'completed'
+                    ? 'Complete your first task to see it here.'
+                    : selectedCategory
+                      ? 'No tasks for this phase. Try another timeline.'
+                      : 'No tasks match your current filters.'}
                 </Text>
               </View>
             </CardEntrance>
           )}
+
+          {/* Empty state for grouped view when everything is empty */}
+          {showGroupedView &&
+            groups &&
+            groups.previous.length === 0 &&
+            groups.current.length === 0 &&
+            groups.future.length === 0 && (
+              <CardEntrance delay={100}>
+                <View style={styles.emptyState}>
+                  <Text style={styles.emptyEmoji}>🎉</Text>
+                  <Text style={styles.emptyTitle}>All caught up</Text>
+                  <Text style={styles.emptySubtitle}>
+                    No pending tasks right now. Check back soon.
+                  </Text>
+                </View>
+              </CardEntrance>
+            )}
         </ScrollView>
       )}
     </View>
   )
 }
 
-interface TaskSectionProps {
-  title: string
-  titleColor: string
-  tasks: FamilyTask[]
-  onComplete: (id: string) => void
-  onSnooze: (id: string) => void
+function getSectionTitle(
+  tab: TaskTab,
+  statFilter: StatFilter | null,
+  timelineCategory: TimelineCategory | null
+): string {
+  if (statFilter === 'due-today') return 'Due Today'
+  if (statFilter === 'this-week') return 'This Week'
+
+  if (timelineCategory) {
+    const cat = TIMELINE_CATEGORIES.find((c) => c.id === timelineCategory)
+    return cat?.label ?? 'Tasks'
+  }
+
+  switch (tab) {
+    case 'active':
+      return 'Active Tasks'
+    case 'my-tasks':
+      return 'My Tasks'
+    case 'partner':
+      return "Partner's Tasks"
+    case 'completed':
+      return 'Completed'
+    case 'catch-up':
+      return 'Catch-Up Queue'
+    default:
+      return 'Tasks'
+  }
 }
 
-function TaskSection({
-  title,
-  titleColor,
-  tasks,
-  onComplete,
-  onSnooze,
-}: TaskSectionProps) {
-  return (
-    <View style={styles.section}>
-      <View style={styles.sectionHeader}>
-        <Text style={[styles.sectionTitle, { color: titleColor }]}>{title}</Text>
-        <Text style={styles.sectionCount}>{tasks.length}</Text>
-      </View>
-      <StaggerList staggerMs={60}>
-        {tasks.map((task) => (
-          <View key={task.id} style={styles.taskItemWrapper}>
-            <TaskItem
-              task={task}
-              onComplete={onComplete}
-              onSnooze={onSnooze}
-            />
-          </View>
-        ))}
-      </StaggerList>
-    </View>
-  )
+function getSectionColor(tab: TaskTab, statFilter: StatFilter | null): string {
+  if (statFilter === 'due-today') return '#c4703f'
+  if (statFilter === 'this-week') return '#5b9bd5'
+
+  switch (tab) {
+    case 'completed':
+      return '#6b8f71'
+    case 'catch-up':
+      return '#d4a853'
+    case 'partner':
+      return '#c47a8f'
+    default:
+      return '#faf6f0'
+  }
 }
 
 const styles = StyleSheet.create({
@@ -301,7 +565,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#12100e',
   },
   headerArea: {
-    paddingHorizontal: 20,
     paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(237,230,220,0.06)',
@@ -311,24 +574,30 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: '#faf6f0',
     marginBottom: 16,
+    paddingHorizontal: 20,
+  },
+  filterTabsWrap: {
+    marginTop: 14,
+    marginBottom: 12,
   },
   timelineScroll: {
-    marginBottom: 12,
+    marginBottom: 4,
   },
   timelineContent: {
     gap: 8,
-    paddingRight: 20,
+    paddingHorizontal: 20,
   },
   timelinePill: {
     paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingVertical: 7,
     borderRadius: 20,
-    backgroundColor: 'rgba(237,230,220,0.06)',
+    backgroundColor: 'rgba(237,230,220,0.04)',
     borderWidth: 1,
-    borderColor: 'transparent',
+    borderColor: 'rgba(237,230,220,0.06)',
+    alignItems: 'center',
   },
   timelinePillSelected: {
-    backgroundColor: 'rgba(196,112,63,0.2)',
+    backgroundColor: 'rgba(196,112,63,0.18)',
     borderColor: '#c4703f',
   },
   timelinePillCurrent: {
@@ -336,43 +605,28 @@ const styles = StyleSheet.create({
   },
   timelinePillText: {
     fontFamily: 'Karla-Medium',
-    fontSize: 13,
-    color: '#7a6f62',
+    fontSize: 12,
+    color: '#4a4239',
   },
   timelinePillTextSelected: {
     color: '#c4703f',
   },
-  filterScroll: {
-    marginBottom: 4,
-  },
-  filterContent: {
-    alignItems: 'center',
-    gap: 8,
-    paddingRight: 20,
-  },
-  filterChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    backgroundColor: 'rgba(237,230,220,0.06)',
-  },
-  filterChipActive: {
-    backgroundColor: 'rgba(196,112,63,0.15)',
-  },
-  filterChipText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 12,
+  timelinePillTextCurrent: {
     color: '#7a6f62',
   },
-  filterChipTextActive: {
-    color: '#c4703f',
+  currentDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#c4703f',
+    marginTop: 4,
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingTop: 16,
+    paddingTop: 20,
   },
   loadingContainer: {
     flex: 1,
@@ -380,27 +634,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   section: {
-    marginBottom: 24,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 12,
-  },
-  sectionTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 14,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  sectionCount: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 13,
-    color: '#4a4239',
+    marginBottom: 28,
   },
   taskItemWrapper: {
     marginBottom: 8,
+  },
+  moreText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 12,
+    color: '#4a4239',
+    textAlign: 'center',
+    marginTop: 8,
   },
   emptyState: {
     alignItems: 'center',
