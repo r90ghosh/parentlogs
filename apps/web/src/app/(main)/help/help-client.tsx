@@ -44,9 +44,9 @@ import Link from 'next/link'
 const faqItems = [
   {
     id: 'what-is-tdc',
-    question: 'What is The Dad Center?',
+    question: 'What is Rooftop Crest?',
     answer:
-      'The Dad Center is the operating system for modern fatherhood — a pregnancy and parenting companion designed primarily for dads (but also moms). It provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and a dad journey system with challenges across 7 pillars.',
+      'Rooftop Crest is the operating system for modern fatherhood — a pregnancy and parenting companion designed primarily for dads (but also moms). It provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and a dad journey system with challenges across 7 pillars.',
   },
   {
     id: 'family-subscription',
@@ -367,12 +367,12 @@ export default function HelpClient() {
                 <ExternalLink className="h-4 w-4 text-[--dim]" />
               </Link>
               <a
-                href="mailto:support@thedadcenter.com"
+                href="mailto:support@rooftopcrest.com"
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-[--card] transition-colors group"
               >
                 <Mail className="h-5 w-5 text-[--muted] group-hover:text-copper transition-colors" />
                 <span className="font-body text-sm text-[--cream] flex-1">
-                  support@thedadcenter.com
+                  support@rooftopcrest.com
                 </span>
                 <ExternalLink className="h-4 w-4 text-[--dim]" />
               </a>

@@ -16,7 +16,7 @@ export function InvitePartnerCard() {
   if (dismissed) return null
 
   const inviteCode = family?.invite_code || ''
-  const inviteLink = `https://thedadcenter.com/join/${inviteCode}`
+  const inviteLink = `https://rooftopcrest.com/join/${inviteCode}`
   const firstName = profile.full_name?.split(' ')[0] || 'Someone'
 
   const handleCopy = async () => {
@@ -61,7 +61,7 @@ export function InvitePartnerCard() {
           <div className="text-left">
             <div className="text-[10px] font-ui text-[--muted] uppercase tracking-wide mb-0.5">Invite Link</div>
             <div className="text-xs font-mono text-[--cream] truncate max-w-[200px]">
-              thedadcenter.com/join/{inviteCode}
+              rooftopcrest.com/join/{inviteCode}
             </div>
           </div>
           {copied ? (

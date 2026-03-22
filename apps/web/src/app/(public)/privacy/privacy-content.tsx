@@ -44,7 +44,7 @@ export function PrivacyContent() {
           <RevealOnScroll delay={50}>
             <Section title="1. Introduction">
               <p>
-                The Dad Center (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates the website thedadcenter.com and associated mobile applications (the &quot;Service&quot;). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our Service.
+                Rooftop Crest (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates the website rooftopcrest.com and associated mobile applications (the &quot;Service&quot;). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our Service.
               </p>
               <p>
                 By using the Service, you agree to the collection and use of information in accordance with this policy. If you do not agree, please do not use our Service.
@@ -127,7 +127,7 @@ export function PrivacyContent() {
           <RevealOnScroll delay={50}>
             <Section title="6. Children's Privacy">
               <p>
-                The Dad Center is intended for parents and expecting parents aged 18 and older. We do not knowingly collect personal information from children under 13 in compliance with COPPA. If we learn that we have collected information from a child under 13, we will promptly delete it. If you believe we have collected such information, please contact us.
+                Rooftop Crest is intended for parents and expecting parents aged 18 and older. We do not knowingly collect personal information from children under 13 in compliance with COPPA. If we learn that we have collected information from a child under 13, we will promptly delete it. If you believe we have collected such information, please contact us.
               </p>
             </Section>
           </RevealOnScroll>
@@ -190,8 +190,8 @@ export function PrivacyContent() {
               <ul>
                 <li>
                   Email:{' '}
-                  <a href="mailto:privacy@thedadcenter.com" className="text-copper hover:underline">
-                    privacy@thedadcenter.com
+                  <a href="mailto:privacy@rooftopcrest.com" className="text-copper hover:underline">
+                    privacy@rooftopcrest.com
                   </a>
                 </li>
                 <li>

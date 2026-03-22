@@ -9,11 +9,11 @@ import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 import { cn } from '@/lib/utils'
 
 export const metadata = {
-  title: 'Baby Preparation Checklists — 15 Essential Lists | The Dad Center',
+  title: 'Baby Preparation Checklists — 15 Essential Lists | Rooftop Crest',
   description:
     'Get organized with 15 curated baby preparation checklists covering hospital bag, nursery setup, baby essentials, and more. Made for dads.',
   openGraph: {
-    title: 'Baby Preparation Checklists — 15 Essential Lists | The Dad Center',
+    title: 'Baby Preparation Checklists — 15 Essential Lists | Rooftop Crest',
     description: 'Get organized with 15 curated baby preparation checklists. From hospital bag to first year firsts.',
   },
 }

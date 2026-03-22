@@ -5,7 +5,7 @@ export const dynamic = 'force-static'
 export const revalidate = 86400 // regenerate daily
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://thedadcenter.com'
+  const baseUrl = 'https://rooftopcrest.com'
 
   const staticPages: MetadataRoute.Sitemap = [
     {

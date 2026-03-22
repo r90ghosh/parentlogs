@@ -25,12 +25,12 @@ export async function generateMetadata({ params }: PageProps) {
 
   if (!article) {
     return {
-      title: 'Article Not Found | The Dad Center',
+      title: 'Article Not Found | Rooftop Crest',
     }
   }
 
   return {
-    title: `${article.title} | The Dad Center`,
+    title: `${article.title} | Rooftop Crest`,
     description: article.excerpt,
     openGraph: {
       title: article.title,
@@ -101,21 +101,21 @@ export default async function ArticlePage({ params }: PageProps) {
     description: article.excerpt,
     author: {
       '@type': 'Organization',
-      name: 'The Dad Center',
-      url: 'https://thedadcenter.com',
+      name: 'Rooftop Crest',
+      url: 'https://rooftopcrest.com',
     },
     publisher: {
       '@type': 'Organization',
-      name: 'The Dad Center',
-      url: 'https://thedadcenter.com',
+      name: 'Rooftop Crest',
+      url: 'https://rooftopcrest.com',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://thedadcenter.com/images/logo.png',
+        url: 'https://rooftopcrest.com/images/logo.png',
       },
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://thedadcenter.com/content/articles/${slug}`,
+      '@id': `https://rooftopcrest.com/content/articles/${slug}`,
     },
   }
 

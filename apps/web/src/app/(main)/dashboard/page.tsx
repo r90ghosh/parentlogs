@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { DashboardClient } from '@/components/dashboard/DashboardClient'
 
 export const metadata: Metadata = {
-  title: 'Dashboard | The Dad Center',
+  title: 'Dashboard | Rooftop Crest',
 }
 
 export default function DashboardPage() {

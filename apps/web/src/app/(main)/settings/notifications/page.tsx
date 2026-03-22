@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import NotificationsClient from './notifications-client'
 
 export const metadata: Metadata = {
-  title: 'Notification Settings | The Dad Center',
+  title: 'Notification Settings | Rooftop Crest',
 }
 
 export default function NotificationSettingsPage() {

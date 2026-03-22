@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import TasksClient from './tasks-client'
 
 export const metadata: Metadata = {
-  title: 'Tasks | The Dad Center',
+  title: 'Tasks | Rooftop Crest',
 }
 
 export default function TasksPage() {

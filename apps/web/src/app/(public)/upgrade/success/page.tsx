@@ -60,7 +60,7 @@ export default function UpgradeSuccessPage() {
             transition={{ delay: 0.4 }}
             className="text-[--muted]"
           >
-            You&apos;ve unlocked the full Dad Center experience.
+            You&apos;ve unlocked the full Rooftop Crest experience.
           </motion.p>
         </div>
 

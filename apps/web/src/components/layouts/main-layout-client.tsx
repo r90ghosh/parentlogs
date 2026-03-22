@@ -141,7 +141,7 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
         <div className="flex items-center justify-between px-4 h-full">
           <div className="flex items-baseline gap-3">
             <Link href="/dashboard" className="font-display font-bold text-[15px] text-[--cream] tracking-[0.08em] hover:text-copper transition-colors leading-none">
-              The Dad Center
+              Rooftop Crest
             </Link>
           </div>
 

@@ -1,6 +1,6 @@
 {
-  "name": "The Dad Center",
-  "short_name": "DadCenter",
+  "name": "Rooftop Crest",
+  "short_name": "RooftopCrest",
   "description": "Your Parenting Command Center - Expert-curated tasks, weekly briefings, and partner sync for pregnancy through early parenthood",
   "start_url": "/dashboard",
   "scope": "/",

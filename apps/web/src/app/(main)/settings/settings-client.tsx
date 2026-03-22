@@ -139,13 +139,13 @@ export default function SettingsClient() {
       {/* App Info */}
       <RevealOnScroll delay={240}>
       <div className="text-center font-body text-sm text-[--dim] pt-4">
-        <p>The Dad Center v1.0.0</p>
+        <p>Rooftop Crest v1.0.0</p>
         <p className="mt-1">
           <Link href="/terms" className="hover:text-[--cream]">Terms</Link>
           {' · '}
           <Link href="/privacy" className="hover:text-[--cream]">Privacy</Link>
           {' · '}
-          <a href="mailto:support@thedadcenter.com" className="hover:text-[--cream]">Support</a>
+          <a href="mailto:support@rooftopcrest.com" className="hover:text-[--cream]">Support</a>
         </p>
       </div>
       </RevealOnScroll>

@@ -1,16 +1,16 @@
-# The Dad Center
+# Rooftop Crest
 
 > The operating system for modern fatherhood. Built by dads, for dads who refuse to wing it.
 
-The Dad Center is a pregnancy and parenting companion app designed primarily for dads (but also moms). It provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and visual how-to guides.
+Rooftop Crest is a pregnancy and parenting companion app designed primarily for dads (but also moms). It provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and visual how-to guides.
 
 ## Key Pages
 
-- [Home](https://thedadcenter.com/): Landing page with features, pricing, and testimonials
-- [Dad Tips](https://thedadcenter.com/tips): Illustrated step-by-step parenting guides (diaper changing, bottle prep, swaddling, bath time, car seat installation, burping)
-- [Budget Guide](https://thedadcenter.com/budget-guide): Comprehensive baby budget planner with 200+ items and real price ranges
-- [Baby Checklists](https://thedadcenter.com/baby-checklists): 15 curated preparation checklists (hospital bag, nursery, registry, baby-proofing, and more)
-- [Articles](https://thedadcenter.com/content): 50+ parenting articles with practical advice for new dads
+- [Home](https://rooftopcrest.com/): Landing page with features, pricing, and testimonials
+- [Dad Tips](https://rooftopcrest.com/tips): Illustrated step-by-step parenting guides (diaper changing, bottle prep, swaddling, bath time, car seat installation, burping)
+- [Budget Guide](https://rooftopcrest.com/budget-guide): Comprehensive baby budget planner with 200+ items and real price ranges
+- [Baby Checklists](https://rooftopcrest.com/baby-checklists): 15 curated preparation checklists (hospital bag, nursery, registry, baby-proofing, and more)
+- [Articles](https://rooftopcrest.com/content): 50+ parenting articles with practical advice for new dads
 
 ## Dad Tips Topics
 
@@ -42,5 +42,5 @@ The Dad Center is a pregnancy and parenting companion app designed primarily for
 
 ## Contact
 
-- Website: https://thedadcenter.com
-- Support: support@thedadcenter.com
+- Website: https://rooftopcrest.com
+- Support: support@rooftopcrest.com

@@ -251,8 +251,8 @@ function SubscriptionContent() {
             <p>Need help with your subscription?</p>
             <p className="mt-1">
               Contact us at{' '}
-              <a href="mailto:support@thedadcenter.com" className="text-copper hover:text-copper/80">
-                support@thedadcenter.com
+              <a href="mailto:support@rooftopcrest.com" className="text-copper hover:text-copper/80">
+                support@rooftopcrest.com
               </a>
             </p>
           </div>

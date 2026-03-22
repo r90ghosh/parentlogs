@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import ArchiveClient from './archive-client'
 
 export const metadata: Metadata = {
-  title: 'Briefing Archive | The Dad Center',
+  title: 'Briefing Archive | Rooftop Crest',
 }
 
 export default function BriefingArchivePage() {

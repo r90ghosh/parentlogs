@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import SettingsClient from './settings-client'
 
 export const metadata: Metadata = {
-  title: 'Settings | The Dad Center',
+  title: 'Settings | Rooftop Crest',
 }
 
 export default function SettingsPage() {

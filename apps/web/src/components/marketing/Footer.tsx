@@ -30,10 +30,10 @@ const footerLinks = {
 }
 
 const socialLinks = [
-  { icon: Twitter, href: 'https://twitter.com/thedadcenter', label: 'Twitter' },
-  { icon: Linkedin, href: 'https://linkedin.com/company/thedadcenter', label: 'LinkedIn' },
-  { icon: Instagram, href: 'https://instagram.com/thedadcenter', label: 'Instagram' },
-  { icon: Mail, href: 'mailto:hello@thedadcenter.com', label: 'Email' },
+  { icon: Twitter, href: 'https://twitter.com/rooftopcrest', label: 'Twitter' },
+  { icon: Linkedin, href: 'https://linkedin.com/company/rooftopcrest', label: 'LinkedIn' },
+  { icon: Instagram, href: 'https://instagram.com/rooftopcrest', label: 'Instagram' },
+  { icon: Mail, href: 'mailto:hello@rooftopcrest.com', label: 'Email' },
 ]
 
 export function Footer() {
@@ -139,7 +139,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="py-6 border-t border-[--border] flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="font-ui text-sm text-[--muted]" suppressHydrationWarning>
-            &copy; {new Date().getFullYear()} The Dad Center. All rights reserved.
+            &copy; {new Date().getFullYear()} Rooftop Crest. All rights reserved.
           </p>
           <p className="font-ui text-sm text-[--dim]">
             Made with love for dads everywhere

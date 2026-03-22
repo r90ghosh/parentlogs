@@ -37,7 +37,7 @@ export const PAYWALL_COPY: Record<string, { headline: string; body: string }> = 
   },
   partner_invite: {
     headline: 'Invite your partner',
-    body: 'Share The Dad Center with your partner for real-time coordination and shared tasks.',
+    body: 'Share Rooftop Crest with your partner for real-time coordination and shared tasks.',
   },
   soft_prompt: {
     headline: 'Unlock the full operating system for fatherhood',

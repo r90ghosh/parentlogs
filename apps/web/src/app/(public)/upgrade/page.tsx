@@ -86,7 +86,7 @@ function UpgradeContent() {
           </Link>
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-copper" />
-            <span className="font-display font-bold text-[--cream]">The Dad Center Premium</span>
+            <span className="font-display font-bold text-[--cream]">Rooftop Crest Premium</span>
           </div>
           <div className="w-16" />
         </div>
@@ -343,7 +343,7 @@ function UpgradeContent() {
 
         {/* Trust signals */}
         <div className="mt-12 text-center space-y-2">
-          <p className="text-sm text-[--dim] font-body">Questions? Contact us at support@thedadcenter.com</p>
+          <p className="text-sm text-[--dim] font-body">Questions? Contact us at support@rooftopcrest.com</p>
           <p className="text-sm text-[--dim] font-body">30-day money-back guarantee on all plans</p>
         </div>
       </div>
