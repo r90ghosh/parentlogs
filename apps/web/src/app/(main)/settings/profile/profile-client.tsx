@@ -29,7 +29,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { ArrowLeft, Camera, Loader2, Save, Trash2, AlertTriangle } from 'lucide-react'
+import { ArrowLeft, Camera, Loader2, Save, Trash2, AlertTriangle, KeyRound, Eye, EyeOff } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/use-toast'
@@ -49,6 +49,17 @@ export default function ProfileClient() {
   const [isUploading, setIsUploading] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Password management state
+  const hasEmailIdentity = user.identities?.some((i: { provider: string }) => i.provider === 'email') ?? false
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [passwordError, setPasswordError] = useState<string | null>(null)
+  const [passwordSuccess, setPasswordSuccess] = useState(false)
+  const [isSavingPassword, setIsSavingPassword] = useState(false)
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
 
   // Keep local state in sync with profile data
   useEffect(() => {
@@ -71,6 +82,57 @@ export default function ProfileClient() {
     } catch (err) {
       setError('Failed to update profile')
       console.error(err)
+    }
+  }
+
+  const handlePasswordSubmit = async () => {
+    setPasswordError(null)
+    setPasswordSuccess(false)
+
+    if (newPassword.length < 8) {
+      setPasswordError('Password must be at least 8 characters')
+      return
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordError('Passwords do not match')
+      return
+    }
+    if (hasEmailIdentity && newPassword === currentPassword) {
+      setPasswordError('New password must be different from current password')
+      return
+    }
+
+    setIsSavingPassword(true)
+
+    try {
+      // If user has email identity, verify current password first
+      if (hasEmailIdentity) {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email: user.email!,
+          password: currentPassword,
+        })
+        if (signInError) {
+          setPasswordError('Current password is incorrect')
+          setIsSavingPassword(false)
+          return
+        }
+      }
+
+      const { error: updateError } = await supabase.auth.updateUser({ password: newPassword })
+      if (updateError) {
+        setPasswordError(updateError.message)
+      } else {
+        setPasswordSuccess(true)
+        setCurrentPassword('')
+        setNewPassword('')
+        setConfirmPassword('')
+        toast({ title: hasEmailIdentity ? 'Password changed successfully' : 'Password set successfully' })
+        setTimeout(() => setPasswordSuccess(false), 3000)
+      }
+    } catch {
+      setPasswordError('Something went wrong. Please try again.')
+    } finally {
+      setIsSavingPassword(false)
     }
   }
 
@@ -270,6 +332,116 @@ export default function ProfileClient() {
               </>
             )}
           </Button>
+        </CardContent>
+      </Card>
+
+      {/* Password */}
+      <Card className="bg-[--surface] border-[--border]">
+        <CardHeader>
+          <CardTitle className="font-display text-lg flex items-center gap-2">
+            <KeyRound className="h-5 w-5 text-copper" />
+            {hasEmailIdentity ? 'Change Password' : 'Set a Password'}
+          </CardTitle>
+          <CardDescription className="font-body">
+            {hasEmailIdentity
+              ? 'Update your account password'
+              : 'Set a password so you can also sign in with email'}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={(e) => { e.preventDefault(); handlePasswordSubmit() }} className="space-y-4">
+            {passwordError && (
+              <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertDescription>{passwordError}</AlertDescription>
+              </Alert>
+            )}
+            {passwordSuccess && (
+              <Alert className="bg-sage/10 border-sage/30">
+                <AlertDescription className="text-sage font-body">
+                  {hasEmailIdentity ? 'Password changed successfully!' : 'Password set successfully!'}
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {hasEmailIdentity && (
+              <div className="space-y-2">
+                <Label htmlFor="currentPassword" className="font-ui font-medium">Current Password</Label>
+                <div className="relative">
+                  <Input
+                    id="currentPassword"
+                    type={showCurrentPassword ? 'text' : 'password'}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Enter current password"
+                    autoComplete="current-password"
+                    className="bg-[--card] border-[--border] pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[--muted] hover:text-[--cream] transition-colors"
+                  >
+                    {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="newPassword" className="font-ui font-medium">New Password</Label>
+              <div className="relative">
+                <Input
+                  id="newPassword"
+                  type={showNewPassword ? 'text' : 'password'}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="At least 8 characters"
+                  autoComplete="new-password"
+                  className="bg-[--card] border-[--border] pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[--muted] hover:text-[--cream] transition-colors"
+                >
+                  {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              <p className="font-body text-xs text-[--dim]">Minimum 8 characters</p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword" className="font-ui font-medium">Confirm New Password</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm new password"
+                autoComplete="new-password"
+                className="bg-[--card] border-[--border]"
+              />
+            </div>
+
+            <Button
+              type="submit"
+              disabled={isSavingPassword || !newPassword || !confirmPassword || (hasEmailIdentity && !currentPassword)}
+              className="w-full bg-copper hover:bg-copper/80 font-ui font-semibold"
+            >
+              {isSavingPassword ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {hasEmailIdentity ? 'Changing...' : 'Setting...'}
+                </>
+              ) : (
+                <>
+                  <KeyRound className="mr-2 h-4 w-4" />
+                  {hasEmailIdentity ? 'Change Password' : 'Set Password'}
+                </>
+              )}
+            </Button>
+          </form>
         </CardContent>
       </Card>
 

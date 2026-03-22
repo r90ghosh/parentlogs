@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Share,
   Linking,
+  Platform,
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -27,12 +28,14 @@ import {
   Crown,
   Share2,
   ExternalLink,
+  KeyRound,
 } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useRevenueCat } from '@/components/providers/RevenueCatProvider'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import * as Haptics from 'expo-haptics'
+import * as WebBrowser from 'expo-web-browser'
 
 interface SettingsRowProps {
   icon: React.ReactNode
@@ -272,8 +275,24 @@ export default function SettingsScreen() {
           </GlassCard>
         </CardEntrance>
 
+        {/* Security */}
+        <CardEntrance delay={200}>
+          <Text style={styles.sectionTitle}>Security</Text>
+          <GlassCard style={styles.section}>
+            <SettingsRow
+              icon={<KeyRound size={18} color="#c4703f" />}
+              label={
+                user?.identities?.some((i) => i.provider === 'email')
+                  ? 'Change Password'
+                  : 'Set Password'
+              }
+              onPress={() => router.push('/(screens)/change-password')}
+            />
+          </GlassCard>
+        </CardEntrance>
+
         {/* Subscription */}
-        <CardEntrance delay={240}>
+        <CardEntrance delay={280}>
           <Text style={styles.sectionTitle}>Subscription</Text>
           <GlassCard style={styles.section}>
             <View style={styles.subscriptionRow}>
@@ -312,7 +331,12 @@ export default function SettingsScreen() {
                         { text: 'Cancel', style: 'cancel' },
                         {
                           text: 'Open Settings',
-                          onPress: () => Linking.openURL('https://apps.apple.com/account/subscriptions'),
+                          onPress: () => {
+                            const url = Platform.OS === 'ios'
+                              ? 'https://apps.apple.com/account/subscriptions'
+                              : 'https://play.google.com/store/account/subscriptions'
+                            Linking.openURL(url)
+                          },
                         },
                       ]
                     )
@@ -329,8 +353,37 @@ export default function SettingsScreen() {
           </GlassCard>
         </CardEntrance>
 
+        {/* Legal */}
+        <CardEntrance delay={360}>
+          <Text style={styles.sectionTitle}>Legal</Text>
+          <GlassCard style={styles.section}>
+            <SettingsRow
+              icon={<ExternalLink size={18} color="#7a6f62" />}
+              label="Privacy Policy"
+              onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')}
+            />
+            <SettingsRow
+              icon={<ExternalLink size={18} color="#7a6f62" />}
+              label="Terms of Service"
+              onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/terms')}
+            />
+          </GlassCard>
+        </CardEntrance>
+
+        {/* About */}
+        <CardEntrance delay={400}>
+          <Text style={styles.sectionTitle}>About</Text>
+          <GlassCard style={styles.section}>
+            <View style={styles.disclaimerContainer}>
+              <Text style={styles.disclaimerText}>
+                The Dad Center provides general pregnancy and parenting information for educational purposes only. It is not intended as medical advice. Always consult your healthcare provider for medical decisions.
+              </Text>
+            </View>
+          </GlassCard>
+        </CardEntrance>
+
         {/* Sign Out */}
-        <CardEntrance delay={320}>
+        <CardEntrance delay={440}>
           <GlassCard style={styles.section}>
             <SettingsRow
               icon={<LogOut size={18} color="#d4836b" />}
@@ -342,7 +395,7 @@ export default function SettingsScreen() {
         </CardEntrance>
 
         {/* Danger Zone */}
-        <CardEntrance delay={400}>
+        <CardEntrance delay={480}>
           <Text style={styles.dangerSectionTitle}>Danger Zone</Text>
           <GlassCard style={styles.dangerSection}>
             <Pressable
@@ -539,5 +592,16 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     paddingHorizontal: 16,
     paddingVertical: 12,
+  },
+
+  // Disclaimer
+  disclaimerContainer: {
+    padding: 16,
+  },
+  disclaimerText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 13,
+    color: '#7a6f62',
+    lineHeight: 20,
   },
 })

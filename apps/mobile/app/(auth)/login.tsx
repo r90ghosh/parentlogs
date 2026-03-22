@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
 import { BrandLogo } from '@/components/BrandLogo'
 import { supabase } from '@/lib/supabase'
@@ -19,6 +19,7 @@ import { signInWithGoogle } from '@/lib/google-auth'
 import { signInWithApple } from '@/lib/apple-auth'
 
 export default function LoginScreen() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -121,6 +122,17 @@ export default function LoginScreen() {
                 secureTextEntry
                 autoComplete="password"
               />
+              <Pressable
+                onPress={() =>
+                  router.push({
+                    pathname: '/(auth)/forgot-password',
+                    params: email.trim() ? { email: email.trim() } : undefined,
+                  })
+                }
+                style={styles.forgotPasswordButton}
+              >
+                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+              </Pressable>
             </View>
 
             <Pressable
@@ -250,6 +262,15 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Regular',
     fontSize: 16,
     color: '#ede6dc',
+  },
+  forgotPasswordButton: {
+    alignSelf: 'flex-end',
+    marginTop: 4,
+  },
+  forgotPasswordText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 13,
+    color: '#c4703f',
   },
   button: {
     backgroundColor: '#c4703f',
