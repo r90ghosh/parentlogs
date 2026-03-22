@@ -13,9 +13,10 @@ import {
 } from 'react-native'
 import { Link } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
-import * as Linking from 'expo-linking'
-import * as WebBrowser from 'expo-web-browser'
+import { BrandLogo } from '@/components/BrandLogo'
 import { supabase } from '@/lib/supabase'
+import { signInWithGoogle } from '@/lib/google-auth'
+import { signInWithApple } from '@/lib/apple-auth'
 
 export default function SignupScreen() {
   const [fullName, setFullName] = useState('')
@@ -23,40 +24,32 @@ export default function SignupScreen() {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+  const [isAppleLoading, setIsAppleLoading] = useState(false)
 
   const handleGoogleSignIn = async () => {
     if (isGoogleLoading) return
     setIsGoogleLoading(true)
     try {
-      const redirectUrl = Linking.createURL('auth/callback')
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: redirectUrl,
-          skipBrowserRedirect: true,
-        },
-      })
-
-      if (error) {
-        Alert.alert('Google sign in failed', error.message)
-        return
-      }
-
-      if (data?.url) {
-        const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl)
-        if (result.type === 'success' && result.url) {
-          const parsedUrl = Linking.parse(result.url)
-          const accessToken = (parsedUrl.queryParams as Record<string, string>)?.access_token
-          const refreshToken = (parsedUrl.queryParams as Record<string, string>)?.refresh_token
-          if (accessToken && refreshToken) {
-            await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken })
-          }
-        }
-      }
-    } catch (err) {
+      await signInWithGoogle()
+    } catch {
       Alert.alert('Error', 'Could not sign in with Google. Please try again.')
     } finally {
       setIsGoogleLoading(false)
+    }
+  }
+
+  const handleAppleSignIn = async () => {
+    if (isAppleLoading) return
+    setIsAppleLoading(true)
+    try {
+      await signInWithApple()
+    } catch (err: unknown) {
+      const error = err as { code?: string }
+      if (error.code !== 'ERR_REQUEST_CANCELED') {
+        Alert.alert('Error', 'Could not sign in with Apple. Please try again.')
+      }
+    } finally {
+      setIsAppleLoading(false)
     }
   }
 
@@ -106,7 +99,7 @@ export default function SignupScreen() {
         >
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.brand}>The Dad Center</Text>
+            <BrandLogo size={40} textSize={30} />
             <Text style={styles.subtitle}>
               Join thousands of dads who refuse to wing it
             </Text>
@@ -177,6 +170,25 @@ export default function SignupScreen() {
               <Text style={styles.dividerText}>or</Text>
               <View style={styles.dividerLine} />
             </View>
+
+            {/* Apple Sign In (iOS only, shown above Google per Apple guidelines) */}
+            {Platform.OS === 'ios' && (
+              <Pressable
+                onPress={handleAppleSignIn}
+                disabled={isAppleLoading}
+                style={({ pressed }) => [
+                  styles.appleButton,
+                  pressed && styles.buttonPressed,
+                  isAppleLoading && styles.buttonDisabled,
+                ]}
+              >
+                {isAppleLoading ? (
+                  <ActivityIndicator color="#ffffff" />
+                ) : (
+                  <Text style={styles.appleButtonText}>{'\uF8FF'} Continue with Apple</Text>
+                )}
+              </Pressable>
+            )}
 
             {/* Google Sign In */}
             <Pressable
@@ -296,6 +308,18 @@ const styles = StyleSheet.create({
     fontFamily: 'Karla-Regular',
     fontSize: 13,
     color: '#4a4239',
+  },
+  appleButton: {
+    backgroundColor: '#000000',
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  appleButtonText: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 16,
+    color: '#ffffff',
   },
   googleButton: {
     backgroundColor: '#201c18',

@@ -31,11 +31,12 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: [
-      { url: '/images/logo.png' },
-      { url: '/favicon.ico', sizes: '48x48' },
+      { url: '/images/logo-icon.svg', type: 'image/svg+xml' },
+      { url: '/images/logo-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/images/logo-512.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/images/logo.png', sizes: '180x180' },
+      { url: '/images/logo-180.png', sizes: '180x180', type: 'image/png' },
     ],
   },
   appleWebApp: {

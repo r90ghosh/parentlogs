@@ -7,6 +7,7 @@ import {
   Platform,
 } from 'react-native'
 import { Link } from 'expo-router'
+import { BrandLogoIcon } from '@/components/BrandLogo'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { BlurView } from 'expo-blur'
@@ -22,6 +23,7 @@ import {
   Sparkles,
   ArrowRight,
 } from 'lucide-react-native'
+import * as WebBrowser from 'expo-web-browser'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance, StaggerList } from '@/components/animations'
 
@@ -146,6 +148,7 @@ export default function LandingScreen() {
         >
           <Text style={styles.preLabel}>FOR MODERN DADS</Text>
 
+          <BrandLogoIcon size={56} />
           <Text style={styles.heroTitle}>The Dad Center</Text>
 
           <Text style={styles.heroSubtitle}>
@@ -427,9 +430,13 @@ export default function LandingScreen() {
             </Link>
 
             <View style={styles.legalLinks}>
-              <Text style={styles.legalText}>Privacy Policy</Text>
+              <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')}>
+                <Text style={styles.legalLink}>Privacy Policy</Text>
+              </Pressable>
               <Text style={styles.legalDot}>{'\u00B7'}</Text>
-              <Text style={styles.legalText}>Terms of Service</Text>
+              <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/terms')}>
+                <Text style={styles.legalLink}>Terms of Service</Text>
+              </Pressable>
             </View>
           </CardEntrance>
         </View>
@@ -911,6 +918,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Karla-Regular',
     fontSize: 12,
     color: '#4a4239',
+  },
+  legalLink: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 12,
+    color: '#4a4239',
+    textDecorationLine: 'underline',
   },
   legalDot: {
     fontFamily: 'Karla-Regular',
