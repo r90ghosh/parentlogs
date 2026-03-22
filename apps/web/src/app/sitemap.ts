@@ -1,5 +1,8 @@
 import type { MetadataRoute } from 'next'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createClient } from '@supabase/supabase-js'
+
+export const dynamic = 'force-static'
+export const revalidate = 86400 // regenerate daily
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://thedadcenter.com'
@@ -46,7 +49,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch all article slugs
   let articlePages: MetadataRoute.Sitemap = []
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
     const { data } = await supabase.from('articles').select('slug')
 
     if (data) {
