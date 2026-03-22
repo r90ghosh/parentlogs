@@ -1,16 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/server'
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseAdmin } from '@/lib/supabase/admin'
 import Stripe from 'stripe'
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
-
 export async function POST(request: NextRequest) {
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')
 
@@ -85,7 +79,7 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
 
   // For lifetime purchase (payment mode)
   if (session.mode === 'payment' && plan === 'lifetime') {
-    await supabaseAdmin
+    await getSupabaseAdmin()
       .from('subscriptions')
       .upsert({
         user_id: userId,
@@ -98,7 +92,7 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
       })
 
     // Update profile
-    await supabaseAdmin
+    await getSupabaseAdmin()
       .from('profiles')
       .update({
         subscription_tier: 'lifetime',
@@ -112,7 +106,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const customerId = subscription.customer as string
 
   // Find user by customer ID
-  const { data: subRecord } = await supabaseAdmin
+  const { data: subRecord } = await getSupabaseAdmin()
     .from('subscriptions')
     .select('user_id')
     .eq('stripe_customer_id', customerId)
@@ -142,7 +136,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   }
 
   // Update subscription record
-  await supabaseAdmin
+  await getSupabaseAdmin()
     .from('subscriptions')
     .update({
       stripe_subscription_id: subscription.id,
@@ -156,7 +150,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     .eq('user_id', userId)
 
   // Update profile
-  await supabaseAdmin
+  await getSupabaseAdmin()
     .from('profiles')
     .update({
       subscription_tier: tier,
@@ -168,7 +162,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
 async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
   const customerId = subscription.customer as string
 
-  const { data: subRecord } = await supabaseAdmin
+  const { data: subRecord } = await getSupabaseAdmin()
     .from('subscriptions')
     .select('user_id')
     .eq('stripe_customer_id', customerId)
@@ -184,7 +178,7 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
   const expiresAt = periodEnd > sevenDaysFromNow ? periodEnd : sevenDaysFromNow
 
   // Update subscription to canceled but keep premium until grace period expires
-  await supabaseAdmin
+  await getSupabaseAdmin()
     .from('subscriptions')
     .update({
       status: 'canceled',
@@ -194,7 +188,7 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
     .eq('user_id', subRecord.user_id)
 
   // Set expiration date — grace period logic will handle the actual downgrade
-  await supabaseAdmin
+  await getSupabaseAdmin()
     .from('profiles')
     .update({
       subscription_expires_at: expiresAt.toISOString(),
@@ -210,7 +204,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
 async function handlePaymentFailed(invoice: Stripe.Invoice) {
   const customerId = invoice.customer as string
 
-  const { data: subRecord } = await supabaseAdmin
+  const { data: subRecord } = await getSupabaseAdmin()
     .from('subscriptions')
     .select('user_id')
     .eq('stripe_customer_id', customerId)
@@ -219,7 +213,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
   if (!subRecord) return
 
   // Update status to past_due
-  await supabaseAdmin
+  await getSupabaseAdmin()
     .from('subscriptions')
     .update({
       status: 'past_due',
