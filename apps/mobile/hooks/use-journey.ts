@@ -10,7 +10,7 @@ export function useCurrentPhase(): ContentPhase {
 
   if (!family?.stage) return 'trimester-1'
 
-  const currentWeek = (family as any)?.current_week as number | undefined
+  const currentWeek = family?.current_week ?? undefined
 
   return familyStageToContentPhase(
     family.stage as FamilyStage,

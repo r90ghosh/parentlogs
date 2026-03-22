@@ -23,6 +23,7 @@ import {
   RotateCcw,
 } from 'lucide-react-native'
 import type { PurchasesOffering, PurchasesPackage } from 'react-native-purchases'
+import * as WebBrowser from 'expo-web-browser'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import { useAuth } from '@/components/providers/AuthProvider'
@@ -123,7 +124,7 @@ export default function UpgradeScreen() {
     if (!pkg) {
       Alert.alert(
         'Not Available',
-        'In-app purchases are not available on this device. Visit thedadcenter.com to subscribe.'
+        'In-app purchases are temporarily unavailable. Please try again later.'
       )
       return
     }
@@ -328,10 +329,23 @@ export default function UpgradeScreen() {
             )}
           </Pressable>
           <Text style={styles.legalText}>
-            Payment will be charged to your App Store or Google Play account.
-            Subscriptions renew automatically unless canceled at least 24 hours
-            before the current period ends.
+            Payment will be charged to your Apple ID account at confirmation of
+            purchase. Subscription automatically renews unless canceled at least
+            24 hours before the end of the current period. Your account will be
+            charged for renewal within 24 hours prior to the end of the current
+            period at the cost of the chosen plan. You can manage and cancel your
+            subscriptions by going to your Account Settings on the App Store
+            after purchase.
           </Text>
+          <View style={styles.legalLinks}>
+            <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')}>
+              <Text style={styles.legalLink}>Privacy Policy</Text>
+            </Pressable>
+            <Text style={styles.legalDot}>{'\u00B7'}</Text>
+            <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/terms')}>
+              <Text style={styles.legalLink}>Terms of Service</Text>
+            </Pressable>
+          </View>
         </CardEntrance>
       </ScrollView>
     </View>
@@ -589,5 +603,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 16,
     paddingHorizontal: 12,
+  },
+  legalLinks: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginTop: 12,
+    paddingBottom: 8,
+  },
+  legalLink: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 11,
+    color: '#7a6f62',
+    textDecorationLine: 'underline',
+  },
+  legalDot: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 11,
+    color: '#4a4239',
   },
 })

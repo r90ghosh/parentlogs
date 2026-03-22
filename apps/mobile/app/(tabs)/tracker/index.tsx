@@ -28,6 +28,7 @@ import {
   Clock,
   History,
   Lock,
+  BarChart3,
 } from 'lucide-react-native'
 import { formatDistanceToNow, format } from 'date-fns'
 import { useAuth } from '@/components/providers/AuthProvider'
@@ -153,15 +154,24 @@ export default function TrackerScreen() {
           <View style={styles.headerRow}>
             <Text style={styles.pageTitle}>Baby Tracker</Text>
             {!isPreview && (
-              <Pressable
-                onPress={() =>
-                  router.push('/(tabs)/tracker/history')
-                }
-                style={styles.historyButton}
-              >
-                <History size={16} color="#c4703f" />
-                <Text style={styles.historyText}>History</Text>
-              </Pressable>
+              <View style={styles.headerButtons}>
+                <Pressable
+                  onPress={() => router.push('/(screens)/tracker-summary')}
+                  style={styles.historyButton}
+                >
+                  <BarChart3 size={16} color="#c4703f" />
+                  <Text style={styles.historyText}>Summary</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() =>
+                    router.push('/(tabs)/tracker/history')
+                  }
+                  style={styles.historyButton}
+                >
+                  <History size={16} color="#c4703f" />
+                  <Text style={styles.historyText}>History</Text>
+                </Pressable>
+              </View>
             )}
           </View>
         </CardEntrance>
@@ -470,6 +480,10 @@ const styles = StyleSheet.create({
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 28,
     color: '#faf6f0',
+  },
+  headerButtons: {
+    flexDirection: 'row',
+    gap: 8,
   },
   historyButton: {
     flexDirection: 'row',

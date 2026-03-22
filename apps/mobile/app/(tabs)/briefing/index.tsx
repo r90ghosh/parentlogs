@@ -3,12 +3,15 @@ import {
   View,
   Text,
   ScrollView,
+  Pressable,
   RefreshControl,
   ActivityIndicator,
   StyleSheet,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
+import { useRouter } from 'expo-router'
+import { Archive } from 'lucide-react-native'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useCurrentBriefing, useBriefingByWeek } from '@/hooks/use-briefings'
@@ -25,11 +28,12 @@ import type { FamilyStage } from '@tdc/shared/types'
 
 export default function BriefingScreen() {
   const insets = useSafeAreaInsets()
+  const router = useRouter()
   const queryClient = useQueryClient()
   const { family, profile } = useAuth()
 
   const stage = (family?.stage || 'first-trimester') as FamilyStage
-  const currentWeek = (family as any)?.current_week ?? 1
+  const currentWeek = family?.current_week ?? 1
   const isPregnancy = isPregnancyStage(stage)
   const maxWeek = isPregnancy ? 40 : 104
 
@@ -86,7 +90,16 @@ export default function BriefingScreen() {
       >
         {/* Header */}
         <CardEntrance delay={0}>
-          <Text style={styles.pageTitle}>Briefing</Text>
+          <View style={styles.headerRow}>
+            <Text style={styles.pageTitle}>Briefing</Text>
+            <Pressable
+              onPress={() => router.push('/(screens)/briefing-archive')}
+              style={styles.archiveButton}
+            >
+              <Archive size={16} color="#c4703f" />
+              <Text style={styles.archiveText}>Archive</Text>
+            </Pressable>
+          </View>
         </CardEntrance>
 
         {/* Week Navigation Pills */}
@@ -256,6 +269,13 @@ export default function BriefingScreen() {
                 </View>
               </CardEntrance>
             )}
+
+            {/* Medical Disclaimer */}
+            <CardEntrance delay={450}>
+              <Text style={styles.disclaimerText}>
+                For informational purposes only. Always consult your healthcare provider.
+              </Text>
+            </CardEntrance>
           </>
         )}
       </ScrollView>
@@ -274,12 +294,33 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 16,
   },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+    paddingHorizontal: 4,
+  },
   pageTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 28,
     color: '#faf6f0',
-    marginBottom: 4,
-    paddingHorizontal: 4,
+  },
+  archiveButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(237,230,220,0.08)',
+    backgroundColor: 'rgba(237,230,220,0.04)',
+  },
+  archiveText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 13,
+    color: '#c4703f',
   },
   loadingContainer: {
     paddingVertical: 80,
@@ -415,5 +456,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#7a6f62',
     lineHeight: 18,
+  },
+  disclaimerText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 11,
+    color: '#4a4239',
+    textAlign: 'center',
+    marginTop: 16,
+    paddingHorizontal: 20,
+    lineHeight: 16,
   },
 })

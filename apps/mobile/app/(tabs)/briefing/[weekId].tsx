@@ -34,7 +34,7 @@ export default function BriefingWeekScreen() {
   const { family, profile } = useAuth()
 
   const stage = (family?.stage || 'first-trimester') as FamilyStage
-  const currentWeek = (family as any)?.current_week ?? 1
+  const currentWeek = family?.current_week ?? 1
   const isPregnancy = isPregnancyStage(stage)
   const maxWeek = isPregnancy ? 40 : 104
   const week = parseInt(weekId, 10) || currentWeek
@@ -226,6 +226,13 @@ export default function BriefingWeekScreen() {
                 </View>
               </CardEntrance>
             )}
+
+            {/* Medical Disclaimer */}
+            <CardEntrance delay={450}>
+              <Text style={styles.disclaimerText}>
+                For informational purposes only. Always consult your healthcare provider.
+              </Text>
+            </CardEntrance>
           </>
         )}
       </ScrollView>
@@ -406,5 +413,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#7a6f62',
     lineHeight: 18,
+  },
+  disclaimerText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 11,
+    color: '#4a4239',
+    textAlign: 'center',
+    marginTop: 16,
+    paddingHorizontal: 20,
+    lineHeight: 16,
   },
 })

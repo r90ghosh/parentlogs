@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { taskService } from '@/lib/services'
-import type { TaskAssignee } from '@tdc/shared/types'
+import type { TaskAssignee, TaskStatus } from '@tdc/shared/types'
 
 export function useTasks(filters?: { assignee?: TaskAssignee; category?: string }) {
   const { family } = useAuth()
@@ -66,6 +66,28 @@ export function useSkipTask() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks', family?.id] })
       queryClient.invalidateQueries({ queryKey: ['tasks-due', family?.id] })
+    },
+  })
+}
+
+export function useCreateTask() {
+  const queryClient = useQueryClient()
+  const { family } = useAuth()
+
+  return useMutation({
+    mutationFn: (task: {
+      title: string
+      description: string
+      due_date: string
+      assigned_to: TaskAssignee
+      priority: 'must-do' | 'good-to-do'
+      category: string
+      status: TaskStatus
+    }) => taskService.createTask(task),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks', family?.id] })
+      queryClient.invalidateQueries({ queryKey: ['tasks-due', family?.id] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
     },
   })
 }

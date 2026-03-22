@@ -1,4 +1,5 @@
 import { useEffect, useState, createContext, useContext } from 'react'
+import { Alert } from 'react-native'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useSegments } from 'expo-router'
 import { pushNotificationService } from '@/services/push-notification-service'
@@ -22,6 +23,7 @@ interface Family {
   due_date: string | null
   stage: string | null
   invite_code: string | null
+  current_week: number | null
 }
 
 interface AuthContextType {
@@ -41,24 +43,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [family, setFamily] = useState<Family | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [profileLoaded, setProfileLoaded] = useState(false)
   const router = useRouter()
   const segments = useSegments()
 
   const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single()
-    setProfile(data)
-
-    if (data?.family_id) {
-      const { data: familyData } = await supabase
-        .from('families')
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
         .select('*')
-        .eq('id', data.family_id)
+        .eq('id', userId)
         .single()
-      setFamily(familyData)
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('[Auth] Failed to fetch profile:', error.message)
+        Alert.alert('Error', 'Failed to load profile. Please try again.', [
+          { text: 'Retry', onPress: () => fetchProfile(userId) },
+        ])
+        return
+      }
+
+      setProfile(data)
+
+      if (data?.family_id) {
+        const { data: familyData, error: familyError } = await supabase
+          .from('families')
+          .select('*')
+          .eq('id', data.family_id)
+          .single()
+        if (familyError && familyError.code !== 'PGRST116') {
+          console.error('[Auth] Failed to fetch family:', familyError.message)
+        }
+        setFamily(familyData)
+      } else {
+        setFamily(null)
+      }
+    } finally {
+      setProfileLoaded(true)
     }
   }
 
@@ -76,6 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         setProfile(null)
         setFamily(null)
+        setProfileLoaded(false)
       }
       setIsLoading(false)
     })
@@ -93,16 +115,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (!session && !inAuthGroup) {
       router.replace('/(auth)/landing')
-    } else if (session && (inAuthGroup || atRoot)) {
+    } else if (session && profileLoaded && (inAuthGroup || atRoot)) {
       if (!profile?.onboarding_completed) {
         router.replace('/(onboarding)/role')
       } else {
         router.replace('/(tabs)')
       }
-    } else if (session && inApp && profile && !profile.onboarding_completed) {
+    } else if (session && profileLoaded && inApp && profile && !profile.onboarding_completed) {
       router.replace('/(onboarding)/role')
     }
-  }, [session, profile, isLoading, segments])
+  }, [session, profile, profileLoaded, isLoading, segments])
 
   const signOut = async () => {
     // Deactivate device token before signing out

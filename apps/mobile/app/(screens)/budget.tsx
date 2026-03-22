@@ -349,13 +349,15 @@ export default function BudgetScreen() {
       ) : (
         <FlatList
           data={currentData}
-          keyExtractor={(item: any) =>
-            activeTab === 'browse' ? item.budget_id : item.id
+          keyExtractor={(item: BudgetTemplate | FamilyBudgetItem) =>
+            activeTab === 'browse'
+              ? (item as BudgetTemplate).budget_id
+              : (item as FamilyBudgetItem).id
           }
           renderItem={
             activeTab === 'browse'
-              ? (renderBrowseItem as any)
-              : (renderMyBudgetItem as any)
+              ? (renderBrowseItem as any) // eslint-disable-line @typescript-eslint/no-explicit-any -- union data type, render functions matched conditionally
+              : (renderMyBudgetItem as any) // eslint-disable-line @typescript-eslint/no-explicit-any
           }
           contentContainerStyle={[
             styles.listContent,
@@ -363,6 +365,11 @@ export default function BudgetScreen() {
           ]}
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={ListHeaderComponent}
+          ListFooterComponent={
+            <Text style={styles.disclaimerText}>
+              For planning purposes only. Not financial advice.
+            </Text>
+          }
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
@@ -657,5 +664,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#7a6f62',
     textAlign: 'center',
+  },
+  disclaimerText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 11,
+    color: '#4a4239',
+    textAlign: 'center',
+    marginTop: 16,
+    paddingHorizontal: 20,
+    paddingBottom: 8,
+    lineHeight: 16,
   },
 })

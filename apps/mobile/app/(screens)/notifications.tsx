@@ -20,6 +20,8 @@ import {
   Users,
   Newspaper,
   Crown,
+  Star,
+  Moon,
 } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
@@ -75,6 +77,10 @@ interface Preferences {
   task_reminders_1_day: boolean
   weekly_briefing: boolean
   partner_activity: boolean
+  milestone_notifications: boolean
+  quiet_hours_enabled: boolean
+  quiet_hours_start: string
+  quiet_hours_end: string
 }
 
 const DEFAULT_PREFS: Preferences = {
@@ -84,6 +90,10 @@ const DEFAULT_PREFS: Preferences = {
   task_reminders_1_day: true,
   weekly_briefing: true,
   partner_activity: true,
+  milestone_notifications: true,
+  quiet_hours_enabled: false,
+  quiet_hours_start: '22:00',
+  quiet_hours_end: '07:00',
 }
 
 export default function NotificationsScreen() {
@@ -117,6 +127,10 @@ export default function NotificationsScreen() {
             task_reminders_1_day: data.task_reminders_1_day ?? true,
             weekly_briefing: data.weekly_briefing ?? true,
             partner_activity: data.partner_activity ?? true,
+            milestone_notifications: data.milestone_notifications ?? true,
+            quiet_hours_enabled: data.quiet_hours_enabled ?? false,
+            quiet_hours_start: data.quiet_hours_start ?? '22:00',
+            quiet_hours_end: data.quiet_hours_end ?? '07:00',
           })
         }
       } catch {
@@ -317,6 +331,53 @@ export default function NotificationsScreen() {
           </GlassCard>
         </CardEntrance>
 
+        {/* Milestones */}
+        <CardEntrance delay={340}>
+          <Text style={styles.sectionTitle}>Milestones</Text>
+          <GlassCard style={styles.section}>
+            <NotificationToggle
+              icon={<Star size={18} color="#d4a853" />}
+              label="Milestone Notifications"
+              description="Get notified about baby milestones and development markers"
+              value={prefs.milestone_notifications}
+              onToggle={(v) => updatePref('milestone_notifications', v)}
+              disabled={!prefs.push_enabled}
+            />
+          </GlassCard>
+        </CardEntrance>
+
+        {/* Quiet Hours */}
+        <CardEntrance delay={400}>
+          <Text style={styles.sectionTitle}>Quiet Hours</Text>
+          <GlassCard style={styles.section}>
+            <NotificationToggle
+              icon={<Moon size={18} color="#c47a8f" />}
+              label="Quiet Hours"
+              description={
+                prefs.quiet_hours_enabled
+                  ? `No notifications from ${prefs.quiet_hours_start} to ${prefs.quiet_hours_end}`
+                  : 'Silence notifications during sleeping hours'
+              }
+              value={prefs.quiet_hours_enabled}
+              onToggle={(v) => updatePref('quiet_hours_enabled', v)}
+              disabled={!prefs.push_enabled}
+            />
+            {prefs.quiet_hours_enabled && prefs.push_enabled && (
+              <View style={styles.quietHoursRow}>
+                <View style={styles.quietTimeBlock}>
+                  <Text style={styles.quietTimeLabel}>Start</Text>
+                  <Text style={styles.quietTimeValue}>{prefs.quiet_hours_start}</Text>
+                </View>
+                <Text style={styles.quietTimeSeparator}>to</Text>
+                <View style={styles.quietTimeBlock}>
+                  <Text style={styles.quietTimeLabel}>End</Text>
+                  <Text style={styles.quietTimeValue}>{prefs.quiet_hours_end}</Text>
+                </View>
+              </View>
+            )}
+          </GlassCard>
+        </CardEntrance>
+
         {/* Info text */}
         <CardEntrance delay={360}>
           <Text style={styles.infoText}>
@@ -440,6 +501,37 @@ const styles = StyleSheet.create({
     color: '#d4a853',
     flex: 1,
     lineHeight: 18,
+  },
+
+  // Quiet hours
+  quietHoursRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(237,230,220,0.06)',
+  },
+  quietTimeBlock: {
+    alignItems: 'center',
+    gap: 4,
+  },
+  quietTimeLabel: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 11,
+    color: '#7a6f62',
+  },
+  quietTimeValue: {
+    fontFamily: 'Jost-Medium',
+    fontSize: 18,
+    color: '#ede6dc',
+  },
+  quietTimeSeparator: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 14,
+    color: '#4a4239',
   },
 
   // Info text

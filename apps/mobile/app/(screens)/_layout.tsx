@@ -17,6 +17,15 @@ export default function ScreensLayout() {
       <Stack.Screen name="notifications" />
       <Stack.Screen name="upgrade" />
       <Stack.Screen name="change-password" />
+      <Stack.Screen name="edit-profile" />
+      <Stack.Screen name="family" />
+      <Stack.Screen name="create-task" />
+      <Stack.Screen name="help" />
+      <Stack.Screen name="triage" />
+      <Stack.Screen name="briefing-archive" />
+      <Stack.Screen name="tracker-summary" />
+      <Stack.Screen name="content" />
+      <Stack.Screen name="article" />
     </Stack>
   )
 }

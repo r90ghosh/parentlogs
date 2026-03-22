@@ -23,6 +23,13 @@ dist
 # misc
 .DS_Store
 *.pem
+*.p8
+
+# Apple keys & secrets
+keys/
+
+# Design artifacts
+screenshots/
 
 # debug
 npm-debug.log*

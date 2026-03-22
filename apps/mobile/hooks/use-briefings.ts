@@ -5,7 +5,7 @@ import { useAuth } from '@/components/providers/AuthProvider'
 export function useCurrentBriefing() {
   const { family } = useAuth()
   const stage = family?.stage
-  const currentWeek = (family as any)?.current_week as number | undefined
+  const currentWeek = family?.current_week ?? undefined
 
   return useQuery({
     queryKey: ['current-briefing', family?.id],

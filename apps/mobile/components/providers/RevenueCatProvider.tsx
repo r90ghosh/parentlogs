@@ -25,6 +25,9 @@ export function initRevenueCat(userId: string) {
     return
   }
 
+  // Set flag immediately to prevent concurrent init attempts
+  rcConfigured = true
+
   ;(async () => {
     try {
       if (__DEV__) {
@@ -32,7 +35,6 @@ export function initRevenueCat(userId: string) {
       }
 
       Purchases.configure({ apiKey, appUserID: userId })
-      rcConfigured = true
       console.log('[RevenueCat] Configured for user:', userId)
 
       const info = await Purchases.getCustomerInfo()
@@ -45,7 +47,7 @@ export function initRevenueCat(userId: string) {
       onInitCallback?.(info, offerings.current)
     } catch (err) {
       console.warn('[RevenueCat] Init failed:', err)
-      // Error already logged above
+      rcConfigured = false
     }
   })()
 }

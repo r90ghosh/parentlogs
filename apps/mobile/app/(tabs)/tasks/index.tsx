@@ -10,6 +10,8 @@ import {
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
+import { Plus } from 'lucide-react-native'
+import { useRouter } from 'expo-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useTasks, useCompleteTask, useSnoozeTask } from '@/hooks/use-tasks'
@@ -41,6 +43,7 @@ import {
 
 export default function TasksScreen() {
   const insets = useSafeAreaInsets()
+  const router = useRouter()
   const queryClient = useQueryClient()
   const { family, profile } = useAuth()
   const timelineScrollRef = useRef<ScrollView>(null)
@@ -510,6 +513,14 @@ export default function TasksScreen() {
             )}
         </ScrollView>
       )}
+
+      {/* FAB - Create Task */}
+      <Pressable
+        onPress={() => router.push('/(screens)/create-task')}
+        style={[styles.fab, { bottom: insets.bottom + 100 }]}
+      >
+        <Plus size={24} color="#faf6f0" />
+      </Pressable>
     </View>
   )
 }
@@ -667,5 +678,20 @@ const styles = StyleSheet.create({
     color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 22,
+  },
+  fab: {
+    position: 'absolute',
+    right: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#c4703f',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#c4703f',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
 })

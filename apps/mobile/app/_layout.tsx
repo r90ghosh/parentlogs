@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { AuthProvider } from '@/components/providers/AuthProvider'
 import { QueryProvider } from '@/components/providers/QueryProvider'
 import { RevenueCatProvider } from '@/components/providers/RevenueCatProvider'
+import { NetworkProvider } from '@/components/providers/NetworkProvider'
 import '../global.css'
 
 export {
@@ -38,15 +39,17 @@ export default function RootLayout() {
       <QueryProvider>
         <AuthProvider>
           <RevenueCatProvider>
-            <StatusBar style="light" />
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="index" />
-              <Stack.Screen name="(auth)" />
-              <Stack.Screen name="(onboarding)" />
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="(screens)" options={{ presentation: 'modal' }} />
-              <Stack.Screen name="+not-found" />
-            </Stack>
+            <NetworkProvider>
+              <StatusBar style="light" />
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="index" />
+                <Stack.Screen name="(auth)" />
+                <Stack.Screen name="(onboarding)" />
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="(screens)" options={{ presentation: 'modal' }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+            </NetworkProvider>
           </RevenueCatProvider>
         </AuthProvider>
       </QueryProvider>

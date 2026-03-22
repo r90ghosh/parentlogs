@@ -16,7 +16,11 @@ export default (): ExpoConfig => ({
   },
   ios: {
     bundleIdentifier: "com.thedadcenter.app",
-    supportsTablet: true,
+    supportsTablet: false,
+    usesAppleSignIn: true,
+    entitlements: {
+      "com.apple.developer.applesignin": ["Default"],
+    },
     infoPlist: {
       UIBackgroundModes: ["remote-notification"],
     },
@@ -41,10 +45,12 @@ export default (): ExpoConfig => ({
     "expo-router",
     "expo-font",
     "expo-secure-store",
+    "expo-apple-authentication",
     ["expo-notifications", {
       icon: "./assets/images/icon.png",
       color: "#c4703f",
     }],
+    "@react-native-community/datetimepicker",
   ],
   extra: {
     eas: {

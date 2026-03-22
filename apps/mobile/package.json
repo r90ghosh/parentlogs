@@ -17,6 +17,8 @@
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/datetimepicker": "8.6.0",
+    "@react-native-community/netinfo": "11.5.2",
     "@react-navigation/native": "^7.1.33",
     "@supabase/supabase-js": "^2.89.0",
     "@tanstack/query-async-storage-persister": "^5.62.0",
@@ -26,6 +28,7 @@
     "@tdc/shared": "workspace:*",
     "date-fns": "^4.1.0",
     "expo": "~55.0.8",
+    "expo-apple-authentication": "~55.0.9",
     "expo-blur": "~55.0.10",
     "expo-constants": "~55.0.9",
     "expo-dev-client": "~55.0.18",

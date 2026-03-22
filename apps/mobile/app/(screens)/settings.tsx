@@ -92,7 +92,7 @@ export default function SettingsScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { signOut, profile, family, user } = useAuth()
-  const { isPro } = useRevenueCat()
+  const { isPro, customerInfo } = useRevenueCat()
   const [deletingAccount, setDeletingAccount] = useState(false)
 
   const tierLabel =
@@ -138,7 +138,7 @@ export default function SettingsScreen() {
   function handleDeleteAccount() {
     Alert.alert(
       'Delete Account',
-      'This will permanently delete your account and all associated data. This action cannot be undone.',
+      'This will permanently delete your account and all associated data. This action cannot be undone.\n\nIf you have an active subscription, deleting your account will NOT cancel it. Please cancel your subscription in Settings > Subscriptions before deleting your account.',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -207,6 +207,7 @@ export default function SettingsScreen() {
               icon={<User size={18} color="#ede6dc" />}
               label="Name"
               value={profile?.full_name || 'Not set'}
+              onPress={() => router.push('/(screens)/edit-profile')}
             />
             <SettingsRow
               icon={<User size={18} color="#7a6f62" />}
@@ -218,6 +219,7 @@ export default function SettingsScreen() {
                     ? 'Mom'
                     : profile?.role || 'Not set'
               }
+              onPress={() => router.push('/(screens)/edit-profile')}
             />
           </GlassCard>
         </CardEntrance>
@@ -229,7 +231,7 @@ export default function SettingsScreen() {
             <SettingsRow
               icon={<Users size={18} color="#c47a8f" />}
               label="Family Members"
-              onPress={() => {}}
+              onPress={() => router.push('/(screens)/family')}
             />
             {family?.invite_code && (
               <>
@@ -316,6 +318,14 @@ export default function SettingsScreen() {
                       {tierLabel}
                     </Text>
                   </View>
+                  {profile?.subscription_tier === 'lifetime' && (
+                    <Text style={styles.subscriptionDetail}>Never expires</Text>
+                  )}
+                  {profile?.subscription_tier === 'premium' && customerInfo?.entitlements?.active?.premium?.expirationDate && (
+                    <Text style={styles.subscriptionDetail}>
+                      Renews {new Date(customerInfo.entitlements.active.premium.expirationDate).toLocaleDateString()}
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>
@@ -564,6 +574,12 @@ const styles = StyleSheet.create({
   },
   tierBadgeTextPremium: {
     color: '#d4a853',
+  },
+  subscriptionDetail: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 12,
+    color: '#7a6f62',
+    marginTop: 2,
   },
 
   // Danger

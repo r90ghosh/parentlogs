@@ -15,6 +15,8 @@ import {
   User,
   Bell,
   CreditCard,
+  Newspaper,
+  HelpCircle,
 } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { GlassCard } from '@/components/glass'
@@ -117,6 +119,11 @@ export default function MoreScreen() {
               label="Dad Journey"
               onPress={() => router.push('/(screens)/journey')}
             />
+            <MenuItem
+              icon={<Newspaper size={20} color="#5b9bd5" />}
+              label="Articles"
+              onPress={() => router.push('/(screens)/content')}
+            />
           </GlassCard>
         </CardEntrance>
 
@@ -127,12 +134,12 @@ export default function MoreScreen() {
             <MenuItem
               icon={<Users size={20} color="#c47a8f" />}
               label="Family Members"
-              onPress={() => router.push('/(screens)/settings')}
+              onPress={() => router.push('/(screens)/family')}
             />
             <MenuItem
               icon={<UserPlus size={20} color="#6b8f71" />}
               label="Invite Partner"
-              onPress={() => router.push('/(screens)/settings')}
+              onPress={() => router.push('/(screens)/family')}
             />
           </GlassCard>
         </CardEntrance>
@@ -155,6 +162,11 @@ export default function MoreScreen() {
               icon={<CreditCard size={20} color="#d4a853" />}
               label="Subscription"
               onPress={() => router.push('/(screens)/upgrade')}
+            />
+            <MenuItem
+              icon={<HelpCircle size={20} color="#6b8f71" />}
+              label="Help & Support"
+              onPress={() => router.push('/(screens)/help')}
             />
             <MenuItem
               icon={<Settings size={20} color="#7a6f62" />}

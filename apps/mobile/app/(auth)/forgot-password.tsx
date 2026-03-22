@@ -72,8 +72,8 @@ export default function ForgotPasswordScreen() {
             <Text style={styles.successEmail}>{email.trim()}</Text>
           </Text>
           <Text style={styles.successHint}>
-            Click the link in the email to reset your password. The link will
-            open in your browser.
+            Click the link to reset your password in your browser. Once done,
+            come back here and sign in with your new password.
           </Text>
 
           <Pressable

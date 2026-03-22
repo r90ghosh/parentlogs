@@ -13,12 +13,14 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
+import DateTimePicker from '@react-native-community/datetimepicker'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { supabase } from '@/lib/supabase'
 import * as Haptics from 'expo-haptics'
 
 export default function FamilyScreen() {
-  const [dueDate, setDueDate] = useState('')
+  const [dueDate, setDueDate] = useState<Date | null>(null)
+  const [showDatePicker, setShowDatePicker] = useState(false)
   const [babyName, setBabyName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -27,23 +29,20 @@ export default function FamilyScreen() {
   const handleContinue = async () => {
     if (!user) return
 
-    // Due date is required
-    const dateRegex = /^\d{4}-\d{2}-\d{2}$/
-    if (!dateRegex.test(dueDate)) {
-      Alert.alert(
-        'Invalid date',
-        'Please enter the due date in YYYY-MM-DD format (e.g. 2026-08-15).'
-      )
+    if (!dueDate) {
+      Alert.alert('Missing date', 'Please select a due date.')
       return
     }
 
     setIsLoading(true)
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
 
+    const formattedDate = dueDate.toISOString().split('T')[0]
+
     // Create or update family
     const { data: family, error: familyError } = await supabase
       .from('families')
-      .insert({ due_date: dueDate })
+      .insert({ due_date: formattedDate })
       .select()
       .single()
 
@@ -111,17 +110,34 @@ export default function FamilyScreen() {
           <View style={styles.form}>
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Due Date</Text>
-              <TextInput
+              <Pressable
+                onPress={() => setShowDatePicker(true)}
                 style={styles.input}
-                value={dueDate}
-                onChangeText={setDueDate}
-                placeholder="YYYY-MM-DD"
-                placeholderTextColor="#4a4239"
-                keyboardType="numbers-and-punctuation"
-                autoCorrect={false}
-              />
+              >
+                <Text style={dueDate ? styles.inputText : styles.placeholderText}>
+                  {dueDate
+                    ? dueDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                    : 'Select your due date'}
+                </Text>
+              </Pressable>
+              {showDatePicker && (
+                <DateTimePicker
+                  value={dueDate || new Date()}
+                  mode="date"
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  minimumDate={new Date()}
+                  maximumDate={new Date(Date.now() + 10 * 30 * 24 * 60 * 60 * 1000)}
+                  onChange={(event, selectedDate) => {
+                    setShowDatePicker(Platform.OS === 'ios')
+                    if (selectedDate) {
+                      setDueDate(selectedDate)
+                    }
+                  }}
+                  themeVariant="dark"
+                />
+              )}
               <Text style={styles.hint}>
-                Enter the expected or actual due date
+                Select the expected or actual due date
               </Text>
             </View>
 
@@ -217,6 +233,16 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Regular',
     fontSize: 16,
     color: '#ede6dc',
+  },
+  inputText: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
+    color: '#ede6dc',
+  },
+  placeholderText: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
+    color: '#4a4239',
   },
   hint: {
     fontFamily: 'Karla-Regular',
