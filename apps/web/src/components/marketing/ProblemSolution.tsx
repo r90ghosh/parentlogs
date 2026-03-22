@@ -39,7 +39,7 @@ export function ProblemSolution() {
             <span className="text-gradient-copper">complete system</span>.
           </h2>
           <p className="font-body text-lg text-[--muted]">
-            Stop piecing together information from a dozen sources. Rooftop Crest gives you
+            Stop piecing together information from a dozen sources. The Dad Center gives you
             everything you need in one place.
           </p>
         </RevealOnScroll>

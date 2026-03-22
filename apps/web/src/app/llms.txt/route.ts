@@ -1,12 +1,12 @@
 export async function GET() {
-  const content = `# Rooftop Crest
+  const content = `# The Dad Center
 > The operating system for modern fatherhood.
 
 ## About
-Rooftop Crest is a pregnancy and parenting companion app designed primarily for dads (but also moms). It provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and a "dad journey" system with challenge tiles across 7 pillars. One subscription covers the whole family — both partners share full access.
+The Dad Center is a pregnancy and parenting companion app designed primarily for dads (but also moms). It provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and a "dad journey" system with challenge tiles across 7 pillars. One subscription covers the whole family — both partners share full access.
 
 ## URL
-https://rooftopcrest.com
+https://thedadcenter.com
 
 ## Features
 - Weekly Briefings: Week-by-week guidance covering baby development, partner experience, practical tasks, health tips, and preparation milestones tailored to your specific pregnancy week or parenting stage.
@@ -61,8 +61,8 @@ https://rooftopcrest.com
 - 18+ Months
 
 ## Contact
-support@rooftopcrest.com
-https://rooftopcrest.com
+support@thedadcenter.com
+https://thedadcenter.com
 `
 
   return new Response(content, {

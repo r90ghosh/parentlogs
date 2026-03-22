@@ -3,7 +3,7 @@ import { DadTipsClient } from '@/components/features/tips/DadTipsClient'
 import { dadTips } from '@/data/dadTips'
 
 export const metadata: Metadata = {
-  title: 'Dad Tips — Visual Step-by-Step Parenting Guides | Rooftop Crest',
+  title: 'Dad Tips — Visual Step-by-Step Parenting Guides | The Dad Center',
   description:
     'Illustrated how-to guides for new dads: diaper changing, bottle prep, swaddling, bath time, car seat installation, and burping. Simple visual steps you can follow at 3am.',
   keywords: [
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     description:
       'Illustrated how-to guides for new dads. Diaper changes, bottle prep, swaddling, bath time, car seats, and burping — visual steps you can follow at 3am.',
     type: 'website',
-    url: 'https://rooftopcrest.com/tips',
+    url: 'https://thedadcenter.com/tips',
   },
   twitter: {
     card: 'summary_large_image',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 }
 
 function buildHowToJsonLd() {
-  const baseUrl = 'https://rooftopcrest.com'
+  const baseUrl = 'https://thedadcenter.com'
 
   return dadTips.map((topic) => ({
     '@context': 'https://schema.org',
@@ -89,11 +89,11 @@ function buildCollectionJsonLd() {
     name: 'Dad Tips — Visual Parenting Guides',
     description:
       'A collection of illustrated step-by-step parenting guides for new dads, covering diaper changing, bottle prep, swaddling, bath time, car seat installation, and burping.',
-    url: 'https://rooftopcrest.com/tips',
+    url: 'https://thedadcenter.com/tips',
     isPartOf: {
       '@type': 'WebSite',
-      name: 'Rooftop Crest',
-      url: 'https://rooftopcrest.com',
+      name: 'The Dad Center',
+      url: 'https://thedadcenter.com',
     },
     mainEntity: {
       '@type': 'ItemList',

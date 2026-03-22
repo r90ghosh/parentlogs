@@ -76,7 +76,7 @@ export function Logo({
             href && 'group-hover:text-copper'
           )}
         >
-          Rooftop Crest
+          The Dad Center
         </span>
       )}
     </div>

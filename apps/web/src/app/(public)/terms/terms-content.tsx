@@ -44,7 +44,7 @@ export function TermsContent() {
           <RevealOnScroll delay={50}>
             <Section title="1. Acceptance of Terms">
               <p>
-                By accessing or using Rooftop Crest (&quot;Service&quot;), operated by Rooftop Crest (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;), you agree to be bound by these Terms of Service (&quot;Terms&quot;). If you do not agree to these Terms, do not use the Service.
+                By accessing or using The Dad Center (&quot;Service&quot;), operated by The Dad Center (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;), you agree to be bound by these Terms of Service (&quot;Terms&quot;). If you do not agree to these Terms, do not use the Service.
               </p>
               <p>
                 We reserve the right to modify these Terms at any time. We will notify you of material changes by posting updated Terms on this page. Your continued use of the Service after changes constitutes acceptance.
@@ -55,7 +55,7 @@ export function TermsContent() {
           <RevealOnScroll delay={50}>
             <Section title="2. Service Description">
               <p>
-                Rooftop Crest is a pregnancy and parenting companion application that provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and a dad journey challenge system. The Service is designed primarily for fathers but is available to all parents and expecting parents.
+                The Dad Center is a pregnancy and parenting companion application that provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and a dad journey challenge system. The Service is designed primarily for fathers but is available to all parents and expecting parents.
               </p>
             </Section>
           </RevealOnScroll>
@@ -129,10 +129,10 @@ export function TermsContent() {
           <RevealOnScroll delay={50}>
             <Section title="7. Intellectual Property">
               <p>
-                All content, design, code, logos, and trademarks of Rooftop Crest are owned by us or our licensors. The Service is protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, or create derivative works without our prior written consent.
+                All content, design, code, logos, and trademarks of The Dad Center are owned by us or our licensors. The Service is protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, or create derivative works without our prior written consent.
               </p>
               <p>
-                &quot;Rooftop Crest&quot; name, logo, and tagline &quot;The operating system for modern fatherhood&quot; are trademarks of Rooftop Crest.
+                &quot;The Dad Center&quot; name, logo, and tagline &quot;The operating system for modern fatherhood&quot; are trademarks of The Dad Center.
               </p>
             </Section>
           </RevealOnScroll>
@@ -153,7 +153,7 @@ export function TermsContent() {
               <div className="p-4 bg-coral/10 border border-coral/25 rounded-lg">
                 <p className="text-coral font-semibold mb-2">Important Notice</p>
                 <p>
-                  Rooftop Crest is an informational and organizational tool, not a medical service. The content provided — including briefings, checklists, and parenting guidance — is for general informational purposes only and does not constitute medical advice, diagnosis, or treatment.
+                  The Dad Center is an informational and organizational tool, not a medical service. The content provided — including briefings, checklists, and parenting guidance — is for general informational purposes only and does not constitute medical advice, diagnosis, or treatment.
                 </p>
                 <p className="mt-2">
                   Always consult a qualified healthcare provider with questions about pregnancy, childbirth, infant care, or your health. Never disregard professional medical advice or delay seeking it because of information from the Service. In case of a medical emergency, call your local emergency services immediately.
@@ -165,7 +165,7 @@ export function TermsContent() {
           <RevealOnScroll delay={50}>
             <Section title="10. Limitation of Liability">
               <p>
-                TO THE MAXIMUM EXTENT PERMITTED BY LAW, ROOFTOP CREST AND ITS OFFICERS, DIRECTORS, EMPLOYEES, AND AGENTS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, DATA, OR GOODWILL, ARISING FROM OR RELATED TO YOUR USE OF THE SERVICE.
+                TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE DAD CENTER AND ITS OFFICERS, DIRECTORS, EMPLOYEES, AND AGENTS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, DATA, OR GOODWILL, ARISING FROM OR RELATED TO YOUR USE OF THE SERVICE.
               </p>
               <p>
                 OUR TOTAL LIABILITY FOR ANY CLAIMS ARISING FROM THESE TERMS OR THE SERVICE SHALL NOT EXCEED THE AMOUNT YOU PAID US IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM.
@@ -209,8 +209,8 @@ export function TermsContent() {
               <ul>
                 <li>
                   Email:{' '}
-                  <a href="mailto:legal@rooftopcrest.com" className="text-copper hover:underline">
-                    legal@rooftopcrest.com
+                  <a href="mailto:legal@thedadcenter.com" className="text-copper hover:underline">
+                    legal@thedadcenter.com
                   </a>
                 </li>
                 <li>

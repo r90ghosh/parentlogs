@@ -26,7 +26,7 @@ const karla = Karla({
 })
 
 export const metadata: Metadata = {
-  title: 'Rooftop Crest - Your Parenting Command Center',
+  title: 'The Dad Center - Your Parenting Command Center',
   description: 'Expert-curated tasks, weekly briefings, and partner sync for pregnancy through early parenthood.',
   manifest: '/manifest.json',
   icons: {
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Rooftop Crest',
+    title: 'The Dad Center',
   },
 }
 

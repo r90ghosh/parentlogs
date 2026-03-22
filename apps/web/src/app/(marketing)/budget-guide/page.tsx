@@ -7,11 +7,11 @@ import { PublicBudgetBrowser } from '@/components/marketing/PublicBudgetBrowser'
 import { Button } from '@/components/ui/button'
 
 export const metadata = {
-  title: 'Baby Budget Guide — What You\'ll Actually Spend | Rooftop Crest',
+  title: 'Baby Budget Guide — What You\'ll Actually Spend | The Dad Center',
   description:
     'A comprehensive, dad-friendly baby budget guide covering every expense from pregnancy through toddlerhood. See real price ranges and plan ahead.',
   openGraph: {
-    title: 'Baby Budget Guide — What You\'ll Actually Spend | Rooftop Crest',
+    title: 'Baby Budget Guide — What You\'ll Actually Spend | The Dad Center',
     description: 'Plan your baby expenses with our comprehensive budget guide. Real price ranges from pregnancy through 12+ months.',
   },
 }

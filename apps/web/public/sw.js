@@ -1,5 +1,5 @@
-// Rooftop Crest Service Worker - PWA with Push Notifications
-const CACHE_NAME = 'rooftopcrest-v3';
+// The Dad Center Service Worker - PWA with Push Notifications
+const CACHE_NAME = 'thedadcenter-v3';
 const OFFLINE_URL = '/offline';
 
 // Assets to precache on install
@@ -141,7 +141,7 @@ self.addEventListener('push', (event) => {
     };
 
     event.waitUntil(
-      self.registration.showNotification(data.title || 'Rooftop Crest', options)
+      self.registration.showNotification(data.title || 'The Dad Center', options)
     );
   } catch (error) {
     console.error('[SW] Push notification error:', error);

@@ -30,7 +30,7 @@ export default function OnboardingWelcome() {
             <RevealOnScroll delay={0}>
               <div className="text-center mb-8">
                 <h1 className="font-display text-3xl font-bold text-[--cream] mb-2 leading-tight">
-                  Welcome to<br />Rooftop Crest
+                  Welcome to<br />The Dad Center
                 </h1>
                 <p className="font-body text-[--muted] text-sm">
                   Your parenting command center

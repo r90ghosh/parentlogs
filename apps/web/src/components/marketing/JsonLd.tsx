@@ -1,30 +1,30 @@
 export function JsonLd() {
-  const baseUrl = 'https://rooftopcrest.com'
+  const baseUrl = 'https://thedadcenter.com'
 
   const organization = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Rooftop Crest',
+    name: 'The Dad Center',
     url: baseUrl,
     logo: `${baseUrl}/images/logo.png`,
     description:
       'The operating system for modern fatherhood. Week-by-week guidance, actionable tasks, budget planning, and partner sync for dads.',
     contactPoint: {
       '@type': 'ContactPoint',
-      email: 'support@rooftopcrest.com',
+      email: 'support@thedadcenter.com',
       contactType: 'customer support',
     },
     sameAs: [
-      'https://twitter.com/rooftopcrest',
-      'https://instagram.com/rooftopcrest',
-      'https://linkedin.com/company/rooftopcrest',
+      'https://twitter.com/thedadcenter',
+      'https://instagram.com/thedadcenter',
+      'https://linkedin.com/company/thedadcenter',
     ],
   }
 
   const website = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Rooftop Crest',
+    name: 'The Dad Center',
     url: baseUrl,
     description:
       'The operating system for modern fatherhood. Week-by-week guidance, actionable tasks, and partner sync.',
@@ -33,7 +33,7 @@ export function JsonLd() {
   const softwareApp = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'Rooftop Crest',
+    name: 'The Dad Center',
     operatingSystem: 'Web',
     applicationCategory: 'LifestyleApplication',
     description:
@@ -79,18 +79,18 @@ export function JsonLd() {
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'What is Rooftop Crest?',
+        name: 'What is The Dad Center?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Rooftop Crest is a pregnancy and parenting companion app designed primarily for dads. It provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and a dad journey system with challenge tiles across 7 pillars.',
+          text: 'The Dad Center is a pregnancy and parenting companion app designed primarily for dads. It provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and a dad journey system with challenge tiles across 7 pillars.',
         },
       },
       {
         '@type': 'Question',
-        name: 'How much does Rooftop Crest cost?',
+        name: 'How much does The Dad Center cost?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Rooftop Crest offers three pricing options: $4.99/month, $39.99/year (just $3.33/month), or a one-time lifetime purchase of $99.99. There is also a generous free tier to get started.',
+          text: 'The Dad Center offers three pricing options: $4.99/month, $39.99/year (just $3.33/month), or a one-time lifetime purchase of $99.99. There is also a generous free tier to get started.',
         },
       },
       {
@@ -98,7 +98,7 @@ export function JsonLd() {
         name: 'Is there a free plan?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes! Rooftop Crest offers a free tier that includes a 30-day rolling task window, 4 weeks of briefings from signup, and 30 days of push notifications. Free should feel complete — you get real value before ever paying.',
+          text: 'Yes! The Dad Center offers a free tier that includes a 30-day rolling task window, 4 weeks of briefings from signup, and 30 days of push notifications. Free should feel complete — you get real value before ever paying.',
         },
       },
       {
@@ -119,7 +119,7 @@ export function JsonLd() {
       },
       {
         '@type': 'Question',
-        name: 'When should I start using Rooftop Crest?',
+        name: 'When should I start using The Dad Center?',
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'You can start at any point during pregnancy or early parenthood. The earlier the better — many dads join in the first trimester to stay ahead of the curve. But the app adapts to wherever you are in your journey.',

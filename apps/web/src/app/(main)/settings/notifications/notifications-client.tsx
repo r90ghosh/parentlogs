@@ -61,7 +61,7 @@ export default function NotificationsClient() {
 
   const handleTestNotification = () => {
     showTestNotification('Test Notification', {
-      body: 'This is a test notification from Rooftop Crest!',
+      body: 'This is a test notification from The Dad Center!',
       tag: 'test',
     })
   }

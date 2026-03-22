@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import ChecklistDetailClient from './checklist-detail-client'
 
 export const metadata: Metadata = {
-  title: 'Checklist | Rooftop Crest',
+  title: 'Checklist | The Dad Center',
 }
 
 export default function ChecklistDetailPage() {

@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
 
-export const alt = 'Rooftop Crest - The Operating System for Modern Fatherhood'
+export const alt = 'The Dad Center - The Operating System for Modern Fatherhood'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -43,7 +43,7 @@ export default function OgImage() {
             marginBottom: 24,
           }}
         >
-          Rooftop Crest
+          The Dad Center
         </div>
 
         {/* Subtitle */}
@@ -77,7 +77,7 @@ export default function OgImage() {
             marginTop: 32,
           }}
         >
-          rooftopcrest.com
+          thedadcenter.com
         </div>
       </div>
     ),

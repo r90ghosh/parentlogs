@@ -19,6 +19,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: 'https://rooftopcrest.com/sitemap.xml',
+    sitemap: 'https://thedadcenter.com/sitemap.xml',
   }
 }

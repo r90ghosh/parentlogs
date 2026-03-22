@@ -21,14 +21,14 @@ export async function generateMetadata({ params }: PageProps) {
   const checklist = await getCachedChecklist(id)
 
   if (!checklist) {
-    return { title: 'Checklist Not Found | Rooftop Crest' }
+    return { title: 'Checklist Not Found | The Dad Center' }
   }
 
   return {
-    title: `${checklist.name} Checklist — ${checklist.items.length} Items | Rooftop Crest`,
+    title: `${checklist.name} Checklist — ${checklist.items.length} Items | The Dad Center`,
     description: checklist.description,
     openGraph: {
-      title: `${checklist.name} Checklist | Rooftop Crest`,
+      title: `${checklist.name} Checklist | The Dad Center`,
       description: checklist.description,
     },
   }
