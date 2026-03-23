@@ -1,19 +1,8 @@
-import type { BabyLog } from '@tdc/shared/types'
+import type { BabyLog, LogType } from '@tdc/shared/types'
 import { isPremiumTier } from '@tdc/shared/utils/subscription-utils'
 import type { AppSupabaseClient, ServiceContext } from './types'
 
-export type LogType =
-  | 'feeding'
-  | 'diaper'
-  | 'sleep'
-  | 'temperature'
-  | 'medicine'
-  | 'vitamin_d'
-  | 'mood'
-  | 'weight'
-  | 'height'
-  | 'milestone'
-  | 'custom'
+export type { LogType }
 
 export const BASIC_LOG_TYPES: LogType[] = ['feeding', 'diaper', 'sleep']
 export const PREMIUM_LOG_TYPES: LogType[] = ['temperature', 'medicine', 'vitamin_d', 'mood', 'weight', 'height', 'milestone', 'custom']

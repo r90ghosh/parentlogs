@@ -5,7 +5,7 @@ import { Flame, TrendingUp } from 'lucide-react'
 import { useUser } from '@/components/user-provider'
 import { useMoodHistory } from '@/hooks/use-dad-journey'
 import { DadChallengeTiles, MoodCheckinWidget } from '@/components/dashboard/dad-journey'
-import { MOOD_CONFIG } from '@/lib/dad-pillar-config'
+import { MOOD_CONFIG } from '@tdc/shared/constants'
 import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
 import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 

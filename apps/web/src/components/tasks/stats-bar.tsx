@@ -1,14 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-
-export interface TaskStats {
-  dueToday: number
-  thisWeek: number
-  completed: number
-  partnerTasks: number
-  catchUpQueue: number
-}
+import type { TaskStats } from '@tdc/shared/types'
 
 interface StatsBarProps {
   stats: TaskStats

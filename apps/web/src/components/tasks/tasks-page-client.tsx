@@ -50,7 +50,7 @@ import {
   getTaskStatsByCategory,
   getCurrentTimelineCategory,
   getTaskTimelineCategory,
-} from '@/lib/task-timeline'
+} from '@tdc/shared/utils'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { PaywallOverlay } from '@/components/shared/paywall-overlay'
 import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'

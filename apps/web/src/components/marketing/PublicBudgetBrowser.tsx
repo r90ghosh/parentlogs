@@ -7,7 +7,7 @@ import {
   BudgetTimelineCategory,
   getBudgetStatsByCategory,
   getBudgetTimelineCategory,
-} from '@/lib/budget-timeline'
+} from '@tdc/shared/utils'
 import { getCategoryStyle } from '@/lib/budget-constants'
 import { budgetService } from '@/lib/services'
 import {

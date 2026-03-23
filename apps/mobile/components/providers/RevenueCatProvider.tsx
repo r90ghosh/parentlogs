@@ -87,12 +87,12 @@ export function RevenueCatProvider({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     if (!rcConfigured) return
 
-    const listener = Purchases.addCustomerInfoUpdateListener((info) => {
+    const unsubscribe = Purchases.addCustomerInfoUpdateListener((info) => {
       console.log('[RevenueCat] Customer info updated, entitlements:', Object.keys(info.entitlements.active))
       setCustomerInfo(info)
     })
 
-    return () => listener.remove()
+    return () => unsubscribe()
   }, [isReady])
 
   const isPro = !!customerInfo?.entitlements.active[ENTITLEMENT_ID]

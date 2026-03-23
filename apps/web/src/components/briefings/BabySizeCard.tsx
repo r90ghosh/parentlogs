@@ -1,4 +1,4 @@
-import { BabySize, formatWeight, formatLength } from '@/lib/baby-sizes'
+import { BabySize, formatWeight, formatLength } from '@tdc/shared/utils'
 
 interface BabySizeCardProps {
   size: BabySize

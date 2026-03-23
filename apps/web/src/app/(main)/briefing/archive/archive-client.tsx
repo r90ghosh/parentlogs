@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { BriefingTemplate, FamilyStage } from '@tdc/shared/types'
-import { isPregnancyStage, getTrimesterLabel, getTrimesterFromWeek } from '@/lib/pregnancy-utils'
+import { isPregnancyStage, getTrimesterLabel, getTrimesterFromWeek } from '@tdc/shared/utils'
 import { RevealOnScroll, Card3DTilt, CardEntrance } from '@/components/ui/animations'
 
 export default function ArchiveClient() {

@@ -1,8 +1,7 @@
 import Link from 'next/link'
 import { DollarSign, TrendingUp, ArrowRight } from 'lucide-react'
 import { getPublicBudgetTemplates } from '@/lib/public-data'
-import { getBudgetStatsByCategory } from '@/lib/budget-timeline'
-import { formatBudgetPrice } from '@/lib/budget-timeline'
+import { getBudgetStatsByCategory, formatBudgetPrice } from '@tdc/shared/utils'
 import { PublicBudgetBrowser } from '@/components/marketing/PublicBudgetBrowser'
 import { Button } from '@/components/ui/button'
 

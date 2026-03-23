@@ -11,6 +11,7 @@ interface Article {
   is_free: boolean
   reviewed_by: string | null
   sources: string[] | null
+  published_at: string | null
   created_at: string
 }
 

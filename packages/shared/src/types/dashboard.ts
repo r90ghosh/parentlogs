@@ -65,7 +65,7 @@ export interface Achievement {
   icon: string
 }
 
-export interface TaskStats {
+export interface DashboardTaskStats {
   completed: number
   remaining: number
   overdue: number
@@ -86,7 +86,7 @@ export interface DashboardData {
   momSymptoms: MomSymptom[]
   dadTip: DadTip
   priorityTasks: PriorityTask[]
-  taskStats: TaskStats
+  taskStats: DashboardTaskStats
   upcomingEvents: UpcomingEvent[]
   partner: PartnerActivity | null
   briefing: WeeklyBriefing

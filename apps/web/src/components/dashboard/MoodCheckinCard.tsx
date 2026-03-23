@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { useUser } from '@/components/user-provider'
 import { useLastCheckin, useSubmitMoodCheckin, useMoodHistory } from '@/hooks/use-dad-journey'
-import { MOOD_CONFIG, SITUATION_FLAGS } from '@/lib/dad-pillar-config'
+import { MOOD_CONFIG, SITUATION_FLAGS } from '@tdc/shared/constants'
 import { MoodLevel } from '@tdc/shared/types/dad-journey'
 import { Skeleton } from '@/components/ui/skeleton'
 

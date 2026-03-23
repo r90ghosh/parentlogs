@@ -3,7 +3,7 @@
 // New design components
 export { TasksHeader } from './tasks-header'
 export { StatsBar } from './stats-bar'
-export type { TaskStats } from './stats-bar'
+export type { TaskStats } from '@tdc/shared/types'
 export { FilterBar } from './filter-bar'
 export { TaskItem } from './task-item'
 export { TaskSection, SectionAction } from './task-section'

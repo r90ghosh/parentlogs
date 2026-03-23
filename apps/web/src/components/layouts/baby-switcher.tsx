@@ -12,7 +12,7 @@ import {
 import { useUser } from '@/components/user-provider'
 import { useBabies, useSwitchBaby } from '@/hooks/use-babies'
 import { cn } from '@/lib/utils'
-import { isPregnancyStage } from '@/lib/pregnancy-utils'
+import { isPregnancyStage } from '@tdc/shared/utils'
 import { Baby as BabyType } from '@tdc/shared/types'
 import Link from 'next/link'
 

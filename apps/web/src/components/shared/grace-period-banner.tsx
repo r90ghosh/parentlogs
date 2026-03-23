@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { AlertTriangle, Sparkles } from 'lucide-react'
 import Link from 'next/link'
@@ -8,11 +9,13 @@ import { useGracePeriodStatus } from '@/hooks/use-subscription'
 export function GracePeriodBanner() {
   const { isInGracePeriod, daysRemaining, expiresAt } = useGracePeriodStatus()
 
+  const now = useMemo(() => Date.now(), [])
+
   if (!isInGracePeriod || !expiresAt) return null
 
   const expiry = new Date(expiresAt)
   const daysSinceExpiry = Math.floor(
-    (Date.now() - expiry.getTime()) / (1000 * 60 * 60 * 24)
+    (now - expiry.getTime()) / (1000 * 60 * 60 * 24)
   )
 
   return (

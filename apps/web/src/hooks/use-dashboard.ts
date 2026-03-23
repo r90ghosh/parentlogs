@@ -3,15 +3,15 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import { isPast, isToday, differenceInDays, differenceInWeeks, format } from 'date-fns'
-import { PriorityTask, TaskStats, UpcomingEvent, PartnerActivity, WeeklyBriefing, Achievement } from '@tdc/shared/types/dashboard'
-import { getAchievement } from '@/lib/baby-development-data'
+import { PriorityTask, DashboardTaskStats, UpcomingEvent, PartnerActivity, WeeklyBriefing, Achievement } from '@tdc/shared/types/dashboard'
+import { getAchievement } from '@tdc/shared/utils'
 import { taskService } from '@/lib/services'
 
 const supabase = createClient()
 
 interface DashboardQueryResult {
   priorityTasks: PriorityTask[]
-  taskStats: TaskStats
+  taskStats: DashboardTaskStats
   upcomingEvents: UpcomingEvent[]
   partner: PartnerActivity | null
   briefing: WeeklyBriefing

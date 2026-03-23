@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useUser } from '@/components/user-provider'
 import { useFamily } from '@/hooks/use-family'
@@ -21,8 +22,9 @@ export default function TasksClient() {
 
   // Calculate days to go
   const dueDate = activeBaby?.due_date || family?.due_date
+  const now = useMemo(() => Date.now(), [])
   const daysToGo = dueDate
-    ? Math.max(0, Math.ceil((new Date(dueDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    ? Math.max(0, Math.ceil((new Date(dueDate).getTime() - now) / (1000 * 60 * 60 * 24)))
     : 0
 
   // Read view param: 'list' (default) or 'calendar'

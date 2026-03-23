@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { FamilyTask, TriageAction } from '@tdc/shared/types'
 import { CatchUpTaskItem } from './catch-up-task-item'
 import { SectionAction } from './task-section'
-import { categorizeBacklogTask, sortBacklogTasks } from '@/lib/task-utils'
+import { categorizeBacklogTask, sortBacklogTasks } from '@tdc/shared/utils'
 import { cn } from '@/lib/utils'
 import { ChevronDown, CheckCircle2 } from 'lucide-react'
 

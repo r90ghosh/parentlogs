@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Crown, Lock, X, Check, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { PAYWALL_COPY } from '@/lib/paywall-copy'
+import { PAYWALL_COPY } from '@tdc/shared/constants'
 
 export interface PaywallOverlayProps {
   feature: string

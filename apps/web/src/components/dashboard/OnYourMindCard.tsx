@@ -7,8 +7,8 @@ import { cn } from '@/lib/utils'
 import { useUser } from '@/components/user-provider'
 import { useFamily } from '@/hooks/use-family'
 import { useDadChallengeContent } from '@/hooks/use-dad-journey'
-import { PILLAR_CONFIG } from '@/lib/dad-pillar-config'
-import { getContentPhase } from '@/lib/phase-utils'
+import { PILLAR_CONFIG } from '@tdc/shared/constants'
+import { getContentPhase } from '@tdc/shared/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export function OnYourMindCard() {

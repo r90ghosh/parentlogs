@@ -1,4 +1,4 @@
-import { BabySize, formatWeight } from '@/lib/baby-sizes'
+import { BabySize, formatWeight } from '@tdc/shared/utils'
 import { differenceInDays } from 'date-fns'
 
 interface QuickStatsProps {

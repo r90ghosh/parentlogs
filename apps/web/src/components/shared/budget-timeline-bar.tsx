@@ -7,7 +7,7 @@ import {
   BudgetTimelineCategory,
   BudgetCategoryStats,
   formatBudgetPrice,
-} from '@/lib/budget-timeline'
+} from '@tdc/shared/utils'
 
 interface BudgetTimelineBarProps {
   stats: Record<BudgetTimelineCategory, BudgetCategoryStats>

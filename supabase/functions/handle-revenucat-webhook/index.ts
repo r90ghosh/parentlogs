@@ -42,7 +42,7 @@ async function updateFamilyTier(userId: string, tier: string) {
 Deno.serve(async (req: Request) => {
   // Verify auth header
   const authHeader = req.headers.get("Authorization");
-  if (RC_WEBHOOK_AUTH && authHeader !== `Bearer ${RC_WEBHOOK_AUTH}`) {
+  if (!RC_WEBHOOK_AUTH || authHeader !== `Bearer ${RC_WEBHOOK_AUTH}`) {
     return new Response("Unauthorized", { status: 401 });
   }
 

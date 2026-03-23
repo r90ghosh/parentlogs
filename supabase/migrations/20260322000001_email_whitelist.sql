@@ -52,11 +52,7 @@ EXCEPTION
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
 
--- 4. Seed whitelist with test emails
-INSERT INTO public.whitelisted_emails (email, notes) VALUES
-  ('rocky.fxdx@gmail.com', 'Test account');
-
--- 5. Helper function: single call to whitelist + upgrade
+-- 4. Helper function: single call to whitelist + upgrade
 CREATE OR REPLACE FUNCTION whitelist_email(p_email TEXT, p_notes TEXT DEFAULT NULL)
 RETURNS TEXT AS $$
 DECLARE
@@ -84,7 +80,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = '';
 
--- 6. Upgrade any existing accounts that match
+-- 4b. Restrict whitelist_email() to service-role only (prevent privilege escalation)
+REVOKE EXECUTE ON FUNCTION public.whitelist_email(TEXT, TEXT) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION public.whitelist_email(TEXT, TEXT) FROM authenticated;
+REVOKE EXECUTE ON FUNCTION public.whitelist_email(TEXT, TEXT) FROM anon;
+
+-- 5. Upgrade any existing accounts that match
 UPDATE public.profiles
 SET subscription_tier = 'lifetime'
 WHERE LOWER(email) IN (SELECT email FROM public.whitelisted_emails)

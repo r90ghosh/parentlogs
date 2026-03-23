@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Crown, Lock, Sparkles } from 'lucide-react'
 import Link from 'next/link'
-import { PAYWALL_COPY } from '@/lib/paywall-copy'
+import { PAYWALL_COPY } from '@tdc/shared/constants'
 
 export interface PaywallBannerProps {
   feature: string

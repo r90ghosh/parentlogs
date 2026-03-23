@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useShiftBriefing, useTrackerLogs } from '@/hooks/use-tracker'
 import { useFamilyMembers } from '@/hooks/use-family'
 import { useAuth } from '@/lib/auth/auth-context'
@@ -65,8 +65,10 @@ export function ShiftChangeContent() {
   const partner = members?.find(m => m.id !== user?.id)
   const currentUser = members?.find(m => m.id === user?.id)
 
+  const now = useMemo(() => Date.now(), [])
+
   // Group logs by type for the last 8 hours
-  const eightHoursAgo = new Date(Date.now() - 8 * 60 * 60 * 1000)
+  const eightHoursAgo = new Date(now - 8 * 60 * 60 * 1000)
   const recentActivity = recentLogs?.filter(
     log => new Date(log.logged_at) > eightHoursAgo
   ) || []
@@ -79,13 +81,13 @@ export function ShiftChangeContent() {
   // Check for any alerts
   const alerts: string[] = []
   if (shiftData?.last_feeding) {
-    const hoursSinceFeeding = (Date.now() - new Date(shiftData.last_feeding.logged_at).getTime()) / (1000 * 60 * 60)
+    const hoursSinceFeeding = (now - new Date(shiftData.last_feeding.logged_at).getTime()) / (1000 * 60 * 60)
     if (hoursSinceFeeding > 4) {
       alerts.push(`Last feeding was ${formatDistanceToNow(new Date(shiftData.last_feeding.logged_at))} ago`)
     }
   }
   if (shiftData?.last_diaper) {
-    const hoursSinceDiaper = (Date.now() - new Date(shiftData.last_diaper.logged_at).getTime()) / (1000 * 60 * 60)
+    const hoursSinceDiaper = (now - new Date(shiftData.last_diaper.logged_at).getTime()) / (1000 * 60 * 60)
     if (hoursSinceDiaper > 3) {
       alerts.push(`Last diaper change was ${formatDistanceToNow(new Date(shiftData.last_diaper.logged_at))} ago`)
     }

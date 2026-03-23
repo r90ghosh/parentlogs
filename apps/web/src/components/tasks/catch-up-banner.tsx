@@ -3,7 +3,7 @@
 import { useMemo } from 'react'
 import Link from 'next/link'
 import { FamilyTask } from '@tdc/shared/types'
-import { categorizeBacklogTask } from '@/lib/task-utils'
+import { categorizeBacklogTask } from '@tdc/shared/utils'
 import { cn } from '@/lib/utils'
 
 interface CatchUpBannerProps {

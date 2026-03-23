@@ -6,7 +6,7 @@ import {
   TIMELINE_CATEGORIES,
   TimelineCategory,
   TaskCategoryStats,
-} from '@/lib/task-timeline'
+} from '@tdc/shared/utils'
 
 // Short pill labels for each category
 const PILL_LABELS: Record<TimelineCategory, string> = {
