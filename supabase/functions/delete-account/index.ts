@@ -230,6 +230,69 @@ Deno.serve(async (req: Request) => {
     if (deviceTokenError)
       console.error("Failed to delete device_tokens:", deviceTokenError);
 
+    const { error: contactError } = await supabase
+      .from("contact_messages")
+      .delete()
+      .eq("user_id", userId);
+    if (contactError)
+      console.error("Failed to delete contact_messages:", contactError);
+
+    // Cancel active subscriptions before deleting records
+    const { data: subRecord } = await supabase
+      .from("subscriptions")
+      .select("stripe_subscription_id, platform")
+      .eq("user_id", userId)
+      .single();
+
+    if (subRecord?.stripe_subscription_id && subRecord?.platform !== 'mobile') {
+      // Cancel Stripe subscription (web purchases only)
+      try {
+        const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+        if (stripeKey) {
+          const res = await fetch(
+            `https://api.stripe.com/v1/subscriptions/${subRecord.stripe_subscription_id}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${stripeKey}`,
+              },
+            }
+          );
+          if (res.ok) {
+            console.log(`[delete-account] Canceled Stripe subscription: ${subRecord.stripe_subscription_id}`);
+          } else {
+            console.error(`[delete-account] Stripe cancel failed (${res.status}): ${await res.text()}`);
+          }
+        }
+      } catch (stripeErr) {
+        console.error("[delete-account] Failed to cancel Stripe subscription:", stripeErr);
+      }
+    }
+
+    // Revoke RevenueCat subscriber access (mobile purchases)
+    try {
+      const rcApiKey = Deno.env.get("REVENUECAT_API_KEY");
+      if (rcApiKey) {
+        const res = await fetch(
+          `https://api.revenuecat.com/v1/subscribers/${userId}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${rcApiKey}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (res.ok || res.status === 404) {
+          console.log(`[delete-account] Deleted RevenueCat subscriber: ${userId}`);
+        } else {
+          console.error(`[delete-account] RevenueCat delete failed (${res.status}): ${await res.text()}`);
+        }
+      }
+    } catch (rcErr) {
+      console.error("[delete-account] Failed to delete RevenueCat subscriber:", rcErr);
+    }
+
     const { error: subError } = await supabase
       .from("subscriptions")
       .delete()
@@ -281,6 +344,13 @@ Deno.serve(async (req: Request) => {
           .eq("family_id", profile.family_id);
         if (tasksError)
           console.error("Failed to delete family_tasks:", tasksError);
+
+        const { error: babiesError } = await supabase
+          .from("babies")
+          .delete()
+          .eq("family_id", profile.family_id);
+        if (babiesError)
+          console.error("Failed to delete babies:", babiesError);
 
         // Delete profile before family (profile has family_id FK)
         const { error: profileError } = await supabase

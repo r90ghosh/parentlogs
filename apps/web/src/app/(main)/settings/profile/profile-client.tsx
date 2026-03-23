@@ -464,18 +464,23 @@ export default function ProfileClient() {
             <AlertDialogContent className="bg-[--surface] border-[--border]">
               <AlertDialogHeader>
                 <AlertDialogTitle className="font-display text-white">Delete Account?</AlertDialogTitle>
-                <AlertDialogDescription className="font-body">
-                  This action cannot be undone. This will permanently delete your account
-                  and remove all your data including:
-                  <ul className="list-disc list-inside mt-2 space-y-1">
-                    <li>Your profile and settings</li>
-                    <li>All task history and progress</li>
-                    <li>Baby tracker logs</li>
-                    <li>Budget items and checklists</li>
-                  </ul>
-                  <p className="mt-2 font-medium text-coral">
-                    If you&apos;re the only member, your family will also be deleted.
-                  </p>
+                <AlertDialogDescription asChild>
+                  <div className="font-body text-[--muted]">
+                    <p>This action cannot be undone. This will permanently delete your account
+                    and remove all your data including:</p>
+                    <ul className="list-disc list-inside mt-2 space-y-1">
+                      <li>Your profile and settings</li>
+                      <li>All task history and progress</li>
+                      <li>Baby tracker logs</li>
+                      <li>Budget items and checklists</li>
+                    </ul>
+                    <p className="mt-2 font-medium text-coral">
+                      If you&apos;re the only member, your family will also be deleted.
+                    </p>
+                    <p className="mt-2 font-medium text-gold">
+                      If you have an active subscription, it will be automatically canceled.
+                    </p>
+                  </div>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

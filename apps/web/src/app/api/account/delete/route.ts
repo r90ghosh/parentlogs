@@ -100,6 +100,18 @@ export async function DELETE(request: NextRequest) {
       .eq('user_id', user.id)
     if (pushSubError) console.error('Failed to delete push_subscriptions:', pushSubError)
 
+    const { error: deviceTokenError } = await supabaseAdmin
+      .from('device_tokens')
+      .delete()
+      .eq('user_id', user.id)
+    if (deviceTokenError) console.error('Failed to delete device_tokens:', deviceTokenError)
+
+    const { error: contactError } = await supabaseAdmin
+      .from('contact_messages')
+      .delete()
+      .eq('user_id', user.id)
+    if (contactError) console.error('Failed to delete contact_messages:', contactError)
+
     // Cancel active Stripe subscription before deleting the record
     const { data: subRecord } = await supabaseAdmin
       .from('subscriptions')
@@ -115,6 +127,28 @@ export async function DELETE(request: NextRequest) {
         // Log but don't block account deletion — subscription may already be canceled
         console.error('Failed to cancel Stripe subscription:', stripeError)
       }
+    }
+
+    // Revoke RevenueCat subscriber access (for mobile purchases)
+    try {
+      const rcApiKey = process.env.REVENUECAT_API_KEY
+      if (rcApiKey) {
+        const res = await fetch(
+          `https://api.revenuecat.com/v1/subscribers/${user.id}`,
+          {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${rcApiKey}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+        if (!res.ok && res.status !== 404) {
+          console.error(`RevenueCat delete failed (${res.status}): ${await res.text()}`)
+        }
+      }
+    } catch (rcErr) {
+      console.error('Failed to delete RevenueCat subscriber:', rcErr)
     }
 
     const { error: subError } = await supabaseAdmin
@@ -165,6 +199,12 @@ export async function DELETE(request: NextRequest) {
           .delete()
           .eq('family_id', profile.family_id)
         if (tasksError) console.error('Failed to delete family_tasks:', tasksError)
+
+        const { error: babiesError } = await supabaseAdmin
+          .from('babies')
+          .delete()
+          .eq('family_id', profile.family_id)
+        if (babiesError) console.error('Failed to delete babies:', babiesError)
 
         // Delete the family
         const { error: familyError } = await supabaseAdmin

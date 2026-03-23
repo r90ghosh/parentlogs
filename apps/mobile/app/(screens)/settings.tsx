@@ -144,7 +144,7 @@ export default function SettingsScreen() {
   function handleDeleteAccount() {
     Alert.alert(
       'Delete Account',
-      'This will permanently delete your account and all associated data. This action cannot be undone.\n\nIf you have an active subscription, deleting your account will NOT cancel it. Please cancel your subscription in Settings > Subscriptions before deleting your account.',
+      'This will permanently delete your account and all associated data. This action cannot be undone.\n\nIf you have an active subscription, it will be automatically canceled.',
       [
         { text: 'Cancel', style: 'cancel' },
         {
