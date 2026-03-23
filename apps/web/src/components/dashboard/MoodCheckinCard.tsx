@@ -107,9 +107,7 @@ export function MoodCheckinCard() {
         {showCrisisResources && (
           <div className="mt-3 pt-3 border-t border-[--border]">
             <p className="font-body text-[11px] text-[--muted] leading-relaxed">
-              If you&apos;re experiencing persistent feelings of hopelessness, help is available 24/7:{' '}
-              <span className="text-[--cream]">988 Suicide &amp; Crisis Lifeline</span> (call or text 988)
-              {' | '}
+              If you&apos;re having a tough time, you&apos;re not alone. Talk to someone:{' '}
               <span className="text-[--cream]">Postpartum Support International:</span> 1-800-944-4773
             </p>
           </div>

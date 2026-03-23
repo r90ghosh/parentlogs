@@ -35,9 +35,8 @@ export function MoodCheckinCard({ todaysCheckin }: MoodCheckinCardProps) {
         {(todaysCheckin.mood === 'struggling' || todaysCheckin.mood === 'rough') && (
           <View style={styles.crisisResources}>
             <Text style={styles.crisisText}>
-              If you're experiencing persistent feelings of hopelessness, help is available 24/7:
+              If you're having a tough time, you're not alone. Talk to someone:
             </Text>
-            <Text style={styles.crisisPhone}>988 Suicide & Crisis Lifeline: Call or text 988</Text>
             <Text style={styles.crisisPhone}>Postpartum Support International: 1-800-944-4773</Text>
           </View>
         )}
