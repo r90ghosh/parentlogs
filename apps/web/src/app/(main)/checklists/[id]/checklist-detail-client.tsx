@@ -186,6 +186,11 @@ export default function ChecklistDetailClient() {
           ))}
         </CardContent>
       </Card>
+
+      {/* Medical Disclaimer */}
+      <p className="text-center font-ui text-[10px] text-[--dim] max-w-md mx-auto leading-relaxed">
+        Medical guidance in checklists is general reference only. Always confirm medication dosages, fever thresholds, and emergency procedures with your pediatrician.
+      </p>
     </div>
   )
 }

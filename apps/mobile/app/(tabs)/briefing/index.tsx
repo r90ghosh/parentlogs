@@ -260,7 +260,7 @@ export default function BriefingScreen() {
                 <View style={styles.sourceFooter}>
                   <View style={styles.sourceBadge}>
                     <Text style={styles.sourceBadgeText}>
-                      Medically Reviewed
+                      Source-Referenced
                     </Text>
                   </View>
                   <Text style={styles.sourceText}>

@@ -1338,7 +1338,7 @@
   {
     "task_id": "POST-W01-010",
     "title": "Vitamin D Drops",
-    "description": "Start administering 400 IU Vitamin D daily if exclusively breastfeeding (AAP guideline).",
+    "description": "Ask your pediatrician about Vitamin D supplementation for breastfed babies.",
     "stage": "post-birth",
     "due_date_logic": "BD + 5 Days",
     "due_date_offset_days": 5,

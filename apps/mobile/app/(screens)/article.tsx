@@ -147,6 +147,11 @@ export default function ArticleScreen() {
                   <Text style={styles.sourcesText}>{article.sources}</Text>
                 </>
               ) : null}
+
+              {/* Medical Disclaimer */}
+              <Text style={styles.medicalDisclaimer}>
+                This article is for informational purposes only and does not constitute medical advice. Always consult your healthcare provider for medical decisions.
+              </Text>
             </>
           )}
         </CardEntrance>
@@ -258,6 +263,17 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#7a6f62',
     lineHeight: 20,
+  },
+
+  // Medical disclaimer
+  medicalDisclaimer: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 11,
+    color: '#4a4239',
+    textAlign: 'center',
+    marginTop: 24,
+    paddingHorizontal: 20,
+    lineHeight: 16,
   },
 
   // Paywall

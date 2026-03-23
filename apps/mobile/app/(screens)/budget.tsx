@@ -450,7 +450,7 @@ export default function BudgetScreen() {
           ListHeaderComponent={ListHeaderComponent}
           ListFooterComponent={
             <Text style={styles.disclaimerText}>
-              For planning purposes only. Not financial advice.
+              For planning purposes only. Not financial or medical advice. Consult your pediatrician before administering any medication.
             </Text>
           }
           refreshControl={

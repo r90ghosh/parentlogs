@@ -161,7 +161,25 @@ export function PrivacyContent() {
           </RevealOnScroll>
 
           <RevealOnScroll delay={50}>
-            <Section title="9. Cookies & Local Storage">
+            <Section title="9. Health Information">
+              <p>
+                The Dad Center allows you to record certain health-related information, including mood check-ins, baby temperature readings, medication logs, and developmental milestones. This data is stored securely in your account and is accessible only to you and your linked partner.
+              </p>
+              <h4>Important Distinctions</h4>
+              <ul>
+                <li>This data is <strong>not a medical record</strong> and should not be treated as one.</li>
+                <li>Mood check-in data is used solely to provide you with personal reflection and is never shared with third parties for profiling or advertising.</li>
+                <li>Baby tracker data (temperature, medicine, feeding, sleep) is for your personal record-keeping convenience only and does not constitute medical monitoring.</li>
+                <li>We do not use health-related data for any purpose other than providing and improving the Service for you.</li>
+              </ul>
+              <p>
+                If you delete your account, all health-related data is permanently deleted within 30 days in accordance with our data retention policy.
+              </p>
+            </Section>
+          </RevealOnScroll>
+
+          <RevealOnScroll delay={50}>
+            <Section title="10. Cookies & Local Storage">
               <p>
                 We use essential cookies and local storage for authentication sessions and user preferences. We do not use third-party advertising cookies. Analytics cookies (if any) are anonymized and used solely to improve the Service.
               </p>
@@ -169,7 +187,7 @@ export function PrivacyContent() {
           </RevealOnScroll>
 
           <RevealOnScroll delay={50}>
-            <Section title="10. International Transfers">
+            <Section title="11. International Transfers">
               <p>
                 Your data may be transferred to and processed in the United States where our service providers are located. By using the Service, you consent to this transfer. We ensure appropriate safeguards are in place for international data transfers.
               </p>
@@ -177,7 +195,7 @@ export function PrivacyContent() {
           </RevealOnScroll>
 
           <RevealOnScroll delay={50}>
-            <Section title="11. Changes to This Policy">
+            <Section title="12. Changes to This Policy">
               <p>
                 We may update this Privacy Policy from time to time. We will notify you of material changes by posting the updated policy on this page and updating the &quot;Last updated&quot; date. Your continued use of the Service after changes constitutes acceptance of the updated policy.
               </p>
@@ -185,7 +203,7 @@ export function PrivacyContent() {
           </RevealOnScroll>
 
           <RevealOnScroll delay={50}>
-            <Section title="12. Contact Us">
+            <Section title="13. Contact Us">
               <p>If you have questions about this Privacy Policy, contact us at:</p>
               <ul>
                 <li>

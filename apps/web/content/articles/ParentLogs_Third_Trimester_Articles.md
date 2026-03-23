@@ -68,7 +68,7 @@ More importantly: listen without solving. When she vents about how hard this is,
 
 ### What's Coming Up
 
-Over the next few weeks, prenatal appointments will increase to every two weeks, then weekly as you approach the due date. The baby will continue gaining about half a pound per week. By week 32, survival rates for babies born early exceed 95% with proper NICU care—that's a significant milestone. Start thinking about work handoff plans and ensuring your contact list is ready for the big day.
+Over the next few weeks, prenatal appointments will increase to every two weeks, then weekly as you approach the due date. The baby will continue gaining about half a pound per week. By week 32, survival rates for babies born early exceed 95% with proper NICU care, though outcomes vary based on individual circumstances and access to neonatal care—that's a significant milestone. Start thinking about work handoff plans and ensuring your contact list is ready for the big day.
 
 ---
 

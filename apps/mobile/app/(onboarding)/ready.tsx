@@ -69,6 +69,9 @@ export default function ReadyScreen() {
           >
             <Text style={styles.buttonText}>Let's Go</Text>
           </Pressable>
+          <Text style={styles.disclaimerText}>
+            The Dad Center provides educational information only and is not a substitute for medical advice. Always consult your healthcare provider.
+          </Text>
         </Animated.View>
       </View>
     </View>
@@ -154,5 +157,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
     color: '#faf6f0',
+  },
+  disclaimerText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 11,
+    color: '#4a4239',
+    textAlign: 'center',
+    marginTop: 16,
+    paddingHorizontal: 20,
+    lineHeight: 16,
   },
 })

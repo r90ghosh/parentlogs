@@ -7,7 +7,7 @@ import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 const painPoints = [
   {
     problem: 'Drowning in conflicting advice',
-    solution: 'Expert-curated, medically reviewed content',
+    solution: 'Research-based, source-referenced content',
     icon: Brain,
     color: 'sky',
   },

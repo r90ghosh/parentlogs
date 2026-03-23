@@ -75,6 +75,7 @@ export function MoodCheckinCard() {
   // Already checked in today — show compact state
   if (lastCheckin) {
     const moodCfg = MOOD_CONFIG.find(m => m.level === lastCheckin.mood)
+    const showCrisisResources = lastCheckin.mood === 'struggling' || lastCheckin.mood === 'rough'
     return (
       <motion.div
         initial={{ opacity: 0, y: 12 }}
@@ -83,23 +84,34 @@ export function MoodCheckinCard() {
           'rounded-[20px] px-5 py-4 card-copper-top',
           'bg-[--card]',
           'border border-[--border]',
-          'shadow-card',
-          'flex items-center justify-between'
+          'shadow-card'
         )}
       >
-        <div className="flex items-center gap-3">
-          <span className="text-2xl">{moodCfg?.emoji}</span>
-          <div>
-            <div className="text-sm font-semibold font-ui text-[--cream]">
-              Today: feeling <span className={moodCfg?.color}>{moodCfg?.label.toLowerCase()}</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">{moodCfg?.emoji}</span>
+            <div>
+              <div className="text-sm font-semibold font-ui text-[--cream]">
+                Today: feeling <span className={moodCfg?.color}>{moodCfg?.label.toLowerCase()}</span>
+              </div>
+              <div className="text-xs text-[--muted] font-body">Mood checked in</div>
             </div>
-            <div className="text-xs text-[--muted] font-body">Mood checked in</div>
           </div>
+          {streak > 1 && (
+            <div className="flex items-center gap-1.5 text-xs text-gold font-medium font-ui">
+              <span>🔥</span>
+              <span>{streak}-day streak</span>
+            </div>
+          )}
         </div>
-        {streak > 1 && (
-          <div className="flex items-center gap-1.5 text-xs text-gold font-medium font-ui">
-            <span>🔥</span>
-            <span>{streak}-day streak</span>
+        {showCrisisResources && (
+          <div className="mt-3 pt-3 border-t border-[--border]">
+            <p className="font-body text-[11px] text-[--muted] leading-relaxed">
+              If you&apos;re experiencing persistent feelings of hopelessness, help is available 24/7:{' '}
+              <span className="text-[--cream]">988 Suicide &amp; Crisis Lifeline</span> (call or text 988)
+              {' | '}
+              <span className="text-[--cream]">Postpartum Support International:</span> 1-800-944-4773
+            </p>
           </div>
         )}
       </motion.div>

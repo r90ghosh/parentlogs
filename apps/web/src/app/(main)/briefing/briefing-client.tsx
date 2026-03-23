@@ -191,7 +191,7 @@ export default function BriefingClient() {
                   <p className="whitespace-pre-line">{displayBriefing.baby_update}</p>
                   {weekToView === 12 && (
                     <HighlightBox icon="💡" color="teal">
-                      Miscarriage risk drops to about 2% after seeing a heartbeat at 12 weeks.
+                      According to published research, miscarriage risk drops to about 2% after seeing a heartbeat at 12 weeks. Individual risk factors vary.
                       This is why many couples choose to announce after this milestone.
                     </HighlightBox>
                   )}
@@ -296,7 +296,7 @@ export default function BriefingClient() {
           <footer className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-10 pt-6 border-t border-[--border]">
             <div className="flex flex-wrap items-center gap-3 text-sm font-body text-[--muted]">
               <span className="inline-flex items-center gap-1.5 bg-[--sage-dim] text-[--sage] px-3 py-1 rounded-full text-xs font-medium font-ui">
-                ✓ Medically Reviewed
+                ✓ Source-Referenced
               </span>
               {displayBriefing.medical_source && (
                 <span>Sources: {displayBriefing.medical_source}</span>

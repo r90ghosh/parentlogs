@@ -240,6 +240,11 @@ export default function JourneyScreen() {
               />
             )
           })}
+
+          {/* Disclaimer */}
+          <Text style={styles.disclaimerText}>
+            Content is for informational and self-reflection purposes only. For mental health concerns, please consult a qualified professional.
+          </Text>
         </ScrollView>
       )}
     </View>
@@ -437,6 +442,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#7a6f62',
     marginTop: 8,
+  },
+
+  // Disclaimer
+  disclaimerText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 11,
+    color: '#4a4239',
+    textAlign: 'center',
+    marginTop: 8,
+    paddingHorizontal: 20,
+    lineHeight: 16,
   },
 
   // Loading / Empty

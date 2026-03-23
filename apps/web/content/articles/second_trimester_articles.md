@@ -247,7 +247,7 @@ Week 24 is a significant milestone—viability week. You'll want to schedule a h
 
 **The Quick Brief**
 
-Week 24 is a medical milestone: viability. If your baby were born today, modern medicine would give them a fighting chance—about 40-70% survival rates with intensive intervention. No one wants to think about that, but crossing this threshold brings a profound shift in how both of you may feel about this pregnancy.
+Week 24 is a medical milestone: viability. If your baby were born today, modern medicine would give them a fighting chance—about 40-70% survival rates with intensive intervention, though outcomes vary based on individual circumstances and access to neonatal care. No one wants to think about that, but crossing this threshold brings a profound shift in how both of you may feel about this pregnancy.
 
 ---
 
@@ -337,7 +337,7 @@ Your baby is now about the size of a head of lettuce (14.5 inches, about 2 pound
 
 The brain is exceptionally active, and brain waves now show distinct sleep patterns including REM sleep. That means your baby might be dreaming—about what, no one knows (probably not much, given limited experiences), but the architecture for dreaming exists.
 
-The lungs continue maturing but aren't ready for air yet. Babies born at 27 weeks now have survival rates above 90% with NICU support, though they typically require significant intervention. Your baby is still practicing breathing movements using amniotic fluid, building the muscle strength and coordination needed for actual breathing.
+The lungs continue maturing but aren't ready for air yet. Babies born at 27 weeks now have survival rates above 90% with NICU support, though outcomes vary based on individual circumstances and access to neonatal care. Your baby is still practicing breathing movements using amniotic fluid, building the muscle strength and coordination needed for actual breathing.
 
 The immune system is developing rapidly, and antibodies from mom are crossing the placenta to provide protection for the first months after birth. This is why vaccines during pregnancy (flu, Tdap) are recommended—mom's immune response transfers to baby.
 

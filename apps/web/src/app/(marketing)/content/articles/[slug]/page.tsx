@@ -226,6 +226,14 @@ export default async function ArticlePage({ params }: PageProps) {
           </div>
         )}
 
+        {/* Medical disclaimer */}
+        {!isLocked && (
+          <p className="font-ui text-xs text-[--dim] max-w-2xl mx-auto text-center mt-10">
+            Content is for informational purposes only and does not replace professional medical advice.
+            Always consult your healthcare provider.
+          </p>
+        )}
+
         {/* Related articles */}
         <RelatedContent articles={relatedArticles} currentStage={article.stage} />
       </article>

@@ -265,6 +265,11 @@ export default function ChecklistsScreen() {
               tintColor="#c4703f"
             />
           }
+          ListFooterComponent={
+            <Text style={styles.disclaimerText}>
+              Medical guidance in checklists is general reference only. Confirm medication dosages and emergency procedures with your pediatrician.
+            </Text>
+          }
         />
       )}
     </View>
@@ -452,6 +457,17 @@ const styles = StyleSheet.create({
     color: '#7a6f62',
     textAlign: 'center',
     paddingVertical: 16,
+  },
+
+  // Disclaimer
+  disclaimerText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 11,
+    color: '#4a4239',
+    textAlign: 'center',
+    marginTop: 16,
+    paddingHorizontal: 20,
+    lineHeight: 16,
   },
 
   // Loading / Empty

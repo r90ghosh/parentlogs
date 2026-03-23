@@ -307,31 +307,36 @@ function LogEntryContent() {
           )}
 
           {logType === 'temperature' && (
-            <div className="flex gap-2">
-              <div className="flex-1 space-y-2">
-                <Label>Temperature</Label>
-                <Input
-                  type="number"
-                  step="0.1"
-                  value={temperature}
-                  onChange={(e) => setTemperature(e.target.value)}
-                  placeholder="98.6"
-                  className="bg-[--card] border-[--border]"
-                />
+            <>
+              <div className="flex gap-2">
+                <div className="flex-1 space-y-2">
+                  <Label>Temperature</Label>
+                  <Input
+                    type="number"
+                    step="0.1"
+                    value={temperature}
+                    onChange={(e) => setTemperature(e.target.value)}
+                    placeholder="98.6"
+                    className="bg-[--card] border-[--border]"
+                  />
+                </div>
+                <div className="w-20 space-y-2">
+                  <Label>Unit</Label>
+                  <Select value={temperatureUnit} onValueChange={(v) => setTemperatureUnit(v as any)}>
+                    <SelectTrigger className="bg-[--card] border-[--border]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="F">°F</SelectItem>
+                      <SelectItem value="C">°C</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              <div className="w-20 space-y-2">
-                <Label>Unit</Label>
-                <Select value={temperatureUnit} onValueChange={(v) => setTemperatureUnit(v as any)}>
-                  <SelectTrigger className="bg-[--card] border-[--border]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="F">°F</SelectItem>
-                    <SelectItem value="C">°C</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+              <p className="font-ui text-[10px] text-[--dim] leading-relaxed">
+                This tracker is for personal record-keeping only and is not a diagnostic tool. For concerns about your baby&apos;s temperature, contact your pediatrician.
+              </p>
+            </>
           )}
 
           {logType === 'medicine' && (
@@ -354,6 +359,9 @@ function LogEntryContent() {
                   className="bg-[--card] border-[--border]"
                 />
               </div>
+              <p className="font-ui text-[10px] text-[--dim] leading-relaxed">
+                Always verify medication dosages with your pediatrician.
+              </p>
             </>
           )}
 

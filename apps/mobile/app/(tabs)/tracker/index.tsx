@@ -426,6 +426,11 @@ export default function TrackerScreen() {
             )}
           </View>
         </CardEntrance>
+
+        {/* Disclaimer */}
+        <Text style={styles.disclaimerText}>
+          This tracker is for personal record-keeping only and is not a diagnostic tool. For medical concerns, contact your pediatrician.
+        </Text>
       </ScrollView>
     </View>
   )
@@ -666,5 +671,14 @@ const styles = StyleSheet.create({
   loadingRow: {
     paddingVertical: 24,
     alignItems: 'center',
+  },
+  disclaimerText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 11,
+    color: '#4a4239',
+    textAlign: 'center',
+    marginTop: 16,
+    paddingHorizontal: 20,
+    lineHeight: 16,
   },
 })

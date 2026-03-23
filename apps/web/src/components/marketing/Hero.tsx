@@ -304,7 +304,7 @@ export function Hero() {
                 { value: 'Built for', label: 'First-Time Dads' },
                 { value: '200+', label: 'Pre-loaded Tasks' },
                 { value: '47', label: 'Weekly Briefings' },
-                { value: 'ACOG & AAP', label: 'Medically Sourced' },
+                { value: 'Evidence-Based', label: 'Source-Referenced' },
               ].map((stat, i) => (
                 <div key={i} className="text-center">
                   <p className="font-display font-bold text-2xl sm:text-3xl md:text-4xl text-[--cream] mb-1">{stat.value}</p>

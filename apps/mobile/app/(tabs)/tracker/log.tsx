@@ -372,6 +372,9 @@ export default function LogScreen() {
                       />
                     </View>
                   </View>
+                  <Text style={styles.fieldDisclaimer}>
+                    For concerns about your baby's temperature, contact your pediatrician.
+                  </Text>
                 </>
               )}
 
@@ -394,6 +397,9 @@ export default function LogScreen() {
                     placeholder="2.5ml"
                     placeholderTextColor="#4a4239"
                   />
+                  <Text style={styles.fieldDisclaimer}>
+                    Always verify medication dosages with your pediatrician.
+                  </Text>
                 </>
               )}
 
@@ -713,5 +719,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
     color: '#faf6f0',
+  },
+  fieldDisclaimer: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 11,
+    color: '#4a4239',
+    marginTop: 8,
+    lineHeight: 16,
   },
 })

@@ -32,6 +32,15 @@ export function MoodCheckinCard({ todaysCheckin }: MoodCheckinCardProps) {
             </Text>
           </View>
         </View>
+        {(todaysCheckin.mood === 'struggling' || todaysCheckin.mood === 'rough') && (
+          <View style={styles.crisisResources}>
+            <Text style={styles.crisisText}>
+              If you're experiencing persistent feelings of hopelessness, help is available 24/7:
+            </Text>
+            <Text style={styles.crisisPhone}>988 Suicide & Crisis Lifeline: Call or text 988</Text>
+            <Text style={styles.crisisPhone}>Postpartum Support International: 1-800-944-4773</Text>
+          </View>
+        )}
       </GlassCard>
     )
   }
@@ -94,5 +103,24 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#7a6f62',
     marginTop: 2,
+  },
+  crisisResources: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(237,230,220,0.06)',
+  },
+  crisisText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 11,
+    color: '#7a6f62',
+    lineHeight: 16,
+    marginBottom: 4,
+  },
+  crisisPhone: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 11,
+    color: '#5b9bd5',
+    lineHeight: 16,
   },
 })

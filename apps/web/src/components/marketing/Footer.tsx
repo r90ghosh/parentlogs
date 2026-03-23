@@ -107,6 +107,11 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Medical disclaimer */}
+        <p className="font-ui text-xs text-[--dim] max-w-2xl mx-auto text-center mt-4">
+          The Dad Center provides general pregnancy and parenting information for educational purposes only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult your healthcare provider with questions about medical conditions.
+        </p>
+
         {/* Bottom bar */}
         <div className="py-6 border-t border-[--border] flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="font-ui text-sm text-[--muted]" suppressHydrationWarning>

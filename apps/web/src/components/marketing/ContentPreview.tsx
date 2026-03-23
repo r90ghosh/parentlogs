@@ -83,7 +83,7 @@ export function ContentPreview() {
               Explore Our Content
             </h2>
             <p className="font-body text-lg text-[--muted] max-w-2xl">
-              Comprehensive, medically-reviewed guides written specifically for dads.
+              Comprehensive, source-referenced guides written specifically for dads.
               From first positive test to toddler years.
             </p>
           </div>

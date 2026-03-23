@@ -19,6 +19,7 @@ import { UpgradePromptCard } from './UpgradePromptCard'
 import { Skeleton } from '@/components/ui/skeleton'
 import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+import { MedicalDisclaimerFooter } from '@/components/shared/medical-disclaimer'
 
 // Full-width card IDs (render at top, spanning both columns)
 const FULL_WIDTH_CARDS = ['mood', 'partner-activity', 'shift-briefing']
@@ -140,6 +141,9 @@ export function DashboardClient() {
           )}
         </div>
       </div>
+
+      {/* Medical Disclaimer */}
+      <MedicalDisclaimerFooter className="mt-10 pb-2" />
     </div>
   )
 }
