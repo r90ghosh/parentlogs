@@ -14,6 +14,10 @@ const footerLinks = {
     { label: 'Privacy Policy', href: '/privacy' },
     { label: 'Terms of Service', href: '/terms' },
   ],
+  company: [
+    { label: 'About', href: '/about' },
+    { label: 'FAQ', href: '/faq' },
+  ],
   support: [
     { label: 'Contact', href: 'mailto:hello@thedadcenter.com' },
   ],
@@ -31,7 +35,7 @@ export function Footer() {
     <footer className="bg-[--surface]" style={{ borderTop: '1px solid rgba(196,112,63,0.5)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main footer content */}
-        <div className="py-12 md:py-16 grid grid-cols-2 md:grid-cols-5 gap-8">
+        <div className="py-12 md:py-16 grid grid-cols-2 md:grid-cols-6 gap-8">
           {/* Brand column */}
           <div className="col-span-2">
             <div className="mb-4">
@@ -62,6 +66,23 @@ export function Footer() {
             <h4 className="font-ui text-sm font-semibold text-[--cream] mb-4">Product</h4>
             <ul className="space-y-3">
               {footerLinks.product.map((link, i) => (
+                <li key={i}>
+                  <Link
+                    href={link.href}
+                    className="font-ui text-sm text-[--muted] hover:text-copper transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Company links */}
+          <div>
+            <h4 className="font-ui text-sm font-semibold text-[--cream] mb-4">Company</h4>
+            <ul className="space-y-3">
+              {footerLinks.company.map((link, i) => (
                 <li key={i}>
                   <Link
                     href={link.href}

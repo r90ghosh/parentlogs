@@ -19,6 +19,7 @@ export interface ServerAuthResult {
   user: {
     id: string
     email: string
+    identities?: { provider: string }[]
   } | null
   profile: AppUser | null
   family: Family | null
@@ -72,7 +73,7 @@ export async function getServerAuth(): Promise<ServerAuthResult> {
     // User exists but no profile (edge case - trigger may have failed)
     if (isDev) console.warn('[ServerAuth] User exists but profile not found:', user.id)
     return {
-      user: { id: user.id, email: user.email! },
+      user: { id: user.id, email: user.email!, identities: user.identities?.map(i => ({ provider: i.provider })) },
       profile: null,
       family: null,
       activeBaby: null
@@ -113,7 +114,7 @@ export async function getServerAuth(): Promise<ServerAuthResult> {
 
   if (isDev) console.log('[ServerAuth] getServerAuth END (success)')
   return {
-    user: { id: user.id, email: user.email! },
+    user: { id: user.id, email: user.email!, identities: user.identities?.map(i => ({ provider: i.provider })) },
     profile: profile as AppUser,
     family,
     activeBaby

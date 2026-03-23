@@ -23,6 +23,7 @@ interface UserContextValue {
   user: {
     id: string
     email: string
+    identities?: { provider: string }[]
   }
   // Full profile from profiles table
   profile: AppUser

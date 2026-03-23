@@ -26,6 +26,8 @@ export default function ScreensLayout() {
       <Stack.Screen name="tracker-summary" />
       <Stack.Screen name="content" />
       <Stack.Screen name="article" />
+      <Stack.Screen name="about" />
+      <Stack.Screen name="faq" />
     </Stack>
   )
 }

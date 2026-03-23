@@ -18,3 +18,7 @@ export { ResourceLibrary } from './ResourceLibrary'
 export { ArticleContent } from './ArticleContent'
 export { PaywallGate } from './PaywallGate'
 export { RelatedContent } from './RelatedContent'
+
+// About & FAQ
+export { AboutContent } from './AboutContent'
+export { FaqContent } from './FaqContent'

@@ -17,6 +17,8 @@ import {
   CreditCard,
   Newspaper,
   HelpCircle,
+  Info,
+  MessageCircleQuestion,
 } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { GlassCard } from '@/components/glass'
@@ -176,10 +178,27 @@ export default function MoreScreen() {
           </GlassCard>
         </CardEntrance>
 
+        {/* Info section */}
+        <CardEntrance delay={320}>
+          <Text style={styles.sectionTitle}>Info</Text>
+          <GlassCard style={styles.section}>
+            <MenuItem
+              icon={<Info size={20} color="#c4703f" />}
+              label="About The Dad Center"
+              onPress={() => router.push('/(screens)/about')}
+            />
+            <MenuItem
+              icon={<MessageCircleQuestion size={20} color="#5b9bd5" />}
+              label="FAQ"
+              onPress={() => router.push('/(screens)/faq')}
+            />
+          </GlassCard>
+        </CardEntrance>
+
         {/* Upgrade CTA for free users */}
         {profile?.subscription_tier !== 'premium' &&
           profile?.subscription_tier !== 'lifetime' && (
-            <CardEntrance delay={320}>
+            <CardEntrance delay={400}>
               <Pressable
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
@@ -207,7 +226,7 @@ export default function MoreScreen() {
           )}
 
         {/* Sign Out */}
-        <CardEntrance delay={400}>
+        <CardEntrance delay={480}>
           <GlassCard style={styles.section}>
             <MenuItem
               icon={<LogOut size={20} color="#d4836b" />}

@@ -28,6 +28,8 @@ const navLinks: NavLink[] = [
       { href: '/tips', label: 'Tips' },
     ],
   },
+  { href: '/about', label: 'About' },
+  { href: '/faq', label: 'FAQ' },
 ]
 
 export function Header() {
