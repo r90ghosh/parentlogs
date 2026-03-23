@@ -25,6 +25,23 @@ const plans = [
     highlighted: false,
   },
   {
+    name: 'Monthly',
+    price: '$4.99',
+    period: '/month',
+    periodNote: 'Cancel anytime',
+    description: 'Flexible month-to-month',
+    features: [
+      { text: 'All ~140 weekly briefings', included: true },
+      { text: 'Full task timeline', included: true },
+      { text: 'Real-time partner sync', included: true },
+      { text: 'Push notifications', included: true },
+      { text: 'Mood trends & insights', included: true },
+    ],
+    cta: 'Start Monthly',
+    ctaLink: '/signup?plan=monthly',
+    highlighted: false,
+  },
+  {
     name: 'Yearly',
     price: '$39.99',
     period: '/year',
@@ -65,7 +82,7 @@ const plans = [
 export function Pricing() {
   return (
     <section id="pricing" className="relative py-16 sm:py-24 md:py-32">
-      <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
         {/* Section header */}
         <RevealOnScroll className="text-center mb-16">
           <span className="section-pre justify-center">Pricing</span>
@@ -74,8 +91,8 @@ export function Pricing() {
           </h2>
         </RevealOnScroll>
 
-        {/* Pricing cards — 3 columns */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 items-start">
+        {/* Pricing cards — 4 columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 items-start">
           {plans.map((plan, index) => (
             <RevealOnScroll key={index} delay={80 + index * 120}>
               <Card3DTilt maxTilt={plan.highlighted ? 4 : 3} gloss>
