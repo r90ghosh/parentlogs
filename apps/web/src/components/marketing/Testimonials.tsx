@@ -1,27 +1,30 @@
 'use client'
 
-import { Star } from 'lucide-react'
+import { BookOpen, CheckSquare, TrendingUp } from 'lucide-react'
 import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 
-const testimonials = [
+const highlights = [
   {
-    quote: "Finally, an app that doesn't treat me like an idiot. The week-by-week briefings are exactly what I needed to feel prepared without drowning in information.",
-    author: 'Michael T.',
-    role: 'Early Access Dad',
-    avatar: 'M',
+    icon: BookOpen,
+    week: 'Week 28',
+    title: 'The Third Trimester Shift',
+    quote: 'Install infant car seat. Research pediatricians. Pack hospital bag. Start birth plan. — All laid out, week by week.',
+    color: 'var(--copper)',
   },
   {
-    quote: "The task system is brilliant. I didn't even know half of these things needed to happen, and now I'm ahead of schedule on everything.",
-    author: 'David K.',
-    role: 'Early Access Dad',
-    avatar: 'D',
+    icon: CheckSquare,
+    week: 'Week 12',
+    title: 'First Trimester Wrap-Up',
+    quote: 'Verify prenatal insurance. Schedule anatomy scan. Start a baby registry. Morning sickness support plan. — Nothing falls through the cracks.',
+    color: 'var(--gold)',
   },
   {
-    quote: "My wife was skeptical at first, but when she saw how organized I was with the nursery prep, she became a bigger fan than me.",
-    author: 'James R.',
-    role: 'Early Access Dad',
-    avatar: 'J',
+    icon: TrendingUp,
+    week: '0–3 Months',
+    title: 'The Fourth Trimester',
+    quote: 'Set up feeding station. Learn swaddle technique. Track feeds and diapers. Split night shifts fairly. — From day one, you know what to do.',
+    color: 'var(--sage)',
   },
 ]
 
@@ -31,13 +34,16 @@ export function Testimonials() {
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Section header */}
         <RevealOnScroll className="text-center mb-16">
-          <span className="section-pre justify-center">Early Feedback</span>
-          <h2 className="font-display font-bold text-3xl sm:text-4xl text-[--cream] leading-[1.2] mb-12">
-            What Early Access Dads Are Saying
+          <span className="section-pre justify-center">Inside the App</span>
+          <h2 className="font-display font-bold text-3xl sm:text-4xl text-[--cream] leading-[1.2] mb-4">
+            Your Roadmap at Every Stage
           </h2>
+          <p className="font-body text-[--muted] text-base sm:text-lg max-w-xl mx-auto">
+            Real tasks and briefings from The Dad Center — here&apos;s what a week looks like.
+          </p>
         </RevealOnScroll>
 
-        {/* Single featured testimonial - like mockup */}
+        {/* Featured highlight */}
         <RevealOnScroll>
           <div className="relative max-w-3xl mx-auto text-center p-4 sm:p-8 md:p-12">
             {/* Rotating quote mark */}
@@ -49,65 +55,46 @@ export function Testimonials() {
               &ldquo;
             </div>
 
-            {/* Stars */}
-            <div className="flex justify-center gap-1 mb-6">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-5 w-5 text-gold fill-gold" />
-              ))}
+            {/* Week badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-copper-dim border border-copper/25 mb-6">
+              <span className="font-ui text-xs font-semibold uppercase tracking-wider text-copper">{highlights[0].week}</span>
             </div>
 
             {/* Quote */}
-            <blockquote className="font-body text-base sm:text-xl md:text-2xl text-[--cream] leading-relaxed mb-8 italic">
-              &ldquo;{testimonials[0].quote}&rdquo;
+            <blockquote className="font-body text-base sm:text-xl md:text-2xl text-[--cream] leading-relaxed mb-6 italic">
+              &ldquo;{highlights[0].quote}&rdquo;
             </blockquote>
 
-            {/* Author */}
-            <div className="flex items-center justify-center gap-3">
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center font-ui font-semibold text-[--bg]"
-                style={{ background: 'linear-gradient(135deg, var(--copper), var(--gold))' }}
-              >
-                {testimonials[0].avatar}
-              </div>
-              <div className="text-left">
-                <p className="font-ui font-medium text-[--cream]">{testimonials[0].author}</p>
-                <p className="font-ui text-sm text-[--muted]">{testimonials[0].role}</p>
-              </div>
-            </div>
+            <p className="font-ui text-sm text-[--muted]">{highlights[0].title}</p>
           </div>
         </RevealOnScroll>
 
-        {/* Additional testimonials grid */}
+        {/* Highlights grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-          {testimonials.map((testimonial, index) => (
+          {highlights.map((highlight, index) => (
             <RevealOnScroll key={index} delay={80 + index * 120}>
               <Card3DTilt maxTilt={3} gloss>
                 <div className="p-6 rounded-xl bg-[--card] border border-[--border] shadow-card h-full">
-                  {/* Stars */}
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-gold fill-gold" />
-                    ))}
-                  </div>
-
-                  {/* Quote */}
-                  <p className="font-body text-sm text-[--cream] leading-relaxed mb-6">
-                    &ldquo;{testimonial.quote}&rdquo;
-                  </p>
-
-                  {/* Author */}
-                  <div className="flex items-center gap-3">
+                  {/* Week + Icon */}
+                  <div className="flex items-center gap-3 mb-4">
                     <div
-                      className="w-9 h-9 rounded-full flex items-center justify-center font-ui font-semibold text-sm text-[--bg]"
-                      style={{ background: 'linear-gradient(135deg, var(--copper), var(--gold))' }}
+                      className="w-9 h-9 rounded-full flex items-center justify-center"
+                      style={{ background: `color-mix(in srgb, ${highlight.color} 15%, transparent)` }}
                     >
-                      {testimonial.avatar}
+                      <highlight.icon className="h-4 w-4" style={{ color: highlight.color }} />
                     </div>
                     <div>
-                      <p className="font-ui font-medium text-sm text-[--cream]">{testimonial.author}</p>
-                      <p className="font-ui text-xs text-[--muted]">{testimonial.role}</p>
+                      <p className="font-ui font-semibold text-xs uppercase tracking-wider" style={{ color: highlight.color }}>
+                        {highlight.week}
+                      </p>
+                      <p className="font-ui text-xs text-[--muted]">{highlight.title}</p>
                     </div>
                   </div>
+
+                  {/* Content */}
+                  <p className="font-body text-sm text-[--cream] leading-relaxed">
+                    &ldquo;{highlight.quote}&rdquo;
+                  </p>
                 </div>
               </Card3DTilt>
             </RevealOnScroll>
