@@ -178,7 +178,7 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
   const expiresAt = periodEnd > sevenDaysFromNow ? periodEnd : sevenDaysFromNow
 
   // Update subscription to canceled but keep premium until grace period expires
-  await getSupabaseAdmin()
+  const { error: subError } = await getSupabaseAdmin()
     .from('subscriptions')
     .update({
       status: 'canceled',
@@ -186,14 +186,34 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
       updated_at: new Date().toISOString(),
     })
     .eq('user_id', subRecord.user_id)
+  if (subError) throw new Error(`Failed to update subscription: ${subError.message}`)
 
-  // Set expiration date — grace period logic will handle the actual downgrade
-  await getSupabaseAdmin()
+  // Look up user's family to apply family-wide downgrade
+  const { data: userProfile } = await getSupabaseAdmin()
     .from('profiles')
-    .update({
-      subscription_expires_at: expiresAt.toISOString(),
-    })
+    .select('family_id')
     .eq('id', subRecord.user_id)
+    .single()
+
+  if (userProfile?.family_id) {
+    // Downgrade ALL family members (one subscription covers the whole family)
+    const { error: familyError } = await getSupabaseAdmin()
+      .from('profiles')
+      .update({
+        subscription_expires_at: expiresAt.toISOString(),
+      })
+      .eq('family_id', userProfile.family_id)
+    if (familyError) throw new Error(`Failed to update family profiles: ${familyError.message}`)
+  } else {
+    // No family — just update the canceling user's profile
+    const { error: profileError } = await getSupabaseAdmin()
+      .from('profiles')
+      .update({
+        subscription_expires_at: expiresAt.toISOString(),
+      })
+      .eq('id', subRecord.user_id)
+    if (profileError) throw new Error(`Failed to update profile: ${profileError.message}`)
+  }
 }
 
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {

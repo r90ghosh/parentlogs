@@ -29,9 +29,12 @@ import {
   Share2,
   ExternalLink,
   KeyRound,
+  AlertTriangle,
+  Mail,
 } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useRevenueCat } from '@/components/providers/RevenueCatProvider'
+import { useSubscriptionStatus } from '@/hooks/use-subscription'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import * as Haptics from 'expo-haptics'
@@ -93,7 +96,10 @@ export default function SettingsScreen() {
   const router = useRouter()
   const { signOut, profile, family, user } = useAuth()
   const { isPro, customerInfo } = useRevenueCat()
+  const { data: subStatus } = useSubscriptionStatus()
   const [deletingAccount, setDeletingAccount] = useState(false)
+  const isPastDue = subStatus?.status === 'past_due'
+  const isCanceling = subStatus?.cancel_at_period_end === true
 
   const tierLabel =
     profile?.subscription_tier === 'premium'
@@ -297,6 +303,28 @@ export default function SettingsScreen() {
         <CardEntrance delay={280}>
           <Text style={styles.sectionTitle}>Subscription</Text>
           <GlassCard style={styles.section}>
+            {/* Payment Failed Alert */}
+            {isPastDue && (
+              <Pressable
+                onPress={() => {
+                  const url = Platform.OS === 'ios'
+                    ? 'https://apps.apple.com/account/subscriptions'
+                    : 'https://play.google.com/store/account/subscriptions'
+                  Linking.openURL(url)
+                }}
+                style={styles.pastDueBanner}
+              >
+                <AlertTriangle size={16} color="#d4836b" />
+                <View style={styles.pastDueBannerText}>
+                  <Text style={styles.pastDueTitle}>Payment failed</Text>
+                  <Text style={styles.pastDueDescription}>
+                    Your last payment didn't go through. Tap to update your payment method.
+                  </Text>
+                </View>
+                <ChevronRight size={14} color="#d4836b" />
+              </Pressable>
+            )}
+
             <View style={styles.subscriptionRow}>
               <View style={styles.settingsRowLeft}>
                 <CreditCard size={18} color="#d4a853" />
@@ -313,23 +341,41 @@ export default function SettingsScreen() {
                         (profile?.subscription_tier === 'premium' ||
                           profile?.subscription_tier === 'lifetime') &&
                           styles.tierBadgeTextPremium,
+                        isPastDue && styles.pastDueBadgeText,
                       ]}
                     >
-                      {tierLabel}
+                      {isPastDue ? 'Past Due' : tierLabel}
                     </Text>
                   </View>
                   {profile?.subscription_tier === 'lifetime' && (
                     <Text style={styles.subscriptionDetail}>Never expires</Text>
                   )}
-                  {profile?.subscription_tier === 'premium' && customerInfo?.entitlements?.active?.['The Dad Center Pro']?.expirationDate && (
+                  {profile?.subscription_tier === 'premium' && !isCanceling && customerInfo?.entitlements?.active?.['The Dad Center Pro']?.expirationDate && (
                     <Text style={styles.subscriptionDetail}>
                       Renews {new Date(customerInfo.entitlements.active['The Dad Center Pro'].expirationDate!).toLocaleDateString()}
+                    </Text>
+                  )}
+                  {/* Grace period messaging */}
+                  {isCanceling && subStatus?.current_period_end && (
+                    <Text style={styles.subscriptionDetail}>
+                      Access until {new Date(subStatus.current_period_end).toLocaleDateString()} + 7-day grace period
                     </Text>
                   )}
                 </View>
               </View>
             </View>
+
+            {/* Grace period explanation */}
+            {isCanceling && (
+              <View style={styles.gracePeriodBanner}>
+                <Text style={styles.gracePeriodText}>
+                  Your premium access continues until the end of your billing period, plus a 7-day grace period before switching to the free plan. Your data will be preserved.
+                </Text>
+              </View>
+            )}
+
             {isPro || profile?.subscription_tier === 'premium' || profile?.subscription_tier === 'lifetime' ? (
+              <>
                 <SettingsRow
                   icon={<ExternalLink size={18} color="#d4a853" />}
                   label="Manage Subscription"
@@ -352,14 +398,37 @@ export default function SettingsScreen() {
                     )
                   }}
                 />
-              ) : (
-                <SettingsRow
-                  icon={<Crown size={18} color="#d4a853" />}
-                  label="Upgrade to Premium"
-                  onPress={() => router.push('/(screens)/upgrade')}
-                  color="#d4a853"
-                />
-              )}
+                {/* Refund request */}
+                {profile?.subscription_tier !== 'lifetime' && (
+                  <SettingsRow
+                    icon={<Mail size={18} color="#7a6f62" />}
+                    label="Request Refund"
+                    onPress={() => {
+                      Alert.alert(
+                        '30-Day Money-Back Guarantee',
+                        'Not satisfied? You can request a full refund within 30 days of purchase by emailing us.',
+                        [
+                          { text: 'Cancel', style: 'cancel' },
+                          {
+                            text: 'Send Email',
+                            onPress: () => {
+                              Linking.openURL('mailto:info@thedadcenter.com?subject=Refund%20Request%20-%20The%20Dad%20Center%20Premium')
+                            },
+                          },
+                        ]
+                      )
+                    }}
+                  />
+                )}
+              </>
+            ) : (
+              <SettingsRow
+                icon={<Crown size={18} color="#d4a853" />}
+                label="Upgrade to Premium"
+                onPress={() => router.push('/(screens)/upgrade')}
+                color="#d4a853"
+              />
+            )}
           </GlassCard>
         </CardEntrance>
 
@@ -580,6 +649,46 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#7a6f62',
     marginTop: 2,
+  },
+  pastDueBadgeText: {
+    color: '#d4836b',
+  },
+  pastDueBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: 'rgba(212,131,107,0.08)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(212,131,107,0.15)',
+  },
+  pastDueBannerText: {
+    flex: 1,
+  },
+  pastDueTitle: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 13,
+    color: '#d4836b',
+  },
+  pastDueDescription: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 12,
+    color: 'rgba(212,131,107,0.7)',
+    marginTop: 2,
+  },
+  gracePeriodBanner: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: 'rgba(212,168,83,0.08)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(212,168,83,0.15)',
+  },
+  gracePeriodText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 12,
+    color: 'rgba(212,168,83,0.8)',
+    lineHeight: 18,
   },
 
   // Danger

@@ -6,12 +6,17 @@ import {
   RefreshControl,
   ActivityIndicator,
   StyleSheet,
+  Pressable,
+  Linking,
+  Platform,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useQueryClient } from '@tanstack/react-query'
+import { AlertTriangle, ChevronRight } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useDashboardData } from '@/hooks/use-dashboard'
+import { useSubscriptionStatus } from '@/hooks/use-subscription'
 import { CardEntrance } from '@/components/animations'
 import {
   MoodCheckinCard,
@@ -38,6 +43,8 @@ export default function DashboardScreen() {
   const queryClient = useQueryClient()
   const { profile, family } = useAuth()
   const { tasksQuery, briefingQuery, moodQuery } = useDashboardData()
+  const { data: subStatus } = useSubscriptionStatus()
+  const isPastDue = subStatus?.status === 'past_due'
 
   const isLoading = tasksQuery.isLoading && briefingQuery.isLoading
   const isRefreshing =
@@ -47,6 +54,7 @@ export default function DashboardScreen() {
     queryClient.invalidateQueries({ queryKey: ['tasks-due'] })
     queryClient.invalidateQueries({ queryKey: ['current-briefing'] })
     queryClient.invalidateQueries({ queryKey: ['mood-today'] })
+    queryClient.invalidateQueries({ queryKey: ['subscription-status'] })
   }, [queryClient])
 
   // Derive current week from family (or baby via profile)
@@ -89,6 +97,30 @@ export default function DashboardScreen() {
             </View>
           </View>
         </CardEntrance>
+
+        {/* Payment Failed Banner */}
+        {isPastDue && (
+          <CardEntrance delay={40}>
+            <Pressable
+              onPress={() => {
+                const url = Platform.OS === 'ios'
+                  ? 'https://apps.apple.com/account/subscriptions'
+                  : 'https://play.google.com/store/account/subscriptions'
+                Linking.openURL(url)
+              }}
+              style={styles.pastDueBanner}
+            >
+              <AlertTriangle size={16} color="#d4836b" />
+              <View style={styles.pastDueBannerContent}>
+                <Text style={styles.pastDueTitle}>Payment failed</Text>
+                <Text style={styles.pastDueDesc}>
+                  Update your payment method to keep premium access.
+                </Text>
+              </View>
+              <ChevronRight size={14} color="#d4836b" />
+            </Pressable>
+          </CardEntrance>
+        )}
 
         {isLoading ? (
           <View style={styles.loadingContainer}>
@@ -175,5 +207,30 @@ const styles = StyleSheet.create({
   },
   cardsContainer: {
     gap: 16,
+  },
+  pastDueBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    padding: 14,
+    marginBottom: 16,
+    borderRadius: 16,
+    backgroundColor: 'rgba(212,131,107,0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(212,131,107,0.2)',
+  },
+  pastDueBannerContent: {
+    flex: 1,
+  },
+  pastDueTitle: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 13,
+    color: '#d4836b',
+  },
+  pastDueDesc: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 12,
+    color: 'rgba(212,131,107,0.7)',
+    marginTop: 2,
   },
 })
