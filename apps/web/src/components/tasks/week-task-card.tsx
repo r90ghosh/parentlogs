@@ -14,7 +14,7 @@ import {
   Users,
   MoreHorizontal,
 } from 'lucide-react'
-import { FamilyTask } from '@/types'
+import { FamilyTask } from '@tdc/shared/types'
 import { cn } from '@/lib/utils'
 import { checkboxVariants } from './animations/task-animations'
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { FamilyTask, BacklogCategory, TriageAction } from '@/types'
+import { FamilyTask, BacklogCategory, TriageAction } from '@tdc/shared/types'
 import { categorizeBacklogTask } from '@/lib/task-utils'
 import { categoryConfig } from '@/lib/design-tokens'
 import { cn } from '@/lib/utils'

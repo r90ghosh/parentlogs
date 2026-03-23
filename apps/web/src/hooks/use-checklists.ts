@@ -1,8 +1,9 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { checklistService, ChecklistWithItems, ServiceContext } from '@/services/checklist-service'
-import { ChecklistItemTemplate } from '@/types'
+import { checklistService } from '@/lib/services'
+import type { ChecklistWithItems, ServiceContext } from '@tdc/services'
+import { ChecklistItemTemplate } from '@tdc/shared/types'
 import { useUser } from '@/components/user-provider'
 
 type ChecklistItem = ChecklistItemTemplate & { completed?: boolean }

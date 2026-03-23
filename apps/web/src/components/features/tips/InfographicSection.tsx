@@ -1,7 +1,7 @@
 'use client'
 
 import { Lightbulb } from 'lucide-react'
-import type { TipSection, IllustrationComponent } from '@/types/tips'
+import type { TipSection, IllustrationComponent } from '@tdc/shared/types/tips'
 
 interface InfographicSectionProps {
   section: TipSection

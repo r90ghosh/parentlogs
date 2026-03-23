@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
-import { User as AppUser, UserRole } from '@/types'
+import { User as AppUser, UserRole } from '@tdc/shared/types'
 
 /**
  * React Query hook for profile data

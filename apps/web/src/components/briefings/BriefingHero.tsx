@@ -1,6 +1,6 @@
 'use client'
 
-import { BriefingTemplate } from '@/types'
+import { BriefingTemplate } from '@tdc/shared/types'
 import { cn } from '@/lib/utils'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 

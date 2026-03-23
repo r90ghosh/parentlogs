@@ -1,5 +1,5 @@
-import { FamilyStage } from '@/types'
-import { ContentPhase } from '@/types/dad-journey'
+import { FamilyStage } from '@tdc/shared/types'
+import { ContentPhase } from '@tdc/shared/types/dad-journey'
 import { familyStageToContentPhase } from '@/lib/stage-mapping'
 
 /**

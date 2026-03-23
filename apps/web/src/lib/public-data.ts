@@ -1,6 +1,6 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { PREMIUM_CHECKLIST_IDS } from '@/lib/checklist-constants'
-import { BudgetTemplate } from '@/types'
+import { BudgetTemplate } from '@tdc/shared/types'
 
 /**
  * Fetch all V2 budget templates (public, no auth required)

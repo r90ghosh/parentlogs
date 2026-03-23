@@ -3,8 +3,9 @@
 import { useMemo, useCallback } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { startOfWeek, endOfWeek, isPast, isToday, addDays } from 'date-fns'
-import { taskService, TaskFilters, ServiceContext } from '@/services/task-service'
-import { FamilyTask, TaskAssignee, TaskStatus, TriageAction } from '@/types'
+import { taskService } from '@/lib/services'
+import type { TaskFilters, ServiceContext } from '@tdc/services'
+import { FamilyTask, TaskAssignee, TaskStatus, TriageAction } from '@tdc/shared/types'
 import { useUser } from '@/components/user-provider'
 
 export type CreateTaskInput = {

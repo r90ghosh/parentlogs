@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { BabyDevelopment } from '@/types/dashboard'
+import { BabyDevelopment } from '@tdc/shared/types/dashboard'
 
 interface BabyDevelopmentCardProps {
   baby: BabyDevelopment

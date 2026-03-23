@@ -1,8 +1,8 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query'
-import { budgetService } from '@/services/budget-service'
-import { BudgetPeriod } from '@/types'
+import { budgetService } from '@/lib/services'
+import { BudgetPeriod } from '@tdc/shared/types'
 import { useUser } from '@/components/user-provider'
 
 function useServiceContext() {

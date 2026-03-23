@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { PartnerActivity } from '@/types/dashboard'
+import { PartnerActivity } from '@tdc/shared/types/dashboard'
 import { useIsPremium } from '@/hooks/use-subscription'
 import { PaywallBanner } from '@/components/shared/paywall-banner'
 

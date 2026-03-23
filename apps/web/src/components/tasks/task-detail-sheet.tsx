@@ -40,7 +40,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { FamilyTask } from '@/types'
+import { FamilyTask } from '@tdc/shared/types'
 import { cn } from '@/lib/utils'
 
 interface TaskDetailSheetProps {

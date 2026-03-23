@@ -1,5 +1,5 @@
-import { FamilyStage, BudgetPeriod } from '@/types'
-import { ContentPhase } from '@/types/dad-journey'
+import { FamilyStage, BudgetPeriod } from '@tdc/shared/types'
+import { ContentPhase } from '@tdc/shared/types/dad-journey'
 import { TimelineCategory } from '@/lib/task-timeline'
 import { isPregnancyStage } from '@/lib/pregnancy-utils'
 

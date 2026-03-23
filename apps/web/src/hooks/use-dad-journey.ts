@@ -1,7 +1,7 @@
 'use client'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { dadJourneyService } from '@/services/dad-journey-service'
-import { ContentPhase, DadProfile } from '@/types/dad-journey'
+import { dadJourneyService } from '@/lib/services'
+import { ContentPhase, DadProfile } from '@tdc/shared/types/dad-journey'
 
 export function useDadChallengeContent(phase: ContentPhase) {
   return useQuery({

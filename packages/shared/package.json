@@ -17,8 +17,12 @@
     "date-fns": "^4.1.0",
     "zod": "^4.2.1"
   },
+  "peerDependencies": {
+    "react": ">=18"
+  },
   "devDependencies": {
     "@tdc/tsconfig": "workspace:*",
+    "@types/react": "^19",
     "typescript": "^5.0.0"
   }
 }

@@ -363,3 +363,6 @@ export type PremiumFeature =
   | 'partner_sync'
   | 'push_notifications'
   | 'export_data'
+
+// Tips Types (re-export)
+export type { TipSection, TipTopic, IllustrationProps, IllustrationComponent } from './tips'

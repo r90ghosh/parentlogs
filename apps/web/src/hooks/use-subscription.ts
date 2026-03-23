@@ -1,12 +1,14 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { subscriptionService, PricingPlan, ServiceContext } from '@/services/subscription-service'
-import { PremiumFeature, SubscriptionTier } from '@/types'
+import { subscriptionService } from '@/lib/services'
+import type { ServiceContext } from '@tdc/services'
+import { createCheckoutSession, createPortalSession, type PricingPlan } from '@/lib/stripe/checkout'
+import { PremiumFeature, SubscriptionTier } from '@tdc/shared/types'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo } from 'react'
 import { useUser } from '@/components/user-provider'
-import { isInGracePeriod, gracePeriodDaysRemaining } from '@/lib/subscription-utils'
+import { isInGracePeriod, gracePeriodDaysRemaining } from '@tdc/shared/utils/subscription-utils'
 
 function useServiceContext(): Partial<ServiceContext> | undefined {
   const { user, profile } = useUser()
@@ -66,7 +68,7 @@ export function useCheckout() {
 
   const checkoutMutation = useMutation({
     mutationFn: async (plan: PricingPlan) => {
-      const result = await subscriptionService.createCheckoutSession(plan)
+      const result = await createCheckoutSession(plan)
       if (result.error) throw new Error(result.error)
       return result.url
     },
@@ -79,7 +81,7 @@ export function useCheckout() {
 
   const portalMutation = useMutation({
     mutationFn: async () => {
-      const result = await subscriptionService.createPortalSession()
+      const result = await createPortalSession()
       if (result.error) throw new Error(result.error)
       return result.url
     },

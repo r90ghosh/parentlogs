@@ -1,8 +1,9 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { trackerService, LogFilters, LogType } from '@/services/tracker-service'
-import { BabyLog } from '@/types'
+import { trackerService } from '@/lib/services'
+import type { LogFilters, LogType } from '@tdc/services'
+import { BabyLog } from '@tdc/shared/types'
 import { useUser } from '@/components/user-provider'
 
 export type CreateLogInput = {

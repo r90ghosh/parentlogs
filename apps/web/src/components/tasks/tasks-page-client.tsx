@@ -15,7 +15,7 @@ import {
   subMonths,
   isToday,
 } from 'date-fns'
-import { FamilyTask, TriageAction } from '@/types'
+import { FamilyTask, TriageAction } from '@tdc/shared/types'
 import {
   TasksHeader,
   StatsBar,

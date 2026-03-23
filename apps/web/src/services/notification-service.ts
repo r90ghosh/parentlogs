@@ -1,16 +1,11 @@
 import { createClient } from '@/lib/supabase/client'
-import { NotificationPreferences } from '@/types'
-import { isPremiumTier } from '@/lib/subscription-utils'
+import { NotificationPreferences } from '@tdc/shared/types'
+import { isPremiumTier } from '@tdc/shared/utils/subscription-utils'
+import type { ServiceContext } from '@tdc/services'
 
 const supabase = createClient()
 
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''
-
-export interface ServiceContext {
-  userId: string
-  familyId: string
-  subscriptionTier?: string
-}
 
 async function resolveUserId(ctx?: Partial<ServiceContext>): Promise<string | null> {
   if (ctx?.userId) return ctx.userId

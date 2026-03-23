@@ -6,7 +6,7 @@ import ReactMarkdown from 'react-markdown'
 import { ChevronDown, ChevronUp, CheckCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { PaywallOverlay } from '@/components/shared/paywall-overlay'
-import { DadChallengeContent, PillarConfig } from '@/types/dad-journey'
+import { DadChallengeContent, PillarConfig } from '@tdc/shared/types/dad-journey'
 
 function Markdown({ children }: { children: string }) {
   return (

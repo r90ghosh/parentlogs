@@ -33,7 +33,7 @@ import { ArrowLeft, Camera, Loader2, Save, Trash2, AlertTriangle, KeyRound, Eye,
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/use-toast'
-import { UserRole } from '@/types'
+import { UserRole } from '@tdc/shared/types'
 
 export default function ProfileClient() {
   const router = useRouter()

@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { PriorityTask } from '@/types/dashboard'
+import { PriorityTask } from '@tdc/shared/types/dashboard'
 import Link from 'next/link'
 
 interface PriorityTasksCardProps {

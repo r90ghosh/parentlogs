@@ -1,6 +1,6 @@
 import { createBrowserClient } from '@supabase/ssr'
 import { SupabaseClient } from '@supabase/supabase-js'
-import { Database } from '@/types/database'
+import { Database } from '@tdc/shared/types/database'
 
 // Singleton instance for browser client
 let browserClient: SupabaseClient<Database> | null = null

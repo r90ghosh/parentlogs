@@ -13,7 +13,7 @@ import { useUser } from '@/components/user-provider'
 import { useBabies, useSwitchBaby } from '@/hooks/use-babies'
 import { cn } from '@/lib/utils'
 import { isPregnancyStage } from '@/lib/pregnancy-utils'
-import { Baby as BabyType } from '@/types'
+import { Baby as BabyType } from '@tdc/shared/types'
 import Link from 'next/link'
 
 function getWeekLabel(baby: BabyType): string {

@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 import Link from 'next/link'
-import { FamilyTask } from '@/types'
+import { FamilyTask } from '@tdc/shared/types'
 import { WeekTaskCard } from './week-task-card'
 import { staggerContainerVariants, staggerItemVariants } from './animations/task-animations'
 

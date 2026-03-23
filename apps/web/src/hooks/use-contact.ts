@@ -1,7 +1,8 @@
 'use client'
 
 import { useMutation } from '@tanstack/react-query'
-import { contactService, SubmitContactMessagePayload } from '@/services/contact-service'
+import { contactService } from '@/lib/services'
+import type { SubmitContactMessagePayload } from '@tdc/services'
 
 export function useSubmitContactMessage() {
   return useMutation({

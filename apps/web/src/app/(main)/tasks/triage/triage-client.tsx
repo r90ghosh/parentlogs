@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { FamilyTask, TriageAction } from '@/types'
+import { FamilyTask, TriageAction } from '@tdc/shared/types'
 import { useBacklogTasks, useTriageTask } from '@/hooks/use-tasks'
 import { useUser } from '@/components/user-provider'
 import { useFamily } from '@/hooks/use-family'

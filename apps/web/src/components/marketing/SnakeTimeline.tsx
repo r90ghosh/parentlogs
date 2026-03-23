@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 import { useSnakeTimeline } from '@/hooks/use-snake-timeline'
-import type { TimelineDomain, TimelineMilestone, TimelineDot } from '@/types/timeline'
+import type { TimelineDomain, TimelineMilestone, TimelineDot } from '@tdc/shared/types/timeline'
 
 /* ── Domain color map ── */
 const DOMAIN_COLORS: Record<TimelineDomain, string> = {

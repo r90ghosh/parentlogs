@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { Achievement } from '@/types/dashboard'
+import { Achievement } from '@tdc/shared/types/dashboard'
 
 interface AchievementBannerProps {
   achievement: Achievement

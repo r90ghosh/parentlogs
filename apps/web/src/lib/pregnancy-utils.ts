@@ -1,4 +1,4 @@
-import { FamilyStage, PregnancyTrimester } from '@/types'
+import { FamilyStage, PregnancyTrimester } from '@tdc/shared/types'
 
 /**
  * Trimester week ranges based on medical standards

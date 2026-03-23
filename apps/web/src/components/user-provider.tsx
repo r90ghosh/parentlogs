@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useContext, ReactNode } from 'react'
-import { User as AppUser, Family, Baby } from '@/types'
+import { User as AppUser, Family, Baby } from '@tdc/shared/types'
 
 /**
  * User context for server-fetched data

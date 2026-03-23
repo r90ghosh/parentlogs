@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { useUser } from '@/components/user-provider'
 import { useLastCheckin, useSubmitMoodCheckin, useMoodHistory } from '@/hooks/use-dad-journey'
 import { MOOD_CONFIG, SITUATION_FLAGS } from '@/lib/dad-pillar-config'
-import { MoodLevel } from '@/types/dad-journey'
+import { MoodLevel } from '@tdc/shared/types/dad-journey'
 import { Flame } from 'lucide-react'
 
 /**

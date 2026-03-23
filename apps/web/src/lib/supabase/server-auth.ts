@@ -1,5 +1,5 @@
 import { createServerSupabaseClient } from './server'
-import { User as AppUser, Family, Baby } from '@/types'
+import { User as AppUser, Family, Baby } from '@tdc/shared/types'
 
 const isDev = process.env.NODE_ENV === 'development'
 

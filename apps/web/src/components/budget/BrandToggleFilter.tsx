@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { BudgetBrandView } from '@/types'
+import { BudgetBrandView } from '@tdc/shared/types'
 import { Crown, Sparkles } from 'lucide-react'
 
 interface BrandToggleFilterProps {

@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
-import { FamilyTask, TriageAction } from '@/types'
+import { FamilyTask, TriageAction } from '@tdc/shared/types'
 import { CatchUpTaskItem } from './catch-up-task-item'
 import { SectionAction } from './task-section'
 import { categorizeBacklogTask, sortBacklogTasks } from '@/lib/task-utils'

@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import type { TipTopic } from '@/types/tips'
+import type { TipTopic } from '@tdc/shared/types/tips'
 
 interface TopicSelectorProps {
   topics: TipTopic[]

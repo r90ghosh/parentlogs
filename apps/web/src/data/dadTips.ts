@@ -1,4 +1,4 @@
-import type { TipTopic } from '@/types/tips'
+import type { TipTopic } from '@tdc/shared/types/tips'
 
 export const dadTips: TipTopic[] = [
   {

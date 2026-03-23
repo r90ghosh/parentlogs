@@ -5,7 +5,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { Bell, CheckSquare, AlertTriangle, BookOpen, Users, Info } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CardEntrance } from '@/components/ui/animations/CardEntrance'
-import { Notification, NotificationType } from '@/types'
+import { Notification, NotificationType } from '@tdc/shared/types'
 import { useMarkNotificationRead } from '@/hooks/use-notifications'
 
 const typeIcons: Record<NotificationType, React.ElementType> = {

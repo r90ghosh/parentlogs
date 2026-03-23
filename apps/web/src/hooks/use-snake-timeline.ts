@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
-import type { TimelineMilestone, TimelineDot } from '@/types/timeline'
+import type { TimelineMilestone, TimelineDot } from '@tdc/shared/types/timeline'
 
 const supabase = createClient()
 

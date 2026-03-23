@@ -1,4 +1,4 @@
-import { PillarConfig, MoodConfig, SituationFlag, DadConcern } from '@/types/dad-journey'
+import { PillarConfig, MoodConfig, SituationFlag, DadConcern } from '@tdc/shared/types/dad-journey'
 
 export const PILLAR_CONFIG: PillarConfig[] = [
   { pillar: 'anxiety', label: 'Anxiety & Fear', icon: '🫣', color: 'coral', gradient: 'from-coral/15 to-coral/5', borderColor: 'border-l-coral' },

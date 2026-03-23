@@ -1,4 +1,4 @@
-import { FamilyTask, BacklogCategory } from '@/types'
+import { FamilyTask, BacklogCategory } from '@tdc/shared/types'
 
 /**
  * Categorize a backlog task based on its properties

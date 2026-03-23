@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react'
 import Link from 'next/link'
-import { FamilyTask } from '@/types'
+import { FamilyTask } from '@tdc/shared/types'
 import { categorizeBacklogTask } from '@/lib/task-utils'
 import { cn } from '@/lib/utils'
 

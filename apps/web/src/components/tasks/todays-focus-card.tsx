@@ -16,7 +16,7 @@ import {
   MoreHorizontal,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { FamilyTask } from '@/types'
+import { FamilyTask } from '@tdc/shared/types'
 import { cn } from '@/lib/utils'
 import { focusCardVariants } from './animations/task-animations'
 import { Confetti } from './animations/confetti'

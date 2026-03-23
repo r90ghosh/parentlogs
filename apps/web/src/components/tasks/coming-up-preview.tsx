@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { format, startOfWeek, endOfWeek, addWeeks } from 'date-fns'
 import { ChevronDown, Calendar } from 'lucide-react'
 import Link from 'next/link'
-import { FamilyTask } from '@/types'
+import { FamilyTask } from '@tdc/shared/types'
 import { cn } from '@/lib/utils'
 
 interface ComingUpPreviewProps {

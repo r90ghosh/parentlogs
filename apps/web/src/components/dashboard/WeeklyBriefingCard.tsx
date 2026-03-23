@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { WeeklyBriefing } from '@/types/dashboard'
+import { WeeklyBriefing } from '@tdc/shared/types/dashboard'
 import Link from 'next/link'
 
 interface WeeklyBriefingCardProps {

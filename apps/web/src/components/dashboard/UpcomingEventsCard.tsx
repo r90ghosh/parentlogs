@@ -2,7 +2,7 @@
 
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
-import { UpcomingEvent } from '@/types/dashboard'
+import { UpcomingEvent } from '@tdc/shared/types/dashboard'
 import Link from 'next/link'
 
 interface UpcomingEventsCardProps {

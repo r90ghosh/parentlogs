@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useFamily, useFamilyMembers, useUpdateFamily } from '@/hooks/use-family'
 import { useBabies } from '@/hooks/use-babies'
-import { familyService } from '@/services/family-service'
+import { familyService } from '@/lib/services'
 import { useUser } from '@/components/user-provider'
 import { AddBabyDialog } from '@/components/settings/add-baby-dialog'
 import { isPregnancyStage } from '@/lib/pregnancy-utils'

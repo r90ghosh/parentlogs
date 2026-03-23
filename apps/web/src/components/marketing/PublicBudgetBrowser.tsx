@@ -9,7 +9,7 @@ import {
   getBudgetTimelineCategory,
 } from '@/lib/budget-timeline'
 import { getCategoryStyle } from '@/lib/budget-constants'
-import { budgetService } from '@/services/budget-service'
+import { budgetService } from '@/lib/services'
 import {
   Accordion,
   AccordionContent,
@@ -25,7 +25,7 @@ import {
   Lightbulb,
   Stethoscope,
 } from 'lucide-react'
-import { BudgetTemplate, BudgetBrandView } from '@/types'
+import { BudgetTemplate, BudgetBrandView } from '@tdc/shared/types'
 
 interface PublicBudgetBrowserProps {
   templates: BudgetTemplate[]

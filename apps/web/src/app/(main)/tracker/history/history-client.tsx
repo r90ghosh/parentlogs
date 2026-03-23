@@ -33,7 +33,7 @@ import {
 import Link from 'next/link'
 import { format, isToday, isYesterday } from 'date-fns'
 import { cn } from '@/lib/utils'
-import { LogType, BASIC_LOG_TYPES, PREMIUM_LOG_TYPES } from '@/services/tracker-service'
+import { BASIC_LOG_TYPES, PREMIUM_LOG_TYPES, type LogType } from '@tdc/services'
 import { LOG_TYPE_CONFIG } from '@/lib/tracker-constants'
 import { useToast } from '@/hooks/use-toast'
 

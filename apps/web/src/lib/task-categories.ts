@@ -1,4 +1,4 @@
-import { BacklogCategory, TriageAction } from '@/types'
+import { BacklogCategory, TriageAction } from '@tdc/shared/types'
 
 export const categoryConfig: Record<string, {
   icon: string

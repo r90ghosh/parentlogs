@@ -17,7 +17,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { BriefingTemplate, FamilyStage } from '@/types'
+import { BriefingTemplate, FamilyStage } from '@tdc/shared/types'
 import { isPregnancyStage, getTrimesterLabel, getTrimesterFromWeek } from '@/lib/pregnancy-utils'
 import { RevealOnScroll, Card3DTilt, CardEntrance } from '@/components/ui/animations'
 

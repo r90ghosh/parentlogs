@@ -12,7 +12,7 @@ import {
   Star,
   Plus,
 } from 'lucide-react'
-import { LogType } from '@/services/tracker-service'
+import type { LogType } from '@tdc/services'
 
 export const LOG_TYPE_CONFIG: Record<LogType, { icon: LucideIcon; color: string; bgColor: string; label: string }> = {
   feeding: { icon: Milk, color: 'text-sky', bgColor: 'bg-sky-dim', label: 'Feeding' },

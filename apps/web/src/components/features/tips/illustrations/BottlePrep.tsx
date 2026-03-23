@@ -1,5 +1,5 @@
 import { C } from './colors'
-import type { IllustrationProps } from '@/types/tips'
+import type { IllustrationProps } from '@tdc/shared/types/tips'
 
 export function BottlePrepSection1({ className }: IllustrationProps) {
   return (

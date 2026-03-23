@@ -1,4 +1,4 @@
-import { FamilyTask, Family } from '@/types'
+import { FamilyTask, Family } from '@tdc/shared/types'
 import { differenceInDays, startOfDay, endOfWeek, startOfWeek } from 'date-fns'
 import { isPregnancyStage } from './pregnancy-utils'
 

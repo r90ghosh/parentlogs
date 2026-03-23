@@ -1,4 +1,4 @@
-import { BabyDevelopment, MomSymptom, DadTip } from '@/types/dashboard'
+import { BabyDevelopment, MomSymptom, DadTip } from '@tdc/shared/types/dashboard'
 import { babySizes, getBabySize } from './baby-sizes'
 
 // Heart rate data by week (approximate ranges)

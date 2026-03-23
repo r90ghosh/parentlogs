@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { briefingService } from '@/services/briefing-service'
+import { briefingService } from '@/lib/services'
 import { useUser } from '@/components/user-provider'
 
 export function useCurrentBriefing() {

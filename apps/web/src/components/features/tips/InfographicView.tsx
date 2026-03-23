@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import type { TipTopic, IllustrationComponent } from '@/types/tips'
+import type { TipTopic, IllustrationComponent } from '@tdc/shared/types/tips'
 import { InfographicSection } from './InfographicSection'
 
 interface InfographicViewProps {

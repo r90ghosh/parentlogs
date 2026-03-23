@@ -19,7 +19,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useToast } from '@/hooks/use-toast'
-import { LogType } from '@/services/tracker-service'
+import type { LogType } from '@tdc/services'
 
 function LogEntryContent() {
   const router = useRouter()

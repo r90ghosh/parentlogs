@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { notificationService, ServiceContext } from '@/services/notification-service'
-import { notificationHistoryService } from '@/services/notification-history-service'
-import { NotificationPreferences, Notification } from '@/types'
+import { notificationService } from '@/services/notification-service'
+import type { ServiceContext } from '@tdc/services'
+import { notificationHistoryService } from '@/lib/services'
+import { NotificationPreferences, Notification } from '@tdc/shared/types'
 import { useOptionalUser } from '@/components/user-provider'
 
 function useServiceContext(): Partial<ServiceContext> | undefined {

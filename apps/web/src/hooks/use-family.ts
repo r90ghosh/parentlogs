@@ -1,8 +1,9 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { familyService, ServiceContext } from '@/services/family-service'
-import { Family } from '@/types'
+import { familyService } from '@/lib/services'
+import type { ServiceContext } from '@tdc/services'
+import { Family } from '@tdc/shared/types'
 import { useOptionalUser } from '@/components/user-provider'
 
 function useServiceContext(): Partial<ServiceContext> | undefined {

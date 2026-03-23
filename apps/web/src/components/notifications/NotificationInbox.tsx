@@ -5,7 +5,7 @@ import { isToday, isYesterday } from 'date-fns'
 import { ListSkeleton, EmptyState } from '@/components/error/loading-states'
 import { useNotificationFeed, useMarkAllNotificationsRead } from '@/hooks/use-notifications'
 import { NotificationItem } from './NotificationItem'
-import { Notification } from '@/types'
+import { Notification } from '@tdc/shared/types'
 
 function groupNotifications(notifications: Notification[]) {
   const today: Notification[] = []

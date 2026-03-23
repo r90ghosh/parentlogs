@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useCompleteDashboardTask } from '@/hooks/use-dashboard'
 import { cn } from '@/lib/utils'
 import { Check, ListTodo } from 'lucide-react'
-import { FamilyTask } from '@/types'
+import { FamilyTask } from '@tdc/shared/types'
 
 const supabase = createClient()
 

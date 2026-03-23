@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { X, ShoppingBag, Crown, Sparkles, RefreshCw, Stethoscope, Lightbulb } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { BudgetTemplate } from '@/types'
+import { BudgetTemplate } from '@tdc/shared/types'
 
 interface BrandRecommendationDrawerProps {
   template: BudgetTemplate | null

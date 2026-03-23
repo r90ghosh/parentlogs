@@ -1,4 +1,4 @@
-import { BudgetTemplate, BudgetPeriod, Family } from '@/types'
+import { BudgetTemplate, BudgetPeriod, Family } from '@tdc/shared/types'
 import { familyStageToBudgetPeriod } from './stage-mapping'
 
 /** Shared shape for anything that provides stage/week context (Family or Baby) */

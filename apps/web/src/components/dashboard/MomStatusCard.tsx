@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { MomSymptom } from '@/types/dashboard'
+import { MomSymptom } from '@tdc/shared/types/dashboard'
 
 interface MomStatusCardProps {
   partnerName: string
