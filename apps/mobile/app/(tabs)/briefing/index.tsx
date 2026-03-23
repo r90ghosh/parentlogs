@@ -77,7 +77,7 @@ export default function BriefingScreen() {
         style={styles.scroll}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingTop: insets.top + 12, paddingBottom: insets.bottom + 90 },
+          { paddingTop: 12, paddingBottom: insets.bottom + 90 },
         ]}
         refreshControl={
           <RefreshControl

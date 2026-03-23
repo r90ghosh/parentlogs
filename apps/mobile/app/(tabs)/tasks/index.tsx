@@ -242,7 +242,7 @@ export default function TasksScreen() {
       />
 
       {/* Sticky header area */}
-      <View style={[styles.headerArea, { paddingTop: insets.top + 12 }]}>
+      <View style={[styles.headerArea, { paddingTop: 12 }]}>
         <Text style={styles.pageTitle}>Tasks</Text>
 
         {/* Stats Row */}

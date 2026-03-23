@@ -164,7 +164,7 @@ export default function TaskDetailScreen() {
           colors={['#12100e', '#1a1714', '#12100e']}
           style={StyleSheet.absoluteFill}
         />
-        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+        <View style={[styles.header, { paddingTop: 12 }]}>
           <Pressable onPress={() => router.back()} style={styles.backButton}>
             <ArrowLeft size={20} color="#ede6dc" />
           </Pressable>
@@ -190,7 +190,7 @@ export default function TaskDetailScreen() {
       />
 
       {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+      <View style={[styles.header, { paddingTop: 12 }]}>
         <Pressable onPress={() => router.back()} style={styles.backButton}>
           <ArrowLeft size={20} color="#ede6dc" />
         </Pressable>

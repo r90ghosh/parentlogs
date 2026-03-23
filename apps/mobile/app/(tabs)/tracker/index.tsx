@@ -138,7 +138,7 @@ export default function TrackerScreen() {
         style={styles.scroll}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingTop: insets.top + 12, paddingBottom: insets.bottom + 90 },
+          { paddingTop: 12, paddingBottom: insets.bottom + 90 },
         ]}
         refreshControl={
           <RefreshControl

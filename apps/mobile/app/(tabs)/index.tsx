@@ -17,6 +17,7 @@ import { AlertTriangle, ChevronRight } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useDashboardData } from '@/hooks/use-dashboard'
 import { useSubscriptionStatus } from '@/hooks/use-subscription'
+import { useBabies } from '@/hooks/use-babies'
 import { CardEntrance } from '@/components/animations'
 import {
   MoodCheckinCard,
@@ -44,6 +45,7 @@ export default function DashboardScreen() {
   const { profile, family } = useAuth()
   const { tasksQuery, briefingQuery, moodQuery } = useDashboardData()
   const { data: subStatus } = useSubscriptionStatus()
+  const { data: babies } = useBabies()
   const isPastDue = subStatus?.status === 'past_due'
 
   const isLoading = tasksQuery.isLoading && briefingQuery.isLoading
@@ -55,10 +57,12 @@ export default function DashboardScreen() {
     queryClient.invalidateQueries({ queryKey: ['current-briefing'] })
     queryClient.invalidateQueries({ queryKey: ['mood-today'] })
     queryClient.invalidateQueries({ queryKey: ['subscription-status'] })
+    queryClient.invalidateQueries({ queryKey: ['babies'] })
   }, [queryClient])
 
-  // Derive current week from family (or baby via profile)
-  const currentWeek = (family as { current_week?: number })?.current_week ?? 1
+  // Use active baby's current_week if available, fallback to family
+  const activeBaby = babies?.find((b) => b.id === profile?.active_baby_id) ?? babies?.[0]
+  const currentWeek = activeBaby?.current_week ?? (family as { current_week?: number })?.current_week ?? 1
 
   return (
     <View style={styles.container}>
@@ -72,7 +76,7 @@ export default function DashboardScreen() {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: insets.top + 20,
+            paddingTop: 16,
             paddingBottom: insets.bottom + 100,
           },
         ]}
@@ -92,9 +96,6 @@ export default function DashboardScreen() {
             <Text style={styles.greeting}>
               {getGreeting()}, {getFirstName(profile?.full_name ?? null)}
             </Text>
-            <View style={styles.weekBadge}>
-              <Text style={styles.weekBadgeText}>Week {currentWeek}</Text>
-            </View>
           </View>
         </CardEntrance>
 
@@ -177,29 +178,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   greetingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     marginBottom: 24,
   },
   greeting: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 24,
     color: '#faf6f0',
-    flex: 1,
-  },
-  weekBadge: {
-    backgroundColor: 'rgba(196,112,63,0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(196,112,63,0.3)',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-  },
-  weekBadgeText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 12,
-    color: '#c4703f',
   },
   loadingContainer: {
     paddingTop: 80,

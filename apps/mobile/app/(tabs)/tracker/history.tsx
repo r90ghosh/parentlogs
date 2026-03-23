@@ -152,7 +152,7 @@ export default function HistoryScreen() {
       />
 
       {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
+      <View style={[styles.header, { paddingTop: 8 }]}>
         <Pressable onPress={() => router.back()} style={styles.backButton}>
           <ChevronLeft size={22} color="#faf6f0" />
         </Pressable>
@@ -165,7 +165,7 @@ export default function HistoryScreen() {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: insets.top + 60,
+            paddingTop: 60,
             paddingBottom: insets.bottom + 90,
           },
         ]}
