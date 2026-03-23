@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
   },
   checkedEmoji: {
     fontSize: 32,
+    fontFamily: 'System',
   },
   checkedTitle: {
     fontFamily: 'Karla-SemiBold',

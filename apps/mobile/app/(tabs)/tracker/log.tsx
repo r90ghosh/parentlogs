@@ -687,6 +687,7 @@ const styles = StyleSheet.create({
   },
   moodEmoji: {
     fontSize: 24,
+    fontFamily: 'System',
   },
   vitaminDContainer: {
     paddingVertical: 16,

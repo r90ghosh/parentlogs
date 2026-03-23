@@ -125,7 +125,7 @@ export default function FamilyScreen() {
                   value={dueDate || new Date()}
                   mode="date"
                   display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                  minimumDate={new Date()}
+                  minimumDate={new Date(Date.now() - 18 * 30 * 24 * 60 * 60 * 1000)}
                   maximumDate={new Date(Date.now() + 10 * 30 * 24 * 60 * 60 * 1000)}
                   onChange={(event, selectedDate) => {
                     setShowDatePicker(Platform.OS === 'ios')

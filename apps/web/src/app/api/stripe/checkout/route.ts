@@ -61,6 +61,17 @@ export async function POST(request: NextRequest) {
     const config = PRICING_CONFIG_ALT[plan]
     const isLifetime = plan === 'lifetime'
 
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL
+    if (!appUrl || appUrl.includes('localhost')) {
+      console.error('NEXT_PUBLIC_APP_URL is not set or is localhost in production')
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+    }
+
+    if (!config.priceId) {
+      console.error(`Missing Stripe price ID for plan: ${plan}`)
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+    }
+
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,

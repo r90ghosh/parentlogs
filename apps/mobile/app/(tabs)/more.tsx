@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, Pressable, StyleSheet, ScrollView, Alert } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -212,7 +212,10 @@ export default function MoreScreen() {
             <MenuItem
               icon={<LogOut size={20} color="#d4836b" />}
               label="Sign Out"
-              onPress={signOut}
+              onPress={() => Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+                { text: 'Cancel', style: 'cancel' },
+                { text: 'Sign Out', style: 'destructive', onPress: signOut },
+              ])}
               color="#d4836b"
               showChevron={false}
             />

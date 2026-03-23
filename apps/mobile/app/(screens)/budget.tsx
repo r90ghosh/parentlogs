@@ -7,6 +7,7 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  ScrollView,
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -17,16 +18,27 @@ import {
   Plus,
   ShoppingCart,
   DollarSign,
+  Crown,
+  Sparkles,
 } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import { useBudgetTemplates, useBudgetSummary, useAddToBudget, useTogglePurchased } from '@/hooks/use-budget'
 import { useAuth } from '@/components/providers/AuthProvider'
-import type { BudgetPeriod, BudgetTemplate, FamilyBudgetItem } from '@tdc/shared/types'
+import type { BudgetPeriod, BudgetPriority, BudgetTemplate, FamilyBudgetItem } from '@tdc/shared/types'
 import { BUDGET_TIMELINE_CATEGORIES } from '@tdc/shared/utils/budget-timeline'
 import * as Haptics from 'expo-haptics'
 
 type TabMode = 'browse' | 'my-budget'
+type PriorityFilter = 'all' | BudgetPriority
+
+const PRIORITY_FILTERS: { id: PriorityFilter; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'must-have', label: 'Must-have' },
+  { id: 'good-to-have', label: 'Nice-to-have' },
+  { id: 'tip', label: 'Tips' },
+  { id: 'doctor', label: 'Doctor' },
+]
 
 export default function BudgetScreen() {
   const insets = useSafeAreaInsets()
@@ -34,6 +46,7 @@ export default function BudgetScreen() {
   const { profile } = useAuth()
   const [selectedPeriod, setSelectedPeriod] = useState<BudgetPeriod | null>(null)
   const [activeTab, setActiveTab] = useState<TabMode>('browse')
+  const [selectedPriority, setSelectedPriority] = useState<PriorityFilter>('all')
 
   const templatesQuery = useBudgetTemplates(selectedPeriod ?? undefined)
   const summaryQuery = useBudgetSummary()
@@ -47,11 +60,12 @@ export default function BudgetScreen() {
     summaryQuery.refetch()
   }, [templatesQuery, summaryQuery])
 
-  // Filter templates by period when browsing
+  // Filter templates by period and priority when browsing
   const browseItems = useMemo(() => {
     if (!templatesQuery.data) return []
-    return templatesQuery.data
-  }, [templatesQuery.data])
+    if (selectedPriority === 'all') return templatesQuery.data
+    return templatesQuery.data.filter((t) => t.priority === selectedPriority)
+  }, [templatesQuery.data, selectedPriority])
 
   // Get family budget items
   const myBudgetItems = useMemo(() => {
@@ -91,6 +105,7 @@ export default function BudgetScreen() {
   const renderBrowseItem = useCallback(
     ({ item, index }: { item: BudgetTemplate; index: number }) => {
       const isAdded = addedTemplateIds.has(item.budget_id)
+      const hasBrands = item.brand_premium || item.brand_value
       return (
         <GlassCard style={styles.budgetItemCard}>
           <View style={styles.budgetItemHeader}>
@@ -114,6 +129,26 @@ export default function BudgetScreen() {
               {item.description}
             </Text>
           ) : null}
+          {hasBrands && (
+            <View style={styles.brandsContainer}>
+              {item.brand_premium ? (
+                <View style={styles.brandRow}>
+                  <Crown size={12} color="#d4a853" />
+                  <Text style={styles.brandPremiumText} numberOfLines={1}>
+                    {item.brand_premium}
+                  </Text>
+                </View>
+              ) : null}
+              {item.brand_value ? (
+                <View style={styles.brandRow}>
+                  <Sparkles size={12} color="#6b8f71" />
+                  <Text style={styles.brandValueText} numberOfLines={1}>
+                    {item.brand_value}
+                  </Text>
+                </View>
+              ) : null}
+            </View>
+          )}
           <View style={styles.budgetItemFooter}>
             <Text style={styles.budgetItemPeriod}>{item.period}</Text>
             {!isAdded ? (
@@ -294,37 +329,85 @@ export default function BudgetScreen() {
 
       {/* Timeline bar (browse mode only) */}
       {activeTab === 'browse' && (
-        <FlatList
-          horizontal
-          data={BUDGET_TIMELINE_CATEGORIES}
-          keyExtractor={(item) => item.id}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.timelineContent}
-          style={styles.timelineBar}
-          renderItem={({ item }) => (
-            <Pressable
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                setSelectedPeriod(
-                  selectedPeriod === item.id ? null : item.id
-                )
-              }}
-              style={[
-                styles.timelinePill,
-                selectedPeriod === item.id && styles.timelinePillActive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.timelinePillText,
-                  selectedPeriod === item.id && styles.timelinePillTextActive,
-                ]}
+        <>
+          <FlatList
+            horizontal
+            data={BUDGET_TIMELINE_CATEGORIES}
+            keyExtractor={(item) => item.id}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.timelineContent}
+            style={styles.timelineBar}
+            renderItem={({ item }) => (
+              <Pressable
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                  setSelectedPeriod(
+                    selectedPeriod === item.id ? null : item.id
+                  )
+                }}
+                style={{
+                  paddingHorizontal: 16,
+                  paddingVertical: 9,
+                  borderRadius: 20,
+                  backgroundColor: selectedPeriod === item.id ? 'rgba(196,112,63,0.2)' : 'rgba(42,38,34,0.9)',
+                  borderWidth: 1,
+                  borderColor: selectedPeriod === item.id ? '#c4703f' : 'rgba(237,230,220,0.2)',
+                }}
               >
-                {item.label}
-              </Text>
-            </Pressable>
-          )}
-        />
+                <Text
+                  className=""
+                  style={{
+                    fontFamily: 'Karla-SemiBold',
+                    fontSize: 14,
+                    color: selectedPeriod === item.id ? '#c4703f' : '#faf6f0',
+                    textDecorationLine: 'none',
+                    opacity: 1,
+                  }}
+                >
+                  {item.label}
+                </Text>
+              </Pressable>
+            )}
+          />
+
+          {/* Priority filter pills */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.priorityContent}
+            style={styles.priorityBar}
+          >
+            {PRIORITY_FILTERS.map((filter) => (
+              <Pressable
+                key={filter.id}
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                  setSelectedPriority(
+                    selectedPriority === filter.id ? 'all' : filter.id
+                  )
+                }}
+                style={{
+                  paddingHorizontal: 14,
+                  paddingVertical: 7,
+                  borderRadius: 16,
+                  backgroundColor: selectedPriority === filter.id ? 'rgba(212,168,83,0.2)' : 'rgba(42,38,34,0.9)',
+                  borderWidth: 1,
+                  borderColor: selectedPriority === filter.id ? '#d4a853' : 'rgba(237,230,220,0.2)',
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: 'Karla-SemiBold',
+                    fontSize: 13,
+                    color: selectedPriority === filter.id ? '#d4a853' : '#faf6f0',
+                  }}
+                >
+                  {filter.label}
+                </Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </>
       )}
 
       {/* Content */}
@@ -342,7 +425,7 @@ export default function BudgetScreen() {
           </Text>
           <Text style={styles.emptySubtitle}>
             {activeTab === 'browse'
-              ? 'Try selecting a different period'
+              ? 'Try selecting a different period or filter'
               : 'Browse items and add them to your budget'}
           </Text>
         </View>
@@ -444,31 +527,61 @@ const styles = StyleSheet.create({
   // Timeline bar
   timelineBar: {
     maxHeight: 44,
-    marginBottom: 12,
+    marginBottom: 8,
   },
   timelineContent: {
     paddingHorizontal: 20,
     gap: 8,
   },
   timelinePill: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 9,
     borderRadius: 20,
-    backgroundColor: 'rgba(32,28,24,0.8)',
+    backgroundColor: 'rgba(42,38,34,0.9)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
+    borderColor: 'rgba(237,230,220,0.15)',
   },
   timelinePillActive: {
-    backgroundColor: 'rgba(196,112,63,0.15)',
-    borderColor: 'rgba(196,112,63,0.3)',
+    backgroundColor: 'rgba(196,112,63,0.2)',
+    borderColor: '#c4703f',
   },
   timelinePillText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 13,
-    color: '#7a6f62',
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 14,
+    color: '#ede6dc',
   },
   timelinePillTextActive: {
     color: '#c4703f',
+  },
+
+  // Priority filter bar
+  priorityBar: {
+    maxHeight: 40,
+    marginBottom: 12,
+  },
+  priorityContent: {
+    paddingHorizontal: 20,
+    gap: 6,
+  },
+  priorityPill: {
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 16,
+    backgroundColor: 'rgba(42,38,34,0.9)',
+    borderWidth: 1,
+    borderColor: 'rgba(237,230,220,0.15)',
+  },
+  priorityPillActive: {
+    backgroundColor: 'rgba(212,168,83,0.2)',
+    borderColor: '#d4a853',
+  },
+  priorityPillText: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 13,
+    color: '#ede6dc',
+  },
+  priorityPillTextActive: {
+    color: '#d4a853',
   },
 
   // List
@@ -534,6 +647,29 @@ const styles = StyleSheet.create({
     fontFamily: 'Karla-Regular',
     fontSize: 12,
     color: '#4a4239',
+  },
+
+  // Brand recommendations
+  brandsContainer: {
+    marginTop: 10,
+    gap: 6,
+  },
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  brandPremiumText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 12,
+    color: '#d4a853',
+    flex: 1,
+  },
+  brandValueText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 12,
+    color: '#6b8f71',
+    flex: 1,
   },
 
   // Must-have badge

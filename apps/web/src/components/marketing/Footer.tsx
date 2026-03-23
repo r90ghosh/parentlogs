@@ -9,30 +9,20 @@ const footerLinks = {
     { label: 'Content', href: '/content' },
     { label: 'Budget Guide', href: '/budget-guide' },
     { label: 'Checklists', href: '/baby-checklists' },
-    { label: 'Dashboard', href: '/dashboard' },
-  ],
-  company: [
-    { label: 'About', href: '/about' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Contact', href: '/help' },
-    { label: 'Careers', href: '/careers' },
   ],
   legal: [
     { label: 'Privacy Policy', href: '/privacy' },
     { label: 'Terms of Service', href: '/terms' },
-    { label: 'Cookie Policy', href: '/cookies' },
   ],
   support: [
-    { label: 'Help Center', href: '/help' },
-    { label: 'FAQ', href: '/faq' },
-    { label: 'Status', href: '/status' },
+    { label: 'Contact', href: 'mailto:hello@thedadcenter.com' },
   ],
 }
 
 const socialLinks = [
-  { icon: Twitter, href: 'https://twitter.com/thedadcenter', label: 'Twitter' },
-  { icon: Linkedin, href: 'https://linkedin.com/company/thedadcenter', label: 'LinkedIn' },
-  { icon: Instagram, href: 'https://instagram.com/thedadcenter', label: 'Instagram' },
+  { icon: Twitter, href: 'https://x.com/thedadcenter', label: 'X' },
+  { icon: Instagram, href: 'https://www.instagram.com/thedadcenter/', label: 'Instagram' },
+  { icon: Linkedin, href: 'https://www.linkedin.com/in/the-dad-cente/', label: 'LinkedIn' },
   { icon: Mail, href: 'mailto:hello@thedadcenter.com', label: 'Email' },
 ]
 
@@ -41,7 +31,7 @@ export function Footer() {
     <footer className="bg-[--surface]" style={{ borderTop: '1px solid rgba(196,112,63,0.5)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main footer content */}
-        <div className="py-12 md:py-16 grid grid-cols-2 md:grid-cols-6 gap-8">
+        <div className="py-12 md:py-16 grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Brand column */}
           <div className="col-span-2">
             <div className="mb-4">
@@ -84,23 +74,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Company links */}
-          <div>
-            <h4 className="font-ui text-sm font-semibold text-[--cream] mb-4">Company</h4>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link, i) => (
-                <li key={i}>
-                  <Link
-                    href={link.href}
-                    className="font-ui text-sm text-[--muted] hover:text-copper transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
           {/* Legal links */}
           <div>
             <h4 className="font-ui text-sm font-semibold text-[--cream] mb-4">Legal</h4>
@@ -118,20 +91,18 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Support links */}
+          {/* Support */}
           <div>
             <h4 className="font-ui text-sm font-semibold text-[--cream] mb-4">Support</h4>
             <ul className="space-y-3">
-              {footerLinks.support.map((link, i) => (
-                <li key={i}>
-                  <Link
-                    href={link.href}
-                    className="font-ui text-sm text-[--muted] hover:text-copper transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <a
+                  href="mailto:hello@thedadcenter.com"
+                  className="font-ui text-sm text-[--muted] hover:text-copper transition-colors"
+                >
+                  Contact
+                </a>
+              </li>
             </ul>
           </div>
         </div>

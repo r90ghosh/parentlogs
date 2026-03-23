@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
   },
   babySizeEmoji: {
     fontSize: 24,
+    fontFamily: 'System',
   },
   babySizeText: {
     fontFamily: 'Jost-Regular',

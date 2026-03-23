@@ -11,13 +11,16 @@ export function JsonLd() {
       'The operating system for modern fatherhood. Week-by-week guidance, actionable tasks, budget planning, and partner sync for dads.',
     contactPoint: {
       '@type': 'ContactPoint',
-      email: 'support@thedadcenter.com',
+      email: 'hello@thedadcenter.com',
       contactType: 'customer support',
     },
     sameAs: [
-      'https://twitter.com/thedadcenter',
-      'https://instagram.com/thedadcenter',
-      'https://linkedin.com/company/thedadcenter',
+      'https://x.com/thedadcenter',
+      'https://www.instagram.com/thedadcenter/',
+      'https://www.linkedin.com/in/the-dad-cente/',
+      'https://www.reddit.com/r/thedadcenter/',
+      'https://www.pinterest.com/thedadcenter/',
+      'https://www.threads.com/@thedadcenter',
     ],
   }
 
@@ -64,13 +67,6 @@ export function JsonLd() {
         availability: 'https://schema.org/InStock',
       },
     ],
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.9',
-      ratingCount: '10000',
-      bestRating: '5',
-      worstRating: '1',
-    },
   }
 
   const faqPage = {

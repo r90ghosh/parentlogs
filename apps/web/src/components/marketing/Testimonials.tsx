@@ -8,19 +8,19 @@ const testimonials = [
   {
     quote: "Finally, an app that doesn't treat me like an idiot. The week-by-week briefings are exactly what I needed to feel prepared without drowning in information.",
     author: 'Michael T.',
-    role: 'Software Engineer',
+    role: 'Early Access Dad',
     avatar: 'M',
   },
   {
     quote: "The task system is brilliant. I didn't even know half of these things needed to happen, and now I'm ahead of schedule on everything.",
     author: 'David K.',
-    role: 'Product Manager',
+    role: 'Early Access Dad',
     avatar: 'D',
   },
   {
     quote: "My wife was skeptical at first, but when she saw how organized I was with the nursery prep, she became a bigger fan than me.",
     author: 'James R.',
-    role: 'Data Scientist',
+    role: 'Early Access Dad',
     avatar: 'J',
   },
 ]
@@ -31,9 +31,9 @@ export function Testimonials() {
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Section header */}
         <RevealOnScroll className="text-center mb-16">
-          <span className="section-pre justify-center">Testimonials</span>
+          <span className="section-pre justify-center">Early Feedback</span>
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-[--cream] leading-[1.2] mb-12">
-            Trusted by 10,000+ dads
+            What Early Access Dads Are Saying
           </h2>
         </RevealOnScroll>
 

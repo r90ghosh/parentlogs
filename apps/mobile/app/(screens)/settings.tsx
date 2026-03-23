@@ -321,9 +321,9 @@ export default function SettingsScreen() {
                   {profile?.subscription_tier === 'lifetime' && (
                     <Text style={styles.subscriptionDetail}>Never expires</Text>
                   )}
-                  {profile?.subscription_tier === 'premium' && customerInfo?.entitlements?.active?.premium?.expirationDate && (
+                  {profile?.subscription_tier === 'premium' && customerInfo?.entitlements?.active?.['The Dad Center Pro']?.expirationDate && (
                     <Text style={styles.subscriptionDetail}>
-                      Renews {new Date(customerInfo.entitlements.active.premium.expirationDate).toLocaleDateString()}
+                      Renews {new Date(customerInfo.entitlements.active['The Dad Center Pro'].expirationDate!).toLocaleDateString()}
                     </Text>
                   )}
                 </View>

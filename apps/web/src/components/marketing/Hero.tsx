@@ -301,10 +301,10 @@ export function Hero() {
           <RevealOnScroll delay={400}>
             <div className="mt-12 sm:mt-16 flex flex-wrap justify-center gap-4 sm:gap-8 md:gap-12">
               {[
-                { value: '10,000+', label: 'Active Dads' },
+                { value: 'Built for', label: 'First-Time Dads' },
                 { value: '200+', label: 'Pre-loaded Tasks' },
                 { value: '47', label: 'Weekly Briefings' },
-                { value: '4.9/5', label: 'User Rating' },
+                { value: 'ACOG & AAP', label: 'Medically Sourced' },
               ].map((stat, i) => (
                 <div key={i} className="text-center">
                   <p className="font-display font-bold text-2xl sm:text-3xl md:text-4xl text-[--cream] mb-1">{stat.value}</p>

@@ -8,11 +8,9 @@ interface Article {
   content: string
   excerpt: string | null
   stage: string | null
-  category: string | null
   is_free: boolean
   reviewed_by: string | null
-  sources: string | null
-  published_at: string | null
+  sources: string[] | null
   created_at: string
 }
 
@@ -22,8 +20,8 @@ export function useArticles(stage?: string) {
     queryFn: async () => {
       let query = supabase
         .from('articles')
-        .select('id, title, slug, excerpt, stage, category, is_free, reviewed_by, published_at')
-        .order('published_at', { ascending: false })
+        .select('id, title, slug, excerpt, stage, is_free, reviewed_by, created_at')
+        .order('created_at', { ascending: false })
 
       if (stage) {
         query = query.eq('stage', stage)

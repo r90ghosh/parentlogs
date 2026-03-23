@@ -9,9 +9,14 @@ const supabaseAdmin = createClient(
 const RC_WEBHOOK_AUTH = Deno.env.get("REVENUCAT_WEBHOOK_AUTH");
 
 const PRODUCT_TIER_MAP: Record<string, "premium" | "lifetime"> = {
-  "com.thedadcenter.premium.monthly": "premium",
-  "com.thedadcenter.premium.annual": "premium",
-  "com.thedadcenter.premium.lifetime": "lifetime",
+  // App Store product IDs (production)
+  "tdc_monthly_499": "premium",
+  "tdc_annual_3999": "premium",
+  "tdc_lifetime_9999": "lifetime",
+  // Test Store product IDs (sandbox)
+  "monthly": "premium",
+  "yearly": "premium",
+  "lifetime": "lifetime",
 };
 
 async function updateFamilyTier(userId: string, tier: string) {

@@ -37,7 +37,7 @@ const plans = [
       { text: 'Push notifications', included: true },
       { text: 'Mood trends & insights', included: true },
     ],
-    cta: 'Start Free Trial',
+    cta: 'Get Started',
     ctaLink: '/signup?plan=yearly',
     highlighted: true,
     badge: 'Best Value',

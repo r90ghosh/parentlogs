@@ -34,12 +34,14 @@ export function useSubmitMood() {
   const { user, family } = useAuth()
 
   return useMutation({
-    mutationFn: (mood: MoodLevel) =>
-      dadJourneyService.submitMoodCheckin({
-        userId: user!.id,
-        familyId: family!.id,
+    mutationFn: (mood: MoodLevel) => {
+      if (!user?.id || !family?.id) throw new Error('Not authenticated')
+      return dadJourneyService.submitMoodCheckin({
+        userId: user.id,
+        familyId: family.id,
         mood,
-      }),
+      })
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mood-today', user?.id] })
       queryClient.invalidateQueries({ queryKey: ['dashboard'] })

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'
+import { getStripe } from '@/lib/stripe/server'
 
 export async function DELETE(request: NextRequest) {
   try {
@@ -98,6 +99,23 @@ export async function DELETE(request: NextRequest) {
       .delete()
       .eq('user_id', user.id)
     if (pushSubError) console.error('Failed to delete push_subscriptions:', pushSubError)
+
+    // Cancel active Stripe subscription before deleting the record
+    const { data: subRecord } = await supabaseAdmin
+      .from('subscriptions')
+      .select('stripe_subscription_id')
+      .eq('user_id', user.id)
+      .single()
+
+    if (subRecord?.stripe_subscription_id) {
+      try {
+        const stripe = getStripe()
+        await stripe.subscriptions.cancel(subRecord.stripe_subscription_id)
+      } catch (stripeError) {
+        // Log but don't block account deletion — subscription may already be canceled
+        console.error('Failed to cancel Stripe subscription:', stripeError)
+      }
+    }
 
     const { error: subError } = await supabaseAdmin
       .from('subscriptions')

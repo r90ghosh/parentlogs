@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: 64,
+    fontFamily: 'System',
   },
   step: {
     fontFamily: 'Karla-Medium',
