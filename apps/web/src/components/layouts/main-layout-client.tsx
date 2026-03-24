@@ -50,8 +50,8 @@ const mainNavItems = [
 const moreToolItems = [
   { href: '/checklists', label: 'Checklists', icon: ClipboardList },
   { href: '/budget', label: 'Budget', icon: DollarSign },
-  { href: '/content', label: 'Articles', icon: FileText, external: true },
-  { href: '/tips', label: 'Dad Tips', icon: Lightbulb, external: true },
+  { href: '/content', label: 'Articles', icon: FileText },
+  { href: '/tips', label: 'Dad Tips', icon: Lightbulb },
 ]
 
 const moreFamilyItems = [
@@ -110,20 +110,6 @@ function SectionItems({
             <span>{item.label}</span>
           </>
         )
-
-        if (item.external) {
-          return (
-            <a
-              key={item.href + item.label}
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={className}
-            >
-              {content}
-            </a>
-          )
-        }
 
         return (
           <Link
