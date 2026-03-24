@@ -22,6 +22,7 @@ export const stripe = new Proxy({} as Stripe, {
   },
 })
 
+// Server-only pricing config with Stripe price IDs (never expose to client)
 export const PRICING_CONFIG = {
   monthly: {
     priceId: process.env.STRIPE_MONTHLY_PRICE_ID || '',
@@ -33,22 +34,6 @@ export const PRICING_CONFIG = {
   },
   lifetime: {
     priceId: process.env.STRIPE_LIFETIME_PRICE_ID || '',
-    mode: 'payment' as const,
-  },
-}
-
-// Alternative names used in .env.local (for compatibility)
-export const PRICING_CONFIG_ALT = {
-  monthly: {
-    priceId: process.env.STRIPE_MONTHLY_PRICE_ID || process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY || '',
-    mode: 'subscription' as const,
-  },
-  yearly: {
-    priceId: process.env.STRIPE_YEARLY_PRICE_ID || process.env.NEXT_PUBLIC_STRIPE_PRICE_ANNUAL || '',
-    mode: 'subscription' as const,
-  },
-  lifetime: {
-    priceId: process.env.STRIPE_LIFETIME_PRICE_ID || process.env.NEXT_PUBLIC_STRIPE_PRICE_LIFETIME || '',
     mode: 'payment' as const,
   },
 }

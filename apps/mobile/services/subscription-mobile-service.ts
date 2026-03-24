@@ -46,7 +46,7 @@ export const subscriptionMobileService = {
 
       await supabase
         .from('profiles')
-        .update({ subscription_tier: tier })
+        .update({ subscription_tier: tier, subscription_expires_at: entitlement.expirationDate ?? null })
         .eq('id', user.id)
 
       console.log('[Subscription] Synced tier to Supabase:', tier)

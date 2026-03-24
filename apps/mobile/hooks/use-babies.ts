@@ -19,9 +19,8 @@ export function useSwitchBaby() {
 
   return useMutation({
     mutationFn: async (babyId: string) => {
-      const result = await babyService.setActiveBaby(babyId)
-      if (result.error) throw result.error
-      return result
+      const { error } = await babyService.setActiveBaby(babyId)
+      if (error) throw error
     },
     onSuccess: async () => {
       await refreshProfile()

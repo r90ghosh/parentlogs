@@ -1,3 +1,8 @@
+// IMPORTANT: This is the canonical Next.js Stripe webhook handler.
+// It handles grace period logic for subscription cancellations.
+// A duplicate exists at supabase/functions/stripe-webhook/index.ts (Supabase Edge Function).
+// Ensure only ONE of these is configured in the Stripe dashboard.
+
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/server'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'

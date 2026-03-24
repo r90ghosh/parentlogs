@@ -350,7 +350,7 @@ export interface ApiResponse<T> {
   message?: string
 }
 
-// Premium Feature Keys
+/** @deprecated Name is misleading — actual window is 30 days. Kept for backward compat. */
 export type PremiumFeature =
   | 'tasks_beyond_14_days'
   | 'briefings_beyond_4_weeks'

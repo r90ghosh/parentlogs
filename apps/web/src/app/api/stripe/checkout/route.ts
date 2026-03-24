@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe, PRICING_CONFIG_ALT, PlanType } from '@/lib/stripe/server'
+import { stripe, PRICING_CONFIG, PlanType } from '@/lib/stripe/server'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 
 export async function POST(request: NextRequest) {
@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     const { plan } = await request.json() as { plan: PlanType }
 
-    if (!plan || !PRICING_CONFIG_ALT[plan]) {
+    if (!plan || !PRICING_CONFIG[plan]) {
       return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })
     }
 
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
         })
     }
 
-    const config = PRICING_CONFIG_ALT[plan]
+    const config = PRICING_CONFIG[plan]
     const isLifetime = plan === 'lifetime'
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL

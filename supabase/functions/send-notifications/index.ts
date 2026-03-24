@@ -71,8 +71,8 @@ Deno.serve(async (req: Request) => {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Error sending notifications:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error("Error sending notifications:", error instanceof Error ? error.message : "Unknown error");
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });

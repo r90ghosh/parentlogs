@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  Platform,
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -329,13 +330,16 @@ export default function UpgradeScreen() {
             )}
           </Pressable>
           <Text style={styles.legalText}>
-            Payment will be charged to your Apple ID account at confirmation of
-            purchase. Subscription automatically renews unless canceled at least
-            24 hours before the end of the current period. Your account will be
-            charged for renewal within 24 hours prior to the end of the current
-            period at the cost of the chosen plan. You can manage and cancel your
-            subscriptions by going to your Account Settings on the App Store
-            after purchase.
+            Payment will be charged to your{' '}
+            {Platform.OS === 'ios' ? 'Apple ID' : 'Google Play account'} at
+            confirmation of purchase. Subscription automatically renews unless
+            canceled at least 24 hours before the end of the current period.
+            Your account will be charged for renewal within 24 hours prior to
+            the end of the current period at the cost of the chosen plan. You
+            can manage and cancel your subscriptions by going to your Account
+            Settings on the{' '}
+            {Platform.OS === 'ios' ? 'App Store' : 'Google Play Store'} after
+            purchase.
           </Text>
           <View style={styles.legalLinks}>
             <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')}>

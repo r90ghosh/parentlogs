@@ -92,7 +92,10 @@ export function createBabyService(supabase: AppSupabaseClient) {
       return { baby: newBaby, error: null }
     },
 
-    async updateBaby(babyId: string, updates: Partial<Pick<Baby, 'baby_name' | 'due_date' | 'birth_date'>>): Promise<{ error: Error | null }> {
+    async updateBaby(babyId: string, updates: Partial<Pick<Baby, 'baby_name' | 'due_date' | 'birth_date'>>, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
+      const resolved = await resolveContext(ctx)
+      if (!resolved) return { error: new Error('Not authenticated') }
+
       const safeUpdates: Record<string, unknown> = {}
       if (updates.baby_name !== undefined) safeUpdates.baby_name = updates.baby_name
       if (updates.due_date !== undefined) safeUpdates.due_date = updates.due_date
@@ -102,6 +105,7 @@ export function createBabyService(supabase: AppSupabaseClient) {
         .from('babies')
         .update(safeUpdates)
         .eq('id', babyId)
+        .eq('family_id', resolved.familyId)
 
       return { error: error as Error | null }
     },
@@ -133,12 +137,15 @@ export function createBabyService(supabase: AppSupabaseClient) {
     async archiveBaby(babyId: string, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
       const resolved = await resolveContext(ctx)
 
+      if (!resolved) return { error: new Error('Not authenticated') }
+
       const { error } = await supabase
         .from('babies')
         .update({ is_active: false })
         .eq('id', babyId)
+        .eq('family_id', resolved.familyId)
 
-      if (!error && resolved) {
+      if (!error) {
         // If archived baby was active, switch to first remaining active baby
         const { data: profile } = await supabase
           .from('profiles')

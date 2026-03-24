@@ -46,9 +46,9 @@ export function useSnoozeTask() {
 
   return useMutation({
     mutationFn: (id: string) => {
-      const tomorrow = new Date()
-      tomorrow.setDate(tomorrow.getDate() + 7)
-      return taskService.snoozeTask(id, tomorrow.toISOString().split('T')[0])
+      const snoozeUntil = new Date()
+      snoozeUntil.setDate(snoozeUntil.getDate() + 7)
+      return taskService.snoozeTask(id, snoozeUntil.toISOString().split('T')[0])
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks', family?.id] })

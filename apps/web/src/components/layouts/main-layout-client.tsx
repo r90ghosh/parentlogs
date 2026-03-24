@@ -30,7 +30,6 @@ import {
   BookOpen,
   FileText,
   Lightbulb,
-  UserPlus,
   Users,
   Crown,
   HelpCircle,
@@ -56,7 +55,6 @@ const moreToolItems = [
 ]
 
 const moreFamilyItems = [
-  { href: '/settings/family', label: 'Invite Partner', icon: UserPlus },
   { href: '/settings/family', label: 'Family Settings', icon: Users },
 ]
 

@@ -214,8 +214,7 @@ export const notificationService = {
     const daysSinceSignup = Math.floor((now.getTime() - signupDate.getTime()) / (1000 * 60 * 60 * 24))
     const daysRemaining = Math.max(0, 30 - daysSinceSignup)
 
-    // Consistent with isPushWindowActive: day 30 is active (daysRemaining >= 0 means <= 30 days)
-    return { isActive: daysRemaining >= 0, daysRemaining, isPremium: false }
+    return { isActive: daysRemaining > 0, daysRemaining, isPremium: false }
   },
 
   // Helper: Convert VAPID key

@@ -1,5 +1,4 @@
 export { CardEntrance } from './CardEntrance'
 export { StaggerList } from './StaggerList'
-export { WarmBackground } from './WarmBackground'
 export { MoodEmojiPop } from './MoodEmojiPop'
 export { SwipeAction } from './SwipeAction'

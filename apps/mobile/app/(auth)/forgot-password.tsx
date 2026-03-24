@@ -39,7 +39,7 @@ export default function ForgotPasswordScreen() {
 
     const { error: resetError } = await supabase.auth.resetPasswordForEmail(
       trimmed,
-      { redirectTo: 'https://thedadcenter.com/auth/reset-password' }
+      { redirectTo: 'https://thedadcenter.com/reset-password' }
     )
 
     if (resetError) {

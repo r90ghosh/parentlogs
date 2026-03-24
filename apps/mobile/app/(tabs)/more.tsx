@@ -6,7 +6,6 @@ import {
   DollarSign,
   ClipboardList,
   Compass,
-  Settings,
   Crown,
   LogOut,
   ChevronRight,
@@ -169,11 +168,6 @@ export default function MoreScreen() {
               icon={<HelpCircle size={20} color="#6b8f71" />}
               label="Help & Support"
               onPress={() => router.push('/(screens)/help')}
-            />
-            <MenuItem
-              icon={<Settings size={20} color="#7a6f62" />}
-              label="Settings"
-              onPress={() => router.push('/(screens)/settings')}
             />
           </GlassCard>
         </CardEntrance>

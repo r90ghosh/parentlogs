@@ -85,14 +85,17 @@ export function RevenueCatProvider({ children }: { children: React.ReactNode }) 
 
   // Listen for customer info updates after configured
   useEffect(() => {
-    if (!rcConfigured) return
+    if (!isReady) return
 
-    const unsubscribe = Purchases.addCustomerInfoUpdateListener((info) => {
+    const listener = (info: CustomerInfo) => {
       console.log('[RevenueCat] Customer info updated, entitlements:', Object.keys(info.entitlements.active))
       setCustomerInfo(info)
-    })
+    }
+    Purchases.addCustomerInfoUpdateListener(listener)
 
-    return () => unsubscribe()
+    return () => {
+      Purchases.removeCustomerInfoUpdateListener(listener)
+    }
   }, [isReady])
 
   const isPro = !!customerInfo?.entitlements.active[ENTITLEMENT_ID]

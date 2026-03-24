@@ -20,9 +20,10 @@ export async function signInWithGoogle(): Promise<void> {
       const parsedUrl = Linking.parse(result.url)
       const accessToken = (parsedUrl.queryParams as Record<string, string>)?.access_token
       const refreshToken = (parsedUrl.queryParams as Record<string, string>)?.refresh_token
-      if (accessToken && refreshToken) {
-        await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken })
+      if (!accessToken || !refreshToken) {
+        throw new Error('Google sign-in failed: missing tokens')
       }
+      await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken })
     }
   }
 }

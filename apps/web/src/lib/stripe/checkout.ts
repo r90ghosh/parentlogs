@@ -1,23 +1,20 @@
 import { createClient } from '@/lib/supabase/client'
 
-// Pricing configuration
+// Pricing configuration (display only — price IDs resolved server-side in stripe/server.ts)
 export const PRICING = {
   monthly: {
     price: 499, // $4.99 in cents
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY || '',
     label: '$4.99/month',
     period: 'month',
   },
   yearly: {
     price: 3999, // $39.99 in cents (save ~33%)
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ANNUAL || '',
     label: '$39.99/year',
     period: 'year',
     savings: 'Save 33%',
   },
   lifetime: {
     price: 9999, // $99.99 one-time
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_LIFETIME || '',
     label: '$99.99 one-time',
     period: 'lifetime',
     savings: 'Best value',
@@ -30,9 +27,10 @@ export type PricingPlan = keyof typeof PRICING
 export async function createCheckoutSession(plan: PricingPlan): Promise<{ url: string | null; error: string | null }> {
   try {
     const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
     const { data: { session } } = await supabase.auth.getSession()
 
-    if (!session?.access_token) {
+    if (!user || !session?.access_token) {
       return { url: null, error: 'You must be logged in to purchase a subscription' }
     }
 
@@ -61,9 +59,10 @@ export async function createCheckoutSession(plan: PricingPlan): Promise<{ url: s
 export async function createPortalSession(): Promise<{ url: string | null; error: string | null }> {
   try {
     const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
     const { data: { session } } = await supabase.auth.getSession()
 
-    if (!session?.access_token) {
+    if (!user || !session?.access_token) {
       return { url: null, error: 'You must be logged in to access the portal' }
     }
 

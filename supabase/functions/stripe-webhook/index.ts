@@ -1,3 +1,8 @@
+// IMPORTANT: This is the Supabase Edge Function Stripe webhook handler.
+// The canonical web Stripe webhook is at apps/web/src/app/api/stripe/webhook/route.ts
+// which handles grace period logic correctly.
+// Ensure only ONE of these is configured in the Stripe dashboard.
+
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@14.10.0?target=deno";

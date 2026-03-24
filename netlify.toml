@@ -1,5 +1,6 @@
 [build]
-  command = "npm run build"
+  base = "."
+  command = "pnpm turbo run build --filter=@tdc/web"
   publish = "apps/web/.next"
 
 # Note: SECRETS_SCAN_OMIT_KEYS must be set in Netlify UI (Site settings > Environment variables)

@@ -59,6 +59,19 @@ Deno.serve(async (req: Request) => {
       });
     }
 
+    // Validate that userId maps to a real user
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("id")
+      .eq("id", userId)
+      .single();
+    if (!profile) {
+      return new Response(
+        JSON.stringify({ error: "Unknown user" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     switch (event.type) {
       case "INITIAL_PURCHASE":
       case "RENEWAL":
@@ -168,9 +181,7 @@ Deno.serve(async (req: Request) => {
   } catch (error) {
     console.error("RevenueCat webhook error:", error);
     return new Response(
-      JSON.stringify({
-        error: error instanceof Error ? error.message : "Unknown error",
-      }),
+      JSON.stringify({ error: "Internal server error" }),
       {
         status: 500,
         headers: { "Content-Type": "application/json" },

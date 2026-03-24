@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { useRouter, useSegments } from 'expo-router'
 import { pushNotificationService } from '@/services/push-notification-service'
 import { initRevenueCat } from './RevenueCatProvider'
-import { isInGracePeriod, GRACE_PERIOD_DAYS } from '@tdc/shared/utils/subscription-utils'
+import { isInGracePeriod } from '@tdc/shared/utils/subscription-utils'
 import type { Session, User } from '@supabase/supabase-js'
 
 interface Profile {
@@ -38,7 +38,7 @@ interface AuthContextType {
   refreshProfile: () => Promise<void>
 }
 
-const AuthContext = createContext<AuthContextType>(null!)
+const AuthContext = createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
@@ -172,4 +172,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-export const useAuth = () => useContext(AuthContext)
+export function useAuth() {
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider')
+  }
+  return context
+}
