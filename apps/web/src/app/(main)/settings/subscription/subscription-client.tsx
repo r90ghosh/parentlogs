@@ -316,11 +316,11 @@ function SubscriptionContent() {
             <Button asChild className="w-full bg-copper hover:bg-copper/80 font-ui font-semibold">
               <Link href="/upgrade">
                 <Sparkles className="mr-2 h-4 w-4" />
-                Upgrade — $39.99/yr ($3.33/mo)
+                Upgrade to Premium
               </Link>
             </Button>
             <p className="font-body text-xs text-[--dim]">
-              Or $4.99/month · $99.99 lifetime · 30-day money-back guarantee
+              Starting at $4.99/mo · 30-day money-back guarantee
             </p>
           </CardFooter>
         )}
