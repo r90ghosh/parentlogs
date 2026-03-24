@@ -293,7 +293,7 @@ export default function HelpScreen() {
             </Pressable>
             <Pressable
               onPress={() =>
-                Linking.openURL('mailto:support@thedadcenter.com')
+                Linking.openURL('mailto:info@thedadcenter.com')
               }
               style={({ pressed }) => [
                 styles.linkRow,

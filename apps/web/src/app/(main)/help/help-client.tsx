@@ -367,12 +367,12 @@ export default function HelpClient() {
                 <ExternalLink className="h-4 w-4 text-[--dim]" />
               </Link>
               <a
-                href="mailto:support@thedadcenter.com"
+                href="mailto:info@thedadcenter.com"
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-[--card] transition-colors group"
               >
                 <Mail className="h-5 w-5 text-[--muted] group-hover:text-copper transition-colors" />
                 <span className="font-body text-sm text-[--cream] flex-1">
-                  support@thedadcenter.com
+                  info@thedadcenter.com
                 </span>
                 <ExternalLink className="h-4 w-4 text-[--dim]" />
               </a>

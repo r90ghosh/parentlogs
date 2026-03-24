@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { useRouter, useSegments } from 'expo-router'
 import { pushNotificationService } from '@/services/push-notification-service'
 import { initRevenueCat } from './RevenueCatProvider'
+import { isInGracePeriod, GRACE_PERIOD_DAYS } from '@tdc/shared/utils/subscription-utils'
 import type { Session, User } from '@supabase/supabase-js'
 
 interface Profile {
@@ -12,6 +13,7 @@ interface Profile {
   role: 'mom' | 'dad' | 'other' | null
   family_id: string | null
   subscription_tier: string | null
+  subscription_expires_at: string | null
   onboarding_completed: boolean
   active_baby_id: string | null
   signup_week: number | null
@@ -61,6 +63,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           { text: 'Retry', onPress: () => fetchProfile(userId) },
         ])
         return
+      }
+
+      // Normalize tier: if subscription expired past grace period, treat as free
+      if (data && data.subscription_tier === 'premium' && data.subscription_expires_at) {
+        const expired = new Date(data.subscription_expires_at) < new Date()
+        const inGrace = isInGracePeriod(data.subscription_expires_at)
+        if (expired && !inGrace) {
+          data.subscription_tier = 'free'
+        }
       }
 
       setProfile(data)

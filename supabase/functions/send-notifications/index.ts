@@ -6,7 +6,7 @@ const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const vapidPublicKey = Deno.env.get("VAPID_PUBLIC_KEY")!;
 const vapidPrivateKey = Deno.env.get("VAPID_PRIVATE_KEY")!;
-const vapidEmail = Deno.env.get("VAPID_EMAIL") || "mailto:hello@thedadcenter.com";
+const vapidEmail = Deno.env.get("VAPID_EMAIL") || "mailto:info@thedadcenter.com";
 
 webpush.setVapidDetails(vapidEmail, vapidPublicKey, vapidPrivateKey);
 

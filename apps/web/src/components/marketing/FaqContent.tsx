@@ -235,7 +235,7 @@ export function FaqContent() {
                   asChild
                   className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper"
                 >
-                  <a href="mailto:hello@thedadcenter.com">
+                  <a href="mailto:info@thedadcenter.com">
                     <Mail className="mr-2 h-4 w-4" />
                     Email Us
                   </a>

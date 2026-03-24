@@ -145,7 +145,7 @@ export default function SettingsClient() {
           {' · '}
           <Link href="/privacy" className="hover:text-[--cream]">Privacy</Link>
           {' · '}
-          <a href="mailto:support@thedadcenter.com" className="hover:text-[--cream]">Support</a>
+          <a href="mailto:info@thedadcenter.com" className="hover:text-[--cream]">Support</a>
         </p>
       </div>
       </RevealOnScroll>

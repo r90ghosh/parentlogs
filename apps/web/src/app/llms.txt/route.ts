@@ -61,7 +61,7 @@ https://thedadcenter.com
 - 18+ Months
 
 ## Contact
-support@thedadcenter.com
+info@thedadcenter.com
 https://thedadcenter.com
 `
 

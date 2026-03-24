@@ -11,7 +11,7 @@ export function JsonLd() {
       'The operating system for modern fatherhood. Week-by-week guidance, actionable tasks, budget planning, and partner sync for dads.',
     contactPoint: {
       '@type': 'ContactPoint',
-      email: 'hello@thedadcenter.com',
+      email: 'info@thedadcenter.com',
       contactType: 'customer support',
     },
     sameAs: [

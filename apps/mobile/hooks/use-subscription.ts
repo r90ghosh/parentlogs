@@ -6,11 +6,14 @@ import { supabase } from '@/lib/supabase'
 /**
  * Unified subscription check combining RevenueCat entitlements + Supabase profile.
  * Handles cross-platform subscriptions: RevenueCat (mobile) and Stripe (web).
+ * Note: AuthProvider already normalizes subscription_tier based on expiration/grace period,
+ * so checking profile.subscription_tier here is sufficient.
  */
 export function useSubscription() {
   const { isPro, customerInfo, isReady } = useRevenueCat()
   const { profile } = useAuth()
 
+  // AuthProvider normalizes tier to 'free' when expired past grace period
   const supabasePremium =
     profile?.subscription_tier === 'premium' ||
     profile?.subscription_tier === 'lifetime'

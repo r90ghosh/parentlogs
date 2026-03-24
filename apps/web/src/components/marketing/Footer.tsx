@@ -19,7 +19,7 @@ const footerLinks = {
     { label: 'FAQ', href: '/faq' },
   ],
   support: [
-    { label: 'Contact', href: 'mailto:hello@thedadcenter.com' },
+    { label: 'Contact', href: 'mailto:info@thedadcenter.com' },
   ],
 }
 
@@ -27,7 +27,7 @@ const socialLinks = [
   { icon: Twitter, href: 'https://x.com/thedadcenter', label: 'X' },
   { icon: Instagram, href: 'https://www.instagram.com/thedadcenter/', label: 'Instagram' },
   { icon: Linkedin, href: 'https://www.linkedin.com/company/the-dad-center/', label: 'LinkedIn' },
-  { icon: Mail, href: 'mailto:hello@thedadcenter.com', label: 'Email' },
+  { icon: Mail, href: 'mailto:info@thedadcenter.com', label: 'Email' },
 ]
 
 export function Footer() {
@@ -118,7 +118,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li>
                 <a
-                  href="mailto:hello@thedadcenter.com"
+                  href="mailto:info@thedadcenter.com"
                   className="font-ui text-sm text-[--muted] hover:text-copper transition-colors"
                 >
                   Contact

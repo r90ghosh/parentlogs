@@ -43,4 +43,4 @@ The Dad Center is a pregnancy and parenting companion app designed primarily for
 ## Contact
 
 - Website: https://thedadcenter.com
-- Support: support@thedadcenter.com
+- Support: info@thedadcenter.com

@@ -198,7 +198,7 @@ export default function FaqScreen() {
         <CardEntrance delay={FAQ_CATEGORIES.length * 100}>
           <Pressable
             onPress={() =>
-              Linking.openURL('mailto:hello@thedadcenter.com')
+              Linking.openURL('mailto:info@thedadcenter.com')
             }
             style={styles.contactCard}
           >
