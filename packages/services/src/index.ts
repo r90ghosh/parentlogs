@@ -9,5 +9,6 @@ export { createTrackerService, type TrackerService, type LogFilters, type ShiftB
 export { createTaskService, type TaskService, type TaskFilters } from './task-service'
 export { createFamilyService, type FamilyService } from './family-service'
 export { createSubscriptionService, type SubscriptionService } from './subscription-service'
+export { createFeedbackService, type FeedbackService, type FeedbackPayload } from './feedback-service'
 
 export type { AppSupabaseClient, ServiceContext } from './types'

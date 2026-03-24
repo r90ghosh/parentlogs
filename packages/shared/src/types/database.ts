@@ -588,6 +588,50 @@ export type Database = {
           },
         ]
       }
+      device_tokens: {
+        Row: {
+          app_version: string | null
+          created_at: string | null
+          device_id: string | null
+          id: string
+          is_active: boolean | null
+          platform: string
+          token: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          app_version?: string | null
+          created_at?: string | null
+          device_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          platform: string
+          token: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          app_version?: string | null
+          created_at?: string | null
+          device_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          platform?: string
+          token?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "device_tokens_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       families: {
         Row: {
           baby_name: string | null
@@ -820,6 +864,45 @@ export type Database = {
           },
         ]
       }
+      feedback: {
+        Row: {
+          created_at: string | null
+          family_stage: string | null
+          id: string
+          message: string
+          page_url: string | null
+          status: string
+          type: string
+          user_agent: string | null
+          user_id: string | null
+          user_role: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          family_stage?: string | null
+          id?: string
+          message: string
+          page_url?: string | null
+          status?: string
+          type: string
+          user_agent?: string | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          family_stage?: string | null
+          id?: string
+          message?: string
+          page_url?: string | null
+          status?: string
+          type?: string
+          user_agent?: string | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Relationships: []
+      }
       mood_checkins: {
         Row: {
           checked_in_at: string
@@ -864,6 +947,54 @@ export type Database = {
           },
           {
             foreignKeyName: "mood_checkins_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_delivery_log: {
+        Row: {
+          channel: string
+          created_at: string | null
+          error_message: string | null
+          id: string
+          notification_id: string | null
+          status: string
+          token_id: string | null
+          user_id: string
+        }
+        Insert: {
+          channel: string
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          notification_id?: string | null
+          status: string
+          token_id?: string | null
+          user_id: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          notification_id?: string | null
+          status?: string
+          token_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_delivery_log_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "notifications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_delivery_log_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -1088,7 +1219,12 @@ export type Database = {
           current_period_end: string | null
           current_period_start: string | null
           id: string
+          last_verified_at: string | null
+          platform: string | null
+          revenucat_app_user_id: string | null
           status: string | null
+          store_original_transaction_id: string | null
+          store_product_id: string | null
           stripe_customer_id: string | null
           stripe_subscription_id: string | null
           tier: Database["public"]["Enums"]["subscription_tier"] | null
@@ -1101,7 +1237,12 @@ export type Database = {
           current_period_end?: string | null
           current_period_start?: string | null
           id?: string
+          last_verified_at?: string | null
+          platform?: string | null
+          revenucat_app_user_id?: string | null
           status?: string | null
+          store_original_transaction_id?: string | null
+          store_product_id?: string | null
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
           tier?: Database["public"]["Enums"]["subscription_tier"] | null
@@ -1114,7 +1255,12 @@ export type Database = {
           current_period_end?: string | null
           current_period_start?: string | null
           id?: string
+          last_verified_at?: string | null
+          platform?: string | null
+          revenucat_app_user_id?: string | null
           status?: string | null
+          store_original_transaction_id?: string | null
+          store_product_id?: string | null
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
           tier?: Database["public"]["Enums"]["subscription_tier"] | null
@@ -1316,6 +1462,24 @@ export type Database = {
         }
         Relationships: []
       }
+      whitelisted_emails: {
+        Row: {
+          created_at: string | null
+          email: string
+          notes: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          notes?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          notes?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -1361,6 +1525,10 @@ export type Database = {
       is_family_member: { Args: { family_uuid: string }; Returns: boolean }
       is_premium_user: { Args: never; Returns: boolean }
       regenerate_invite_code: { Args: { p_family_id: string }; Returns: string }
+      whitelist_email: {
+        Args: { p_email: string; p_notes?: string }
+        Returns: string
+      }
     }
     Enums: {
       dad_challenge_pillar:

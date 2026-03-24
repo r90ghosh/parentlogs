@@ -11,6 +11,7 @@ import {
   createContactService,
   createNotificationHistoryService,
   createSubscriptionService,
+  createFeedbackService,
 } from '@tdc/services'
 
 const supabase = createClient()
@@ -26,3 +27,4 @@ export const babyService = createBabyService(supabase)
 export const contactService = createContactService(supabase)
 export const notificationHistoryService = createNotificationHistoryService(supabase)
 export const subscriptionService = createSubscriptionService(supabase)
+export const feedbackService = createFeedbackService(supabase)
