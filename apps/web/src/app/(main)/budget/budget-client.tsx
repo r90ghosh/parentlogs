@@ -172,6 +172,61 @@ export default function BudgetClient() {
     }
   }
 
+  // Compute summary stats filtered by selected timeline category
+  const filteredStats = useMemo(() => {
+    if (!summary) return null
+
+    // No filter — use original totals
+    if (!selectedTimelineCategory) {
+      return {
+        grandTotalMin: summary.grandTotalMin,
+        grandTotalMax: summary.grandTotalMax,
+        purchasedTotal: summary.purchasedTotal,
+        remainingTotal: summary.remainingTotal,
+        monthlyRecurringMin: summary.monthlyRecurringMin,
+        monthlyRecurringMax: summary.monthlyRecurringMax,
+        familyItemCount: summary.familyItems.length,
+        purchasedCount: summary.familyItems.filter(i => i.is_purchased).length,
+      }
+    }
+
+    // Filter templates by selected category
+    const filtered = allTemplates.filter(
+      t => getBudgetTimelineCategory(t) === selectedTimelineCategory
+    )
+    const nonTip = filtered.filter(t => t.priority !== 'tip')
+
+    const grandTotalMin = nonTip.reduce((sum, t) => sum + (t.price_min || 0), 0)
+    const grandTotalMax = nonTip.reduce((sum, t) => sum + (t.price_max || 0), 0)
+
+    const recurring = nonTip.filter(t => t.is_recurring && t.recurring_frequency === 'monthly')
+    const monthlyRecurringMin = recurring.reduce((sum, t) => sum + (t.price_min || 0), 0)
+    const monthlyRecurringMax = recurring.reduce((sum, t) => sum + (t.price_max || 0), 0)
+
+    // Filter family items by matching template period
+    const templateIdsInCategory = new Set(filtered.map(t => t.budget_id))
+    const filteredFamilyItems = summary.familyItems.filter(
+      i => i.budget_template_id && templateIdsInCategory.has(i.budget_template_id)
+    )
+
+    const purchased = filteredFamilyItems.filter(i => i.is_purchased)
+    const purchasedTotal = purchased.reduce((sum, i) => sum + (i.actual_price || i.estimated_price || 0), 0)
+
+    const pending = filteredFamilyItems.filter(i => !i.is_purchased)
+    const remainingTotal = pending.reduce((sum, i) => sum + (i.estimated_price || 0), 0)
+
+    return {
+      grandTotalMin,
+      grandTotalMax,
+      purchasedTotal,
+      remainingTotal,
+      monthlyRecurringMin,
+      monthlyRecurringMax,
+      familyItemCount: filteredFamilyItems.length,
+      purchasedCount: purchased.length,
+    }
+  }, [summary, allTemplates, selectedTimelineCategory])
+
   // Filter categories for browse tab
   const filteredCategories = useMemo(() => {
     if (!summary?.categories) return []
@@ -280,8 +335,8 @@ export default function BudgetClient() {
                     <p className="text-xs text-[--muted] font-ui">Estimated Range</p>
                     <p className="text-xl font-bold text-[--cream] tabular-nums">
                       {budgetService.formatPriceRange(
-                        summary?.grandTotalMin || 0,
-                        summary?.grandTotalMax || 0
+                        filteredStats?.grandTotalMin || 0,
+                        filteredStats?.grandTotalMax || 0
                       )}
                     </p>
                   </div>
@@ -301,7 +356,7 @@ export default function BudgetClient() {
                   <div>
                     <p className="text-xs text-[--muted] font-ui">Purchased</p>
                     <p className="text-xl font-bold text-[--cream] tabular-nums">
-                      {budgetService.formatPrice(summary?.purchasedTotal || 0)}
+                      {budgetService.formatPrice(filteredStats?.purchasedTotal || 0)}
                     </p>
                   </div>
                 </div>
@@ -320,7 +375,7 @@ export default function BudgetClient() {
                   <div>
                     <p className="text-xs text-[--muted] font-ui">Remaining</p>
                     <p className="text-xl font-bold text-[--cream] tabular-nums">
-                      {budgetService.formatPrice(summary?.remainingTotal || 0)}
+                      {budgetService.formatPrice(filteredStats?.remainingTotal || 0)}
                     </p>
                   </div>
                 </div>
@@ -331,7 +386,7 @@ export default function BudgetClient() {
       </RevealOnScroll>
 
       {/* Monthly Recurring Costs Card */}
-      {(summary?.monthlyRecurringMin || 0) > 0 && (
+      {(filteredStats?.monthlyRecurringMin || 0) > 0 && (
         <RevealOnScroll delay={40}>
           <Card3DTilt maxTilt={3} gloss>
             <Card className="bg-[--surface] border-[--border] card-sky-top">
@@ -344,8 +399,8 @@ export default function BudgetClient() {
                     <p className="text-xs text-[--muted] font-ui">Monthly Recurring</p>
                     <p className="text-xl font-bold text-[--cream] tabular-nums">
                       {budgetService.formatPriceRange(
-                        summary?.monthlyRecurringMin || 0,
-                        summary?.monthlyRecurringMax || 0
+                        filteredStats?.monthlyRecurringMin || 0,
+                        filteredStats?.monthlyRecurringMax || 0
                       )}
                       <span className="text-sm text-[--muted] font-normal ml-1">/mo</span>
                     </p>
@@ -358,7 +413,7 @@ export default function BudgetClient() {
       )}
 
       {/* Progress */}
-      {summary && summary.familyItems.length > 0 && (
+      {filteredStats && filteredStats.familyItemCount > 0 && (
         <RevealOnScroll delay={80}>
           <Card3DTilt maxTilt={3} gloss>
             <Card className="bg-[--surface] border-[--border]">
@@ -366,11 +421,11 @@ export default function BudgetClient() {
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-[--muted] font-body">Shopping Progress</span>
                   <span className="text-sm font-medium text-[--cream] tabular-nums font-ui">
-                    {purchasedItems.length} of {summary.familyItems.length} items
+                    {filteredStats.purchasedCount} of {filteredStats.familyItemCount} items
                   </span>
                 </div>
                 <Progress
-                  value={(purchasedItems.length / summary.familyItems.length) * 100}
+                  value={(filteredStats.purchasedCount / filteredStats.familyItemCount) * 100}
                   className="h-2 bg-[--dim]"
                 />
               </CardContent>
