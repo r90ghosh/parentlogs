@@ -1,7 +1,10 @@
+import { LogoIcon } from '@/components/ui/logo'
+
 export default function Loading() {
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="h-8 w-8 rounded-full border-2 border-[--copper] border-t-transparent animate-spin" />
+    <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+      <LogoIcon size="xl" className="animate-pulse" />
+      <p className="text-sm font-ui text-[--muted] animate-pulse">Loading...</p>
     </div>
   )
 }

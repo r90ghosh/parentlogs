@@ -18,7 +18,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
+import { LogoIcon } from '@/components/ui/logo'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -222,14 +222,11 @@ export default function BudgetClient() {
 
   if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 space-y-6">
-        <Skeleton className="h-8 w-48" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[...Array(3)].map((_, i) => (
-            <Skeleton key={i} className="h-32" />
-          ))}
-        </div>
-        <Skeleton className="h-96" />
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+        <LogoIcon size="xl" className="animate-pulse" />
+        <p className="text-sm font-ui text-[--muted] animate-pulse">
+          Loading your budget...
+        </p>
       </div>
     )
   }

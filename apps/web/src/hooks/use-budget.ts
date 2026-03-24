@@ -31,7 +31,7 @@ export function useBudgetSummary() {
     queryKey: ['budget-summary', profile?.family_id],
     queryFn: () => budgetService.getBudgetSummary(ctx),
     enabled: !!profile?.family_id,
-    staleTime: 1000 * 60 * 2, // 2 minutes - avoid refetching on every focus/tab switch
+    staleTime: 1000 * 60 * 10, // 10 minutes — templates are static, mutations invalidate cache
     placeholderData: keepPreviousData, // show cached data while refetching
   })
 }

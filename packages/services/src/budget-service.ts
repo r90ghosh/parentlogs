@@ -20,6 +20,9 @@ export interface BudgetSummary {
   remainingTotal: number
 }
 
+// Only columns needed for budget list rendering — skip affiliate URLs, currency, sort_order, timestamps
+const BUDGET_LIST_COLUMNS = 'budget_id, item, category, subcategory, description, period, price_min, price_max, price_display, is_recurring, recurring_frequency, brand_premium, brand_value, priority, is_premium, notes'
+
 export function createBudgetService(supabase: AppSupabaseClient) {
   async function resolveContext(ctx?: Partial<ServiceContext>): Promise<ServiceContext | null> {
     if (ctx?.userId && ctx?.familyId) {
@@ -73,24 +76,25 @@ export function createBudgetService(supabase: AppSupabaseClient) {
 
       const isPremium = isPremiumTier(resolved.subscriptionTier)
 
-      // Get all templates (only V2 rows with period set)
-      const { data: templates, error: templatesError } = await supabase
-        .from('budget_templates')
-        .select('*')
-        .not('period', 'is', null)
-        .order('category', { ascending: true })
-        .order('price_min', { ascending: true })
+      // Fire both queries in parallel — same data, ~half the wait
+      const [templatesResult, familyItemsResult] = await Promise.all([
+        supabase
+          .from('budget_templates')
+          .select(BUDGET_LIST_COLUMNS)
+          .not('period', 'is', null)
+          .order('category', { ascending: true })
+          .order('price_min', { ascending: true }),
+        supabase
+          .from('family_budget')
+          .select('*')
+          .eq('family_id', resolved.familyId)
+          .order('created_at', { ascending: true }),
+      ])
 
-      if (templatesError) throw templatesError
-
-      // Get family's budget items
-      const { data: familyItems, error: familyItemsError } = await supabase
-        .from('family_budget')
-        .select('*')
-        .eq('family_id', resolved.familyId)
-        .order('created_at', { ascending: true })
-
-      if (familyItemsError) throw familyItemsError
+      if (templatesResult.error) throw templatesResult.error
+      if (familyItemsResult.error) throw familyItemsResult.error
+      const templates = templatesResult.data
+      const familyItems = familyItemsResult.data
 
       // Group templates by category
       const categoryMap = new Map<string, BudgetTemplate[]>()
