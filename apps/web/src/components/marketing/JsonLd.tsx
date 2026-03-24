@@ -17,7 +17,7 @@ export function JsonLd() {
     sameAs: [
       'https://x.com/thedadcenter',
       'https://www.instagram.com/thedadcenter/',
-      'https://www.linkedin.com/in/the-dad-cente/',
+      'https://www.linkedin.com/company/the-dad-center/',
       'https://www.reddit.com/r/thedadcenter/',
       'https://www.pinterest.com/thedadcenter/',
       'https://www.threads.com/@thedadcenter',

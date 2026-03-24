@@ -26,7 +26,7 @@ const footerLinks = {
 const socialLinks = [
   { icon: Twitter, href: 'https://x.com/thedadcenter', label: 'X' },
   { icon: Instagram, href: 'https://www.instagram.com/thedadcenter/', label: 'Instagram' },
-  { icon: Linkedin, href: 'https://www.linkedin.com/in/the-dad-cente/', label: 'LinkedIn' },
+  { icon: Linkedin, href: 'https://www.linkedin.com/company/the-dad-center/', label: 'LinkedIn' },
   { icon: Mail, href: 'mailto:hello@thedadcenter.com', label: 'Email' },
 ]
 

@@ -340,7 +340,7 @@ function SubscriptionContent() {
                     Not satisfied? Request a full refund within 30 days of purchase.
                   </p>
                   <a
-                    href="mailto:info@thedadcenter.com?subject=Refund%20Request%20-%20The%20Dad%20Center%20Premium"
+                    href="mailto:hello@thedadcenter.com?subject=Refund%20Request%20-%20The%20Dad%20Center%20Premium"
                     className="inline-flex items-center gap-1.5 font-ui text-xs text-copper hover:text-copper/80 mt-2"
                   >
                     <Mail className="h-3 w-3" />
@@ -355,7 +355,7 @@ function SubscriptionContent() {
             <p>Need help with your subscription?</p>
             <p className="mt-1">
               Contact us at{' '}
-              <a href="mailto:support@thedadcenter.com" className="text-copper hover:text-copper/80">
+              <a href="mailto:hello@thedadcenter.com" className="text-copper hover:text-copper/80">
                 support@thedadcenter.com
               </a>
             </p>

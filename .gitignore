@@ -51,5 +51,8 @@ next-env.d.ts
 # Local Netlify folder
 .netlify
 
+# Supabase local temp
+supabase/.temp/
+
 # MCP config (contains API keys)
 .mcp.json

@@ -17,7 +17,6 @@ import {
   CheckSquare,
   Activity,
   DollarSign,
-  Star,
   Check,
   Crown,
   Sparkles,
@@ -70,21 +69,24 @@ const STEPS = [
   },
 ]
 
-const TESTIMONIALS = [
+const APP_HIGHLIGHTS = [
   {
-    quote: 'Finally, an app that doesn\'t treat me like an idiot. The week-by-week briefings are exactly what I needed.',
-    author: 'Michael T.',
-    context: 'First-time dad, Week 28',
+    week: 'Week 28',
+    title: 'The Third Trimester Shift',
+    quote: 'Install infant car seat. Research pediatricians. Pack hospital bag. Start birth plan. — All laid out, week by week.',
+    icon: BookOpen,
   },
   {
-    quote: 'The task system is brilliant. I didn\'t even know half of these things needed to happen.',
-    author: 'David K.',
-    context: 'Dad of two, Week 34',
+    week: 'Week 12',
+    title: 'First Trimester Wrap-Up',
+    quote: 'Verify prenatal insurance. Schedule anatomy scan. Start a baby registry. Morning sickness support plan. — Nothing falls through the cracks.',
+    icon: CheckSquare,
   },
   {
-    quote: 'My wife was skeptical at first, but when she saw how organized I was, she became a bigger fan than me.',
-    author: 'James R.',
-    context: 'First-time dad, Week 22',
+    week: '0–3 Months',
+    title: 'The Fourth Trimester',
+    quote: 'Set up feeding station. Learn swaddle technique. Track feeds and diapers. Split night shifts fairly. — From day one, you know what to do.',
+    icon: Activity,
   },
 ]
 
@@ -193,9 +195,9 @@ export default function LandingScreen() {
           {/* Trust stats */}
           <View style={styles.statsRow}>
             {[
-              { value: '10,000+', label: 'Active Dads' },
-              { value: '200+', label: 'Tasks' },
-              { value: '4.9/5', label: 'Rating' },
+              { value: '200+', label: 'Pre-loaded Tasks' },
+              { value: '47', label: 'Weekly Briefings' },
+              { value: 'Evidence', label: 'Based' },
             ].map((stat) => (
               <View key={stat.label} style={styles.statItem}>
                 <Text style={styles.statValue}>{stat.value}</Text>
@@ -261,37 +263,19 @@ export default function LandingScreen() {
           </StaggerList>
         </View>
 
-        {/* ====== TESTIMONIALS SECTION ====== */}
+        {/* ====== INSIDE THE APP SECTION ====== */}
         <View style={styles.section}>
           <CardEntrance delay={100}>
-            <Text style={styles.sectionPreLabel}>TESTIMONIALS</Text>
+            <Text style={styles.sectionPreLabel}>INSIDE THE APP</Text>
             <Text style={styles.sectionTitle}>
-              Built by a dad,{'\n'}for dads
+              Your Roadmap{'\n'}at Every Stage
             </Text>
           </CardEntrance>
 
-          {TESTIMONIALS.map((testimonial, index) => (
-            <CardEntrance key={testimonial.author} delay={200 + index * 120}>
+          {APP_HIGHLIGHTS.map((highlight, index) => (
+            <CardEntrance key={highlight.week} delay={200 + index * 120}>
               <GlassCard style={styles.testimonialCard}>
-                {/* Stars */}
-                <View style={styles.starsRow}>
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={14}
-                      color="#d4a853"
-                      fill="#d4a853"
-                    />
-                  ))}
-                </View>
-
-                {/* Quote mark */}
-                <Text style={styles.quoteMark}>{'\u201C'}</Text>
-
-                {/* Quote text */}
-                <Text style={styles.quoteText}>{testimonial.quote}</Text>
-
-                {/* Attribution */}
+                {/* Week badge + icon */}
                 <View style={styles.attributionRow}>
                   <LinearGradient
                     colors={['#c4703f', '#d4a853']}
@@ -299,17 +283,20 @@ export default function LandingScreen() {
                     end={{ x: 1, y: 1 }}
                     style={styles.avatarCircle}
                   >
-                    <Text style={styles.avatarLetter}>
-                      {testimonial.author.charAt(0)}
-                    </Text>
+                    <highlight.icon size={16} color="#faf6f0" />
                   </LinearGradient>
                   <View>
-                    <Text style={styles.authorName}>{testimonial.author}</Text>
+                    <Text style={styles.authorName}>{highlight.week}</Text>
                     <Text style={styles.authorContext}>
-                      {testimonial.context}
+                      {highlight.title}
                     </Text>
                   </View>
                 </View>
+
+                {/* Quote text */}
+                <Text style={[styles.quoteText, { marginTop: 12 }]}>
+                  {highlight.quote}
+                </Text>
               </GlassCard>
             </CardEntrance>
           ))}
@@ -747,19 +734,6 @@ const styles = StyleSheet.create({
   testimonialCard: {
     padding: 20,
     marginBottom: 12,
-  },
-  starsRow: {
-    flexDirection: 'row',
-    gap: 2,
-    marginBottom: 12,
-  },
-  quoteMark: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 48,
-    color: '#c4703f',
-    opacity: 0.3,
-    lineHeight: 40,
-    marginBottom: 4,
   },
   quoteText: {
     fontFamily: 'Jost-Regular',
