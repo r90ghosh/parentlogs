@@ -1,6 +1,6 @@
-# ParentLogs Content Data
+# The Dad Center Content Data
 
-This directory contains the template content data for the ParentLogs application.
+This directory contains the template content data for The Dad Center application.
 
 ## Directory Structure
 

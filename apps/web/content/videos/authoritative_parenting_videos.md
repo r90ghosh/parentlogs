@@ -1,6 +1,6 @@
 # Authoritative Video Resources by Parenting Phase
 
-> **Note:** This curated list draws from medical and child development authorities including AAP, CDC, ACOG, Mayo Clinic, Stanford Children's Health, Zero to Three, Pathways.org, and other recognized institutions. These align with ParentLogs' content philosophy of sourcing from established guidelines.
+> **Note:** This curated list draws from medical and child development authorities including AAP, CDC, ACOG, Mayo Clinic, Stanford Children's Health, Zero to Three, Pathways.org, and other recognized institutions. These align with The Dad Center's content philosophy of sourcing from established guidelines.
 
 ---
 
@@ -168,4 +168,4 @@
 ---
 
 *Last Updated: December 2025*
-*For ParentLogs content library integration*
+*For The Dad Center content library integration*

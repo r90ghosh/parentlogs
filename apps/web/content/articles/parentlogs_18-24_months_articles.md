@@ -1,4 +1,4 @@
-# ParentLogs: 18-24 Month Stage Articles
+# The Dad Center: 18-24 Month Stage Articles
 
 *Comprehensive guides for first-time dads during the toddler transition*
 
@@ -264,4 +264,4 @@ Your role as a dad continues to evolve. You're no longer just meeting basic surv
 
 ---
 
-*ParentLogs: The operating system for modern parenthood.*
+*The Dad Center: The operating system for modern fatherhood.*

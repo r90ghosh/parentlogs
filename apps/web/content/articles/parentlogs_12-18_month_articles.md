@@ -1,4 +1,4 @@
-# ParentLogs: 12-18 Month Stage Articles
+# The Dad Center: 12-18 Month Stage Articles
 
 *Comprehensive guides for first-time dads during the toddler transition*
 
@@ -270,4 +270,4 @@ Language is about to accelerate dramatically. Many 18-month-olds move from 20 wo
 
 ---
 
-*ParentLogs — The Operating System for Modern Parenthood*
+*The Dad Center — The Operating System for Modern Fatherhood*

@@ -1,4 +1,4 @@
-# ParentLogs: Second Trimester Weekly Articles
+# The Dad Center: Second Trimester Weekly Articles
 ## Weeks 14-27 | The Planning Trimester
 
 ---

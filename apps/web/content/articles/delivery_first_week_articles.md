@@ -1,4 +1,4 @@
-# ParentLogs: Delivery & First Week Articles for First-Time Dads
+# The Dad Center: Delivery & First Week Articles for First-Time Dads
 
 ===ARTICLE 1: THE DELIVERY ROOM: DAD'S ROLE===
 
@@ -372,4 +372,4 @@ Mark your calendar for her postpartum checkup—ACOG recommends an initial conta
 
 ---
 
-*Written for ParentLogs – The Dad-First Family Protocol*
+*Written for The Dad Center – The Dad-First Family Protocol*

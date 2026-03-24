@@ -1,6 +1,6 @@
 # Fourth Trimester Articles (0-3 Months)
 
-*ParentLogs Weekly Briefings for First-Time Dads*
+*The Dad Center Weekly Briefings for First-Time Dads*
 
 ---
 

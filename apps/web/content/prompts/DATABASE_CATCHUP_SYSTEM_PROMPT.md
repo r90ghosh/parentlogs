@@ -2,7 +2,7 @@
 
 ## Context
 
-We're building ParentLogs, a pregnancy/parenting task management app. We need to ensure our database has all required tables and add a "smart catch-up system" for users who sign up mid-pregnancy.
+We're building The Dad Center, a pregnancy/parenting task management app. We need to ensure our database has all required tables and add a "smart catch-up system" for users who sign up mid-pregnancy.
 
 **The Problem We're Solving:**
 A dad who signs up at Week 20 shouldn't see "156 overdue tasks" - instead, they should see a "Catch-Up Queue" where they can quickly triage past tasks as "Already Did", "Add to List", or "Skip".

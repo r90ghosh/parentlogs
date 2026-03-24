@@ -1,4 +1,4 @@
-# ParentLogs: Third Trimester Articles (Weeks 28-40)
+# The Dad Center: Third Trimester Articles (Weeks 28-40)
 
 *Comprehensive weekly guides for first-time dads during the final stretch of pregnancy*
 
