@@ -23,8 +23,8 @@ const nextConfig: NextConfig = {
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.googletagmanager.com",
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
             "font-src 'self' https://fonts.gstatic.com",
-            "img-src 'self' data: blob: https://*.supabase.co",
-            "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://www.google-analytics.com",
+            "img-src 'self' data: blob: https://*.supabase.co https://lh3.googleusercontent.com",
+            "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.thedadcenter.com wss://api.thedadcenter.com https://api.stripe.com https://www.google-analytics.com",
             "frame-src https://js.stripe.com https://hooks.stripe.com",
           ].join('; ')
         },

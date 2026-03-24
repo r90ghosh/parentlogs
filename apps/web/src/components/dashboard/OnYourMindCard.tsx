@@ -9,6 +9,7 @@ import { useFamily } from '@/hooks/use-family'
 import { useDadChallengeContent } from '@/hooks/use-dad-journey'
 import { PILLAR_CONFIG } from '@tdc/shared/constants'
 import { getContentPhase } from '@tdc/shared/utils'
+import type { ContentPhase } from '@tdc/shared/types/dad-journey'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export function OnYourMindCard() {
@@ -18,7 +19,7 @@ export function OnYourMindCard() {
   const stage = activeBaby?.stage || family?.stage
   const currentWeek = activeBaby?.current_week ?? family?.current_week
   const phase = stage && currentWeek != null ? getContentPhase(stage, currentWeek) : undefined
-  const { data: content, isLoading } = useDadChallengeContent(phase!)
+  const { data: content, isLoading } = useDadChallengeContent(phase as ContentPhase)
 
   if (isLoading) {
     return <Skeleton className="h-48 w-full rounded-[20px]" />
@@ -50,7 +51,7 @@ export function OnYourMindCard() {
 
       {tiles.length === 0 ? (
         <div className="py-4 text-center">
-          <div className="text-sm font-body text-[--muted]">Challenge content loading...</div>
+          <div className="text-sm font-body text-[--muted]">No challenges available yet.</div>
         </div>
       ) : (
         <div className="space-y-3">

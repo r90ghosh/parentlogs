@@ -50,8 +50,8 @@ const mainNavItems = [
 const moreToolItems = [
   { href: '/checklists', label: 'Checklists', icon: ClipboardList },
   { href: '/budget', label: 'Budget', icon: DollarSign },
-  { href: '/content', label: 'Articles', icon: FileText },
-  { href: '/tips', label: 'Dad Tips', icon: Lightbulb },
+  { href: '/content', label: 'Articles', icon: FileText, external: true },
+  { href: '/tips', label: 'Dad Tips', icon: Lightbulb, external: true },
 ]
 
 const moreFamilyItems = [
@@ -98,19 +98,40 @@ function SectionItems({
     <>
       {items.map((item) => {
         const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+        const className = cn(
+          'flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-ui transition-colors w-full',
+          isActive
+            ? 'bg-copper-dim text-copper border-l-2 border-l-copper'
+            : 'text-[--cream] hover:bg-[--card] active:bg-[--card-hover]'
+        )
+        const content = (
+          <>
+            <item.icon className="h-5 w-5 flex-shrink-0" />
+            <span>{item.label}</span>
+          </>
+        )
+
+        if (item.external) {
+          return (
+            <a
+              key={item.href + item.label}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={className}
+            >
+              {content}
+            </a>
+          )
+        }
+
         return (
           <Link
             key={item.href + item.label}
             href={item.href}
-            className={cn(
-              'flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-ui transition-colors w-full',
-              isActive
-                ? 'bg-copper-dim text-copper border-l-2 border-l-copper'
-                : 'text-[--cream] hover:bg-[--card] active:bg-[--card-hover]'
-            )}
+            className={className}
           >
-            <item.icon className="h-5 w-5 flex-shrink-0" />
-            <span>{item.label}</span>
+            {content}
           </Link>
         )
       })}
