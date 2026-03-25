@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react'
 import {
   View,
   Text,
@@ -6,6 +7,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   Alert,
+  TextInput,
 } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -22,11 +24,12 @@ import {
   Heart,
   Sparkles,
   Lightbulb,
+  Trash2,
 } from 'lucide-react-native'
 import * as Haptics from 'expo-haptics'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
-import { useTaskById, useCompleteTask, useSnoozeTask, useSkipTask } from '@/hooks/use-tasks'
+import { useTaskById, useCompleteTask, useSnoozeTask, useSkipTask, useUpdateTask, useDeleteTask } from '@/hooks/use-tasks'
 import { format } from 'date-fns'
 
 function getCategoryIcon(category: string) {
@@ -104,6 +107,12 @@ function getAssigneeColor(assignee: string): string {
   }
 }
 
+const SNOOZE_OPTIONS: { label: string; days: number }[] = [
+  { label: '1d', days: 1 },
+  { label: '3d', days: 3 },
+  { label: '7d', days: 7 },
+]
+
 export default function TaskDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const router = useRouter()
@@ -112,6 +121,28 @@ export default function TaskDetailScreen() {
   const completeTask = useCompleteTask()
   const snoozeTask = useSnoozeTask()
   const skipTask = useSkipTask()
+  const updateTask = useUpdateTask()
+  const deleteTask = useDeleteTask()
+
+  const [notes, setNotes] = useState('')
+  const notesDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Initialize notes from task data
+  useEffect(() => {
+    if (task?.notes !== undefined && task.notes !== null) {
+      setNotes(task.notes)
+    }
+  }, [task?.id, task?.notes])
+
+  const handleNotesChange = (text: string) => {
+    setNotes(text)
+    if (notesDebounceRef.current) {
+      clearTimeout(notesDebounceRef.current)
+    }
+    notesDebounceRef.current = setTimeout(() => {
+      updateTask.mutate({ id, updates: { notes: text } })
+    }, 1000)
+  }
 
   const handleComplete = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
@@ -120,9 +151,9 @@ export default function TaskDetailScreen() {
     })
   }
 
-  const handleSnooze = () => {
+  const handleSnooze = (days: number) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-    snoozeTask.mutate(id, {
+    snoozeTask.mutate({ id, days }, {
       onSuccess: () => router.back(),
     })
   }
@@ -138,6 +169,19 @@ export default function TaskDetailScreen() {
           skipTask.mutate(id, {
             onSuccess: () => router.back(),
           })
+        },
+      },
+    ])
+  }
+
+  const handleDelete = () => {
+    Alert.alert('Delete Task', "This can't be undone.", [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: () => {
+          deleteTask.mutate(id, { onSuccess: () => router.back() })
         },
       },
     ])
@@ -195,7 +239,9 @@ export default function TaskDetailScreen() {
           <ArrowLeft size={20} color="#ede6dc" />
         </Pressable>
         <Text style={styles.headerTitle}>Task Details</Text>
-        <View style={styles.backButton} />
+        <Pressable onPress={handleDelete} style={styles.deleteButton}>
+          <Trash2 size={18} color="#d4836b" />
+        </Pressable>
       </View>
 
       <ScrollView
@@ -279,6 +325,22 @@ export default function TaskDetailScreen() {
             </GlassCard>
           </CardEntrance>
         )}
+
+        {/* Notes */}
+        <CardEntrance delay={320}>
+          <GlassCard style={styles.sectionCard}>
+            <Text style={styles.sectionTitle}>Notes</Text>
+            <TextInput
+              style={styles.notesInput}
+              multiline
+              placeholder="Add personal notes..."
+              placeholderTextColor="#4a4239"
+              value={notes}
+              onChangeText={handleNotesChange}
+              textAlignVertical="top"
+            />
+          </GlassCard>
+        </CardEntrance>
       </ScrollView>
 
       {/* Bottom action buttons */}
@@ -289,12 +351,20 @@ export default function TaskDetailScreen() {
               <SkipForward size={18} color="#7a6f62" />
               <Text style={styles.secondaryButtonText}>Skip</Text>
             </Pressable>
-            <Pressable onPress={handleSnooze} style={styles.secondaryButton}>
-              <Clock size={18} color="#c4703f" />
-              <Text style={[styles.secondaryButtonText, { color: '#c4703f' }]}>
-                Snooze
-              </Text>
-            </Pressable>
+
+            {/* Snooze picker: 1d / 3d / 7d */}
+            <View style={styles.snoozePickerRow}>
+              {SNOOZE_OPTIONS.map((opt) => (
+                <Pressable
+                  key={opt.days}
+                  onPress={() => handleSnooze(opt.days)}
+                  style={styles.snoozeOption}
+                >
+                  <Clock size={14} color="#c4703f" />
+                  <Text style={styles.snoozeOptionText}>{opt.label}</Text>
+                </Pressable>
+              ))}
+            </View>
           </View>
           <Pressable
             onPress={handleComplete}
@@ -342,6 +412,14 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: 'rgba(237,230,220,0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  deleteButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(212,131,107,0.1)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -452,6 +530,13 @@ const styles = StyleSheet.create({
     color: '#ede6dc',
     lineHeight: 24,
   },
+  notesInput: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 15,
+    color: '#ede6dc',
+    minHeight: 80,
+    lineHeight: 22,
+  },
   bottomActions: {
     position: 'absolute',
     bottom: 0,
@@ -465,8 +550,8 @@ const styles = StyleSheet.create({
   },
   secondaryActions: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 32,
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 12,
   },
   secondaryButton: {
@@ -479,6 +564,26 @@ const styles = StyleSheet.create({
     fontFamily: 'Karla-Medium',
     fontSize: 14,
     color: '#7a6f62',
+  },
+  snoozePickerRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  snoozeOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(196,112,63,0.3)',
+    backgroundColor: 'rgba(196,112,63,0.08)',
+  },
+  snoozeOptionText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 13,
+    color: '#c4703f',
   },
   completeButton: {
     borderRadius: 12,

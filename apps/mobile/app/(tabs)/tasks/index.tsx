@@ -7,10 +7,11 @@ import {
   Pressable,
   ActivityIndicator,
   StyleSheet,
+  TextInput,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
-import { Plus } from 'lucide-react-native'
+import { Plus, Search } from 'lucide-react-native'
 import { useRouter } from 'expo-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/AuthProvider'
@@ -51,6 +52,8 @@ export default function TasksScreen() {
   const [activeTab, setActiveTab] = useState<TaskTab>('active')
   const [statFilter, setStatFilter] = useState<StatFilter | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<TimelineCategory | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
 
   const { data: tasks, isLoading, isRefetching } = useTasks()
   const completeTask = useCompleteTask()
@@ -80,6 +83,12 @@ export default function TasksScreen() {
       }
     }
   }, [currentCategory])
+
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm), 300)
+    return () => clearTimeout(timer)
+  }, [searchTerm])
 
   const onRefresh = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['tasks'] })
@@ -204,8 +213,18 @@ export default function TasksScreen() {
       })
     }
 
+    // Step 4: Apply search filter
+    if (debouncedSearch.trim()) {
+      const term = debouncedSearch.toLowerCase().trim()
+      result = result.filter(
+        (task) =>
+          task.title.toLowerCase().includes(term) ||
+          task.description?.toLowerCase().includes(term)
+      )
+    }
+
     return result
-  }, [allTasks, activeTab, statFilter, selectedCategory, userRole, partnerRole, timelineSource])
+  }, [allTasks, activeTab, statFilter, selectedCategory, userRole, partnerRole, timelineSource, debouncedSearch])
 
   // Group tasks by time period for the default active view
   const showGroupedView =
@@ -230,7 +249,7 @@ export default function TasksScreen() {
   )
 
   const handleSnooze = useCallback(
-    (id: string) => snoozeTask.mutate(id),
+    (id: string) => snoozeTask.mutate({ id }),
     [snoozeTask]
   )
 
@@ -244,6 +263,20 @@ export default function TasksScreen() {
       {/* Sticky header area */}
       <View style={[styles.headerArea, { paddingTop: 12 }]}>
         <Text style={styles.pageTitle}>Tasks</Text>
+
+        {/* Search */}
+        <View style={styles.searchContainer}>
+          <Search size={16} color="#7a6f62" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search tasks..."
+            placeholderTextColor="#4a4239"
+            value={searchTerm}
+            onChangeText={setSearchTerm}
+            returnKeyType="search"
+            clearButtonMode="while-editing"
+          />
+        </View>
 
         {/* Stats Row */}
         <TaskStatsRow
@@ -451,11 +484,18 @@ export default function TasksScreen() {
             <>
               {filteredTasks.length > 0 ? (
                 <View style={styles.section}>
-                  <TaskSectionHeader
-                    title={getSectionTitle(activeTab, statFilter, selectedCategory)}
-                    count={filteredTasks.length}
-                    accentColor={getSectionColor(activeTab, statFilter)}
-                  />
+                  {debouncedSearch.trim() ? (
+                    <Text style={styles.searchResultCount}>
+                      {filteredTasks.length} result{filteredTasks.length !== 1 ? 's' : ''}{' '}
+                      for &apos;{debouncedSearch.trim()}&apos;
+                    </Text>
+                  ) : (
+                    <TaskSectionHeader
+                      title={getSectionTitle(activeTab, statFilter, selectedCategory)}
+                      count={filteredTasks.length}
+                      accentColor={getSectionColor(activeTab, statFilter)}
+                    />
+                  )}
                   <StaggerList staggerMs={50}>
                     {filteredTasks.map((task) => (
                       <View key={task.id} style={styles.taskItemWrapper}>
@@ -586,6 +626,34 @@ const styles = StyleSheet.create({
     color: '#faf6f0',
     marginBottom: 16,
     paddingHorizontal: 20,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: 'rgba(237,230,220,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(237,230,220,0.08)',
+    paddingHorizontal: 14,
+    marginHorizontal: 20,
+    marginBottom: 16,
+    gap: 8,
+  },
+  searchIcon: {
+    flexShrink: 0,
+  },
+  searchInput: {
+    flex: 1,
+    fontFamily: 'Karla-Regular',
+    fontSize: 14,
+    color: '#ede6dc',
+  },
+  searchResultCount: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 13,
+    color: '#7a6f62',
+    marginBottom: 12,
   },
   filterTabsWrap: {
     marginTop: 14,
