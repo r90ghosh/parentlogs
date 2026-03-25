@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/server'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
+import { triggerEmail } from '@/lib/email/trigger-email'
 import Stripe from 'stripe'
 
 export async function POST(request: NextRequest) {
@@ -104,6 +105,8 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
         subscription_expires_at: null, // Lifetime never expires
       })
       .eq('id', userId)
+
+    triggerEmail('subscription_confirmed', userId, { plan: 'lifetime' }).catch((err) => console.error('Email trigger failed:', err))
   }
 }
 
@@ -162,6 +165,13 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
       subscription_expires_at: periodEnd.toISOString(),
     })
     .eq('id', userId)
+
+  const isNewSubscription = subscription.status === 'active'
+    && tier === 'premium'
+    && (Date.now() / 1000 - subscription.created) < 300
+  if (isNewSubscription) {
+    triggerEmail('subscription_confirmed', userId, { plan: 'premium' }).catch((err) => console.error('Email trigger failed:', err))
+  }
 }
 
 async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
@@ -219,6 +229,9 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
       .eq('id', subRecord.user_id)
     if (profileError) throw new Error(`Failed to update profile: ${profileError.message}`)
   }
+
+  const daysRemaining = Math.ceil((expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+  triggerEmail('subscription_expiring', subRecord.user_id, { days_remaining: daysRemaining }).catch((err) => console.error('Email trigger failed:', err))
 }
 
 async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
@@ -245,4 +258,6 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
       updated_at: new Date().toISOString(),
     })
     .eq('user_id', subRecord.user_id)
+
+  triggerEmail('payment_failed', subRecord.user_id).catch((err) => console.error('Email trigger failed:', err))
 }

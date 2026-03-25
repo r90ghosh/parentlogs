@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient, type InfiniteData } from '@tanstack/react-query'
 import { notificationService } from '@/services/notification-service'
 import type { ServiceContext } from '@tdc/services'
 import { notificationHistoryService } from '@/lib/services'
@@ -132,11 +132,17 @@ export function usePushWindowStatus() {
 
 // --- Notification Inbox Hooks ---
 
-export function useNotificationFeed(limit = 30) {
-  return useQuery({
-    queryKey: ['notifications', 'feed', limit],
-    queryFn: () => notificationHistoryService.getNotifications(limit),
-    staleTime: 1000 * 30, // 30 seconds
+const PAGE_SIZE = 20
+
+export function useNotificationFeed(types?: string[]) {
+  return useInfiniteQuery({
+    queryKey: ['notifications', 'feed', types],
+    queryFn: ({ pageParam = 0 }) =>
+      notificationHistoryService.getNotifications(PAGE_SIZE, pageParam, types),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _allPages, lastPageParam) =>
+      lastPage.length === PAGE_SIZE ? lastPageParam + PAGE_SIZE : undefined,
+    staleTime: 1000 * 30,
     refetchOnWindowFocus: true,
   })
 }
@@ -151,6 +157,8 @@ export function useUnreadNotificationCount() {
   })
 }
 
+type InfiniteFeed = InfiniteData<Notification[], number>
+
 export function useMarkNotificationRead() {
   const queryClient = useQueryClient()
 
@@ -160,18 +168,25 @@ export function useMarkNotificationRead() {
     onMutate: async (notificationId) => {
       await queryClient.cancelQueries({ queryKey: ['notifications'] })
 
-      const previousFeed = queryClient.getQueriesData<Notification[]>({ queryKey: ['notifications', 'feed'] })
+      const previousFeed = queryClient.getQueriesData<InfiniteFeed>({ queryKey: ['notifications', 'feed'] })
       const previousCount = queryClient.getQueryData<number>(['notifications', 'unread-count'])
 
-      // Optimistic update on feed
-      queryClient.setQueriesData<Notification[]>(
+      // Optimistic update on feed (infinite query pages)
+      queryClient.setQueriesData<InfiniteFeed>(
         { queryKey: ['notifications', 'feed'] },
-        (old) =>
-          old?.map((n) =>
-            n.id === notificationId
-              ? { ...n, is_read: true, read_at: new Date().toISOString() }
-              : n
-          )
+        (old) => {
+          if (!old) return old
+          return {
+            ...old,
+            pages: old.pages.map((page) =>
+              page.map((n) =>
+                n.id === notificationId
+                  ? { ...n, is_read: true, read_at: new Date().toISOString() }
+                  : n
+              )
+            ),
+          }
+        }
       )
 
       // Optimistic update on count
@@ -206,13 +221,20 @@ export function useMarkAllNotificationsRead() {
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ['notifications'] })
 
-      const previousFeed = queryClient.getQueriesData<Notification[]>({ queryKey: ['notifications', 'feed'] })
+      const previousFeed = queryClient.getQueriesData<InfiniteFeed>({ queryKey: ['notifications', 'feed'] })
       const previousCount = queryClient.getQueryData<number>(['notifications', 'unread-count'])
 
-      queryClient.setQueriesData<Notification[]>(
+      queryClient.setQueriesData<InfiniteFeed>(
         { queryKey: ['notifications', 'feed'] },
-        (old) =>
-          old?.map((n) => ({ ...n, is_read: true, read_at: new Date().toISOString() }))
+        (old) => {
+          if (!old) return old
+          return {
+            ...old,
+            pages: old.pages.map((page) =>
+              page.map((n) => ({ ...n, is_read: true, read_at: new Date().toISOString() }))
+            ),
+          }
+        }
       )
 
       queryClient.setQueryData<number>(
@@ -244,6 +266,58 @@ export function useDeleteNotification() {
   return useMutation({
     mutationFn: (notificationId: string) =>
       notificationHistoryService.deleteNotification(notificationId),
+    onMutate: async (notificationId) => {
+      await queryClient.cancelQueries({ queryKey: ['notifications'] })
+
+      const previousFeed = queryClient.getQueriesData<InfiniteFeed>({ queryKey: ['notifications', 'feed'] })
+      const previousCount = queryClient.getQueryData<number>(['notifications', 'unread-count'])
+
+      let wasUnread = false
+      queryClient.setQueriesData<InfiniteFeed>(
+        { queryKey: ['notifications', 'feed'] },
+        (old) => {
+          if (!old) return old
+          return {
+            ...old,
+            pages: old.pages.map((page) => {
+              const target = page.find((n) => n.id === notificationId)
+              if (target && !target.is_read) wasUnread = true
+              return page.filter((n) => n.id !== notificationId)
+            }),
+          }
+        }
+      )
+
+      if (wasUnread) {
+        queryClient.setQueryData<number>(
+          ['notifications', 'unread-count'],
+          (old) => Math.max(0, (old ?? 1) - 1)
+        )
+      }
+
+      return { previousFeed, previousCount }
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousFeed) {
+        context.previousFeed.forEach(([key, data]) => {
+          queryClient.setQueryData(key, data)
+        })
+      }
+      if (context?.previousCount !== undefined) {
+        queryClient.setQueryData(['notifications', 'unread-count'], context.previousCount)
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+    },
+  })
+}
+
+export function useDeleteReadNotifications() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: () => notificationHistoryService.deleteReadNotifications(),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] })
     },

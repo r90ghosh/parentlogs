@@ -1,5 +1,5 @@
-import { Tabs } from 'expo-router'
-import { Platform, StyleSheet, View } from 'react-native'
+import { Tabs, useRouter } from 'expo-router'
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native'
 import { BlurView } from 'expo-blur'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
@@ -8,9 +8,36 @@ import {
   BookOpen,
   Activity,
   MoreHorizontal,
+  Bell,
 } from 'lucide-react-native'
 import * as Haptics from 'expo-haptics'
 import { BabySwitcher } from '@/components/BabySwitcher'
+import { useUnreadNotificationCount } from '@/hooks/use-notifications'
+
+function NotificationBell() {
+  const router = useRouter()
+  const { data: unreadCount } = useUnreadNotificationCount()
+  const count = unreadCount ?? 0
+
+  return (
+    <Pressable
+      onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+        router.push('/(screens)/notification-inbox')
+      }}
+      style={styles.bellButton}
+    >
+      <Bell size={20} color="#7a6f62" />
+      {count > 0 && (
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>
+            {count > 99 ? '99+' : count}
+          </Text>
+        </View>
+      )}
+    </Pressable>
+  )
+}
 
 function TabHeader() {
   const insets = useSafeAreaInsets()
@@ -18,6 +45,7 @@ function TabHeader() {
   return (
     <View style={[styles.header, { paddingTop: insets.top + 4 }]}>
       <BabySwitcher />
+      <NotificationBell />
     </View>
   )
 }
@@ -114,10 +142,39 @@ const styles = StyleSheet.create({
     backgroundColor: '#12100e',
   },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: '#12100e',
     paddingHorizontal: 16,
     paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(237,230,220,0.06)',
+  },
+  bellButton: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badge: {
+    position: 'absolute',
+    top: 2,
+    right: 0,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: '#c4703f',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+    borderWidth: 2,
+    borderColor: '#12100e',
+  },
+  badgeText: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 10,
+    color: '#faf6f0',
+    lineHeight: 12,
   },
 })

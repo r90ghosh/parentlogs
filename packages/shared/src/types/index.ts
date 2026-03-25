@@ -311,10 +311,32 @@ export interface NotificationPreferences {
   weekly_briefing_time: string
   quiet_hours_start?: string | null
   quiet_hours_end?: string | null
+  // Email preferences
+  email_weekly_briefing: boolean
+  email_task_digest: boolean
+  email_lifecycle: boolean
+  email_milestones: boolean
+  // Notification preferences
+  preferred_notification_time: string
+  mood_reminders: boolean
+  milestone_notifications: boolean
+  onboarding_nudges: boolean
+  re_engagement_emails: boolean
 }
 
 // Notification History Types
-export type NotificationType = 'daily_digest' | 'task_reminder' | 'overdue_alert' | 'weekly_briefing' | 'partner_activity' | 'system'
+export type NotificationType =
+  | 'daily_digest'
+  | 'task_reminder'
+  | 'overdue_alert'
+  | 'weekly_briefing'
+  | 'partner_activity'
+  | 'milestone'
+  | 'onboarding'
+  | 'celebration'
+  | 'mood_reminder'
+  | 're_engagement'
+  | 'system'
 
 export interface Notification {
   id: string

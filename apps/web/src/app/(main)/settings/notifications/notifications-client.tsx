@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ArrowLeft, Bell, BellOff, CheckCircle, AlertTriangle, Loader2 } from 'lucide-react'
+import { ArrowLeft, Bell, BellOff, CheckCircle, AlertTriangle, Loader2, Mail } from 'lucide-react'
 import Link from 'next/link'
 import { useToast } from '@/hooks/use-toast'
 
@@ -253,6 +253,75 @@ export default function NotificationsClient() {
                 <Switch
                   checked={preferences?.weekly_briefing ?? true}
                   onCheckedChange={(checked) => handleTogglePreference('weekly_briefing', checked)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Email Notifications */}
+          <Card className="bg-[--surface] border-[--border]">
+            <CardHeader>
+              <CardTitle className="font-display text-lg flex items-center gap-2">
+                <Mail className="h-5 w-5 text-copper" />
+                Email Notifications
+              </CardTitle>
+              <CardDescription className="font-body">
+                Choose which emails you receive
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="font-ui font-medium">Weekly briefing email</Label>
+                  <p className="font-body text-xs text-[--muted]">Get your briefing summary delivered to your inbox</p>
+                </div>
+                <Switch
+                  checked={preferences?.email_weekly_briefing ?? true}
+                  onCheckedChange={(checked) => handleTogglePreference('email_weekly_briefing', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="font-ui font-medium">Overdue task digest</Label>
+                  <p className="font-body text-xs text-[--muted]">Email when must-do tasks are overdue</p>
+                </div>
+                <Switch
+                  checked={preferences?.email_task_digest ?? false}
+                  onCheckedChange={(checked) => handleTogglePreference('email_task_digest', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="font-ui font-medium">Milestone emails</Label>
+                  <p className="font-body text-xs text-[--muted]">Baby development milestones and celebrations</p>
+                </div>
+                <Switch
+                  checked={preferences?.email_milestones ?? true}
+                  onCheckedChange={(checked) => handleTogglePreference('email_milestones', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="font-ui font-medium">Lifecycle emails</Label>
+                  <p className="font-body text-xs text-[--muted]">Onboarding tips and getting-started guides</p>
+                </div>
+                <Switch
+                  checked={preferences?.email_lifecycle ?? true}
+                  onCheckedChange={(checked) => handleTogglePreference('email_lifecycle', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="font-ui font-medium">Re-engagement emails</Label>
+                  <p className="font-body text-xs text-[--muted]">Updates when you haven't logged in for a while</p>
+                </div>
+                <Switch
+                  checked={preferences?.re_engagement_emails ?? true}
+                  onCheckedChange={(checked) => handleTogglePreference('re_engagement_emails', checked)}
                 />
               </div>
             </CardContent>

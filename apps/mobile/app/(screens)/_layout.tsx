@@ -15,6 +15,7 @@ export default function ScreensLayout() {
       <Stack.Screen name="journey" />
       <Stack.Screen name="settings" />
       <Stack.Screen name="notifications" />
+      <Stack.Screen name="notification-inbox" />
       <Stack.Screen name="upgrade" />
       <Stack.Screen name="change-password" />
       <Stack.Screen name="edit-profile" />

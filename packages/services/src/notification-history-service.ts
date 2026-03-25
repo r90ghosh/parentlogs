@@ -3,13 +3,18 @@ import type { AppSupabaseClient } from './types'
 
 export function createNotificationHistoryService(supabase: AppSupabaseClient) {
   return {
-    async getNotifications(limit = 30, offset = 0): Promise<Notification[]> {
-      const { data, error } = await supabase
+    async getNotifications(limit = 20, offset = 0, types?: string[]): Promise<Notification[]> {
+      let query = supabase
         .from('notifications')
         .select('*')
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1)
 
+      if (types?.length) {
+        query = query.in('type', types)
+      }
+
+      const { data, error } = await query
       if (error) throw error
       return (data || []) as Notification[]
     },
@@ -47,6 +52,15 @@ export function createNotificationHistoryService(supabase: AppSupabaseClient) {
         .from('notifications')
         .delete()
         .eq('id', notificationId)
+
+      if (error) throw error
+    },
+
+    async deleteReadNotifications(): Promise<void> {
+      const { error } = await supabase
+        .from('notifications')
+        .delete()
+        .eq('is_read', true)
 
       if (error) throw error
     },

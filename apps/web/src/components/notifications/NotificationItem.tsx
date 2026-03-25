@@ -2,11 +2,11 @@
 
 import { useRouter } from 'next/navigation'
 import { formatDistanceToNow } from 'date-fns'
-import { Bell, CheckSquare, AlertTriangle, BookOpen, Users, Info } from 'lucide-react'
+import { Bell, CheckSquare, AlertTriangle, BookOpen, Users, Info, Star, Rocket, PartyPopper, Heart, MailOpen, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 import { Notification, NotificationType } from '@tdc/shared/types'
-import { useMarkNotificationRead } from '@/hooks/use-notifications'
+import { useMarkNotificationRead, useDeleteNotification } from '@/hooks/use-notifications'
 
 const typeIcons: Record<NotificationType, React.ElementType> = {
   daily_digest: Bell,
@@ -14,6 +14,11 @@ const typeIcons: Record<NotificationType, React.ElementType> = {
   overdue_alert: AlertTriangle,
   weekly_briefing: BookOpen,
   partner_activity: Users,
+  milestone: Star,
+  onboarding: Rocket,
+  celebration: PartyPopper,
+  mood_reminder: Heart,
+  re_engagement: MailOpen,
   system: Info,
 }
 
@@ -26,6 +31,7 @@ export function NotificationItem({
 }) {
   const router = useRouter()
   const markAsRead = useMarkNotificationRead()
+  const deleteNotification = useDeleteNotification()
 
   const Icon = typeIcons[notification.type] || Bell
 
@@ -33,7 +39,15 @@ export function NotificationItem({
     if (!notification.is_read) {
       markAsRead.mutate(notification.id)
     }
-    router.push(notification.url)
+    // Only allow relative URLs (internal navigation)
+    if (notification.url.startsWith('/')) {
+      router.push(notification.url)
+    }
+  }
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    deleteNotification.mutate(notification.id)
   }
 
   return (
@@ -41,7 +55,7 @@ export function NotificationItem({
       <button
         onClick={handleClick}
         className={cn(
-          'w-full flex items-start gap-3 px-4 py-3 rounded-lg text-left transition-colors',
+          'group w-full flex items-start gap-3 px-4 py-3 rounded-lg text-left transition-colors',
           notification.is_read
             ? 'bg-[--surface] hover:bg-[--card]'
             : 'bg-[--card] border-l-2 border-l-copper hover:bg-[--card-hover]'
@@ -74,10 +88,20 @@ export function NotificationItem({
           </p>
         </div>
 
-        {/* Unread dot */}
-        {!notification.is_read && (
-          <div className="mt-2 flex-shrink-0 h-2 w-2 rounded-full bg-copper" />
-        )}
+        {/* Delete button (hover) / Unread dot */}
+        <div className="mt-2 flex-shrink-0 flex items-center">
+          <button
+            type="button"
+            aria-label="Delete notification"
+            onClick={handleDelete}
+            className="opacity-0 group-hover:opacity-100 transition-opacity text-[--dim] hover:text-coral p-1 -m-1"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+          {!notification.is_read && (
+            <div className="ml-1 h-2 w-2 rounded-full bg-copper group-hover:hidden" />
+          )}
+        </div>
       </button>
     </CardEntrance>
   )
