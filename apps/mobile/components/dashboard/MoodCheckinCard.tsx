@@ -2,6 +2,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { GlassCard } from '@/components/glass'
 import { MoodEmojiPop } from '@/components/animations'
 import { useSubmitMood } from '@/hooks/use-dashboard'
+import { useMoodHistory } from '@/hooks/use-journey'
 import type { MoodLevel, MoodCheckin } from '@tdc/shared/types/dad-journey'
 
 const MOODS: { level: MoodLevel; emoji: string; label: string }[] = [
@@ -12,15 +13,58 @@ const MOODS: { level: MoodLevel; emoji: string; label: string }[] = [
   { level: 'great', emoji: '😄', label: 'Great' },
 ]
 
+function getMoodEmoji(level: MoodLevel): string {
+  return MOODS.find((m) => m.level === level)?.emoji ?? '•'
+}
+
+function getStreak(checkins: MoodCheckin[]): number {
+  if (!checkins.length) return 0
+
+  // Sort descending by date (already descending from service)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  let streak = 0
+  let currentDate = new Date(today)
+
+  for (let i = 0; i < 30; i++) {
+    const dateStr = currentDate.toISOString().split('T')[0]
+    const hasCheckin = checkins.some((c) => {
+      const checkinDate = new Date(c.checked_in_at)
+      return checkinDate.toISOString().split('T')[0] === dateStr
+    })
+    if (hasCheckin) {
+      streak++
+      currentDate.setDate(currentDate.getDate() - 1)
+    } else {
+      break
+    }
+  }
+
+  return streak
+}
+
 interface MoodCheckinCardProps {
   todaysCheckin: MoodCheckin | null | undefined
 }
 
 export function MoodCheckinCard({ todaysCheckin }: MoodCheckinCardProps) {
   const submitMood = useSubmitMood()
+  const { data: history } = useMoodHistory(7)
 
   if (todaysCheckin) {
     const moodConfig = MOODS.find((m) => m.level === todaysCheckin.mood)
+
+    // Build last 7 days array (today to 6 days ago)
+    const last7Days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date()
+      d.setHours(0, 0, 0, 0)
+      d.setDate(d.getDate() - (6 - i))
+      return d.toISOString().split('T')[0]
+    })
+
+    const streak = history ? getStreak(history) : 0
+
     return (
       <GlassCard style={styles.card}>
         <View style={styles.checkedInRow}>
@@ -32,6 +76,38 @@ export function MoodCheckinCard({ todaysCheckin }: MoodCheckinCardProps) {
             </Text>
           </View>
         </View>
+
+        {/* History dots */}
+        {history && history.length > 0 && (
+          <View style={styles.historyRow}>
+            {last7Days.map((dateStr) => {
+              const checkin = history.find(
+                (c) => new Date(c.checked_in_at).toISOString().split('T')[0] === dateStr
+              )
+              return (
+                <View
+                  key={dateStr}
+                  style={[
+                    styles.historyDot,
+                    checkin ? styles.historyDotFilled : styles.historyDotEmpty,
+                  ]}
+                >
+                  {checkin && (
+                    <Text style={styles.historyDotEmoji}>
+                      {getMoodEmoji(checkin.mood)}
+                    </Text>
+                  )}
+                </View>
+              )
+            })}
+          </View>
+        )}
+
+        {/* Streak */}
+        {streak > 0 && (
+          <Text style={styles.streakText}>🔥 {streak} day streak</Text>
+        )}
+
         {(todaysCheckin.mood === 'struggling' || todaysCheckin.mood === 'rough') && (
           <View style={styles.crisisResources}>
             <Text style={styles.crisisText}>
@@ -121,5 +197,34 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#5b9bd5',
     lineHeight: 16,
+  },
+  historyRow: {
+    flexDirection: 'row',
+    gap: 6,
+    marginTop: 12,
+    justifyContent: 'flex-start',
+  },
+  historyDot: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  historyDotFilled: {
+    backgroundColor: 'rgba(196,112,63,0.12)',
+  },
+  historyDotEmpty: {
+    backgroundColor: '#4a4239',
+  },
+  historyDotEmoji: {
+    fontSize: 14,
+    fontFamily: 'System',
+  },
+  streakText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 13,
+    color: '#d4a853',
+    marginTop: 8,
   },
 })

@@ -29,6 +29,8 @@ export default function ScreensLayout() {
       <Stack.Screen name="article" />
       <Stack.Screen name="about" />
       <Stack.Screen name="faq" />
+      <Stack.Screen name="feedback" />
+      <Stack.Screen name="personalize" />
     </Stack>
   )
 }

@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { dadJourneyService } from '@/lib/services'
-import type { ContentPhase } from '@tdc/shared/types/dad-journey'
+import type { ContentPhase, DadProfile } from '@tdc/shared/types/dad-journey'
 import { familyStageToContentPhase } from '@tdc/shared/utils/stage-mapping'
 import type { FamilyStage } from '@tdc/shared/types'
 
@@ -35,5 +35,30 @@ export function useDadProfile() {
     queryFn: () => dadJourneyService.getDadProfile(user!.id),
     enabled: !!user?.id,
     staleTime: 1000 * 60 * 5,
+  })
+}
+
+export function useMoodHistory(limit = 7) {
+  const { user } = useAuth()
+
+  return useQuery({
+    queryKey: ['mood-history', user?.id, limit],
+    queryFn: () => dadJourneyService.getRecentCheckins(user!.id, limit),
+    enabled: !!user?.id,
+    staleTime: 1000 * 60 * 2,
+  })
+}
+
+export function useUpsertDadProfile() {
+  const queryClient = useQueryClient()
+  const { user } = useAuth()
+
+  return useMutation({
+    mutationFn: (profile: Partial<DadProfile>) =>
+      dadJourneyService.upsertDadProfile(user!.id, profile),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dad-profile', user?.id] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+    },
   })
 }
