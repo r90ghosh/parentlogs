@@ -14,6 +14,8 @@ import {
 import * as Haptics from 'expo-haptics'
 import { BabySwitcher } from '@/components/BabySwitcher'
 import { useUnreadNotificationCount } from '@/hooks/use-notifications'
+import { useRealtimeSync } from '@/hooks/use-realtime-sync'
+import { ToastProvider } from '@/components/ui/Toast'
 
 const NotificationBell = React.memo(function NotificationBell() {
   const router = useRouter()
@@ -54,7 +56,10 @@ function TabHeader() {
 }
 
 export default function TabLayout() {
+  useRealtimeSync()
+
   return (
+    <ToastProvider>
     <View style={styles.container}>
       <TabHeader />
       <Tabs
@@ -136,6 +141,7 @@ export default function TabLayout() {
         />
       </Tabs>
     </View>
+    </ToastProvider>
   )
 }
 

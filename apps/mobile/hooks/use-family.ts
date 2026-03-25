@@ -2,6 +2,16 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { familyService } from '@/lib/services'
 
+export function usePartnerActivity() {
+  const { family } = useAuth()
+  return useQuery({
+    queryKey: ['partner-activity', family?.id],
+    queryFn: () => familyService.getPartnerActivity(family!.id),
+    enabled: !!family?.id,
+    staleTime: 1000 * 60 * 2,
+  })
+}
+
 export function useFamilyMembers() {
   const { family } = useAuth()
   return useQuery({

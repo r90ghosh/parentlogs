@@ -18,6 +18,7 @@ import { useAuth } from '@/components/providers/AuthProvider'
 import { useDashboardData } from '@/hooks/use-dashboard'
 import { useSubscriptionStatus } from '@/hooks/use-subscription'
 import { useBabies } from '@/hooks/use-babies'
+import { usePartnerActivity } from '@/hooks/use-family'
 import { CardEntrance } from '@/components/animations'
 import {
   MoodCheckinCard,
@@ -25,6 +26,7 @@ import {
   TasksDueCard,
   QuickActionsBar,
   BudgetSnapshotCard,
+  PartnerActivityCard,
 } from '@/components/dashboard'
 
 function getGreeting(): string {
@@ -46,6 +48,7 @@ export default function DashboardScreen() {
   const { tasksQuery, briefingQuery, moodQuery } = useDashboardData()
   const { data: subStatus } = useSubscriptionStatus()
   const { data: babies } = useBabies()
+  const { data: partnerActivity } = usePartnerActivity()
   const isPastDue = subStatus?.status === 'past_due'
 
   const isLoading = tasksQuery.isLoading && briefingQuery.isLoading
@@ -58,6 +61,7 @@ export default function DashboardScreen() {
     queryClient.invalidateQueries({ queryKey: ['mood-today'] })
     queryClient.invalidateQueries({ queryKey: ['subscription-status'] })
     queryClient.invalidateQueries({ queryKey: ['babies'] })
+    queryClient.invalidateQueries({ queryKey: ['partner-activity'] })
   }, [queryClient])
 
   // Use active baby's current_week if available, fallback to family
@@ -136,8 +140,15 @@ export default function DashboardScreen() {
               </CardEntrance>
             )}
 
-            {/* 2. Briefing Teaser */}
-            <CardEntrance delay={160}>
+            {/* 2. Partner Activity */}
+            {partnerActivity && (
+              <CardEntrance delay={160}>
+                <PartnerActivityCard data={partnerActivity} />
+              </CardEntrance>
+            )}
+
+            {/* 3. Briefing Teaser */}
+            <CardEntrance delay={240}>
               <BriefingTeaserCard
                 briefing={briefingQuery.data}
                 currentWeek={currentWeek}
@@ -145,18 +156,18 @@ export default function DashboardScreen() {
               />
             </CardEntrance>
 
-            {/* 3. Tasks Due */}
-            <CardEntrance delay={240}>
+            {/* 4. Tasks Due */}
+            <CardEntrance delay={320}>
               <TasksDueCard tasks={tasksQuery.data} />
             </CardEntrance>
 
-            {/* 4. Quick Actions */}
-            <CardEntrance delay={320}>
+            {/* 5. Quick Actions */}
+            <CardEntrance delay={400}>
               <QuickActionsBar />
             </CardEntrance>
 
-            {/* 5. Budget Snapshot */}
-            <CardEntrance delay={400}>
+            {/* 6. Budget Snapshot */}
+            <CardEntrance delay={480}>
               <BudgetSnapshotCard />
             </CardEntrance>
           </View>
