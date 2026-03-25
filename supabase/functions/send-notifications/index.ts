@@ -170,7 +170,7 @@ Deno.serve(async (req: Request) => {
 async function sendDailyDigest() {
   const { data: prefsWithProfiles } = await supabase
     .from("notification_preferences")
-    .select("user_id, quiet_hours_start, quiet_hours_end, profiles!inner(family_id)")
+    .select("user_id, quiet_hours_start, quiet_hours_end, timezone, profiles!inner(family_id)")
     .or("task_reminders_7_day.eq.true,task_reminders_3_day.eq.true,task_reminders_1_day.eq.true");
 
   if (!prefsWithProfiles?.length) return;
@@ -202,7 +202,7 @@ async function sendDailyDigest() {
   for (const pref of prefsWithProfiles) {
     const familyId = (pref.profiles as unknown as { family_id: string | null }).family_id;
     if (!familyId) continue;
-    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end)) continue;
+    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
 
     const familyTasks = tasksByFamily[familyId];
     if (!familyTasks?.length) continue;
@@ -256,7 +256,7 @@ async function sendTaskReminders() {
   const memberIds = allMembers.map((m) => m.id);
   const { data: allPrefs } = await supabase
     .from("notification_preferences")
-    .select("user_id, task_reminders_1_day, quiet_hours_start, quiet_hours_end")
+    .select("user_id, task_reminders_1_day, quiet_hours_start, quiet_hours_end, timezone")
     .in("user_id", memberIds);
 
   const prefsMap = new Map((allPrefs || []).map((p) => [p.user_id, p]));
@@ -264,7 +264,7 @@ async function sendTaskReminders() {
   for (const member of allMembers) {
     const pref = prefsMap.get(member.id);
     if (!pref?.task_reminders_1_day) continue;
-    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end)) continue;
+    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
 
     const familyTasks = tasksByFamily[member.family_id];
     if (!familyTasks?.length) continue;
@@ -311,7 +311,7 @@ async function sendOverdueAlerts() {
   const memberIds = allMembers.map((m) => m.id);
   const { data: allPrefs } = await supabase
     .from("notification_preferences")
-    .select("user_id, task_reminders_1_day, quiet_hours_start, quiet_hours_end")
+    .select("user_id, task_reminders_1_day, quiet_hours_start, quiet_hours_end, timezone")
     .in("user_id", memberIds);
 
   const prefsMap = new Map((allPrefs || []).map((p) => [p.user_id, p]));
@@ -319,7 +319,7 @@ async function sendOverdueAlerts() {
   for (const member of allMembers) {
     const pref = prefsMap.get(member.id);
     if (!pref?.task_reminders_1_day) continue;
-    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end)) continue;
+    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
 
     const familyTasks = tasksByFamily[member.family_id];
     if (!familyTasks?.length) continue;
@@ -340,7 +340,7 @@ async function sendOverdueAlerts() {
 }
 
 async function sendWeeklyBriefingAlerts() {
-  const { data: families } = await supabase.from("families").select("id, current_week");
+  const { data: families } = await supabase.from("families").select("id, current_week").limit(500);
 
   if (!families?.length) return;
 
@@ -357,7 +357,7 @@ async function sendWeeklyBriefingAlerts() {
   const memberIds = allMembers.map((m) => m.id);
   const { data: allPrefs } = await supabase
     .from("notification_preferences")
-    .select("user_id, weekly_briefing, quiet_hours_start, quiet_hours_end")
+    .select("user_id, weekly_briefing, quiet_hours_start, quiet_hours_end, timezone")
     .in("user_id", memberIds)
     .eq("weekly_briefing", true);
 
@@ -366,7 +366,7 @@ async function sendWeeklyBriefingAlerts() {
   for (const member of allMembers) {
     const pref = prefsMap.get(member.id);
     if (!pref) continue;
-    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end)) continue;
+    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
 
     const currentWeek = familyWeekMap.get(member.family_id);
 
@@ -399,53 +399,66 @@ async function sendMilestoneNotifications() {
   // Get all families with their current week
   const { data: families } = await supabase
     .from("families")
-    .select("id, current_week, stage");
+    .select("id, current_week, stage")
+    .limit(500);
 
   if (!families?.length) return;
 
-  for (const family of families) {
-    // Only pregnancy milestones for now
-    if (family.stage === "post-birth" || !family.current_week) continue;
+  const milestoneFamilies = families.filter(
+    (f) => f.stage !== "post-birth" && f.current_week && PREGNANCY_MILESTONES[f.current_week]
+  );
 
+  if (!milestoneFamilies.length) return;
+
+  const milestoneFamilyIds = milestoneFamilies.map((f) => f.id);
+
+  const { data: allMembers } = await supabase
+    .from("profiles")
+    .select("id, family_id")
+    .in("family_id", milestoneFamilyIds);
+
+  if (!allMembers?.length) return;
+
+  const allMemberIds = allMembers.map((m) => m.id);
+
+  const { data: allPrefs } = await supabase
+    .from("notification_preferences")
+    .select("user_id, milestone_notifications, quiet_hours_start, quiet_hours_end, timezone")
+    .in("user_id", allMemberIds);
+
+  const prefsMap = new Map((allPrefs || []).map((p) => [p.user_id, p]));
+
+  const { data: existingMilestones } = await supabase
+    .from("notifications")
+    .select("user_id, title")
+    .in("user_id", allMemberIds)
+    .eq("type", "milestone");
+
+  const milestoneSet = new Set(
+    (existingMilestones || []).map((m) => `${m.user_id}:${m.title}`)
+  );
+
+  const membersByFamily = allMembers.reduce((acc, m) => {
+    if (!acc[m.family_id]) acc[m.family_id] = [];
+    acc[m.family_id].push(m);
+    return acc;
+  }, {} as Record<string, typeof allMembers>);
+
+  for (const family of milestoneFamilies) {
     const milestone = PREGNANCY_MILESTONES[family.current_week];
-    if (!milestone) continue;
-
-    // Get family members with milestone preferences
-    const { data: members } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("family_id", family.id);
-
+    const members = membersByFamily[family.id];
     if (!members?.length) continue;
-
-    const memberIds = members.map((m) => m.id);
-
-    // Check milestone preferences
-    const { data: prefs } = await supabase
-      .from("notification_preferences")
-      .select("user_id, milestone_notifications, quiet_hours_start, quiet_hours_end")
-      .in("user_id", memberIds);
-
-    const prefsMap = new Map((prefs || []).map((p) => [p.user_id, p]));
 
     for (const member of members) {
       const pref = prefsMap.get(member.id);
       if (pref?.milestone_notifications === false) continue;
-      if (pref && checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end)) continue;
+      if (pref && checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
 
-      // Dedup: check if we already sent this milestone
       const expectedTitle = `Week ${family.current_week}: ${milestone.title}`;
-      const { count } = await supabase
-        .from("notifications")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", member.id)
-        .eq("type", "milestone")
-        .eq("title", expectedTitle);
-
-      if ((count || 0) > 0) continue;
+      if (milestoneSet.has(`${member.id}:${expectedTitle}`)) continue;
 
       const payload: NotificationPayload = {
-        title: `Week ${family.current_week}: ${milestone.title}`,
+        title: expectedTitle,
         body: milestone.body,
         url: "/briefing",
         tag: "milestone",
@@ -466,7 +479,8 @@ async function sendOnboardingNudges() {
   const { data: profiles } = await supabase
     .from("profiles")
     .select("id, created_at, first_briefing_viewed_at, first_task_completed_at, partner_invited_at, first_mood_checkin_at")
-    .is("onboarding_completed", true);
+    .is("onboarding_completed", true)
+    .limit(500);
 
   if (!profiles?.length) return;
 
@@ -474,7 +488,7 @@ async function sendOnboardingNudges() {
   const profileIds = profiles.map((p) => p.id);
   const { data: prefs } = await supabase
     .from("notification_preferences")
-    .select("user_id, onboarding_nudges, quiet_hours_start, quiet_hours_end")
+    .select("user_id, onboarding_nudges, quiet_hours_start, quiet_hours_end, timezone")
     .in("user_id", profileIds);
 
   const prefsMap = new Map((prefs || []).map((p) => [p.user_id, p]));
@@ -482,7 +496,7 @@ async function sendOnboardingNudges() {
   for (const profile of profiles) {
     const pref = prefsMap.get(profile.id);
     if (pref?.onboarding_nudges === false) continue;
-    if (pref && checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end)) continue;
+    if (pref && checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
 
     const signupDate = new Date(profile.created_at);
     const hoursSinceSignup = (now.getTime() - signupDate.getTime()) / (1000 * 60 * 60);
@@ -541,14 +555,14 @@ async function sendMoodReminders() {
   // Get all users with mood reminders enabled
   const { data: prefs } = await supabase
     .from("notification_preferences")
-    .select("user_id, mood_reminders, quiet_hours_start, quiet_hours_end")
+    .select("user_id, mood_reminders, quiet_hours_start, quiet_hours_end, timezone")
     .neq("mood_reminders", false);
 
   if (!prefs?.length) return;
 
   for (const pref of prefs) {
     if (checkedInUserIds.has(pref.user_id)) continue;
-    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end)) continue;
+    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
 
     // Dedup: only one mood reminder per day
     const { count } = await supabase
@@ -581,7 +595,8 @@ async function sendReEngagementNotifications() {
     .from("profiles")
     .select("id, last_active_at, email, subscription_tier")
     .not("last_active_at", "is", null)
-    .lt("last_active_at", new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString());
+    .lt("last_active_at", new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString())
+    .limit(500);
 
   if (!inactiveUsers?.length) return;
 
@@ -652,43 +667,55 @@ async function sendPushWindowWarnings() {
   const { data: freeUsers } = await supabase
     .from("profiles")
     .select("id, created_at, subscription_tier")
-    .eq("subscription_tier", "free");
+    .eq("subscription_tier", "free")
+    .limit(500);
 
   if (!freeUsers?.length) return;
 
-  for (const user of freeUsers) {
-    const signupDate = new Date(user.created_at);
-    const daysSinceSignup = Math.floor((now.getTime() - signupDate.getTime()) / (1000 * 60 * 60 * 24));
+  const eligibleUsers = freeUsers.filter((user) => {
+    const daysSinceSignup = Math.floor((now.getTime() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24));
+    return daysSinceSignup === 27 || daysSinceSignup === 30;
+  });
 
-    if (daysSinceSignup !== 27 && daysSinceSignup !== 30) continue;
+  if (!eligibleUsers.length) return;
 
-    // Dedup
-    const tag = daysSinceSignup === 27 ? "push-expiry-warning" : "push-expiry-final";
-    const { count } = await supabase
-      .from("notifications")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", user.id)
-      .eq("type", "system")
-      .eq("title", daysSinceSignup === 27 ? "Push notifications expire in 3 days" : "Last day of push notifications");
+  const eligibleIds = eligibleUsers.map((u) => u.id);
+  const { data: existingWarnings } = await supabase
+    .from("notifications")
+    .select("user_id, title")
+    .in("user_id", eligibleIds)
+    .eq("type", "system")
+    .in("title", ["Push notifications expire in 3 days", "Last day of push notifications"]);
 
-    if ((count || 0) > 0) continue;
+  const warningSet = new Set(
+    (existingWarnings || []).map((w) => `${w.user_id}:${w.title}`)
+  );
+
+  for (const user of eligibleUsers) {
+    const daysSinceSignup = Math.floor((now.getTime() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24));
 
     if (daysSinceSignup === 27) {
+      const title = "Push notifications expire in 3 days";
+      if (warningSet.has(`${user.id}:${title}`)) continue;
+
       const payload: NotificationPayload = {
-        title: "Push notifications expire in 3 days",
+        title,
         body: "Upgrade to keep task reminders, briefing alerts, and partner activity.",
         url: "/upgrade",
-        tag,
+        tag: "push-expiry-warning",
       };
       await persistNotification(user.id, "system", payload);
       await sendPushNotification(user.id, payload, "system");
       await sendEmailNotification(user.id, "subscription_expiring", { days_remaining: 3 });
     } else {
+      const title = "Last day of push notifications";
+      if (warningSet.has(`${user.id}:${title}`)) continue;
+
       const payload: NotificationPayload = {
-        title: "Last day of push notifications",
+        title,
         body: "After today, you'll only see notifications in-app. Upgrade to keep them.",
         url: "/upgrade",
-        tag,
+        tag: "push-expiry-final",
       };
       await persistNotification(user.id, "system", payload);
       await sendPushNotification(user.id, payload, "system");
@@ -708,7 +735,8 @@ async function sendOnboardingDripEmails() {
     .from("profiles")
     .select("id, created_at, full_name")
     .gte("created_at", eightDaysAgo.toISOString())
-    .is("onboarding_completed", true);
+    .is("onboarding_completed", true)
+    .limit(500);
 
   if (!newUsers?.length) return;
 
@@ -774,11 +802,17 @@ async function sendDripEmail(userId: string, type: string, data: Record<string, 
 
 // --- Shared Helpers ---
 
-function checkQuietHours(quietHoursStart: string | null, quietHoursEnd: string | null): boolean {
+function checkQuietHours(
+  quietHoursStart: string | null,
+  quietHoursEnd: string | null,
+  timezone: string = "UTC"
+): boolean {
   if (!quietHoursStart) return false;
 
   const now = new Date();
-  const currentHour = now.getHours();
+  const currentHour = parseInt(
+    now.toLocaleString("en-US", { hour: "numeric", hour12: false, timeZone: timezone })
+  );
   const startHour = parseInt(quietHoursStart.split(":")[0] || "22");
   const endHour = parseInt((quietHoursEnd || "07:00").split(":")[0] || "7");
 
@@ -794,7 +828,7 @@ async function sendEmailNotification(
   data: Record<string, unknown> = {}
 ): Promise<void> {
   try {
-    await fetch(`${supabaseUrl}/functions/v1/send-email`, {
+    const response = await fetch(`${supabaseUrl}/functions/v1/send-email`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${supabaseServiceKey}`,
@@ -802,6 +836,10 @@ async function sendEmailNotification(
       },
       body: JSON.stringify({ type: emailType, user_id: userId, ...data }),
     });
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error(`Email ${emailType} failed: ${response.status}`, errText);
+    }
   } catch (err) {
     console.error(`Failed to trigger ${emailType} email for user ${userId}:`, err);
   }
@@ -855,13 +893,17 @@ async function sendPushNotification(
     try {
       await webpush.sendNotification(pushSubscription, JSON.stringify(payload));
       await logDelivery(userId, "web_push", "sent");
-    } catch (error) {
-      console.error(`Failed to send web push to user ${userId}:`, error);
-      if (error.statusCode === 404 || error.statusCode === 410) {
+    } catch (err: unknown) {
+      console.error(`Failed to send web push to user ${userId}:`, err);
+      const statusCode = err instanceof Error && "statusCode" in err
+        ? (err as Record<string, unknown>).statusCode
+        : undefined;
+      const message = err instanceof Error ? err.message : String(err);
+      if (statusCode === 404 || statusCode === 410) {
         await supabase.from("push_subscriptions").delete().eq("user_id", userId);
-        await logDelivery(userId, "web_push", "invalid_token", `HTTP ${error.statusCode}`);
+        await logDelivery(userId, "web_push", "invalid_token", `HTTP ${statusCode}`);
       } else {
-        await logDelivery(userId, "web_push", "failed", error.message || "Unknown error");
+        await logDelivery(userId, "web_push", "failed", message);
       }
     }
   }
@@ -929,11 +971,12 @@ async function sendExpoPush(
           }
         }
       }
-    } catch (error) {
-      console.error(`Failed to send Expo push to user ${userId}:`, error);
+    } catch (err: unknown) {
+      console.error(`Failed to send Expo push to user ${userId}:`, err);
+      const message = err instanceof Error ? err.message : "Fetch failed";
       for (let j = 0; j < chunk.length; j++) {
         const tokenRecord = tokens[i + j];
-        await logDelivery(userId, "expo_push", "failed", error.message || "Fetch failed", tokenRecord.id);
+        await logDelivery(userId, "expo_push", "failed", message, tokenRecord.id);
       }
     }
   }

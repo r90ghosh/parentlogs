@@ -1,3 +1,4 @@
+import React from 'react'
 import { Tabs, useRouter } from 'expo-router'
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native'
 import { BlurView } from 'expo-blur'
@@ -14,7 +15,7 @@ import * as Haptics from 'expo-haptics'
 import { BabySwitcher } from '@/components/BabySwitcher'
 import { useUnreadNotificationCount } from '@/hooks/use-notifications'
 
-function NotificationBell() {
+const NotificationBell = React.memo(function NotificationBell() {
   const router = useRouter()
   const { data: unreadCount } = useUnreadNotificationCount()
   const count = unreadCount ?? 0
@@ -26,6 +27,8 @@ function NotificationBell() {
         router.push('/(screens)/notification-inbox')
       }}
       style={styles.bellButton}
+      accessibilityLabel={count > 0 ? `Notifications, ${count} unread` : 'Notifications'}
+      accessibilityRole="button"
     >
       <Bell size={20} color="#7a6f62" />
       {count > 0 && (
@@ -37,7 +40,7 @@ function NotificationBell() {
       )}
     </Pressable>
   )
-}
+})
 
 function TabHeader() {
   const insets = useSafeAreaInsets()

@@ -9,5 +9,4 @@ ALTER TABLE profiles
 
 -- Index for re-engagement queries (find inactive users)
 CREATE INDEX IF NOT EXISTS idx_profiles_last_active
-  ON profiles(last_active_at)
-  WHERE last_active_at IS NOT NULL;
+  ON profiles(last_active_at DESC);

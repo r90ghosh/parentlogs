@@ -1,9 +1,17 @@
-/**
- * Server-side helper to trigger transactional/notification emails
- * via the send-email edge function. Only use in API routes and server actions.
- */
+type EmailType =
+  | 'welcome'
+  | 'partner_invited'
+  | 'partner_joined'
+  | 'subscription_confirmed'
+  | 'subscription_expiring'
+  | 'payment_failed'
+  | 'weekly_briefing'
+  | 'overdue_digest'
+  | 're_engagement'
+  | 'onboarding_drip'
+
 export async function triggerEmail(
-  type: string,
+  type: EmailType,
   userId: string,
   data: Record<string, unknown> = {}
 ): Promise<void> {

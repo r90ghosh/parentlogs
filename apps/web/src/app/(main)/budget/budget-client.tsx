@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { LogoIcon } from '@/components/ui/logo'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -277,11 +278,61 @@ export default function BudgetClient() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <LogoIcon size="xl" className="animate-pulse" />
-        <p className="text-sm font-ui text-[--muted] animate-pulse">
-          Loading your budget...
-        </p>
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 space-y-6" role="status" aria-busy="true">
+        {/* Header skeleton */}
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-4 w-64" />
+          </div>
+          <Skeleton className="h-10 w-32 rounded-md" />
+        </div>
+
+        {/* Timeline bar skeleton — 9 pills */}
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <Skeleton key={i} className="h-8 w-24 rounded-full shrink-0" />
+          ))}
+        </div>
+
+        {/* Summary cards skeleton — 3-column grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Card key={i} className="bg-[--surface] border-[--border]">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-11 w-11 rounded-lg" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-6 w-32" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Tabs skeleton */}
+        <div className="space-y-4">
+          <Skeleton className="h-10 w-64 rounded-md" />
+
+          {/* Category row skeletons */}
+          <div className="space-y-2">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Card key={i} className="bg-[--surface] border-[--border]">
+                <CardContent className="py-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Skeleton className="h-5 w-5 rounded" />
+                      <Skeleton className="h-5 w-36" />
+                    </div>
+                    <Skeleton className="h-5 w-20" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
       </div>
     )
   }

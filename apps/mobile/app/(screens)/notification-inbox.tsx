@@ -279,12 +279,56 @@ export default function NotificationInboxScreen() {
         />
         <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
           <Text style={styles.headerTitle}>Notifications</Text>
-          <Pressable onPress={() => router.back()} style={styles.closeButton}>
+          <Pressable
+            onPress={() => router.back()}
+            style={styles.closeButton}
+            accessibilityLabel="Close"
+            accessibilityRole="button"
+          >
             <X size={20} color="#7a6f62" />
           </Pressable>
         </View>
         <View style={styles.loadingContainer}>
           <ActivityIndicator color="#c4703f" size="large" />
+        </View>
+      </View>
+    )
+  }
+
+  if (isError) {
+    return (
+      <View style={styles.container}>
+        <LinearGradient
+          colors={['#12100e', '#1a1714', '#12100e']}
+          style={StyleSheet.absoluteFill}
+        />
+        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+          <Text style={styles.headerTitle}>Notifications</Text>
+          <Pressable
+            onPress={() => router.back()}
+            style={styles.closeButton}
+            accessibilityLabel="Close"
+            accessibilityRole="button"
+          >
+            <X size={20} color="#7a6f62" />
+          </Pressable>
+        </View>
+        <View style={styles.emptyContainer}>
+          <View style={styles.emptyIcon}>
+            <AlertTriangle size={32} color="#d4836b" />
+          </View>
+          <Text style={styles.emptyTitle}>Something went wrong</Text>
+          <Text style={styles.emptySubtitle}>
+            We couldn't load your notifications.
+          </Text>
+          <Pressable
+            onPress={() => refetch()}
+            style={styles.markAllButton}
+            accessibilityLabel="Try again"
+            accessibilityRole="button"
+          >
+            <Text style={styles.markAllText}>Try again</Text>
+          </Pressable>
         </View>
       </View>
     )
@@ -306,11 +350,18 @@ export default function NotificationInboxScreen() {
               onPress={handleMarkAllRead}
               style={styles.markAllButton}
               disabled={markAllRead.isPending}
+              accessibilityLabel="Mark all as read"
+              accessibilityRole="button"
             >
               <Text style={styles.markAllText}>Mark all as read</Text>
             </Pressable>
           )}
-          <Pressable onPress={() => router.back()} style={styles.closeButton}>
+          <Pressable
+            onPress={() => router.back()}
+            style={styles.closeButton}
+            accessibilityLabel="Close"
+            accessibilityRole="button"
+          >
             <X size={20} color="#7a6f62" />
           </Pressable>
         </View>

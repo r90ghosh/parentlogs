@@ -127,6 +127,49 @@ export function useDeleteNotification() {
   return useMutation({
     mutationFn: (notificationId: string) =>
       notificationHistoryService.deleteNotification(notificationId),
+    onMutate: async (notificationId) => {
+      await queryClient.cancelQueries({ queryKey: ['notifications'] })
+
+      const previousFeed = queryClient.getQueriesData<Notification[]>({
+        queryKey: ['notifications', 'feed'],
+      })
+      const previousCount = queryClient.getQueryData<number>([
+        'notifications',
+        'unread-count',
+      ])
+
+      let wasUnread = false
+      queryClient.setQueriesData<Notification[]>(
+        { queryKey: ['notifications', 'feed'] },
+        (old) => {
+          const target = old?.find((n) => n.id === notificationId)
+          if (target && !target.is_read) wasUnread = true
+          return old?.filter((n) => n.id !== notificationId)
+        }
+      )
+
+      if (wasUnread) {
+        queryClient.setQueryData<number>(
+          ['notifications', 'unread-count'],
+          (old) => Math.max(0, (old ?? 1) - 1)
+        )
+      }
+
+      return { previousFeed, previousCount }
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previousFeed) {
+        context.previousFeed.forEach(([key, data]) => {
+          queryClient.setQueryData(key, data)
+        })
+      }
+      if (context?.previousCount !== undefined) {
+        queryClient.setQueryData(
+          ['notifications', 'unread-count'],
+          context.previousCount
+        )
+      }
+    },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] })
     },

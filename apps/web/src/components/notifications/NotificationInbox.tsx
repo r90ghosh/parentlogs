@@ -50,6 +50,10 @@ export function NotificationInbox() {
   const [activeFilter, setActiveFilter] = useState(0)
   const activeTypes = FILTER_OPTIONS[activeFilter].types as string[] | undefined
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [activeFilter])
+
   const {
     data,
     isLoading,
