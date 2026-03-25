@@ -12,9 +12,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useQueryClient } from '@tanstack/react-query'
-import { ChevronLeft, ChevronRight } from 'lucide-react-native'
+import { ChevronLeft, ChevronRight, Check, Square } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useBriefingByWeek } from '@/hooks/use-briefings'
+import { useTasks, useCompleteTask } from '@/hooks/use-tasks'
 import { isPregnancyStage } from '@tdc/shared/utils/pregnancy-utils'
 import {
   getBabySize,
@@ -23,8 +24,9 @@ import {
 } from '@tdc/shared/utils/baby-sizes'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance, StaggerList } from '@/components/animations'
-import { BriefingSection, FieldNotesCallout } from '@/components/briefing'
+import { BriefingSection, FieldNotesCallout, BriefingProgressBar } from '@/components/briefing'
 import type { FamilyStage } from '@tdc/shared/types'
+import { startOfWeek, endOfWeek, isWithinInterval, parseISO } from 'date-fns'
 
 export default function BriefingWeekScreen() {
   const { weekId } = useLocalSearchParams<{ weekId: string }>()
@@ -42,8 +44,22 @@ export default function BriefingWeekScreen() {
   const [refreshing, setRefreshing] = useState(false)
 
   const { data: briefing, isLoading } = useBriefingByWeek(stage, week)
+  const { data: allTasks } = useTasks()
+  const completeTask = useCompleteTask()
   const babySize = isPregnancy ? getBabySize(week) : undefined
   const role = profile?.role ?? 'dad'
+
+  // Filter tasks due this calendar week
+  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
+  const weekEnd = endOfWeek(new Date(), { weekStartsOn: 1 })
+  const thisWeekTasks = (allTasks ?? []).filter((task) => {
+    if (!task.due_date) return false
+    try {
+      return isWithinInterval(parseISO(task.due_date), { start: weekStart, end: weekEnd })
+    } catch {
+      return false
+    }
+  })
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true)
@@ -142,6 +158,7 @@ export default function BriefingWeekScreen() {
                   )}
                 </Text>
                 <Text style={styles.heroTitle}>{briefing.title}</Text>
+                <BriefingProgressBar week={week} isPregnancy={isPregnancy} />
                 {babySize && (
                   <View style={styles.babySizeRow}>
                     <Text style={styles.babySizeEmoji}>{babySize.emoji}</Text>
@@ -211,6 +228,42 @@ export default function BriefingWeekScreen() {
                 </BriefingSection>
               )}
             </StaggerList>
+
+            {thisWeekTasks.length > 0 && (
+              <BriefingSection
+                title="This Week's Tasks"
+                icon="✅"
+                accentColor="#c4703f"
+              >
+                {thisWeekTasks.map((task) => (
+                  <Pressable
+                    key={task.id}
+                    onPress={() => completeTask.mutate(task.id)}
+                    style={weekTaskStyles.row}
+                  >
+                    <View
+                      style={[
+                        weekTaskStyles.checkbox,
+                        task.status === 'completed' && weekTaskStyles.checkboxChecked,
+                      ]}
+                    >
+                      {task.status === 'completed' && (
+                        <Check size={11} color="#12100e" />
+                      )}
+                    </View>
+                    <Text
+                      style={[
+                        weekTaskStyles.taskTitle,
+                        task.status === 'completed' && weekTaskStyles.taskTitleDone,
+                      ]}
+                      numberOfLines={2}
+                    >
+                      {task.title}
+                    </Text>
+                  </Pressable>
+                ))}
+              </BriefingSection>
+            )}
 
             {briefing.medical_source && (
               <CardEntrance delay={400}>
@@ -422,5 +475,42 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingHorizontal: 20,
     lineHeight: 16,
+  },
+})
+
+const weekTaskStyles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(237,230,220,0.06)',
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: '#4a4239',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 1,
+    flexShrink: 0,
+  },
+  checkboxChecked: {
+    backgroundColor: '#6b8f71',
+    borderColor: '#6b8f71',
+  },
+  taskTitle: {
+    flex: 1,
+    fontFamily: 'Jost-Regular',
+    fontSize: 14,
+    color: '#ede6dc',
+    lineHeight: 20,
+  },
+  taskTitleDone: {
+    textDecorationLine: 'line-through',
+    color: '#7a6f62',
   },
 })

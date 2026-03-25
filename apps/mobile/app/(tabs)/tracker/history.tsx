@@ -8,6 +8,10 @@ import {
   Alert,
   ActivityIndicator,
   StyleSheet,
+  Modal,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -16,6 +20,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import {
   ChevronLeft,
   Trash2,
+  Pencil,
   Baby,
   Milk,
   Moon,
@@ -27,13 +32,14 @@ import {
   Ruler,
   Star,
   Plus,
+  X,
 } from 'lucide-react-native'
 import { format, isToday, isYesterday } from 'date-fns'
 import * as Haptics from 'expo-haptics'
-import { useTrackerLogs, useDeleteLog } from '@/hooks/use-tracker'
+import { useTrackerLogs, useDeleteLog, useUpdateLog } from '@/hooks/use-tracker'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance, StaggerList } from '@/components/animations'
-import type { LogType } from '@tdc/shared/types'
+import type { LogType, BabyLog } from '@tdc/shared/types'
 
 interface LogTypeConfig {
   icon: typeof Milk
@@ -104,9 +110,12 @@ export default function HistoryScreen() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const deleteLog = useDeleteLog()
+  const updateLog = useUpdateLog()
 
   const [typeFilter, setTypeFilter] = useState<LogType | 'all'>('all')
   const [refreshing, setRefreshing] = useState(false)
+  const [editingLog, setEditingLog] = useState<BabyLog | null>(null)
+  const [editNotes, setEditNotes] = useState('')
 
   const { data: logs, isLoading } = useTrackerLogs({
     log_type: typeFilter === 'all' ? undefined : typeFilter,
@@ -131,6 +140,40 @@ export default function HistoryScreen() {
         },
       },
     ])
+  }
+
+  const handleLongPress = (log: BabyLog) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+    Alert.alert(
+      'Log Options',
+      undefined,
+      [
+        {
+          text: 'Edit Notes',
+          onPress: () => {
+            setEditingLog(log)
+            setEditNotes(log.notes ?? '')
+          },
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => handleDelete(log.id),
+        },
+        { text: 'Cancel', style: 'cancel' },
+      ]
+    )
+  }
+
+  const handleSaveEdit = () => {
+    if (!editingLog) return
+    updateLog.mutate(
+      { id: editingLog.id, updates: { notes: editNotes } },
+      {
+        onSuccess: () => setEditingLog(null),
+        onError: () => Alert.alert('Error', 'Failed to update log.'),
+      }
+    )
   }
 
   // Group logs by date
@@ -254,46 +297,162 @@ export default function HistoryScreen() {
                     LOG_TYPE_CONFIG.custom
                   const Icon = config.icon
                   return (
-                    <GlassCard key={log.id} style={styles.logEntry}>
-                      <View
-                        style={[
-                          styles.logEntryIcon,
-                          { backgroundColor: config.bgColor },
-                        ]}
-                      >
-                        <Icon size={16} color={config.color} />
-                      </View>
-                      <View style={styles.logEntryContent}>
-                        <View style={styles.logEntryTop}>
-                          <Text style={styles.logEntryType}>
-                            {config.label}
-                          </Text>
-                          <Text style={styles.logEntryTime}>
-                            {format(new Date(log.logged_at), 'h:mm a')}
+                    <Pressable
+                      key={log.id}
+                      onLongPress={() => handleLongPress(log as BabyLog)}
+                      delayLongPress={400}
+                    >
+                      <GlassCard style={styles.logEntry}>
+                        <View
+                          style={[
+                            styles.logEntryIcon,
+                            { backgroundColor: config.bgColor },
+                          ]}
+                        >
+                          <Icon size={16} color={config.color} />
+                        </View>
+                        <View style={styles.logEntryContent}>
+                          <View style={styles.logEntryTop}>
+                            <Text style={styles.logEntryType}>
+                              {config.label}
+                            </Text>
+                            <Text style={styles.logEntryTime}>
+                              {format(new Date(log.logged_at), 'h:mm a')}
+                            </Text>
+                          </View>
+                          <Text style={styles.logEntryDetail} numberOfLines={2}>
+                            {formatLogDetails(log)}
+                            {log.notes ? ` - ${log.notes}` : ''}
                           </Text>
                         </View>
-                        <Text style={styles.logEntryDetail} numberOfLines={2}>
-                          {formatLogDetails(log)}
-                          {log.notes ? ` - ${log.notes}` : ''}
-                        </Text>
-                      </View>
-                      <Pressable
-                        onPress={() => handleDelete(log.id)}
-                        style={styles.deleteButton}
-                        hitSlop={8}
-                      >
-                        <Trash2 size={16} color="#d4836b" />
-                      </Pressable>
-                    </GlassCard>
+                        <Pressable
+                          onPress={() => handleDelete(log.id)}
+                          style={styles.deleteButton}
+                          hitSlop={8}
+                        >
+                          <Trash2 size={16} color="#d4836b" />
+                        </Pressable>
+                      </GlassCard>
+                    </Pressable>
                   )
                 })}
               </StaggerList>
             </View>
           ))}
       </ScrollView>
+
+      {/* Edit Notes Modal */}
+      <Modal
+        visible={!!editingLog}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setEditingLog(null)}
+      >
+        <KeyboardAvoidingView
+          style={historyEditStyles.overlay}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <View style={historyEditStyles.sheet}>
+            <View style={historyEditStyles.sheetHeader}>
+              <Text style={historyEditStyles.sheetTitle}>Edit Notes</Text>
+              <Pressable
+                onPress={() => setEditingLog(null)}
+                style={historyEditStyles.closeBtn}
+              >
+                <X size={20} color="#7a6f62" />
+              </Pressable>
+            </View>
+            <TextInput
+              style={historyEditStyles.notesInput}
+              value={editNotes}
+              onChangeText={setEditNotes}
+              placeholder="Add notes..."
+              placeholderTextColor="#4a4239"
+              multiline
+              maxLength={500}
+              textAlignVertical="top"
+            />
+            <Pressable
+              onPress={handleSaveEdit}
+              style={[
+                historyEditStyles.saveBtn,
+                updateLog.isPending && historyEditStyles.saveBtnDisabled,
+              ]}
+              disabled={updateLog.isPending}
+            >
+              <Text style={historyEditStyles.saveBtnText}>
+                {updateLog.isPending ? 'Saving...' : 'Save'}
+              </Text>
+            </Pressable>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </View>
   )
 }
+
+const historyEditStyles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+  },
+  sheet: {
+    backgroundColor: '#201c18',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 24,
+    paddingBottom: 40,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(237,230,220,0.08)',
+  },
+  sheetHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  sheetTitle: {
+    fontFamily: 'PlayfairDisplay-Bold',
+    fontSize: 18,
+    color: '#faf6f0',
+  },
+  closeBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(237,230,220,0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  notesInput: {
+    backgroundColor: 'rgba(237,230,220,0.05)',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(237,230,220,0.10)',
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontFamily: 'Jost-Regular',
+    fontSize: 15,
+    color: '#faf6f0',
+    minHeight: 100,
+    marginBottom: 16,
+  },
+  saveBtn: {
+    backgroundColor: '#c4703f',
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  saveBtnDisabled: {
+    opacity: 0.5,
+  },
+  saveBtnText: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 16,
+    color: '#faf6f0',
+  },
+})
 
 const styles = StyleSheet.create({
   container: {

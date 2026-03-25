@@ -7,6 +7,7 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  Alert,
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -26,6 +27,7 @@ import {
   Stethoscope,
   Car,
   Shirt,
+  RotateCcw,
 } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
@@ -33,6 +35,7 @@ import {
   useChecklists,
   useChecklistById,
   useToggleChecklistItem,
+  useResetChecklist,
 } from '@/hooks/use-checklists'
 import type { ChecklistWithItems } from '@tdc/services'
 import * as Haptics from 'expo-haptics'
@@ -64,7 +67,26 @@ interface ChecklistCardProps {
 
 function ChecklistCard({ checklist, isExpanded, onToggle }: ChecklistCardProps) {
   const toggleItem = useToggleChecklistItem()
+  const resetChecklist = useResetChecklist()
   const detailQuery = useChecklistById(isExpanded ? checklist.checklist_id : '')
+
+  function handleReset() {
+    Alert.alert(
+      'Reset Checklist?',
+      'This will uncheck all items. This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Reset',
+          style: 'destructive',
+          onPress: () => {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)
+            resetChecklist.mutate(checklist.checklist_id)
+          },
+        },
+      ]
+    )
+  }
   const Icon = getCategoryIcon(checklist.name)
 
   const items = isExpanded && detailQuery.data?.items
@@ -102,6 +124,19 @@ function ChecklistCard({ checklist, isExpanded, onToggle }: ChecklistCardProps) 
           </Text>
         </View>
         <View style={styles.checklistRight}>
+          {/* Reset button (only when completed > 0 and not locked) */}
+          {!checklist.is_locked && checklist.progress.completed > 0 && (
+            <Pressable
+              onPress={(e) => {
+                e.stopPropagation?.()
+                handleReset()
+              }}
+              hitSlop={8}
+              style={styles.resetButton}
+            >
+              <RotateCcw size={14} color="#d4836b" />
+            </Pressable>
+          )}
           {/* Progress circle */}
           <View style={styles.progressCircle}>
             <Text style={styles.progressText}>
@@ -357,6 +392,14 @@ const styles = StyleSheet.create({
   checklistRight: {
     alignItems: 'center',
     gap: 4,
+  },
+  resetButton: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(212,131,107,0.10)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   // Progress

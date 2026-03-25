@@ -40,6 +40,25 @@ export function useAddToBudget() {
   })
 }
 
+export function useAddCustomBudgetItem() {
+  const queryClient = useQueryClient()
+  const { family } = useAuth()
+  return useMutation({
+    mutationFn: ({
+      item,
+      category,
+      estimatedPrice,
+    }: {
+      item: string
+      category: string
+      estimatedPrice: number
+    }) => budgetService.addCustomItem(item, category, estimatedPrice),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['budget-summary', family?.id] })
+    },
+  })
+}
+
 export function useTogglePurchased() {
   const queryClient = useQueryClient()
   const { family } = useAuth()

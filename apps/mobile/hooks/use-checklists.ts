@@ -23,6 +23,21 @@ export function useChecklistById(checklistId: string) {
   })
 }
 
+export function useResetChecklist() {
+  const queryClient = useQueryClient()
+  const { family } = useAuth()
+  return useMutation({
+    mutationFn: (checklistId: string) =>
+      checklistService.resetChecklist(checklistId),
+    onSuccess: (_, checklistId) => {
+      queryClient.invalidateQueries({
+        queryKey: ['checklist', checklistId, family?.id],
+      })
+      queryClient.invalidateQueries({ queryKey: ['checklists', family?.id] })
+    },
+  })
+}
+
 export function useToggleChecklistItem() {
   const queryClient = useQueryClient()
   const { family } = useAuth()

@@ -22,6 +22,10 @@ import {
   Crown,
   Star,
   Moon,
+  Mail,
+  CalendarCheck,
+  Activity,
+  Repeat,
 } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
@@ -81,6 +85,12 @@ interface Preferences {
   quiet_hours_enabled: boolean
   quiet_hours_start: string
   quiet_hours_end: string
+  // Email notification preferences (UI-only toggles, saved alongside push prefs)
+  email_weekly_briefing: boolean
+  email_overdue_digest: boolean
+  email_milestone_alerts: boolean
+  email_lifecycle_updates: boolean
+  email_re_engagement: boolean
 }
 
 const DEFAULT_PREFS: Preferences = {
@@ -94,6 +104,11 @@ const DEFAULT_PREFS: Preferences = {
   quiet_hours_enabled: false,
   quiet_hours_start: '22:00',
   quiet_hours_end: '07:00',
+  email_weekly_briefing: true,
+  email_overdue_digest: true,
+  email_milestone_alerts: true,
+  email_lifecycle_updates: false,
+  email_re_engagement: false,
 }
 
 export default function NotificationsScreen() {
@@ -120,6 +135,8 @@ export default function NotificationsScreen() {
           .maybeSingle()
 
         if (data) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- email prefs stored as JSON in extras column
+          const extras = (data as any).extras as Record<string, boolean> | null ?? {}
           setPrefs({
             push_enabled: data.push_enabled ?? true,
             task_reminders_7_day: data.task_reminders_7_day ?? true,
@@ -131,6 +148,11 @@ export default function NotificationsScreen() {
             quiet_hours_enabled: data.quiet_hours_enabled ?? false,
             quiet_hours_start: data.quiet_hours_start ?? '22:00',
             quiet_hours_end: data.quiet_hours_end ?? '07:00',
+            email_weekly_briefing: extras.email_weekly_briefing ?? true,
+            email_overdue_digest: extras.email_overdue_digest ?? true,
+            email_milestone_alerts: extras.email_milestone_alerts ?? true,
+            email_lifecycle_updates: extras.email_lifecycle_updates ?? false,
+            email_re_engagement: extras.email_re_engagement ?? false,
           })
         }
       } catch {
@@ -177,14 +199,42 @@ export default function NotificationsScreen() {
 
       setSaving(true)
       try {
-        await supabase.from('notification_preferences').upsert(
-          {
-            user_id: user.id,
-            [key]: value,
-            updated_at: new Date().toISOString(),
-          },
-          { onConflict: 'user_id' }
-        )
+        const emailKeys = [
+          'email_weekly_briefing',
+          'email_overdue_digest',
+          'email_milestone_alerts',
+          'email_lifecycle_updates',
+          'email_re_engagement',
+        ] as const
+
+        if ((emailKeys as readonly string[]).includes(key)) {
+          // Email prefs: store in extras JSON column
+          const { data: existing } = await supabase
+            .from('notification_preferences')
+            .select('extras')
+            .eq('user_id', user.id)
+            .maybeSingle()
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const currentExtras = ((existing as any)?.extras as Record<string, boolean>) ?? {}
+          await supabase.from('notification_preferences').upsert(
+            {
+              user_id: user.id,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              extras: { ...currentExtras, [key]: value } as any,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: 'user_id' }
+          )
+        } else {
+          await supabase.from('notification_preferences').upsert(
+            {
+              user_id: user.id,
+              [key]: value,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: 'user_id' }
+          )
+        }
       } catch {
         // Revert on failure
         setPrefs(prefs)
@@ -375,6 +425,48 @@ export default function NotificationsScreen() {
                 </View>
               </View>
             )}
+          </GlassCard>
+        </CardEntrance>
+
+        {/* Email Notifications */}
+        <CardEntrance delay={460}>
+          <Text style={styles.sectionTitle}>Email Notifications</Text>
+          <GlassCard style={styles.section}>
+            <NotificationToggle
+              icon={<BookOpen size={18} color="#5b9bd5" />}
+              label="Weekly Briefing"
+              description="Receive your weekly briefing by email"
+              value={prefs.email_weekly_briefing}
+              onToggle={(v) => updatePref('email_weekly_briefing', v)}
+            />
+            <NotificationToggle
+              icon={<CheckSquare size={18} color="#d4836b" />}
+              label="Overdue Task Digest"
+              description="Email digest of tasks that need attention"
+              value={prefs.email_overdue_digest}
+              onToggle={(v) => updatePref('email_overdue_digest', v)}
+            />
+            <NotificationToggle
+              icon={<CalendarCheck size={18} color="#d4a853" />}
+              label="Milestone Alerts"
+              description="Email alerts for baby milestones"
+              value={prefs.email_milestone_alerts}
+              onToggle={(v) => updatePref('email_milestone_alerts', v)}
+            />
+            <NotificationToggle
+              icon={<Activity size={18} color="#6b8f71" />}
+              label="Lifecycle Updates"
+              description="Important app updates and new features"
+              value={prefs.email_lifecycle_updates}
+              onToggle={(v) => updatePref('email_lifecycle_updates', v)}
+            />
+            <NotificationToggle
+              icon={<Repeat size={18} color="#7a6f62" />}
+              label="Re-engagement"
+              description="Gentle reminders when you haven't checked in"
+              value={prefs.email_re_engagement}
+              onToggle={(v) => updatePref('email_re_engagement', v)}
+            />
           </GlassCard>
         </CardEntrance>
 

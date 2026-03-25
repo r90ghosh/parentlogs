@@ -59,3 +59,20 @@ export function useDeleteLog() {
     },
   })
 }
+
+export function useUpdateLog() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      id,
+      updates,
+    }: {
+      id: string
+      updates: Partial<Pick<import('@tdc/shared/types').BabyLog, 'log_type' | 'log_data' | 'logged_at' | 'notes'>>
+    }) => trackerService.updateLog(id, updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tracker-logs'] })
+      queryClient.invalidateQueries({ queryKey: ['shift-briefing'] })
+    },
+  })
+}

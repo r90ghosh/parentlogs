@@ -8,6 +8,11 @@ import {
   ActivityIndicator,
   RefreshControl,
   ScrollView,
+  Modal,
+  TextInput,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -23,12 +28,22 @@ import {
 } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
-import { BrandRecommendationSheet } from '@/components/budget/BrandRecommendationSheet'
-import { useBudgetTemplates, useBudgetSummary, useAddToBudget, useTogglePurchased } from '@/hooks/use-budget'
+import {
+  useBudgetTemplates,
+  useBudgetSummary,
+  useAddToBudget,
+  useTogglePurchased,
+  useAddCustomBudgetItem,
+} from '@/hooks/use-budget'
 import { useAuth } from '@/components/providers/AuthProvider'
 import type { BudgetPeriod, BudgetPriority, BudgetTemplate, FamilyBudgetItem } from '@tdc/shared/types'
 import { BUDGET_TIMELINE_CATEGORIES } from '@tdc/shared/utils/budget-timeline'
 import * as Haptics from 'expo-haptics'
+
+const BUDGET_CATEGORIES = [
+  'Nursery', 'Feeding', 'Clothing', 'Gear', 'Safety', 'Health',
+  'Registry', 'Hospital', 'Travel', 'Other',
+]
 
 type TabMode = 'browse' | 'my-budget'
 type PriorityFilter = 'all' | BudgetPriority
@@ -48,12 +63,16 @@ export default function BudgetScreen() {
   const [selectedPeriod, setSelectedPeriod] = useState<BudgetPeriod | null>(null)
   const [activeTab, setActiveTab] = useState<TabMode>('browse')
   const [selectedPriority, setSelectedPriority] = useState<PriorityFilter>('all')
-  const [selectedItem, setSelectedItem] = useState<BudgetTemplate | null>(null)
+  const [showCustomModal, setShowCustomModal] = useState(false)
+  const [customItemName, setCustomItemName] = useState('')
+  const [customCategory, setCustomCategory] = useState(BUDGET_CATEGORIES[0])
+  const [customPrice, setCustomPrice] = useState('')
 
   const templatesQuery = useBudgetTemplates(selectedPeriod ?? undefined)
   const summaryQuery = useBudgetSummary()
   const addToBudget = useAddToBudget()
   const togglePurchased = useTogglePurchased()
+  const addCustomItem = useAddCustomBudgetItem()
 
   const isRefreshing = templatesQuery.isRefetching || summaryQuery.isRefetching
 
@@ -94,6 +113,36 @@ export default function BudgetScreen() {
     togglePurchased.mutate({ itemId, isPurchased: !currentlyPurchased })
   }
 
+  function handleSubmitCustomItem() {
+    const name = customItemName.trim()
+    const priceStr = customPrice.trim()
+    if (!name) {
+      Alert.alert('Item name is required')
+      return
+    }
+    const price = priceStr ? Math.round(parseFloat(priceStr) * 100) : 0
+    if (priceStr && isNaN(price)) {
+      Alert.alert('Enter a valid price')
+      return
+    }
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+    addCustomItem.mutate(
+      { item: name, category: customCategory, estimatedPrice: price },
+      {
+        onSuccess: () => {
+          setShowCustomModal(false)
+          setCustomItemName('')
+          setCustomPrice('')
+          setCustomCategory(BUDGET_CATEGORIES[0])
+          setActiveTab('my-budget')
+        },
+        onError: () => {
+          Alert.alert('Error', 'Failed to add custom item. Please try again.')
+        },
+      }
+    )
+  }
+
   function formatPrice(cents: number): string {
     if (cents === 0) return 'Free'
     return `$${Math.round(cents / 100)}`
@@ -109,7 +158,6 @@ export default function BudgetScreen() {
       const isAdded = addedTemplateIds.has(item.budget_id)
       const hasBrands = item.brand_premium || item.brand_value
       return (
-        <Pressable onPress={() => setSelectedItem(item)}>
         <GlassCard style={styles.budgetItemCard}>
           <View style={styles.budgetItemHeader}>
             <View style={styles.budgetItemInfo}>
@@ -171,7 +219,6 @@ export default function BudgetScreen() {
             )}
           </View>
         </GlassCard>
-        </Pressable>
       )
     },
     [addedTemplateIds, addToBudget.isPending]
@@ -288,47 +335,58 @@ export default function BudgetScreen() {
       </View>
 
       {/* Tab toggle */}
-      <View style={styles.tabContainer}>
-        <Pressable
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-            setActiveTab('browse')
-          }}
-          style={[styles.tab, activeTab === 'browse' && styles.tabActive]}
-        >
-          <ShoppingCart
-            size={14}
-            color={activeTab === 'browse' ? '#c4703f' : '#7a6f62'}
-          />
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === 'browse' && styles.tabTextActive,
-            ]}
+      <View style={styles.tabRow}>
+        <View style={styles.tabContainer}>
+          <Pressable
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+              setActiveTab('browse')
+            }}
+            style={[styles.tab, activeTab === 'browse' && styles.tabActive]}
           >
-            Browse
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-            setActiveTab('my-budget')
-          }}
-          style={[styles.tab, activeTab === 'my-budget' && styles.tabActive]}
-        >
-          <DollarSign
-            size={14}
-            color={activeTab === 'my-budget' ? '#c4703f' : '#7a6f62'}
-          />
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === 'my-budget' && styles.tabTextActive,
-            ]}
+            <ShoppingCart
+              size={14}
+              color={activeTab === 'browse' ? '#c4703f' : '#7a6f62'}
+            />
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === 'browse' && styles.tabTextActive,
+              ]}
+            >
+              Browse
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+              setActiveTab('my-budget')
+            }}
+            style={[styles.tab, activeTab === 'my-budget' && styles.tabActive]}
           >
-            My Budget
-          </Text>
-        </Pressable>
+            <DollarSign
+              size={14}
+              color={activeTab === 'my-budget' ? '#c4703f' : '#7a6f62'}
+            />
+            <Text
+              style={[
+                styles.tabText,
+                activeTab === 'my-budget' && styles.tabTextActive,
+              ]}
+            >
+              My Budget
+            </Text>
+          </Pressable>
+        </View>
+        {activeTab === 'my-budget' && (
+          <Pressable
+            onPress={() => setShowCustomModal(true)}
+            style={styles.addCustomButton}
+            accessibilityLabel="Add custom item"
+          >
+            <Plus size={16} color="#c4703f" />
+          </Pressable>
+        )}
       </View>
 
       {/* Timeline bar (browse mode only) */}
@@ -467,10 +525,91 @@ export default function BudgetScreen() {
         />
       )}
 
-      <BrandRecommendationSheet
-        item={selectedItem}
-        onClose={() => setSelectedItem(null)}
-      />
+      {/* Add Custom Item Modal */}
+      <Modal
+        visible={showCustomModal}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowCustomModal(false)}
+      >
+        <KeyboardAvoidingView
+          style={styles.modalOverlay}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <View style={styles.modalSheet}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Add Custom Item</Text>
+              <Pressable
+                onPress={() => setShowCustomModal(false)}
+                style={styles.modalClose}
+              >
+                <X size={20} color="#7a6f62" />
+              </Pressable>
+            </View>
+
+            <Text style={styles.inputLabel}>Item Name</Text>
+            <TextInput
+              style={styles.textInput}
+              value={customItemName}
+              onChangeText={setCustomItemName}
+              placeholder="e.g. Baby Monitor"
+              placeholderTextColor="#4a4239"
+              maxLength={80}
+            />
+
+            <Text style={styles.inputLabel}>Category</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.categoryPills}
+            >
+              {BUDGET_CATEGORIES.map((cat) => (
+                <Pressable
+                  key={cat}
+                  onPress={() => setCustomCategory(cat)}
+                  style={[
+                    styles.categoryPill,
+                    customCategory === cat && styles.categoryPillSelected,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.categoryPillText,
+                      customCategory === cat && styles.categoryPillTextSelected,
+                    ]}
+                  >
+                    {cat}
+                  </Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+
+            <Text style={styles.inputLabel}>Estimated Price (optional)</Text>
+            <TextInput
+              style={styles.textInput}
+              value={customPrice}
+              onChangeText={setCustomPrice}
+              placeholder="e.g. 49.99"
+              placeholderTextColor="#4a4239"
+              keyboardType="decimal-pad"
+              maxLength={10}
+            />
+
+            <Pressable
+              onPress={handleSubmitCustomItem}
+              style={[
+                styles.submitButton,
+                addCustomItem.isPending && styles.submitButtonDisabled,
+              ]}
+              disabled={addCustomItem.isPending}
+            >
+              <Text style={styles.submitButtonText}>
+                {addCustomItem.isPending ? 'Adding...' : 'Add to Budget'}
+              </Text>
+            </Pressable>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </View>
   )
 }
@@ -502,15 +641,31 @@ const styles = StyleSheet.create({
   },
 
   // Tab toggle
-  tabContainer: {
+  tabRow: {
     flexDirection: 'row',
-    marginHorizontal: 20,
+    alignItems: 'center',
+    paddingHorizontal: 20,
     marginBottom: 12,
+    gap: 8,
+  },
+  tabContainer: {
+    flex: 1,
+    flexDirection: 'row',
     backgroundColor: 'rgba(32,28,24,0.8)',
     borderRadius: 10,
     padding: 4,
     borderWidth: 1,
     borderColor: 'rgba(237,230,220,0.06)',
+  },
+  addCustomButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(196,112,63,0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(196,112,63,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   tab: {
     flex: 1,
@@ -819,5 +974,99 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 8,
     lineHeight: 16,
+  },
+
+  // Custom item modal
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+  },
+  modalSheet: {
+    backgroundColor: '#201c18',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 24,
+    paddingBottom: 40,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(237,230,220,0.08)',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontFamily: 'PlayfairDisplay-Bold',
+    fontSize: 18,
+    color: '#faf6f0',
+  },
+  modalClose: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(237,230,220,0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputLabel: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 12,
+    color: '#7a6f62',
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+    marginBottom: 8,
+    marginTop: 16,
+  },
+  textInput: {
+    backgroundColor: 'rgba(237,230,220,0.05)',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(237,230,220,0.10)',
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontFamily: 'Jost-Regular',
+    fontSize: 15,
+    color: '#faf6f0',
+  },
+  categoryPills: {
+    gap: 8,
+    paddingVertical: 4,
+  },
+  categoryPill: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 16,
+    backgroundColor: 'rgba(237,230,220,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(237,230,220,0.08)',
+  },
+  categoryPillSelected: {
+    backgroundColor: 'rgba(196,112,63,0.15)',
+    borderColor: '#c4703f',
+  },
+  categoryPillText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 13,
+    color: '#7a6f62',
+  },
+  categoryPillTextSelected: {
+    color: '#c4703f',
+  },
+  submitButton: {
+    marginTop: 24,
+    backgroundColor: '#c4703f',
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  submitButtonDisabled: {
+    opacity: 0.5,
+  },
+  submitButtonText: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 16,
+    color: '#faf6f0',
   },
 })

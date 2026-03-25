@@ -18,7 +18,6 @@ import { useAuth } from '@/components/providers/AuthProvider'
 import { useDashboardData } from '@/hooks/use-dashboard'
 import { useSubscriptionStatus } from '@/hooks/use-subscription'
 import { useBabies } from '@/hooks/use-babies'
-import { usePartnerActivity } from '@/hooks/use-family'
 import { CardEntrance } from '@/components/animations'
 import {
   MoodCheckinCard,
@@ -26,8 +25,13 @@ import {
   TasksDueCard,
   QuickActionsBar,
   BudgetSnapshotCard,
-  PartnerActivityCard,
+  ChecklistProgressCard,
+  OnYourMindCard,
+  PersonalizeCard,
+  UpgradePromptCard,
+  WelcomeCatchUpCard,
 } from '@/components/dashboard'
+import { useBacklogCount } from '@/hooks/use-triage'
 
 function getGreeting(): string {
   const hour = new Date().getHours()
@@ -48,7 +52,7 @@ export default function DashboardScreen() {
   const { tasksQuery, briefingQuery, moodQuery } = useDashboardData()
   const { data: subStatus } = useSubscriptionStatus()
   const { data: babies } = useBabies()
-  const { data: partnerActivity } = usePartnerActivity()
+  const { data: backlogCount } = useBacklogCount()
   const isPastDue = subStatus?.status === 'past_due'
 
   const isLoading = tasksQuery.isLoading && briefingQuery.isLoading
@@ -61,7 +65,10 @@ export default function DashboardScreen() {
     queryClient.invalidateQueries({ queryKey: ['mood-today'] })
     queryClient.invalidateQueries({ queryKey: ['subscription-status'] })
     queryClient.invalidateQueries({ queryKey: ['babies'] })
-    queryClient.invalidateQueries({ queryKey: ['partner-activity'] })
+    queryClient.invalidateQueries({ queryKey: ['backlog-count'] })
+    queryClient.invalidateQueries({ queryKey: ['checklists'] })
+    queryClient.invalidateQueries({ queryKey: ['dad-profile'] })
+    queryClient.invalidateQueries({ queryKey: ['dad-challenge-content'] })
   }, [queryClient])
 
   // Use active baby's current_week if available, fallback to family
@@ -133,22 +140,15 @@ export default function DashboardScreen() {
           </View>
         ) : (
           <View style={styles.cardsContainer}>
-            {/* 1. Mood Check-in */}
+            {/* 1. Mood Check-in (dad only) */}
             {profile?.role === 'dad' && (
               <CardEntrance delay={80}>
                 <MoodCheckinCard todaysCheckin={moodQuery.data} />
               </CardEntrance>
             )}
 
-            {/* 2. Partner Activity */}
-            {partnerActivity && (
-              <CardEntrance delay={160}>
-                <PartnerActivityCard data={partnerActivity} />
-              </CardEntrance>
-            )}
-
-            {/* 3. Briefing Teaser */}
-            <CardEntrance delay={240}>
+            {/* 2. Briefing Teaser */}
+            <CardEntrance delay={160}>
               <BriefingTeaserCard
                 briefing={briefingQuery.data}
                 currentWeek={currentWeek}
@@ -156,19 +156,50 @@ export default function DashboardScreen() {
               />
             </CardEntrance>
 
-            {/* 4. Tasks Due */}
-            <CardEntrance delay={320}>
+            {/* 3. Tasks Due */}
+            <CardEntrance delay={240}>
               <TasksDueCard tasks={tasksQuery.data} />
             </CardEntrance>
 
-            {/* 5. Quick Actions */}
-            <CardEntrance delay={400}>
+            {/* 4. Welcome Catch-Up (if backlog > 0) */}
+            {(backlogCount ?? 0) > 0 && (
+              <CardEntrance delay={320}>
+                <WelcomeCatchUpCard />
+              </CardEntrance>
+            )}
+
+            {/* 5. On Your Mind (dad only) */}
+            {profile?.role === 'dad' && (
+              <CardEntrance delay={400}>
+                <OnYourMindCard />
+              </CardEntrance>
+            )}
+
+            {/* 6. Quick Actions */}
+            <CardEntrance delay={480}>
               <QuickActionsBar />
             </CardEntrance>
 
-            {/* 6. Budget Snapshot */}
-            <CardEntrance delay={480}>
+            {/* 7. Personalize Card (dad only, if no profile) */}
+            {profile?.role === 'dad' && (
+              <CardEntrance delay={560}>
+                <PersonalizeCard />
+              </CardEntrance>
+            )}
+
+            {/* 8. Budget Snapshot */}
+            <CardEntrance delay={640}>
               <BudgetSnapshotCard />
+            </CardEntrance>
+
+            {/* 9. Checklist Progress */}
+            <CardEntrance delay={720}>
+              <ChecklistProgressCard />
+            </CardEntrance>
+
+            {/* 10. Upgrade Prompt (free tier only) */}
+            <CardEntrance delay={800}>
+              <UpgradePromptCard />
             </CardEntrance>
           </View>
         )}

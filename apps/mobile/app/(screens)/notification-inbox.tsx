@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   RefreshControl,
+  Alert,
 } from 'react-native'
 import Animated, {
   useAnimatedStyle,
@@ -44,6 +45,7 @@ import {
   useMarkNotificationRead,
   useMarkAllNotificationsRead,
   useDeleteNotification,
+  useDeleteReadNotifications,
 } from '@/hooks/use-notifications'
 
 const DELETE_THRESHOLD = 80
@@ -233,6 +235,7 @@ export default function NotificationInboxScreen() {
   const markRead = useMarkNotificationRead()
   const markAllRead = useMarkAllNotificationsRead()
   const deleteNotification = useDeleteNotification()
+  const deleteReadNotifications = useDeleteReadNotifications()
 
   const groups = useMemo(
     () => groupNotifications(notifications ?? []),
@@ -240,6 +243,25 @@ export default function NotificationInboxScreen() {
   )
 
   const hasUnread = (unreadCount ?? 0) > 0
+  const hasRead = (notifications ?? []).some((n) => n.is_read)
+
+  const handleClearRead = useCallback(() => {
+    Alert.alert(
+      'Clear Read Notifications?',
+      'All read notifications will be permanently deleted.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Clear',
+          style: 'destructive',
+          onPress: () => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+            deleteReadNotifications.mutate()
+          },
+        },
+      ]
+    )
+  }, [deleteReadNotifications])
 
   const handlePress = useCallback(
     (notification: Notification) => {
@@ -345,6 +367,18 @@ export default function NotificationInboxScreen() {
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
         <Text style={styles.headerTitle}>Notifications</Text>
         <View style={styles.headerRight}>
+          {hasRead && (
+            <Pressable
+              onPress={handleClearRead}
+              style={styles.clearReadButton}
+              disabled={deleteReadNotifications.isPending}
+              accessibilityLabel="Clear read notifications"
+              accessibilityRole="button"
+            >
+              <Trash2 size={14} color="#7a6f62" />
+              <Text style={styles.clearReadText}>Clear read</Text>
+            </Pressable>
+          )}
           {hasUnread && (
             <Pressable
               onPress={handleMarkAllRead}
@@ -447,6 +481,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+  },
+  clearReadButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    backgroundColor: 'rgba(237,230,220,0.06)',
+  },
+  clearReadText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 12,
+    color: '#7a6f62',
   },
   markAllButton: {
     paddingVertical: 6,
