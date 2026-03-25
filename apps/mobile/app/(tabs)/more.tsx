@@ -21,6 +21,7 @@ import {
   Palette,
   BookOpen,
   Receipt,
+  MessageSquarePlus,
 } from 'lucide-react-native'
 import * as WebBrowser from 'expo-web-browser'
 import { useAuth } from '@/components/providers/AuthProvider'
@@ -187,6 +188,11 @@ export default function MoreScreen() {
               icon={<HelpCircle size={20} color="#6b8f71" />}
               label="Help & Support"
               onPress={() => router.push('/(screens)/help')}
+            />
+            <MenuItem
+              icon={<MessageSquarePlus size={20} color="#c4703f" />}
+              label="Send Feedback"
+              onPress={() => router.push('/(screens)/feedback')}
             />
           </GlassCard>
         </CardEntrance>

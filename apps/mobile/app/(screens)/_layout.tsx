@@ -31,6 +31,8 @@ export default function ScreensLayout() {
       <Stack.Screen name="faq" />
       <Stack.Screen name="appearance" />
       <Stack.Screen name="upgrade-success" />
+      <Stack.Screen name="feedback" />
+      <Stack.Screen name="personalize" />
     </Stack>
   )
 }
