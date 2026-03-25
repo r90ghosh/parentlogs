@@ -10,7 +10,8 @@ import {
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
-import { Plus } from 'lucide-react-native'
+import { Plus, CalendarDays, LayoutList } from 'lucide-react-native'
+import { TaskCalendar } from '@/components/tasks/TaskCalendar'
 import { useRouter } from 'expo-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/AuthProvider'
@@ -51,6 +52,7 @@ export default function TasksScreen() {
   const [activeTab, setActiveTab] = useState<TaskTab>('active')
   const [statFilter, setStatFilter] = useState<StatFilter | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<TimelineCategory | null>(null)
+  const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list')
 
   const { data: tasks, isLoading, isRefetching } = useTasks()
   const completeTask = useCompleteTask()
@@ -243,7 +245,19 @@ export default function TasksScreen() {
 
       {/* Sticky header area */}
       <View style={[styles.headerArea, { paddingTop: 12 }]}>
-        <Text style={styles.pageTitle}>Tasks</Text>
+        <View style={styles.pageTitleRow}>
+          <Text style={styles.pageTitle}>Tasks</Text>
+          <Pressable
+            onPress={() => setViewMode(viewMode === 'list' ? 'calendar' : 'list')}
+            style={styles.viewToggleButton}
+          >
+            {viewMode === 'list' ? (
+              <CalendarDays size={20} color="#7a6f62" />
+            ) : (
+              <LayoutList size={20} color="#c4703f" />
+            )}
+          </Pressable>
+        </View>
 
         {/* Stats Row */}
         <TaskStatsRow
@@ -309,6 +323,12 @@ export default function TasksScreen() {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#c4703f" />
         </View>
+      ) : viewMode === 'calendar' ? (
+        <TaskCalendar
+          tasks={allTasks}
+          onComplete={handleComplete}
+          onSnooze={handleSnooze}
+        />
       ) : (
         <ScrollView
           style={styles.scrollView}
@@ -580,12 +600,25 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(237,230,220,0.06)',
   },
+  pageTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    marginBottom: 16,
+  },
   pageTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 28,
     color: '#faf6f0',
-    marginBottom: 16,
-    paddingHorizontal: 20,
+  },
+  viewToggleButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(237,230,220,0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   filterTabsWrap: {
     marginTop: 14,

@@ -23,6 +23,7 @@ import {
 } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
+import { BrandRecommendationSheet } from '@/components/budget/BrandRecommendationSheet'
 import { useBudgetTemplates, useBudgetSummary, useAddToBudget, useTogglePurchased } from '@/hooks/use-budget'
 import { useAuth } from '@/components/providers/AuthProvider'
 import type { BudgetPeriod, BudgetPriority, BudgetTemplate, FamilyBudgetItem } from '@tdc/shared/types'
@@ -47,6 +48,7 @@ export default function BudgetScreen() {
   const [selectedPeriod, setSelectedPeriod] = useState<BudgetPeriod | null>(null)
   const [activeTab, setActiveTab] = useState<TabMode>('browse')
   const [selectedPriority, setSelectedPriority] = useState<PriorityFilter>('all')
+  const [selectedItem, setSelectedItem] = useState<BudgetTemplate | null>(null)
 
   const templatesQuery = useBudgetTemplates(selectedPeriod ?? undefined)
   const summaryQuery = useBudgetSummary()
@@ -107,6 +109,7 @@ export default function BudgetScreen() {
       const isAdded = addedTemplateIds.has(item.budget_id)
       const hasBrands = item.brand_premium || item.brand_value
       return (
+        <Pressable onPress={() => setSelectedItem(item)}>
         <GlassCard style={styles.budgetItemCard}>
           <View style={styles.budgetItemHeader}>
             <View style={styles.budgetItemInfo}>
@@ -168,6 +171,7 @@ export default function BudgetScreen() {
             )}
           </View>
         </GlassCard>
+        </Pressable>
       )
     },
     [addedTemplateIds, addToBudget.isPending]
@@ -462,6 +466,11 @@ export default function BudgetScreen() {
           }
         />
       )}
+
+      <BrandRecommendationSheet
+        item={selectedItem}
+        onClose={() => setSelectedItem(null)}
+      />
     </View>
   )
 }

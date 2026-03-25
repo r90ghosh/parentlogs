@@ -18,7 +18,11 @@ import {
   HelpCircle,
   Info,
   MessageCircleQuestion,
+  Palette,
+  BookOpen,
+  Receipt,
 } from 'lucide-react-native'
+import * as WebBrowser from 'expo-web-browser'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
@@ -125,6 +129,16 @@ export default function MoreScreen() {
               label="Articles"
               onPress={() => router.push('/(screens)/content')}
             />
+            <MenuItem
+              icon={<BookOpen size={20} color="#5b9bd5" />}
+              label="Dad Tips"
+              onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/resources')}
+            />
+            <MenuItem
+              icon={<Receipt size={20} color="#d4a853" />}
+              label="Budget Guide"
+              onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/resources')}
+            />
           </GlassCard>
         </CardEntrance>
 
@@ -153,6 +167,11 @@ export default function MoreScreen() {
               icon={<User size={20} color="#ede6dc" />}
               label="Profile"
               onPress={() => router.push('/(screens)/settings')}
+            />
+            <MenuItem
+              icon={<Palette size={20} color="#c4703f" />}
+              label="Appearance"
+              onPress={() => router.push('/(screens)/appearance')}
             />
             <MenuItem
               icon={<Bell size={20} color="#5b9bd5" />}

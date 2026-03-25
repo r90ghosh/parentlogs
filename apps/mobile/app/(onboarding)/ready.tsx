@@ -1,18 +1,28 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native'
+import { View, Text, Pressable, StyleSheet, Share } from 'react-native'
 import { useRouter } from 'expo-router'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useAuth } from '@/components/providers/AuthProvider'
 import * as Haptics from 'expo-haptics'
 import Animated, { FadeInDown } from 'react-native-reanimated'
+import { GlassCard } from '@/components/glass'
+import { UserPlus } from 'lucide-react-native'
 
 export default function ReadyScreen() {
   const router = useRouter()
-  const { refreshProfile } = useAuth()
+  const { refreshProfile, family } = useAuth()
 
   const handleStart = async () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
     await refreshProfile()
     router.replace('/(tabs)')
+  }
+
+  const handleShareInvite = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+    const message = family?.invite_code
+      ? `Join me on The Dad Center! Use invite code: ${family.invite_code}`
+      : 'Join me on The Dad Center — the app for modern parents. Download at thedadcenter.com'
+    await Share.share({ message })
   }
 
   return (
@@ -57,8 +67,36 @@ export default function ReadyScreen() {
           ))}
         </Animated.View>
 
+        {/* Partner invite section */}
         <Animated.View
-          entering={FadeInDown.delay(800).springify().damping(12)}
+          entering={FadeInDown.delay(750).springify().damping(12)}
+          style={styles.inviteContainer}
+        >
+          <GlassCard style={styles.inviteCard}>
+            <View style={styles.inviteAccent} />
+            <View style={styles.inviteInner}>
+              <View style={styles.inviteHeader}>
+                <UserPlus size={18} color="#d4a853" />
+                <Text style={styles.inviteTitle}>Invite Your Partner</Text>
+              </View>
+              <Text style={styles.inviteSubtitle}>
+                Share access — one subscription covers both of you
+              </Text>
+              <Pressable
+                onPress={handleShareInvite}
+                style={({ pressed }) => [
+                  styles.shareButton,
+                  pressed && styles.shareButtonPressed,
+                ]}
+              >
+                <Text style={styles.shareButtonText}>Share Invite</Text>
+              </Pressable>
+            </View>
+          </GlassCard>
+        </Animated.View>
+
+        <Animated.View
+          entering={FadeInDown.delay(900).springify().damping(12)}
         >
           <Pressable
             onPress={handleStart}
@@ -67,7 +105,7 @@ export default function ReadyScreen() {
               pressed && styles.buttonPressed,
             ]}
           >
-            <Text style={styles.buttonText}>Let's Go</Text>
+            <Text style={styles.buttonText}>I'm Ready</Text>
           </Pressable>
           <Text style={styles.disclaimerText}>
             The Dad Center provides educational information only and is not a substitute for medical advice. Always consult your healthcare provider.
@@ -121,8 +159,61 @@ const styles = StyleSheet.create({
   },
   features: {
     marginTop: 36,
-    marginBottom: 40,
+    marginBottom: 20,
     gap: 16,
+  },
+  inviteContainer: {
+    marginBottom: 16,
+  },
+  inviteCard: {
+    overflow: 'hidden',
+    flexDirection: 'row',
+    padding: 0,
+    borderColor: 'rgba(212,168,83,0.2)',
+  },
+  inviteAccent: {
+    width: 3,
+    backgroundColor: '#d4a853',
+    borderTopLeftRadius: 12,
+    borderBottomLeftRadius: 12,
+  },
+  inviteInner: {
+    flex: 1,
+    padding: 16,
+  },
+  inviteHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 6,
+  },
+  inviteTitle: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 16,
+    color: '#faf6f0',
+  },
+  inviteSubtitle: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 14,
+    color: '#7a6f62',
+    marginBottom: 14,
+    lineHeight: 20,
+  },
+  shareButton: {
+    backgroundColor: 'rgba(212,168,83,0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(212,168,83,0.3)',
+    borderRadius: 8,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  shareButtonPressed: {
+    opacity: 0.8,
+  },
+  shareButtonText: {
+    fontFamily: 'Karla-SemiBold',
+    fontSize: 14,
+    color: '#d4a853',
   },
   featureRow: {
     flexDirection: 'row',

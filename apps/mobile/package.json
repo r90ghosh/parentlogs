@@ -50,6 +50,7 @@
     "react-dom": "19.2.0",
     "react-hook-form": "^7.54.0",
     "react-native": "0.83.2",
+    "react-native-calendars": "^1.1314.0",
     "react-native-css-interop": "^0.1.20",
     "react-native-gesture-handler": "~2.30.0",
     "react-native-purchases": "^9.14.0",
