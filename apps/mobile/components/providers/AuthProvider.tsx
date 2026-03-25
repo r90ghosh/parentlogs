@@ -5,6 +5,8 @@ import { useRouter, useSegments } from 'expo-router'
 import { pushNotificationService } from '@/services/push-notification-service'
 import { initRevenueCat } from './RevenueCatProvider'
 import { isInGracePeriod } from '@tdc/shared/utils/subscription-utils'
+import { Sentry } from '@/lib/sentry'
+import { identifyUser, resetUser } from '@/lib/analytics'
 import type { Session, User } from '@supabase/supabase-js'
 
 interface Profile {
@@ -58,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .single()
 
       if (error && error.code !== 'PGRST116') {
-        console.error('[Auth] Failed to fetch profile:', error.message)
+        Sentry.captureException(error, { extra: { context: 'fetch_profile' } })
         Alert.alert('Error', 'Failed to load profile. Please try again.', [
           { text: 'Retry', onPress: () => fetchProfile(userId) },
         ])
@@ -83,7 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           .eq('id', data.family_id)
           .single()
         if (familyError && familyError.code !== 'PGRST116') {
-          console.error('[Auth] Failed to fetch family:', familyError.message)
+          Sentry.captureException(familyError, { extra: { context: 'fetch_family' } })
         }
         setFamily(familyData)
       } else {
@@ -103,12 +105,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await fetchProfile(session.user.id)
         // Initialize RevenueCat with user ID
         initRevenueCat(session.user.id)
+        // Identify user for analytics
+        identifyUser(session.user.id)
         // Register for push notifications (fire and forget)
         pushNotificationService.register(session.user.id).catch(() => {})
       } else {
         setProfile(null)
         setFamily(null)
         setProfileLoaded(false)
+        resetUser()
       }
       setIsLoading(false)
     })
@@ -143,6 +148,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (token && session?.user) {
       await pushNotificationService.unregister(session.user.id, token).catch(() => {})
     }
+    resetUser()
     await supabase.auth.signOut()
     setProfile(null)
     setFamily(null)

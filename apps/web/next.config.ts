@@ -1,3 +1,4 @@
+import { withSentryConfig } from '@sentry/nextjs'
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -20,11 +21,11 @@ const nextConfig: NextConfig = {
           key: 'Content-Security-Policy',
           value: [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' https://js.stripe.com https://www.googletagmanager.com",
+            "script-src 'self' 'unsafe-inline' https://js.stripe.com https://*.sentry-cdn.com",
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
             "font-src 'self' https://fonts.gstatic.com",
             "img-src 'self' data: blob: https://*.supabase.co https://lh3.googleusercontent.com",
-            "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.thedadcenter.com wss://api.thedadcenter.com https://api.stripe.com https://www.google-analytics.com",
+            "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.thedadcenter.com wss://api.thedadcenter.com https://api.stripe.com https://*.ingest.sentry.io",
             "frame-src https://js.stripe.com https://hooks.stripe.com",
           ].join('; ')
         },
@@ -61,4 +62,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig);

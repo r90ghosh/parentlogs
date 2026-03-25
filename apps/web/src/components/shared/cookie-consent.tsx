@@ -25,6 +25,10 @@ export function CookieConsent() {
     setAnimateIn(false)
     // Remove from DOM after slide-out transition
     setTimeout(() => setShow(false), 500)
+    // Start tracking immediately on accept without reload
+    if (value === 'accepted') {
+      import('@/lib/analytics').then(({ initAnalytics }) => initAnalytics())
+    }
   }
 
   if (!show) return null

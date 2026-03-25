@@ -8,15 +8,21 @@ import { AuthProvider } from '@/components/providers/AuthProvider'
 import { QueryProvider } from '@/components/providers/QueryProvider'
 import { RevenueCatProvider } from '@/components/providers/RevenueCatProvider'
 import { NetworkProvider } from '@/components/providers/NetworkProvider'
+import { initSentry, Sentry } from '@/lib/sentry'
+import { initAnalytics } from '@/lib/analytics'
+import { ScreenEngagementTracker } from '@/hooks/use-screen-engagement'
 import '../global.css'
 
 export {
   ErrorBoundary,
 } from 'expo-router'
 
+// Initialize Sentry before anything else
+initSentry()
+
 SplashScreen.preventAutoHideAsync()
 
-export default function RootLayout() {
+function RootLayout() {
   const [fontsLoaded] = useFonts({
     'PlayfairDisplay-Bold': require('../assets/fonts/PlayfairDisplay-Bold.ttf'),
     'Jost-Regular': require('../assets/fonts/Jost-Regular.ttf'),
@@ -29,6 +35,8 @@ export default function RootLayout() {
   useEffect(() => {
     if (fontsLoaded) {
       SplashScreen.hideAsync()
+      const cleanup = initAnalytics()
+      return cleanup
     }
   }, [fontsLoaded])
 
@@ -41,6 +49,7 @@ export default function RootLayout() {
           <RevenueCatProvider>
             <NetworkProvider>
               <StatusBar style="light" />
+              <ScreenEngagementTracker />
               <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="index" />
                 <Stack.Screen name="(auth)" />
@@ -56,3 +65,6 @@ export default function RootLayout() {
     </GestureHandlerRootView>
   )
 }
+
+// Wrap with Sentry for automatic error boundary
+export default Sentry.wrap(RootLayout)

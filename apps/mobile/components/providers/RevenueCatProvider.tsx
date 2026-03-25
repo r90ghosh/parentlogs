@@ -2,6 +2,7 @@ import { useEffect, useState, createContext, useContext, useCallback } from 'rea
 import Purchases, { LOG_LEVEL } from 'react-native-purchases'
 import type { CustomerInfo, PurchasesOffering } from 'react-native-purchases'
 import { Platform } from 'react-native'
+import { Sentry } from '@/lib/sentry'
 
 export const ENTITLEMENT_ID = 'The Dad Center Pro'
 
@@ -16,7 +17,7 @@ export function initRevenueCat(userId: string) {
   const apiKey = Platform.OS === 'ios' ? RC_IOS_KEY : RC_ANDROID_KEY
 
   if (!apiKey || apiKey === 'placeholder') {
-    console.warn('[RevenueCat] No API key, skipping')
+    Sentry.addBreadcrumb({ category: 'revenuecat', message: 'No API key, skipping', level: 'warning' })
     return
   }
 
@@ -46,7 +47,7 @@ export function initRevenueCat(userId: string) {
       // Notify the React component
       onInitCallback?.(info, offerings.current)
     } catch (err) {
-      console.warn('[RevenueCat] Init failed:', err)
+      Sentry.captureException(err, { extra: { context: 'revenuecat_init' } })
       rcConfigured = false
     }
   })()

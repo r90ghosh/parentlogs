@@ -7,11 +7,24 @@ import { PartnerActivityProvider } from '@/components/shared/partner-activity'
 import { ErrorBoundary } from '@/components/error/error-boundary'
 import { PageLoading } from '@/components/error/loading-states'
 import { initAnalytics } from '@/lib/analytics'
+import { PageEngagementTracker } from '@/hooks/use-page-engagement'
 
-// Analytics initializer component
+// Analytics initializer — gated on cookie consent
 function AnalyticsInitializer() {
   useEffect(() => {
-    initAnalytics()
+    // Initialize if consent already given
+    if (localStorage.getItem('cookie-consent') === 'accepted') {
+      initAnalytics()
+    }
+
+    // Listen for consent changes (from cookie-consent banner or other tabs)
+    function handleStorage(e: StorageEvent) {
+      if (e.key === 'cookie-consent' && e.newValue === 'accepted') {
+        initAnalytics()
+      }
+    }
+    window.addEventListener('storage', handleStorage)
+    return () => window.removeEventListener('storage', handleStorage)
   }, [])
 
   return null
@@ -70,6 +83,7 @@ export function Providers({ children }: { children: ReactNode }) {
               {children}
             </Suspense>
             <AnalyticsInitializer />
+            <PageEngagementTracker />
             <ServiceWorkerRegistration />
           </PartnerActivityProvider>
         </AuthProvider>

@@ -1,6 +1,7 @@
 'use client'
 
 import { Component, ReactNode } from 'react'
+import * as Sentry from '@sentry/nextjs'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react'
@@ -41,11 +42,8 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   logErrorToService(error: Error, errorInfo: React.ErrorInfo) {
-    // Implementation would send to Sentry, LogRocket, etc.
-    console.log('Would log to error service:', {
-      message: error.message,
-      stack: error.stack,
-      componentStack: errorInfo.componentStack,
+    Sentry.captureException(error, {
+      extra: { componentStack: errorInfo.componentStack },
     })
   }
 

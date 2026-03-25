@@ -51,6 +51,7 @@ export default (): ExpoConfig => ({
       color: "#c4703f",
     }],
     "@react-native-community/datetimepicker",
+    "@sentry/react-native/expo",
   ],
   extra: {
     eas: {
