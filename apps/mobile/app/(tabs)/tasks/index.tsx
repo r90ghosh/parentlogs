@@ -358,7 +358,7 @@ export default function TasksScreen() {
         </View>
       ) : viewMode === 'calendar' ? (
         <TaskCalendar
-          tasks={allTasks}
+          tasks={allTasks.filter((t) => t.status === 'pending' || t.status === 'snoozed')}
           onComplete={handleComplete}
           onSnooze={handleSnooze}
         />

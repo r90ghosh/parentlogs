@@ -17,6 +17,7 @@ interface ThemeOption {
   id: ThemePreference
   label: string
   description: string
+  disabled?: boolean
 }
 
 const THEME_OPTIONS: ThemeOption[] = [
@@ -33,7 +34,8 @@ const THEME_OPTIONS: ThemeOption[] = [
   {
     id: 'light',
     label: 'Light',
-    description: 'Always use light theme',
+    description: 'Coming soon',
+    disabled: true,
   },
 ]
 
@@ -88,22 +90,27 @@ export default function AppearanceScreen() {
             {THEME_OPTIONS.map((option, index) => {
               const isSelected = selected === option.id
               const isLast = index === THEME_OPTIONS.length - 1
+              const isDisabled = option.disabled
               return (
                 <Pressable
                   key={option.id}
-                  onPress={() => handleSelect(option.id)}
+                  onPress={() => !isDisabled && handleSelect(option.id)}
+                  disabled={isDisabled}
                   style={({ pressed }) => [
                     styles.optionRow,
                     isSelected && styles.optionRowSelected,
                     !isLast && styles.optionRowBorder,
-                    pressed && styles.optionRowPressed,
+                    pressed && !isDisabled && styles.optionRowPressed,
+                    isDisabled && styles.optionRowDisabled,
                   ]}
                 >
                   {/* Left accent border for selected */}
                   {isSelected && <View style={styles.selectedAccent} />}
 
                   <View style={styles.optionContent}>
-                    <Text style={styles.optionLabel}>{option.label}</Text>
+                    <Text style={[styles.optionLabel, isDisabled && styles.optionLabelDisabled]}>
+                      {option.label}
+                    </Text>
                     <Text style={styles.optionDescription}>
                       {option.description}
                     </Text>
@@ -114,6 +121,7 @@ export default function AppearanceScreen() {
                     style={[
                       styles.radio,
                       isSelected && styles.radioSelected,
+                      isDisabled && styles.radioDisabled,
                     ]}
                   >
                     {isSelected && <View style={styles.radioDot} />}
@@ -126,7 +134,7 @@ export default function AppearanceScreen() {
 
         <CardEntrance delay={120}>
           <Text style={styles.noteText}>
-            The app currently uses a dark theme. Light theme support will be available in a future update.
+            The app currently uses a dark theme. Additional theme options coming soon.
           </Text>
         </CardEntrance>
       </View>
@@ -198,6 +206,15 @@ const styles = StyleSheet.create({
   },
   optionRowPressed: {
     backgroundColor: 'rgba(237,230,220,0.04)',
+  },
+  optionRowDisabled: {
+    opacity: 0.4,
+  },
+  optionLabelDisabled: {
+    color: '#4a4239',
+  },
+  radioDisabled: {
+    borderColor: '#2a2520',
   },
   selectedAccent: {
     position: 'absolute',

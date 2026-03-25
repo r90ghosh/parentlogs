@@ -134,6 +134,15 @@ export default function TaskDetailScreen() {
     }
   }, [task?.id, task?.notes])
 
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (notesDebounceRef.current) {
+        clearTimeout(notesDebounceRef.current)
+      }
+    }
+  }, [])
+
   const handleNotesChange = (text: string) => {
     setNotes(text)
     if (notesDebounceRef.current) {
@@ -181,6 +190,7 @@ export default function TaskDetailScreen() {
         text: 'Delete',
         style: 'destructive',
         onPress: () => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)
           deleteTask.mutate(id, { onSuccess: () => router.back() })
         },
       },
@@ -333,6 +343,7 @@ export default function TaskDetailScreen() {
             <TextInput
               style={styles.notesInput}
               multiline
+              maxLength={2000}
               placeholder="Add personal notes..."
               placeholderTextColor="#4a4239"
               value={notes}

@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native'
+import { format, subDays } from 'date-fns'
 import { GlassCard } from '@/components/glass'
 import { MoodEmojiPop } from '@/components/animations'
 import { useSubmitMood } from '@/hooks/use-dashboard'
@@ -20,22 +21,15 @@ function getMoodEmoji(level: MoodLevel): string {
 function getStreak(checkins: MoodCheckin[]): number {
   if (!checkins.length) return 0
 
-  // Sort descending by date (already descending from service)
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
   let streak = 0
-  let currentDate = new Date(today)
-
-  for (let i = 0; i < 30; i++) {
-    const dateStr = currentDate.toISOString().split('T')[0]
-    const hasCheckin = checkins.some((c) => {
-      const checkinDate = new Date(c.checked_in_at)
-      return checkinDate.toISOString().split('T')[0] === dateStr
-    })
+  // Cap loop to number of fetched checkins + 1 (to detect the gap)
+  for (let i = 0; i <= checkins.length; i++) {
+    const dateStr = format(subDays(new Date(), i), 'yyyy-MM-dd')
+    const hasCheckin = checkins.some(
+      (c) => format(new Date(c.checked_in_at), 'yyyy-MM-dd') === dateStr
+    )
     if (hasCheckin) {
       streak++
-      currentDate.setDate(currentDate.getDate() - 1)
     } else {
       break
     }
@@ -55,13 +49,10 @@ export function MoodCheckinCard({ todaysCheckin }: MoodCheckinCardProps) {
   if (todaysCheckin) {
     const moodConfig = MOODS.find((m) => m.level === todaysCheckin.mood)
 
-    // Build last 7 days array (today to 6 days ago)
-    const last7Days = Array.from({ length: 7 }, (_, i) => {
-      const d = new Date()
-      d.setHours(0, 0, 0, 0)
-      d.setDate(d.getDate() - (6 - i))
-      return d.toISOString().split('T')[0]
-    })
+    // Build last 7 days array (6 days ago to today), timezone-safe
+    const last7Days = Array.from({ length: 7 }, (_, i) =>
+      format(subDays(new Date(), 6 - i), 'yyyy-MM-dd')
+    )
 
     const streak = history ? getStreak(history) : 0
 
@@ -82,7 +73,7 @@ export function MoodCheckinCard({ todaysCheckin }: MoodCheckinCardProps) {
           <View style={styles.historyRow}>
             {last7Days.map((dateStr) => {
               const checkin = history.find(
-                (c) => new Date(c.checked_in_at).toISOString().split('T')[0] === dateStr
+                (c) => format(new Date(c.checked_in_at), 'yyyy-MM-dd') === dateStr
               )
               return (
                 <View

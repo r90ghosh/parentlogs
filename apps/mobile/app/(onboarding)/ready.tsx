@@ -22,7 +22,11 @@ export default function ReadyScreen() {
     const message = family?.invite_code
       ? `Join me on The Dad Center! Use invite code: ${family.invite_code}`
       : 'Join me on The Dad Center — the app for modern parents. Download at thedadcenter.com'
-    await Share.share({ message })
+    try {
+      await Share.share({ message })
+    } catch {
+      // User dismissed share sheet or share failed — no action needed
+    }
   }
 
   return (
