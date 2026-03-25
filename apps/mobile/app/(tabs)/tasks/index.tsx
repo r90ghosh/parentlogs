@@ -486,8 +486,7 @@ export default function TasksScreen() {
                 <View style={styles.section}>
                   {debouncedSearch.trim() ? (
                     <Text style={styles.searchResultCount}>
-                      {filteredTasks.length} result{filteredTasks.length !== 1 ? 's' : ''}{' '}
-                      for &apos;{debouncedSearch.trim()}&apos;
+                      {`${filteredTasks.length} result${filteredTasks.length !== 1 ? 's' : ''} for '${debouncedSearch.trim()}'`}
                     </Text>
                   ) : (
                     <TaskSectionHeader
