@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import { useAuth } from '@/lib/auth/auth-context'
@@ -28,6 +28,9 @@ export function useRealtimeSync() {
     return member?.full_name?.split(' ')[0] || 'Partner'
   }, [user?.id, members])
 
+  const getMemberNameRef = useRef(getMemberName)
+  getMemberNameRef.current = getMemberName
+
   useEffect(() => {
     if (!family?.id) return
 
@@ -53,7 +56,7 @@ export function useRealtimeSync() {
 
             // Show toast for partner activity
             if (payload.new?.completed_by && payload.new.completed_by !== user?.id) {
-              const memberName = getMemberName(payload.new.completed_by)
+              const memberName = getMemberNameRef.current(payload.new.completed_by)
               if (payload.new.status === 'completed') {
                 toast.success(`${memberName} completed a task`, {
                   description: payload.new.title,
@@ -82,7 +85,7 @@ export function useRealtimeSync() {
 
             // Show toast for partner activity
             if (payload.new?.logged_by && payload.new.logged_by !== user?.id) {
-              const memberName = getMemberName(payload.new.logged_by)
+              const memberName = getMemberNameRef.current(payload.new.logged_by)
               const logType = payload.new.log_type?.replace('_', ' ')
               toast.info(`${memberName} logged ${logType}`, {
                 description: formatLogDetails(payload.new),
@@ -110,7 +113,7 @@ export function useRealtimeSync() {
 
             // Show toast for partner activity
             if (payload.new?.completed_by && payload.new.completed_by !== user?.id && payload.new.completed) {
-              const memberName = getMemberName(payload.new.completed_by)
+              const memberName = getMemberNameRef.current(payload.new.completed_by)
               toast.success(`${memberName} checked off an item`, {
                 description: `In checklist ${payload.new.checklist_id}`,
               })
@@ -128,7 +131,8 @@ export function useRealtimeSync() {
       if (logsChannel) supabase.removeChannel(logsChannel)
       if (checklistChannel) supabase.removeChannel(checklistChannel)
     }
-  }, [family?.id, user?.id, queryClient, getMemberName])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [family?.id, user?.id, queryClient])
 }
 
 function formatLogDetails(log: Record<string, any>): string {

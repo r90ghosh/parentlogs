@@ -40,7 +40,7 @@ export function NotificationItem({
       markAsRead.mutate(notification.id)
     }
     // Only allow relative URLs (internal navigation)
-    if (notification.url.startsWith('/')) {
+    if (notification.url?.startsWith('/')) {
       router.push(notification.url)
     }
   }
@@ -94,7 +94,7 @@ export function NotificationItem({
             type="button"
             aria-label="Delete notification"
             onClick={handleDelete}
-            className="opacity-0 group-hover:opacity-100 transition-opacity text-[--dim] hover:text-coral p-1 -m-1"
+            className="sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 transition-opacity text-[--dim] hover:text-coral p-1 -m-1"
           >
             <Trash2 className="h-3.5 w-3.5" />
           </button>

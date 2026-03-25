@@ -68,7 +68,15 @@ export function TaskItem({
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick?.()
+        }
+      }}
       className={cn(
         'flex items-start gap-4 p-4 rounded-xl cursor-pointer transition-all',
         isHighlighted && 'bg-copper-dim border border-copper/20',

@@ -20,7 +20,7 @@ export function useFamily() {
   const ctx = useServiceContext()
 
   return useQuery({
-    queryKey: ['family'],
+    queryKey: ['family', ctx?.familyId],
     queryFn: () => familyService.getFamily(ctx),
     enabled: !!ctx?.familyId,
     staleTime: 1000 * 60 * 5, // 5 minutes - family data rarely changes

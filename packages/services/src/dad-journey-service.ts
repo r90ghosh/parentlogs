@@ -75,14 +75,14 @@ export function createDadJourneyService(supabase: AppSupabaseClient) {
 
     // Get today's check-in (if any)
     async getLastCheckin(userId: string): Promise<MoodCheckin | null> {
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
+      const now = new Date()
+      const todayStart = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()))
 
       const { data, error } = await supabase
         .from('mood_checkins')
         .select('*')
         .eq('user_id', userId)
-        .gte('checked_in_at', today.toISOString())
+        .gte('checked_in_at', todayStart.toISOString())
         .order('checked_in_at', { ascending: false })
         .limit(1)
         .maybeSingle()

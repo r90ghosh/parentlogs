@@ -7,21 +7,24 @@ import type { TimelineMilestone, TimelineDot } from '@tdc/shared/types/timeline'
 const supabase = createClient()
 
 async function fetchTimeline(): Promise<TimelineMilestone[]> {
-  const { data: milestones, error: mErr } = await supabase
-    .from('timeline_milestones')
-    .select('*')
-    .order('sort_order', { ascending: true })
+  const [
+    { data: milestones, error: mErr },
+    { data: dots, error: dErr },
+  ] = await Promise.all([
+    supabase
+      .from('timeline_milestones')
+      .select('*')
+      .order('sort_order', { ascending: true }),
+    supabase
+      .from('timeline_dots')
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true }),
+  ])
 
   if (mErr) throw mErr
-  if (!milestones || milestones.length === 0) return []
-
-  const { data: dots, error: dErr } = await supabase
-    .from('timeline_dots')
-    .select('*')
-    .eq('is_active', true)
-    .order('sort_order', { ascending: true })
-
   if (dErr) throw dErr
+  if (!milestones || milestones.length === 0) return []
 
   const dotsByMilestone = new Map<string, TimelineDot[]>()
   for (const dot of (dots || [])) {

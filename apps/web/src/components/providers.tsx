@@ -20,12 +20,13 @@ function AnalyticsInitializer() {
 // Service worker registration component
 function ServiceWorkerRegistration() {
   useEffect(() => {
+    let intervalId: ReturnType<typeof setInterval> | undefined
     if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
       navigator.serviceWorker
         .register('/sw.js')
         .then((registration) => {
           // Check for updates periodically
-          setInterval(() => {
+          intervalId = setInterval(() => {
             registration.update()
           }, 60 * 60 * 1000) // Every hour
         })
@@ -33,6 +34,7 @@ function ServiceWorkerRegistration() {
           // Service worker registration failed silently
         })
     }
+    return () => { if (intervalId) clearInterval(intervalId) }
   }, [])
 
   return null

@@ -21,13 +21,13 @@ export const notificationService = {
 
   // Get current permission status
   getPermissionStatus(): NotificationPermission {
-    if (!this.isSupported()) return 'denied'
+    if (!notificationService.isSupported()) return 'denied'
     return Notification.permission
   },
 
   // Request notification permission
   async requestPermission(): Promise<NotificationPermission> {
-    if (!this.isSupported()) return 'denied'
+    if (!notificationService.isSupported()) return 'denied'
     return await Notification.requestPermission()
   },
 
@@ -45,7 +45,7 @@ export const notificationService = {
 
   // Subscribe to push notifications
   async subscribeToPush(): Promise<PushSubscription | null> {
-    const registration = await this.registerServiceWorker()
+    const registration = await notificationService.registerServiceWorker()
     if (!registration) return null
 
     try {
@@ -56,12 +56,12 @@ export const notificationService = {
         // Create new subscription
         subscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
-          applicationServerKey: this.urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+          applicationServerKey: notificationService.urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
         })
       }
 
       // Save subscription to database
-      await this.saveSubscription(subscription)
+      await notificationService.saveSubscription(subscription)
 
       return subscription
     } catch {
@@ -71,14 +71,14 @@ export const notificationService = {
 
   // Unsubscribe from push notifications
   async unsubscribeFromPush(): Promise<boolean> {
-    if (!this.isSupported()) return false
+    if (!notificationService.isSupported()) return false
 
     const registration = await navigator.serviceWorker.ready
     const subscription = await registration.pushManager.getSubscription()
 
     if (subscription) {
       await subscription.unsubscribe()
-      await this.removeSubscription(subscription)
+      await notificationService.removeSubscription(subscription)
       return true
     }
 
@@ -96,7 +96,7 @@ export const notificationService = {
 
     const subscriptionJson = subscription.toJSON()
 
-    await supabase.from('push_subscriptions').upsert({
+    const { error } = await supabase.from('push_subscriptions').upsert({
       user_id: userId,
       endpoint: subscriptionJson.endpoint!,
       p256dh: subscriptionJson.keys?.p256dh || '',
@@ -104,6 +104,7 @@ export const notificationService = {
     }, {
       onConflict: 'endpoint',
     })
+    if (error) throw error
   },
 
   // Remove subscription from Supabase
@@ -154,7 +155,7 @@ export const notificationService = {
 
   // Show local notification (for testing)
   async showLocalNotification(title: string, options: NotificationOptions = {}): Promise<void> {
-    if (!this.isSupported()) return
+    if (!notificationService.isSupported()) return
     if (Notification.permission !== 'granted') return
 
     const registration = await navigator.serviceWorker.ready

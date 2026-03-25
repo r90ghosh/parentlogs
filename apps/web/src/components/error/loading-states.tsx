@@ -65,7 +65,7 @@ export function ListSkeleton({ count = 3, className }: { count?: number; classNa
 // Dashboard skeleton
 export function DashboardSkeleton() {
   return (
-    <div className="p-4 md:ml-64 space-y-6">
+    <div className="p-4 space-y-6">
       {/* Header */}
       <div className="space-y-2">
         <Skeleton className="h-8 w-48" />
@@ -105,7 +105,7 @@ export function DashboardSkeleton() {
 // Task list skeleton
 export function TaskListSkeleton() {
   return (
-    <div className="p-4 md:ml-64 space-y-6">
+    <div className="p-4 space-y-6">
       <div className="flex items-center justify-between">
         <Skeleton className="h-8 w-32" />
         <Skeleton className="h-10 w-24" />
@@ -118,7 +118,7 @@ export function TaskListSkeleton() {
 // Tracker skeleton
 export function TrackerSkeleton() {
   return (
-    <div className="p-4 md:ml-64 space-y-6">
+    <div className="p-4 space-y-6">
       <Skeleton className="h-8 w-32" />
 
       {/* Quick log buttons */}
@@ -138,7 +138,7 @@ export function TrackerSkeleton() {
 // Settings skeleton
 export function SettingsSkeleton() {
   return (
-    <div className="p-4 md:ml-64 space-y-6 max-w-2xl">
+    <div className="p-4 space-y-6 max-w-2xl">
       <Skeleton className="h-8 w-32" />
       <CardSkeleton />
       <div className="space-y-2">

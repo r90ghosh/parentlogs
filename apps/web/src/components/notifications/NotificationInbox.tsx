@@ -7,6 +7,17 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { ListSkeleton, EmptyState } from '@/components/error/loading-states'
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import {
   useNotificationFeed,
   useMarkAllNotificationsRead,
   useDeleteReadNotifications,
@@ -108,16 +119,33 @@ export function NotificationInbox() {
           </button>
         )}
         {hasRead && (
-          <button
-            onClick={() => {
-              if (!window.confirm('Delete all read notifications? This cannot be undone.')) return
-              deleteRead.mutate()
-            }}
-            disabled={deleteRead.isPending}
-            className="font-ui text-xs font-medium text-[--dim] hover:text-coral transition-colors disabled:opacity-50"
-          >
-            Clear read
-          </button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button
+                disabled={deleteRead.isPending}
+                className="font-ui text-xs font-medium text-[--dim] hover:text-coral transition-colors disabled:opacity-50"
+              >
+                Clear read
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-[--surface] border-[--border]">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="font-display text-[--cream]">Clear Read Notifications</AlertDialogTitle>
+                <AlertDialogDescription className="font-body text-[--muted]">
+                  Delete all read notifications? This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="border-[--border-hover] font-ui">Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => deleteRead.mutate()}
+                  className="bg-coral hover:bg-coral/90 text-[--bg] font-ui"
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         )}
         <Link
           href="/settings/notifications"

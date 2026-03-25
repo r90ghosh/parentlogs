@@ -10,5 +10,6 @@ export { createTaskService, type TaskService, type TaskFilters } from './task-se
 export { createFamilyService, type FamilyService } from './family-service'
 export { createSubscriptionService, type SubscriptionService } from './subscription-service'
 export { createFeedbackService, type FeedbackService, type FeedbackPayload } from './feedback-service'
+export { createProfileService, type ProfileService } from './profile-service'
 
 export type { AppSupabaseClient, ServiceContext } from './types'

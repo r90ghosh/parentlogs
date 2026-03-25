@@ -1,7 +1,10 @@
-// IMPORTANT: This is the Supabase Edge Function Stripe webhook handler.
-// The canonical web Stripe webhook is at apps/web/src/app/api/stripe/webhook/route.ts
-// which handles grace period logic correctly.
-// Ensure only ONE of these is configured in the Stripe dashboard.
+// DEPRECATED: This handler is superseded by the Next.js API route at
+// apps/web/src/app/api/stripe/webhook/route.ts which handles idempotency,
+// grace period logic, and proper error handling.
+// Do NOT register this endpoint in the Stripe Dashboard.
+//
+// This file is kept for reference only. The Next.js route is the single
+// source of truth for all Stripe webhook processing.
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";

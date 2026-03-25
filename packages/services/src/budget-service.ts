@@ -108,7 +108,7 @@ export function createBudgetService(supabase: AppSupabaseClient) {
         name,
         items: items.map(item => ({
           ...item,
-          is_premium: !isPremium && item.is_premium,
+          is_locked: !isPremium && item.is_premium,
         })),
         // Exclude tip items from totals
         totalMin: items.filter(i => i.priority !== 'tip').reduce((sum, i) => sum + (i.price_min || 0), 0),

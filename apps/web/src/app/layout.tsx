@@ -3,7 +3,6 @@ import { Playfair_Display, Jost, Karla } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
 import { Toaster } from '@/components/ui/sonner'
-import { FloatingParticles } from '@/components/ui/animations/FloatingParticles'
 import { CookieConsent } from '@/components/shared/cookie-consent'
 import { FeedbackWidget } from '@/components/shared/feedback-widget'
 
@@ -94,7 +93,6 @@ export default function RootLayout({
       </head>
       <body className={`${playfair.variable} ${jost.variable} ${karla.variable} font-body antialiased`}>
         <Providers>
-          <FloatingParticles count={12} />
           {children}
           <Toaster />
           <FeedbackWidget />

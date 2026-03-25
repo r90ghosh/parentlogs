@@ -137,10 +137,12 @@ export function MoodCheckinWidget() {
       <p className="text-sm font-semibold font-ui text-[--cream] mb-3">How are you feeling today?</p>
 
       {/* Emoji mood selector */}
-      <div className="flex gap-2 mb-4">
+      <div role="radiogroup" aria-label="How are you feeling today?" className="flex gap-2 mb-4">
         {MOOD_CONFIG.map(cfg => (
           <button
             key={cfg.level}
+            role="radio"
+            aria-checked={selectedMood === cfg.level}
             onClick={() => handleMoodSelect(cfg.level)}
             className={cn(
               'flex-1 flex flex-col items-center gap-1 py-2 rounded-lg transition-colors border',

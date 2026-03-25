@@ -96,6 +96,7 @@ export function createTaskService(supabase: AppSupabaseClient) {
         .eq('id', id)
         .single()
 
+      if (error && error.code !== 'PGRST116') throw error
       if (error) return null
       return data as FamilyTask
     },
@@ -116,7 +117,10 @@ export function createTaskService(supabase: AppSupabaseClient) {
       return { error: error as Error | null }
     },
 
-    async snoozeTask(id: string, until: string): Promise<{ error: Error | null }> {
+    async snoozeTask(id: string, until: string, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
+      const resolved = await resolveContext(ctx)
+      if (!resolved) return { error: new Error('Not authenticated') }
+
       const { error } = await supabase
         .from('family_tasks')
         .update({
@@ -124,15 +128,20 @@ export function createTaskService(supabase: AppSupabaseClient) {
           snoozed_until: until,
         })
         .eq('id', id)
+        .eq('family_id', resolved.familyId)
 
       return { error: error as Error | null }
     },
 
-    async skipTask(id: string): Promise<{ error: Error | null }> {
+    async skipTask(id: string, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
+      const resolved = await resolveContext(ctx)
+      if (!resolved) return { error: new Error('Not authenticated') }
+
       const { error } = await supabase
         .from('family_tasks')
         .update({ status: 'skipped' })
         .eq('id', id)
+        .eq('family_id', resolved.familyId)
 
       return { error: error as Error | null }
     },
@@ -171,8 +180,12 @@ export function createTaskService(supabase: AppSupabaseClient) {
 
     async updateTask(
       id: string,
-      updates: Partial<Pick<FamilyTask, 'title' | 'description' | 'due_date' | 'assigned_to' | 'priority' | 'category' | 'status' | 'notes'>>
+      updates: Partial<Pick<FamilyTask, 'title' | 'description' | 'due_date' | 'assigned_to' | 'priority' | 'category' | 'status' | 'notes'>>,
+      ctx?: Partial<ServiceContext>
     ): Promise<{ error: Error | null }> {
+      const resolved = await resolveContext(ctx)
+      if (!resolved) return { error: new Error('Not authenticated') }
+
       const safeUpdates: Record<string, unknown> = {}
       if (updates.title !== undefined) safeUpdates.title = updates.title
       if (updates.description !== undefined) safeUpdates.description = updates.description
@@ -187,6 +200,7 @@ export function createTaskService(supabase: AppSupabaseClient) {
         .from('family_tasks')
         .update(safeUpdates)
         .eq('id', id)
+        .eq('family_id', resolved.familyId)
 
       return { error: error as Error | null }
     },
@@ -202,6 +216,41 @@ export function createTaskService(supabase: AppSupabaseClient) {
         .eq('family_id', resolved.familyId)
 
       return { error: error as Error | null }
+    },
+
+    /**
+     * Get top priority pending tasks for dashboard display
+     */
+    async getDashboardPriorityTasks(familyId: string, babyId?: string, limit = 5): Promise<Pick<FamilyTask, 'id' | 'title' | 'category' | 'due_date' | 'priority'>[]> {
+      let query = supabase
+        .from('family_tasks')
+        .select('id, title, category, due_date, priority')
+        .eq('family_id', familyId)
+        .eq('status', 'pending')
+      if (babyId) query = query.eq('baby_id', babyId)
+      query = query
+        .order('priority', { ascending: false })
+        .order('due_date', { ascending: true })
+        .limit(limit)
+
+      const { data, error } = await query
+      if (error) throw error
+      return data as Pick<FamilyTask, 'id' | 'title' | 'category' | 'due_date' | 'priority'>[]
+    },
+
+    /**
+     * Get minimal task data for computing dashboard stats
+     */
+    async getDashboardTaskStats(familyId: string, babyId?: string): Promise<Pick<FamilyTask, 'id' | 'status' | 'due_date'>[]> {
+      let query = supabase
+        .from('family_tasks')
+        .select('id, status, due_date')
+        .eq('family_id', familyId)
+      if (babyId) query = query.eq('baby_id', babyId)
+
+      const { data, error } = await query
+      if (error) throw error
+      return data as Pick<FamilyTask, 'id' | 'status' | 'due_date'>[]
     },
 
     /**
@@ -224,7 +273,7 @@ export function createTaskService(supabase: AppSupabaseClient) {
 
       const { data, error } = await query
 
-      if (error) return []
+      if (error) throw error
       return data as FamilyTask[]
     },
 
@@ -249,7 +298,7 @@ export function createTaskService(supabase: AppSupabaseClient) {
 
       const { data, error } = await query
 
-      if (error) return []
+      if (error) throw error
       return (data || []) as FamilyTask[]
     },
 
@@ -279,6 +328,7 @@ export function createTaskService(supabase: AppSupabaseClient) {
         .from('family_tasks')
         .update(updates)
         .eq('id', id)
+        .eq('family_id', resolved.familyId)
 
       return { error: error as Error | null }
     },
@@ -332,7 +382,7 @@ export function createTaskService(supabase: AppSupabaseClient) {
 
       const { count, error } = await query
 
-      if (error) return 0
+      if (error) throw error
       return count || 0
     },
   }

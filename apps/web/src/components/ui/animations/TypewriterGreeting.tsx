@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface TypewriterGreetingProps {
   text: string
@@ -18,6 +18,8 @@ export function TypewriterGreeting({
   const [displayText, setDisplayText] = useState('')
   const [showCursor, setShowCursor] = useState(true)
   const [isComplete, setIsComplete] = useState(false)
+  const onCompleteRef = useRef(onComplete)
+  onCompleteRef.current = onComplete
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -25,7 +27,7 @@ export function TypewriterGreeting({
       setDisplayText(text)
       setIsComplete(true)
       setShowCursor(false)
-      onComplete?.()
+      onCompleteRef.current?.()
       return
     }
 
@@ -39,13 +41,13 @@ export function TypewriterGreeting({
         setIsComplete(true)
         setTimeout(() => {
           setShowCursor(false)
-          onComplete?.()
+          onCompleteRef.current?.()
         }, 800)
       }
     }, speed)
 
     return () => clearInterval(interval)
-  }, [text, speed, onComplete])
+  }, [text, speed])
 
   return (
     <span className={className}>

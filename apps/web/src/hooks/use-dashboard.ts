@@ -1,13 +1,10 @@
 'use client'
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { createClient } from '@/lib/supabase/client'
-import { isPast, isToday, differenceInDays, differenceInWeeks, format } from 'date-fns'
+import { isPast, isToday, differenceInDays, format } from 'date-fns'
 import { PriorityTask, DashboardTaskStats, UpcomingEvent, PartnerActivity, WeeklyBriefing, Achievement } from '@tdc/shared/types/dashboard'
 import { getAchievement } from '@tdc/shared/utils'
-import { taskService } from '@/lib/services'
-
-const supabase = createClient()
+import { taskService, briefingService, familyService } from '@/lib/services'
 
 interface DashboardQueryResult {
   priorityTasks: PriorityTask[]
@@ -76,102 +73,50 @@ export function useDashboardData(familyId: string | undefined, currentWeek: numb
         }
       }
 
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
-
-      // Build task queries with optional baby_id filter
-      let priorityQuery = supabase
-        .from('family_tasks')
-        .select('id, title, category, due_date, priority')
-        .eq('family_id', familyId)
-        .eq('status', 'pending')
-      if (babyId) priorityQuery = priorityQuery.eq('baby_id', babyId)
-      priorityQuery = priorityQuery
-        .order('priority', { ascending: false })
-        .order('due_date', { ascending: true })
-        .limit(5)
-
-      let allTasksQuery = supabase
-        .from('family_tasks')
-        .select('id, status, due_date')
-        .eq('family_id', familyId)
-      if (babyId) allTasksQuery = allTasksQuery.eq('baby_id', babyId)
-
       // Run independent queries in parallel
       const [
-        { data: tasks },
-        { data: allTasks },
-        { data: briefingData },
-        partnerResult,
+        tasks,
+        allTasks,
+        briefingData,
+        partnerData,
       ] = await Promise.all([
-        priorityQuery,
-        allTasksQuery,
-        // Briefing
-        supabase
-          .from('briefing_templates')
-          .select('title, baby_update')
-          .eq('stage', 'pregnancy')
-          .eq('week', currentWeek)
-          .maybeSingle(),
-        // Partner info (needs sequential sub-queries but runs in parallel with others)
-        (async (): Promise<PartnerActivity | null> => {
-          try {
-            const { data: { user } } = await supabase.auth.getUser()
-            if (!user) return null
-
-            const { data: partnerProfile } = await supabase
-              .from('profiles')
-              .select('id, full_name, updated_at')
-              .eq('family_id', familyId)
-              .neq('id', user.id)
-              .single()
-
-            if (!partnerProfile) return null
-
-            const { data: partnerTasks } = await supabase
-              .from('family_tasks')
-              .select('title, status, completed_at')
-              .eq('family_id', familyId)
-              .eq('completed_by', partnerProfile.id)
-              .order('completed_at', { ascending: false })
-              .limit(2)
-
-            const lastActive = partnerProfile.updated_at
-              ? formatLastActive(new Date(partnerProfile.updated_at))
-              : 'Not yet active'
-
-            const partnerName = partnerProfile.full_name?.split(' ')[0] || 'Partner'
-
-            return {
-              name: partnerName,
-              initial: partnerName[0].toUpperCase(),
-              lastActive,
-              isSynced: true,
-              recentTasks: partnerTasks?.map(t => ({
-                title: t.title,
-                status: t.status === 'completed' ? 'completed' : 'in-progress',
-                time: t.completed_at ? formatTaskTime(new Date(t.completed_at)) : 'In progress',
-              })) || [],
-            }
-          } catch {
-            return null
-          }
-        })(),
+        taskService.getDashboardPriorityTasks(familyId, babyId, 5),
+        taskService.getDashboardTaskStats(familyId, babyId),
+        briefingService.getBriefingTeaser('pregnancy', currentWeek),
+        familyService.getPartnerActivity(familyId),
       ])
 
       // Calculate stats
-      const completed = allTasks?.filter(t => t.status === 'completed').length || 0
-      const pending = allTasks?.filter(t => t.status === 'pending').length || 0
-      const overdue = allTasks?.filter(t => {
+      const completed = allTasks.filter(t => t.status === 'completed').length
+      const pending = allTasks.filter(t => t.status === 'pending').length
+      const overdue = allTasks.filter(t => {
         if (t.status !== 'pending') return false
         const dueDate = new Date(t.due_date)
         dueDate.setHours(0, 0, 0, 0)
         return isPast(dueDate) && !isToday(dueDate)
-      }).length || 0
+      }).length
 
       const upcomingEvents: UpcomingEvent[] = []
 
-      const partner = partnerResult
+      // Map partner data to PartnerActivity
+      let partner: PartnerActivity | null = null
+      if (partnerData) {
+        const lastActive = partnerData.updatedAt
+          ? formatLastActive(new Date(partnerData.updatedAt))
+          : 'Not yet active'
+
+        partner = {
+          name: partnerData.name,
+          initial: partnerData.initial,
+          lastActive,
+          isSynced: true,
+          recentTasks: partnerData.recentTasks.map(t => ({
+            title: t.title,
+            status: t.status === 'completed' ? 'completed' : 'in-progress',
+            time: t.completedAt ? formatTaskTime(new Date(t.completedAt)) : 'In progress',
+          })),
+        }
+      }
 
       let briefing: WeeklyBriefing = {
         week: currentWeek,
@@ -248,9 +193,9 @@ function formatLastActive(date: Date): string {
  */
 function formatTaskTime(date: Date): string {
   const now = new Date()
-  const isToday = date.toDateString() === now.toDateString()
+  const isSameDay = date.toDateString() === now.toDateString()
 
-  if (isToday) return 'Today'
+  if (isSameDay) return 'Today'
 
   const yesterday = new Date(now)
   yesterday.setDate(yesterday.getDate() - 1)

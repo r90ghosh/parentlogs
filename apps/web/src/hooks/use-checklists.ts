@@ -43,6 +43,7 @@ export function useChecklist(checklistId: string) {
 
 export function useToggleChecklistItem() {
   const queryClient = useQueryClient()
+  const { profile } = useUser()
   const ctx = useServiceContext()
 
   return useMutation({
@@ -54,14 +55,16 @@ export function useToggleChecklistItem() {
 
     // Optimistic update - instant UI feedback
     onMutate: async ({ checklistId, itemId, completed }) => {
+      const fullKey = ['checklist', checklistId, profile?.active_baby_id]
+
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['checklist', checklistId] })
+      await queryClient.cancelQueries({ queryKey: fullKey })
 
       // Snapshot the previous value
-      const previousChecklist = queryClient.getQueryData(['checklist', checklistId])
+      const previousChecklist = queryClient.getQueryData(fullKey)
 
       // Optimistically update the cache
-      queryClient.setQueryData<ChecklistWithItems | null>(['checklist', checklistId], (old) => {
+      queryClient.setQueryData<ChecklistWithItems | null>(fullKey, (old) => {
         if (!old) return old
 
         const updatedItems = old.items.map((item: ChecklistItem) =>
@@ -91,7 +94,7 @@ export function useToggleChecklistItem() {
     onError: (err, variables, context) => {
       if (context?.previousChecklist) {
         queryClient.setQueryData(
-          ['checklist', variables.checklistId],
+          ['checklist', variables.checklistId, profile?.active_baby_id],
           context.previousChecklist
         )
       }

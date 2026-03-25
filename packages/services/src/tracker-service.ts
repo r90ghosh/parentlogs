@@ -100,6 +100,7 @@ export function createTrackerService(supabase: AppSupabaseClient) {
         .eq('id', id)
         .single()
 
+      if (error && error.code !== 'PGRST116') throw error
       if (error) return null
       return data as BabyLog
     },

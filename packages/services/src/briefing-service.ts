@@ -111,6 +111,18 @@ export function createBriefingService(supabase: AppSupabaseClient) {
       return briefing as BriefingTemplate | null
     },
 
+    async getBriefingTeaser(stage: FamilyStage, week: number): Promise<{ title: string; baby_update: string | null } | null> {
+      const { data, error } = await supabase
+        .from('briefing_templates')
+        .select('title, baby_update')
+        .eq('stage', stage)
+        .eq('week', week)
+        .maybeSingle()
+
+      if (error) throw error
+      return data
+    },
+
     async getAllBriefings(): Promise<BriefingTemplate[]> {
       const { data, error } = await supabase
         .from('briefing_templates')

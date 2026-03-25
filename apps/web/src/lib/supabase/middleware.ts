@@ -33,6 +33,14 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
+  // Skip auth for public routes — avoids unnecessary getUser() round-trip
+  // NOTE: '/' is NOT included here because we need getUser() to redirect logged-in users to /dashboard
+  const publicPaths = ['/content', '/tips', '/faq', '/about', '/privacy', '/terms', '/resources']
+  const isPublicPath = publicPaths.some(p => pathname === p || pathname.startsWith(p + '/'))
+  if (isPublicPath) {
+    return supabaseResponse
+  }
+
   const startTime = Date.now()
   const {
     data: { user },

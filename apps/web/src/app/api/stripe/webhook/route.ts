@@ -1,7 +1,7 @@
 // IMPORTANT: This is the canonical Next.js Stripe webhook handler.
 // It handles grace period logic for subscription cancellations.
-// A duplicate exists at supabase/functions/stripe-webhook/index.ts (Supabase Edge Function).
-// Ensure only ONE of these is configured in the Stripe dashboard.
+// The duplicate at supabase/functions/stripe-webhook/index.ts is DEPRECATED — do not
+// register it in the Stripe Dashboard. This route is the single source of truth.
 
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/server'
@@ -24,7 +24,26 @@ export async function POST(request: NextRequest) {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
   } catch (err) {
     console.error('Webhook signature verification failed:', err)
+    // 400 for signature failures — Stripe should retry with a valid signature
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
+  }
+
+  const supabaseAdmin = getSupabaseAdmin()
+
+  // Atomic idempotency: INSERT with ON CONFLICT uses the UNIQUE constraint on event_id
+  // to prevent duplicate processing even under concurrent requests
+  const { data: inserted, error: dedupeError } = await supabaseAdmin
+    .from('stripe_webhook_events')
+    .upsert(
+      { event_id: event.id, event_type: event.type, processed_at: new Date().toISOString() },
+      { onConflict: 'event_id', ignoreDuplicates: true }
+    )
+    .select('id')
+    .single()
+
+  if (dedupeError || !inserted) {
+    // Event already processed (conflict) or error — skip
+    return NextResponse.json({ received: true, duplicate: true })
   }
 
   try {
@@ -61,16 +80,17 @@ export async function POST(request: NextRequest) {
       }
 
       default:
-        console.log(`Unhandled event type: ${event.type}`)
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`Unhandled event type: ${event.type}`)
+        }
     }
 
     return NextResponse.json({ received: true })
   } catch (error) {
-    console.error('Webhook handler error:', error)
-    return NextResponse.json(
-      { error: 'Webhook handler failed' },
-      { status: 500 }
-    )
+    console.error('Webhook processing error:', error)
+    // Return 200 to prevent Stripe from retrying non-retryable errors.
+    // Signature failures (above) still return 400 since those are retryable.
+    return NextResponse.json({ received: true, error: 'Processing failed' }, { status: 200 })
   }
 }
 
@@ -85,7 +105,7 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
 
   // For lifetime purchase (payment mode)
   if (session.mode === 'payment' && plan === 'lifetime') {
-    await getSupabaseAdmin()
+    const { error: subError } = await getSupabaseAdmin()
       .from('subscriptions')
       .upsert({
         user_id: userId,
@@ -96,15 +116,17 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
       }, {
         onConflict: 'user_id',
       })
+    if (subError) throw subError
 
     // Update profile
-    await getSupabaseAdmin()
+    const { error: profileError } = await getSupabaseAdmin()
       .from('profiles')
       .update({
         subscription_tier: 'lifetime',
         subscription_expires_at: null, // Lifetime never expires
       })
       .eq('id', userId)
+    if (profileError) throw profileError
 
     triggerEmail('subscription_confirmed', userId, { plan: 'lifetime' }).catch((err) => console.error('Email trigger failed:', err))
   }
@@ -129,10 +151,18 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   const status = subscription.status
 
   // Access items to get period end - Stripe API structure
-  const currentPeriodEnd = subscription.items?.data[0]?.current_period_end
-    ?? Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60 // fallback to 30 days
-  const currentPeriodStart = subscription.items?.data[0]?.current_period_start
-    ?? Math.floor(Date.now() / 1000)
+  const rawPeriodEnd = subscription.items?.data[0]?.current_period_end
+  const rawPeriodStart = subscription.items?.data[0]?.current_period_start
+
+  if (!rawPeriodEnd) {
+    console.warn(`Stripe subscription ${subscription.id} missing period_end, using 30-day fallback`)
+  }
+  if (!rawPeriodStart) {
+    console.warn(`Stripe subscription ${subscription.id} missing period_start, using now as fallback`)
+  }
+
+  const currentPeriodEnd = rawPeriodEnd ?? Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60
+  const currentPeriodStart = rawPeriodStart ?? Math.floor(Date.now() / 1000)
 
   const periodEnd = new Date(currentPeriodEnd * 1000)
   const periodStart = new Date(currentPeriodStart * 1000)
@@ -144,7 +174,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   }
 
   // Update subscription record
-  await getSupabaseAdmin()
+  const { error: subError } = await getSupabaseAdmin()
     .from('subscriptions')
     .update({
       stripe_subscription_id: subscription.id,
@@ -156,15 +186,17 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
       updated_at: new Date().toISOString(),
     })
     .eq('user_id', userId)
+  if (subError) throw subError
 
   // Update profile
-  await getSupabaseAdmin()
+  const { error: profileError } = await getSupabaseAdmin()
     .from('profiles')
     .update({
       subscription_tier: tier,
       subscription_expires_at: periodEnd.toISOString(),
     })
     .eq('id', userId)
+  if (profileError) throw profileError
 
   const isNewSubscription = subscription.status === 'active'
     && tier === 'premium'
@@ -211,7 +243,9 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
     .single()
 
   if (userProfile?.family_id) {
-    // Downgrade ALL family members (one subscription covers the whole family)
+    // Keep tier as 'premium' during grace period so client-side isPremium checks
+    // continue to work. The subscription_expires_at marks when access ends.
+    // A cron job or on-read check should downgrade tier to 'free' after expiry.
     const { error: familyError } = await getSupabaseAdmin()
       .from('profiles')
       .update({
@@ -251,13 +285,14 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
   if (!subRecord) return
 
   // Update status to past_due
-  await getSupabaseAdmin()
+  const { error: updateError } = await getSupabaseAdmin()
     .from('subscriptions')
     .update({
       status: 'past_due',
       updated_at: new Date().toISOString(),
     })
     .eq('user_id', subRecord.user_id)
+  if (updateError) throw updateError
 
   triggerEmail('payment_failed', subRecord.user_id).catch((err) => console.error('Email trigger failed:', err))
 }

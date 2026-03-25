@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Crown, Lock, X, Check, Sparkles } from 'lucide-react'
 import Link from 'next/link'
@@ -128,9 +129,26 @@ export function PaywallModal({
   const copy = PAYWALL_COPY[feature]
   const headline = copy?.headline || 'Premium Feature'
   const body = copy ? interpolateCopy(copy.body, interpolations) : 'Upgrade to unlock this feature.'
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') onClose()
+  }, [onClose])
+
+  useEffect(() => {
+    modalRef.current?.focus()
+  }, [])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[--bg]/70 backdrop-blur-sm p-4">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="paywall-title"
+      tabIndex={-1}
+      ref={modalRef}
+      onKeyDown={handleKeyDown}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[--bg]/70 backdrop-blur-sm p-4 outline-none"
+    >
       <div className="relative bg-[--card] border border-[--border] rounded-2xl max-w-md w-full p-6 shadow-lift overflow-hidden">
         {/* Top accent bar */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-copper via-gold to-copper" />
@@ -147,7 +165,7 @@ export function PaywallModal({
           <div className="mx-auto w-14 h-14 rounded-full bg-gradient-to-br from-gold/30 to-copper/30 border border-gold/30 flex items-center justify-center mb-4">
             <Crown className="h-7 w-7 text-gold" />
           </div>
-          <h2 className="font-display text-xl font-bold text-[--cream] mb-2">{headline}</h2>
+          <h2 id="paywall-title" className="font-display text-xl font-bold text-[--cream] mb-2">{headline}</h2>
           <p className="font-body text-sm text-[--muted]">{body}</p>
         </div>
 

@@ -8,6 +8,7 @@ import { useLastCheckin, useSubmitMoodCheckin, useMoodHistory } from '@/hooks/us
 import { MOOD_CONFIG, SITUATION_FLAGS } from '@tdc/shared/constants'
 import { MoodLevel } from '@tdc/shared/types/dad-journey'
 import { Skeleton } from '@/components/ui/skeleton'
+import { toast } from 'sonner'
 
 export function MoodCheckinCard() {
   const { profile, family } = useUser()
@@ -61,10 +62,13 @@ export function MoodCheckinCard() {
         mood: selectedMood,
         situationFlags: selectedFlags,
       })
-    } finally {
-      setIsSubmitting(false)
       setSelectedMood(null)
       setSelectedFlags([])
+    } catch {
+      toast.error('Failed to save mood check-in. Please try again.')
+      return
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -133,10 +137,13 @@ export function MoodCheckinCard() {
       </div>
 
       {/* Mood emoji buttons */}
-      <div className="flex items-center justify-between">
+      <div role="radiogroup" aria-label="How are you feeling today?" className="flex items-center justify-between">
         {MOOD_CONFIG.map(({ level, emoji, label }) => (
           <button
             key={level}
+            role="radio"
+            aria-checked={selectedMood === level}
+            aria-label={label}
             onClick={() => handleMoodSelect(level)}
             className={cn(
               'flex flex-col items-center gap-1 px-2 sm:px-3 py-1.5 rounded-xl transition-all',

@@ -73,48 +73,40 @@ export async function getServerAuth(): Promise<ServerAuthResult> {
     // User exists but no profile (edge case - trigger may have failed)
     if (isDev) console.warn('[ServerAuth] User exists but profile not found:', user.id)
     return {
-      user: { id: user.id, email: user.email!, identities: user.identities?.map(i => ({ provider: i.provider })) },
+      user: { id: user.id, email: user.email ?? '', identities: user.identities?.map(i => ({ provider: i.provider })) },
       profile: null,
       family: null,
       activeBaby: null
     }
   }
 
-  // Fetch family data if user has a family
-  let family: Family | null = null
-  if (profile.family_id) {
-    const { data: familyData, error: familyError } = await supabase
-      .from('families')
-      .select('*')
-      .eq('id', profile.family_id)
-      .single()
+  // Fetch family and active baby in parallel
+  const [familyResult, babyResult] = await Promise.all([
+    profile.family_id
+      ? supabase.from('families').select('*').eq('id', profile.family_id).single()
+      : Promise.resolve({ data: null, error: null }),
+    profile.active_baby_id
+      ? supabase.from('babies').select('*').eq('id', profile.active_baby_id).single()
+      : Promise.resolve({ data: null, error: null }),
+  ])
 
-    if (familyError) {
-      if (isDev) console.error('[ServerAuth] Family fetch error:', familyError.message)
-    } else if (familyData) {
-      family = familyData as Family
-    }
+  let family: Family | null = null
+  if (familyResult.error) {
+    if (isDev) console.error('[ServerAuth] Family fetch error:', familyResult.error.message)
+  } else if (familyResult.data) {
+    family = familyResult.data as Family
   }
 
-  // Fetch active baby
   let activeBaby: Baby | null = null
-  if (profile.active_baby_id) {
-    const { data: babyData, error: babyError } = await supabase
-      .from('babies')
-      .select('*')
-      .eq('id', profile.active_baby_id)
-      .single()
-
-    if (babyError) {
-      if (isDev) console.error('[ServerAuth] Baby fetch error:', babyError.message)
-    } else if (babyData) {
-      activeBaby = babyData as Baby
-    }
+  if (babyResult.error) {
+    if (isDev) console.error('[ServerAuth] Baby fetch error:', babyResult.error.message)
+  } else if (babyResult.data) {
+    activeBaby = babyResult.data as Baby
   }
 
   if (isDev) console.log('[ServerAuth] getServerAuth END (success)')
   return {
-    user: { id: user.id, email: user.email!, identities: user.identities?.map(i => ({ provider: i.provider })) },
+    user: { id: user.id, email: user.email ?? '', identities: user.identities?.map(i => ({ provider: i.provider })) },
     profile: profile as AppUser,
     family,
     activeBaby
@@ -133,7 +125,7 @@ export async function getServerUser() {
     return null
   }
 
-  return { id: user.id, email: user.email! }
+  return { id: user.id, email: user.email ?? '' }
 }
 
 /**

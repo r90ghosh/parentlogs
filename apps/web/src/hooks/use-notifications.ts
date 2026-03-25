@@ -92,7 +92,7 @@ export function useNotificationPreferences() {
   const ctx = useServiceContext()
 
   return useQuery({
-    queryKey: ['notification-preferences'],
+    queryKey: ['notification-preferences', ctx?.userId],
     queryFn: () => notificationService.getPreferences(ctx),
     enabled: !!ctx,
   })

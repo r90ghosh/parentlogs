@@ -14,13 +14,3 @@ export { InvitePartnerCard } from './InvitePartnerCard'
 export { BudgetSnapshotCard } from './BudgetSnapshotCard'
 export { ChecklistProgressCard } from './ChecklistProgressCard'
 export { WelcomeCatchUpCard } from './WelcomeCatchUpCard'
-
-// Legacy components (kept for backward compat)
-export { BabyDevelopmentCard } from './BabyDevelopmentCard'
-export { MomStatusCard } from './MomStatusCard'
-export { CountdownCard } from './CountdownCard'
-export { ProgressCard } from './ProgressCard'
-export { PriorityTasksCard } from './PriorityTasksCard'
-export { UpcomingEventsCard } from './UpcomingEventsCard'
-export { WeeklyBriefingCard } from './WeeklyBriefingCard'
-export { AchievementBanner } from './AchievementBanner'

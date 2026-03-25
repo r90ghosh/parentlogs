@@ -161,6 +161,50 @@ export function createFamilyService(supabase: AppSupabaseClient) {
       return (members || []) as FamilyMember[]
     },
 
+    async getPartnerActivity(familyId: string): Promise<{
+      name: string
+      initial: string
+      updatedAt: string | null
+      recentTasks: { title: string; status: string; completedAt: string | null }[]
+    } | null> {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return null
+
+        const { data: partnerProfile } = await supabase
+          .from('profiles')
+          .select('id, full_name, updated_at')
+          .eq('family_id', familyId)
+          .neq('id', user.id)
+          .single()
+
+        if (!partnerProfile) return null
+
+        const { data: partnerTasks } = await supabase
+          .from('family_tasks')
+          .select('title, status, completed_at')
+          .eq('family_id', familyId)
+          .eq('completed_by', partnerProfile.id)
+          .order('completed_at', { ascending: false })
+          .limit(2)
+
+        const partnerName = partnerProfile.full_name?.split(' ')[0] || 'Partner'
+
+        return {
+          name: partnerName,
+          initial: partnerName[0].toUpperCase(),
+          updatedAt: partnerProfile.updated_at,
+          recentTasks: partnerTasks?.map(t => ({
+            title: t.title,
+            status: t.status ?? 'pending',
+            completedAt: t.completed_at,
+          })) || [],
+        }
+      } catch {
+        return null
+      }
+    },
+
     async updateFamily(updates: Partial<Pick<Family, 'due_date' | 'birth_date' | 'baby_name' | 'stage'>>, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
       const resolved = await resolveContext(ctx)
       if (!resolved) return { error: new Error('No family found') }

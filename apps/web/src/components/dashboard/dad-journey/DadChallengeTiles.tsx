@@ -99,13 +99,7 @@ export function DadChallengeTiles({ maxTiles = 7 }: DadChallengeTilesProps) {
         return (
           <CardEntrance key={tile.id} delay={index * 80}>
             <Card3DTilt maxTilt={3} gloss>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05, duration: 0.3, ease: 'easeOut' }}
-              >
-                <DadChallengeTile content={tile} config={config} />
-              </motion.div>
+              <DadChallengeTile content={tile} config={config} />
             </Card3DTilt>
           </CardEntrance>
         )

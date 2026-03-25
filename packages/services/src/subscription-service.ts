@@ -69,6 +69,7 @@ export function createSubscriptionService(supabase: AppSupabaseClient) {
         .eq('user_id', userId)
         .single()
 
+      if (error && error.code !== 'PGRST116') throw error
       if (error || !data) return null
       return data as Subscription
     },
