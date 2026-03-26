@@ -131,7 +131,7 @@ export default async function ArticlePage({ params }: PageProps) {
           {/* Back link */}
           <Link
             href="/content"
-            className="inline-flex items-center gap-2 font-ui text-[--muted] hover:text-white transition-colors mb-8"
+            className="inline-flex items-center gap-2 font-ui text-[--muted] hover:text-[--white] transition-colors mb-8"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Content
@@ -160,7 +160,7 @@ export default async function ArticlePage({ params }: PageProps) {
           </div>
 
           {/* Title */}
-          <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-[--white] mb-6">
             {article.title}
           </h1>
 
@@ -192,7 +192,7 @@ export default async function ArticlePage({ params }: PageProps) {
         {/* Sources */}
         {article.sources && article.sources.length > 0 && !isLocked && (
           <div className="mt-12 pt-8 border-t border-[--border]">
-            <h3 className="font-display text-lg font-semibold text-white mb-4">Sources</h3>
+            <h3 className="font-display text-lg font-semibold text-[--white] mb-4">Sources</h3>
             <ul className="space-y-2">
               {article.sources.map((source, index) => (
                 <li key={index} className="font-body text-sm text-[--muted]">
@@ -206,7 +206,7 @@ export default async function ArticlePage({ params }: PageProps) {
         {/* Bottom CTA for free articles - only show for unauthenticated users */}
         {!isLocked && !isAuthenticated && (
           <div className="mt-12 p-8 rounded-2xl bg-[--surface]/50 border border-[--border] text-center">
-            <h3 className="font-display text-xl font-bold text-white mb-3">
+            <h3 className="font-display text-xl font-bold text-[--white] mb-3">
               Want personalized weekly briefings?
             </h3>
             <p className="font-body text-[--muted] mb-6 max-w-lg mx-auto">

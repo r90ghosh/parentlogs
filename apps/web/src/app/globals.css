@@ -133,23 +133,23 @@ html.light body {
 
 /* Glass cards — frosted translucent panels */
 html.light [data-slot="card"] {
-  background: rgba(255, 255, 255, 0.42) !important;
+  background: rgba(255, 255, 255, 0.42);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.55);
   box-shadow:
     0 2px 8px rgba(0,0,0,0.04),
     0 8px 32px rgba(0,0,0,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.70) !important;
+    inset 0 1px 0 rgba(255,255,255,0.70);
 }
 
 html.light [data-slot="card"]:hover {
-  background: rgba(255, 255, 255, 0.55) !important;
-  border-color: rgba(255, 255, 255, 0.70) !important;
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(255, 255, 255, 0.70);
   box-shadow:
     0 4px 16px rgba(0,0,0,0.06),
     0 12px 48px rgba(0,0,0,0.08),
-    inset 0 1px 0 rgba(255,255,255,0.80) !important;
+    inset 0 1px 0 rgba(255,255,255,0.80);
 }
 
 @layer base {

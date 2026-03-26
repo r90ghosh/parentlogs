@@ -46,7 +46,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
       </div>
 
       {/* Title */}
-      <h3 className="font-display text-lg font-semibold text-white mb-2 group-hover:text-copper transition-colors line-clamp-2">
+      <h3 className="font-display text-lg font-semibold text-[--white] mb-2 group-hover:text-copper transition-colors line-clamp-2">
         {article.title}
       </h3>
 

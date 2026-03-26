@@ -86,7 +86,7 @@ export default async function ResourcesPage(props: PageProps) {
             </span>
 
             {/* Title */}
-            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[--white] mb-6">
               Everything you need to navigate{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-copper to-gold">
                 fatherhood
@@ -104,7 +104,7 @@ export default async function ResourcesPage(props: PageProps) {
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
                   <BookOpen className="h-5 w-5 text-copper" />
-                  <span className="font-display text-3xl font-bold text-white">{counts.articles}</span>
+                  <span className="font-display text-3xl font-bold text-[--white]">{counts.articles}</span>
                 </div>
                 <span className="font-ui text-sm text-[--dim]">Articles</span>
               </div>
@@ -114,7 +114,7 @@ export default async function ResourcesPage(props: PageProps) {
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
                   <Video className="h-5 w-5 text-copper" />
-                  <span className="font-display text-3xl font-bold text-white">{counts.videos}</span>
+                  <span className="font-display text-3xl font-bold text-[--white]">{counts.videos}</span>
                 </div>
                 <span className="font-ui text-sm text-[--dim]">Videos</span>
               </div>
@@ -150,7 +150,7 @@ export default async function ResourcesPage(props: PageProps) {
 
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="p-8 md:p-12 rounded-2xl bg-gradient-to-br from-copper/10 to-[--surface] border border-copper/20">
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-white mb-4">
+              <h2 className="font-display text-2xl md:text-3xl font-bold text-[--white] mb-4">
                 {isAuthenticated ? 'Upgrade to Premium' : 'Unlock All Content'}
               </h2>
               <p className="font-body text-[--muted] mb-8 max-w-xl mx-auto">
@@ -175,7 +175,7 @@ export default async function ResourcesPage(props: PageProps) {
                     asChild
                     variant="outline"
                     size="lg"
-                    className="border-[--border] text-[--cream] hover:bg-[--card] hover:text-white font-ui font-semibold"
+                    className="border-[--border] text-[--cream] hover:bg-[--card] hover:text-[--white] font-ui font-semibold"
                   >
                     <Link href="/#pricing">See Pricing</Link>
                   </Button>

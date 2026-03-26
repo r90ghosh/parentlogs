@@ -31,7 +31,7 @@ export function ToggleTheme() {
     }, []);
 
     if (!isMounted) {
-        return <div className="flex h-8 w-24" />;
+        return <div className="flex h-7 w-[84px]" />;
     }
 
     return (

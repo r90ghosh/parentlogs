@@ -38,7 +38,7 @@ export default async function PublicChecklistsPage() {
               Preparation Checklists
             </span>
 
-            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[--white] mb-6">
               Never forget a{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-copper to-gold">
                 thing
@@ -53,21 +53,21 @@ export default async function PublicChecklistsPage() {
             {/* Stats */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 md:gap-10">
               <div className="text-center">
-                <span className="font-display text-3xl font-bold text-white">{checklists.length}</span>
+                <span className="font-display text-3xl font-bold text-[--white]">{checklists.length}</span>
                 <span className="font-ui text-sm text-[--dim] block">Checklists</span>
               </div>
 
               <div className="hidden sm:block w-px h-12 bg-[--border]" />
 
               <div className="text-center">
-                <span className="font-display text-3xl font-bold text-white">{totalItems}+</span>
+                <span className="font-display text-3xl font-bold text-[--white]">{totalItems}+</span>
                 <span className="font-ui text-sm text-[--dim] block">Items</span>
               </div>
 
               <div className="hidden sm:block w-px h-12 bg-[--border]" />
 
               <div className="text-center">
-                <span className="font-display text-3xl font-bold text-white">{freeCount}</span>
+                <span className="font-display text-3xl font-bold text-[--white]">{freeCount}</span>
                 <span className="font-ui text-sm text-[--dim] block">Free Lists</span>
               </div>
             </div>
@@ -122,7 +122,7 @@ export default async function PublicChecklistsPage() {
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="p-8 md:p-12 rounded-2xl bg-gradient-to-br from-copper/10 to-[--surface] border border-copper/20">
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-white mb-4">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[--white] mb-4">
               Track Your Progress
             </h2>
             <p className="font-body text-[--muted] mb-8 max-w-xl mx-auto">
@@ -146,7 +146,7 @@ export default async function PublicChecklistsPage() {
                 asChild
                 variant="outline"
                 size="lg"
-                className="border-[--border] text-[--cream] hover:bg-[--card] hover:text-white font-ui font-semibold"
+                className="border-[--border] text-[--cream] hover:bg-[--card] hover:text-[--white] font-ui font-semibold"
               >
                 <Link href="/#pricing">See Pricing</Link>
               </Button>

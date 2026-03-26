@@ -68,7 +68,7 @@ export default async function ChecklistDetailPage({ params }: PageProps) {
           <div className="flex items-center gap-2 mb-8">
             <Link
               href="/baby-checklists"
-              className="inline-flex items-center gap-2 font-ui text-[--muted] hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 font-ui text-[--muted] hover:text-[--white] transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
               Checklists
@@ -84,7 +84,7 @@ export default async function ChecklistDetailPage({ params }: PageProps) {
             </div>
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <h1 className="font-display text-3xl md:text-4xl font-bold text-white">
+                <h1 className="font-display text-3xl md:text-4xl font-bold text-[--white]">
                   {checklist.name}
                 </h1>
                 {checklist.is_premium && (
@@ -147,7 +147,7 @@ export default async function ChecklistDetailPage({ params }: PageProps) {
         {/* Sign up CTA after items */}
         <div className="mt-12 p-8 rounded-2xl bg-[--surface]/50 border border-[--border] text-center">
           <CheckCircle2 className="h-10 w-10 text-copper mx-auto mb-4" />
-          <h3 className="font-display text-xl font-bold text-white mb-3">
+          <h3 className="font-display text-xl font-bold text-[--white] mb-3">
             Ready to start checking off items?
           </h3>
           <p className="font-body text-[--muted] mb-6 max-w-lg mx-auto">
@@ -169,7 +169,7 @@ export default async function ChecklistDetailPage({ params }: PageProps) {
         {/* Related Checklists */}
         {related.length > 0 && (
           <div className="mt-16 pt-12 border-t border-[--border]">
-            <h2 className="font-display text-2xl font-bold text-white mb-6">More Checklists</h2>
+            <h2 className="font-display text-2xl font-bold text-[--white] mb-6">More Checklists</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {related.map((cl) => {
                 const RelIcon = CHECKLIST_ICONS[cl.checklist_id] || FileText

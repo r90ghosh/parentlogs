@@ -231,7 +231,7 @@ function ShiftStat({
         <Icon className={cn("h-4 w-4", iconColor)} />
         <span className="font-ui text-xs text-[--muted]">{label}</span>
       </div>
-      <p className="font-body text-sm font-medium text-white">{value}</p>
+      <p className="font-body text-sm font-medium text-[--white]">{value}</p>
       <p className="font-body text-xs text-[--dim]">{subValue}</p>
     </div>
   )

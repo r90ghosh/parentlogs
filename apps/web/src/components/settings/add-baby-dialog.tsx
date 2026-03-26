@@ -70,7 +70,7 @@ export function AddBabyDialog() {
       </DialogTrigger>
       <DialogContent className="bg-[--surface] border-[--border]">
         <DialogHeader>
-          <DialogTitle className="font-display text-lg text-white flex items-center gap-2">
+          <DialogTitle className="font-display text-lg text-[--white] flex items-center gap-2">
             <Baby className="h-5 w-5" />
             Add Baby
           </DialogTitle>

@@ -74,7 +74,7 @@ export default function SettingsClient() {
       {/* Header */}
       <RevealOnScroll delay={0}>
       <div>
-        <h1 className="font-display text-2xl font-bold text-white">Settings</h1>
+        <h1 className="font-display text-2xl font-bold text-[--white]">Settings</h1>
         <p className="font-body text-[--muted]">Manage your account and preferences</p>
       </div>
       </RevealOnScroll>
@@ -92,7 +92,7 @@ export default function SettingsClient() {
             </Avatar>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <h2 className="font-display text-lg font-semibold text-white truncate">
+                <h2 className="font-display text-lg font-semibold text-[--white] truncate">
                   {profile.full_name || 'User'}
                 </h2>
                 {isPremium && (
@@ -123,7 +123,7 @@ export default function SettingsClient() {
                     <item.icon className="h-5 w-5 text-[--cream]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-body font-medium text-white">{item.label}</p>
+                    <p className="font-body font-medium text-[--white]">{item.label}</p>
                     <p className="font-body text-sm text-[--muted]">{item.description}</p>
                   </div>
                   <ChevronRight className="h-5 w-5 text-[--dim]" />

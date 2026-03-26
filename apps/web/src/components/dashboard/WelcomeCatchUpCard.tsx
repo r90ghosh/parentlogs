@@ -28,7 +28,7 @@ export function WelcomeCatchUpCard({
     >
       <div className="flex items-center gap-2 mb-3">
         <AlertTriangle className="h-4 w-4 text-gold" />
-        <span className="text-sm font-semibold text-white">Welcome to Your Timeline</span>
+        <span className="text-sm font-semibold text-[--white]">Welcome to Your Timeline</span>
       </div>
 
       <p className="text-xs text-[--muted] mb-4">

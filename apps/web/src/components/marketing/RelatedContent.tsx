@@ -14,7 +14,7 @@ export function RelatedContent({ articles, currentStage }: RelatedContentProps) 
   return (
     <section className="mt-16 pt-12 border-t border-[--border]">
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl font-bold text-white">Related Articles</h2>
+        <h2 className="text-2xl font-bold text-[--white]">Related Articles</h2>
         <Link
           href={`/content?stage=${currentStage}`}
           className="flex items-center gap-1.5 text-sm text-amber-400 hover:text-amber-300 transition-colors"

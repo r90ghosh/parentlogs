@@ -218,7 +218,7 @@ export default function ProfileClient() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <h1 className="font-display text-xl font-bold text-white">Profile</h1>
+        <h1 className="font-display text-xl font-bold text-[--white]">Profile</h1>
       </div>
 
       {error && (
@@ -463,7 +463,7 @@ export default function ProfileClient() {
             </AlertDialogTrigger>
             <AlertDialogContent className="bg-[--surface] border-[--border]">
               <AlertDialogHeader>
-                <AlertDialogTitle className="font-display text-white">Delete Account?</AlertDialogTitle>
+                <AlertDialogTitle className="font-display text-[--white]">Delete Account?</AlertDialogTitle>
                 <AlertDialogDescription asChild>
                   <div className="font-body text-[--muted]">
                     <p>This action cannot be undone. This will permanently delete your account

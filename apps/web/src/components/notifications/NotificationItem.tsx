@@ -76,7 +76,7 @@ export function NotificationItem({
         <div className="flex-1 min-w-0">
           <p className={cn(
             'font-body text-sm leading-snug',
-            notification.is_read ? 'text-[--cream]' : 'font-medium text-white'
+            notification.is_read ? 'text-[--cream]' : 'font-medium text-[--white]'
           )}>
             {notification.title}
           </p>

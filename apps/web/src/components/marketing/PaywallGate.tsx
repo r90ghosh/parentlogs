@@ -30,7 +30,7 @@ export function PaywallGate({ title, isAuthenticated = false }: PaywallGateProps
           {isAuthenticated ? (
             <>
               {/* Upgrade CTA for authenticated free users */}
-              <h3 className="font-display text-2xl font-bold text-white mb-3">Upgrade to unlock this article</h3>
+              <h3 className="font-display text-2xl font-bold text-[--white] mb-3">Upgrade to unlock this article</h3>
               <p className="font-body text-[--muted] mb-8">
                 This is a premium article. Upgrade your account to read the full article and unlock
                 all premium content.
@@ -50,7 +50,7 @@ export function PaywallGate({ title, isAuthenticated = false }: PaywallGateProps
           ) : (
             <>
               {/* Signup CTA for unauthenticated users */}
-              <h3 className="font-display text-2xl font-bold text-white mb-3">Sign up free to continue reading</h3>
+              <h3 className="font-display text-2xl font-bold text-[--white] mb-3">Sign up free to continue reading</h3>
               <p className="font-body text-[--muted] mb-8">
                 Create a free account to unlock this article and get access to weekly briefings
                 personalized to your due date.
@@ -72,7 +72,7 @@ export function PaywallGate({ title, isAuthenticated = false }: PaywallGateProps
                   asChild
                   variant="outline"
                   size="lg"
-                  className="w-full border-[--border] text-[--cream] hover:bg-[--card] hover:text-white font-ui font-semibold"
+                  className="w-full border-[--border] text-[--cream] hover:bg-[--card] hover:text-[--white] font-ui font-semibold"
                 >
                   <Link href="/login">
                     <Mail className="mr-2 h-5 w-5" />

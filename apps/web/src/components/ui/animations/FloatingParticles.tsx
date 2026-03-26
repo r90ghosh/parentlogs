@@ -1,5 +1,6 @@
 'use client'
 
+import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 
 interface Particle {
@@ -33,7 +34,11 @@ function generateParticles(count: number): Particle[] {
 }
 
 export function FloatingParticles({ count = 10 }: { count?: number }) {
+  const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
   const [particles, setParticles] = useState<Particle[]>([])
+
+  useEffect(() => setMounted(true), [])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -42,6 +47,7 @@ export function FloatingParticles({ count = 10 }: { count?: number }) {
     setParticles(generateParticles(count))
   }, [count])
 
+  if (mounted && resolvedTheme === 'light') return null
   if (particles.length === 0) return null
 
   return (

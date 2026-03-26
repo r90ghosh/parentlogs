@@ -13,15 +13,15 @@ function Markdown({ children }: { children: string }) {
     <ReactMarkdown
       components={{
         h2: ({ children }) => (
-          <h4 className="font-display text-base font-semibold text-white mt-4 mb-2 first:mt-0">{children}</h4>
+          <h4 className="font-display text-base font-semibold text-[--white] mt-4 mb-2 first:mt-0">{children}</h4>
         ),
         h3: ({ children }) => (
-          <h5 className="font-display text-sm font-semibold text-white mt-3 mb-1">{children}</h5>
+          <h5 className="font-display text-sm font-semibold text-[--white] mt-3 mb-1">{children}</h5>
         ),
         p: ({ children }) => (
           <p className="text-sm font-body text-[--cream] leading-relaxed mb-3 last:mb-0">{children}</p>
         ),
-        strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+        strong: ({ children }) => <strong className="font-semibold text-[--white]">{children}</strong>,
         em: ({ children }) => <em className="italic">{children}</em>,
         ul: ({ children }) => <ul className="list-disc pl-5 mb-3 space-y-1 text-sm font-body text-[--cream]">{children}</ul>,
         ol: ({ children }) => <ol className="list-decimal pl-5 mb-3 space-y-1 text-sm font-body text-[--cream]">{children}</ol>,
@@ -35,7 +35,7 @@ function Markdown({ children }: { children: string }) {
         hr: () => <hr className="my-3 border-[--border]/60" />,
         // Downgrade h1 to h4 since this is inside a tile
         h1: ({ children }) => (
-          <h4 className="font-display text-base font-semibold text-white mt-4 mb-2 first:mt-0">{children}</h4>
+          <h4 className="font-display text-base font-semibold text-[--white] mt-4 mb-2 first:mt-0">{children}</h4>
         ),
       }}
     >

@@ -75,7 +75,7 @@ export default function NotificationsClient() {
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
-          <h1 className="font-display text-xl font-bold text-white">Notifications</h1>
+          <h1 className="font-display text-xl font-bold text-[--white]">Notifications</h1>
         </div>
 
         <Alert variant="destructive">
@@ -97,7 +97,7 @@ export default function NotificationsClient() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <h1 className="font-display text-xl font-bold text-white">Notifications</h1>
+        <h1 className="font-display text-xl font-bold text-[--white]">Notifications</h1>
       </div>
 
       {/* Permission Status */}

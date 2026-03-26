@@ -107,7 +107,7 @@ export function NotificationInbox() {
   // Header (always visible)
   const header = (
     <div className="flex items-center justify-between mb-4">
-      <h1 className="font-display text-2xl font-bold text-white">Notifications</h1>
+      <h1 className="font-display text-2xl font-bold text-[--white]">Notifications</h1>
       <div className="flex items-center gap-3">
         {hasUnread && (
           <button

@@ -164,7 +164,7 @@ export default function FamilyClient() {
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
-          <h1 className="font-display text-xl font-bold text-white">Family</h1>
+          <h1 className="font-display text-xl font-bold text-[--white]">Family</h1>
         </div>
 
         <Card className="bg-[--surface] border-[--border]">
@@ -189,7 +189,7 @@ export default function FamilyClient() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <h1 className="font-display text-xl font-bold text-white">Family</h1>
+        <h1 className="font-display text-xl font-bold text-[--white]">Family</h1>
       </div>
 
       {error && (
@@ -223,7 +223,7 @@ export default function FamilyClient() {
               </Avatar>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className="font-body font-medium text-white truncate">{member.full_name}</p>
+                  <p className="font-body font-medium text-[--white] truncate">{member.full_name}</p>
                   {member.is_owner && (
                     <Badge variant="outline" className="text-xs border-gold/30 text-gold">
                       <Crown className="h-3 w-3 mr-1" />
@@ -240,7 +240,7 @@ export default function FamilyClient() {
           <div className="pt-4 border-t border-[--border]">
             <Label className="font-ui font-semibold text-[11px] uppercase tracking-[0.12em] text-[--muted]">Invite Code</Label>
             <div className="flex items-center gap-2 mt-2">
-              <div className="flex-1 bg-[--card] rounded-lg px-4 py-3 font-mono text-lg tracking-wider text-white">
+              <div className="flex-1 bg-[--card] rounded-lg px-4 py-3 font-mono text-lg tracking-wider text-[--white]">
                 {family.invite_code}
               </div>
               <Button
@@ -292,7 +292,7 @@ export default function FamilyClient() {
           {babies?.map((baby, index) => (
             <div key={baby.id} className="p-3 bg-[--card]/50 rounded-lg space-y-3">
               <div className="flex items-center justify-between">
-                <p className="font-body text-white font-medium">
+                <p className="font-body text-[--white] font-medium">
                   {baby.baby_name || `Baby ${index + 1}`}
                 </p>
                 <Badge variant="outline" className="text-xs border-copper/30 text-copper">
@@ -397,7 +397,7 @@ export default function FamilyClient() {
               </AlertDialogTrigger>
               <AlertDialogContent className="bg-[--surface] border-[--border]">
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="font-display text-white">Leave Family?</AlertDialogTitle>
+                  <AlertDialogTitle className="font-display text-[--white]">Leave Family?</AlertDialogTitle>
                   <AlertDialogDescription className="font-body">
                     You will be removed from this family. Your personal data will be preserved,
                     but you&apos;ll lose access to shared family data like tasks and tracker logs.

@@ -41,7 +41,7 @@ export default async function PublicBudgetPage() {
             </span>
 
             {/* Title */}
-            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[--white] mb-6">
               What you&apos;ll{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-copper to-gold">
                 actually spend
@@ -59,7 +59,7 @@ export default async function PublicBudgetPage() {
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
                   <DollarSign className="h-5 w-5 text-copper" />
-                  <span className="font-display text-3xl font-bold text-white">{totalItems}</span>
+                  <span className="font-display text-3xl font-bold text-[--white]">{totalItems}</span>
                 </div>
                 <span className="font-ui text-sm text-[--dim]">Items Tracked</span>
               </div>
@@ -69,7 +69,7 @@ export default async function PublicBudgetPage() {
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
                   <TrendingUp className="h-5 w-5 text-copper" />
-                  <span className="font-display text-3xl font-bold text-white">{categories.size}</span>
+                  <span className="font-display text-3xl font-bold text-[--white]">{categories.size}</span>
                 </div>
                 <span className="font-ui text-sm text-[--dim]">Categories</span>
               </div>
@@ -77,7 +77,7 @@ export default async function PublicBudgetPage() {
               <div className="hidden sm:block w-px h-12 bg-[--border]" />
 
               <div className="text-center">
-                <span className="font-display text-2xl font-bold text-white">
+                <span className="font-display text-2xl font-bold text-[--white]">
                   {formatBudgetPrice(totalMin)}-{formatBudgetPrice(totalMax)}
                 </span>
                 <span className="font-ui text-sm text-[--dim] block">Est. Total Range</span>
@@ -98,7 +98,7 @@ export default async function PublicBudgetPage() {
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="p-8 md:p-12 rounded-2xl bg-gradient-to-br from-copper/10 to-[--surface] border border-copper/20">
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-white mb-4">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-[--white] mb-4">
               Track Your Own Baby Budget
             </h2>
             <p className="font-body text-[--muted] mb-8 max-w-xl mx-auto">
@@ -122,7 +122,7 @@ export default async function PublicBudgetPage() {
                 asChild
                 variant="outline"
                 size="lg"
-                className="border-[--border] text-[--cream] hover:bg-[--card] hover:text-white font-ui font-semibold"
+                className="border-[--border] text-[--cream] hover:bg-[--card] hover:text-[--white] font-ui font-semibold"
               >
                 <Link href="/#pricing">See Pricing</Link>
               </Button>

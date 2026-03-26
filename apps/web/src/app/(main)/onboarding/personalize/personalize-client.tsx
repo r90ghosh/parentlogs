@@ -73,7 +73,7 @@ export default function PersonalizeClient() {
 
         <Card className="bg-[--surface] border-[--border]">
           <CardHeader>
-            <CardTitle className="font-display text-xl text-white">Personalize Your Experience</CardTitle>
+            <CardTitle className="font-display text-xl text-[--white]">Personalize Your Experience</CardTitle>
             <CardDescription className="font-body">
               Tell us what&apos;s on your mind so we can tailor content to you
             </CardDescription>
@@ -98,7 +98,7 @@ export default function PersonalizeClient() {
                     className={cn(
                       'flex items-center gap-2 p-3 rounded-lg font-body text-sm text-left transition-all border',
                       selectedConcerns.includes(concern.key)
-                        ? 'border-copper bg-copper/10 text-white'
+                        ? 'border-copper bg-copper/10 text-[--white]'
                         : 'border-[--border] bg-[--card] text-[--cream] hover:border-[--border-hover]'
                     )}
                   >
@@ -122,7 +122,7 @@ export default function PersonalizeClient() {
                     className={cn(
                       'w-full p-3 rounded-lg font-body text-sm text-left transition-all border',
                       workSituation === option
-                        ? 'border-copper bg-copper/10 text-white'
+                        ? 'border-copper bg-copper/10 text-[--white]'
                         : 'border-[--border] bg-[--card] text-[--cream] hover:border-[--border-hover]'
                     )}
                   >

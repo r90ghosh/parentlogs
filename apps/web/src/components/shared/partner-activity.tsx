@@ -36,7 +36,7 @@ export function PartnerStatus() {
         <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-sage border-2 border-[--surface]" />
       </div>
       <div className="hidden sm:block">
-        <p className="font-body text-sm font-medium text-white">
+        <p className="font-body text-sm font-medium text-[--white]">
           {partner.full_name?.split(' ')[0]}
         </p>
         <p className="font-body text-xs text-[--muted]">Online</p>
@@ -71,7 +71,7 @@ export function RecentPartnerActivity() {
           </AvatarFallback>
         </Avatar>
         <div>
-          <p className="font-body text-sm font-medium text-white">{partner.full_name}</p>
+          <p className="font-body text-sm font-medium text-[--white]">{partner.full_name}</p>
           <p className="font-body text-xs text-[--muted] capitalize">{partner.role}</p>
         </div>
         <Badge variant="outline" className="ml-auto text-sage border-sage/30 font-ui">
@@ -119,7 +119,7 @@ export function ActivityItem({
         <AvatarFallback className="font-display">{userName.charAt(0).toUpperCase()}</AvatarFallback>
       </Avatar>
       <div className="flex-1 min-w-0">
-        <p className="font-body text-sm text-white">
+        <p className="font-body text-sm text-[--white]">
           <span className="font-medium">{userName}</span>{' '}
           <span className="text-[--muted]">{action}</span>
         </p>

@@ -68,7 +68,7 @@ export class ErrorBoundary extends Component<Props, State> {
               <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-coral/10 flex items-center justify-center">
                 <AlertTriangle className="h-8 w-8 text-coral" />
               </div>
-              <CardTitle className="font-display text-xl text-white">Something went wrong</CardTitle>
+              <CardTitle className="font-display text-xl text-[--white]">Something went wrong</CardTitle>
               <CardDescription className="font-body">
                 An unexpected error occurred. We&apos;ve been notified and are working on it.
               </CardDescription>

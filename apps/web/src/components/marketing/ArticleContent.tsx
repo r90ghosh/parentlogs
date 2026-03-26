@@ -12,7 +12,7 @@ interface ArticleContentProps {
 export function ArticleContent({ content, className }: ArticleContentProps) {
   // Warm cream for body text, softer on the eyes
   const textColor = 'text-[--cream]'
-  const headingColor = 'text-white'
+  const headingColor = 'text-[--white]'
 
   return (
     <div className={cn('prose prose-invert max-w-none', className)}>

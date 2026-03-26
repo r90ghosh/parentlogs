@@ -70,7 +70,7 @@ export function ContentFilters({
                 'font-ui px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
                 currentStage === 'all'
                   ? 'bg-copper text-white'
-                  : 'bg-[--card]/50 text-[--muted] hover:bg-[--card-hover]/50 hover:text-white'
+                  : 'bg-[--card]/50 text-[--muted] hover:bg-[--card-hover]/50 hover:text-[--white]'
               )}
             >
               All Stages
@@ -93,7 +93,7 @@ export function ContentFilters({
                     'font-ui px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
                     currentStage === stage.id
                       ? 'bg-copper text-white'
-                      : 'bg-[--card]/50 text-[--muted] hover:bg-[--card-hover]/50 hover:text-white'
+                      : 'bg-[--card]/50 text-[--muted] hover:bg-[--card-hover]/50 hover:text-[--white]'
                   )}
                 >
                   {stage.label}
@@ -112,8 +112,8 @@ export function ContentFilters({
                 className={cn(
                   'font-ui px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2',
                   currentFormat === 'all'
-                    ? 'bg-[--card-hover] text-white'
-                    : 'bg-[--card]/30 text-[--muted] hover:bg-[--card-hover]/50 hover:text-white'
+                    ? 'bg-[--card-hover] text-[--white]'
+                    : 'bg-[--card]/30 text-[--muted] hover:bg-[--card-hover]/50 hover:text-[--white]'
                 )}
               >
                 All
@@ -123,8 +123,8 @@ export function ContentFilters({
                 className={cn(
                   'font-ui px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2',
                   currentFormat === 'articles'
-                    ? 'bg-[--card-hover] text-white'
-                    : 'bg-[--card]/30 text-[--muted] hover:bg-[--card-hover]/50 hover:text-white'
+                    ? 'bg-[--card-hover] text-[--white]'
+                    : 'bg-[--card]/30 text-[--muted] hover:bg-[--card-hover]/50 hover:text-[--white]'
                 )}
               >
                 <BookOpen className="h-4 w-4" />
@@ -135,8 +135,8 @@ export function ContentFilters({
                 className={cn(
                   'font-ui px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2',
                   currentFormat === 'videos'
-                    ? 'bg-[--card-hover] text-white'
-                    : 'bg-[--card]/30 text-[--muted] hover:bg-[--card-hover]/50 hover:text-white'
+                    ? 'bg-[--card-hover] text-[--white]'
+                    : 'bg-[--card]/30 text-[--muted] hover:bg-[--card-hover]/50 hover:text-[--white]'
                 )}
               >
                 <Video className="h-4 w-4" />
@@ -152,7 +152,7 @@ export function ContentFilters({
                 placeholder="Search articles and videos..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="w-full pl-10 pr-4 py-2 rounded-lg bg-[--card]/30 border border-[--border]/50 font-body text-white placeholder:text-[--dim] focus:outline-none focus:border-copper/50 focus:ring-1 focus:ring-copper/50 transition-colors"
+                className="w-full pl-10 pr-4 py-2 rounded-lg bg-[--card]/30 border border-[--border]/50 font-body text-[--white] placeholder:text-[--dim] focus:outline-none focus:border-copper/50 focus:ring-1 focus:ring-copper/50 transition-colors"
               />
             </div>
 
@@ -160,7 +160,7 @@ export function ContentFilters({
             {hasActiveFilters && (
               <button
                 onClick={handleClearFilters}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg font-ui text-sm font-medium text-[--muted] hover:text-white hover:bg-[--card-hover]/50 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg font-ui text-sm font-medium text-[--muted] hover:text-[--white] hover:bg-[--card-hover]/50 transition-colors"
               >
                 <X className="h-4 w-4" />
                 Clear

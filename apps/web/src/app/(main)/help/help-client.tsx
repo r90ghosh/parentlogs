@@ -167,7 +167,7 @@ export default function HelpClient() {
       {/* Header */}
       <RevealOnScroll delay={0}>
         <div>
-          <h1 className="font-display text-2xl font-bold text-white">Help & Support</h1>
+          <h1 className="font-display text-2xl font-bold text-[--white]">Help & Support</h1>
           <p className="font-body text-[--muted]">
             Find answers or get in touch with our team
           </p>

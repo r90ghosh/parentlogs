@@ -81,7 +81,7 @@ function SubscriptionContent() {
     <div className="p-4 space-y-6 max-w-3xl">
       {/* Header */}
       <div>
-        <h1 className="font-display text-2xl font-bold text-white">Subscription</h1>
+        <h1 className="font-display text-2xl font-bold text-[--white]">Subscription</h1>
         <p className="font-body text-[--muted]">Manage your subscription and billing</p>
       </div>
 
@@ -127,7 +127,7 @@ function SubscriptionContent() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="font-display text-white flex items-center gap-2">
+              <CardTitle className="font-display text-[--white] flex items-center gap-2">
                 {isPremium && <Crown className="h-5 w-5 text-gold" />}
                 Current Plan
               </CardTitle>
@@ -163,7 +163,7 @@ function SubscriptionContent() {
                     <p className="font-ui text-sm text-[--muted]">
                       {isLifetime ? 'Purchased' : 'Current Period'}
                     </p>
-                    <p className="font-body text-white font-medium">
+                    <p className="font-body text-[--white] font-medium">
                       {isLifetime
                         ? formatDate(subscription.created_at)
                         : `${formatDate(subscription.current_period_start)} - ${formatDate(subscription.current_period_end)}`}
@@ -176,7 +176,7 @@ function SubscriptionContent() {
                     <CreditCard className="h-5 w-5 text-[--muted]" />
                     <div>
                       <p className="font-ui text-sm text-[--muted]">Status</p>
-                      <p className="font-body text-white font-medium capitalize">
+                      <p className="font-body text-[--white] font-medium capitalize">
                         {isPastDue ? 'Past Due' : subscription.status}
                         {isCanceling && ' (Canceling)'}
                       </p>
@@ -262,7 +262,7 @@ function SubscriptionContent() {
       {/* Features Comparison */}
       <Card className="bg-[--surface] border-[--border]">
         <CardHeader>
-          <CardTitle className="font-display text-white">Feature Comparison</CardTitle>
+          <CardTitle className="font-display text-[--white]">Feature Comparison</CardTitle>
           <CardDescription className="font-body">
             {isPremium ? 'You have access to all features' : 'Free vs Premium — see what you\'re missing'}
           </CardDescription>
@@ -282,7 +282,7 @@ function SubscriptionContent() {
                   const hasAccess = isPremium || feature.free
                   return (
                     <tr key={index} className="border-b border-[--border]/50">
-                      <td className={`py-2.5 px-3 ${hasAccess ? 'text-white' : 'text-[--dim]'}`}>
+                      <td className={`py-2.5 px-3 ${hasAccess ? 'text-[--white]' : 'text-[--dim]'}`}>
                         {feature.name}
                       </td>
                       <td className="text-center py-2.5 px-3">
@@ -335,7 +335,7 @@ function SubscriptionContent() {
               <div className="flex items-start gap-3">
                 <Mail className="h-4 w-4 text-[--muted] mt-0.5 shrink-0" />
                 <div>
-                  <p className="font-ui text-sm text-white font-medium">30-Day Money-Back Guarantee</p>
+                  <p className="font-ui text-sm text-[--white] font-medium">30-Day Money-Back Guarantee</p>
                   <p className="font-body text-xs text-[--muted] mt-1">
                     Not satisfied? Request a full refund within 30 days of purchase.
                   </p>
@@ -367,7 +367,7 @@ function SubscriptionContent() {
       <AlertDialog open={showCancelConfirm} onOpenChange={setShowCancelConfirm}>
         <AlertDialogContent className="bg-[--surface] border-[--border]">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-display text-white">
+            <AlertDialogTitle className="font-display text-[--white]">
               Manage Your Subscription
             </AlertDialogTitle>
             <AlertDialogDescription asChild>

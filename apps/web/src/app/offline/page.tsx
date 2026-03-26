@@ -42,14 +42,14 @@ export default function OfflinePage() {
           <div className="mx-auto mb-4 h-20 w-20 rounded-full bg-[--card] flex items-center justify-center">
             <WifiOff className="h-10 w-10 text-[--muted]" />
           </div>
-          <CardTitle className="font-display text-2xl text-white">You&apos;re Offline</CardTitle>
+          <CardTitle className="font-display text-2xl text-[--white]">You&apos;re Offline</CardTitle>
           <CardDescription className="font-body">
             It looks like you&apos;ve lost your internet connection. Don&apos;t worry, some features are still available.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="p-4 bg-[--card]/50 rounded-lg">
-            <h3 className="font-body font-medium text-white mb-2">Available offline:</h3>
+            <h3 className="font-body font-medium text-[--white] mb-2">Available offline:</h3>
             <ul className="font-body text-sm text-[--muted] space-y-1">
               <li>• View cached pages</li>
               <li>• Browse previously loaded content</li>

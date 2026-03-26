@@ -62,7 +62,7 @@ export function ResourceLibrary({
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[--card] mb-6">
           <BookOpen className="h-8 w-8 text-[--dim]" />
         </div>
-        <h3 className="font-display text-xl font-semibold text-white mb-2">No content found</h3>
+        <h3 className="font-display text-xl font-semibold text-[--white] mb-2">No content found</h3>
         <p className="font-body text-[--muted] mb-6">
           {searchQuery
             ? `No results for "${searchQuery}"`
@@ -88,7 +88,7 @@ export function ResourceLibrary({
             <div className="flex items-center gap-3 mb-6">
               <div className="flex items-center gap-2 text-[--muted]">
                 <BookOpen className="h-5 w-5" />
-                <h2 className="font-display text-lg font-semibold text-white">Articles</h2>
+                <h2 className="font-display text-lg font-semibold text-[--white]">Articles</h2>
               </div>
               <span className="px-2 py-0.5 rounded-full font-ui text-xs font-medium bg-[--card] text-[--muted]">
                 {totalArticles}
@@ -111,7 +111,7 @@ export function ResourceLibrary({
             <div className="flex items-center gap-3 mb-6">
               <div className="flex items-center gap-2 text-[--muted]">
                 <Video className="h-5 w-5" />
-                <h2 className="font-display text-lg font-semibold text-white">Videos</h2>
+                <h2 className="font-display text-lg font-semibold text-[--white]">Videos</h2>
               </div>
               <span className="px-2 py-0.5 rounded-full font-ui text-xs font-medium bg-[--card] text-[--muted]">
                 {totalVideos}
@@ -134,7 +134,7 @@ export function ResourceLibrary({
             variant="outline"
             size="lg"
             onClick={handleLoadMore}
-            className="border-[--border] text-[--cream] hover:bg-[--card] hover:text-white font-ui font-semibold"
+            className="border-[--border] text-[--cream] hover:bg-[--card] hover:text-[--white] font-ui font-semibold"
           >
             Load More
           </Button>
