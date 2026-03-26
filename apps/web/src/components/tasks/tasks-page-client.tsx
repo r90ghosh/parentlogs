@@ -166,12 +166,19 @@ export function TasksPageClient({
     const completed = tasks.filter(t => t.status === 'completed').length
     const partnerTasks = activeTasks.filter(t => t.assigned_to === 'mom').length
 
+    // This-week scoped stats for progress card
+    const thisWeekAll = tasks.filter(t => !t.is_backlog && getEffectiveWeek(t) === currentWeek)
+    const thisWeekDone = thisWeekAll.filter(t => t.status === 'completed').length
+    const thisWeekTotal = thisWeekAll.length
+
     return {
       dueToday,
       thisWeek,
       completed,
       partnerTasks,
       catchUpQueue: backlogTasks.length,
+      thisWeekDone,
+      thisWeekTotal,
     }
   }, [tasks, backlogTasks, currentWeek, getEffectiveWeek])
 
@@ -295,12 +302,11 @@ export function TasksPageClient({
     return generateWeekDays(tasksPerDay)
   }, [tasks])
 
-  // Calculate overall progress
+  // Calculate this-week progress
   const progressPercent = useMemo(() => {
-    const total = tasks.filter(t => !t.is_backlog).length
-    if (total === 0) return 0
-    return Math.round((stats.completed / total) * 100)
-  }, [tasks, stats.completed])
+    if (stats.thisWeekTotal === 0) return 0
+    return Math.round((stats.thisWeekDone / stats.thisWeekTotal) * 100)
+  }, [stats.thisWeekDone, stats.thisWeekTotal])
 
   // Calendar view computations
   const calendarDays = useMemo(() => {
@@ -708,8 +714,8 @@ export function TasksPageClient({
                 <Card3DTilt maxTilt={3} gloss>
                   <ProgressCard
                     percentComplete={progressPercent}
-                    done={stats.completed}
-                    active={stats.thisWeek}
+                    done={stats.thisWeekDone}
+                    active={stats.thisWeekTotal - stats.thisWeekDone}
                     toTriage={stats.catchUpQueue}
                   />
                 </Card3DTilt>
