@@ -79,7 +79,7 @@ export function TaskItem({
       }}
       className={cn(
         'flex items-start gap-4 p-4 rounded-xl cursor-pointer transition-all',
-        isHighlighted && 'bg-copper-dim border border-copper/20',
+        isHighlighted && 'bg-copper/[0.04] border border-copper/10',
         !isHighlighted && 'hover:bg-[--card]',
         isDimmed && 'opacity-70'
       )}
