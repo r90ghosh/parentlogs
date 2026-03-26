@@ -2,8 +2,8 @@ import type { ChecklistTemplate, ChecklistItemTemplate } from '@tdc/shared/types
 import { isPremiumTier } from '@tdc/shared/utils/subscription-utils'
 import type { AppSupabaseClient, ServiceContext } from './types'
 
-// Premium checklists: CL-05 through CL-11
-const PREMIUM_CHECKLIST_IDS = ['CL-05', 'CL-06', 'CL-07', 'CL-08', 'CL-09', 'CL-10', 'CL-11']
+// All checklists are free for SEO
+const PREMIUM_CHECKLIST_IDS: string[] = []
 
 export interface ChecklistWithItems extends ChecklistTemplate {
   items: ChecklistItemTemplate[]
@@ -59,7 +59,7 @@ export function createChecklistService(supabase: AppSupabaseClient) {
       const { data: checklists } = await supabase
         .from('checklist_templates')
         .select('*')
-        .order('checklist_id', { ascending: true })
+        .order('sort_order', { ascending: true })
 
       if (!checklists) return []
 

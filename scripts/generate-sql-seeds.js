@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Paths
-const CONTENT_DIR = path.join(__dirname, '..', 'content');
+const CONTENT_DIR = path.join(__dirname, '..', 'apps', 'web', 'content');
 const SEED_DIR = path.join(__dirname, '..', 'supabase', 'seed');
 
 // Ensure seed directory exists
@@ -183,8 +183,8 @@ function generateChecklistsSeed() {
 
   const checklists = JSON.parse(fs.readFileSync(checklistsPath, 'utf-8'));
 
-  // Free checklists
-  const FREE_CHECKLISTS = ['CL-01', 'CL-02', 'CL-03', 'CL-04', 'CL-12', 'CL-13', 'CL-14', 'CL-15'];
+  // All checklists are now free (for SEO)
+  const ALL_FREE = true;
 
   let sql = `-- Checklist Templates Seed Data
 -- Generated: ${new Date().toISOString()}
@@ -195,7 +195,7 @@ function generateChecklistsSeed() {
 
   // Generate checklist templates
   checklists.forEach((checklist, index) => {
-    const isPremium = !FREE_CHECKLISTS.includes(checklist.checklist_id);
+    const isPremium = !ALL_FREE;
 
     sql += `INSERT INTO checklist_templates (checklist_id, name, description, stage, week_relevant, is_premium, sort_order)
 VALUES (
