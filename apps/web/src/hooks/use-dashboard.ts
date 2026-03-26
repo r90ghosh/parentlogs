@@ -211,11 +211,35 @@ export function useCompleteDashboardTask() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (taskId: string) => taskService.completeTask(taskId),
+    mutationFn: async (taskId: string) => {
+      const { error } = await taskService.completeTask(taskId)
+      if (error) throw error
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dashboard'] })
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
       queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
+      queryClient.invalidateQueries({ queryKey: ['briefing-tasks'] })
+    },
+  })
+}
+
+/**
+ * Uncomplete a task (revert to pending)
+ */
+export function useUncompleteDashboardTask() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (taskId: string) => {
+      const { error } = await taskService.uncompleteTask(taskId)
+      if (error) throw error
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+      queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
+      queryClient.invalidateQueries({ queryKey: ['briefing-tasks'] })
     },
   })
 }

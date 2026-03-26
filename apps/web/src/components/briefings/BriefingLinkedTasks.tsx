@@ -1,11 +1,12 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
-import { useCompleteDashboardTask } from '@/hooks/use-dashboard'
+import { useCompleteDashboardTask, useUncompleteDashboardTask } from '@/hooks/use-dashboard'
 import { cn } from '@/lib/utils'
 import { Check, ListTodo } from 'lucide-react'
 import { FamilyTask } from '@tdc/shared/types'
+import { useCallback } from 'react'
 
 const supabase = createClient()
 
@@ -39,8 +40,35 @@ function useBriefingWeekTasks(familyId: string, weekNumber: number) {
 }
 
 export function BriefingLinkedTasks({ weekNumber, familyId }: BriefingLinkedTasksProps) {
+  const queryClient = useQueryClient()
   const { data: tasks, isLoading } = useBriefingWeekTasks(familyId, weekNumber)
   const completeTask = useCompleteDashboardTask()
+  const uncompleteTask = useUncompleteDashboardTask()
+
+  const queryKey = ['briefing-tasks', familyId, weekNumber]
+
+  const handleToggle = useCallback((taskId: string, isCompleted: boolean) => {
+    // Guard against double-clicks while a mutation is in-flight
+    if (completeTask.isPending || uncompleteTask.isPending) return
+
+    // Optimistic update — flip the task status in cache instantly
+    queryClient.setQueryData<FamilyTask[]>(queryKey, (old) =>
+      old?.map(t =>
+        t.id === taskId
+          ? { ...t, status: (isCompleted ? 'pending' : 'completed') as FamilyTask['status'] }
+          : t
+      )
+    )
+
+    const mutation = isCompleted ? uncompleteTask : completeTask
+    mutation.mutate(taskId, {
+      onError: () => {
+        // Revert on failure
+        queryClient.invalidateQueries({ queryKey })
+      },
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryClient, completeTask, uncompleteTask, familyId, weekNumber])
 
   if (isLoading) {
     return (
@@ -60,12 +88,6 @@ export function BriefingLinkedTasks({ weekNumber, familyId }: BriefingLinkedTask
   const completedCount = tasks.filter(t => t.status === 'completed').length
   const totalCount = tasks.length
 
-  const handleToggle = (taskId: string, isCompleted: boolean) => {
-    if (!isCompleted && !completeTask.isPending) {
-      completeTask.mutate(taskId)
-    }
-  }
-
   return (
     <div className="bg-[--card] border border-[--border] rounded-2xl p-6 shadow-card">
       {/* Header */}
@@ -76,10 +98,9 @@ export function BriefingLinkedTasks({ weekNumber, familyId }: BriefingLinkedTask
           </div>
           <span className="text-sm font-semibold font-ui text-[--cream]">Tasks This Week</span>
         </div>
-        {/* Completion summary */}
         <span
           className={cn(
-            'text-xs font-medium font-ui px-2.5 py-1 rounded-full',
+            'text-xs font-medium font-ui px-2.5 py-1 rounded-full transition-colors',
             completedCount === totalCount
               ? 'bg-[--sage-dim] text-[--sage]'
               : 'bg-[--card-hover] text-[--muted]'
@@ -99,20 +120,17 @@ export function BriefingLinkedTasks({ weekNumber, familyId }: BriefingLinkedTask
             <button
               key={task.id}
               onClick={() => handleToggle(task.id, isCompleted)}
-              disabled={isCompleted || completeTask.isPending}
               className={cn(
                 'w-full flex items-center gap-3 p-3 rounded-xl transition-colors text-left',
-                isCompleted
-                  ? 'bg-[--bg] cursor-default'
-                  : 'bg-[--bg] hover:bg-[--card-hover] cursor-pointer'
+                'bg-[--bg] hover:bg-[--card-hover] cursor-pointer active:scale-[0.98]'
               )}
             >
               {/* Checkbox */}
               <div
                 className={cn(
-                  'w-5 h-5 rounded-md border-2 flex-shrink-0 flex items-center justify-center transition-all',
+                  'w-5 h-5 rounded-md border-2 flex-shrink-0 flex items-center justify-center transition-all duration-150',
                   isCompleted
-                    ? 'bg-copper border-copper'
+                    ? 'bg-copper border-copper scale-110'
                     : 'border-[--dim] hover:border-copper/60'
                 )}
               >
@@ -122,7 +140,7 @@ export function BriefingLinkedTasks({ weekNumber, familyId }: BriefingLinkedTask
               {/* Title */}
               <span
                 className={cn(
-                  'text-sm font-body flex-1 leading-snug',
+                  'text-sm font-body flex-1 leading-snug transition-colors duration-150',
                   isCompleted
                     ? 'text-[--dim] line-through'
                     : 'text-[--cream]'

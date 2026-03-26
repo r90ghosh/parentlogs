@@ -113,6 +113,24 @@ export function createTaskService(supabase: AppSupabaseClient) {
           completed_at: new Date().toISOString(),
         })
         .eq('id', id)
+        .eq('family_id', resolved.familyId)
+
+      return { error: error as Error | null }
+    },
+
+    async uncompleteTask(id: string, ctx?: Partial<ServiceContext>): Promise<{ error: Error | null }> {
+      const resolved = await resolveContext(ctx)
+      if (!resolved) return { error: new Error('Not authenticated') }
+
+      const { error } = await supabase
+        .from('family_tasks')
+        .update({
+          status: 'pending',
+          completed_by: null,
+          completed_at: null,
+        })
+        .eq('id', id)
+        .eq('family_id', resolved.familyId)
 
       return { error: error as Error | null }
     },
