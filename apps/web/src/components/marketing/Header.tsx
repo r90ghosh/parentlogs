@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/ui/logo'
+import { ToggleTheme } from '@/components/ui/toggle-theme'
 
 type NavLink = {
   href?: string
@@ -165,6 +166,7 @@ export function Header() {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center gap-4">
+            <ToggleTheme />
             {isLoggedIn === true ? (
               <Button asChild className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper">
                 <Link href="/dashboard">
@@ -186,6 +188,7 @@ export function Header() {
 
           {/* Mobile Auth + Menu */}
           <div className="flex md:hidden items-center gap-2">
+            <ToggleTheme />
             {isLoggedIn === true ? (
               <Button asChild size="sm" className="bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-xs">
                 <Link href="/dashboard">Dashboard</Link>
