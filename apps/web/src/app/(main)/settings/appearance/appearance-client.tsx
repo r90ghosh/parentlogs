@@ -13,30 +13,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ArrowLeft, Moon, Sun, Monitor, Type, Check } from 'lucide-react'
+import { ArrowLeft, Moon, Sun, Monitor, Type } from 'lucide-react'
 import Link from 'next/link'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
 type Theme = 'dark' | 'light' | 'system'
 type FontSize = 'small' | 'medium' | 'large'
-type AccentColor = 'purple' | 'blue' | 'green' | 'orange' | 'pink'
-
-const accentColors: { value: AccentColor; label: string; class: string }[] = [
-  { value: 'purple', label: 'Purple', class: 'bg-purple-500' },
-  { value: 'blue', label: 'Blue', class: 'bg-blue-500' },
-  { value: 'green', label: 'Green', class: 'bg-green-500' },
-  { value: 'orange', label: 'Orange', class: 'bg-orange-500' },
-  { value: 'pink', label: 'Pink', class: 'bg-pink-500' },
-]
-
 export default function AppearanceClient() {
   const { toast } = useToast()
 
   // Load settings from localStorage
   const [theme, setTheme] = useState<Theme>('dark')
   const [fontSize, setFontSize] = useState<FontSize>('medium')
-  const [accentColor, setAccentColor] = useState<AccentColor>('purple')
   const [reducedMotion, setReducedMotion] = useState(false)
   const [compactMode, setCompactMode] = useState(false)
 
@@ -44,13 +33,11 @@ export default function AppearanceClient() {
     // Load saved preferences
     const savedTheme = localStorage.getItem('theme') as Theme
     const savedFontSize = localStorage.getItem('fontSize') as FontSize
-    const savedAccent = localStorage.getItem('accentColor') as AccentColor
     const savedReducedMotion = localStorage.getItem('reducedMotion') === 'true'
     const savedCompactMode = localStorage.getItem('compactMode') === 'true'
 
     if (savedTheme) setTheme(savedTheme)
     if (savedFontSize) setFontSize(savedFontSize)
-    if (savedAccent) setAccentColor(savedAccent)
     setReducedMotion(savedReducedMotion)
     setCompactMode(savedCompactMode)
   }, [])
@@ -83,12 +70,6 @@ export default function AppearanceClient() {
     else root.style.fontSize = '16px'
 
     toast({ title: 'Font size updated' })
-  }
-
-  const handleAccentChange = (newAccent: AccentColor) => {
-    setAccentColor(newAccent)
-    localStorage.setItem('accentColor', newAccent)
-    toast({ title: 'Accent color updated' })
   }
 
   const handleReducedMotionChange = (enabled: boolean) => {
@@ -178,37 +159,6 @@ export default function AppearanceClient() {
         </CardContent>
       </Card>
 
-      {/* Accent Color */}
-      <Card className="bg-[--surface] border-[--border]">
-        <CardHeader>
-          <CardTitle className="font-display text-lg">Accent Color</CardTitle>
-          <CardDescription className="font-body">Personalize the app with your favorite color</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-3">
-            {accentColors.map((color) => (
-              <button
-                key={color.value}
-                onClick={() => handleAccentChange(color.value)}
-                className={cn(
-                  "relative h-10 w-10 rounded-full transition-transform hover:scale-110",
-                  color.class,
-                  accentColor === color.value && "ring-2 ring-offset-2 ring-offset-[--surface] ring-white"
-                )}
-                title={color.label}
-              >
-                {accentColor === color.value && (
-                  <Check className="absolute inset-0 m-auto h-5 w-5 text-white" />
-                )}
-              </button>
-            ))}
-          </div>
-          <p className="font-body text-xs text-[--dim] mt-3">
-            Note: Custom accent colors are coming soon.
-          </p>
-        </CardContent>
-      </Card>
-
       {/* Font Size */}
       <Card className="bg-[--surface] border-[--border]">
         <CardHeader>
@@ -285,7 +235,6 @@ export default function AppearanceClient() {
             onClick={() => {
               handleThemeChange('dark')
               handleFontSizeChange('medium')
-              handleAccentChange('purple')
               handleReducedMotionChange(false)
               handleCompactModeChange(false)
               toast({ title: 'Settings reset to defaults' })
