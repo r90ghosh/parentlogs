@@ -40,7 +40,7 @@ export function ToggleTheme() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="bg-muted/80 inline-flex items-center overflow-hidden rounded-md border"
+            className="bg-muted/80 inline-flex items-center overflow-hidden rounded-md"
             role="radiogroup"
         >
             {THEME_OPTIONS.map((option) => (
@@ -61,7 +61,7 @@ export function ToggleTheme() {
                         <motion.div
                             layoutId="theme-option"
                             transition={{ type: 'spring', bounce: 0.1, duration: 0.75 }}
-                            className="border-muted-foreground/50 absolute inset-0 rounded-md border"
+                            className="bg-muted-foreground/10 absolute inset-0 rounded-md"
                         />
                     )}
                     <option.icon className="size-3.5" />
