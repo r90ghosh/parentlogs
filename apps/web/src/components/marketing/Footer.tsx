@@ -32,7 +32,7 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-[--surface]" style={{ borderTop: '1px solid rgba(196,112,63,0.5)' }}>
+    <footer className="bg-[--surface] border-t border-copper/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main footer content */}
         <div className="py-12 md:py-16 grid grid-cols-2 md:grid-cols-6 gap-8">

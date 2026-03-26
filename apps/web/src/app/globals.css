@@ -69,6 +69,87 @@
     --input: rgba(237, 230, 220, 0.08);
     --ring: #c4703f;
   }
+
+  /* Light mode — glassmorphism + sharp borders + depth */
+  html.light {
+    /* Core Palette */
+    --bg: transparent;
+    --surface: rgba(255, 255, 255, 0.45);
+    --card: rgba(255, 255, 255, 0.40);
+    --card-hover: rgba(255, 255, 255, 0.60);
+    --white: #111113;
+    --cream: #1a1a2e;
+    --muted: #3d3d56;
+    --dim: #9ca3af;
+
+    /* Accent dim/glow */
+    --copper-dim: rgba(196, 112, 63, 0.10);
+    --copper-glow: rgba(196, 112, 63, 0.18);
+    --gold-dim: rgba(212, 168, 83, 0.10);
+    --gold-glow: rgba(212, 168, 83, 0.18);
+    --sage-dim: rgba(107, 143, 113, 0.10);
+    --coral-dim: rgba(212, 131, 107, 0.10);
+    --sky-dim: rgba(91, 155, 213, 0.10);
+    --rose-dim: rgba(196, 122, 143, 0.10);
+
+    /* Borders — frosted white edge (glass look) */
+    --border: rgba(255, 255, 255, 0.60);
+    --border-hover: rgba(255, 255, 255, 0.80);
+
+    /* Shadows — soft diffuse glow */
+    --shadow-card: 0 2px 8px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06);
+    --shadow-hover: 0 4px 16px rgba(0,0,0,0.06), 0 12px 48px rgba(0,0,0,0.08);
+    --shadow-lift: 0 8px 24px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.10);
+    --shadow-copper: 0 4px 24px rgba(196,112,63,0.12);
+    --shadow-gold: 0 4px 24px rgba(212,168,83,0.12);
+
+    /* shadcn/ui compat */
+    --background: transparent;
+    --foreground: #1a1a2e;
+    --card-foreground: #1a1a2e;
+    --popover: rgba(255, 255, 255, 0.80);
+    --popover-foreground: #1a1a2e;
+    --primary: #c4703f;
+    --primary-foreground: #ffffff;
+    --secondary: #d4a853;
+    --secondary-foreground: #1a1a1e;
+    --muted-foreground: #3d3d56;
+    --accent-foreground: #c4703f;
+    --destructive: #d4836b;
+    --destructive-foreground: #ffffff;
+    --input: rgba(0, 0, 0, 0.06);
+    --ring: #c4703f;
+  }
+}
+
+/* ============================================
+   Light Mode Glassmorphism System
+   ============================================ */
+
+/* Light mode body — transparent so animated gradient shows through */
+html.light body {
+  background: transparent !important;
+}
+
+/* Glass cards — frosted translucent panels */
+html.light [data-slot="card"] {
+  background: rgba(255, 255, 255, 0.42) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.55) !important;
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.04),
+    0 8px 32px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.70) !important;
+}
+
+html.light [data-slot="card"]:hover {
+  background: rgba(255, 255, 255, 0.55) !important;
+  border-color: rgba(255, 255, 255, 0.70) !important;
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.06),
+    0 12px 48px rgba(0,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.80) !important;
 }
 
 @layer base {

@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Switch } from '@/components/ui/switch'
 import {
   Select,
@@ -18,43 +18,30 @@ import Link from 'next/link'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
-type Theme = 'dark' | 'light' | 'system'
 type FontSize = 'small' | 'medium' | 'large'
+
 export default function AppearanceClient() {
   const { toast } = useToast()
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
-  // Load settings from localStorage
-  const [theme, setTheme] = useState<Theme>('dark')
   const [fontSize, setFontSize] = useState<FontSize>('medium')
   const [reducedMotion, setReducedMotion] = useState(false)
   const [compactMode, setCompactMode] = useState(false)
 
   useEffect(() => {
-    // Load saved preferences
-    const savedTheme = localStorage.getItem('theme') as Theme
+    setMounted(true)
     const savedFontSize = localStorage.getItem('fontSize') as FontSize
     const savedReducedMotion = localStorage.getItem('reducedMotion') === 'true'
     const savedCompactMode = localStorage.getItem('compactMode') === 'true'
 
-    if (savedTheme) setTheme(savedTheme)
     if (savedFontSize) setFontSize(savedFontSize)
     setReducedMotion(savedReducedMotion)
     setCompactMode(savedCompactMode)
   }, [])
 
-  const handleThemeChange = (newTheme: Theme) => {
+  const handleThemeChange = (newTheme: string) => {
     setTheme(newTheme)
-    localStorage.setItem('theme', newTheme)
-
-    // Apply theme to document
-    const root = document.documentElement
-    if (newTheme === 'system') {
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      root.classList.toggle('dark', systemDark)
-    } else {
-      root.classList.toggle('dark', newTheme === 'dark')
-    }
-
     toast({ title: 'Theme updated' })
   }
 
@@ -62,7 +49,6 @@ export default function AppearanceClient() {
     setFontSize(newSize)
     localStorage.setItem('fontSize', newSize)
 
-    // Apply font size to document
     const root = document.documentElement
     root.classList.remove('text-sm', 'text-base', 'text-lg')
     if (newSize === 'small') root.style.fontSize = '14px'
@@ -76,7 +62,6 @@ export default function AppearanceClient() {
     setReducedMotion(enabled)
     localStorage.setItem('reducedMotion', String(enabled))
 
-    // Apply reduced motion
     const root = document.documentElement
     root.classList.toggle('reduce-motion', enabled)
 
@@ -89,6 +74,9 @@ export default function AppearanceClient() {
     toast({ title: enabled ? 'Compact mode enabled' : 'Normal mode enabled' })
   }
 
+  // Avoid hydration mismatch — don't render theme-dependent UI until mounted
+  const currentTheme = mounted ? theme : 'dark'
+
   return (
     <div className="p-4 space-y-6 max-w-2xl">
       {/* Header */}
@@ -98,7 +86,7 @@ export default function AppearanceClient() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <h1 className="font-display text-xl font-bold text-white">Appearance</h1>
+        <h1 className="font-display text-xl font-bold text-[--white]">Appearance</h1>
       </div>
 
       {/* Theme */}
@@ -108,54 +96,27 @@ export default function AppearanceClient() {
           <CardDescription className="font-body">Choose your preferred color scheme</CardDescription>
         </CardHeader>
         <CardContent>
-          <RadioGroup value={theme} onValueChange={(v) => handleThemeChange(v as Theme)}>
-            <div className="grid grid-cols-3 gap-4">
-              <Label
-                htmlFor="theme-dark"
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              { value: 'dark', label: 'Dark', icon: Moon },
+              { value: 'light', label: 'Light', icon: Sun },
+              { value: 'system', label: 'System', icon: Monitor },
+            ].map(({ value, label, icon: Icon }) => (
+              <button
+                key={value}
+                onClick={() => handleThemeChange(value)}
                 className={cn(
                   "flex flex-col items-center gap-2 p-4 rounded-lg border-2 cursor-pointer transition-colors",
-                  theme === 'dark'
+                  currentTheme === value
                     ? "border-copper bg-copper/10"
-                    : "border-[--border-hover] hover:border-[--border-hover]"
+                    : "border-[--border-hover] hover:border-copper/40"
                 )}
               >
-                <RadioGroupItem value="dark" id="theme-dark" className="sr-only" />
-                <Moon className="h-6 w-6 text-[--cream]" />
-                <span className="font-body text-sm text-white">Dark</span>
-              </Label>
-
-              <Label
-                htmlFor="theme-light"
-                className={cn(
-                  "flex flex-col items-center gap-2 p-4 rounded-lg border-2 cursor-pointer transition-colors",
-                  theme === 'light'
-                    ? "border-copper bg-copper/10"
-                    : "border-[--border-hover] hover:border-[--border-hover]"
-                )}
-              >
-                <RadioGroupItem value="light" id="theme-light" className="sr-only" />
-                <Sun className="h-6 w-6 text-[--cream]" />
-                <span className="font-body text-sm text-white">Light</span>
-              </Label>
-
-              <Label
-                htmlFor="theme-system"
-                className={cn(
-                  "flex flex-col items-center gap-2 p-4 rounded-lg border-2 cursor-pointer transition-colors",
-                  theme === 'system'
-                    ? "border-copper bg-copper/10"
-                    : "border-[--border-hover] hover:border-[--border-hover]"
-                )}
-              >
-                <RadioGroupItem value="system" id="theme-system" className="sr-only" />
-                <Monitor className="h-6 w-6 text-[--cream]" />
-                <span className="font-body text-sm text-white">System</span>
-              </Label>
-            </div>
-          </RadioGroup>
-          <p className="font-body text-xs text-[--dim] mt-3">
-            Note: Light mode is coming soon. Currently optimized for dark mode.
-          </p>
+                <Icon className="h-6 w-6 text-[--cream]" />
+                <span className="font-body text-sm text-[--white]">{label}</span>
+              </button>
+            ))}
+          </div>
         </CardContent>
       </Card>
 
@@ -184,7 +145,7 @@ export default function AppearanceClient() {
           <div className="mt-4 p-4 bg-[--card]/50 rounded-lg">
             <p className="font-ui text-[--muted] text-xs mb-2">Preview:</p>
             <p
-              className="font-body text-white"
+              className="font-body text-[--white]"
               style={{
                 fontSize: fontSize === 'small' ? '14px' : fontSize === 'large' ? '18px' : '16px'
               }}

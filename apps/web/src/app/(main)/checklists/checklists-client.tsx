@@ -85,11 +85,11 @@ export default function ChecklistsClient() {
             const colors = CHECKLIST_COLORS[checklist.checklist_id] || CHECKLIST_COLORS['CL-15']
 
             return (
-              <CardEntrance key={checklist.checklist_id} delay={index * 80}>
-              <Card3DTilt maxTilt={3} gloss>
+              <CardEntrance key={checklist.checklist_id} delay={index * 80} className="h-full">
+              <Card3DTilt maxTilt={3} gloss className="h-full">
               <Link
                 href={`/checklists/${checklist.checklist_id}`}
-                className="block"
+                className="block h-full"
               >
                 <Card className="bg-[--surface] border-[--border] h-full transition-all hover:border-[--border-hover]">
                   <CardContent className="pt-6">
