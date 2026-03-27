@@ -39,7 +39,6 @@ import { WarmBackground } from '@/components/ui/animations/WarmBackground'
 import { FloatingParticles } from '@/components/ui/animations/FloatingParticles'
 import { useUnreadNotificationCount } from '@/hooks/use-notifications'
 import { ToggleTheme } from '@/components/ui/toggle-theme'
-import { LightModeBackground, LightModeGrid } from '@/components/shared/light-mode-background'
 import { GracePeriodBanner } from '@/components/shared/grace-period-banner'
 import { BabySwitcher } from '@/components/layouts/baby-switcher'
 
@@ -142,12 +141,8 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen min-h-[100dvh] relative">
-      {/* Dark mode backgrounds */}
       <WarmBackground />
       <FloatingParticles count={30} />
-      {/* Light mode backgrounds */}
-      <LightModeBackground />
-      <LightModeGrid />
 
       {/* Header */}
       <header className="sticky top-0 z-40 bg-[--surface]/95 backdrop-blur-[16px] border-b border-[--border]" style={{ height: 'var(--header-h)' }}>

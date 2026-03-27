@@ -73,7 +73,7 @@
   /* Light mode — glassmorphism + sharp borders + depth */
   html.light {
     /* Core Palette */
-    --bg: transparent;
+    --bg: #e8edf5;
     --surface: rgba(255, 255, 255, 0.45);
     --card: rgba(255, 255, 255, 0.40);
     --card-hover: rgba(255, 255, 255, 0.60);
@@ -104,7 +104,7 @@
     --shadow-gold: 0 4px 24px rgba(212,168,83,0.12);
 
     /* shadcn/ui compat */
-    --background: transparent;
+    --background: #e8edf5;
     --foreground: #1a1a2e;
     --card-foreground: #1a1a2e;
     --popover: rgba(255, 255, 255, 0.80);
@@ -126,9 +126,10 @@
    Light Mode Glassmorphism System
    ============================================ */
 
-/* Light mode body — transparent so animated gradient shows through */
+/* Light mode body — static pink→blue gradient (boy or girl) */
 html.light body {
-  background: transparent !important;
+  background: linear-gradient(135deg, #f0b4c8 0%, #e8edf5 30%, #a8d0e6 60%, #89b5d4 100%) !important;
+  background-attachment: fixed !important;
 }
 
 /* Glass cards — frosted translucent panels */
@@ -162,9 +163,7 @@ html.light [data-slot="card"]:hover {
     font-size: 17px;
   }
 
-  /* Let background animations (particles, grid, gradient) show through page wrappers.
-     In dark mode, --bg (#12100e) is the base; particles float on top with z-index.
-     In light mode, make wrappers transparent so the static gradient shows through. */
+  /* In light mode, page wrappers should be transparent so the body gradient shows through */
   html.light [class*="bg-\[--bg\]"] {
     background-color: transparent !important;
   }

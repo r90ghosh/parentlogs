@@ -9,7 +9,6 @@ import { ErrorBoundary } from '@/components/error/error-boundary'
 import { PageLoading } from '@/components/error/loading-states'
 import { initAnalytics } from '@/lib/analytics'
 import { PageEngagementTracker } from '@/hooks/use-page-engagement'
-import { LightModeBackground } from '@/components/shared/light-mode-background'
 
 // Analytics initializer — gated on cookie consent
 function AnalyticsInitializer() {
@@ -78,7 +77,6 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-      <LightModeBackground />
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
