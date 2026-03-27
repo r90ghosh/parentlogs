@@ -248,6 +248,10 @@ export function Header() {
             )
           )}
           <div className="pt-4 border-t border-[--border] space-y-3">
+            <div className="flex items-center justify-between py-2">
+              <span className="font-ui text-sm text-[--muted]">Theme</span>
+              <ToggleTheme />
+            </div>
             {isLoggedIn ? (
               <Button asChild className="w-full bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold">
                 <Link href="/dashboard">Go to Dashboard</Link>
