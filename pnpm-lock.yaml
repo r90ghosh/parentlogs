@@ -184,7 +184,7 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.71.2(react@19.2.3))
       '@paper-design/shaders-react':
-        specifier: ^0.0.72
+        specifier: 0.0.72
         version: 0.0.72(@types/react@19.2.14)(react@19.2.3)
       '@radix-ui/react-accordion':
         specifier: ^1.2.12
