@@ -72,7 +72,7 @@ export default async function ResourcesPage(props: PageProps) {
   return (
     <div className="min-h-screen bg-[--bg]">
       {/* Header Section */}
-      <section className="relative pt-32 pb-12 md:pt-32 md:pb-16">
+      <section className="relative pt-24 pb-12 md:pt-32 md:pb-16">
         {/* Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-[--surface] via-[--bg] to-[--bg]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-copper/5 via-transparent to-transparent" />

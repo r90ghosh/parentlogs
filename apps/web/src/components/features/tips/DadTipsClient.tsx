@@ -58,7 +58,7 @@ export function DadTipsClient() {
   return (
     <div className="min-h-screen">
       {/* Hero area */}
-      <section className="relative pt-28 pb-4 md:pt-28 md:pb-6">
+      <section className="relative pt-20 pb-4 md:pt-28 md:pb-6">
         <div className="absolute inset-0 bg-gradient-to-b from-zinc-900 to-transparent" />
 
         <div className="relative max-w-2xl mx-auto px-4">
@@ -82,7 +82,7 @@ export function DadTipsClient() {
       </section>
 
       {/* Topic selector — sticky below marketing header */}
-      <div className="sticky top-[92px] md:top-14 z-20 bg-[--surface]/95 backdrop-blur-[16px] border-b border-[--border]">
+      <div className="sticky top-12 md:top-14 z-20 bg-[--surface]/95 backdrop-blur-[16px] border-b border-[--border]">
         <div className="max-w-2xl mx-auto">
           <TopicSelector
             topics={dadTips}

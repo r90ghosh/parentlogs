@@ -1,5 +1,4 @@
 export { Header } from './Header'
-export { MobileContentNav } from './MobileContentNav'
 export { Hero } from './Hero'
 export { SnakeTimeline } from './SnakeTimeline'
 export { ProblemSolution } from './ProblemSolution'
