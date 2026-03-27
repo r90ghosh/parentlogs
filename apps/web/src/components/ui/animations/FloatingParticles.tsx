@@ -23,7 +23,7 @@ const COLORS = [
 function generateParticles(count: number): Particle[] {
   return Array.from({ length: count }, (_, i) => ({
     id: i,
-    size: 2 + Math.random() * 3,
+    size: 3 + Math.random() * 5,
     left: Math.random() * 100,
     duration: 11 + Math.random() * 9,
     delay: Math.random() * 10,
