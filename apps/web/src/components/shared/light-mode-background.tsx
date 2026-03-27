@@ -2,6 +2,15 @@
 
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
+import { InfiniteGrid } from '@/components/ui/infinite-grid'
+
+export function LightModeGrid() {
+  const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  if (!mounted || resolvedTheme !== 'light') return null
+  return <InfiniteGrid className="fixed inset-0 z-0 pointer-events-auto" />
+}
 
 export function LightModeBackground() {
   const { resolvedTheme } = useTheme()
