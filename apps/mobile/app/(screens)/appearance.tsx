@@ -1,23 +1,18 @@
-import { useState, useEffect } from 'react'
 import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
-import { LinearGradient } from 'expo-linear-gradient'
 import { ChevronLeft } from 'lucide-react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import * as Haptics from 'expo-haptics'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useTheme } from '@/components/providers/ThemeProvider'
 
 type ThemePreference = 'system' | 'dark' | 'light'
-
-const THEME_STORAGE_KEY = '@tdc_theme_preference'
 
 interface ThemeOption {
   id: ThemePreference
   label: string
   description: string
-  disabled?: boolean
 }
 
 const THEME_OPTIONS: ThemeOption[] = [
@@ -29,57 +24,34 @@ const THEME_OPTIONS: ThemeOption[] = [
   {
     id: 'dark',
     label: 'Dark',
-    description: 'Always use dark theme',
+    description: 'Dark background with floating stars',
   },
   {
     id: 'light',
     label: 'Light',
-    description: 'Coming soon',
-    disabled: true,
+    description: 'Pastel gradient with glass cards',
   },
 ]
 
 export default function AppearanceScreen() {
   const router = useRouter()
   const insets = useSafeAreaInsets()
-  const [selected, setSelected] = useState<ThemePreference>('system')
+  const { theme: selected, setTheme, isDark } = useTheme()
 
-  // Load saved preference on mount
-  useEffect(() => {
-    AsyncStorage.getItem(THEME_STORAGE_KEY)
-      .then((value) => {
-        if (value === 'system' || value === 'dark' || value === 'light') {
-          setSelected(value)
-        }
-      })
-      .catch(() => {
-        // Ignore storage errors, default to 'system'
-      })
-  }, [])
-
-  const handleSelect = async (option: ThemePreference) => {
+  const handleSelect = (option: ThemePreference) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    setSelected(option)
-    try {
-      await AsyncStorage.setItem(THEME_STORAGE_KEY, option)
-    } catch {
-      // Ignore storage errors
-    }
+    setTheme(option)
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
         <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ChevronLeft size={20} color="#ede6dc" />
+          <ChevronLeft size={20} color={isDark ? '#ede6dc' : '#1a1a2e'} />
         </Pressable>
-        <Text style={styles.headerTitle}>Appearance</Text>
+        <Text style={[styles.headerTitle, !isDark && { color: '#1a1a2e' }]}>Appearance</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -90,52 +62,35 @@ export default function AppearanceScreen() {
             {THEME_OPTIONS.map((option, index) => {
               const isSelected = selected === option.id
               const isLast = index === THEME_OPTIONS.length - 1
-              const isDisabled = option.disabled
               return (
                 <Pressable
                   key={option.id}
-                  onPress={() => !isDisabled && handleSelect(option.id)}
-                  disabled={isDisabled}
+                  onPress={() => handleSelect(option.id)}
                   style={({ pressed }) => [
                     styles.optionRow,
                     isSelected && styles.optionRowSelected,
                     !isLast && styles.optionRowBorder,
-                    pressed && !isDisabled && styles.optionRowPressed,
-                    isDisabled && styles.optionRowDisabled,
+                    pressed && styles.optionRowPressed,
                   ]}
                 >
-                  {/* Left accent border for selected */}
                   {isSelected && <View style={styles.selectedAccent} />}
 
                   <View style={styles.optionContent}>
-                    <Text style={[styles.optionLabel, isDisabled && styles.optionLabelDisabled]}>
+                    <Text style={[styles.optionLabel, !isDark && { color: '#1a1a2e' }]}>
                       {option.label}
                     </Text>
-                    <Text style={styles.optionDescription}>
+                    <Text style={[styles.optionDescription, !isDark && { color: '#3d3d56' }]}>
                       {option.description}
                     </Text>
                   </View>
 
-                  {/* Radio indicator */}
-                  <View
-                    style={[
-                      styles.radio,
-                      isSelected && styles.radioSelected,
-                      isDisabled && styles.radioDisabled,
-                    ]}
-                  >
+                  <View style={[styles.radio, isSelected && styles.radioSelected]}>
                     {isSelected && <View style={styles.radioDot} />}
                   </View>
                 </Pressable>
               )
             })}
           </GlassCard>
-        </CardEntrance>
-
-        <CardEntrance delay={120}>
-          <Text style={styles.noteText}>
-            The app currently uses a dark theme. Additional theme options coming soon.
-          </Text>
         </CardEntrance>
       </View>
     </View>
@@ -207,15 +162,6 @@ const styles = StyleSheet.create({
   optionRowPressed: {
     backgroundColor: 'rgba(237,230,220,0.04)',
   },
-  optionRowDisabled: {
-    opacity: 0.4,
-  },
-  optionLabelDisabled: {
-    color: '#4a4239',
-  },
-  radioDisabled: {
-    borderColor: '#2a2520',
-  },
   selectedAccent: {
     position: 'absolute',
     left: 0,
@@ -256,13 +202,5 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     backgroundColor: '#c4703f',
-  },
-  noteText: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 13,
-    color: '#4a4239',
-    textAlign: 'center',
-    lineHeight: 18,
-    paddingHorizontal: 12,
   },
 })

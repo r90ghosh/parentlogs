@@ -16,10 +16,12 @@ import { BabySwitcher } from '@/components/BabySwitcher'
 import { useUnreadNotificationCount } from '@/hooks/use-notifications'
 import { useRealtimeSync } from '@/hooks/use-realtime-sync'
 import { ToastProvider } from '@/components/ui/Toast'
+import { useTheme } from '@/components/providers/ThemeProvider'
 
 const NotificationBell = React.memo(function NotificationBell() {
   const router = useRouter()
   const { data: unreadCount } = useUnreadNotificationCount()
+  const { isDark } = useTheme()
   const count = unreadCount ?? 0
 
   return (
@@ -32,9 +34,9 @@ const NotificationBell = React.memo(function NotificationBell() {
       accessibilityLabel={count > 0 ? `Notifications, ${count} unread` : 'Notifications'}
       accessibilityRole="button"
     >
-      <Bell size={20} color="#7a6f62" />
+      <Bell size={20} color={isDark ? '#7a6f62' : '#6b7280'} />
       {count > 0 && (
-        <View style={styles.badge}>
+        <View style={[styles.badge, !isDark && { borderColor: '#f5f7fa' }]}>
           <Text style={styles.badgeText}>
             {count > 99 ? '99+' : count}
           </Text>
@@ -46,9 +48,17 @@ const NotificationBell = React.memo(function NotificationBell() {
 
 function TabHeader() {
   const insets = useSafeAreaInsets()
+  const { isDark } = useTheme()
 
   return (
-    <View style={[styles.header, { paddingTop: insets.top + 4 }]}>
+    <View style={[
+      styles.header,
+      { paddingTop: insets.top + 4 },
+      !isDark && {
+        backgroundColor: 'transparent',
+        borderBottomColor: 'rgba(0,0,0,0.06)',
+      },
+    ]}>
       <BabySwitcher />
       <NotificationBell />
     </View>
@@ -57,16 +67,17 @@ function TabHeader() {
 
 export default function TabLayout() {
   useRealtimeSync()
+  const { isDark } = useTheme()
 
   return (
     <ToastProvider>
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <TabHeader />
       <Tabs
         screenOptions={{
           headerShown: false,
           tabBarActiveTintColor: '#c4703f',
-          tabBarInactiveTintColor: '#7a6f62',
+          tabBarInactiveTintColor: isDark ? '#7a6f62' : '#6b7280',
           tabBarLabelStyle: {
             fontFamily: 'Karla-Medium',
             fontSize: 11,
@@ -74,19 +85,20 @@ export default function TabLayout() {
           tabBarStyle: {
             position: 'absolute',
             borderTopWidth: 1,
-            borderTopColor: 'rgba(237,230,220,0.08)',
+            borderTopColor: isDark ? 'rgba(237,230,220,0.08)' : 'rgba(0,0,0,0.06)',
             backgroundColor:
-              Platform.OS === 'ios' ? 'transparent' : 'rgba(26,23,20,0.95)',
+              Platform.OS === 'ios' ? 'transparent' : (isDark ? 'rgba(26,23,20,0.95)' : 'rgba(255,255,255,0.85)'),
             elevation: 0,
           },
           tabBarBackground: () =>
             Platform.OS === 'ios' ? (
               <BlurView
-                tint="dark"
-                intensity={80}
+                tint={isDark ? 'dark' : 'light'}
+                intensity={isDark ? 80 : 60}
                 style={StyleSheet.absoluteFill}
               />
             ) : null,
+          sceneStyle: { backgroundColor: 'transparent' },
         }}
         screenListeners={{
           tabPress: () => {

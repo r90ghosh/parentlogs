@@ -8,6 +8,8 @@ import { AuthProvider } from '@/components/providers/AuthProvider'
 import { QueryProvider } from '@/components/providers/QueryProvider'
 import { RevenueCatProvider } from '@/components/providers/RevenueCatProvider'
 import { NetworkProvider } from '@/components/providers/NetworkProvider'
+import { ThemeProvider, useTheme } from '@/components/providers/ThemeProvider'
+import { AppBackground } from '@/components/shared/AppBackground'
 import { initSentry, Sentry } from '@/lib/sentry'
 import { initAnalytics } from '@/lib/analytics'
 import { ScreenEngagementTracker } from '@/hooks/use-screen-engagement'
@@ -48,21 +50,37 @@ function RootLayout() {
         <AuthProvider>
           <RevenueCatProvider>
             <NetworkProvider>
-              <StatusBar style="light" />
-              <ScreenEngagementTracker />
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="index" />
-                <Stack.Screen name="(auth)" />
-                <Stack.Screen name="(onboarding)" />
-                <Stack.Screen name="(tabs)" />
-                <Stack.Screen name="(screens)" options={{ presentation: 'modal' }} />
-                <Stack.Screen name="+not-found" />
-              </Stack>
+              <ThemeProvider>
+                <RootContent />
+              </ThemeProvider>
             </NetworkProvider>
           </RevenueCatProvider>
         </AuthProvider>
       </QueryProvider>
     </GestureHandlerRootView>
+  )
+}
+
+function RootContent() {
+  const { isDark } = useTheme()
+
+  return (
+    <>
+      <AppBackground />
+      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <ScreenEngagementTracker />
+      <Stack screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: 'transparent' },
+      }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="(onboarding)" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(screens)" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+    </>
   )
 }
 
