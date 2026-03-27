@@ -19,7 +19,7 @@ const features = [
   {
     icon: Calendar,
     title: 'Weekly Briefings',
-    description: '47 detailed articles covering pregnancy through 24 months. Know exactly what\'s happening and what to do each week.',
+    description: '60+ detailed briefings covering pregnancy through 24 months. Know exactly what\'s happening and what to do each week.',
   },
   {
     icon: CheckSquare,
@@ -104,9 +104,6 @@ export function Features() {
               </Link>
             </Button>
           </MagneticButton>
-          <p className="mt-4 font-ui text-sm text-[--muted]">
-            No credit card required. 30-day money-back guarantee.
-          </p>
         </RevealOnScroll>
       </div>
     </section>

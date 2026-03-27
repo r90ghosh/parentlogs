@@ -69,7 +69,7 @@ const colorMap: Record<string, { border: string; bg: string; icon: string }> = {
 
 export function AboutContent() {
   return (
-    <div className="py-16 sm:py-24 md:py-32">
+    <div className="pt-32 pb-16 sm:py-24 md:py-32">
       {/* Hero */}
       <section className="max-w-[1100px] mx-auto px-4 sm:px-6 text-center mb-20 sm:mb-28">
         <RevealOnScroll>

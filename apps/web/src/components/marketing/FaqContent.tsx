@@ -164,7 +164,7 @@ export function FaqContent() {
   }
 
   return (
-    <div className="py-16 sm:py-24 md:py-32">
+    <div className="pt-32 pb-16 sm:py-24 md:py-32">
       {/* Hero */}
       <section className="max-w-[1100px] mx-auto px-4 sm:px-6 text-center mb-16 sm:mb-24">
         <RevealOnScroll>

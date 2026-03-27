@@ -39,19 +39,6 @@ export function HowItWorks() {
 
         {/* Steps */}
         <div className="relative">
-          {/* Connecting dashed line (desktop) */}
-          <div className="hidden lg:block absolute top-20 left-[16.67%] right-[16.67%]">
-            <svg width="100%" height="2" className="overflow-visible">
-              <line
-                x1="0" y1="1" x2="100%" y2="1"
-                stroke="var(--copper)"
-                strokeWidth="1.5"
-                strokeDasharray="6 4"
-                strokeOpacity="0.7"
-              />
-            </svg>
-          </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
             {steps.map((step, index) => (
               <RevealOnScroll key={index} delay={80 + index * 120}>

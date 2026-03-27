@@ -93,7 +93,7 @@ export function ContentPreview() {
             <div className="text-center">
               <div className="flex items-center justify-center gap-2 mb-1">
                 <BookOpen className="h-5 w-5 text-copper" />
-                <span className="font-display font-bold text-2xl text-[--white]">47</span>
+                <span className="font-display font-bold text-2xl text-[--white]">40+</span>
               </div>
               <span className="font-ui text-sm text-[--muted]">Articles</span>
             </div>
@@ -101,7 +101,7 @@ export function ContentPreview() {
             <div className="text-center">
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Video className="h-5 w-5 text-copper" />
-                <span className="font-display font-bold text-2xl text-[--white]">83</span>
+                <span className="font-display font-bold text-2xl text-[--white]">65+</span>
               </div>
               <span className="font-ui text-sm text-[--muted]">Videos</span>
             </div>

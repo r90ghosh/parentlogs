@@ -303,7 +303,7 @@ export function Hero() {
               {[
                 { value: 'Built for', label: 'First-Time Dads' },
                 { value: '200+', label: 'Pre-loaded Tasks' },
-                { value: '47', label: 'Weekly Briefings' },
+                { value: '60+', label: 'Weekly Briefings' },
                 { value: 'Evidence-Based', label: 'Source-Referenced' },
               ].map((stat, i) => (
                 <div key={i} className="text-center">

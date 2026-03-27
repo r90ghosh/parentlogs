@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { Header } from '@/components/marketing/Header'
 import { Footer } from '@/components/marketing/Footer'
 import { MarketingShell } from '@/components/marketing/MarketingShell'
+import { MobileContentNav } from '@/components/marketing/MobileContentNav'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://thedadcenter.com'),
@@ -38,6 +39,7 @@ export default function MarketingLayout({
     <div className="min-h-screen flex flex-col bg-[--bg] relative animate-page-load-fade-in">
       <MarketingShell>
         <Header />
+        <MobileContentNav />
         <main className="flex-1 relative z-[2]">
           {children}
         </main>

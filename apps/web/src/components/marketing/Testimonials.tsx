@@ -72,8 +72,8 @@ export function Testimonials() {
         {/* Highlights grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
           {highlights.map((highlight, index) => (
-            <RevealOnScroll key={index} delay={80 + index * 120}>
-              <Card3DTilt maxTilt={3} gloss>
+            <RevealOnScroll key={index} delay={80 + index * 120} className="h-full">
+              <Card3DTilt maxTilt={3} gloss className="h-full">
                 <div className="p-6 rounded-xl bg-[--card] border border-[--border] shadow-card h-full">
                   {/* Week + Icon */}
                   <div className="flex items-center gap-3 mb-4">

@@ -59,11 +59,6 @@ export function FinalCTA() {
           </div>
         </RevealOnScroll>
 
-        <RevealOnScroll delay={240}>
-          <p className="font-ui text-sm text-[--muted]">
-            30-day money-back guarantee. No credit card required.
-          </p>
-        </RevealOnScroll>
       </div>
     </section>
   )

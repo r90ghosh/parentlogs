@@ -303,8 +303,6 @@ export function SnakeTimeline() {
   if (loading) return <TimelineSkeleton />
   if (milestones.length === 0) return null
 
-  const totalDots = milestones.reduce((sum, m) => sum + m.dots.length, 0)
-
   return (
     <section className="py-16 sm:py-24 md:py-32 relative overflow-hidden">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
@@ -375,7 +373,7 @@ export function SnakeTimeline() {
         <RevealOnScroll delay={300}>
           <div className="text-center mt-16 sm:mt-20">
             <p className="font-ui text-[11px] uppercase tracking-[0.08em] text-[--muted] mb-6">
-              {totalDots} task previews &middot; {milestones.length} milestones &middot; {ALL_DOMAINS.length} domains
+              200+ tasks &middot; 60+ briefings &middot; 200+ budget items
             </p>
             <MagneticButton maxOffset={6}>
               <Button
@@ -389,9 +387,6 @@ export function SnakeTimeline() {
                 </Link>
               </Button>
             </MagneticButton>
-            <p className="font-body text-xs text-[--dim] mt-4">
-              No credit card required. 30-day money-back guarantee.
-            </p>
           </div>
         </RevealOnScroll>
       </div>
