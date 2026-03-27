@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { useServiceContext } from './use-service-context'
 import { budgetService } from '@/lib/services'
 import type { BudgetPeriod } from '@tdc/shared/types'
 
@@ -13,10 +14,11 @@ export function useBudgetTemplates(period?: BudgetPeriod) {
 
 export function useBudgetSummary() {
   const { family } = useAuth()
+  const ctx = useServiceContext()
 
   return useQuery({
     queryKey: ['budget-summary', family?.id],
-    queryFn: () => budgetService.getBudgetSummary(),
+    queryFn: () => budgetService.getBudgetSummary(ctx),
     enabled: !!family?.id,
     staleTime: 1000 * 60 * 2,
   })
@@ -25,6 +27,7 @@ export function useBudgetSummary() {
 export function useAddToBudget() {
   const queryClient = useQueryClient()
   const { family } = useAuth()
+  const ctx = useServiceContext()
 
   return useMutation({
     mutationFn: ({
@@ -33,7 +36,7 @@ export function useAddToBudget() {
     }: {
       templateId: string
       estimatedPrice?: number
-    }) => budgetService.addToFamilyBudget(templateId, estimatedPrice),
+    }) => budgetService.addToFamilyBudget(templateId, estimatedPrice, ctx),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['budget-summary', family?.id] })
     },
@@ -43,6 +46,7 @@ export function useAddToBudget() {
 export function useAddCustomBudgetItem() {
   const queryClient = useQueryClient()
   const { family } = useAuth()
+  const ctx = useServiceContext()
   return useMutation({
     mutationFn: ({
       item,
@@ -52,7 +56,7 @@ export function useAddCustomBudgetItem() {
       item: string
       category: string
       estimatedPrice: number
-    }) => budgetService.addCustomItem(item, category, estimatedPrice),
+    }) => budgetService.addCustomItem(item, category, estimatedPrice, ctx),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['budget-summary', family?.id] })
     },
@@ -62,6 +66,7 @@ export function useAddCustomBudgetItem() {
 export function useTogglePurchased() {
   const queryClient = useQueryClient()
   const { family } = useAuth()
+  const ctx = useServiceContext()
 
   return useMutation({
     mutationFn: ({
@@ -74,8 +79,8 @@ export function useTogglePurchased() {
       actualPrice?: number
     }) =>
       isPurchased
-        ? budgetService.markAsPurchased(itemId, actualPrice)
-        : budgetService.updateBudgetItem(itemId, { is_purchased: false }),
+        ? budgetService.markAsPurchased(itemId, actualPrice, ctx)
+        : budgetService.updateBudgetItem(itemId, { is_purchased: false }, ctx),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['budget-summary', family?.id] })
     },

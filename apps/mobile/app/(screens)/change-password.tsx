@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native'
-import { useRouter } from 'expo-router'
+import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { ArrowLeft, KeyRound, Eye, EyeOff } from 'lucide-react-native'
@@ -22,9 +22,14 @@ export default function ChangePasswordScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { user } = useAuth()
+  const params = useLocalSearchParams<{ recovery?: string }>()
+
+  // In recovery mode (from password reset email), skip current password check
+  const isRecovery = params.recovery === '1'
 
   const hasEmailIdentity =
     user?.identities?.some((i) => i.provider === 'email') ?? false
+  const requireCurrentPassword = hasEmailIdentity && !isRecovery
 
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -38,7 +43,7 @@ export default function ChangePasswordScreen() {
     isLoading ||
     !newPassword ||
     !confirmPassword ||
-    (hasEmailIdentity && !currentPassword)
+    (requireCurrentPassword && !currentPassword)
 
   const handleSubmit = async () => {
     if (isDisabled) return
@@ -52,7 +57,7 @@ export default function ChangePasswordScreen() {
       setError('Passwords do not match')
       return
     }
-    if (hasEmailIdentity && newPassword === currentPassword) {
+    if (requireCurrentPassword && newPassword === currentPassword) {
       setError('New password must be different from current password')
       return
     }
@@ -60,8 +65,8 @@ export default function ChangePasswordScreen() {
     setIsLoading(true)
 
     try {
-      // Verify current password for email users
-      if (hasEmailIdentity) {
+      // Verify current password for email users (skip in recovery mode)
+      if (requireCurrentPassword) {
         const { error: signInError } =
           await supabase.auth.signInWithPassword({
             email: user!.email!,
@@ -81,11 +86,14 @@ export default function ChangePasswordScreen() {
       if (updateError) {
         setError(updateError.message)
       } else {
+        const message = isRecovery
+          ? 'Your password has been reset successfully.'
+          : hasEmailIdentity
+            ? 'Your password has been changed.'
+            : 'Your password has been set. You can now sign in with email.'
         Alert.alert(
           'Success',
-          hasEmailIdentity
-            ? 'Your password has been changed.'
-            : 'Your password has been set. You can now sign in with email.',
+          message,
           [{ text: 'OK', onPress: () => router.back() }]
         )
       }
@@ -109,7 +117,7 @@ export default function ChangePasswordScreen() {
           <ArrowLeft size={20} color="#ede6dc" />
         </Pressable>
         <Text style={styles.headerTitle}>
-          {hasEmailIdentity ? 'Change Password' : 'Set Password'}
+          {isRecovery ? 'Reset Password' : hasEmailIdentity ? 'Change Password' : 'Set Password'}
         </Text>
         <View style={styles.headerSpacer} />
       </View>
@@ -132,9 +140,11 @@ export default function ChangePasswordScreen() {
               <KeyRound size={28} color="#c4703f" />
             </View>
             <Text style={styles.description}>
-              {hasEmailIdentity
-                ? 'Enter your current password and choose a new one.'
-                : 'Set a password so you can also sign in with email and password.'}
+              {isRecovery
+                ? 'Choose a new password for your account.'
+                : hasEmailIdentity
+                  ? 'Enter your current password and choose a new one.'
+                  : 'Set a password so you can also sign in with email and password.'}
             </Text>
           </View>
 
@@ -147,7 +157,7 @@ export default function ChangePasswordScreen() {
 
           {/* Form */}
           <View style={styles.form}>
-            {hasEmailIdentity && (
+            {requireCurrentPassword && (
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Current Password</Text>
                 <View style={styles.inputWrapper}>
@@ -226,7 +236,7 @@ export default function ChangePasswordScreen() {
                 <ActivityIndicator color="#faf6f0" />
               ) : (
                 <Text style={styles.buttonText}>
-                  {hasEmailIdentity ? 'Change Password' : 'Set Password'}
+                  {isRecovery ? 'Reset Password' : hasEmailIdentity ? 'Change Password' : 'Set Password'}
                 </Text>
               )}
             </Pressable>

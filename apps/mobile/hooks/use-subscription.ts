@@ -1,7 +1,11 @@
+import { useCallback, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useRouter } from 'expo-router'
 import { useRevenueCat, ENTITLEMENT_ID } from '@/components/providers/RevenueCatProvider'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { supabase } from '@/lib/supabase'
+import { isInGracePeriod, gracePeriodDaysRemaining } from '@tdc/shared/utils/subscription-utils'
+import type { PremiumFeature } from '@tdc/shared/types'
 
 /**
  * Unified subscription check combining RevenueCat entitlements + Supabase profile.
@@ -63,4 +67,76 @@ export function useSubscriptionStatus() {
     enabled: !!user?.id,
     staleTime: 1000 * 60 * 5,
   })
+}
+
+/**
+ * Per-feature premium check.
+ * Returns whether the current user has access to a specific premium feature.
+ */
+export function useHasFeature(feature: PremiumFeature) {
+  const { isSubscribed, tier, isReady } = useSubscription()
+
+  return {
+    hasFeature: isSubscribed,
+    isLoading: !isReady,
+    tier,
+  }
+}
+
+/**
+ * Gate hook for conditionally showing a paywall overlay.
+ * Returns `shouldShowPaywall: true` when the user is on the free tier.
+ */
+export function usePremiumGate() {
+  const { isSubscribed, tier, isReady } = useSubscription()
+
+  return {
+    isPremium: isSubscribed,
+    isLoading: !isReady,
+    tier,
+    shouldShowPaywall: isReady && !isSubscribed,
+  }
+}
+
+/**
+ * Redirect-based premium gate. Pushes to the upgrade screen if the user
+ * is not subscribed. Returns a `requirePremium()` callback that returns
+ * `false` (and navigates) when the user lacks access.
+ */
+export function useRequirePremium() {
+  const router = useRouter()
+  const { isSubscribed, isReady } = useSubscription()
+
+  const requirePremium = useCallback(() => {
+    if (isReady && !isSubscribed) {
+      router.push('/(screens)/upgrade')
+      return false
+    }
+    return true
+  }, [isSubscribed, isReady, router])
+
+  return {
+    isPremium: isSubscribed,
+    isLoading: !isReady,
+    requirePremium,
+  }
+}
+
+/**
+ * Grace period status for showing renewal banners.
+ * Uses the shared utility to calculate days remaining after subscription expiry.
+ */
+export function useGracePeriodStatus() {
+  const { profile } = useAuth()
+  const expiresAt = profile?.subscription_expires_at ?? null
+
+  return useMemo(() => {
+    const inGrace = isInGracePeriod(expiresAt)
+    const daysRemaining = gracePeriodDaysRemaining(expiresAt)
+    return {
+      isInGracePeriod: inGrace,
+      daysRemaining,
+      expiresAt,
+    }
+  }, [expiresAt])
 }

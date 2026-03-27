@@ -1,4 +1,5 @@
 import Purchases, { type PurchasesPackage } from 'react-native-purchases'
+import { Platform } from 'react-native'
 import { supabase } from '@/lib/supabase'
 import { ENTITLEMENT_ID } from '@/components/providers/RevenueCatProvider'
 
@@ -44,10 +45,42 @@ export const subscriptionMobileService = {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
+      // Update profiles table (existing behavior)
       await supabase
         .from('profiles')
         .update({ subscription_tier: tier, subscription_expires_at: entitlement.expirationDate ?? null })
         .eq('id', user.id)
+
+      // Upsert subscriptions table to match web's Stripe webhook behavior.
+      // Wrapped in its own try/catch so a failure here doesn't block the profiles update above.
+      try {
+        const platform = Platform.OS === 'ios' ? 'ios' : 'android'
+
+        const { error: subError } = await supabase
+          .from('subscriptions')
+          .upsert({
+            user_id: user.id,
+            tier,
+            status: 'active',
+            current_period_start: entitlement.latestPurchaseDate ?? new Date().toISOString(),
+            current_period_end: entitlement.expirationDate ?? null,
+            cancel_at_period_end: false,
+            platform,
+            revenucat_app_user_id: customerInfo.originalAppUserId,
+            store_product_id: entitlement.productIdentifier,
+            store_original_transaction_id: entitlement.originalPurchaseDate ?? null,
+            last_verified_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          }, { onConflict: 'user_id' })
+
+        if (subError) {
+          console.warn('[Subscription] Failed to upsert subscriptions row:', subError.message)
+        } else {
+          console.log('[Subscription] Synced subscriptions row for platform:', platform)
+        }
+      } catch (subErr) {
+        console.warn('[Subscription] Failed to sync subscriptions table:', subErr)
+      }
 
       console.log('[Subscription] Synced tier to Supabase:', tier)
     } catch (err) {

@@ -351,6 +351,8 @@ export interface Notification {
 }
 
 // Subscription Types
+export type SubscriptionPlatform = 'web' | 'ios' | 'android'
+
 export interface Subscription {
   id: string
   user_id: string
@@ -361,6 +363,11 @@ export interface Subscription {
   current_period_start?: string
   current_period_end?: string
   cancel_at_period_end: boolean
+  platform?: SubscriptionPlatform
+  revenucat_app_user_id?: string
+  store_product_id?: string
+  store_original_transaction_id?: string
+  last_verified_at?: string
   created_at: string
   updated_at: string
 }

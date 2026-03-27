@@ -87,10 +87,10 @@ interface Preferences {
   quiet_hours_end: string
   // Email notification preferences (UI-only toggles, saved alongside push prefs)
   email_weekly_briefing: boolean
-  email_overdue_digest: boolean
-  email_milestone_alerts: boolean
-  email_lifecycle_updates: boolean
-  email_re_engagement: boolean
+  email_task_digest: boolean
+  email_milestones: boolean
+  email_lifecycle: boolean
+  re_engagement_emails: boolean
 }
 
 const DEFAULT_PREFS: Preferences = {
@@ -105,10 +105,10 @@ const DEFAULT_PREFS: Preferences = {
   quiet_hours_start: '22:00',
   quiet_hours_end: '07:00',
   email_weekly_briefing: true,
-  email_overdue_digest: true,
-  email_milestone_alerts: true,
-  email_lifecycle_updates: false,
-  email_re_engagement: false,
+  email_task_digest: false,
+  email_milestones: true,
+  email_lifecycle: true,
+  re_engagement_emails: true,
 }
 
 export default function NotificationsScreen() {
@@ -149,10 +149,10 @@ export default function NotificationsScreen() {
             quiet_hours_start: data.quiet_hours_start ?? '22:00',
             quiet_hours_end: data.quiet_hours_end ?? '07:00',
             email_weekly_briefing: extras.email_weekly_briefing ?? true,
-            email_overdue_digest: extras.email_overdue_digest ?? true,
-            email_milestone_alerts: extras.email_milestone_alerts ?? true,
-            email_lifecycle_updates: extras.email_lifecycle_updates ?? false,
-            email_re_engagement: extras.email_re_engagement ?? false,
+            email_task_digest: extras.email_task_digest ?? false,
+            email_milestones: extras.email_milestones ?? true,
+            email_lifecycle: extras.email_lifecycle ?? true,
+            re_engagement_emails: extras.re_engagement_emails ?? true,
           })
         }
       } catch {
@@ -201,10 +201,10 @@ export default function NotificationsScreen() {
       try {
         const emailKeys = [
           'email_weekly_briefing',
-          'email_overdue_digest',
-          'email_milestone_alerts',
-          'email_lifecycle_updates',
-          'email_re_engagement',
+          'email_task_digest',
+          'email_milestones',
+          'email_lifecycle',
+          're_engagement_emails',
         ] as const
 
         if ((emailKeys as readonly string[]).includes(key)) {
@@ -443,29 +443,29 @@ export default function NotificationsScreen() {
               icon={<CheckSquare size={18} color="#d4836b" />}
               label="Overdue Task Digest"
               description="Email digest of tasks that need attention"
-              value={prefs.email_overdue_digest}
-              onToggle={(v) => updatePref('email_overdue_digest', v)}
+              value={prefs.email_task_digest}
+              onToggle={(v) => updatePref('email_task_digest', v)}
             />
             <NotificationToggle
               icon={<CalendarCheck size={18} color="#d4a853" />}
               label="Milestone Alerts"
               description="Email alerts for baby milestones"
-              value={prefs.email_milestone_alerts}
-              onToggle={(v) => updatePref('email_milestone_alerts', v)}
+              value={prefs.email_milestones}
+              onToggle={(v) => updatePref('email_milestones', v)}
             />
             <NotificationToggle
               icon={<Activity size={18} color="#6b8f71" />}
               label="Lifecycle Updates"
               description="Important app updates and new features"
-              value={prefs.email_lifecycle_updates}
-              onToggle={(v) => updatePref('email_lifecycle_updates', v)}
+              value={prefs.email_lifecycle}
+              onToggle={(v) => updatePref('email_lifecycle', v)}
             />
             <NotificationToggle
               icon={<Repeat size={18} color="#7a6f62" />}
               label="Re-engagement"
               description="Gentle reminders when you haven't checked in"
-              value={prefs.email_re_engagement}
-              onToggle={(v) => updatePref('email_re_engagement', v)}
+              value={prefs.re_engagement_emails}
+              onToggle={(v) => updatePref('re_engagement_emails', v)}
             />
           </GlassCard>
         </CardEntrance>

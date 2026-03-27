@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { useServiceContext } from './use-service-context'
 import { familyService } from '@/lib/services'
 
 export function usePartnerActivity() {
@@ -14,9 +15,10 @@ export function usePartnerActivity() {
 
 export function useFamilyMembers() {
   const { family } = useAuth()
+  const ctx = useServiceContext()
   return useQuery({
     queryKey: ['family-members', family?.id],
-    queryFn: () => familyService.getFamilyMembers(),
+    queryFn: () => familyService.getFamilyMembers(ctx),
     enabled: !!family?.id,
   })
 }
@@ -24,9 +26,10 @@ export function useFamilyMembers() {
 export function useUpdateFamily() {
   const queryClient = useQueryClient()
   const { family } = useAuth()
+  const ctx = useServiceContext()
   return useMutation({
     mutationFn: (updates: { baby_name?: string; due_date?: string; birth_date?: string }) =>
-      familyService.updateFamily(updates),
+      familyService.updateFamily(updates, ctx),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['family-members', family?.id] })
       queryClient.invalidateQueries({ queryKey: ['dashboard'] })
@@ -37,8 +40,9 @@ export function useUpdateFamily() {
 export function useRegenerateInviteCode() {
   const queryClient = useQueryClient()
   const { family } = useAuth()
+  const ctx = useServiceContext()
   return useMutation({
-    mutationFn: () => familyService.regenerateInviteCode(),
+    mutationFn: () => familyService.regenerateInviteCode(ctx),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['family-members', family?.id] })
     },

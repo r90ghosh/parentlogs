@@ -5,7 +5,7 @@ import { useRouter, useSegments } from 'expo-router'
 import { pushNotificationService } from '@/services/push-notification-service'
 import { initRevenueCat } from './RevenueCatProvider'
 import { isInGracePeriod } from '@tdc/shared/utils/subscription-utils'
-import { Sentry } from '@/lib/sentry'
+import { Sentry, setSentryUser, clearSentryUser } from '@/lib/sentry'
 import { identifyUser, resetUser } from '@/lib/analytics'
 import type { Session, User } from '@supabase/supabase-js'
 
@@ -99,21 +99,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       setSession(session)
       if (session?.user) {
         await fetchProfile(session.user.id)
         // Initialize RevenueCat with user ID
         initRevenueCat(session.user.id)
-        // Identify user for analytics
+        // Identify user for analytics + error tracking
         identifyUser(session.user.id)
+        setSentryUser(session.user.id, session.user.email)
         // Register for push notifications (fire and forget)
         pushNotificationService.register(session.user.id).catch(() => {})
+
+        // Handle password recovery deep-link — navigate to change password screen
+        if (event === 'PASSWORD_RECOVERY') {
+          router.push('/(screens)/change-password?recovery=1')
+        }
       } else {
         setProfile(null)
         setFamily(null)
         setProfileLoaded(false)
         resetUser()
+        clearSentryUser()
       }
       setIsLoading(false)
     })

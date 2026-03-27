@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { useServiceContext } from './use-service-context'
 import { trackerService } from '@/lib/services'
 import type { LogType } from '@tdc/shared/types'
 
@@ -12,27 +13,30 @@ export type CreateLogInput = {
 
 export function useRecentLogs(limit = 20) {
   const { family } = useAuth()
+  const ctx = useServiceContext()
   return useQuery({
     queryKey: ['tracker-logs', family?.id, { limit }],
-    queryFn: () => trackerService.getLogs({ limit }),
+    queryFn: () => trackerService.getLogs({ limit }, ctx),
     enabled: !!family?.id,
   })
 }
 
 export function useTrackerLogs(filters: { log_type?: LogType; limit?: number } = {}) {
   const { family } = useAuth()
+  const ctx = useServiceContext()
   return useQuery({
     queryKey: ['tracker-logs', family?.id, filters],
-    queryFn: () => trackerService.getLogs(filters),
+    queryFn: () => trackerService.getLogs(filters, ctx),
     enabled: !!family?.id,
   })
 }
 
 export function useShiftBriefing() {
   const { family } = useAuth()
+  const ctx = useServiceContext()
   return useQuery({
     queryKey: ['shift-briefing', family?.id],
-    queryFn: () => trackerService.getShiftBriefing(),
+    queryFn: () => trackerService.getShiftBriefing(ctx),
     enabled: !!family?.id,
     refetchInterval: 60000,
   })
@@ -40,8 +44,9 @@ export function useShiftBriefing() {
 
 export function useCreateLog() {
   const queryClient = useQueryClient()
+  const ctx = useServiceContext()
   return useMutation({
-    mutationFn: (log: CreateLogInput) => trackerService.createLog(log),
+    mutationFn: (log: CreateLogInput) => trackerService.createLog(log, ctx),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tracker-logs'] })
       queryClient.invalidateQueries({ queryKey: ['shift-briefing'] })
@@ -51,8 +56,9 @@ export function useCreateLog() {
 
 export function useDeleteLog() {
   const queryClient = useQueryClient()
+  const ctx = useServiceContext()
   return useMutation({
-    mutationFn: (id: string) => trackerService.deleteLog(id),
+    mutationFn: (id: string) => trackerService.deleteLog(id, ctx),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tracker-logs'] })
       queryClient.invalidateQueries({ queryKey: ['shift-briefing'] })

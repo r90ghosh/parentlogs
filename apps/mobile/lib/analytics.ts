@@ -111,9 +111,9 @@ export function getUserId(): string | null {
   return userId
 }
 
-// Pre-defined event helpers
+// Pre-defined event helpers — mirrors web analytics API surface
 export const analytics = {
-  // Auth
+  // Authentication
   signUp: (method: string) => trackEvent('sign_up', { method }),
   signIn: (method: string) => trackEvent('login', { method }),
   signOut: () => trackEvent('logout'),
@@ -121,17 +121,28 @@ export const analytics = {
   // Onboarding
   onboardingStarted: () => trackEvent('onboarding_started'),
   onboardingCompleted: (role: string) => trackEvent('onboarding_completed', { role }),
+  familyCreated: () => trackEvent('family_created'),
+  familyJoined: () => trackEvent('family_joined'),
 
   // Tasks
+  taskCreated: (category: string) => trackEvent('task_created', { category }),
   taskCompleted: (category: string) => trackEvent('task_completed', { category }),
+  taskSkipped: (category: string) => trackEvent('task_skipped', { category }),
+  taskSnoozed: (category: string, days: number) => trackEvent('task_snoozed', { category, days }),
+
+  // Tracker
+  logCreated: (logType: string) => trackEvent('log_created', { log_type: logType }),
+  logDeleted: (logType: string) => trackEvent('log_deleted', { log_type: logType }),
 
   // Briefing
   briefingViewed: (week: number) => trackEvent('briefing_viewed', { week }),
 
   // Budget
   budgetItemAdded: (category: string) => trackEvent('budget_item_added', { category }),
+  budgetItemPurchased: (category: string) => trackEvent('budget_item_purchased', { category }),
 
   // Checklists
+  checklistViewed: (checklistId: string) => trackEvent('checklist_viewed', { checklist_id: checklistId }),
   checklistItemChecked: (checklistId: string) => trackEvent('checklist_item_checked', { checklist_id: checklistId }),
 
   // Journey
@@ -143,6 +154,20 @@ export const analytics = {
   // Subscription
   upgradeViewed: () => trackEvent('upgrade_viewed'),
   checkoutStarted: (plan: string) => trackEvent('begin_checkout', { plan }),
-  purchase: (plan: string, value: number) => trackEvent('purchase', { plan, value, currency: 'USD' }),
+  subscriptionPurchased: (plan: string, value: number) => trackEvent('purchase', { plan, value, currency: 'USD' }),
+  subscriptionCanceled: () => trackEvent('subscription_canceled'),
+
+  // Feature usage
+  featureUsed: (feature: string) => trackEvent('feature_used', { feature }),
   premiumFeatureBlocked: (feature: string) => trackEvent('premium_feature_blocked', { feature }),
+
+  // Notifications
+  notificationsEnabled: () => trackEvent('notifications_enabled'),
+  notificationsDisabled: () => trackEvent('notifications_disabled'),
+
+  // Errors
+  errorOccurred: (errorType: string, message: string) => trackEvent('error_occurred', { error_type: errorType, message }),
+
+  // Performance
+  performanceMark: (metric: string, value: number) => trackEvent('performance', { metric, value }),
 }

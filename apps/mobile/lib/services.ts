@@ -12,6 +12,8 @@ import {
   createNotificationHistoryService,
   createSubscriptionService,
   createFeedbackService,
+  createProfileService,
+  createArticlesService,
 } from '@tdc/services'
 
 export const taskService = createTaskService(supabase)
@@ -26,3 +28,5 @@ export const contactService = createContactService(supabase)
 export const notificationHistoryService = createNotificationHistoryService(supabase)
 export const subscriptionService = createSubscriptionService(supabase)
 export const feedbackService = createFeedbackService(supabase)
+export const profileService = createProfileService(supabase)
+export const articlesService = createArticlesService(supabase)
