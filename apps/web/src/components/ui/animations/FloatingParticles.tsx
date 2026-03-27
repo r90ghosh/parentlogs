@@ -53,7 +53,7 @@ export function FloatingParticles({ count = 10 }: { count?: number }) {
   return (
     <div
       className="pointer-events-none fixed inset-0 overflow-hidden"
-      style={{ zIndex: 1 }}
+      style={{ zIndex: 5 }}
       aria-hidden="true"
     >
       {particles.map((p) => (

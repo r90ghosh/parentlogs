@@ -163,8 +163,9 @@ html.light [data-slot="card"]:hover {
   }
 
   /* Let background animations (particles, grid, gradient) show through page wrappers.
-     body provides the actual base color; everything above it should be transparent. */
-  [class*="bg-\[--bg\]"] {
+     In dark mode, --bg (#12100e) is the base; particles float on top with z-index.
+     In light mode, make wrappers transparent so the static gradient shows through. */
+  html.light [class*="bg-\[--bg\]"] {
     background-color: transparent !important;
   }
 }
