@@ -73,7 +73,7 @@
   /* Light mode — glassmorphism + sharp borders + depth */
   html.light {
     /* Core Palette */
-    --bg: #e8edf5;
+    --bg: #f5f7fa;
     --surface: rgba(255, 255, 255, 0.45);
     --card: rgba(255, 255, 255, 0.40);
     --card-hover: rgba(255, 255, 255, 0.60);
@@ -104,7 +104,7 @@
     --shadow-gold: 0 4px 24px rgba(212,168,83,0.12);
 
     /* shadcn/ui compat */
-    --background: #e8edf5;
+    --background: #f5f7fa;
     --foreground: #1a1a2e;
     --card-foreground: #1a1a2e;
     --popover: rgba(255, 255, 255, 0.80);
@@ -128,7 +128,7 @@
 
 /* Light mode body — static pink→blue gradient (boy or girl) */
 html.light body {
-  background: linear-gradient(135deg, #f0b4c8 0%, #e8edf5 30%, #a8d0e6 60%, #89b5d4 100%) !important;
+  background: linear-gradient(135deg, #fce4ec 0%, #f5f7fa 30%, #e1f0fa 60%, #d4e9f7 100%) !important;
   background-attachment: fixed !important;
 }
 
