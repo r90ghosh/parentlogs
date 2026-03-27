@@ -16,7 +16,7 @@ export function MedicalDisclaimer({ className }: MedicalDisclaimerProps) {
       )}
     >
       <Stethoscope className="h-4 w-4 text-[--coral] flex-shrink-0 mt-0.5" />
-      <p className="font-body text-xs text-[--muted]">
+      <p className="font-body text-sm text-[--cream]">
         <span className="font-ui font-medium text-[--coral]">Medical Disclaimer:</span>{' '}
         Content is for informational purposes only and does not replace professional medical
         advice. Always consult your healthcare provider.
@@ -29,7 +29,7 @@ export function MedicalDisclaimerFooter({ className }: MedicalDisclaimerProps) {
   return (
     <p
       className={cn(
-        'text-center font-body text-[10px] text-[--dim]',
+        'text-center font-body text-xs text-[--cream]',
         className
       )}
     >
