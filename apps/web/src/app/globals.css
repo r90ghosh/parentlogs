@@ -161,6 +161,12 @@ html.light [data-slot="card"]:hover {
     font-feature-settings: "rlig" 1, "calt" 1;
     font-size: 17px;
   }
+
+  /* Let background animations (particles, grid, gradient) show through page wrappers.
+     body provides the actual base color; everything above it should be transparent. */
+  [class*="bg-\[--bg\]"] {
+    background-color: transparent !important;
+  }
 }
 
 /* === Warm Luxury Utility Classes === */

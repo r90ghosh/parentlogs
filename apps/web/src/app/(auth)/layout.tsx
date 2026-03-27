@@ -7,7 +7,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col bg-[--bg] relative">
       <WarmBackground />
-      <FloatingParticles count={12} />
+      <FloatingParticles count={30} />
       <header className="p-6 relative z-10">
         <Logo size="md" variant="dark" />
       </header>

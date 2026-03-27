@@ -12,7 +12,7 @@ export function MarketingShell({ children }: { children: ReactNode }) {
       <ScrollProgressBar />
       {/* Dark mode backgrounds */}
       <WarmBackground />
-      <FloatingParticles count={12} />
+      <FloatingParticles count={30} />
       {/* Light mode backgrounds */}
       <LightModeBackground />
       <LightModeGrid />

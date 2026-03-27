@@ -141,10 +141,10 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
   )
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-[--bg]">
+    <div className="min-h-screen min-h-[100dvh] relative">
       {/* Dark mode backgrounds */}
       <WarmBackground />
-      <FloatingParticles count={12} />
+      <FloatingParticles count={30} />
       {/* Light mode backgrounds */}
       <LightModeBackground />
       <LightModeGrid />
