@@ -13,17 +13,17 @@ interface ThemeContextValue {
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
-  theme: 'system',
-  resolvedTheme: 'dark',
+  theme: 'light',
+  resolvedTheme: 'light',
   setTheme: () => {},
-  isDark: true,
+  isDark: false,
 })
 
 const THEME_STORAGE_KEY = '@tdc_theme_preference'
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const systemScheme = useColorScheme()
-  const [theme, setThemeState] = useState<Theme>('system')
+  const [theme, setThemeState] = useState<Theme>('light')
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {

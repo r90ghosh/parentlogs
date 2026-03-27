@@ -7,12 +7,12 @@ export default (): ExpoConfig => ({
   scheme: "thedadcenter",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
-  userInterfaceStyle: "dark",
-  backgroundColor: "#12100e",
+  userInterfaceStyle: "automatic",
+  backgroundColor: "#f5f7fa",
   splash: {
     image: "./assets/images/splash-icon.png",
     resizeMode: "contain",
-    backgroundColor: "#12100e",
+    backgroundColor: "#f5f7fa",
   },
   ios: {
     bundleIdentifier: "com.thedadcenter.app",
@@ -32,7 +32,7 @@ export default (): ExpoConfig => ({
     package: "com.thedadcenter.app",
     adaptiveIcon: {
       foregroundImage: "./assets/images/android-icon-foreground.png",
-      backgroundColor: "#12100e",
+      backgroundColor: "#f5f7fa",
     },
     permissions: ["RECEIVE_BOOT_COMPLETED", "VIBRATE"],
   },
