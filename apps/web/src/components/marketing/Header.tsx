@@ -26,11 +26,12 @@ const navLinks: NavLink[] = [
       { href: '/content', label: 'Content' },
       { href: '/budget-guide', label: 'Budget Guide' },
       { href: '/baby-checklists', label: 'Checklists' },
-      { href: '/tips', label: 'Tips' },
+      { href: '/tips', label: 'Dad Tips' },
     ],
   },
   { href: '/about', label: 'About' },
   { href: '/faq', label: 'FAQ' },
+  { href: '/privacy', label: 'Privacy' },
 ]
 
 export function Header() {

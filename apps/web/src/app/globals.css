@@ -508,30 +508,15 @@ html.light [data-slot="card"]:hover {
   }
 }
 
-/* iOS specific fixes */
-@supports (-webkit-touch-callout: none) {
-  html,
-  body {
-    height: 100%;
-    overflow-x: hidden;
-  }
-
-  body {
-    -webkit-overflow-scrolling: touch;
-    overflow-y: auto;
-  }
-}
-
 /* Mobile viewport fix */
 @media (max-width: 768px) {
   html {
     overflow-x: hidden;
-    overflow-y: auto;
   }
 
   body {
     overflow-x: hidden;
-    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     min-height: 100vh;
     min-height: -webkit-fill-available;
   }
