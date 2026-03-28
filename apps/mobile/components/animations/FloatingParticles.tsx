@@ -96,7 +96,7 @@ function Star({ particle }: { particle: Particle }) {
   )
 }
 
-export function FloatingParticles({ count = 30 }: { count?: number }) {
+export function FloatingParticles({ count = 18 }: { count?: number }) {
   const reducedMotion = useReducedMotion()
   const particles = useMemo(() => generateParticles(count), [count])
 

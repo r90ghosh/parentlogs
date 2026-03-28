@@ -142,7 +142,7 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen min-h-[100dvh] relative">
       <WarmBackground />
-      <FloatingParticles count={30} />
+      <FloatingParticles count={18} />
 
       {/* Header */}
       <header className="sticky top-0 z-40 bg-[--surface]/95 backdrop-blur-[16px] border-b border-[--border]" style={{ height: 'var(--header-h)' }}>

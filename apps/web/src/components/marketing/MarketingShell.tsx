@@ -10,7 +10,7 @@ export function MarketingShell({ children }: { children: ReactNode }) {
     <>
       <ScrollProgressBar />
       <WarmBackground />
-      <FloatingParticles count={30} />
+      <FloatingParticles count={18} />
       {children}
     </>
   )

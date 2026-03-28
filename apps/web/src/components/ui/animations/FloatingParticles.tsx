@@ -32,7 +32,7 @@ function generateParticles(count: number): Particle[] {
   }))
 }
 
-export function FloatingParticles({ count = 10 }: { count?: number }) {
+export function FloatingParticles({ count = 18 }: { count?: number }) {
   const [particles, setParticles] = useState<Particle[]>([])
 
   useEffect(() => {
