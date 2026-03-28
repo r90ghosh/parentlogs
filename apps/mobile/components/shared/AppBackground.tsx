@@ -15,7 +15,7 @@ export function AppBackground() {
         />
       ) : (
         <LinearGradient
-          colors={['#fce4ec', '#f5f7fa', '#e1f0fa', '#d4e9f7']}
+          colors={['#d4e9f7', '#e1f0fa', '#f5f7fa', '#fce4ec']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={StyleSheet.absoluteFill}

@@ -126,9 +126,9 @@
    Light Mode Glassmorphism System
    ============================================ */
 
-/* Light mode body — static pink→blue gradient (boy or girl) */
+/* Light mode body — static blue→pink gradient (boy or girl) */
 html.light body {
-  background: linear-gradient(135deg, #fce4ec 0%, #f5f7fa 30%, #e1f0fa 60%, #d4e9f7 100%) !important;
+  background: linear-gradient(135deg, #d4e9f7 0%, #e1f0fa 30%, #f5f7fa 60%, #fce4ec 100%) !important;
   background-attachment: fixed !important;
 }
 
