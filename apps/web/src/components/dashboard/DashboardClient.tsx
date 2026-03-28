@@ -20,7 +20,7 @@ import { UpgradePromptCard } from './UpgradePromptCard'
 import { Skeleton } from '@/components/ui/skeleton'
 import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { MedicalDisclaimerFooter } from '@/components/shared/medical-disclaimer'
+import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 import { AlertTriangle, CreditCard, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -180,7 +180,7 @@ export function DashboardClient() {
       </div>
 
       {/* Medical Disclaimer */}
-      <MedicalDisclaimerFooter className="mt-10 pb-2" />
+      <MedicalDisclaimer className="mt-10" />
     </div>
   )
 }
