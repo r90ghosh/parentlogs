@@ -213,8 +213,8 @@ export function Header() {
       {/* Mobile Menu */}
       <div
         className={cn(
-          'md:hidden absolute top-full left-0 right-0 bg-[--bg]/98 backdrop-blur-[20px] border-b border-[--border] transition-all duration-300 overflow-hidden',
-          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          'md:hidden absolute top-full left-0 right-0 bg-[--bg] backdrop-blur-[20px] border-b border-[--border] transition-all duration-300',
+          isMobileMenuOpen ? 'max-h-[85vh] overflow-y-auto opacity-100' : 'max-h-0 overflow-hidden opacity-0'
         )}
       >
         <nav className="px-4 py-4 space-y-2">
