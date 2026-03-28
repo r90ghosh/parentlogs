@@ -32,6 +32,7 @@ import {
   AlertTriangle,
   Mail,
 } from 'lucide-react-native'
+import Constants from 'expo-constants'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useRevenueCat } from '@/components/providers/RevenueCatProvider'
 import { useSubscriptionStatus } from '@/hooks/use-subscription'
@@ -66,6 +67,8 @@ function SettingsRow({
         }
       }}
       disabled={!onPress}
+      accessibilityLabel={value ? `${label}, ${value}` : label}
+      accessibilityRole={onPress ? 'button' : undefined}
       style={({ pressed }) => [
         styles.settingsRow,
         pressed && onPress && styles.settingsRowPressed,
@@ -98,6 +101,7 @@ export default function SettingsScreen() {
   const { isPro, customerInfo } = useRevenueCat()
   const { data: subStatus } = useSubscriptionStatus()
   const [deletingAccount, setDeletingAccount] = useState(false)
+  const appVersion = Constants.expoConfig?.version ?? '1.0.0'
   const isPastDue = subStatus?.status === 'past_due'
   const isCanceling = subStatus?.cancel_at_period_end === true
 
@@ -192,7 +196,7 @@ export default function SettingsScreen() {
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
         <Text style={styles.headerTitle}>Settings</Text>
-        <Pressable onPress={() => router.back()} style={styles.closeButton}>
+        <Pressable onPress={() => router.back()} style={styles.closeButton} accessibilityLabel="Close settings" accessibilityRole="button">
           <X size={20} color="#7a6f62" />
         </Pressable>
       </View>
@@ -255,12 +259,16 @@ export default function SettingsScreen() {
                     <Pressable
                       onPress={handleCopyInviteCode}
                       style={styles.inviteActionButton}
+                      accessibilityLabel="Copy invite code"
+                      accessibilityRole="button"
                     >
                       <Copy size={16} color="#6b8f71" />
                     </Pressable>
                     <Pressable
                       onPress={handleShareInviteCode}
                       style={styles.inviteActionButton}
+                      accessibilityLabel="Share invite code"
+                      accessibilityRole="button"
                     >
                       <Share2 size={16} color="#6b8f71" />
                     </Pressable>
@@ -461,6 +469,8 @@ export default function SettingsScreen() {
           </GlassCard>
         </CardEntrance>
 
+        <Text style={styles.versionText}>Version {appVersion}</Text>
+
         {/* Sign Out */}
         <CardEntrance delay={440}>
           <GlassCard style={styles.section}>
@@ -480,6 +490,8 @@ export default function SettingsScreen() {
             <Pressable
               onPress={handleDeleteAccount}
               disabled={deletingAccount}
+              accessibilityLabel="Delete account"
+              accessibilityRole="button"
               style={({ pressed }) => [
                 styles.settingsRow,
                 pressed && styles.settingsRowPressed,
@@ -728,5 +740,13 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#7a6f62',
     lineHeight: 20,
+  },
+  versionText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 12,
+    color: '#4a4239',
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 8,
   },
 })

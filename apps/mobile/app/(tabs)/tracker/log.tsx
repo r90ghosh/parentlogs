@@ -17,6 +17,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { ChevronLeft } from 'lucide-react-native'
 import * as Haptics from 'expo-haptics'
 import { useCreateLog } from '@/hooks/use-tracker'
+import { MedicalDisclaimer } from '@/components/shared/MedicalDisclaimer'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import type { LogType } from '@tdc/shared/types'
@@ -560,6 +561,7 @@ export default function LogScreen() {
               </Pressable>
             </GlassCard>
           </CardEntrance>
+          <MedicalDisclaimer style={{ marginTop: 16 }} />
         </ScrollView>
       </KeyboardAvoidingView>
     </View>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { View, Text, Pressable, StyleSheet } from 'react-native'
 import Animated, {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
@@ -23,13 +24,14 @@ export function BriefingSection({
   defaultExpanded = true,
   accentColor = '#c4703f',
 }: BriefingSectionProps) {
+  const reducedMotion = useReducedMotion()
   const [expanded, setExpanded] = useState(defaultExpanded)
   const rotation = useSharedValue(defaultExpanded ? 180 : 0)
 
   const toggleExpanded = () => {
     const next = !expanded
     setExpanded(next)
-    rotation.value = withTiming(next ? 180 : 0, { duration: 250 })
+    rotation.value = withTiming(next ? 180 : 0, { duration: reducedMotion ? 0 : 250 })
   }
 
   const chevronStyle = useAnimatedStyle(() => ({

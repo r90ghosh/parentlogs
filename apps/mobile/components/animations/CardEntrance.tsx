@@ -1,4 +1,4 @@
-import Animated, { FadeInDown } from 'react-native-reanimated'
+import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated'
 
 interface CardEntranceProps {
   delay?: number
@@ -6,9 +6,11 @@ interface CardEntranceProps {
 }
 
 export function CardEntrance({ delay = 0, children }: CardEntranceProps) {
+  const reducedMotion = useReducedMotion()
+
   return (
     <Animated.View
-      entering={FadeInDown.delay(delay)
+      entering={reducedMotion ? undefined : FadeInDown.delay(delay)
         .springify()
         .damping(15)
         .stiffness(100)}

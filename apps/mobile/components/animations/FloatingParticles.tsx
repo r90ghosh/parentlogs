@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
 import Animated, {
+  useReducedMotion,
   useSharedValue,
   useAnimatedStyle,
   withRepeat,
@@ -96,7 +97,10 @@ function Star({ particle }: { particle: Particle }) {
 }
 
 export function FloatingParticles({ count = 30 }: { count?: number }) {
+  const reducedMotion = useReducedMotion()
   const particles = useMemo(() => generateParticles(count), [count])
+
+  if (reducedMotion) return null
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">

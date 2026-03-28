@@ -179,7 +179,7 @@ export default function UpgradeScreen() {
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
         <Text style={styles.headerTitle}>Go Premium</Text>
-        <Pressable onPress={() => router.back()} style={styles.closeButton}>
+        <Pressable onPress={() => router.back()} style={styles.closeButton} accessibilityLabel="Close" accessibilityRole="button">
           <X size={20} color="#7a6f62" />
         </Pressable>
       </View>
@@ -245,7 +245,7 @@ export default function UpgradeScreen() {
         <View style={styles.plansSection}>
           {plans.map((plan, index) => (
             <CardEntrance key={plan.key} delay={240 + index * 100}>
-              <Pressable onPress={() => setSelectedPlan(plan.key)}>
+              <Pressable onPress={() => setSelectedPlan(plan.key)} accessibilityLabel={`Select ${plan.title} plan, ${plan.price}`} accessibilityRole="radio" accessibilityState={{ selected: selectedPlan === plan.key }}>
                 <GlassCard
                   style={[
                     styles.planCard,
@@ -293,6 +293,8 @@ export default function UpgradeScreen() {
           <Pressable
             onPress={handlePurchase}
             disabled={purchasing}
+            accessibilityLabel={purchasing ? 'Purchasing...' : `Subscribe ${selectedPlan === 'lifetime' ? 'one-time' : 'now'}`}
+            accessibilityRole="button"
             style={[styles.purchaseButton, purchasing && styles.purchaseButtonDisabled]}
           >
             <LinearGradient
@@ -318,6 +320,8 @@ export default function UpgradeScreen() {
           <Pressable
             onPress={handleRestore}
             disabled={restoring}
+            accessibilityLabel="Restore purchases"
+            accessibilityRole="button"
             style={styles.restoreButton}
           >
             {restoring ? (
@@ -342,11 +346,11 @@ export default function UpgradeScreen() {
             purchase.
           </Text>
           <View style={styles.legalLinks}>
-            <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')}>
+            <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')} accessibilityLabel="Privacy Policy" accessibilityRole="link">
               <Text style={styles.legalLink}>Privacy Policy</Text>
             </Pressable>
             <Text style={styles.legalDot}>{'\u00B7'}</Text>
-            <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/terms')}>
+            <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/terms')} accessibilityLabel="Terms of Service" accessibilityRole="link">
               <Text style={styles.legalLink}>Terms of Service</Text>
             </Pressable>
           </View>

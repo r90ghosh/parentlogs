@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import NetInfo from '@react-native-community/netinfo'
-import Animated, { FadeInUp, FadeOutUp } from 'react-native-reanimated'
+import Animated, { FadeInUp, FadeOutUp, useReducedMotion } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export function NetworkProvider({ children }: { children: React.ReactNode }) {
+  const reducedMotion = useReducedMotion()
   const [isConnected, setIsConnected] = useState(true)
   const insets = useSafeAreaInsets()
 
@@ -19,8 +20,8 @@ export function NetworkProvider({ children }: { children: React.ReactNode }) {
     <View style={styles.container}>
       {!isConnected && (
         <Animated.View
-          entering={FadeInUp.duration(300)}
-          exiting={FadeOutUp.duration(300)}
+          entering={reducedMotion ? undefined : FadeInUp.duration(300)}
+          exiting={reducedMotion ? undefined : FadeOutUp.duration(300)}
           style={[styles.banner, { paddingTop: insets.top + 4 }]}
         >
           <Text style={styles.bannerText}>No internet connection</Text>

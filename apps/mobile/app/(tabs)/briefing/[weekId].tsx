@@ -14,6 +14,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { ChevronLeft, ChevronRight, Check, Square } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { MedicalDisclaimer } from '@/components/shared/MedicalDisclaimer'
 import { useBriefingByWeek } from '@/hooks/use-briefings'
 import { useTasks, useCompleteTask } from '@/hooks/use-tasks'
 import { isPregnancyStage } from '@tdc/shared/utils/pregnancy-utils'
@@ -282,9 +283,7 @@ export default function BriefingWeekScreen() {
 
             {/* Medical Disclaimer */}
             <CardEntrance delay={450}>
-              <Text style={styles.disclaimerText}>
-                For informational purposes only. Always consult your healthcare provider.
-              </Text>
+              <MedicalDisclaimer />
             </CardEntrance>
           </>
         )}
@@ -466,15 +465,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#7a6f62',
     lineHeight: 18,
-  },
-  disclaimerText: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 11,
-    color: '#4a4239',
-    textAlign: 'center',
-    marginTop: 16,
-    paddingHorizontal: 20,
-    lineHeight: 16,
   },
 })
 

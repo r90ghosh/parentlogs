@@ -110,6 +110,7 @@ export default function TabLayout() {
           name="index"
           options={{
             title: 'Home',
+            tabBarAccessibilityLabel: 'Home',
             tabBarIcon: ({ color, size }) => (
               <Home size={size} color={color} />
             ),
@@ -119,6 +120,7 @@ export default function TabLayout() {
           name="tasks"
           options={{
             title: 'Tasks',
+            tabBarAccessibilityLabel: 'Tasks',
             tabBarIcon: ({ color, size }) => (
               <CheckSquare size={size} color={color} />
             ),
@@ -128,6 +130,7 @@ export default function TabLayout() {
           name="briefing"
           options={{
             title: 'Briefing',
+            tabBarAccessibilityLabel: 'Briefing',
             tabBarIcon: ({ color, size }) => (
               <BookOpen size={size} color={color} />
             ),
@@ -137,6 +140,7 @@ export default function TabLayout() {
           name="tracker"
           options={{
             title: 'Tracker',
+            tabBarAccessibilityLabel: 'Tracker',
             tabBarIcon: ({ color, size }) => (
               <Activity size={size} color={color} />
             ),
@@ -146,6 +150,7 @@ export default function TabLayout() {
           name="more"
           options={{
             title: 'More',
+            tabBarAccessibilityLabel: 'More menu',
             tabBarIcon: ({ color, size }) => (
               <MoreHorizontal size={size} color={color} />
             ),

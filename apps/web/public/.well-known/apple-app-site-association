@@ -1,0 +1,23 @@
+{
+  "webcredentials": {
+    "apps": ["JB3S3VJF94.com.thedadcenter.app"]
+  },
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["JB3S3VJF94.com.thedadcenter.app"],
+        "components": [
+          { "/": "/auth/callback", "comment": "OAuth and password recovery" },
+          { "/": "/briefing/*", "comment": "Briefing deep links" },
+          { "/": "/tasks/*", "comment": "Task deep links" },
+          { "/": "/dashboard", "comment": "Dashboard deep link" },
+          { "/": "/", "exclude": true, "comment": "Exclude marketing home" },
+          { "/": "/privacy", "exclude": true, "comment": "Exclude privacy" },
+          { "/": "/terms", "exclude": true, "comment": "Exclude terms" },
+          { "/": "/resources", "exclude": true, "comment": "Exclude resources" }
+        ]
+      }
+    ]
+  }
+}

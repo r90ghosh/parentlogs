@@ -2,8 +2,10 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withSpring,
+  withTiming,
   runOnJS,
 } from 'react-native-reanimated'
 import * as Haptics from 'expo-haptics'
@@ -22,6 +24,7 @@ export function SwipeAction({
   onSnooze,
   children,
 }: SwipeActionProps) {
+  const reducedMotion = useReducedMotion()
   const translateX = useSharedValue(0)
 
   const triggerHaptic = () => {
@@ -41,7 +44,9 @@ export function SwipeAction({
         runOnJS(triggerHaptic)()
         runOnJS(onSnooze)()
       }
-      translateX.value = withSpring(0, { damping: 20 })
+      translateX.value = reducedMotion
+        ? withTiming(0, { duration: 0 })
+        : withSpring(0, { damping: 20 })
     })
 
   const animatedStyle = useAnimatedStyle(() => ({

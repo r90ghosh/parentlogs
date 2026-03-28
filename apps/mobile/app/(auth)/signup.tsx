@@ -12,6 +12,7 @@ import {
   Alert,
 } from 'react-native'
 import { Link } from 'expo-router'
+import { Square, CheckSquare } from 'lucide-react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { BrandLogo } from '@/components/BrandLogo'
 import { supabase } from '@/lib/supabase'
@@ -23,6 +24,7 @@ export default function SignupScreen() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [ageConfirmed, setAgeConfirmed] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const [isAppleLoading, setIsAppleLoading] = useState(false)
 
@@ -149,12 +151,27 @@ export default function SignupScreen() {
             </View>
 
             <Pressable
+              onPress={() => setAgeConfirmed(!ageConfirmed)}
+              style={styles.ageRow}
+              accessibilityLabel="I confirm I am 18 years or older"
+              accessibilityRole="checkbox"
+              accessibilityState={{ checked: ageConfirmed }}
+            >
+              {ageConfirmed ? (
+                <CheckSquare size={20} color="#c4703f" />
+              ) : (
+                <Square size={20} color="#7a6f62" />
+              )}
+              <Text style={styles.ageText}>I confirm I am 18 years or older</Text>
+            </Pressable>
+
+            <Pressable
               onPress={handleSignup}
-              disabled={isLoading}
+              disabled={!ageConfirmed || isLoading}
               style={({ pressed }) => [
                 styles.button,
                 pressed && styles.buttonPressed,
-                isLoading && styles.buttonDisabled,
+                (!ageConfirmed || isLoading) && styles.buttonDisabled,
               ]}
             >
               {isLoading ? (
@@ -274,6 +291,18 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Regular',
     fontSize: 16,
     color: '#ede6dc',
+  },
+  ageRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 12,
+  },
+  ageText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 14,
+    color: '#ede6dc',
+    flex: 1,
   },
   button: {
     backgroundColor: '#c4703f',

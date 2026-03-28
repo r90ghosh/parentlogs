@@ -1,6 +1,7 @@
 import { Pressable, Text, StyleSheet } from 'react-native'
 import Animated, {
   useAnimatedStyle,
+  useReducedMotion,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
@@ -19,6 +20,7 @@ export function MoodEmojiPop({
   isSelected,
   onPress,
 }: MoodEmojiPopProps) {
+  const reducedMotion = useReducedMotion()
   const scale = useSharedValue(1)
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -26,9 +28,11 @@ export function MoodEmojiPop({
   }))
 
   const handlePress = () => {
-    scale.value = withSpring(1.3, { damping: 8, stiffness: 300 }, () => {
-      scale.value = withSpring(1, { damping: 10 })
-    })
+    if (!reducedMotion) {
+      scale.value = withSpring(1.3, { damping: 8, stiffness: 300 }, () => {
+        scale.value = withSpring(1, { damping: 10 })
+      })
+    }
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     onPress()
   }
