@@ -49,6 +49,26 @@ Deno.serve(async (req: Request) => {
   try {
     const body = await req.json();
     const event = body.event;
+
+    // Atomic idempotency: INSERT with ON CONFLICT uses the UNIQUE constraint on event_id
+    // to prevent duplicate processing even under concurrent requests
+    if (event.id) {
+      const { data: inserted, error: dedupeError } = await supabaseAdmin
+        .from("revenucat_webhook_events")
+        .upsert(
+          { event_id: event.id, event_type: event.type, processed_at: new Date().toISOString() },
+          { onConflict: "event_id", ignoreDuplicates: true }
+        )
+        .select("id")
+        .single();
+
+      if (dedupeError || !inserted) {
+        return new Response(JSON.stringify({ received: true, duplicate: true }), {
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+    }
+
     const userId = event.app_user_id;
 
     if (!userId) {
