@@ -164,7 +164,7 @@ html.light [data-slot="card"]:hover {
   }
 
   /* In light mode, page wrappers should be transparent so the body gradient shows through */
-  html.light [class*="bg-\[--bg\]"] {
+  html.light [class*="bg-\[--bg\]"]:not([data-solid-bg]) {
     background-color: transparent !important;
   }
 }
