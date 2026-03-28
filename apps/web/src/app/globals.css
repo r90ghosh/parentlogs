@@ -153,6 +153,23 @@ html.light [data-slot="card"]:hover {
     inset 0 1px 0 rgba(255,255,255,0.80);
 }
 
+/* Header & bottom nav — glassmorphism in light mode */
+html.light header.sticky {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.05);
+}
+
+html.light nav[aria-label="Main navigation"] {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 -1px 12px rgba(0, 0, 0, 0.05);
+}
+
 /* Mobile nav menu — glassmorphism in light, solid in dark */
 .mobile-nav-menu {
   background: var(--bg);

@@ -1,16 +1,12 @@
 'use client';
 
 import React from 'react';
-import { MonitorCogIcon, MoonStarIcon, SunIcon } from 'lucide-react';
+import { MoonStarIcon, SunIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 
 const THEME_OPTIONS = [
-    {
-        icon: MonitorCogIcon,
-        value: 'system',
-    },
     {
         icon: SunIcon,
         value: 'light',
@@ -31,7 +27,7 @@ export function ToggleTheme() {
     }, []);
 
     if (!isMounted) {
-        return <div className="flex h-7 w-[84px]" />;
+        return <div className="flex h-7 w-[56px]" />;
     }
 
     return (
