@@ -106,8 +106,8 @@ export function AboutContent() {
           {values.map((value, index) => {
             const colors = colorMap[value.color]
             return (
-              <RevealOnScroll key={value.title} delay={120 + index * 100}>
-                <Card3DTilt maxTilt={3} gloss>
+              <RevealOnScroll key={value.title} delay={120 + index * 100} className="h-full">
+                <Card3DTilt maxTilt={3} gloss className="h-full">
                   <div
                     className={`rounded-2xl p-6 sm:p-8 border ${colors.border} bg-gradient-to-br ${colors.bg} bg-[--card] h-full`}
                   >

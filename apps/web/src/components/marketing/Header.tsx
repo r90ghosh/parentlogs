@@ -27,11 +27,11 @@ const navLinks: NavLink[] = [
       { href: '/budget-guide', label: 'Budget Guide' },
       { href: '/baby-checklists', label: 'Checklists' },
       { href: '/tips', label: 'Dad Tips' },
+      { href: '/about', label: 'About' },
+      { href: '/faq', label: 'FAQ' },
+      { href: '/privacy', label: 'Privacy' },
     ],
   },
-  { href: '/about', label: 'About' },
-  { href: '/faq', label: 'FAQ' },
-  { href: '/privacy', label: 'Privacy' },
 ]
 
 export function Header() {
