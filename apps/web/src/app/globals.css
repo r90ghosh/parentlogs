@@ -442,8 +442,9 @@ html.light .mobile-nav-menu {
     -webkit-user-select: none;
   }
 
-  /* Smooth scrolling */
+  /* Smooth scrolling + bump root font-size so all rem-based sizes scale up ~6% */
   html {
+    font-size: 17px;
     scroll-behavior: smooth;
   }
 
