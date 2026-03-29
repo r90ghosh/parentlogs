@@ -366,12 +366,13 @@ export default function BudgetClient() {
         </div>
         <div className="flex items-center gap-2">
           {(summary?.familyItems.length ?? 0) > 0 && (
-            <Button variant="outline" asChild className="font-ui">
-              <Link href="/my-budget">
-                <Wallet className="h-4 w-4 mr-2" />
-                My Budget ({summary?.familyItems.length})
-              </Link>
-            </Button>
+            <Link
+              href="/my-budget"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-[--border] text-sm font-ui text-[--cream] hover:bg-[--card] transition-colors"
+            >
+              <Wallet className="h-4 w-4" />
+              My Budget ({summary?.familyItems.length})
+            </Link>
           )}
           <Button onClick={() => setShowAddCustomDialog(true)} className="font-ui">
             <Plus className="h-4 w-4 mr-2" />
