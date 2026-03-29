@@ -85,9 +85,9 @@ export function TermsContent() {
               <p>
                 Subscriptions are billed in advance on a recurring basis (monthly or yearly). Payment is processed through Stripe (web) or RevenueCat/App Store/Google Play (mobile). You authorize us to charge your chosen payment method.
               </p>
-              <h4>Cancellation & Refunds</h4>
+              <h4>Cancellation & Free Tier</h4>
               <p>
-                You may cancel your subscription at any time from Settings. Upon cancellation, you retain access until the end of your current billing period. We offer a 30-day money-back guarantee on all plans. Lifetime purchases are non-refundable after 30 days.
+                You may cancel your subscription at any time from Settings. Upon cancellation, you retain access until the end of your current billing period. Free accounts include a 30-day task window, 4 weeks of briefings, and 30 days of push notifications at no cost.
               </p>
             </Section>
           </Reveal>

@@ -320,31 +320,31 @@ function SubscriptionContent() {
               </Link>
             </Button>
             <p className="font-body text-xs text-[--dim]">
-              Starting at $4.99/mo · 30-day money-back guarantee
+              Starting at $4.99/mo · Free for 30 days
             </p>
           </CardFooter>
         )}
       </Card>
 
-      {/* Fix #3: Refund & Help Section */}
+      {/* Help & Support Section */}
       <Card className="bg-[--surface] border-[--border]">
         <CardContent className="pt-6 space-y-4">
-          {/* Refund info — show for premium users */}
+          {/* Cancellation info — show for premium users */}
           {isPremium && !isLifetime && (
             <div className="p-3 rounded-lg bg-[--card]/50 border border-[--border]">
               <div className="flex items-start gap-3">
                 <Mail className="h-4 w-4 text-[--muted] mt-0.5 shrink-0" />
                 <div>
-                  <p className="font-ui text-sm text-[--white] font-medium">30-Day Money-Back Guarantee</p>
+                  <p className="font-ui text-sm text-[--white] font-medium">Need Help?</p>
                   <p className="font-body text-xs text-[--muted] mt-1">
-                    Not satisfied? Request a full refund within 30 days of purchase.
+                    Cancel anytime from Settings. You keep access through your billing period.
                   </p>
                   <a
-                    href="mailto:info@thedadcenter.com?subject=Refund%20Request%20-%20The%20Dad%20Center%20Premium"
+                    href="mailto:info@thedadcenter.com?subject=Support%20-%20The%20Dad%20Center%20Premium"
                     className="inline-flex items-center gap-1.5 font-ui text-xs text-copper hover:text-copper/80 mt-2"
                   >
                     <Mail className="h-3 w-3" />
-                    Request a Refund
+                    Contact Support
                   </a>
                 </div>
               </div>

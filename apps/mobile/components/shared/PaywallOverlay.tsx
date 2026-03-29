@@ -79,7 +79,7 @@ export function PaywallOverlay({
             <Text style={styles.secondaryCtaText}>Or $4.99/month</Text>
           </Pressable>
 
-          <Text style={styles.guarantee}>30-day money-back guarantee</Text>
+          <Text style={styles.guarantee}>Free for 30 days — no credit card needed</Text>
         </View>
       </View>
     </View>

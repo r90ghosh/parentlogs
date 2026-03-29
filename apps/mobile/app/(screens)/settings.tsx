@@ -406,21 +406,21 @@ export default function SettingsScreen() {
                     )
                   }}
                 />
-                {/* Refund request */}
+                {/* Contact support */}
                 {profile?.subscription_tier !== 'lifetime' && (
                   <SettingsRow
                     icon={<Mail size={18} color="#7a6f62" />}
-                    label="Request Refund"
+                    label="Contact Support"
                     onPress={() => {
                       Alert.alert(
-                        '30-Day Money-Back Guarantee',
-                        'Not satisfied? You can request a full refund within 30 days of purchase by emailing us.',
+                        'Need Help?',
+                        'Cancel anytime from Settings. You keep access through your billing period. Need support? Email us.',
                         [
                           { text: 'Cancel', style: 'cancel' },
                           {
                             text: 'Send Email',
                             onPress: () => {
-                              Linking.openURL('mailto:info@thedadcenter.com?subject=Refund%20Request%20-%20The%20Dad%20Center%20Premium')
+                              Linking.openURL('mailto:info@thedadcenter.com?subject=Support%20-%20The%20Dad%20Center%20Premium')
                             },
                           },
                         ]

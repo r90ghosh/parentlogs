@@ -170,12 +170,10 @@ export function Pricing() {
           ))}
         </div>
 
-        {/* Money back guarantee */}
+        {/* Free tier callout */}
         <Reveal delay={500} className="mt-12 text-center">
           <p className="font-ui text-[--muted] text-sm">
-            No credit card required. Cancel anytime.
-            <br />
-            30-day money-back guarantee.
+            Free for 30 days — no credit card needed.
           </p>
         </Reveal>
       </div>

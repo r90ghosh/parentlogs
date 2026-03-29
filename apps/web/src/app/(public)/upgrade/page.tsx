@@ -344,7 +344,7 @@ function UpgradeContent() {
         {/* Trust signals */}
         <div className="mt-12 text-center space-y-2">
           <p className="text-sm text-[--dim] font-body">Questions? Contact us at info@thedadcenter.com</p>
-          <p className="text-sm text-[--dim] font-body">30-day money-back guarantee on all plans</p>
+          <p className="text-sm text-[--dim] font-body">Free for 30 days — no credit card needed</p>
         </div>
       </div>
     </div>

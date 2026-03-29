@@ -130,7 +130,7 @@ export default function UpgradeSuccessPage() {
           transition={{ delay: 1.2 }}
           className="text-center text-xs text-[--dim] mt-6"
         >
-          30-day money-back guarantee on all plans
+          Free for 30 days — no credit card needed
         </motion.p>
       </motion.div>
     </div>

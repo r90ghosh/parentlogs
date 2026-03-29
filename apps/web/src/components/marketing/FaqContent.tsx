@@ -61,8 +61,8 @@ const faqCategories: FaqCategory[] = [
         a: 'Yes. Cancel your subscription at any time — no questions asked. You keep access through the end of your billing period, and your data stays safe on the free tier.',
       },
       {
-        q: 'Do you offer refunds?',
-        a: 'Yes. If you\'re not satisfied within the first 7 days of a new subscription, contact us for a full refund.',
+        q: 'Do I need to pay to try it?',
+        a: 'No. Free accounts get 30 days of tasks, 4 weeks of briefings, and full dashboard access — no credit card required. If you upgrade and want to cancel, you keep access through your billing period.',
       },
     ],
   },

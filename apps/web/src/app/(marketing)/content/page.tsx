@@ -184,7 +184,7 @@ export default async function ResourcesPage(props: PageProps) {
 
               {!isAuthenticated && (
                 <p className="font-body mt-6 text-sm text-[--dim]">
-                  No credit card required. 30-day money-back guarantee.
+                  Free for 30 days — no credit card needed.
                 </p>
               )}
             </div>

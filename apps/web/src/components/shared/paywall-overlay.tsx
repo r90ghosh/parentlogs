@@ -83,7 +83,7 @@ export function PaywallOverlay({ feature, message, description, className, inter
           </Link>
         </Button>
 
-        <p className="text-xs text-[--dim] font-body">30-day money-back guarantee</p>
+        <p className="text-xs text-[--dim] font-body">Free for 30 days — no credit card needed</p>
       </div>
     </div>
   )
