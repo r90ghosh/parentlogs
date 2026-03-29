@@ -29,7 +29,7 @@ export function RevealOnScroll({ children, delay = 0, className = '' }: RevealOn
           observer.unobserve(el)
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0 }
     )
 
     observer.observe(el)

@@ -486,7 +486,6 @@ export default function BudgetClient() {
       )}
 
       {/* Main Content Tabs */}
-      <RevealOnScroll delay={160}>
         <Tabs defaultValue="browse" className="space-y-4">
           <TabsList className="bg-[--surface] border border-[--border]">
             <TabsTrigger value="my-budget" className="font-ui">My Budget ({summary?.familyItems.length || 0})</TabsTrigger>
@@ -638,7 +637,6 @@ export default function BudgetClient() {
             </div>
           </TabsContent>
         </Tabs>
-      </RevealOnScroll>
 
       {/* Add Template Dialog */}
       <Dialog open={!!selectedTemplate} onOpenChange={() => setSelectedTemplate(null)}>
