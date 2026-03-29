@@ -12,6 +12,7 @@ export interface User {
   subscription_tier: SubscriptionTier
   subscription_expires_at?: string
   onboarding_completed?: boolean
+  has_seen_welcome?: boolean
   signup_week?: number
   active_baby_id?: string
   created_at: string

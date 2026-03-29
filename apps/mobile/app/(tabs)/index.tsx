@@ -15,6 +15,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, ChevronRight } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { useWelcomeAnimation } from '@/hooks/use-welcome-animation'
 import { useDashboardData } from '@/hooks/use-dashboard'
 import { useSubscriptionStatus } from '@/hooks/use-subscription'
 import { useBabies } from '@/hooks/use-babies'
@@ -31,6 +32,7 @@ import {
   UpgradePromptCard,
   WelcomeCatchUpCard,
 } from '@/components/dashboard'
+import { WelcomeCelebration } from '@/components/welcome/WelcomeCelebration'
 import { useBacklogCount } from '@/hooks/use-triage'
 
 function getGreeting(): string {
@@ -49,6 +51,7 @@ export default function DashboardScreen() {
   const insets = useSafeAreaInsets()
   const queryClient = useQueryClient()
   const { profile, family } = useAuth()
+  const { isVisible: showWelcome, dismiss: dismissWelcome } = useWelcomeAnimation()
   const { tasksQuery, briefingQuery, moodQuery } = useDashboardData()
   const { data: subStatus } = useSubscriptionStatus()
   const { data: babies } = useBabies()
@@ -204,6 +207,8 @@ export default function DashboardScreen() {
           </View>
         )}
       </ScrollView>
+
+      {showWelcome && <WelcomeCelebration onDismiss={dismissWelcome} />}
     </View>
   )
 }

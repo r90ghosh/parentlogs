@@ -50,6 +50,18 @@ export function createProfileService(supabase: AppSupabaseClient) {
       return data as AppUser
     },
 
+    async markWelcomeSeen(userId: string): Promise<AppUser> {
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({ has_seen_welcome: true })
+        .eq('id', userId)
+        .select()
+        .single()
+
+      if (error) throw error
+      return data as AppUser
+    },
+
     async getCurrentProfile(): Promise<AppUser | null> {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return null

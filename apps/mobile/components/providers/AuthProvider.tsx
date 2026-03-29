@@ -17,6 +17,7 @@ interface Profile {
   subscription_tier: string | null
   subscription_expires_at: string | null
   onboarding_completed: boolean
+  has_seen_welcome: boolean
   active_baby_id: string | null
   signup_week: number | null
   created_at: string

@@ -1116,6 +1116,7 @@ export type Database = {
           email: string
           family_id: string | null
           full_name: string | null
+          has_seen_welcome: boolean
           id: string
           onboarding_completed: boolean | null
           role: Database["public"]["Enums"]["user_role"] | null
@@ -1133,6 +1134,7 @@ export type Database = {
           email: string
           family_id?: string | null
           full_name?: string | null
+          has_seen_welcome?: boolean
           id: string
           onboarding_completed?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null
@@ -1150,6 +1152,7 @@ export type Database = {
           email?: string
           family_id?: string | null
           full_name?: string | null
+          has_seen_welcome?: boolean
           id?: string
           onboarding_completed?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null

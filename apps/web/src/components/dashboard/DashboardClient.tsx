@@ -5,6 +5,8 @@ import { useFamily } from '@/hooks/use-family'
 import { useDashboardCards } from '@/hooks/use-dashboard-context'
 import { useDashboardData } from '@/hooks/use-dashboard'
 import { useSubscription, useCheckout } from '@/hooks/use-subscription'
+import { useWelcomeAnimation } from '@/hooks/use-welcome-animation'
+import { WelcomeOverlay } from '@/components/welcome/WelcomeOverlay'
 import { DashboardHeader } from './DashboardHeader'
 import { QuickActionsBar } from './QuickActionsBar'
 import { MoodCheckinCard } from './MoodCheckinCard'
@@ -56,6 +58,7 @@ const LEFT_COLUMN_CARDS = ['briefing-teaser', 'on-your-mind', 'upgrade-prompt', 
 const RIGHT_COLUMN_CARDS = ['tasks-due', 'quick-actions', 'budget-snapshot', 'checklist-progress']
 
 export function DashboardClient() {
+  const { isVisible: showWelcome, dismiss: dismissWelcome } = useWelcomeAnimation()
   const { profile, activeBaby } = useUser()
   const familyId = profile.family_id!
   const userName = profile?.full_name?.split(' ')[0] || 'there'
@@ -95,6 +98,8 @@ export function DashboardClient() {
   let cardIndex = 0
 
   return (
+    <>
+    {showWelcome && <WelcomeOverlay onDismiss={dismissWelcome} />}
     <div className="max-w-[1600px] mx-auto px-4 md:px-6 lg:px-10 py-6 md:py-8 bg-[--bg]">
       {/* Header with TypewriterGreeting + CopperDivider */}
       <DashboardHeader
@@ -204,5 +209,6 @@ export function DashboardClient() {
       </div>
 
     </div>
+    </>
   )
 }
