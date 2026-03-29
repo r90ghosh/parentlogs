@@ -11,7 +11,7 @@ import { PaywallOverlay } from '@/components/shared/paywall-overlay'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { isPregnancyStage, getBabySize } from '@tdc/shared/utils'
-import { RevealOnScroll, Card3DTilt, CardEntrance, ScrollProgressBar } from '@/components/ui/animations'
+import { Reveal, Card3DTilt, ScrollProgressBar } from '@/components/ui/animations'
 import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 
 import {
@@ -137,7 +137,7 @@ export default function BriefingWeekClient() {
       <ScrollProgressBar />
 
       {/* Hero Section */}
-      <CardEntrance delay={0}>
+      <Reveal variant="card" delay={0}>
         <BriefingHero
           briefing={briefing}
           currentWeek={currentWeek}
@@ -146,7 +146,7 @@ export default function BriefingWeekClient() {
           onNavigate={handleNavigate}
           isPregnancy={isPregnancy}
         />
-      </CardEntrance>
+      </Reveal>
 
       {/* Content Area */}
       <div className="px-4 md:px-12 py-6 max-w-7xl mx-auto">
@@ -165,9 +165,9 @@ export default function BriefingWeekClient() {
 
         {/* Progress Bar - only for pregnancy */}
         {isPregnancy && (
-          <RevealOnScroll delay={0}>
+          <Reveal delay={0}>
             <BriefingProgressBar currentWeek={localWeek} />
-          </RevealOnScroll>
+          </Reveal>
         )}
 
         {/* Two Column Grid */}
@@ -175,7 +175,7 @@ export default function BriefingWeekClient() {
           {/* Main Sections */}
           <div className="space-y-6">
             {/* Baby Update */}
-            <RevealOnScroll delay={0}>
+            <Reveal delay={0}>
               <Card3DTilt maxTilt={3} gloss>
                 <BriefingSection type="baby" title="Baby Update" icon="👶">
                   <p className="whitespace-pre-line">{briefing.baby_update}</p>
@@ -187,42 +187,42 @@ export default function BriefingWeekClient() {
                   )}
                 </BriefingSection>
               </Card3DTilt>
-            </RevealOnScroll>
+            </Reveal>
 
             {/* Mom Update */}
-            <RevealOnScroll delay={80}>
+            <Reveal delay={80}>
               <Card3DTilt maxTilt={3} gloss>
                 <BriefingSection type="mom" title="What Mom's Experiencing" icon="💝">
                   <p className="whitespace-pre-line">{briefing.mom_update}</p>
                 </BriefingSection>
               </Card3DTilt>
-            </RevealOnScroll>
+            </Reveal>
 
             {/* Dad Focus */}
-            <RevealOnScroll delay={160}>
+            <Reveal delay={160}>
               <Card3DTilt maxTilt={3} gloss>
                 <BriefingSection type="dad" title="Your Focus This Week" icon="🎯">
                   <p className="mb-4">Here&apos;s what to focus on this week:</p>
                   <DadFocusList items={briefing.dad_focus} />
                 </BriefingSection>
               </Card3DTilt>
-            </RevealOnScroll>
+            </Reveal>
 
             {/* Inline task completion for this briefing week */}
             {familyId && (
-              <RevealOnScroll delay={240}>
+              <Reveal delay={240}>
                 <Card3DTilt maxTilt={3} gloss>
                   <BriefingLinkedTasks
                     weekNumber={localWeek}
                     familyId={familyId}
                   />
                 </Card3DTilt>
-              </RevealOnScroll>
+              </Reveal>
             )}
 
             {/* Field Notes — real dad perspective interstitial */}
             {briefing.field_notes && (
-              <RevealOnScroll delay={320}>
+              <Reveal delay={320}>
                 <div className="rounded-xl border-l-4 border-copper bg-copper/[0.04] p-5 md:p-6">
                   <div className="flex items-start gap-3">
                     <span className="text-lg mt-0.5 shrink-0">📝</span>
@@ -232,27 +232,27 @@ export default function BriefingWeekClient() {
                     </div>
                   </div>
                 </div>
-              </RevealOnScroll>
+              </Reveal>
             )}
 
             {/* Relationship Tip */}
-            <RevealOnScroll delay={360}>
+            <Reveal delay={360}>
               <Card3DTilt maxTilt={3} gloss>
                 <BriefingSection type="relationship" title="Relationship Check-In" icon="💜">
                   <p className="whitespace-pre-line">{briefing.relationship_tip}</p>
                 </BriefingSection>
               </Card3DTilt>
-            </RevealOnScroll>
+            </Reveal>
 
             {/* Coming Up */}
             {briefing.coming_up && (
-              <RevealOnScroll delay={440}>
+              <Reveal delay={440}>
                 <Card3DTilt maxTilt={3} gloss>
                   <BriefingSection type="coming" title="Coming Up" icon="📆">
                     <p className="whitespace-pre-line">{briefing.coming_up}</p>
                   </BriefingSection>
                 </Card3DTilt>
-              </RevealOnScroll>
+              </Reveal>
             )}
           </div>
 
@@ -260,15 +260,15 @@ export default function BriefingWeekClient() {
           <div className="space-y-4">
             {/* Baby Size Card */}
             {isPregnancy && babySize && (
-              <RevealOnScroll delay={80}>
+              <Reveal delay={80}>
                 <Card3DTilt maxTilt={3} gloss>
                   <BabySizeCard size={babySize} week={localWeek} />
                 </Card3DTilt>
-              </RevealOnScroll>
+              </Reveal>
             )}
             {/* Quick Stats */}
             {isPregnancy && (
-              <RevealOnScroll delay={160}>
+              <Reveal delay={160}>
                 <Card3DTilt maxTilt={3} gloss>
                   <QuickStats
                     week={localWeek}
@@ -276,13 +276,13 @@ export default function BriefingWeekClient() {
                     dueDate={activeBaby?.due_date || family?.due_date}
                   />
                 </Card3DTilt>
-              </RevealOnScroll>
+              </Reveal>
             )}
           </div>
         </div>
 
         {/* Footer navigation */}
-        <RevealOnScroll delay={0}>
+        <Reveal delay={0}>
           <footer className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-10 pt-6 border-t border-[--border]">
             <div className="flex flex-wrap items-center gap-3 text-sm font-body text-[--muted]">
               <span className="inline-flex items-center gap-1.5 bg-[--sage-dim] text-[--sage] px-3 py-1 rounded-full text-xs font-medium font-ui">
@@ -320,10 +320,10 @@ export default function BriefingWeekClient() {
               </button>
             </div>
           </footer>
-        </RevealOnScroll>
+        </Reveal>
 
         {/* Archive Link */}
-        <RevealOnScroll delay={80}>
+        <Reveal delay={80}>
           <div className="text-center mt-8">
             <Link
               href="/briefing/archive"
@@ -332,7 +332,7 @@ export default function BriefingWeekClient() {
               View All Briefings →
             </Link>
           </div>
-        </RevealOnScroll>
+        </Reveal>
       </div>
     </div>
   )

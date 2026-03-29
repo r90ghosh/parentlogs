@@ -1,9 +1,7 @@
-'use client'
-
 import Link from 'next/link'
 import { ArrowRight, BookOpen, Video, CheckCircle, Clock, Baby, Calendar, Heart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 
 // Sample articles representing actual content from the articles folder
@@ -74,7 +72,7 @@ export function ContentPreview() {
     <section className="relative py-16 sm:py-24 md:py-32">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Section header */}
-        <RevealOnScroll className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+        <Reveal className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>
             <span className="section-pre">
               Resource Library
@@ -113,14 +111,14 @@ export function ContentPreview() {
               <span className="font-ui text-sm text-[--muted]">Expert Reviewed</span>
             </div>
           </div>
-        </RevealOnScroll>
+        </Reveal>
 
         {/* Article cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {sampleArticles.map((article, index) => {
             const colors = colorClasses[article.color as keyof typeof colorClasses]
             return (
-              <RevealOnScroll key={article.id} delay={80 + index * 80}>
+              <Reveal key={article.id} delay={80 + index * 80}>
               <Card3DTilt maxTilt={3} gloss>
               <article
                 className="group relative p-6 rounded-xl bg-[--card] border border-[--border] shadow-card transition-all duration-300"
@@ -151,7 +149,7 @@ export function ContentPreview() {
 
               </article>
               </Card3DTilt>
-              </RevealOnScroll>
+              </Reveal>
             )
           })}
         </div>

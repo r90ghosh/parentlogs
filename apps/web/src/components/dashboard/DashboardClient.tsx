@@ -11,14 +11,36 @@ import { MoodCheckinCard } from './MoodCheckinCard'
 import { BriefingTeaserCard } from './BriefingTeaserCard'
 import { TasksDueCard } from './TasksDueCard'
 import { OnYourMindCard } from './OnYourMindCard'
-import { PersonalizeCard } from './PersonalizeCard'
-import { InvitePartnerCard } from './InvitePartnerCard'
-import { BudgetSnapshotCard } from './BudgetSnapshotCard'
-import { ChecklistProgressCard } from './ChecklistProgressCard'
-import { PartnerActivityCard } from './PartnerActivityCard'
-import { UpgradePromptCard } from './UpgradePromptCard'
+import dynamic from 'next/dynamic'
 import { Skeleton } from '@/components/ui/skeleton'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
+
+const CardSkeleton = () => <div className="h-32 rounded-xl bg-[--card] animate-pulse" />
+
+const PersonalizeCard = dynamic(
+  () => import('./PersonalizeCard').then(m => ({ default: m.PersonalizeCard })),
+  { loading: CardSkeleton }
+)
+const InvitePartnerCard = dynamic(
+  () => import('./InvitePartnerCard').then(m => ({ default: m.InvitePartnerCard })),
+  { loading: CardSkeleton }
+)
+const BudgetSnapshotCard = dynamic(
+  () => import('./BudgetSnapshotCard').then(m => ({ default: m.BudgetSnapshotCard })),
+  { loading: CardSkeleton }
+)
+const ChecklistProgressCard = dynamic(
+  () => import('./ChecklistProgressCard').then(m => ({ default: m.ChecklistProgressCard })),
+  { loading: CardSkeleton }
+)
+const PartnerActivityCard = dynamic(
+  () => import('./PartnerActivityCard').then(m => ({ default: m.PartnerActivityCard })),
+  { loading: CardSkeleton }
+)
+const UpgradePromptCard = dynamic(
+  () => import('./UpgradePromptCard').then(m => ({ default: m.UpgradePromptCard })),
+  { loading: CardSkeleton }
+)
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 import { AlertTriangle, CreditCard, Loader2 } from 'lucide-react'
@@ -119,11 +141,11 @@ export function DashboardClient() {
             if (!component) return null
             const delay = cardIndex++ * 120
             return (
-              <CardEntrance key={card.id} delay={delay}>
+              <Reveal variant="card" key={card.id} delay={delay}>
                 <Card3DTilt maxTilt={4} gloss>
                   {component}
                 </Card3DTilt>
-              </CardEntrance>
+              </Reveal>
             )
           })}
         </div>
@@ -144,11 +166,11 @@ export function DashboardClient() {
               if (!component) return null
               const delay = cardIndex++ * 120
               return (
-                <CardEntrance key={card.id} delay={delay}>
+                <Reveal variant="card" key={card.id} delay={delay}>
                   <Card3DTilt maxTilt={4} gloss>
                     {component}
                   </Card3DTilt>
-                </CardEntrance>
+                </Reveal>
               )
             })
           )}
@@ -168,11 +190,11 @@ export function DashboardClient() {
               if (!component) return null
               const delay = cardIndex++ * 120
               return (
-                <CardEntrance key={card.id} delay={delay}>
+                <Reveal variant="card" key={card.id} delay={delay}>
                   <Card3DTilt maxTilt={4} gloss>
                     {component}
                   </Card3DTilt>
-                </CardEntrance>
+                </Reveal>
               )
             })
           )}

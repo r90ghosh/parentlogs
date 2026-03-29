@@ -12,9 +12,8 @@ import { DateSelect } from '@/components/ui/date-select'
 import { cn } from '@/lib/utils'
 import { Loader2, Baby, Calendar } from 'lucide-react'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 
 /**
  * Onboarding Family Setup Page
@@ -167,7 +166,7 @@ export default function OnboardingFamily() {
   }
 
   return (
-    <CardEntrance delay={100}>
+    <Reveal variant="card" delay={100}>
       <Card3DTilt maxTilt={4} gloss>
         <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
           {/* Top accent bar */}
@@ -187,7 +186,7 @@ export default function OnboardingFamily() {
 
           <div className="px-8 pb-8 space-y-6">
             {/* Header */}
-            <RevealOnScroll delay={0}>
+            <Reveal delay={0}>
               <div className="text-center">
                 <h1 className="font-display text-2xl font-bold text-[--cream] mb-2">
                   Tell us about your journey
@@ -196,7 +195,7 @@ export default function OnboardingFamily() {
                   We&apos;ll customize your timeline accordingly
                 </p>
               </div>
-            </RevealOnScroll>
+            </Reveal>
 
             {error && (
               <Alert variant="destructive">
@@ -205,7 +204,7 @@ export default function OnboardingFamily() {
             )}
 
             {/* Stage toggle */}
-            <RevealOnScroll delay={100}>
+            <Reveal delay={100}>
               <div className="grid grid-cols-2 gap-1 rounded-xl bg-[--bg] border border-[--border] p-1">
                 <button
                   type="button"
@@ -234,10 +233,10 @@ export default function OnboardingFamily() {
                   Baby Born
                 </button>
               </div>
-            </RevealOnScroll>
+            </Reveal>
 
             {/* Date input -- only render the active one */}
-            <RevealOnScroll delay={200}>
+            <Reveal delay={200}>
               {stage === 'pregnancy' ? (
                 <div className="space-y-2">
                   <Label className="font-ui text-[--cream]">Due Date</Label>
@@ -263,9 +262,9 @@ export default function OnboardingFamily() {
                   </p>
                 </div>
               )}
-            </RevealOnScroll>
+            </Reveal>
 
-            <RevealOnScroll delay={300}>
+            <Reveal delay={300}>
               <div className="space-y-2">
                 <Label htmlFor="babyName" className="font-ui text-[--cream]">
                   Baby&apos;s Name <span className="text-[--muted] font-normal">(optional)</span>
@@ -279,9 +278,9 @@ export default function OnboardingFamily() {
                   className="bg-[--bg] border-[--border] text-[--cream] placeholder:text-[--dim] focus:border-copper focus:ring-copper/20 font-body"
                 />
               </div>
-            </RevealOnScroll>
+            </Reveal>
 
-            <RevealOnScroll delay={400}>
+            <Reveal delay={400}>
               <MagneticButton className="w-full">
                 <Button
                   className="w-full bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper"
@@ -298,10 +297,10 @@ export default function OnboardingFamily() {
                   )}
                 </Button>
               </MagneticButton>
-            </RevealOnScroll>
+            </Reveal>
           </div>
         </div>
       </Card3DTilt>
-    </CardEntrance>
+    </Reveal>
   )
 }

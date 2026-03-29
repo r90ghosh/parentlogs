@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { Check, X, Sparkles, Crown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 
 const plans = [
@@ -84,17 +84,17 @@ export function Pricing() {
     <section id="pricing" className="relative py-16 sm:py-24 md:py-32">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6">
         {/* Section header */}
-        <RevealOnScroll className="text-center mb-16">
+        <Reveal className="text-center mb-16">
           <span className="section-pre justify-center">Pricing</span>
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-[--cream] leading-[1.2] mb-12">
             Choose your plan
           </h2>
-        </RevealOnScroll>
+        </Reveal>
 
         {/* Pricing cards — 4 columns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 items-start">
           {plans.map((plan, index) => (
-            <RevealOnScroll key={index} delay={80 + index * 120}>
+            <Reveal key={index} delay={80 + index * 120}>
               <Card3DTilt maxTilt={plan.highlighted ? 4 : 3} gloss>
                 <div
                   className={`relative rounded-2xl flex flex-col p-5 sm:p-8 transition-all duration-300 ${
@@ -166,18 +166,18 @@ export function Pricing() {
                   </Button>
                 </div>
               </Card3DTilt>
-            </RevealOnScroll>
+            </Reveal>
           ))}
         </div>
 
         {/* Money back guarantee */}
-        <RevealOnScroll delay={500} className="mt-12 text-center">
+        <Reveal delay={500} className="mt-12 text-center">
           <p className="font-ui text-[--muted] text-sm">
             No credit card required. Cancel anytime.
             <br />
             30-day money-back guarantee.
           </p>
-        </RevealOnScroll>
+        </Reveal>
       </div>
     </section>
   )

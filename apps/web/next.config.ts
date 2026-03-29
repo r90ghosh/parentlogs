@@ -1,8 +1,9 @@
 import { withSentryConfig } from '@sentry/nextjs'
+import withBundleAnalyzer from '@next/bundle-analyzer'
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  reactCompiler: true,
+  reactCompiler: process.env.NODE_ENV === 'production',
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'img.youtube.com' },
@@ -70,4 +71,8 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withSentryConfig(nextConfig);
+const analyze = withBundleAnalyzer({ enabled: process.env.ANALYZE === 'true' })
+
+export default process.env.NODE_ENV === 'production'
+  ? withSentryConfig(analyze(nextConfig))
+  : analyze(nextConfig);

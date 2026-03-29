@@ -1,5 +1,3 @@
-'use client'
-
 import { Video, Play, ExternalLink } from 'lucide-react'
 import type { Video as VideoType } from '@/lib/content'
 

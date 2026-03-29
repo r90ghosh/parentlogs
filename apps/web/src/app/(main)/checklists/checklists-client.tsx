@@ -9,9 +9,8 @@ import { Progress } from '@/components/ui/progress'
 import Link from 'next/link'
 import { FileText, CheckCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 import { CHECKLIST_ICONS, CHECKLIST_COLORS } from '@/lib/checklist-constants'
 import { ChecklistTimelineBar } from '@/components/shared/checklist-timeline-bar'
 import {
@@ -50,25 +49,25 @@ export default function ChecklistsClient() {
   return (
     <div className="p-4 space-y-6 max-w-4xl">
       {/* Header */}
-      <RevealOnScroll delay={0}>
+      <Reveal delay={0}>
       <div>
         <h1 className="text-2xl font-display font-bold text-[--cream]">Checklists</h1>
         <p className="text-[--muted] mt-1 font-body">
           Stay organized with our curated preparation checklists
         </p>
       </div>
-      </RevealOnScroll>
+      </Reveal>
 
       {/* Timeline Filter */}
       {!isLoading && checklistStats && (
-        <RevealOnScroll delay={50}>
+        <Reveal delay={50}>
           <ChecklistTimelineBar
             stats={checklistStats}
             currentCategory={currentCategory}
             selectedCategory={selectedCategory}
             onCategoryClick={setSelectedCategory}
           />
-        </RevealOnScroll>
+        </Reveal>
       )}
 
       {/* Checklists Grid */}
@@ -85,7 +84,7 @@ export default function ChecklistsClient() {
             const colors = CHECKLIST_COLORS[checklist.checklist_id] || CHECKLIST_COLORS['CL-15']
 
             return (
-              <CardEntrance key={checklist.checklist_id} delay={index * 80} className="h-full">
+              <Reveal variant="card" key={checklist.checklist_id} delay={index * 80} className="h-full">
               <Card3DTilt maxTilt={3} gloss className="h-full">
               <Link
                 href={`/checklists/${checklist.checklist_id}`}
@@ -125,7 +124,7 @@ export default function ChecklistsClient() {
                 </Card>
               </Link>
               </Card3DTilt>
-              </CardEntrance>
+              </Reveal>
             )
           })}
         </div>

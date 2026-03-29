@@ -19,7 +19,7 @@ import {
 import { cn } from '@/lib/utils'
 import { BriefingTemplate, FamilyStage } from '@tdc/shared/types'
 import { isPregnancyStage, getTrimesterLabel, getTrimesterFromWeek } from '@tdc/shared/utils'
-import { RevealOnScroll, Card3DTilt, CardEntrance } from '@/components/ui/animations'
+import { Reveal, Card3DTilt } from '@/components/ui/animations'
 
 export default function ArchiveClient() {
   const { data: briefings, isLoading } = useBriefings()
@@ -94,7 +94,7 @@ export default function ArchiveClient() {
   return (
     <div className="p-4 space-y-6 max-w-4xl">
       {/* Header */}
-      <CardEntrance delay={0}>
+      <Reveal variant="card" delay={0}>
         <div className="flex items-center gap-4">
           <Link
             href="/briefing"
@@ -109,10 +109,10 @@ export default function ArchiveClient() {
             </p>
           </div>
         </div>
-      </CardEntrance>
+      </Reveal>
 
       {/* Current Position Indicator */}
-      <RevealOnScroll delay={0}>
+      <Reveal delay={0}>
         <Card className="bg-copper-dim border-copper/30">
           <CardContent className="py-4 flex items-center gap-3">
             <Sparkles className="h-5 w-5 text-copper" />
@@ -124,18 +124,18 @@ export default function ArchiveClient() {
             </span>
           </CardContent>
         </Card>
-      </RevealOnScroll>
+      </Reveal>
 
       {/* Info about content visibility */}
-      <RevealOnScroll delay={80}>
+      <Reveal delay={80}>
         <p className="text-sm text-[--dim] flex items-center gap-2">
           <Lock className="h-4 w-4" />
           Only your current week shows full content. Other weeks show a preview.
         </p>
-      </RevealOnScroll>
+      </Reveal>
 
       {/* Tabs for Trimester/Stage */}
-      <RevealOnScroll delay={160}>
+      <Reveal delay={160}>
         <Tabs defaultValue={defaultTab} className="w-full">
         <TabsList className="bg-[--surface] w-full justify-start gap-1 p-1">
           <TabsTrigger value="first-trimester" className="flex-1">
@@ -184,7 +184,7 @@ export default function ArchiveClient() {
           />
         </TabsContent>
         </Tabs>
-      </RevealOnScroll>
+      </Reveal>
     </div>
   )
 }
@@ -209,7 +209,7 @@ function BriefingGrid({
   return (
     <div className="grid gap-4 md:grid-cols-2">
       {briefings.map((briefing, index) => (
-        <RevealOnScroll key={briefing.briefing_id} delay={index * 60}>
+        <Reveal key={briefing.briefing_id} delay={index * 60}>
           <Card3DTilt maxTilt={3} gloss>
             <BriefingCard
               briefing={briefing}
@@ -218,7 +218,7 @@ function BriefingGrid({
               stage={stage}
             />
           </Card3DTilt>
-        </RevealOnScroll>
+        </Reveal>
       ))}
     </div>
   )

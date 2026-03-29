@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 
@@ -255,20 +255,20 @@ export function Hero() {
       <div className="relative max-w-[1100px] mx-auto px-4 sm:px-6 z-[1]">
         <div className="text-center">
           {/* Pre-label */}
-          <RevealOnScroll>
+          <Reveal>
             <span className="section-pre mb-5 justify-center">For Modern Dads</span>
-          </RevealOnScroll>
+          </Reveal>
 
           {/* Split-letter heading */}
           <SplitLetterHeading />
 
           {/* Animated gradient subtitle */}
-          <RevealOnScroll delay={160}>
+          <Reveal delay={160}>
             <AnimatedSubtitle />
-          </RevealOnScroll>
+          </Reveal>
 
           {/* CTA buttons */}
-          <RevealOnScroll delay={240}>
+          <Reveal delay={240}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
               <MagneticButton maxOffset={6}>
                 <Button asChild size="lg" className="btn-glow-hover bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] px-7 py-3.5 h-auto shadow-copper">
@@ -288,17 +288,17 @@ export function Hero() {
                 See How It Works
               </Button>
             </div>
-          </RevealOnScroll>
+          </Reveal>
 
           {/* Dashboard preview with 3D tilt */}
-          <RevealOnScroll delay={320}>
+          <Reveal delay={320}>
             <div className="mx-auto max-w-[640px]" style={{ perspective: '1000px' }}>
               <DashboardPreview />
             </div>
-          </RevealOnScroll>
+          </Reveal>
 
           {/* Trust bar stats */}
-          <RevealOnScroll delay={400}>
+          <Reveal delay={400}>
             <div className="mt-12 sm:mt-16 flex flex-wrap justify-center gap-4 sm:gap-8 md:gap-12">
               {[
                 { value: 'Built for', label: 'First-Time Dads' },
@@ -312,7 +312,7 @@ export function Hero() {
                 </div>
               ))}
             </div>
-          </RevealOnScroll>
+          </Reveal>
         </div>
       </div>
     </section>

@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { AlertTriangle, ArrowRight, CheckCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -17,11 +16,9 @@ export function WelcomeCatchUpCard({
   upcomingCount,
 }: WelcomeCatchUpCardProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       className={cn(
-        'rounded-[20px] p-5',
+        'animate-fade-in-up rounded-[20px] p-5',
         'bg-gradient-to-br from-gold/10 to-[--surface]',
         'border border-gold/20'
       )}
@@ -61,6 +58,6 @@ export function WelcomeCatchUpCard({
         Review catch-up tasks
         <ArrowRight className="h-4 w-4" />
       </Link>
-    </motion.div>
+    </div>
   )
 }

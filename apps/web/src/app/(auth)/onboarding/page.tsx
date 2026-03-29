@@ -4,9 +4,8 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { CheckCircle } from 'lucide-react'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 
 const features = [
   '200+ expert-curated tasks auto-loaded to your timeline',
@@ -19,7 +18,7 @@ export default function OnboardingWelcome() {
   const router = useRouter()
 
   return (
-    <CardEntrance delay={100}>
+    <Reveal variant="card" delay={100}>
       <Card3DTilt maxTilt={4} gloss>
         <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
           {/* Top accent bar */}
@@ -27,7 +26,7 @@ export default function OnboardingWelcome() {
 
           <div className="p-8">
             {/* Header */}
-            <RevealOnScroll delay={0}>
+            <Reveal delay={0}>
               <div className="text-center mb-8">
                 <h1 className="font-display text-3xl font-bold text-[--cream] mb-2 leading-tight">
                   Welcome to<br />The Dad Center
@@ -36,10 +35,10 @@ export default function OnboardingWelcome() {
                   Your parenting command center
                 </p>
               </div>
-            </RevealOnScroll>
+            </Reveal>
 
             {/* Feature list */}
-            <RevealOnScroll delay={150}>
+            <Reveal delay={150}>
               <ul className="space-y-3 mb-8">
                 {features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-3">
@@ -48,10 +47,10 @@ export default function OnboardingWelcome() {
                   </li>
                 ))}
               </ul>
-            </RevealOnScroll>
+            </Reveal>
 
             {/* CTAs */}
-            <RevealOnScroll delay={300}>
+            <Reveal delay={300}>
               <div className="space-y-3">
                 <MagneticButton className="w-full">
                   <Button
@@ -71,10 +70,10 @@ export default function OnboardingWelcome() {
                   </Button>
                 </MagneticButton>
               </div>
-            </RevealOnScroll>
+            </Reveal>
           </div>
         </div>
       </Card3DTilt>
-    </CardEntrance>
+    </Reveal>
   )
 }

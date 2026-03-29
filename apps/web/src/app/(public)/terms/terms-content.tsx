@@ -1,9 +1,7 @@
-'use client'
-
 import Link from 'next/link'
 import { ArrowLeft, FileText } from 'lucide-react'
 import { WarmBackground } from '@/components/ui/animations/WarmBackground'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 
 const lastUpdated = 'March 4, 2026'
 
@@ -31,17 +29,17 @@ export function TermsContent() {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 py-12">
-        <RevealOnScroll delay={0}>
+        <Reveal delay={0}>
           <div className="mb-10">
             <h1 className="font-display text-3xl md:text-4xl font-bold text-[--cream] mb-3">
               Terms of Service
             </h1>
             <p className="font-body text-[--muted]">Last updated: {lastUpdated}</p>
           </div>
-        </RevealOnScroll>
+        </Reveal>
 
         <div className="prose-custom space-y-8">
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="1. Acceptance of Terms">
               <p>
                 By accessing or using The Dad Center (&quot;Service&quot;), operated by The Dad Center (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;), you agree to be bound by these Terms of Service (&quot;Terms&quot;). If you do not agree to these Terms, do not use the Service.
@@ -50,17 +48,17 @@ export function TermsContent() {
                 We reserve the right to modify these Terms at any time. We will notify you of material changes by posting updated Terms on this page. Your continued use of the Service after changes constitutes acceptance.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="2. Service Description">
               <p>
                 The Dad Center is a pregnancy and parenting companion application that provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and a dad journey challenge system. The Service is designed primarily for fathers but is available to all parents and expecting parents.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="3. Accounts">
               <p>
                 You must create an account to use the Service. You are responsible for maintaining the confidentiality of your credentials and for all activity under your account. You must provide accurate and complete information and keep it up to date. You must be at least 18 years old to create an account.
@@ -69,9 +67,9 @@ export function TermsContent() {
                 We reserve the right to suspend or terminate accounts that violate these Terms or that are inactive for an extended period.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="4. Billing & Subscriptions">
               <p>The Service offers free and premium tiers:</p>
               <ul>
@@ -92,9 +90,9 @@ export function TermsContent() {
                 You may cancel your subscription at any time from Settings. Upon cancellation, you retain access until the end of your current billing period. We offer a 30-day money-back guarantee on all plans. Lifetime purchases are non-refundable after 30 days.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="5. Free Tier">
               <p>Free accounts include:</p>
               <ul>
@@ -108,9 +106,9 @@ export function TermsContent() {
                 Free tier limitations are subject to change. We will provide reasonable notice before reducing free tier features.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="6. Acceptable Use">
               <p>You agree not to:</p>
               <ul>
@@ -124,9 +122,9 @@ export function TermsContent() {
                 <li>Use the Service in a way that could harm minors</li>
               </ul>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="7. Intellectual Property">
               <p>
                 All content, design, code, logos, and trademarks of The Dad Center are owned by us or our licensors. The Service is protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, or create derivative works without our prior written consent.
@@ -135,9 +133,9 @@ export function TermsContent() {
                 &quot;The Dad Center&quot; name, logo, and tagline &quot;The operating system for modern fatherhood&quot; are trademarks of The Dad Center.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="8. User Content">
               <p>
                 You retain ownership of content you submit (mood entries, notes, custom tasks). By submitting content, you grant us a limited license to store, display, and process it as necessary to provide the Service. We will not share your personal content with third parties except as described in our{' '}
@@ -146,9 +144,9 @@ export function TermsContent() {
                 </Link>.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="9. Medical Disclaimer">
               <div className="p-4 bg-coral/10 border border-coral/25 rounded-lg">
                 <p className="text-coral font-semibold mb-2">Important Notice</p>
@@ -160,9 +158,9 @@ export function TermsContent() {
                 </p>
               </div>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="10. Limitation of Liability">
               <p>
                 TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE DAD CENTER AND ITS OFFICERS, DIRECTORS, EMPLOYEES, AND AGENTS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, DATA, OR GOODWILL, ARISING FROM OR RELATED TO YOUR USE OF THE SERVICE.
@@ -174,17 +172,17 @@ export function TermsContent() {
                 THE SERVICE IS PROVIDED &quot;AS IS&quot; AND &quot;AS AVAILABLE&quot; WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="11. Governing Law">
               <p>
                 These Terms shall be governed by and construed in accordance with the laws of the United States and the State of Delaware, without regard to conflict of law principles. Any disputes arising from these Terms shall be resolved in the courts of Delaware.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="12. Termination">
               <p>
                 We may suspend or terminate your access to the Service at any time for violation of these Terms, with or without notice. Upon termination, your right to use the Service ceases immediately. Provisions that by their nature should survive termination (including limitation of liability, intellectual property, and governing law) shall survive.
@@ -193,17 +191,17 @@ export function TermsContent() {
                 You may terminate your account at any time through Settings → Profile → Delete Account.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="13. Severability">
               <p>
                 If any provision of these Terms is found to be unenforceable or invalid, that provision shall be limited or eliminated to the minimum extent necessary so that the remaining Terms remain in full force and effect.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="14. Contact Us">
               <p>If you have questions about these Terms, contact us at:</p>
               <ul>
@@ -221,7 +219,7 @@ export function TermsContent() {
                 </li>
               </ul>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
         </div>
       </div>
     </div>

@@ -36,7 +36,6 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WarmBackground } from '@/components/ui/animations/WarmBackground'
-import { FloatingParticles } from '@/components/ui/animations/FloatingParticles'
 import { useUnreadNotificationCount } from '@/hooks/use-notifications'
 import { ToggleTheme } from '@/components/ui/toggle-theme'
 import { GracePeriodBanner } from '@/components/shared/grace-period-banner'
@@ -142,7 +141,6 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen min-h-[100dvh] relative">
       <WarmBackground />
-      <FloatingParticles count={18} />
 
       {/* Header */}
       <header className="sticky top-0 z-40 bg-[--surface]/95 backdrop-blur-[16px] border-b border-[--border]" style={{ height: 'var(--header-h)' }}>

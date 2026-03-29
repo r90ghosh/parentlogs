@@ -63,7 +63,6 @@ import {
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import { BudgetTemplate, FamilyBudgetItem, BudgetBrandView } from '@tdc/shared/types'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { getCategoryStyle, CATEGORY_ICONS } from '@/lib/budget-constants'
 import Link from 'next/link'

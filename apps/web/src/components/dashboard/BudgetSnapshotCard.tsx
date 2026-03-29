@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { DollarSign, ArrowRight, RefreshCw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useBudgetSummary } from '@/hooks/use-budget'
@@ -33,11 +32,9 @@ export function BudgetSnapshotCard() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       className={cn(
-        'rounded-[20px] p-5 card-gold-top',
+        'animate-fade-in-up rounded-[20px] p-5 card-gold-top',
         'bg-[--card]',
         'border border-[--border]',
         'shadow-card'
@@ -75,6 +72,6 @@ export function BudgetSnapshotCard() {
           </span>
         </div>
       )}
-    </motion.div>
+    </div>
   )
 }

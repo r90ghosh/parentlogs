@@ -1,15 +1,22 @@
 'use client'
 
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useEffect } from 'react'
 
 export function use3DTilt(maxTilt = 6) {
   const ref = useRef<HTMLDivElement>(null)
+  const prefersReducedMotion = useRef(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    prefersReducedMotion.current = mq.matches
+    const onChange = (e: MediaQueryListEvent) => { prefersReducedMotion.current = e.matches }
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     const el = ref.current
-    if (!el) return
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    if (mq.matches) return
+    if (!el || prefersReducedMotion.current) return
 
     const rect = el.getBoundingClientRect()
     const x = (e.clientX - rect.left) / rect.width

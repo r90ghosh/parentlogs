@@ -32,14 +32,16 @@ function generateParticles(count: number): Particle[] {
   }))
 }
 
-export function FloatingParticles({ count = 18 }: { count?: number }) {
+export function FloatingParticles({ count }: { count?: number }) {
   const [particles, setParticles] = useState<Particle[]>([])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
     if (mq.matches) return
 
-    setParticles(generateParticles(count))
+    const isMobile = window.matchMedia('(pointer: coarse)').matches
+    const particleCount = count ?? (isMobile ? 8 : 12)
+    setParticles(generateParticles(particleCount))
   }, [count])
 
   if (particles.length === 0) return null
@@ -63,7 +65,6 @@ export function FloatingParticles({ count = 18 }: { count?: number }) {
             '--duration': `${p.duration}s`,
             '--drift': `${p.drift}px`,
             animationDelay: `${p.delay}s`,
-            willChange: 'transform, opacity',
           } as React.CSSProperties}
         />
       ))}

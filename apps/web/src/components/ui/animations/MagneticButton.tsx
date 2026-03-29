@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useCallback, type ReactNode } from 'react'
+import { useRef, useCallback, useEffect, type ReactNode } from 'react'
 
 interface MagneticButtonProps {
   children: ReactNode
@@ -10,12 +10,19 @@ interface MagneticButtonProps {
 
 export function MagneticButton({ children, className = '', maxOffset = 4 }: MagneticButtonProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const prefersReducedMotion = useRef(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    prefersReducedMotion.current = mq.matches
+    const onChange = (e: MediaQueryListEvent) => { prefersReducedMotion.current = e.matches }
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
 
   const onMouseMove = useCallback((e: React.MouseEvent) => {
     const el = ref.current
-    if (!el) return
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    if (mq.matches) return
+    if (!el || prefersReducedMotion.current) return
 
     const rect = el.getBoundingClientRect()
     const x = e.clientX - rect.left - rect.width / 2

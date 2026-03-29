@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 import { useSnakeTimeline } from '@/hooks/use-snake-timeline'
 import type { TimelineDomain, TimelineMilestone, TimelineDot } from '@tdc/shared/types/timeline'
@@ -182,7 +182,7 @@ function PhaseCard({
     : milestone.dots.length
 
   return (
-    <RevealOnScroll delay={index * 80}>
+    <Reveal delay={index * 80}>
       <div className="flex items-stretch gap-0">
         {/* Timeline line + numbered circle */}
         <div className="relative flex flex-col items-center w-8 sm:w-12 flex-shrink-0">
@@ -276,7 +276,7 @@ function PhaseCard({
           </AnimatePresence>
         </div>
       </div>
-    </RevealOnScroll>
+    </Reveal>
   )
 }
 
@@ -308,27 +308,27 @@ export function SnakeTimeline() {
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* ── Section Header ── */}
         <div className="text-center mb-14">
-          <RevealOnScroll>
+          <Reveal>
             <span className="section-pre mb-5 justify-center">The Full Picture</span>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={80}>
+          <Reveal delay={80}>
             <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-[--cream] leading-[1.15] mb-4">
               Everything that&apos;s coming,{' '}
               <em className="italic text-copper">mapped</em>
             </h2>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={140}>
+          <Reveal delay={140}>
             <p className="font-body text-base sm:text-lg text-[--muted] max-w-[520px] mx-auto leading-relaxed">
               From the first appointment to toddlerhood — every milestone, task, and
               decision point, laid out so nothing catches you off guard.
             </p>
-          </RevealOnScroll>
+          </Reveal>
         </div>
 
         {/* ── Domain Filter Chips ── */}
-        <RevealOnScroll delay={200}>
+        <Reveal delay={200}>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-14">
             {ALL_DOMAINS.map((domain) => {
               const isSelected = domainFilter === domain
@@ -353,7 +353,7 @@ export function SnakeTimeline() {
               )
             })}
           </div>
-        </RevealOnScroll>
+        </Reveal>
 
         {/* ── Vertical Accordion Timeline ── */}
         <div>
@@ -370,7 +370,7 @@ export function SnakeTimeline() {
         </div>
 
         {/* ── CTA Block ── */}
-        <RevealOnScroll delay={300}>
+        <Reveal delay={300}>
           <div className="text-center mt-16 sm:mt-20">
             <p className="font-ui text-[11px] uppercase tracking-[0.08em] text-[--muted] mb-6">
               200+ tasks &middot; 60+ briefings &middot; 200+ budget items
@@ -388,7 +388,7 @@ export function SnakeTimeline() {
               </Button>
             </MagneticButton>
           </div>
-        </RevealOnScroll>
+        </Reveal>
       </div>
     </section>
   )

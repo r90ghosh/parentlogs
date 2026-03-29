@@ -2,19 +2,7 @@
 
 import { useState, useMemo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import {
-  format,
-  startOfMonth,
-  endOfMonth,
-  startOfWeek,
-  endOfWeek,
-  eachDayOfInterval,
-  isSameMonth,
-  isSameDay,
-  addMonths,
-  subMonths,
-  isToday,
-} from 'date-fns'
+import dynamic from 'next/dynamic'
 import { FamilyTask, TriageAction } from '@tdc/shared/types'
 import {
   TasksHeader,
@@ -25,10 +13,6 @@ import {
   SectionAction,
   CatchUpBanner,
   CatchUpSection,
-  FocusCard,
-  WeekCalendarCard,
-  ProgressCard,
-  StreakBanner,
   generateWeekDays,
 } from '@/components/tasks'
 import {
@@ -43,13 +27,21 @@ import {
 import { useUser } from '@/components/user-provider'
 import { useFamily } from '@/hooks/use-family'
 import { TaskTimelineBar } from '@/components/shared/task-timeline-bar'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 import { cn } from '@/lib/utils'
-import { List, CalendarDays, ChevronLeft, ChevronRight, Lock, CheckSquare } from 'lucide-react'
+import { List, CalendarDays, Lock } from 'lucide-react'
 import Link from 'next/link'
+
+const TasksCalendarView = dynamic(
+  () => import('./tasks-calendar-view').then(m => ({ default: m.TasksCalendarView })),
+  { loading: () => <div className="h-64 rounded-xl bg-[--card] animate-pulse" /> }
+)
+
+const TasksSidebarPanel = dynamic(
+  () => import('./tasks-sidebar-panel').then(m => ({ default: m.TasksSidebarPanel })),
+  { loading: () => <div className="space-y-5"><div className="h-40 rounded-xl bg-[--card] animate-pulse" /><div className="h-24 rounded-xl bg-[--card] animate-pulse" /><div className="h-24 rounded-xl bg-[--card] animate-pulse" /></div> }
+)
 
 interface TasksPageClientProps {
   currentWeek: number
@@ -70,10 +62,6 @@ export function TasksPageClient({
 
   // View toggle state
   const [view, setView] = useState<'list' | 'calendar'>(initialView)
-
-  // Calendar state
-  const [calendarDate, setCalendarDate] = useState<Date>(new Date())
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 
   // State
   const [activeTab, setActiveTab] = useState('active')
@@ -326,23 +314,6 @@ export function TasksPageClient({
     return Math.round((stats.thisWeekDone / stats.thisWeekTotal) * 100)
   }, [stats.thisWeekDone, stats.thisWeekTotal])
 
-  // Calendar view computations
-  const calendarDays = useMemo(() => {
-    const monthStart = startOfMonth(calendarDate)
-    const monthEnd = endOfMonth(calendarDate)
-    const calStart = startOfWeek(monthStart)
-    const calEnd = endOfWeek(monthEnd)
-    return eachDayOfInterval({ start: calStart, end: calEnd })
-  }, [calendarDate])
-
-  const getTasksForDate = useCallback((date: Date) => {
-    return tasks.filter(t =>
-      t.due_date && t.status === 'pending' && !t.is_backlog && isSameDay(new Date(t.due_date), date)
-    )
-  }, [tasks])
-
-  const selectedDateTasks = selectedDate ? getTasksForDate(selectedDate) : []
-
   // Check for tasks beyond free window (for showing upgrade prompt)
   const hasLockedTasks = useMemo(() => {
     if (isPremium) return false
@@ -361,7 +332,7 @@ export function TasksPageClient({
   return (
     <div>
       {/* Header with view toggle */}
-      <RevealOnScroll delay={0}>
+      <Reveal delay={0}>
         <div className="flex items-center justify-between mb-4">
           <TasksHeader currentWeek={currentWeek} daysToGo={daysToGo} />
           <div className="flex items-center gap-1 bg-[--surface] border border-[--border] rounded-xl p-1">
@@ -391,123 +362,17 @@ export function TasksPageClient({
             </button>
           </div>
         </div>
-      </RevealOnScroll>
+      </Reveal>
 
-      {/* Calendar View */}
-      {view === 'calendar' && (
-        <div className="space-y-4 mb-6">
-          {/* Month navigation */}
-          <div className="flex items-center justify-between">
-            <button
-              onClick={() => setCalendarDate(subMonths(calendarDate, 1))}
-              className="p-2 rounded-lg hover:bg-[--card] text-[--muted] transition-colors"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <h2 className="text-lg font-display font-semibold text-[--cream]">
-              {format(calendarDate, 'MMMM yyyy')}
-            </h2>
-            <button
-              onClick={() => setCalendarDate(addMonths(calendarDate, 1))}
-              className="p-2 rounded-lg hover:bg-[--card] text-[--muted] transition-colors"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
-
-          {/* Calendar grid */}
-          <div className="bg-[--surface] rounded-xl border border-[--border] overflow-hidden">
-            {/* Day headers */}
-            <div className="grid grid-cols-7 border-b border-[--border]">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                <div key={day} className="p-2 text-center text-xs text-[--muted] font-ui font-medium">
-                  {day}
-                </div>
-              ))}
-            </div>
-
-            {/* Calendar days */}
-            <div className="grid grid-cols-7">
-              {calendarDays.map((day, i) => {
-                const dayTasks = getTasksForDate(day)
-                const isCurrentMonth = isSameMonth(day, calendarDate)
-
-                return (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedDate(day)}
-                    className={cn(
-                      'min-h-[80px] p-2 border-b border-r border-[--border] text-left transition-colors hover:bg-[--card]',
-                      !isCurrentMonth && 'bg-[--bg]/50',
-                      selectedDate && isSameDay(day, selectedDate) && 'bg-copper-dim'
-                    )}
-                  >
-                    <span className={cn(
-                      'text-sm font-body',
-                      isToday(day) && 'bg-copper text-[--bg] rounded-full w-6 h-6 flex items-center justify-center',
-                      !isCurrentMonth && 'text-[--dim]'
-                    )}>
-                      {format(day, 'd')}
-                    </span>
-
-                    {/* Task indicators */}
-                    <div className="mt-1 space-y-0.5">
-                      {dayTasks.slice(0, 3).map((task, j) => (
-                        <div
-                          key={j}
-                          className="text-xs truncate px-1 rounded bg-copper-dim text-copper"
-                        >
-                          {task.title}
-                        </div>
-                      ))}
-                      {dayTasks.length > 3 && (
-                        <div className="text-xs text-[--muted] font-body">+{dayTasks.length - 3} more</div>
-                      )}
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* Day detail sheet */}
-          <Sheet open={!!selectedDate} onOpenChange={() => setSelectedDate(null)}>
-            <SheetContent className="bg-[--surface] border-[--border]">
-              <SheetHeader>
-                <SheetTitle className="text-[--cream] font-display">
-                  {selectedDate && format(selectedDate, 'EEEE, MMMM d')}
-                </SheetTitle>
-              </SheetHeader>
-              <div className="mt-6 space-y-3">
-                {selectedDateTasks.length > 0 ? (
-                  selectedDateTasks.map(task => (
-                    <Link
-                      key={task.id}
-                      href={`/tasks/${task.id}`}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-[--card] hover:bg-[--card-hover] transition-colors"
-                    >
-                      <CheckSquare className="h-4 w-4 text-copper flex-shrink-0" />
-                      <div className="min-w-0">
-                        <div className="text-sm text-[--cream] font-ui truncate">{task.title}</div>
-                        <div className="text-xs text-[--muted] font-body capitalize">{task.category}</div>
-                      </div>
-                    </Link>
-                  ))
-                ) : (
-                  <p className="text-[--muted] font-body text-center py-8">No tasks on this day</p>
-                )}
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      )}
+      {/* Calendar View (lazy-loaded) */}
+      {view === 'calendar' && <TasksCalendarView tasks={tasks} />}
 
       {/* List View */}
       {view === 'list' && (
         <>
           {/* Timeline bar - Week pills filter */}
           {allTasks.length > 0 && (
-            <RevealOnScroll delay={80}>
+            <Reveal delay={80}>
               <div className="mb-6">
                 <TaskTimelineBar
                   currentWeek={currentWeek}
@@ -516,32 +381,32 @@ export function TasksPageClient({
                   taskCountByWeek={taskCountByWeek}
                 />
               </div>
-            </RevealOnScroll>
+            </Reveal>
           )}
 
           {/* Catch-up banner */}
           {backlogTasks.length > 0 && (
-            <RevealOnScroll delay={120}>
+            <Reveal delay={120}>
               <CatchUpBanner
                 tasksToReview={backlogTasks.length}
                 percentDone={triageProgress}
                 signupWeek={signupWeek}
               />
-            </RevealOnScroll>
+            </Reveal>
           )}
 
           {/* Stats bar + Filter bar — hidden when browsing a specific week */}
           {selectedWeek === null && (
             <>
-              <RevealOnScroll delay={160}>
+              <Reveal delay={160}>
                 <StatsBar
                   stats={stats}
                   activeCard={activeStatCard}
                   onCardClick={setActiveStatCard}
                 />
-              </RevealOnScroll>
+              </Reveal>
 
-              <RevealOnScroll delay={200}>
+              <Reveal delay={200}>
                 <FilterBar
                   activeTab={activeTab}
                   onTabChange={setActiveTab}
@@ -551,13 +416,13 @@ export function TasksPageClient({
                   onSearchChange={setSearchQuery}
                   hasCatchUp={backlogTasks.length > 0}
                 />
-              </RevealOnScroll>
+              </Reveal>
             </>
           )}
 
           {/* 30-day free window upgrade prompt */}
           {hasLockedTasks && (
-            <RevealOnScroll delay={240}>
+            <Reveal delay={240}>
               <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-gold-dim to-copper-dim border border-gold/25">
                 <div className="flex items-center gap-3">
                   <Lock className="h-5 w-5 text-gold flex-shrink-0" />
@@ -577,7 +442,7 @@ export function TasksPageClient({
                   </Link>
                 </div>
               </div>
-            </RevealOnScroll>
+            </Reveal>
           )}
 
           {/* Main content layout */}
@@ -586,7 +451,7 @@ export function TasksPageClient({
             <div className="space-y-6">
               {/* Catch-up section - only show when no week filter is active */}
               {activeTab === 'active' && backlogTasks.length > 0 && selectedWeek === null && (
-                <CardEntrance delay={0}>
+                <Reveal variant="card" delay={0}>
                   <CatchUpSection
                     tasks={backlogTasks}
                     currentWeek={currentWeek}
@@ -595,12 +460,12 @@ export function TasksPageClient({
                     isPending={triageTask.isPending || bulkTriageTasks.isPending}
                     onTaskClick={(taskId) => router.push(`/tasks/${taskId}`)}
                   />
-                </CardEntrance>
+                </Reveal>
               )}
 
               {/* Week tasks section - show when a week filter is active */}
               {selectedWeek !== null && phaseTasks.length > 0 && (
-                <CardEntrance delay={0}>
+                <Reveal variant="card" delay={0}>
                   <Card3DTilt maxTilt={3} gloss>
                     <TaskSection
                       icon="📋"
@@ -621,7 +486,7 @@ export function TasksPageClient({
                       ))}
                     </TaskSection>
                   </Card3DTilt>
-                </CardEntrance>
+                </Reveal>
               )}
 
               {/* Week tasks empty state */}
@@ -637,7 +502,7 @@ export function TasksPageClient({
 
               {/* This week section - only show when no week filter is active */}
               {selectedWeek === null && thisWeekTasks.length > 0 && (
-                <CardEntrance delay={80}>
+                <Reveal variant="card" delay={80}>
                   <Card3DTilt maxTilt={3} gloss>
                     <TaskSection
                       icon="📅"
@@ -658,12 +523,12 @@ export function TasksPageClient({
                       ))}
                     </TaskSection>
                   </Card3DTilt>
-                </CardEntrance>
+                </Reveal>
               )}
 
               {/* Coming up section - only show when no week filter is active */}
               {selectedWeek === null && comingUpTasks.length > 0 && (
-                <CardEntrance delay={160}>
+                <Reveal variant="card" delay={160}>
                   <Card3DTilt maxTilt={3} gloss>
                     <TaskSection
                       icon="🔮"
@@ -684,12 +549,12 @@ export function TasksPageClient({
                       ))}
                     </TaskSection>
                   </Card3DTilt>
-                </CardEntrance>
+                </Reveal>
               )}
 
               {/* Earlier tasks section - premium only, default view */}
               {isPremium && selectedWeek === null && earlierTasks.length > 0 && (
-                <CardEntrance delay={240}>
+                <Reveal variant="card" delay={240}>
                   <Card3DTilt maxTilt={3} gloss>
                     <TaskSection
                       icon="📋"
@@ -715,7 +580,7 @@ export function TasksPageClient({
                       )}
                     </TaskSection>
                   </Card3DTilt>
-                </CardEntrance>
+                </Reveal>
               )}
 
               {/* Empty state - only show when no week filter is active */}
@@ -728,58 +593,18 @@ export function TasksPageClient({
               )}
             </div>
 
-            {/* Right: Panel */}
-            <div className="space-y-5">
-              {/* Focus card */}
-              <CardEntrance delay={100}>
-                <Card3DTilt maxTilt={3} gloss>
-                  <FocusCard
-                    task={focusTask}
-                    onDone={() => focusTask && handleComplete(focusTask.id)}
-                    onSnooze={() => {
-                      if (!isPremium) return
-                      if (focusTask) handleSnooze(focusTask.id)
-                    }}
-                  />
-                </Card3DTilt>
-              </CardEntrance>
-
-              {/* Snooze premium badge */}
-              {!isPremium && (
-                <RevealOnScroll delay={150}>
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[--surface] border border-[--border]">
-                    <Lock className="h-3.5 w-3.5 text-[--muted]" />
-                    <span className="text-xs text-[--muted] font-body">Snooze & reschedule are premium features</span>
-                  </div>
-                </RevealOnScroll>
-              )}
-
-              {/* Week calendar */}
-              <CardEntrance delay={200}>
-                <Card3DTilt maxTilt={3} gloss>
-                  <WeekCalendarCard days={weekDays} />
-                </Card3DTilt>
-              </CardEntrance>
-
-              {/* Progress */}
-              <CardEntrance delay={300}>
-                <Card3DTilt maxTilt={3} gloss>
-                  <ProgressCard
-                    percentComplete={progressPercent}
-                    done={stats.thisWeekDone}
-                    active={stats.thisWeekTotal - stats.thisWeekDone}
-                    toTriage={stats.catchUpQueue}
-                  />
-                </Card3DTilt>
-              </CardEntrance>
-
-              {/* Streak banner */}
-              <CardEntrance delay={400}>
-                <Card3DTilt maxTilt={3} gloss>
-                  <StreakBanner days={3} />
-                </Card3DTilt>
-              </CardEntrance>
-            </div>
+            {/* Right: Panel (lazy-loaded) */}
+            <TasksSidebarPanel
+              focusTask={focusTask}
+              weekDays={weekDays}
+              progressPercent={progressPercent}
+              thisWeekDone={stats.thisWeekDone}
+              thisWeekActive={stats.thisWeekTotal - stats.thisWeekDone}
+              catchUpQueue={stats.catchUpQueue}
+              isPremium={isPremium}
+              onComplete={handleComplete}
+              onSnooze={handleSnooze}
+            />
           </div>
         </>
       )}

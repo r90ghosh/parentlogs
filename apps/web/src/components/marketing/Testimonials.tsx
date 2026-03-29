@@ -1,7 +1,5 @@
-'use client'
-
 import { BookOpen, CheckSquare, TrendingUp } from 'lucide-react'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 
 const highlights = [
@@ -33,7 +31,7 @@ export function Testimonials() {
     <section className="relative py-16 sm:py-24 md:py-32">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Section header */}
-        <RevealOnScroll className="text-center mb-16">
+        <Reveal className="text-center mb-16">
           <span className="section-pre justify-center">Inside the App</span>
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-[--cream] leading-[1.2] mb-4">
             Your Roadmap at Every Stage
@@ -41,10 +39,10 @@ export function Testimonials() {
           <p className="font-body text-[--muted] text-base sm:text-lg max-w-xl mx-auto">
             Real tasks and briefings from The Dad Center — here&apos;s what a week looks like.
           </p>
-        </RevealOnScroll>
+        </Reveal>
 
         {/* Featured highlight */}
-        <RevealOnScroll>
+        <Reveal>
           <div className="relative max-w-3xl mx-auto text-center p-4 sm:p-8 md:p-12">
             {/* Rotating quote mark */}
             <div
@@ -67,12 +65,12 @@ export function Testimonials() {
 
             <p className="font-ui text-sm text-[--muted]">{highlights[0].title}</p>
           </div>
-        </RevealOnScroll>
+        </Reveal>
 
         {/* Highlights grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
           {highlights.map((highlight, index) => (
-            <RevealOnScroll key={index} delay={80 + index * 120} className="h-full">
+            <Reveal key={index} delay={80 + index * 120} className="h-full">
               <Card3DTilt maxTilt={3} gloss className="h-full">
                 <div className="p-6 rounded-xl bg-[--card] border border-[--border] shadow-card h-full">
                   {/* Week + Icon */}
@@ -97,7 +95,7 @@ export function Testimonials() {
                   </p>
                 </div>
               </Card3DTilt>
-            </RevealOnScroll>
+            </Reveal>
           ))}
         </div>
       </div>

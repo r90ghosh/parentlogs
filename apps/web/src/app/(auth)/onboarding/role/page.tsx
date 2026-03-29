@@ -9,8 +9,7 @@ import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { UserRole } from '@tdc/shared/types'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
+import { Reveal } from '@/components/ui/animations/Reveal'
 
 const roles: Array<{ id: UserRole; label: string; description: string; emoji: string }> = [
   {
@@ -79,7 +78,7 @@ export default function OnboardingRole() {
   }
 
   return (
-    <CardEntrance delay={100}>
+    <Reveal variant="card" delay={100}>
       <Card3DTilt maxTilt={4} gloss>
         <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
           {/* Top accent bar */}
@@ -99,7 +98,7 @@ export default function OnboardingRole() {
 
           <div className="px-8 pb-8">
             {/* Header */}
-            <RevealOnScroll delay={0}>
+            <Reveal delay={0}>
               <div className="text-center mb-6">
                 <h1 className="font-display text-2xl font-bold text-[--cream] mb-2">
                   What&apos;s your role?
@@ -108,7 +107,7 @@ export default function OnboardingRole() {
                   This helps us personalize your experience
                 </p>
               </div>
-            </RevealOnScroll>
+            </Reveal>
 
             {error && (
               <Alert variant="destructive" className="mb-4">
@@ -116,7 +115,7 @@ export default function OnboardingRole() {
               </Alert>
             )}
 
-            <RevealOnScroll delay={150}>
+            <Reveal delay={150}>
               <div className="space-y-3">
                 {roles.map((role) => (
                   <button
@@ -148,10 +147,10 @@ export default function OnboardingRole() {
                   </button>
                 ))}
               </div>
-            </RevealOnScroll>
+            </Reveal>
           </div>
         </div>
       </Card3DTilt>
-    </CardEntrance>
+    </Reveal>
   )
 }

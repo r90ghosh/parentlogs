@@ -5,7 +5,7 @@ import { CHECKLIST_ICONS, CHECKLIST_COLORS } from '@/lib/checklist-constants'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { cn } from '@/lib/utils'
 
 export const metadata = {
@@ -83,7 +83,7 @@ export default async function PublicChecklistsPage() {
             const colors = CHECKLIST_COLORS[checklist.checklist_id] || CHECKLIST_COLORS['CL-15']
 
             return (
-              <CardEntrance key={checklist.checklist_id} delay={Math.min(index * 80, 600)}>
+              <Reveal variant="card" key={checklist.checklist_id} delay={Math.min(index * 80, 600)}>
                 <Link href={`/baby-checklists/${checklist.checklist_id}`} className="block h-full">
                   <Card className="bg-[--surface] border-[--border] h-full transition-all hover:border-[--border-hover] hover:shadow-lg">
                     <CardContent className="pt-6">
@@ -110,7 +110,7 @@ export default async function PublicChecklistsPage() {
                     </CardContent>
                   </Card>
                 </Link>
-              </CardEntrance>
+              </Reveal>
             )
           })}
         </div>

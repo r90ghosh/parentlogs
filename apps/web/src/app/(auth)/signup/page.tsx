@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { motion } from 'framer-motion'
 import { useAuth } from '@/lib/auth/auth-context'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,7 +12,7 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, UserPlus, Mail } from 'lucide-react'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 
 const signupSchema = z.object({
@@ -68,23 +67,17 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <CardEntrance delay={100}>
+      <Reveal variant="card" delay={100}>
         <Card3DTilt maxTilt={3} gloss>
           <div className="w-full bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
             <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
             <div className="px-8 py-8 space-y-6 text-center">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', duration: 0.5 }}
-                className="mx-auto h-14 w-14 rounded-full bg-copper/20 flex items-center justify-center"
-              >
+              <div className="mx-auto h-14 w-14 rounded-full bg-copper/20 flex items-center justify-center animate-scale-in">
                 <Mail className="h-7 w-7 text-copper" />
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
+              </div>
+              <div
+                className="animate-fade-in-up"
+                style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}
               >
                 <h2 className="font-display text-2xl font-bold text-[--cream] mb-2">
                   Check your email
@@ -92,22 +85,20 @@ export default function SignupPage() {
                 <p className="font-body text-sm text-[--muted]">
                   We&apos;ve sent you a confirmation link. Please check your email to verify your account.
                 </p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
+              </div>
+              <div
+                className="animate-fade-in-up"
+                style={{ animationDelay: '400ms', animationFillMode: 'backwards' }}
               >
                 <Alert className="bg-copper/10 border-copper/30 text-left">
                   <AlertDescription className="text-[--cream] font-body text-sm">
                     After confirming your email, you&apos;ll be able to set up your family profile.
                   </AlertDescription>
                 </Alert>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
+              </div>
+              <div
+                className="animate-fade-in-up"
+                style={{ animationDelay: '500ms', animationFillMode: 'backwards' }}
               >
                 <Link
                   href="/login"
@@ -115,16 +106,16 @@ export default function SignupPage() {
                 >
                   Back to login
                 </Link>
-              </motion.div>
+              </div>
             </div>
           </div>
         </Card3DTilt>
-      </CardEntrance>
+      </Reveal>
     )
   }
 
   return (
-    <CardEntrance delay={100}>
+    <Reveal variant="card" delay={100}>
       <Card3DTilt maxTilt={3} gloss>
         <div className="w-full bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
           {/* Top accent bar */}
@@ -132,43 +123,36 @@ export default function SignupPage() {
 
           <div className="px-5 sm:px-8 py-6 sm:py-8 space-y-6">
             {/* Header */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-center"
+            <div
+              className="text-center animate-fade-in-up"
+              style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}
             >
               <div className="mx-auto mb-4 h-14 w-14 rounded-full bg-copper/20 flex items-center justify-center">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', duration: 0.5, delay: 0.3 }}
+                <div
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: '300ms', animationFillMode: 'backwards' }}
                 >
                   <UserPlus className="h-7 w-7 text-copper" />
-                </motion.div>
+                </div>
               </div>
               <h1 className="font-display text-2xl font-bold text-[--cream] mb-1">
                 Create an account
               </h1>
               <p className="font-body text-sm text-[--muted]">Built for dads. Works for both.</p>
-            </motion.div>
+            </div>
 
             {error && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-              >
+              <div className="animate-fade-in-up">
                 <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
-              </motion.div>
+              </div>
             )}
 
             {/* Google sign-in */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.35 }}
+            <div
+              className="animate-fade-in-up"
+              style={{ animationDelay: '350ms', animationFillMode: 'backwards' }}
             >
               <Button
                 variant="outline"
@@ -184,7 +168,7 @@ export default function SignupPage() {
                 </svg>
                 Continue with Google
               </Button>
-            </motion.div>
+            </div>
 
             {/* Divider */}
             <div className="relative">
@@ -199,12 +183,10 @@ export default function SignupPage() {
             </div>
 
             {/* Email form */}
-            <motion.form
+            <form
               onSubmit={handleSubmit(onSubmit)}
-              className="space-y-4"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.45 }}
+              className="space-y-4 animate-fade-in-up"
+              style={{ animationDelay: '450ms', animationFillMode: 'backwards' }}
             >
               <div className="space-y-2">
                 <Label htmlFor="full_name" className="font-ui text-[--cream]">Full Name</Label>
@@ -283,13 +265,11 @@ export default function SignupPage() {
                   )}
                 </Button>
               </MagneticButton>
-            </motion.form>
+            </form>
 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.55 }}
-              className="text-xs text-center text-[--muted] font-body"
+            <p
+              className="text-xs text-center text-[--muted] font-body animate-fade-in-up"
+              style={{ animationDelay: '550ms', animationFillMode: 'backwards' }}
             >
               By signing up, you agree to our{' '}
               <Link href="/terms" className="text-copper hover:text-copper-hover font-ui transition-colors">
@@ -299,23 +279,21 @@ export default function SignupPage() {
               <Link href="/privacy" className="text-copper hover:text-copper-hover font-ui transition-colors">
                 Privacy Policy
               </Link>
-            </motion.p>
+            </p>
 
             {/* Footer link */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="text-center text-sm text-[--muted] font-body"
+            <p
+              className="text-center text-sm text-[--muted] font-body animate-fade-in-up"
+              style={{ animationDelay: '600ms', animationFillMode: 'backwards' }}
             >
               Already have an account?{' '}
               <Link href="/login" className="text-copper hover:text-copper-hover font-ui transition-colors">
                 Sign in
               </Link>
-            </motion.p>
+            </p>
           </div>
         </div>
       </Card3DTilt>
-    </CardEntrance>
+    </Reveal>
   )
 }

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ChevronDown, Mail, ArrowRight } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 
@@ -167,29 +167,29 @@ export function FaqContent() {
     <div className="pt-32 pb-16 sm:py-24 md:py-32">
       {/* Hero */}
       <section className="max-w-[1100px] mx-auto px-4 sm:px-6 text-center mb-16 sm:mb-24">
-        <RevealOnScroll>
+        <Reveal>
           <span className="section-pre mb-5 justify-center">
             Help Center
           </span>
-        </RevealOnScroll>
-        <RevealOnScroll delay={120}>
+        </Reveal>
+        <Reveal delay={120}>
           <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-[--cream] leading-tight mb-6">
             Frequently Asked Questions
           </h1>
-        </RevealOnScroll>
-        <RevealOnScroll delay={240}>
+        </Reveal>
+        <Reveal delay={240}>
           <p className="font-body text-base sm:text-lg text-[--muted] max-w-2xl mx-auto">
             Everything you need to know about The Dad Center. Can&apos;t find
             your answer? Reach out — we&apos;re real people, and we respond fast.
           </p>
-        </RevealOnScroll>
+        </Reveal>
       </section>
 
       {/* FAQ Categories */}
       <section className="max-w-[800px] mx-auto px-4 sm:px-6 mb-20 sm:mb-28">
         <div className="space-y-8">
           {faqCategories.map((category, catIndex) => (
-            <RevealOnScroll key={category.title} delay={80 + catIndex * 100}>
+            <Reveal key={category.title} delay={80 + catIndex * 100}>
               <Card3DTilt maxTilt={2} gloss>
                 <div className="rounded-2xl bg-[--card] border border-[--border] overflow-hidden">
                   <div className="px-5 sm:px-6 py-4 border-b border-[--border] bg-[--surface]">
@@ -210,14 +210,14 @@ export function FaqContent() {
                   })}
                 </div>
               </Card3DTilt>
-            </RevealOnScroll>
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* Contact CTA */}
       <section className="max-w-[800px] mx-auto px-4 sm:px-6 text-center">
-        <RevealOnScroll>
+        <Reveal>
           <div className="rounded-2xl border border-[--border] bg-[--card] p-10 sm:p-14">
             <div className="w-12 h-12 rounded-xl bg-copper/10 border border-copper/20 flex items-center justify-center mx-auto mb-5">
               <Mail className="h-6 w-6 text-copper" />
@@ -255,7 +255,7 @@ export function FaqContent() {
               </MagneticButton>
             </div>
           </div>
-        </RevealOnScroll>
+        </Reveal>
       </section>
     </div>
   )

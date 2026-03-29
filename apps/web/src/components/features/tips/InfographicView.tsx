@@ -1,7 +1,6 @@
 'use client'
 
 import { useRef, useEffect } from 'react'
-import { motion } from 'framer-motion'
 import type { TipTopic, IllustrationComponent } from '@tdc/shared/types/tips'
 import { InfographicSection } from './InfographicSection'
 
@@ -19,13 +18,10 @@ export function InfographicView({ topic, illustrations }: InfographicViewProps) 
   }, [topic.id])
 
   return (
-    <motion.div
+    <div
       key={topic.id}
       ref={containerRef}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      className="px-4"
+      className="px-4 animate-fade-in-up"
     >
       {topic.sections.map((section, i) => (
         <InfographicSection
@@ -42,6 +38,6 @@ export function InfographicView({ topic, illustrations }: InfographicViewProps) 
           You got this. 👊
         </p>
       </div>
-    </motion.div>
+    </div>
   )
 }

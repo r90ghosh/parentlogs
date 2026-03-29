@@ -12,7 +12,7 @@ import { DadChallengeTile } from './DadChallengeTile'
 import { DadChallengeContent, DadChallengePillar } from '@tdc/shared/types/dad-journey'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
+import { Reveal } from '@/components/ui/animations/Reveal'
 
 interface DadChallengeTilesProps {
   maxTiles?: number
@@ -97,11 +97,11 @@ export function DadChallengeTiles({ maxTiles = 7 }: DadChallengeTilesProps) {
       {visibleTiles.map((tile, index) => {
         const config = PILLAR_CONFIG.find(c => c.pillar === tile.pillar) ?? PILLAR_CONFIG[0]
         return (
-          <CardEntrance key={tile.id} delay={index * 80}>
+          <Reveal variant="card" key={tile.id} delay={index * 80}>
             <Card3DTilt maxTilt={3} gloss>
               <DadChallengeTile content={tile} config={config} />
             </Card3DTilt>
-          </CardEntrance>
+          </Reveal>
         )
       })}
 

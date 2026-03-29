@@ -12,9 +12,8 @@ import { Check, Crown, Loader2, Sparkles, Zap, ArrowLeft, X } from 'lucide-react
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 import { WarmBackground } from '@/components/ui/animations/WarmBackground'
 
 function UpgradeContent() {
@@ -111,7 +110,7 @@ function UpgradeContent() {
         )}
 
         {/* Hero */}
-        <RevealOnScroll delay={0}>
+        <Reveal delay={0}>
           <div className="text-center mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-copper/15 border border-copper/30 mb-5">
               <Sparkles className="h-3.5 w-3.5 text-copper" />
@@ -127,12 +126,12 @@ function UpgradeContent() {
               One subscription per family — both partners share access.
             </p>
           </div>
-        </RevealOnScroll>
+        </Reveal>
 
         {/* Pricing Cards */}
         <div className="grid md:grid-cols-3 gap-6 mb-12" role="radiogroup" aria-label="Select a pricing plan">
           {/* Monthly */}
-          <CardEntrance delay={100}>
+          <Reveal variant="card" delay={100}>
             <Card3DTilt maxTilt={4} gloss>
               <div
                 role="radio"
@@ -169,10 +168,10 @@ function UpgradeContent() {
                 </div>
               </div>
             </Card3DTilt>
-          </CardEntrance>
+          </Reveal>
 
           {/* Yearly - Popular */}
-          <CardEntrance delay={200}>
+          <Reveal variant="card" delay={200}>
             <Card3DTilt maxTilt={4} gloss>
               <div
                 role="radio"
@@ -216,10 +215,10 @@ function UpgradeContent() {
                 </div>
               </div>
             </Card3DTilt>
-          </CardEntrance>
+          </Reveal>
 
           {/* Lifetime */}
-          <CardEntrance delay={300}>
+          <Reveal variant="card" delay={300}>
             <Card3DTilt maxTilt={4} gloss>
               <div
                 role="radio"
@@ -266,11 +265,11 @@ function UpgradeContent() {
                 </div>
               </div>
             </Card3DTilt>
-          </CardEntrance>
+          </Reveal>
         </div>
 
         {/* CTA Button */}
-        <RevealOnScroll delay={200}>
+        <Reveal delay={200}>
           <div className="text-center mb-14">
             <MagneticButton>
               <Button
@@ -301,10 +300,10 @@ function UpgradeContent() {
               Secure payment powered by Stripe
             </p>
           </div>
-        </RevealOnScroll>
+        </Reveal>
 
         {/* Feature Comparison */}
-        <RevealOnScroll delay={100}>
+        <Reveal delay={100}>
         <div className="bg-[--card] border border-[--border] rounded-2xl shadow-card overflow-hidden">
           <div className="p-6 border-b border-[--border]">
             <h2 className="font-display text-xl font-bold text-[--cream] text-center">
@@ -340,7 +339,7 @@ function UpgradeContent() {
             </table>
           </div>
         </div>
-        </RevealOnScroll>
+        </Reveal>
 
         {/* Trust signals */}
         <div className="mt-12 text-center space-y-2">

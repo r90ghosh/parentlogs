@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Calendar,
   CheckSquare,
@@ -10,7 +8,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 import { ArrowRight } from 'lucide-react'
@@ -53,17 +51,17 @@ export function Features() {
     <section id="features" className="relative py-16 sm:py-24 md:py-32">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Section header */}
-        <RevealOnScroll className="text-center mb-12">
+        <Reveal className="text-center mb-12">
           <span className="section-pre justify-center">Features</span>
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-[--cream] leading-[1.2] mb-12">
             Everything you need,<br />nothing you don&apos;t
           </h2>
-        </RevealOnScroll>
+        </Reveal>
 
         {/* Features grid - 2 columns like mockup */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5">
           {features.map((feature, index) => (
-            <RevealOnScroll key={index} delay={80 + index * 80}>
+            <Reveal key={index} delay={80 + index * 80}>
               <Card3DTilt maxTilt={3} gloss>
                 <div className="card-copper-top p-5 sm:p-8 rounded-xl bg-[--card] border border-[--border] hover:border-[--border-hover] shadow-card transition-all duration-300 cursor-default">
                   {/* Icon */}
@@ -90,12 +88,12 @@ export function Features() {
                   </p>
                 </div>
               </Card3DTilt>
-            </RevealOnScroll>
+            </Reveal>
           ))}
         </div>
 
         {/* CTA */}
-        <RevealOnScroll delay={600} className="mt-16 text-center">
+        <Reveal delay={600} className="mt-16 text-center">
           <MagneticButton>
             <Button asChild size="lg" className="btn-glow-hover bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] shadow-copper">
               <Link href="/signup">
@@ -104,7 +102,7 @@ export function Features() {
               </Link>
             </Button>
           </MagneticButton>
-        </RevealOnScroll>
+        </Reveal>
       </div>
     </section>
   )

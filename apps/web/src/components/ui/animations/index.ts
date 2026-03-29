@@ -1,5 +1,6 @@
 export { WarmBackground } from './WarmBackground'
 export { FloatingParticles } from './FloatingParticles'
+export { Reveal } from './Reveal'
 export { CardEntrance } from './CardEntrance'
 export { Card3DTilt } from './Card3DTilt'
 export { RevealOnScroll } from './RevealOnScroll'

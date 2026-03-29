@@ -15,6 +15,8 @@ export { WeekCalendarCard, generateWeekDays } from './week-calendar-card'
 export { ProgressCard } from './progress-card'
 export { StreakBanner } from './streak-banner'
 export { TasksPageClient } from './tasks-page-client'
+export { TasksCalendarView } from './tasks-calendar-view'
+export { TasksSidebarPanel } from './tasks-sidebar-panel'
 
 // Legacy components (may still be used elsewhere)
 export { ProgressHeader } from './progress-header'

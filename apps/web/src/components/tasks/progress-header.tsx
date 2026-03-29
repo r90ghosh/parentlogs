@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { AlertCircle, CheckCircle2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -56,19 +55,15 @@ export function ProgressHeader({
 
       {/* Progress bar */}
       <div className="relative h-2 bg-[--card] rounded-full overflow-hidden">
-        <motion.div
+        <div
           className="absolute inset-y-0 left-0 bg-gradient-to-r from-copper to-gold rounded-full"
-          initial={{ width: 0 }}
-          animate={{ width: `${progressPercent}%` }}
-          transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
+          style={{ width: `${progressPercent}%`, transition: 'width 0.8s ease-out 0.2s' }}
         />
 
         {/* Current position indicator */}
-        <motion.div
+        <div
           className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-[--cream] rounded-full shadow-md border-2 border-copper"
-          initial={{ left: 0 }}
-          animate={{ left: `calc(${progressPercent}% - 6px)` }}
-          transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
+          style={{ left: `calc(${progressPercent}% - 6px)`, transition: 'left 0.8s ease-out 0.2s' }}
         />
       </div>
 

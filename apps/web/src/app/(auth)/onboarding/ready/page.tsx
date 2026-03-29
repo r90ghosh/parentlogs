@@ -7,11 +7,9 @@ import { useCompleteOnboarding } from '@/hooks/use-profile'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { CheckCircle, Rocket, ListTodo, BookOpen, Lightbulb, Loader2 } from 'lucide-react'
-import { motion } from 'framer-motion'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 
 interface ValueItem {
   icon: React.ElementType
@@ -118,7 +116,7 @@ export default function OnboardingReady() {
   }
 
   return (
-    <CardEntrance delay={100}>
+    <Reveal variant="card" delay={100}>
       <Card3DTilt maxTilt={4} gloss>
         <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
           {/* Top accent bar */}
@@ -138,16 +136,13 @@ export default function OnboardingReady() {
 
           <div className="px-8 pb-8 space-y-6">
             {/* Animated icon + header */}
-            <RevealOnScroll delay={0}>
+            <Reveal delay={0}>
               <div className="text-center">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', duration: 0.5 }}
-                  className="mx-auto mb-5 h-16 w-16 rounded-full bg-copper/20 flex items-center justify-center"
+                <div
+                  className="mx-auto mb-5 h-16 w-16 rounded-full bg-copper/20 flex items-center justify-center animate-scale-in"
                 >
                   <Rocket className="h-8 w-8 text-copper" />
-                </motion.div>
+                </div>
                 <h1 className="font-display text-2xl font-bold text-[--cream] mb-2">
                   You&apos;re all set!
                 </h1>
@@ -155,36 +150,33 @@ export default function OnboardingReady() {
                   Your parenting command center is ready
                 </p>
               </div>
-            </RevealOnScroll>
+            </Reveal>
 
             {error && (
               <div className="text-coral text-sm text-center font-body">{error}</div>
             )}
 
             {/* Value items */}
-            <RevealOnScroll delay={200}>
+            <Reveal delay={200}>
               <div className="space-y-3">
                 {valueItems.map((item) => (
-                  <motion.div
+                  <div
                     key={item.label}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: item.delay + 0.3 }}
-                    className="flex items-center gap-3 p-3 bg-[--card-hover] border border-[--border] rounded-xl"
+                    className="flex items-center gap-3 p-3 bg-[--card-hover] border border-[--border] rounded-xl animate-fade-in-up"
+                    style={{ animationDelay: `${(item.delay + 0.3) * 1000}ms`, animationFillMode: 'backwards' }}
                   >
                     <div className="h-8 w-8 rounded-full bg-copper/20 flex items-center justify-center flex-shrink-0">
                       <CheckCircle className="h-4 w-4 text-copper" />
                     </div>
                     <span className="font-body text-sm text-[--cream]">{item.label}</span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </RevealOnScroll>
+            </Reveal>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
+            <div
+              className="animate-fade-in-up"
+              style={{ animationDelay: '800ms', animationFillMode: 'backwards' }}
             >
               <MagneticButton className="w-full">
                 <Button
@@ -203,10 +195,10 @@ export default function OnboardingReady() {
                   )}
                 </Button>
               </MagneticButton>
-            </motion.div>
+            </div>
           </div>
         </div>
       </Card3DTilt>
-    </CardEntrance>
+    </Reveal>
   )
 }

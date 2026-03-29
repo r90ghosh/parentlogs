@@ -81,11 +81,9 @@ export function MoodCheckinCard() {
     const moodCfg = MOOD_CONFIG.find(m => m.level === lastCheckin.mood)
     const showCrisisResources = lastCheckin.mood === 'struggling' || lastCheckin.mood === 'rough'
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div
         className={cn(
-          'rounded-[20px] px-5 py-4 card-copper-top',
+          'animate-fade-in-up rounded-[20px] px-5 py-4 card-copper-top',
           'bg-[--card]',
           'border border-[--border]',
           'shadow-card'
@@ -116,17 +114,15 @@ export function MoodCheckinCard() {
             </p>
           </div>
         )}
-      </motion.div>
+      </div>
     )
   }
 
   // Not yet checked in — show full selector
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       className={cn(
-        'rounded-[20px] px-4 py-3 card-copper-top',
+        'animate-fade-in-up rounded-[20px] px-4 py-3 card-copper-top',
         'bg-[--card]',
         'border border-[--border]',
         'shadow-card'
@@ -201,6 +197,6 @@ export function MoodCheckinCard() {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   )
 }

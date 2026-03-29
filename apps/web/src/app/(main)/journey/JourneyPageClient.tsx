@@ -1,13 +1,11 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { Flame, TrendingUp } from 'lucide-react'
 import { useUser } from '@/components/user-provider'
 import { useMoodHistory } from '@/hooks/use-dad-journey'
 import { DadChallengeTiles, MoodCheckinWidget } from '@/components/dashboard/dad-journey'
 import { MOOD_CONFIG } from '@tdc/shared/constants'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
+import { Reveal } from '@/components/ui/animations/Reveal'
 
 /**
  * Calculate consecutive-day streak (same logic as MoodCheckinWidget)
@@ -48,27 +46,16 @@ export function JourneyPageClient() {
   return (
     <main className="flex-1 py-8 px-4 md:px-8 max-w-2xl mx-auto w-full">
       {/* Page Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="mb-6"
-      >
+      <div className="mb-6 animate-fade-in-up">
         <h1 className="text-2xl font-bold font-display text-[--cream]">Your Dad Journey</h1>
         <p className="text-[--muted] mt-1 text-sm font-body">
           7 real challenges, real talk, and things you can actually do.
         </p>
-      </motion.div>
+      </div>
 
       {/* Mood history summary (if available) */}
       {moodHistory && moodHistory.length > 0 && (
-        <CardEntrance delay={80}>
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.35 }}
-          className="mb-5 rounded-xl bg-[--surface] border border-[--border] p-4 shadow-card"
-        >
+        <Reveal variant="card" delay={80} className="mb-5 rounded-xl bg-[--surface] border border-[--border] p-4 shadow-card">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-[--muted]" />
@@ -100,37 +87,23 @@ export function JourneyPageClient() {
               )
             })}
           </div>
-        </motion.div>
-        </CardEntrance>
+        </Reveal>
       )}
 
       {/* Mood check-in widget (always shown for dads) */}
       {isDad && (
-        <CardEntrance delay={160}>
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.35 }}
-          className="mb-5"
-        >
+        <Reveal variant="card" delay={160} className="mb-5">
           <MoodCheckinWidget />
-        </motion.div>
-        </CardEntrance>
+        </Reveal>
       )}
 
       {/* All 7 challenge tiles */}
-      <RevealOnScroll delay={240}>
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.35 }}
-      >
+      <Reveal delay={240}>
         <p className="text-xs font-semibold font-ui text-[--muted] uppercase tracking-wider mb-3">
           Your challenges
         </p>
         <DadChallengeTiles maxTiles={7} />
-      </motion.div>
-      </RevealOnScroll>
+      </Reveal>
     </main>
   )
 }

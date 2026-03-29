@@ -1,7 +1,5 @@
-'use client'
-
 import { CalendarDays, FileText, Users } from 'lucide-react'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 
 const steps = [
@@ -30,18 +28,18 @@ export function HowItWorks() {
     <section id="how-it-works" className="relative py-16 sm:py-24 md:py-32 overflow-hidden">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Section header */}
-        <RevealOnScroll className="text-center mb-16">
+        <Reveal className="text-center mb-16">
           <span className="section-pre justify-center">How It Works</span>
           <h2 className="font-display font-bold text-3xl sm:text-4xl text-[--cream] leading-[1.2] mb-12">
             Up and running in 2 minutes
           </h2>
-        </RevealOnScroll>
+        </Reveal>
 
         {/* Steps */}
         <div className="relative">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
             {steps.map((step, index) => (
-              <RevealOnScroll key={index} delay={80 + index * 120}>
+              <Reveal key={index} delay={80 + index * 120}>
                 <div className="relative text-center">
                   {/* Step number - flip in */}
                   <div
@@ -75,13 +73,13 @@ export function HowItWorks() {
                     </div>
                   </Card3DTilt>
                 </div>
-              </RevealOnScroll>
+              </Reveal>
             ))}
           </div>
         </div>
 
         {/* Time saved callout */}
-        <RevealOnScroll delay={500} className="mt-16 text-center">
+        <Reveal delay={500} className="mt-16 text-center">
           <div className="inline-flex items-center gap-4 px-6 py-4 rounded-2xl bg-[--card] border border-[--border] shadow-card">
             <div className="text-right">
               <p className="font-display font-bold text-3xl text-[--cream]">10+</p>
@@ -92,7 +90,7 @@ export function HowItWorks() {
               Average time dads save by not having to research and organize everything themselves.
             </p>
           </div>
-        </RevealOnScroll>
+        </Reveal>
       </div>
     </section>
   )

@@ -1,5 +1,3 @@
-'use client'
-
 import Link from 'next/link'
 import {
   Zap,
@@ -9,7 +7,7 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 
@@ -72,41 +70,41 @@ export function AboutContent() {
     <div className="pt-32 pb-16 sm:py-24 md:py-32">
       {/* Hero */}
       <section className="max-w-[1100px] mx-auto px-4 sm:px-6 text-center mb-20 sm:mb-28">
-        <RevealOnScroll>
+        <Reveal>
           <span className="section-pre mb-5 justify-center">Our Mission</span>
-        </RevealOnScroll>
-        <RevealOnScroll delay={120}>
+        </Reveal>
+        <Reveal delay={120}>
           <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-[--cream] leading-tight mb-6">
             Built by dads, for dads
             <br className="hidden sm:block" />
             <span className="text-gradient-copper"> who refuse to wing it</span>
           </h1>
-        </RevealOnScroll>
-        <RevealOnScroll delay={240}>
+        </Reveal>
+        <Reveal delay={240}>
           <p className="font-body text-base sm:text-lg text-[--muted] max-w-2xl mx-auto leading-relaxed">
             Fatherhood shouldn&apos;t feel like improvisation. The Dad Center gives you
             week-by-week guidance, actionable tasks, and partner sync — so you
             show up prepared, not panicked.
           </p>
-        </RevealOnScroll>
+        </Reveal>
       </section>
 
       {/* Values Grid */}
       <section className="max-w-[1100px] mx-auto px-4 sm:px-6 mb-20 sm:mb-28">
-        <RevealOnScroll>
+        <Reveal>
           <span className="section-pre mb-5">What We Believe</span>
-        </RevealOnScroll>
-        <RevealOnScroll delay={80}>
+        </Reveal>
+        <Reveal delay={80}>
           <h2 className="font-display text-2xl sm:text-3xl font-bold text-[--cream] mb-12">
             Four principles that shape everything we build
           </h2>
-        </RevealOnScroll>
+        </Reveal>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {values.map((value, index) => {
             const colors = colorMap[value.color]
             return (
-              <RevealOnScroll key={value.title} delay={120 + index * 100} className="h-full">
+              <Reveal key={value.title} delay={120 + index * 100} className="h-full">
                 <Card3DTilt maxTilt={3} gloss className="h-full">
                   <div
                     className={`rounded-2xl p-6 sm:p-8 border ${colors.border} bg-gradient-to-br ${colors.bg} bg-[--card] h-full`}
@@ -124,7 +122,7 @@ export function AboutContent() {
                     </p>
                   </div>
                 </Card3DTilt>
-              </RevealOnScroll>
+              </Reveal>
             )
           })}
         </div>
@@ -133,32 +131,32 @@ export function AboutContent() {
       {/* The Story */}
       <section className="max-w-[1100px] mx-auto px-4 sm:px-6 mb-20 sm:mb-28">
         <div className="max-w-3xl">
-          <RevealOnScroll>
+          <Reveal>
             <span className="section-pre mb-5">The Story</span>
-          </RevealOnScroll>
-          <RevealOnScroll delay={120}>
+          </Reveal>
+          <Reveal delay={120}>
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-[--cream] mb-8">
               Why The Dad Center exists
             </h2>
-          </RevealOnScroll>
+          </Reveal>
           <div className="space-y-5">
-            <RevealOnScroll delay={200}>
+            <Reveal delay={200}>
               <p className="font-body text-[15px] sm:text-base text-[--muted] leading-relaxed">
                 When one dad found out he was going to be a father, he did what
                 any engineer would do — he went looking for a system. A week-by-week
                 playbook. Something that respected his intelligence and gave him
                 specific, actionable guidance instead of vague reassurances.
               </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={280}>
+            </Reveal>
+            <Reveal delay={280}>
               <p className="font-body text-[15px] sm:text-base text-[--muted] leading-relaxed">
                 He found baby trackers designed for moms, forums full of
                 conflicting advice, and apps that assumed dads were secondary
                 passengers. Nothing felt like it was built for the way he
                 thinks, plans, and prepares.
               </p>
-            </RevealOnScroll>
-            <RevealOnScroll delay={360}>
+            </Reveal>
+            <Reveal delay={360}>
               <p className="font-body text-[15px] sm:text-base text-[--cream] leading-relaxed font-medium">
                 So he built The Dad Center — the operating system for modern
                 fatherhood. Week-by-week briefings, structured tasks, budget
@@ -166,14 +164,14 @@ export function AboutContent() {
                 anxiety into action. No fluff. No condescension. Just the tools
                 to be the dad you want to be.
               </p>
-            </RevealOnScroll>
+            </Reveal>
           </div>
         </div>
       </section>
 
       {/* CTA */}
       <section className="max-w-[1100px] mx-auto px-4 sm:px-6 text-center">
-        <RevealOnScroll>
+        <Reveal>
           <div className="rounded-2xl border border-copper/20 bg-gradient-to-br from-copper/6 to-gold/4 p-10 sm:p-16">
             <h2 className="font-display text-2xl sm:text-3xl font-bold text-[--cream] mb-4">
               Ready to stop winging it?
@@ -195,7 +193,7 @@ export function AboutContent() {
               </Button>
             </MagneticButton>
           </div>
-        </RevealOnScroll>
+        </Reveal>
       </section>
     </div>
   )

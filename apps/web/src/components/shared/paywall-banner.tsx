@@ -1,5 +1,3 @@
-'use client'
-
 import { Button } from '@/components/ui/button'
 import { Crown, Lock, Sparkles } from 'lucide-react'
 import Link from 'next/link'

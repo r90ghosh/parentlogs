@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { CheckCircle, Clock, ArrowRight, CheckSquare } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useUser } from '@/components/user-provider'
@@ -27,11 +26,9 @@ export function TasksDueCard() {
   const tasks = dashboardData?.priorityTasks || []
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       className={cn(
-        'rounded-[20px] p-5 card-copper-top',
+        'animate-fade-in-up rounded-[20px] p-5 card-copper-top',
         'bg-[--card]',
         'border border-[--border]',
         'shadow-card'
@@ -59,16 +56,14 @@ export function TasksDueCard() {
       ) : (
         <div className="space-y-2.5">
           {tasks.slice(0, 4).map((task, index) => (
-            <motion.div
+            <div
               key={task.id}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.05 }}
               className={cn(
-                'flex items-center gap-3 p-3 rounded-[12px]',
+                'animate-fade-in-up flex items-center gap-3 p-3 rounded-[12px]',
                 'bg-[--surface] border border-[--border]',
                 'hover:bg-[--card-hover] hover:border-[--border-hover] transition-colors group'
               )}
+              style={{ animationDelay: `${index * 60}ms`, animationFillMode: 'backwards' }}
             >
               {/* Complete button */}
               <button
@@ -113,7 +108,7 @@ export function TasksDueCard() {
               >
                 Snooze
               </button>
-            </motion.div>
+            </div>
           ))}
 
           {tasks.length > 4 && (
@@ -126,6 +121,6 @@ export function TasksDueCard() {
           )}
         </div>
       )}
-    </motion.div>
+    </div>
   )
 }

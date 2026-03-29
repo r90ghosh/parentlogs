@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useUser } from '@/components/user-provider'
@@ -29,11 +28,9 @@ export function OnYourMindCard() {
   const tiles = (content || []).slice(0, 2)
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       className={cn(
-        'rounded-[20px] p-5',
+        'animate-fade-in-up rounded-[20px] p-5',
         'bg-[--card]',
         'border border-[--border]',
         'shadow-card'
@@ -58,17 +55,15 @@ export function OnYourMindCard() {
           {tiles.map((item, index) => {
             const pillarCfg = PILLAR_CONFIG.find(p => p.pillar === item.pillar)
             return (
-              <motion.div
+              <div
                 key={item.id}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.08 }}
                 className={cn(
-                  'p-4 rounded-[14px] border-l-4',
+                  'animate-fade-in-up p-4 rounded-[14px] border-l-4',
                   `bg-gradient-to-r ${pillarCfg?.gradient || 'from-[--card-hover]/40 to-[--card]/40'}`,
                   pillarCfg?.borderColor || 'border-l-[--dim]',
                   'border border-[--border]'
                 )}
+                style={{ animationDelay: `${index * 60}ms`, animationFillMode: 'backwards' }}
               >
                 <div className="flex items-start gap-3">
                   <span className="text-xl flex-shrink-0">{item.icon || pillarCfg?.icon}</span>
@@ -80,11 +75,11 @@ export function OnYourMindCard() {
                     <p className="text-xs font-body text-[--muted] line-clamp-2">{item.preview}</p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             )
           })}
         </div>
       )}
-    </motion.div>
+    </div>
   )
 }

@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { CheckCircle2, ListTodo } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -33,15 +32,13 @@ function ProgressBar({
         </span>
       </div>
       <div className="h-2 bg-[--card] rounded-full overflow-hidden">
-        <motion.div
+        <div
           className={cn(
             'h-full rounded-full',
             color === 'copper' && 'bg-gradient-to-r from-copper to-gold',
             color === 'sage' && 'bg-sage'
           )}
-          initial={{ width: 0 }}
-          animate={{ width: `${percent}%` }}
-          transition={{ duration: 0.8, ease: 'easeOut', delay: 0.3 }}
+          style={{ width: `${percent}%`, transition: 'width 0.8s ease-out 0.3s' }}
         />
       </div>
     </div>

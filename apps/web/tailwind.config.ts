@@ -153,8 +153,13 @@ const config: Config = {
         'shimmer': 'shimmer 1.5s ease-in-out infinite',
         'mesh-drift-1': 'meshDrift1 20s ease-in-out infinite',
         'mesh-drift-2': 'meshDrift2 25s ease-in-out infinite',
+        'scale-in': 'scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
       },
       keyframes: {
+        'scale-in': {
+          '0%': { opacity: '0', transform: 'scale(0)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },

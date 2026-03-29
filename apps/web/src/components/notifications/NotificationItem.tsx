@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { formatDistanceToNow } from 'date-fns'
 import { Bell, CheckSquare, AlertTriangle, BookOpen, Users, Info, Star, Rocket, PartyPopper, Heart, MailOpen, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Notification, NotificationType } from '@tdc/shared/types'
 import { useMarkNotificationRead, useDeleteNotification } from '@/hooks/use-notifications'
 
@@ -51,7 +51,7 @@ export function NotificationItem({
   }
 
   return (
-    <CardEntrance delay={index * 80}>
+    <Reveal variant="card" delay={index * 80}>
       <button
         onClick={handleClick}
         className={cn(
@@ -103,6 +103,6 @@ export function NotificationItem({
           )}
         </div>
       </button>
-    </CardEntrance>
+    </Reveal>
   )
 }

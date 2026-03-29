@@ -22,9 +22,8 @@ import { cn } from '@/lib/utils'
 import { BASIC_LOG_TYPES, PREMIUM_LOG_TYPES, type LogType } from '@tdc/services'
 import { LOG_TYPE_CONFIG } from '@/lib/tracker-constants'
 import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
 
 export default function TrackerClient() {
   const { activeBaby } = useUser()
@@ -40,7 +39,7 @@ export default function TrackerClient() {
     <div className="p-4 space-y-6 max-w-2xl overflow-x-hidden">
       {/* Preview Banner for Pregnancy */}
       {isPreview && (
-        <CardEntrance delay={0}>
+        <Reveal variant="card" delay={0}>
         <Card className="bg-primary-600/20 border-primary-600/30">
           <CardContent className="py-4 flex items-center gap-3">
             <Lock className="h-6 w-6 text-primary-400" />
@@ -52,7 +51,7 @@ export default function TrackerClient() {
             </div>
           </CardContent>
         </Card>
-        </CardEntrance>
+        </Reveal>
       )}
 
       {/* Header */}
@@ -89,7 +88,7 @@ export default function TrackerClient() {
       </div>
 
       {/* Shift Briefing */}
-      <RevealOnScroll delay={80}>
+      <Reveal delay={80}>
       <Card3DTilt maxTilt={3} gloss>
       <Card className={cn("bg-[--surface] border-[--border] shadow-card", isPreview && "opacity-70")}>
         <CardHeader className="pb-2">
@@ -165,10 +164,10 @@ export default function TrackerClient() {
         </CardContent>
       </Card>
       </Card3DTilt>
-      </RevealOnScroll>
+      </Reveal>
 
       {/* Quick Log Grid - Basic Types */}
-      <RevealOnScroll delay={160}>
+      <Reveal delay={160}>
       <div className={cn(isPreview && "opacity-70")}>
         <h2 className="text-lg font-display font-medium text-[--cream] mb-3">Quick Log</h2>
         <div className="grid grid-cols-3 gap-3">
@@ -203,10 +202,10 @@ export default function TrackerClient() {
           })}
         </div>
       </div>
-      </RevealOnScroll>
+      </Reveal>
 
       {/* More Log Types */}
-      <RevealOnScroll delay={240}>
+      <Reveal delay={240}>
       <div className={cn(isPreview && "opacity-70")}>
         <h2 className="text-lg font-display font-medium text-[--cream] mb-3">More Logs</h2>
         <div className="grid grid-cols-4 gap-2">
@@ -242,10 +241,10 @@ export default function TrackerClient() {
           })}
         </div>
       </div>
-      </RevealOnScroll>
+      </Reveal>
 
       {/* Recent Logs */}
-      <RevealOnScroll delay={320}>
+      <Reveal delay={320}>
       <div className={cn(isPreview && "opacity-70")}>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-display font-medium text-[--cream]">Recent Activity</h2>
@@ -325,7 +324,7 @@ export default function TrackerClient() {
           </Card>
         )}
       </div>
-      </RevealOnScroll>
+      </Reveal>
 
       {/* Medical Disclaimer */}
       <MedicalDisclaimer className="mt-8" />

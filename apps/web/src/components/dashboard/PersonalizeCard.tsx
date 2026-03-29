@@ -1,17 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export function PersonalizeCard() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       className={cn(
-        'rounded-[20px] p-5 card-copper-top',
+        'animate-fade-in-up rounded-[20px] p-5 card-copper-top',
         'bg-[--card]',
         'border border-[--border]',
         'shadow-card'
@@ -40,6 +37,6 @@ export function PersonalizeCard() {
           </Link>
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 }

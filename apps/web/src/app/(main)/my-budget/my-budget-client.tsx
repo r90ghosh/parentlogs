@@ -33,7 +33,7 @@ import {
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import type { FamilyBudgetItem } from '@tdc/shared/types'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { getCategoryStyle } from '@/lib/budget-constants'
 
@@ -197,7 +197,7 @@ export default function MyBudgetClient() {
 
       {/* Empty State */}
       {totalItems === 0 ? (
-        <CardEntrance delay={0}>
+        <Reveal variant="card" delay={0}>
           <Card className="bg-[--surface] border-[--border]">
             <CardContent className="py-16 text-center">
               <DollarSign className="h-12 w-12 text-[--dim] mx-auto mb-4" />
@@ -210,12 +210,12 @@ export default function MyBudgetClient() {
               </Button>
             </CardContent>
           </Card>
-        </CardEntrance>
+        </Reveal>
       ) : (
         <>
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <CardEntrance delay={0}>
+            <Reveal variant="card" delay={0}>
               <Card3DTilt maxTilt={3} gloss>
                 <Card className="bg-[--surface] border-[--border] card-gold-top">
                   <CardContent className="pt-6">
@@ -233,9 +233,9 @@ export default function MyBudgetClient() {
                   </CardContent>
                 </Card>
               </Card3DTilt>
-            </CardEntrance>
+            </Reveal>
 
-            <CardEntrance delay={120}>
+            <Reveal variant="card" delay={120}>
               <Card3DTilt maxTilt={3} gloss>
                 <Card className="bg-[--surface] border-[--border] card-gold-top">
                   <CardContent className="pt-6">
@@ -253,9 +253,9 @@ export default function MyBudgetClient() {
                   </CardContent>
                 </Card>
               </Card3DTilt>
-            </CardEntrance>
+            </Reveal>
 
-            <CardEntrance delay={240}>
+            <Reveal variant="card" delay={240}>
               <Card3DTilt maxTilt={3} gloss>
                 <Card className="bg-[--surface] border-[--border] card-gold-top">
                   <CardContent className="pt-6">
@@ -273,11 +273,11 @@ export default function MyBudgetClient() {
                   </CardContent>
                 </Card>
               </Card3DTilt>
-            </CardEntrance>
+            </Reveal>
           </div>
 
           {/* Progress */}
-          <CardEntrance delay={360}>
+          <Reveal variant="card" delay={360}>
             <Card className="bg-[--surface] border-[--border]">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
@@ -292,7 +292,7 @@ export default function MyBudgetClient() {
                 />
               </CardContent>
             </Card>
-          </CardEntrance>
+          </Reveal>
 
           {/* Pending Items by Category */}
           {pendingByCategory.length > 0 && (
@@ -304,7 +304,7 @@ export default function MyBudgetClient() {
               {pendingByCategory.map(([category, items], catIdx) => {
                 const { Icon, colors } = getCategoryStyle(category)
                 return (
-                  <CardEntrance key={category} delay={480 + catIdx * 80}>
+                  <Reveal variant="card" key={category} delay={480 + catIdx * 80}>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 px-1">
                         <div className={cn('p-1.5 rounded-md', colors.bg)}>
@@ -322,7 +322,7 @@ export default function MyBudgetClient() {
                         />
                       ))}
                     </div>
-                  </CardEntrance>
+                  </Reveal>
                 )
               })}
             </div>
@@ -338,7 +338,7 @@ export default function MyBudgetClient() {
               {purchasedByCategory.map(([category, items], catIdx) => {
                 const { Icon, colors } = getCategoryStyle(category)
                 return (
-                  <CardEntrance key={category} delay={catIdx * 80}>
+                  <Reveal variant="card" key={category} delay={catIdx * 80}>
                     <div className="space-y-2">
                       <div className="flex items-center gap-2 px-1">
                         <div className={cn('p-1.5 rounded-md', colors.bg)}>
@@ -356,7 +356,7 @@ export default function MyBudgetClient() {
                         />
                       ))}
                     </div>
-                  </CardEntrance>
+                  </Reveal>
                 )
               })}
             </div>

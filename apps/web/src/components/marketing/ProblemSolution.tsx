@@ -1,7 +1,5 @@
-'use client'
-
 import { AlertTriangle, CheckCircle, ArrowRight, Brain, Calendar, Users } from 'lucide-react'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 
 const painPoints = [
@@ -30,7 +28,7 @@ export function ProblemSolution() {
     <section className="relative py-16 sm:py-24 md:py-32">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
         {/* Section header */}
-        <RevealOnScroll className="text-center max-w-3xl mx-auto mb-16">
+        <Reveal className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="font-display font-bold text-3xl md:text-4xl text-[--cream] mb-6 leading-[1.2]">
             Other apps give you an{' '}
             <span className="text-[--muted]">empty container</span>.
@@ -42,12 +40,12 @@ export function ProblemSolution() {
             Stop piecing together information from a dozen sources. The Dad Center gives you
             everything you need in one place.
           </p>
-        </RevealOnScroll>
+        </Reveal>
 
         {/* Pain points grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {painPoints.map((point, index) => (
-            <RevealOnScroll key={index} delay={80 + index * 120} className="h-full">
+            <Reveal key={index} delay={80 + index * 120} className="h-full">
               <Card3DTilt maxTilt={3} gloss className="h-full">
                 <div className="relative h-full p-8 rounded-xl bg-[--card] border border-[--border] shadow-card">
                   {/* Icon */}
@@ -91,7 +89,7 @@ export function ProblemSolution() {
                   </div>
                 </div>
               </Card3DTilt>
-            </RevealOnScroll>
+            </Reveal>
           ))}
         </div>
       </div>

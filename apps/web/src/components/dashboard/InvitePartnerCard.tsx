@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { Users, Copy, Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useUser } from '@/components/user-provider'
@@ -30,11 +29,9 @@ export function InvitePartnerCard() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       className={cn(
-        'rounded-[20px] p-5 card-sage-top',
+        'animate-fade-in-up rounded-[20px] p-5 card-sage-top',
         'bg-[--card]',
         'border border-[--border]',
         'shadow-card'
@@ -86,6 +83,6 @@ export function InvitePartnerCard() {
           Doing this solo
         </button>
       </div>
-    </motion.div>
+    </div>
   )
 }

@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { motion } from 'framer-motion'
 import { useAuth } from '@/lib/auth/auth-context'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,7 +12,7 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, Mail, ArrowLeft, CheckCircle, KeyRound } from 'lucide-react'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 
 const forgotPasswordSchema = z.object({
@@ -48,23 +47,19 @@ export default function ForgotPasswordPage() {
 
   if (success) {
     return (
-      <CardEntrance delay={100}>
+      <Reveal variant="card" delay={100}>
         <Card3DTilt maxTilt={3} gloss>
           <div className="w-full bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
             <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
             <div className="px-8 py-8 space-y-6 text-center">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', duration: 0.5 }}
-                className="mx-auto h-14 w-14 rounded-full bg-copper/20 flex items-center justify-center"
+              <div
+                className="mx-auto h-14 w-14 rounded-full bg-copper/20 flex items-center justify-center animate-scale-in"
               >
                 <CheckCircle className="h-7 w-7 text-copper" />
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
+              </div>
+              <div
+                className="animate-fade-in-up"
+                style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}
               >
                 <h2 className="font-display text-2xl font-bold text-[--cream] mb-2">
                   Check your email
@@ -72,22 +67,20 @@ export default function ForgotPasswordPage() {
                 <p className="font-body text-sm text-[--muted]">
                   We&apos;ve sent a password reset link to your email address.
                 </p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
+              </div>
+              <div
+                className="animate-fade-in-up"
+                style={{ animationDelay: '400ms', animationFillMode: 'backwards' }}
               >
                 <Alert className="bg-copper/10 border-copper/30 text-left">
                   <AlertDescription className="text-[--cream] font-body text-sm">
                     Click the link in the email to reset your password. The link will expire in 24 hours.
                   </AlertDescription>
                 </Alert>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
+              </div>
+              <div
+                className="animate-fade-in-up"
+                style={{ animationDelay: '500ms', animationFillMode: 'backwards' }}
               >
                 <Link
                   href="/login"
@@ -96,16 +89,16 @@ export default function ForgotPasswordPage() {
                   <ArrowLeft className="h-4 w-4" />
                   Back to login
                 </Link>
-              </motion.div>
+              </div>
             </div>
           </div>
         </Card3DTilt>
-      </CardEntrance>
+      </Reveal>
     )
   }
 
   return (
-    <CardEntrance delay={100}>
+    <Reveal variant="card" delay={100}>
       <Card3DTilt maxTilt={3} gloss>
         <div className="w-full bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
           {/* Top accent bar */}
@@ -113,20 +106,17 @@ export default function ForgotPasswordPage() {
 
           <div className="px-8 py-8 space-y-6">
             {/* Header */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-center"
+            <div
+              className="text-center animate-fade-in-up"
+              style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}
             >
               <div className="mx-auto mb-4 h-14 w-14 rounded-full bg-copper/20 flex items-center justify-center">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: 'spring', duration: 0.5, delay: 0.3 }}
+                <div
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: '300ms', animationFillMode: 'backwards' }}
                 >
                   <KeyRound className="h-7 w-7 text-copper" />
-                </motion.div>
+                </div>
               </div>
               <h1 className="font-display text-2xl font-bold text-[--cream] mb-1">
                 Forgot password?
@@ -134,26 +124,21 @@ export default function ForgotPasswordPage() {
               <p className="font-body text-sm text-[--muted]">
                 Enter your email and we&apos;ll send you a reset link
               </p>
-            </motion.div>
+            </div>
 
             {error && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-              >
+              <div className="animate-fade-in-up">
                 <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
-              </motion.div>
+              </div>
             )}
 
             {/* Email form */}
-            <motion.form
+            <form
               onSubmit={handleSubmit(onSubmit)}
-              className="space-y-4"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.35 }}
+              className="space-y-4 animate-fade-in-up"
+              style={{ animationDelay: '350ms', animationFillMode: 'backwards' }}
             >
               <div className="space-y-2">
                 <Label htmlFor="email" className="font-ui text-[--cream]">Email</Label>
@@ -188,14 +173,12 @@ export default function ForgotPasswordPage() {
                   )}
                 </Button>
               </MagneticButton>
-            </motion.form>
+            </form>
 
             {/* Footer link */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="text-center"
+            <div
+              className="text-center animate-fade-in-up"
+              style={{ animationDelay: '500ms', animationFillMode: 'backwards' }}
             >
               <Link
                 href="/login"
@@ -204,10 +187,10 @@ export default function ForgotPasswordPage() {
                 <ArrowLeft className="h-4 w-4" />
                 Back to login
               </Link>
-            </motion.div>
+            </div>
           </div>
         </div>
       </Card3DTilt>
-    </CardEntrance>
+    </Reveal>
   )
 }

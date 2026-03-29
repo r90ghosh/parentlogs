@@ -1,9 +1,7 @@
-'use client'
-
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 
 export function FinalCTA() {
@@ -20,20 +18,20 @@ export function FinalCTA() {
       />
 
       <div className="relative max-w-[560px] mx-auto px-4 sm:px-6 text-center z-[1]">
-        <RevealOnScroll>
+        <Reveal>
           <h2 className="font-display font-bold text-3xl md:text-4xl lg:text-5xl text-[--cream] leading-[1.2] mb-6">
             Ready to step up?
           </h2>
-        </RevealOnScroll>
+        </Reveal>
 
-        <RevealOnScroll delay={80}>
+        <Reveal delay={80}>
           <p className="font-body text-lg text-[--muted] mb-10">
             Join thousands of dads who stopped winging it and started
             showing up prepared.
           </p>
-        </RevealOnScroll>
+        </Reveal>
 
-        <RevealOnScroll delay={160}>
+        <Reveal delay={160}>
           {/* CTA with pulse rings */}
           <div className="relative inline-block mb-8">
             {/* Pulse rings */}
@@ -57,7 +55,7 @@ export function FinalCTA() {
               </Button>
             </MagneticButton>
           </div>
-        </RevealOnScroll>
+        </Reveal>
 
       </div>
     </section>

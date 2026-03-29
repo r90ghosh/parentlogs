@@ -25,8 +25,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
-import { CardEntrance } from '@/components/ui/animations/CardEntrance'
+import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 import {
   HelpCircle,
@@ -165,17 +164,17 @@ export default function HelpClient() {
   return (
     <div className="p-4 md:px-8 py-6 space-y-6 max-w-4xl mx-auto">
       {/* Header */}
-      <RevealOnScroll delay={0}>
+      <Reveal delay={0}>
         <div>
           <h1 className="font-display text-2xl font-bold text-[--white]">Help & Support</h1>
           <p className="font-body text-[--muted]">
             Find answers or get in touch with our team
           </p>
         </div>
-      </RevealOnScroll>
+      </Reveal>
 
       {/* FAQ Section */}
-      <CardEntrance delay={80}>
+      <Reveal variant="card" delay={80}>
         <Card className="bg-[--surface] border-[--border]">
           <CardHeader className="pb-3">
             <CardTitle className="font-display text-lg text-[--cream] flex items-center gap-2">
@@ -206,10 +205,10 @@ export default function HelpClient() {
             </Accordion>
           </CardContent>
         </Card>
-      </CardEntrance>
+      </Reveal>
 
       {/* Contact Form */}
-      <CardEntrance delay={160}>
+      <Reveal variant="card" delay={160}>
         <Card className="bg-[--surface] border-[--border]">
           <CardHeader className="pb-3">
             <CardTitle className="font-display text-lg text-[--cream] flex items-center gap-2">
@@ -338,10 +337,10 @@ export default function HelpClient() {
             )}
           </CardContent>
         </Card>
-      </CardEntrance>
+      </Reveal>
 
       {/* Quick Links */}
-      <CardEntrance delay={240}>
+      <Reveal variant="card" delay={240}>
         <Card className="bg-[--surface] border-[--border]">
           <CardHeader className="pb-3">
             <CardTitle className="font-display text-lg text-[--cream]">
@@ -379,7 +378,7 @@ export default function HelpClient() {
             </div>
           </CardContent>
         </Card>
-      </CardEntrance>
+      </Reveal>
     </div>
   )
 }

@@ -25,11 +25,9 @@ export function ChecklistProgressCard() {
   const overallPercent = totalItems > 0 ? Math.round((totalCompleted / totalItems) * 100) : 0
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       className={cn(
-        'rounded-[20px] p-5 card-copper-top',
+        'animate-fade-in-up rounded-[20px] p-5 card-copper-top',
         'bg-[--card]',
         'border border-[--border]',
         'shadow-card'
@@ -84,6 +82,6 @@ export function ChecklistProgressCard() {
           </div>
         </>
       )}
-    </motion.div>
+    </div>
   )
 }

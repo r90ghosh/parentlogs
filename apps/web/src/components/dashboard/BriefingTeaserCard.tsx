@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { ArrowRight, BookOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useUser } from '@/components/user-provider'
@@ -25,11 +24,9 @@ export function BriefingTeaserCard() {
   const briefing = dashboardData?.briefing
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       className={cn(
-        'rounded-[20px] p-5 card-gold-top',
+        'animate-fade-in-up rounded-[20px] p-5 card-gold-top',
         'bg-[--card]',
         'border border-[--border]',
         'shadow-card'
@@ -67,6 +64,6 @@ export function BriefingTeaserCard() {
         Read full briefing
         <ArrowRight className="h-4 w-4" />
       </Link>
-    </motion.div>
+    </div>
   )
 }

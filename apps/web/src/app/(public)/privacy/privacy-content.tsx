@@ -1,9 +1,7 @@
-'use client'
-
 import Link from 'next/link'
 import { ArrowLeft, Shield } from 'lucide-react'
 import { WarmBackground } from '@/components/ui/animations/WarmBackground'
-import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
+import { Reveal } from '@/components/ui/animations/Reveal'
 
 const lastUpdated = 'March 4, 2026'
 
@@ -31,17 +29,17 @@ export function PrivacyContent() {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 py-12">
-        <RevealOnScroll delay={0}>
+        <Reveal delay={0}>
           <div className="mb-10">
             <h1 className="font-display text-3xl md:text-4xl font-bold text-[--cream] mb-3">
               Privacy Policy
             </h1>
             <p className="font-body text-[--muted]">Last updated: {lastUpdated}</p>
           </div>
-        </RevealOnScroll>
+        </Reveal>
 
         <div className="prose-custom space-y-8">
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="1. Introduction">
               <p>
                 The Dad Center (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates the website thedadcenter.com and associated mobile applications (the &quot;Service&quot;). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our Service.
@@ -50,9 +48,9 @@ export function PrivacyContent() {
                 By using the Service, you agree to the collection and use of information in accordance with this policy. If you do not agree, please do not use our Service.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="2. Information We Collect">
               <h4>Account Information</h4>
               <p>
@@ -71,9 +69,9 @@ export function PrivacyContent() {
                 Payment processing is handled by Stripe (web) and RevenueCat (mobile). We do not store your full credit card number. We receive only the last four digits, card brand, and transaction confirmations.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="3. How We Use Your Information">
               <ul>
                 <li>To provide and personalize week-by-week briefings, tasks, and content based on your pregnancy or parenting stage</li>
@@ -85,9 +83,9 @@ export function PrivacyContent() {
                 <li>To detect and prevent fraud or abuse</li>
               </ul>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="4. Information Sharing">
               <p>We do not sell your personal information. We share data only with:</p>
               <ul>
@@ -114,25 +112,25 @@ export function PrivacyContent() {
                 We may also disclose information if required by law, court order, or to protect the rights and safety of our users and the public.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="5. Data Security">
               <p>
                 We implement industry-standard security measures including TLS encryption for all data in transit, row-level security policies in our database, secure authentication via Supabase Auth, and regular security audits. However, no method of electronic storage or transmission is 100% secure, and we cannot guarantee absolute security.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="6. Children's Privacy">
               <p>
                 The Dad Center is intended for parents and expecting parents aged 18 and older. We do not knowingly collect personal information from children under 13 in compliance with COPPA. If we learn that we have collected information from a child under 13, we will promptly delete it. If you believe we have collected such information, please contact us.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="7. Your Rights">
               <h4>For All Users</h4>
               <ul>
@@ -150,17 +148,17 @@ export function PrivacyContent() {
                 You have the right to know what personal information we collect, request deletion, and opt out of the sale of personal information. We do not sell personal information. To exercise your rights, contact us at the address below.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="8. Data Retention">
               <p>
                 We retain your personal data for as long as your account is active or as needed to provide the Service. If you delete your account, we will delete your personal data within 30 days, except where we are required to retain it for legal or compliance purposes.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="9. Health Information">
               <p>
                 The Dad Center allows you to record certain health-related information, including mood check-ins, baby temperature readings, medication logs, and developmental milestones. This data is stored securely in your account and is accessible only to you and your linked partner.
@@ -176,33 +174,33 @@ export function PrivacyContent() {
                 If you delete your account, all health-related data is permanently deleted within 30 days in accordance with our data retention policy.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="10. Cookies & Local Storage">
               <p>
                 We use essential cookies and local storage for authentication sessions and user preferences. We do not use third-party advertising cookies. Analytics cookies (if any) are anonymized and used solely to improve the Service.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="11. International Transfers">
               <p>
                 Your data may be transferred to and processed in the United States where our service providers are located. By using the Service, you consent to this transfer. We ensure appropriate safeguards are in place for international data transfers.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="12. Changes to This Policy">
               <p>
                 We may update this Privacy Policy from time to time. We will notify you of material changes by posting the updated policy on this page and updating the &quot;Last updated&quot; date. Your continued use of the Service after changes constitutes acceptance of the updated policy.
               </p>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
 
-          <RevealOnScroll delay={50}>
+          <Reveal delay={50}>
             <Section title="13. Contact Us">
               <p>If you have questions about this Privacy Policy, contact us at:</p>
               <ul>
@@ -220,7 +218,7 @@ export function PrivacyContent() {
                 </li>
               </ul>
             </Section>
-          </RevealOnScroll>
+          </Reveal>
         </div>
       </div>
     </div>
