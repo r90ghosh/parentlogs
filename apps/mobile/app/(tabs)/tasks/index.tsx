@@ -24,6 +24,7 @@ import {
   TaskFilterTabs,
   TaskSectionHeader,
 } from '@/components/tasks'
+import { WeekNavPills } from '@/components/briefing'
 import type { StatFilter } from '@/components/tasks'
 import type { TaskTab } from '@/components/tasks'
 import {
@@ -47,7 +48,6 @@ export default function TasksScreen() {
   const [activeTab, setActiveTab] = useState<TaskTab>('active')
   const [statFilter, setStatFilter] = useState<StatFilter | null>(null)
   const [selectedWeek, setSelectedWeek] = useState<number | null>(null)
-  const [viewingCenter, setViewingCenter] = useState<number | null>(null)
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
@@ -58,16 +58,7 @@ export default function TasksScreen() {
 
   // Current week from family
   const currentWeek = (family as { current_week?: number })?.current_week ?? 1
-  const center = viewingCenter ?? currentWeek
   const maxWeek = 104
-
-  // Week pills: show ~7 centered on viewingCenter
-  const visibleWeeks = useMemo(() => {
-    const range = 3
-    const start = Math.max(1, center - range)
-    const end = Math.min(maxWeek, center + range)
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i)
-  }, [center, maxWeek])
 
   // Debounce search input
   useEffect(() => {
@@ -300,69 +291,16 @@ export default function TasksScreen() {
         </View>
 
         {/* Week pills bar */}
-        <View style={styles.weekBarContainer}>
-          <View style={styles.weekBarHeader}>
-            <Text style={styles.weekBarLabel}>Tasks by Week</Text>
-            {selectedWeek !== null && (
-              <Pressable onPress={() => setSelectedWeek(null)}>
-                <Text style={styles.showAllText}>Show all</Text>
-              </Pressable>
-            )}
-          </View>
-          <View style={styles.weekPillsRow}>
-            <Pressable
-              onPress={() => setViewingCenter(Math.max(1, center - 1))}
-              disabled={center <= 1}
-              style={[styles.weekChevron, center <= 1 && styles.weekChevronDisabled]}
-            >
-              <Text style={styles.weekChevronText}>{'<'}</Text>
-            </Pressable>
-            {visibleWeeks[0] > 1 && (
-              <Text style={styles.ellipsis}>...</Text>
-            )}
-            {visibleWeeks.map(week => {
-              const isSelected = selectedWeek === week
-              const isCurrent = week === currentWeek
-              const count = taskCountByWeek[week] || 0
-              return (
-                <Pressable
-                  key={week}
-                  onPress={() => setSelectedWeek(selectedWeek === week ? null : week)}
-                  style={[
-                    styles.weekPill,
-                    isSelected && styles.weekPillSelected,
-                    isCurrent && !isSelected && styles.weekPillCurrent,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.weekPillText,
-                      isSelected && styles.weekPillTextSelected,
-                      isCurrent && !isSelected && styles.weekPillTextCurrent,
-                    ]}
-                  >
-                    {week}
-                  </Text>
-                  {count > 0 && !isSelected && (
-                    <View style={styles.weekBadge}>
-                      <Text style={styles.weekBadgeText}>{count}</Text>
-                    </View>
-                  )}
-                </Pressable>
-              )
-            })}
-            {visibleWeeks[visibleWeeks.length - 1] < maxWeek && (
-              <Text style={styles.ellipsis}>...</Text>
-            )}
-            <Pressable
-              onPress={() => setViewingCenter(Math.min(maxWeek, center + 1))}
-              disabled={center >= maxWeek}
-              style={[styles.weekChevron, center >= maxWeek && styles.weekChevronDisabled]}
-            >
-              <Text style={styles.weekChevronText}>{'>'}</Text>
-            </Pressable>
-          </View>
-        </View>
+        <WeekNavPills
+          currentWeek={currentWeek}
+          selectedWeek={selectedWeek}
+          maxWeek={maxWeek}
+          onSelect={(week) => setSelectedWeek(selectedWeek === week ? null : week)}
+          taskCountByWeek={taskCountByWeek}
+          showPhaseLabels
+          showHeader
+          onClearSelection={() => setSelectedWeek(null)}
+        />
       </View>
 
       {/* Task content */}
@@ -703,96 +641,6 @@ const styles = StyleSheet.create({
   filterTabsWrap: {
     marginTop: 14,
     marginBottom: 12,
-  },
-  weekBarContainer: {
-    paddingHorizontal: 20,
-    marginBottom: 4,
-  },
-  weekBarHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  weekBarLabel: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 11,
-    color: '#7a6f62',
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-  },
-  showAllText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 12,
-    color: '#c4703f',
-  },
-  weekPillsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-  },
-  weekChevron: {
-    width: 28,
-    height: 28,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  weekChevronDisabled: {
-    opacity: 0.3,
-  },
-  weekChevronText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 14,
-    color: '#7a6f62',
-  },
-  ellipsis: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 12,
-    color: '#4a4239',
-    paddingHorizontal: 2,
-  },
-  weekPill: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  weekPillSelected: {
-    backgroundColor: '#c4703f',
-  },
-  weekPillCurrent: {
-    backgroundColor: 'rgba(196,112,63,0.2)',
-  },
-  weekPillText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 13,
-    color: '#7a6f62',
-  },
-  weekPillTextSelected: {
-    color: '#faf6f0',
-  },
-  weekPillTextCurrent: {
-    color: '#c4703f',
-  },
-  weekBadge: {
-    position: 'absolute',
-    top: -2,
-    right: -2,
-    minWidth: 14,
-    height: 14,
-    borderRadius: 7,
-    backgroundColor: '#c4703f',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 3,
-  },
-  weekBadgeText: {
-    fontFamily: 'Karla-Bold',
-    fontSize: 9,
-    color: '#faf6f0',
   },
   scrollView: {
     flex: 1,
