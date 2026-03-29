@@ -66,8 +66,15 @@ import { BudgetTemplate, FamilyBudgetItem, BudgetBrandView } from '@tdc/shared/t
 import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { getCategoryStyle, CATEGORY_ICONS } from '@/lib/budget-constants'
+import Link from 'next/link'
 
 type RecurringFilter = 'all' | 'one-time' | 'recurring'
+
+/** Return the single price (in cents) for a template based on the active brand view. */
+function getBrandViewPrice(template: BudgetTemplate, brandView: BudgetBrandView): number {
+  if (brandView === 'premium') return template.price_max || template.price_min
+  return template.price_min
+}
 
 export default function BudgetClient() {
   const { data: summary, isLoading } = useBudgetSummary()
@@ -117,7 +124,7 @@ export default function BudgetClient() {
   const handleAddTemplate = async (template: BudgetTemplate) => {
     const result = await addToBudget.mutateAsync({
       templateId: template.budget_id,
-      estimatedPrice: template.price_min,
+      estimatedPrice: getBrandViewPrice(template, selectedBrandView),
     })
 
     if (result.error) {
@@ -174,19 +181,24 @@ export default function BudgetClient() {
     }
   }
 
-  // Compute summary stats filtered by selected timeline category
+  // Compute summary stats filtered by selected timeline category + brand view
   const filteredStats = useMemo(() => {
     if (!summary) return null
 
-    // No filter — use original totals
+    const priceOf = (t: BudgetTemplate) => getBrandViewPrice(t, selectedBrandView)
+
+    // No filter — use all templates
     if (!selectedTimelineCategory) {
+      const nonTip = allTemplates.filter(t => t.priority !== 'tip')
+      const grandTotal = nonTip.reduce((sum, t) => sum + priceOf(t), 0)
+      const recurring = nonTip.filter(t => t.is_recurring && t.recurring_frequency === 'monthly')
+      const monthlyRecurring = recurring.reduce((sum, t) => sum + priceOf(t), 0)
+
       return {
-        grandTotalMin: summary.grandTotalMin,
-        grandTotalMax: summary.grandTotalMax,
+        grandTotal,
         purchasedTotal: summary.purchasedTotal,
         remainingTotal: summary.remainingTotal,
-        monthlyRecurringMin: summary.monthlyRecurringMin,
-        monthlyRecurringMax: summary.monthlyRecurringMax,
+        monthlyRecurring,
         familyItemCount: summary.familyItems.length,
         purchasedCount: summary.familyItems.filter(i => i.is_purchased).length,
       }
@@ -198,12 +210,10 @@ export default function BudgetClient() {
     )
     const nonTip = filtered.filter(t => t.priority !== 'tip')
 
-    const grandTotalMin = nonTip.reduce((sum, t) => sum + (t.price_min || 0), 0)
-    const grandTotalMax = nonTip.reduce((sum, t) => sum + (t.price_max || 0), 0)
+    const grandTotal = nonTip.reduce((sum, t) => sum + priceOf(t), 0)
 
     const recurring = nonTip.filter(t => t.is_recurring && t.recurring_frequency === 'monthly')
-    const monthlyRecurringMin = recurring.reduce((sum, t) => sum + (t.price_min || 0), 0)
-    const monthlyRecurringMax = recurring.reduce((sum, t) => sum + (t.price_max || 0), 0)
+    const monthlyRecurring = recurring.reduce((sum, t) => sum + priceOf(t), 0)
 
     // Filter family items by matching template period
     const templateIdsInCategory = new Set(filtered.map(t => t.budget_id))
@@ -218,16 +228,14 @@ export default function BudgetClient() {
     const remainingTotal = pending.reduce((sum, i) => sum + (i.estimated_price || 0), 0)
 
     return {
-      grandTotalMin,
-      grandTotalMax,
+      grandTotal,
       purchasedTotal,
       remainingTotal,
-      monthlyRecurringMin,
-      monthlyRecurringMax,
+      monthlyRecurring,
       familyItemCount: filteredFamilyItems.length,
       purchasedCount: purchased.length,
     }
-  }, [summary, allTemplates, selectedTimelineCategory])
+  }, [summary, allTemplates, selectedTimelineCategory, selectedBrandView])
 
   // Filter categories for browse tab
   const filteredCategories = useMemo(() => {
@@ -356,10 +364,20 @@ export default function BudgetClient() {
             Plan and track your baby expenses
           </p>
         </div>
-        <Button onClick={() => setShowAddCustomDialog(true)} className="font-ui">
-          <Plus className="h-4 w-4 mr-2" />
-          Add Custom
-        </Button>
+        <div className="flex items-center gap-2">
+          {(summary?.familyItems.length ?? 0) > 0 && (
+            <Button variant="outline" asChild className="font-ui">
+              <Link href="/my-budget">
+                <Wallet className="h-4 w-4 mr-2" />
+                My Budget ({summary?.familyItems.length})
+              </Link>
+            </Button>
+          )}
+          <Button onClick={() => setShowAddCustomDialog(true)} className="font-ui">
+            <Plus className="h-4 w-4 mr-2" />
+            Add Custom
+          </Button>
+        </div>
       </div>
 
       {/* Brand Toggle Filter */}
@@ -392,12 +410,11 @@ export default function BudgetClient() {
                     <TrendingUp className="h-5 w-5 text-sky" />
                   </div>
                   <div>
-                    <p className="text-xs text-[--muted] font-ui">Estimated Range</p>
+                    <p className="text-xs text-[--muted] font-ui">
+                      {selectedBrandView === 'premium' ? 'Premium Estimate' : 'Best Value Estimate'}
+                    </p>
                     <p className="text-xl font-bold text-[--cream] tabular-nums">
-                      {budgetService.formatPriceRange(
-                        filteredStats?.grandTotalMin || 0,
-                        filteredStats?.grandTotalMax || 0
-                      )}
+                      {budgetService.formatPrice(filteredStats?.grandTotal || 0)}
                     </p>
                   </div>
                 </div>
@@ -446,7 +463,7 @@ export default function BudgetClient() {
       </RevealOnScroll>
 
       {/* Monthly Recurring Costs Card */}
-      {(filteredStats?.monthlyRecurringMin || 0) > 0 && (
+      {(filteredStats?.monthlyRecurring || 0) > 0 && (
         <RevealOnScroll delay={40}>
           <Card3DTilt maxTilt={3} gloss>
             <Card className="bg-[--surface] border-[--border] card-sky-top">
@@ -458,10 +475,7 @@ export default function BudgetClient() {
                   <div>
                     <p className="text-xs text-[--muted] font-ui">Monthly Recurring</p>
                     <p className="text-xl font-bold text-[--cream] tabular-nums">
-                      {budgetService.formatPriceRange(
-                        filteredStats?.monthlyRecurringMin || 0,
-                        filteredStats?.monthlyRecurringMax || 0
-                      )}
+                      {budgetService.formatPrice(filteredStats?.monthlyRecurring || 0)}
                       <span className="text-sm text-[--muted] font-normal ml-1">/mo</span>
                     </p>
                   </div>
@@ -627,12 +641,9 @@ export default function BudgetClient() {
               >
                 {filteredCategories?.map((category) => {
                   const { Icon, colors } = getCategoryStyle(category.name)
-                  const categoryTotalMin = category.items
+                  const categoryTotal = category.items
                     .filter(i => i.priority !== 'tip')
-                    .reduce((sum, item) => sum + (item.price_min || 0), 0)
-                  const categoryTotalMax = category.items
-                    .filter(i => i.priority !== 'tip')
-                    .reduce((sum, item) => sum + (item.price_max || 0), 0)
+                    .reduce((sum, item) => sum + getBrandViewPrice(item, selectedBrandView), 0)
 
                   return (
                     <AccordionItem
@@ -652,7 +663,7 @@ export default function BudgetClient() {
                             </span>
                           </div>
                           <span className="text-sm text-[--muted] mr-4 tabular-nums font-ui">
-                            {budgetService.formatPriceRange(categoryTotalMin, categoryTotalMax)}
+                            {budgetService.formatPrice(categoryTotal)}
                           </span>
                         </div>
                       </AccordionTrigger>
@@ -696,7 +707,7 @@ export default function BudgetClient() {
                 <p className="text-sm text-[--muted] mb-3 font-body">{selectedTemplate.description}</p>
                 <div className="flex items-center gap-3">
                   <span className="text-lg font-bold text-[--cream] tabular-nums">
-                    {selectedTemplate.price_display}
+                    {budgetService.formatPrice(getBrandViewPrice(selectedTemplate, selectedBrandView))}
                   </span>
                   {selectedTemplate.is_recurring && (
                     <span className="text-xs px-2 py-0.5 rounded-full bg-sky/20 text-sky font-ui flex items-center gap-1">
@@ -919,7 +930,7 @@ function BrowseItemRow({
         )}
         <div className="flex items-center gap-3 text-xs text-[--dim] font-ui flex-wrap">
           <span className={cn("tabular-nums", isTip ? 'text-gold' : 'text-[--cream]')}>
-            {isTip ? '$0' : template.price_display}
+            {isTip ? '$0' : budgetService.formatPrice(getBrandViewPrice(template, brandView))}
           </span>
           {brandName && (
             <span className={cn(
