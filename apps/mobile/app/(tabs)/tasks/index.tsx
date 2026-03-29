@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import {
   View,
   Text,
@@ -27,13 +27,9 @@ import {
 import type { StatFilter } from '@/components/tasks'
 import type { TaskTab } from '@/components/tasks'
 import {
-  TIMELINE_CATEGORIES,
-  getCurrentTimelineCategory,
-  getTaskTimelineCategory,
   groupTasksByTimePeriod,
 } from '@tdc/shared/utils/task-timeline'
-import type { TimelineCategory } from '@tdc/shared/utils/task-timeline'
-import type { FamilyStage, TaskStats } from '@tdc/shared/types'
+import type { TaskStats } from '@tdc/shared/types'
 import {
   isToday,
   isPast,
@@ -48,11 +44,10 @@ export default function TasksScreen() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { family, profile } = useAuth()
-  const timelineScrollRef = useRef<ScrollView>(null)
-
   const [activeTab, setActiveTab] = useState<TaskTab>('active')
   const [statFilter, setStatFilter] = useState<StatFilter | null>(null)
-  const [selectedCategory, setSelectedCategory] = useState<TimelineCategory | null>(null)
+  const [selectedWeek, setSelectedWeek] = useState<number | null>(null)
+  const [viewingCenter, setViewingCenter] = useState<number | null>(null)
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
@@ -61,30 +56,18 @@ export default function TasksScreen() {
   const completeTask = useCompleteTask()
   const snoozeTask = useSnoozeTask()
 
-  // Determine current timeline category
-  const timelineSource = family
-    ? {
-        stage: (family.stage ?? 'pregnancy') as FamilyStage,
-        due_date: family.due_date ?? undefined,
-        birth_date: undefined,
-        current_week: (family as { current_week?: number })?.current_week ?? 1,
-      }
-    : null
+  // Current week from family
+  const currentWeek = (family as { current_week?: number })?.current_week ?? 1
+  const center = viewingCenter ?? currentWeek
+  const maxWeek = 104
 
-  const currentCategory = timelineSource
-    ? getCurrentTimelineCategory(timelineSource)
-    : null
-
-  // Auto-scroll timeline to current category
-  useEffect(() => {
-    if (currentCategory && timelineScrollRef.current) {
-      const idx = TIMELINE_CATEGORIES.findIndex((c) => c.id === currentCategory)
-      if (idx >= 0) {
-        const offset = Math.max(0, idx * 100 - 60)
-        timelineScrollRef.current.scrollTo({ x: offset, animated: true })
-      }
-    }
-  }, [currentCategory])
+  // Week pills: show ~7 centered on viewingCenter
+  const visibleWeeks = useMemo(() => {
+    const range = 3
+    const start = Math.max(1, center - range)
+    const end = Math.min(maxWeek, center + range)
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i)
+  }, [center, maxWeek])
 
   // Debounce search input
   useEffect(() => {
@@ -102,6 +85,17 @@ export default function TasksScreen() {
 
   // Compute task stats
   const allTasks = tasks ?? []
+
+  // Task count per week
+  const taskCountByWeek = useMemo(() => {
+    const counts: Record<number, number> = {}
+    const pending = allTasks.filter(t => t.status === 'pending' && !t.is_backlog)
+    pending.forEach(t => {
+      const week = t.week_due
+      if (week != null) counts[week] = (counts[week] || 0) + 1
+    })
+    return counts
+  }, [allTasks])
   const stats: TaskStats = useMemo(() => {
     const today = startOfDay(new Date())
     const weekStart = startOfWeek(today, { weekStartsOn: 1 })
@@ -141,7 +135,7 @@ export default function TasksScreen() {
         'catch-up': 'catch-up',
       }
       setActiveTab(tabMap[filter])
-      setSelectedCategory(null)
+      setSelectedWeek(null)
     }
   }, [])
 
@@ -149,7 +143,7 @@ export default function TasksScreen() {
   const handleTabChange = useCallback((tab: TaskTab) => {
     setActiveTab(tab)
     setStatFilter(null)
-    setSelectedCategory(null)
+    setSelectedWeek(null)
   }, [])
 
   // Filter tasks based on active tab, stat filter, and timeline
@@ -207,12 +201,9 @@ export default function TasksScreen() {
       })
     }
 
-    // Step 3: Apply timeline category filter
-    if (selectedCategory && timelineSource) {
-      result = result.filter((task) => {
-        const category = getTaskTimelineCategory(task.due_date, timelineSource)
-        return category === selectedCategory
-      })
+    // Step 3: Apply week filter
+    if (selectedWeek !== null) {
+      result = result.filter((task) => task.week_due === selectedWeek)
     }
 
     // Step 4: Apply search filter
@@ -226,11 +217,11 @@ export default function TasksScreen() {
     }
 
     return result
-  }, [allTasks, activeTab, statFilter, selectedCategory, userRole, partnerRole, timelineSource, debouncedSearch])
+  }, [allTasks, activeTab, statFilter, selectedWeek, userRole, partnerRole, debouncedSearch])
 
   // Group tasks by time period for the default active view
   const showGroupedView =
-    activeTab === 'active' && !selectedCategory && !statFilter
+    activeTab === 'active' && selectedWeek === null && !statFilter
   const groups = useMemo(() => {
     if (!showGroupedView) return null
     return groupTasksByTimePeriod(filteredTasks)
@@ -308,47 +299,70 @@ export default function TasksScreen() {
           />
         </View>
 
-        {/* Timeline bar */}
-        <ScrollView
-          ref={timelineScrollRef}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.timelineContent}
-          style={styles.timelineScroll}
-        >
-          {TIMELINE_CATEGORIES.map((cat) => {
-            const isSelected = selectedCategory === cat.id
-            const isCurrent = currentCategory === cat.id
-            return (
-              <Pressable
-                key={cat.id}
-                onPress={() =>
-                  setSelectedCategory(
-                    selectedCategory === cat.id ? null : cat.id
-                  )
-                }
-                style={[
-                  styles.timelinePill,
-                  isSelected && styles.timelinePillSelected,
-                  isCurrent && !isSelected && styles.timelinePillCurrent,
-                ]}
-              >
-                <Text
+        {/* Week pills bar */}
+        <View style={styles.weekBarContainer}>
+          <View style={styles.weekBarHeader}>
+            <Text style={styles.weekBarLabel}>Tasks by Week</Text>
+            {selectedWeek !== null && (
+              <Pressable onPress={() => setSelectedWeek(null)}>
+                <Text style={styles.showAllText}>Show all</Text>
+              </Pressable>
+            )}
+          </View>
+          <View style={styles.weekPillsRow}>
+            <Pressable
+              onPress={() => setViewingCenter(Math.max(1, center - 1))}
+              disabled={center <= 1}
+              style={[styles.weekChevron, center <= 1 && styles.weekChevronDisabled]}
+            >
+              <Text style={styles.weekChevronText}>{'<'}</Text>
+            </Pressable>
+            {visibleWeeks[0] > 1 && (
+              <Text style={styles.ellipsis}>...</Text>
+            )}
+            {visibleWeeks.map(week => {
+              const isSelected = selectedWeek === week
+              const isCurrent = week === currentWeek
+              const count = taskCountByWeek[week] || 0
+              return (
+                <Pressable
+                  key={week}
+                  onPress={() => setSelectedWeek(selectedWeek === week ? null : week)}
                   style={[
-                    styles.timelinePillText,
-                    isSelected && styles.timelinePillTextSelected,
-                    isCurrent && !isSelected && styles.timelinePillTextCurrent,
+                    styles.weekPill,
+                    isSelected && styles.weekPillSelected,
+                    isCurrent && !isSelected && styles.weekPillCurrent,
                   ]}
                 >
-                  {cat.label}
-                </Text>
-                {isCurrent && (
-                  <View style={styles.currentDot} />
-                )}
-              </Pressable>
-            )
-          })}
-        </ScrollView>
+                  <Text
+                    style={[
+                      styles.weekPillText,
+                      isSelected && styles.weekPillTextSelected,
+                      isCurrent && !isSelected && styles.weekPillTextCurrent,
+                    ]}
+                  >
+                    {week}
+                  </Text>
+                  {count > 0 && !isSelected && (
+                    <View style={styles.weekBadge}>
+                      <Text style={styles.weekBadgeText}>{count}</Text>
+                    </View>
+                  )}
+                </Pressable>
+              )
+            })}
+            {visibleWeeks[visibleWeeks.length - 1] < maxWeek && (
+              <Text style={styles.ellipsis}>...</Text>
+            )}
+            <Pressable
+              onPress={() => setViewingCenter(Math.min(maxWeek, center + 1))}
+              disabled={center >= maxWeek}
+              style={[styles.weekChevron, center >= maxWeek && styles.weekChevronDisabled]}
+            >
+              <Text style={styles.weekChevronText}>{'>'}</Text>
+            </Pressable>
+          </View>
+        </View>
       </View>
 
       {/* Task content */}
@@ -510,7 +524,7 @@ export default function TasksScreen() {
                     </Text>
                   ) : (
                     <TaskSectionHeader
-                      title={getSectionTitle(activeTab, statFilter, selectedCategory)}
+                      title={getSectionTitle(activeTab, statFilter, selectedWeek)}
                       count={filteredTasks.length}
                       accentColor={getSectionColor(activeTab, statFilter)}
                     />
@@ -546,8 +560,8 @@ export default function TasksScreen() {
                 <Text style={styles.emptySubtitle}>
                   {activeTab === 'completed'
                     ? 'Complete your first task to see it here.'
-                    : selectedCategory
-                      ? 'No tasks for this phase. Try another timeline.'
+                    : selectedWeek !== null
+                      ? `No tasks for Week ${selectedWeek}. Try another week.`
                       : 'No tasks match your current filters.'}
                 </Text>
               </View>
@@ -587,14 +601,13 @@ export default function TasksScreen() {
 function getSectionTitle(
   tab: TaskTab,
   statFilter: StatFilter | null,
-  timelineCategory: TimelineCategory | null
+  selectedWeek: number | null
 ): string {
   if (statFilter === 'due-today') return 'Due Today'
   if (statFilter === 'this-week') return 'This Week'
 
-  if (timelineCategory) {
-    const cat = TIMELINE_CATEGORIES.find((c) => c.id === timelineCategory)
-    return cat?.label ?? 'Tasks'
+  if (selectedWeek !== null) {
+    return `Week ${selectedWeek}`
   }
 
   switch (tab) {
@@ -691,46 +704,95 @@ const styles = StyleSheet.create({
     marginTop: 14,
     marginBottom: 12,
   },
-  timelineScroll: {
+  weekBarContainer: {
+    paddingHorizontal: 20,
     marginBottom: 4,
   },
-  timelineContent: {
-    gap: 8,
-    paddingHorizontal: 20,
-  },
-  timelinePill: {
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 20,
-    backgroundColor: 'rgba(237,230,220,0.04)',
-    borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.06)',
+  weekBarHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
   },
-  timelinePillSelected: {
-    backgroundColor: 'rgba(196,112,63,0.18)',
-    borderColor: '#c4703f',
+  weekBarLabel: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 11,
+    color: '#7a6f62',
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
   },
-  timelinePillCurrent: {
-    borderColor: 'rgba(196,112,63,0.3)',
-  },
-  timelinePillText: {
+  showAllText: {
     fontFamily: 'Karla-Medium',
     fontSize: 12,
-    color: '#4a4239',
-  },
-  timelinePillTextSelected: {
     color: '#c4703f',
   },
-  timelinePillTextCurrent: {
+  weekPillsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+  },
+  weekChevron: {
+    width: 28,
+    height: 28,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  weekChevronDisabled: {
+    opacity: 0.3,
+  },
+  weekChevronText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 14,
     color: '#7a6f62',
   },
-  currentDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
+  ellipsis: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 12,
+    color: '#4a4239',
+    paddingHorizontal: 2,
+  },
+  weekPill: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  weekPillSelected: {
     backgroundColor: '#c4703f',
-    marginTop: 4,
+  },
+  weekPillCurrent: {
+    backgroundColor: 'rgba(196,112,63,0.2)',
+  },
+  weekPillText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 13,
+    color: '#7a6f62',
+  },
+  weekPillTextSelected: {
+    color: '#faf6f0',
+  },
+  weekPillTextCurrent: {
+    color: '#c4703f',
+  },
+  weekBadge: {
+    position: 'absolute',
+    top: -2,
+    right: -2,
+    minWidth: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: '#c4703f',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 3,
+  },
+  weekBadgeText: {
+    fontFamily: 'Karla-Bold',
+    fontSize: 9,
+    color: '#faf6f0',
   },
   scrollView: {
     flex: 1,
