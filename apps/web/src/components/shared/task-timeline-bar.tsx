@@ -1,74 +1,60 @@
 'use client'
 
+import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import {
-  TIMELINE_CATEGORIES,
-  TimelineCategory,
-  TaskCategoryStats,
-} from '@tdc/shared/utils'
-
-// Short pill labels for each category
-const PILL_LABELS: Record<TimelineCategory, string> = {
-  'first-trimester': 'Trimester 1',
-  'second-trimester': 'Trimester 2',
-  'third-trimester': 'Trimester 3',
-  'delivery': 'Delivery',
-  '0-3 months': '0-3 Months',
-  '3-6 months': '3-6 Months',
-  '6-12 months': '6-12 Months',
-  '12-18 months': '12-18 Months',
-  '18-24 months': '18+ Months',
-}
 
 interface TaskTimelineBarProps {
-  stats: Record<TimelineCategory, TaskCategoryStats>
-  currentCategory: TimelineCategory
-  selectedCategory: TimelineCategory | null
-  onCategoryClick: (category: TimelineCategory | null) => void
+  currentWeek: number
+  selectedWeek: number | null
+  onWeekClick: (week: number | null) => void
+  taskCountByWeek: Record<number, number>
+  maxWeek?: number
 }
 
 export function TaskTimelineBar({
-  stats,
-  currentCategory,
-  selectedCategory,
-  onCategoryClick,
+  currentWeek,
+  selectedWeek,
+  onWeekClick,
+  taskCountByWeek,
+  maxWeek = 104,
 }: TaskTimelineBarProps) {
-  const currentIndex = TIMELINE_CATEGORIES.findIndex(c => c.id === currentCategory)
+  // Center the visible range on the current week initially
+  const [viewingCenter, setViewingCenter] = useState(currentWeek)
 
-  const canGoPrev = currentIndex > 0
-  const canGoNext = currentIndex < TIMELINE_CATEGORIES.length - 1
+  const range = 3
+  const minWeek = 1
 
-  const handleNav = (direction: -1 | 1) => {
-    const targetIndex = currentIndex + direction
-    if (targetIndex >= 0 && targetIndex < TIMELINE_CATEGORIES.length) {
-      const targetId = TIMELINE_CATEGORIES[targetIndex].id
-      onCategoryClick(targetId)
-    }
+  // Generate ~7 week pills centered on viewingCenter
+  const getVisibleWeeks = () => {
+    const start = Math.max(minWeek, viewingCenter - range)
+    const end = Math.min(maxWeek, viewingCenter + range)
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i)
   }
 
-  // Active category stats (selected or current)
-  const activeId = selectedCategory || currentCategory
-  const activeStat = stats[activeId]
-  const activeInfo = TIMELINE_CATEGORIES.find(c => c.id === activeId)
+  const visibleWeeks = getVisibleWeeks()
 
-  const totalStats = Object.values(stats).reduce(
-    (sum, stat) => ({
-      total: sum.total + stat.total,
-      completed: sum.completed + stat.completed,
-      pending: sum.pending + stat.pending,
-    }),
-    { total: 0, completed: 0, pending: 0 }
-  )
+  const canGoPrev = visibleWeeks[0] > minWeek
+  const canGoNext = visibleWeeks[visibleWeeks.length - 1] < maxWeek
+
+  const handleShift = (direction: -1 | 1) => {
+    setViewingCenter(prev => {
+      const next = prev + direction * 3
+      return Math.max(minWeek + range, Math.min(maxWeek - range, next))
+    })
+  }
+
+  // Total pending tasks across all weeks
+  const totalTasks = Object.values(taskCountByWeek).reduce((sum, n) => sum + n, 0)
 
   return (
     <div className="space-y-3">
       {/* Label */}
       <div className="flex items-center justify-between text-xs text-[--muted]">
-        <span className="font-ui font-medium">Tasks by Phase</span>
-        {selectedCategory && (
+        <span className="font-ui font-medium">Tasks by Week</span>
+        {selectedWeek !== null && (
           <button
-            onClick={() => onCategoryClick(null)}
+            onClick={() => onWeekClick(null)}
             className="text-copper hover:text-copper/80 text-xs font-ui font-medium hover:underline transition-colors"
           >
             Show all
@@ -79,52 +65,60 @@ export function TaskTimelineBar({
       {/* Pill Navigation */}
       <div className="flex items-center justify-between">
         <button
-          onClick={() => handleNav(-1)}
+          onClick={() => handleShift(-1)}
           disabled={!canGoPrev}
           className={cn(
-            'hidden md:flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm font-ui text-[--muted] transition-colors',
+            'flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm font-ui text-[--muted] transition-colors',
             canGoPrev ? 'hover:bg-[--card] hover:text-[--cream]' : 'opacity-30 cursor-not-allowed'
           )}
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
 
-        <div className="flex items-center gap-1.5 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 flex-1 min-w-0" style={{ scrollbarWidth: 'none' }}>
-          {TIMELINE_CATEGORIES.map((category) => {
-            const stat = stats[category.id]
-            const isSelected = selectedCategory === category.id
-            const isCurrent = currentCategory === category.id
-            const hasNoTasks = stat.total === 0
+        <div className="flex items-center gap-0.5 sm:gap-1">
+          {visibleWeeks[0] > minWeek && (
+            <span className="text-[--dim] text-xs px-1">...</span>
+          )}
+          {visibleWeeks.map(week => {
+            const count = taskCountByWeek[week] || 0
+            const isSelected = selectedWeek === week
+            const isCurrent = currentWeek === week
 
             return (
               <button
-                key={category.id}
-                onClick={() => {
-                  if (stat.total > 0) {
-                    onCategoryClick(isSelected ? null : category.id)
-                  }
-                }}
-                disabled={hasNoTasks}
-                title={`${category.label}: ${stat.completed}/${stat.total} tasks`}
+                key={week}
+                onClick={() => onWeekClick(isSelected ? null : week)}
                 className={cn(
-                  'flex-shrink-0 px-2.5 py-1.5 rounded-lg text-xs font-medium font-ui transition-all whitespace-nowrap',
-                  hasNoTasks && 'opacity-30 cursor-default',
-                  !hasNoTasks && !isSelected && !isCurrent && 'text-[--muted] hover:bg-[--card] hover:text-[--cream]',
-                  isCurrent && !isSelected && 'bg-copper/20 text-copper',
-                  isSelected && 'bg-copper text-[--white]',
+                  'relative w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-xs sm:text-sm font-medium font-ui transition-all',
+                  isSelected
+                    ? 'bg-copper text-[--white]'
+                    : isCurrent
+                      ? 'bg-copper/20 text-copper'
+                      : count > 0
+                        ? 'text-[--muted] hover:bg-[--card] hover:text-[--cream]'
+                        : 'text-[--dim] hover:bg-[--card] hover:text-[--muted]'
                 )}
               >
-                {PILL_LABELS[category.id]}
+                {week}
+                {/* Task count badge */}
+                {count > 0 && !isSelected && (
+                  <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] px-0.5 flex items-center justify-center rounded-full bg-copper/80 text-[--white] text-[9px] font-semibold leading-none">
+                    {count}
+                  </span>
+                )}
               </button>
             )
           })}
+          {visibleWeeks[visibleWeeks.length - 1] < maxWeek && (
+            <span className="text-[--dim] text-xs px-1">...</span>
+          )}
         </div>
 
         <button
-          onClick={() => handleNav(1)}
+          onClick={() => handleShift(1)}
           disabled={!canGoNext}
           className={cn(
-            'hidden md:flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm font-ui text-[--muted] transition-colors',
+            'flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm font-ui text-[--muted] transition-colors',
             canGoNext ? 'hover:bg-[--card] hover:text-[--cream]' : 'opacity-30 cursor-not-allowed'
           )}
         >
@@ -132,20 +126,20 @@ export function TaskTimelineBar({
         </button>
       </div>
 
-      {/* Active phase summary */}
+      {/* Summary bar */}
       <div className="flex items-center justify-center gap-3 text-xs text-[--muted] font-ui">
-        {selectedCategory ? (
+        {selectedWeek !== null ? (
           <>
             <span className="inline-flex items-center gap-1.5 bg-copper-dim text-copper px-2.5 py-1 rounded-full text-xs font-semibold">
-              {activeInfo?.label}
+              Week {selectedWeek}
             </span>
             <span>
-              <span className="text-[--cream] font-medium">{activeStat.completed}</span>/{activeStat.total} done
+              <span className="text-[--cream] font-medium">{taskCountByWeek[selectedWeek] || 0}</span> pending tasks
             </span>
           </>
         ) : (
           <span>
-            <span className="text-[--cream] font-medium">{totalStats.completed}</span>/{totalStats.total} tasks completed
+            <span className="text-[--cream] font-medium">{totalTasks}</span> pending tasks across all weeks
           </span>
         )}
       </div>

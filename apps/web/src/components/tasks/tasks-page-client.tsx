@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   format,
@@ -43,16 +43,7 @@ import {
 import { useUser } from '@/components/user-provider'
 import { useFamily } from '@/hooks/use-family'
 import { TaskTimelineBar } from '@/components/shared/task-timeline-bar'
-import {
-  TimelineCategory,
-  TimelineSource,
-  TIMELINE_CATEGORIES,
-  getTaskStatsByCategory,
-  getCurrentTimelineCategory,
-  getTaskTimelineCategory,
-} from '@tdc/shared/utils'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { PaywallOverlay } from '@/components/shared/paywall-overlay'
 import { RevealOnScroll } from '@/components/ui/animations/RevealOnScroll'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { CardEntrance } from '@/components/ui/animations/CardEntrance'
@@ -89,7 +80,7 @@ export function TasksPageClient({
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [activeStatCard, setActiveStatCard] = useState<string | null>('dueToday')
-  const [selectedTimelineCategory, setSelectedTimelineCategory] = useState<TimelineCategory | null>(null)
+  const [selectedWeek, setSelectedWeek] = useState<number | null>(null)
 
   // Fetch tasks and family data
   const { data: tasks = [], isLoading: isLoadingTasks } = useTasks()
@@ -101,9 +92,6 @@ export function TasksPageClient({
   const bulkTriageTasks = useBulkTriageTasks()
   const completeTask = useCompleteTask()
   const snoozeToTomorrow = useSnoozeToTomorrow()
-
-  // Prefer activeBaby for timeline calculations (multi-baby support)
-  const timelineSource: TimelineSource | null = activeBaby || family || null
 
   // Sync URL with view toggle
   const handleViewChange = useCallback((newView: 'list' | 'calendar') => {
@@ -182,23 +170,22 @@ export function TasksPageClient({
     }
   }, [tasks, backlogTasks, currentWeek, getEffectiveWeek])
 
-  // Calculate timeline stats for the phase filter bar
-  const timelineStats = useMemo(() => {
-    if (!timelineSource) return null
-    return getTaskStatsByCategory(allTasks, timelineSource)
-  }, [allTasks, timelineSource])
-
-  // Get current timeline category
-  const currentTimelineCategory = useMemo(() => {
-    if (!timelineSource) return 'first-trimester' as TimelineCategory
-    return getCurrentTimelineCategory(timelineSource)
-  }, [timelineSource])
+  // Task count by week for the week pills timeline bar
+  const taskCountByWeek = useMemo(() => {
+    const counts: Record<number, number> = {}
+    const pending = tasks.filter(t => t.status === 'pending' && !t.is_backlog)
+    pending.forEach(t => {
+      const week = getEffectiveWeek(t)
+      if (week != null) counts[week] = (counts[week] || 0) + 1
+    })
+    return counts
+  }, [tasks, getEffectiveWeek])
 
   // Filter and sort tasks
   const { thisWeekTasks, comingUpTasks, earlierTasks, focusTask, filteredTasks, phaseTasks } = useMemo(() => {
-    // When a timeline category is selected, use ALL tasks (including future) from allTasks
+    // When a week is selected, use ALL tasks (including future) from allTasks
     // Otherwise use the regular tasks list
-    const baseList = selectedTimelineCategory ? allTasks : tasks
+    const baseList = selectedWeek !== null ? allTasks : tasks
 
     let filtered = baseList.filter(t => t.status === 'pending' && !t.is_backlog)
 
@@ -233,24 +220,16 @@ export function TasksPageClient({
       )
     }
 
-    // Apply timeline category filter
-    if (selectedTimelineCategory && timelineSource) {
-      filtered = filtered.filter(t => {
-        const taskCategory = getTaskTimelineCategory(t.due_date, timelineSource)
-        return taskCategory === selectedTimelineCategory
-      })
+    // Apply week filter
+    if (selectedWeek !== null) {
+      filtered = filtered.filter(t => getEffectiveWeek(t) === selectedWeek)
     }
 
-    // When a timeline category is selected, show all tasks from that phase
+    // When a week is selected, show all tasks from that week
     // Otherwise, separate by week as usual
-    if (selectedTimelineCategory) {
-      // Sort by week/due date
+    if (selectedWeek !== null) {
+      // Sort by due date within the week
       const sortedFiltered = [...filtered].sort((a, b) => {
-        // First by week
-        const weekA = getEffectiveWeek(a) || 0
-        const weekB = getEffectiveWeek(b) || 0
-        if (weekA !== weekB) return weekA - weekB
-        // Then by due date
         return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
       })
 
@@ -260,7 +239,7 @@ export function TasksPageClient({
         earlierTasks: [],
         focusTask: null,
         filteredTasks: sortedFiltered,
-        phaseTasks: sortedFiltered, // All tasks for the selected phase
+        phaseTasks: sortedFiltered,
       }
     }
 
@@ -292,7 +271,7 @@ export function TasksPageClient({
       filteredTasks: filtered,
       phaseTasks: [],
     }
-  }, [tasks, allTasks, activeTab, activeCategory, searchQuery, currentWeek, selectedTimelineCategory, timelineSource, freeWindowCutoff, getEffectiveWeek])
+  }, [tasks, allTasks, activeTab, activeCategory, searchQuery, currentWeek, selectedWeek, freeWindowCutoff, getEffectiveWeek, isPremium])
 
   // Calculate triage progress
   const triageProgress = useMemo(() => {
@@ -499,15 +478,15 @@ export function TasksPageClient({
       {/* List View */}
       {view === 'list' && (
         <>
-          {/* Timeline bar - Phase filter */}
-          {timelineStats && allTasks.length > 0 && (
+          {/* Timeline bar - Week pills filter */}
+          {allTasks.length > 0 && (
             <RevealOnScroll delay={80}>
               <div className="mb-6">
                 <TaskTimelineBar
-                  stats={timelineStats}
-                  currentCategory={currentTimelineCategory}
-                  selectedCategory={selectedTimelineCategory}
-                  onCategoryClick={setSelectedTimelineCategory}
+                  currentWeek={currentWeek}
+                  selectedWeek={selectedWeek}
+                  onWeekClick={setSelectedWeek}
+                  taskCountByWeek={taskCountByWeek}
                 />
               </div>
             </RevealOnScroll>
@@ -575,8 +554,8 @@ export function TasksPageClient({
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6">
             {/* Left: Task sections */}
             <div className="space-y-6">
-              {/* Catch-up section - only show when no phase filter is active */}
-              {activeTab === 'active' && backlogTasks.length > 0 && !selectedTimelineCategory && (
+              {/* Catch-up section - only show when no week filter is active */}
+              {activeTab === 'active' && backlogTasks.length > 0 && selectedWeek === null && (
                 <CardEntrance delay={0}>
                   <CatchUpSection
                     tasks={backlogTasks}
@@ -589,13 +568,13 @@ export function TasksPageClient({
                 </CardEntrance>
               )}
 
-              {/* Phase tasks section - show when a phase filter is active */}
-              {selectedTimelineCategory && phaseTasks.length > 0 && (
+              {/* Week tasks section - show when a week filter is active */}
+              {selectedWeek !== null && phaseTasks.length > 0 && (
                 <CardEntrance delay={0}>
                   <Card3DTilt maxTilt={3} gloss>
                     <TaskSection
                       icon="📋"
-                      title={TIMELINE_CATEGORIES.find(c => c.id === selectedTimelineCategory)?.label || 'Phase Tasks'}
+                      title={`Week ${selectedWeek}`}
                       count={phaseTasks.length}
                       actions={
                         <SectionAction>Sort by priority</SectionAction>
@@ -615,19 +594,19 @@ export function TasksPageClient({
                 </CardEntrance>
               )}
 
-              {/* Phase tasks empty state */}
-              {selectedTimelineCategory && phaseTasks.length === 0 && (
+              {/* Week tasks empty state */}
+              {selectedWeek !== null && phaseTasks.length === 0 && (
                 <div className="text-center py-16">
                   <div className="text-5xl mb-4">📭</div>
-                  <h3 className="text-lg font-display font-semibold text-[--cream] mb-2">No tasks in this phase</h3>
+                  <h3 className="text-lg font-display font-semibold text-[--cream] mb-2">No tasks this week</h3>
                   <p className="text-sm text-[--muted] font-body">
-                    There are no pending tasks for {TIMELINE_CATEGORIES.find(c => c.id === selectedTimelineCategory)?.label}.
+                    There are no pending tasks for Week {selectedWeek}.
                   </p>
                 </div>
               )}
 
-              {/* This week section - only show when no phase filter is active */}
-              {!selectedTimelineCategory && thisWeekTasks.length > 0 && (
+              {/* This week section - only show when no week filter is active */}
+              {selectedWeek === null && thisWeekTasks.length > 0 && (
                 <CardEntrance delay={80}>
                   <Card3DTilt maxTilt={3} gloss>
                     <TaskSection
@@ -652,8 +631,8 @@ export function TasksPageClient({
                 </CardEntrance>
               )}
 
-              {/* Coming up section - only show when no phase filter is active */}
-              {!selectedTimelineCategory && comingUpTasks.length > 0 && (
+              {/* Coming up section - only show when no week filter is active */}
+              {selectedWeek === null && comingUpTasks.length > 0 && (
                 <CardEntrance delay={160}>
                   <Card3DTilt maxTilt={3} gloss>
                     <TaskSection
@@ -679,7 +658,7 @@ export function TasksPageClient({
               )}
 
               {/* Earlier tasks section - premium only, default view */}
-              {isPremium && !selectedTimelineCategory && earlierTasks.length > 0 && (
+              {isPremium && selectedWeek === null && earlierTasks.length > 0 && (
                 <CardEntrance delay={240}>
                   <Card3DTilt maxTilt={3} gloss>
                     <TaskSection
@@ -701,7 +680,7 @@ export function TasksPageClient({
                       ))}
                       {earlierTasks.length > 10 && (
                         <p className="text-center py-3 text-xs text-[--muted] font-body">
-                          Use the timeline bar above to browse by phase
+                          Use the week pills above to browse by week
                         </p>
                       )}
                     </TaskSection>
@@ -709,8 +688,8 @@ export function TasksPageClient({
                 </CardEntrance>
               )}
 
-              {/* Empty state - only show when no phase filter is active */}
-              {!selectedTimelineCategory && thisWeekTasks.length === 0 && comingUpTasks.length === 0 && activeTab !== 'catchup' && (
+              {/* Empty state - only show when no week filter is active */}
+              {selectedWeek === null && thisWeekTasks.length === 0 && comingUpTasks.length === 0 && activeTab !== 'catchup' && (
                 <div className="text-center py-16">
                   <div className="text-5xl mb-4">🎉</div>
                   <h3 className="text-lg font-display font-semibold text-[--cream] mb-2">All caught up!</h3>
