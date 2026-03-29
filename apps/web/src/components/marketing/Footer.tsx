@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Twitter, Linkedin, Instagram, Mail } from 'lucide-react'
+import { Twitter, Linkedin, Instagram, Mail, Smartphone } from 'lucide-react'
 import { Logo } from '@/components/ui/logo'
 
 const footerLinks = {
@@ -41,8 +41,12 @@ export function Footer() {
             <div className="mb-4">
               <Logo size="md" variant="dark" />
             </div>
-            <p className="font-body text-[--muted] text-sm mb-6 max-w-xs">
+            <p className="font-body text-[--muted] text-sm mb-3 max-w-xs">
               The operating system for modern fatherhood. Built by dads, for dads who refuse to wing it.
+            </p>
+            <p className="font-ui text-[11px] uppercase tracking-[0.12em] text-[--dim] mb-4 flex items-center gap-2">
+              <Smartphone className="h-3.5 w-3.5" />
+              Coming soon to iOS & Android
             </p>
             {/* Social links */}
             <div className="flex items-center gap-4">

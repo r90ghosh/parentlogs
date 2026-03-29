@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Play } from 'lucide-react'
+import { ArrowRight, Play, Smartphone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
@@ -269,7 +269,7 @@ export function Hero() {
 
           {/* CTA buttons */}
           <Reveal delay={240}>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
               <MagneticButton maxOffset={6}>
                 <Button asChild size="lg" className="btn-glow-hover bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] px-7 py-3.5 h-auto shadow-copper">
                   <Link href="/signup">
@@ -288,6 +288,14 @@ export function Hero() {
                 See How It Works
               </Button>
             </div>
+          </Reveal>
+
+          {/* App store coming soon */}
+          <Reveal delay={280}>
+            <p className="font-ui text-[11px] uppercase tracking-[0.12em] text-[--muted] flex items-center justify-center gap-2 mb-16">
+              <Smartphone className="h-3.5 w-3.5" />
+              Coming soon to iOS & Android
+            </p>
           </Reveal>
 
           {/* Dashboard preview with 3D tilt */}

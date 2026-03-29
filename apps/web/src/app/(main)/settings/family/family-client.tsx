@@ -208,7 +208,7 @@ export default function FamilyClient() {
           </CardTitle>
           <CardDescription className="font-body">
             {members?.length === 1
-              ? 'Invite your partner to join'
+              ? 'You are the only member'
               : `${members?.length} members in your family`}
           </CardDescription>
         </CardHeader>
@@ -236,46 +236,19 @@ export default function FamilyClient() {
             </div>
           ))}
 
-          {/* Invite Code */}
+          {/* Invite Partner — Coming Soon */}
           <div className="pt-4 border-t border-[--border]">
-            <Label className="font-ui font-semibold text-[11px] uppercase tracking-[0.12em] text-[--muted]">Invite Code</Label>
-            <div className="flex items-center gap-2 mt-2">
-              <div className="flex-1 bg-[--card] rounded-lg px-4 py-3 font-mono text-lg tracking-wider text-[--white]">
-                {family.invite_code}
-              </div>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={handleCopyInviteCode}
-                className="h-12 w-12"
-              >
-                {copied ? (
-                  <Check className="h-5 w-5 text-sage" />
-                ) : (
-                  <Copy className="h-5 w-5" />
-                )}
-              </Button>
+            <div className="flex items-center gap-2 mb-2">
+              <Label className="font-ui font-semibold text-[11px] uppercase tracking-[0.12em] text-[--muted]">
+                Invite Partner
+              </Label>
+              <span className="px-2 py-0.5 rounded-full text-[9px] font-ui font-semibold uppercase tracking-[0.1em] bg-copper/15 text-copper border border-copper/25">
+                Coming Soon
+              </span>
             </div>
-            <p className="font-body text-xs text-[--dim] mt-2">
-              Share this code with your partner to join your family
+            <p className="font-body text-xs text-[--dim]">
+              Partner invitations will be available soon. Your family data is safe and ready.
             </p>
-
-            {isOwner && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleRegenerateCode}
-                disabled={isRegenerating}
-                className="mt-2 font-ui"
-              >
-                {isRegenerating ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <RefreshCw className="mr-2 h-4 w-4" />
-                )}
-                Regenerate Code
-              </Button>
-            )}
           </div>
         </CardContent>
       </Card>
