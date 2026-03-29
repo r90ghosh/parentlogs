@@ -191,7 +191,18 @@ export function TasksPageClient({
     // When a week is explicitly selected, show ALL tasks for that week (any status)
     // and skip tab/category/free-window filters — the user is browsing by week
     if (selectedWeek !== null) {
-      let weekTasks = baseList.filter(t => getEffectiveWeek(t) === selectedWeek && !t.is_backlog)
+      // Determine if family is in pregnancy or post-birth to filter out wrong-stage tasks
+      const familyStage = (family as { stage?: string })?.stage ?? ''
+      const isPostBirth = familyStage === 'post-birth'
+
+      let weekTasks = baseList.filter(t => {
+        if (getEffectiveWeek(t) !== selectedWeek || t.is_backlog) return false
+        // Exclude post-birth tasks during pregnancy and vice versa
+        const templateId = t.task_template_id || ''
+        if (isPostBirth && templateId.startsWith('PREG-')) return false
+        if (!isPostBirth && templateId.startsWith('POST-')) return false
+        return true
+      })
 
       // Still apply search if active
       if (searchQuery.trim()) {
