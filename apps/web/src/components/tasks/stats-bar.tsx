@@ -87,7 +87,7 @@ export function StatsBar({ stats, activeCard, onCardClick }: StatsBarProps) {
               isActive && 'ring-1 ring-current/20'
             )}
           >
-            <span className="text-[10px] font-medium opacity-75">{card.label}</span>
+            <span className="text-[11px] font-semibold">{card.label}</span>
             {value}
           </button>
         )
