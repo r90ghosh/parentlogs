@@ -195,7 +195,7 @@ export function TasksPageClient({
   }, [timelineSource])
 
   // Filter and sort tasks
-  const { thisWeekTasks, comingUpTasks, focusTask, filteredTasks, phaseTasks } = useMemo(() => {
+  const { thisWeekTasks, comingUpTasks, earlierTasks, focusTask, filteredTasks, phaseTasks } = useMemo(() => {
     // When a timeline category is selected, use ALL tasks (including future) from allTasks
     // Otherwise use the regular tasks list
     const baseList = selectedTimelineCategory ? allTasks : tasks
@@ -257,6 +257,7 @@ export function TasksPageClient({
       return {
         thisWeekTasks: [],
         comingUpTasks: [],
+        earlierTasks: [],
         focusTask: null,
         filteredTasks: sortedFiltered,
         phaseTasks: sortedFiltered, // All tasks for the selected phase
@@ -270,12 +271,23 @@ export function TasksPageClient({
       return week != null && week > currentWeek && week <= currentWeek + 4
     })
 
+    // Earlier tasks — premium only, sorted most recent past first
+    const earlier = isPremium
+      ? filtered
+          .filter(t => {
+            const week = getEffectiveWeek(t)
+            return week != null && week < currentWeek
+          })
+          .sort((a, b) => (getEffectiveWeek(b) || 0) - (getEffectiveWeek(a) || 0))
+      : []
+
     // Get focus task (highest priority due today or this week)
     const focus = thisWeek.find(t => t.priority === 'must-do') || thisWeek[0] || null
 
     return {
       thisWeekTasks: thisWeek,
       comingUpTasks: comingUp,
+      earlierTasks: earlier,
       focusTask: focus,
       filteredTasks: filtered,
       phaseTasks: [],
@@ -661,6 +673,37 @@ export function TasksPageClient({
                           onClick={() => router.push(`/tasks/${task.id}`)}
                         />
                       ))}
+                    </TaskSection>
+                  </Card3DTilt>
+                </CardEntrance>
+              )}
+
+              {/* Earlier tasks section - premium only, default view */}
+              {isPremium && !selectedTimelineCategory && earlierTasks.length > 0 && (
+                <CardEntrance delay={240}>
+                  <Card3DTilt maxTilt={3} gloss>
+                    <TaskSection
+                      icon="📋"
+                      title="Earlier Tasks"
+                      count={earlierTasks.length}
+                      subtitle="From previous weeks"
+                      collapsible
+                      defaultExpanded={false}
+                    >
+                      {earlierTasks.slice(0, 10).map(task => (
+                        <TaskItem
+                          key={task.id}
+                          task={task}
+                          isDimmed
+                          onComplete={() => handleComplete(task.id)}
+                          onClick={() => router.push(`/tasks/${task.id}`)}
+                        />
+                      ))}
+                      {earlierTasks.length > 10 && (
+                        <p className="text-center py-3 text-xs text-[--muted] font-body">
+                          Use the timeline bar above to browse by phase
+                        </p>
+                      )}
                     </TaskSection>
                   </Card3DTilt>
                 </CardEntrance>
