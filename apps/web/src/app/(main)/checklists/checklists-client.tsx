@@ -11,6 +11,7 @@ import { FileText, CheckCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 import { CHECKLIST_ICONS, CHECKLIST_COLORS } from '@/lib/checklist-constants'
 import { ChecklistTimelineBar } from '@/components/shared/checklist-timeline-bar'
 import {
@@ -135,6 +136,8 @@ export default function ChecklistsClient() {
           </CardContent>
         </Card>
       )}
+
+      <MedicalDisclaimer className="mt-10" />
     </div>
   )
 }

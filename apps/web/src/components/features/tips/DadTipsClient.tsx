@@ -8,6 +8,7 @@ import type { IllustrationComponent } from '@tdc/shared/types/tips'
 import { dadTips } from '@/data/dadTips'
 import { TopicSelector } from '@/components/features/tips/TopicSelector'
 import { InfographicView } from '@/components/features/tips/InfographicView'
+import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 
 // Dynamically import illustration components grouped by topic.
 // Only the active topic's illustrations are loaded.
@@ -99,6 +100,8 @@ export function DadTipsClient() {
           illustrations={illustrations}
         />
       </div>
+
+      <MedicalDisclaimer className="max-w-2xl mx-auto mb-8" />
     </div>
   )
 }

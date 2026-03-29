@@ -28,6 +28,7 @@ import { useUser } from '@/components/user-provider'
 import { useFamily } from '@/hooks/use-family'
 import { TaskTimelineBar } from '@/components/shared/task-timeline-bar'
 import { Reveal } from '@/components/ui/animations/Reveal'
+import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { cn } from '@/lib/utils'
 import { List, CalendarDays, Lock } from 'lucide-react'
@@ -608,6 +609,8 @@ export function TasksPageClient({
           </div>
         </>
       )}
+
+      <MedicalDisclaimer className="mt-10" />
     </div>
   )
 }

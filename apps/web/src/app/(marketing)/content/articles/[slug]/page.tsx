@@ -7,6 +7,7 @@ import { ArticleContent } from '@/components/marketing/ArticleContent'
 import { PaywallGate } from '@/components/marketing/PaywallGate'
 import { RelatedContent } from '@/components/marketing/RelatedContent'
 import { Button } from '@/components/ui/button'
+import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 
 interface PageProps {
   params: Promise<{
@@ -228,10 +229,7 @@ export default async function ArticlePage({ params }: PageProps) {
 
         {/* Medical disclaimer */}
         {!isLocked && (
-          <p className="font-ui text-xs text-[--dim] max-w-2xl mx-auto text-center mt-10">
-            Content is for informational purposes only and does not replace professional medical advice.
-            Always consult your healthcare provider.
-          </p>
+          <MedicalDisclaimer className="mt-10 max-w-2xl mx-auto" />
         )}
 
         {/* Related articles */}

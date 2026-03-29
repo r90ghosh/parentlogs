@@ -6,6 +6,7 @@ import { useMoodHistory } from '@/hooks/use-dad-journey'
 import { DadChallengeTiles, MoodCheckinWidget } from '@/components/dashboard/dad-journey'
 import { MOOD_CONFIG } from '@tdc/shared/constants'
 import { Reveal } from '@/components/ui/animations/Reveal'
+import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 
 /**
  * Calculate consecutive-day streak (same logic as MoodCheckinWidget)
@@ -104,6 +105,8 @@ export function JourneyPageClient() {
         </p>
         <DadChallengeTiles maxTiles={7} />
       </Reveal>
+
+      <MedicalDisclaimer className="mt-10" />
     </main>
   )
 }

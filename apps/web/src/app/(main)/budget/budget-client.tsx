@@ -64,6 +64,7 @@ import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import { BudgetTemplate, FamilyBudgetItem, BudgetBrandView } from '@tdc/shared/types'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 import { getCategoryStyle, CATEGORY_ICONS } from '@/lib/budget-constants'
 import Link from 'next/link'
 
@@ -770,6 +771,7 @@ export default function BudgetClient() {
         onClose={() => setSelectedItemForDetails(null)}
       />
 
+      <MedicalDisclaimer className="mt-10" />
     </div>
   )
 }
