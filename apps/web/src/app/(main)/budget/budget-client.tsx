@@ -391,92 +391,30 @@ export default function BudgetClient() {
         />
       )}
 
-      {/* Summary Cards */}
-      <RevealOnScroll delay={0}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Estimate */}
-          <Card3DTilt maxTilt={3} gloss>
-            <Card className="bg-[--surface] border-[--border] card-gold-top">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 rounded-lg bg-sky/20">
-                    <TrendingUp className="h-5 w-5 text-sky" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-[--muted] font-ui">
-                      {selectedBrandView === 'premium' ? 'Premium Estimate' : 'Best Value Estimate'}
-                    </p>
-                    <p className="text-xl font-bold text-[--cream] tabular-nums">
-                      {budgetService.formatPrice(filteredStats?.grandTotal || 0)}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Card3DTilt>
-
-          {/* Purchased */}
-          <Card3DTilt maxTilt={3} gloss>
-            <Card className="bg-[--surface] border-[--border] card-gold-top">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 rounded-lg bg-sage/20">
-                    <ShoppingCart className="h-5 w-5 text-sage" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-[--muted] font-ui">Purchased</p>
-                    <p className="text-xl font-bold text-[--cream] tabular-nums">
-                      {budgetService.formatPrice(filteredStats?.purchasedTotal || 0)}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Card3DTilt>
-
-          {/* Remaining */}
-          <Card3DTilt maxTilt={3} gloss>
-            <Card className="bg-[--surface] border-[--border] card-gold-top">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 rounded-lg bg-gold/20">
-                    <Wallet className="h-5 w-5 text-gold" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-[--muted] font-ui">Remaining</p>
-                    <p className="text-xl font-bold text-[--cream] tabular-nums">
-                      {budgetService.formatPrice(filteredStats?.remainingTotal || 0)}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Card3DTilt>
+      {/* Summary Pill Badges */}
+      {filteredStats && (
+        <div className="flex items-center gap-1.5 flex-wrap py-1">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-copper-dim text-copper text-[13px] font-ui font-bold tabular-nums border border-copper/20">
+            <span className="text-[10px] font-medium opacity-75">
+              {selectedBrandView === 'premium' ? 'Estimate' : 'Value'}
+            </span>
+            {budgetService.formatPrice(filteredStats.grandTotal || 0)}
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-sage-dim text-sage text-[13px] font-ui font-bold tabular-nums border border-sage/20">
+            <span className="text-[10px] font-medium opacity-75">Purchased</span>
+            {budgetService.formatPrice(filteredStats.purchasedTotal || 0)}
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-sky-dim text-sky text-[13px] font-ui font-bold tabular-nums border border-sky/20">
+            <span className="text-[10px] font-medium opacity-75">Remaining</span>
+            {budgetService.formatPrice(filteredStats.remainingTotal || 0)}
+          </span>
+          {(filteredStats.monthlyRecurring || 0) > 0 && (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gold-dim text-gold text-[13px] font-ui font-bold tabular-nums border border-gold/20">
+              <span className="text-[10px] font-medium opacity-75">Recurring</span>
+              {budgetService.formatPrice(filteredStats.monthlyRecurring || 0)}/mo
+            </span>
+          )}
         </div>
-      </RevealOnScroll>
-
-      {/* Monthly Recurring Costs Card */}
-      {(filteredStats?.monthlyRecurring || 0) > 0 && (
-        <RevealOnScroll delay={40}>
-          <Card3DTilt maxTilt={3} gloss>
-            <Card className="bg-[--surface] border-[--border] card-sky-top">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 rounded-lg bg-sky/20">
-                    <RefreshCw className="h-5 w-5 text-sky" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-[--muted] font-ui">Monthly Recurring</p>
-                    <p className="text-xl font-bold text-[--cream] tabular-nums">
-                      {budgetService.formatPrice(filteredStats?.monthlyRecurring || 0)}
-                      <span className="text-sm text-[--muted] font-normal ml-1">/mo</span>
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Card3DTilt>
-        </RevealOnScroll>
       )}
 
 
