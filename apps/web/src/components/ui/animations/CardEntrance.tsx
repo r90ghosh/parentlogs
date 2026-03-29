@@ -43,7 +43,7 @@ export function CardEntrance({ children, delay = 0, className = '' }: CardEntran
       style={{
         opacity: isVisible ? 1 : 0,
         transform: isVisible
-          ? 'perspective(800px) rotateX(0deg) translateY(0)'
+          ? 'none'
           : 'perspective(800px) rotateX(8deg) translateY(24px)',
         transition: `opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
       }}
