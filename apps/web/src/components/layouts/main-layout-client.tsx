@@ -132,6 +132,12 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
   const { profile } = useUser()
 
   const { data: unreadCount } = useUnreadNotificationCount()
+  const [moreOpen, setMoreOpen] = useState(false)
+
+  // Close the More drawer when navigating to a new page
+  useEffect(() => {
+    setMoreOpen(false)
+  }, [pathname])
 
   // Find active nav index for sliding indicator
   const activeIndex = mainNavItems.findIndex(
@@ -244,7 +250,7 @@ export function MainLayoutClient({ children }: { children: ReactNode }) {
           })}
 
           {/* More menu */}
-          <Sheet>
+          <Sheet open={moreOpen} onOpenChange={setMoreOpen}>
             <SheetTrigger asChild>
               <button className="flex flex-col items-center justify-center w-full h-full gap-1 text-[--muted] active:text-copper transition-colors">
                 <Menu className="h-5 w-5" />
