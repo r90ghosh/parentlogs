@@ -171,16 +171,25 @@ export function TasksPageClient({
   }, [tasks, backlogTasks, currentWeek, getEffectiveWeek])
 
   // Task count by week for the week pills timeline bar
-  // Uses allTasks (same source as week-filtered view) for consistency
+  // Filters by family stage to avoid mixing PREG and POST tasks at the same week number
+  const familyStage = (family as { stage?: string })?.stage ?? ''
+  const isPostBirth = familyStage === 'post-birth'
+
   const taskCountByWeek = useMemo(() => {
     const counts: Record<number, number> = {}
-    const pending = allTasks.filter(t => t.status === 'pending' && !t.is_backlog)
+    const pending = allTasks.filter(t => {
+      if (t.status !== 'pending' || t.is_backlog) return false
+      const templateId = t.task_template_id || ''
+      if (isPostBirth && templateId.startsWith('PREG-')) return false
+      if (!isPostBirth && templateId.startsWith('POST-')) return false
+      return true
+    })
     pending.forEach(t => {
       const week = getEffectiveWeek(t)
       if (week != null) counts[week] = (counts[week] || 0) + 1
     })
     return counts
-  }, [allTasks, getEffectiveWeek])
+  }, [allTasks, getEffectiveWeek, isPostBirth])
 
   // Filter and sort tasks
   const { thisWeekTasks, comingUpTasks, earlierTasks, focusTask, filteredTasks, phaseTasks } = useMemo(() => {
@@ -191,10 +200,6 @@ export function TasksPageClient({
     // When a week is explicitly selected, show ALL tasks for that week (any status)
     // and skip tab/category/free-window filters — the user is browsing by week
     if (selectedWeek !== null) {
-      // Determine if family is in pregnancy or post-birth to filter out wrong-stage tasks
-      const familyStage = (family as { stage?: string })?.stage ?? ''
-      const isPostBirth = familyStage === 'post-birth'
-
       let weekTasks = baseList.filter(t => {
         if (getEffectiveWeek(t) !== selectedWeek || t.is_backlog) return false
         // Exclude post-birth tasks during pregnancy and vice versa
@@ -525,27 +530,30 @@ export function TasksPageClient({
             </RevealOnScroll>
           )}
 
-          {/* Stats bar */}
-          <RevealOnScroll delay={160}>
-            <StatsBar
-              stats={stats}
-              activeCard={activeStatCard}
-              onCardClick={setActiveStatCard}
-            />
-          </RevealOnScroll>
+          {/* Stats bar + Filter bar — hidden when browsing a specific week */}
+          {selectedWeek === null && (
+            <>
+              <RevealOnScroll delay={160}>
+                <StatsBar
+                  stats={stats}
+                  activeCard={activeStatCard}
+                  onCardClick={setActiveStatCard}
+                />
+              </RevealOnScroll>
 
-          {/* Filter bar */}
-          <RevealOnScroll delay={200}>
-            <FilterBar
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-              activeCategory={activeCategory}
-              onCategoryChange={setActiveCategory}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              hasCatchUp={backlogTasks.length > 0}
-            />
-          </RevealOnScroll>
+              <RevealOnScroll delay={200}>
+                <FilterBar
+                  activeTab={activeTab}
+                  onTabChange={setActiveTab}
+                  activeCategory={activeCategory}
+                  onCategoryChange={setActiveCategory}
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                  hasCatchUp={backlogTasks.length > 0}
+                />
+              </RevealOnScroll>
+            </>
+          )}
 
           {/* 30-day free window upgrade prompt */}
           {hasLockedTasks && (
