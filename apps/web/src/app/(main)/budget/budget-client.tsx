@@ -487,27 +487,6 @@ export default function BudgetClient() {
         </RevealOnScroll>
       )}
 
-      {/* Progress */}
-      {filteredStats && filteredStats.familyItemCount > 0 && (
-        <RevealOnScroll delay={80}>
-          <Card3DTilt maxTilt={3} gloss>
-            <Card className="bg-[--surface] border-[--border]">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-[--muted] font-body">Shopping Progress</span>
-                  <span className="text-sm font-medium text-[--cream] tabular-nums font-ui">
-                    {filteredStats.purchasedCount} of {filteredStats.familyItemCount} items
-                  </span>
-                </div>
-                <Progress
-                  value={(filteredStats.purchasedCount / filteredStats.familyItemCount) * 100}
-                  className="h-2 bg-[--dim]"
-                />
-              </CardContent>
-            </Card>
-          </Card3DTilt>
-        </RevealOnScroll>
-      )}
 
       {/* Main Content Tabs */}
         <Tabs defaultValue="browse" className="space-y-4">
