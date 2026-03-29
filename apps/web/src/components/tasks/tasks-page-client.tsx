@@ -171,15 +171,16 @@ export function TasksPageClient({
   }, [tasks, backlogTasks, currentWeek, getEffectiveWeek])
 
   // Task count by week for the week pills timeline bar
+  // Uses allTasks (same source as week-filtered view) for consistency
   const taskCountByWeek = useMemo(() => {
     const counts: Record<number, number> = {}
-    const pending = tasks.filter(t => t.status === 'pending' && !t.is_backlog)
+    const pending = allTasks.filter(t => t.status === 'pending' && !t.is_backlog)
     pending.forEach(t => {
       const week = getEffectiveWeek(t)
       if (week != null) counts[week] = (counts[week] || 0) + 1
     })
     return counts
-  }, [tasks, getEffectiveWeek])
+  }, [allTasks, getEffectiveWeek])
 
   // Filter and sort tasks
   const { thisWeekTasks, comingUpTasks, earlierTasks, focusTask, filteredTasks, phaseTasks } = useMemo(() => {
