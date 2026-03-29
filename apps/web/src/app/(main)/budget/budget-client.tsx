@@ -87,6 +87,7 @@ export default function BudgetClient() {
   const [selectedBrandView, setSelectedBrandView] = useState<BudgetBrandView>('premium')
   const [selectedItemForDetails, setSelectedItemForDetails] = useState<BudgetTemplate | null>(null)
   const [recurringFilter, setRecurringFilter] = useState<RecurringFilter>('all')
+  const [selectedBudgetCategory, setSelectedBudgetCategory] = useState<string | null>(null)
 
   // All templates from summary
   const allTemplates = useMemo(() => {
@@ -248,7 +249,15 @@ export default function BudgetClient() {
         return { ...category, items }
       })
       .filter(category => category.items.length > 0)
-  }, [summary, selectedTimelineCategory, recurringFilter])
+      // Filter by selected budget category
+      .filter(category => !selectedBudgetCategory || category.name === selectedBudgetCategory)
+  }, [summary, selectedTimelineCategory, recurringFilter, selectedBudgetCategory])
+
+  // Available categories for chips (derived from all templates, not filtered)
+  const availableCategories = useMemo(() => {
+    if (!summary?.categories) return []
+    return summary.categories.map(c => c.name)
+  }, [summary])
 
   const pendingItems = summary?.familyItems.filter(i => !i.is_purchased) || []
   const purchasedItems = summary?.familyItems.filter(i => i.is_purchased) || []
@@ -562,24 +571,57 @@ export default function BudgetClient() {
           {/* Browse Items Tab */}
           <TabsContent value="browse" className="space-y-4">
             <div className="relative">
-              {/* Recurring Filter */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-[--muted] font-ui">Show:</span>
-                <Select value={recurringFilter} onValueChange={(v) => setRecurringFilter(v as RecurringFilter)}>
-                  <SelectTrigger className="w-40 bg-[--surface] border-[--border-hover]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Items</SelectItem>
-                    <SelectItem value="one-time">One-time</SelectItem>
-                    <SelectItem value="recurring">Recurring</SelectItem>
-                  </SelectContent>
-                </Select>
+              {/* Category chips + Recurring filter row */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-1.5 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0" style={{ scrollbarWidth: 'none' }}>
+                  <button
+                    onClick={() => setSelectedBudgetCategory(null)}
+                    className={cn(
+                      'flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium font-ui transition-all whitespace-nowrap',
+                      !selectedBudgetCategory
+                        ? 'bg-copper text-[--white]'
+                        : 'text-[--muted] hover:bg-[--card] hover:text-[--cream]'
+                    )}
+                  >
+                    All
+                  </button>
+                  {availableCategories.map(cat => {
+                    const { Icon, colors } = getCategoryStyle(cat)
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => setSelectedBudgetCategory(selectedBudgetCategory === cat ? null : cat)}
+                        className={cn(
+                          'flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium font-ui transition-all whitespace-nowrap',
+                          selectedBudgetCategory === cat
+                            ? 'bg-copper text-[--white]'
+                            : 'text-[--muted] hover:bg-[--card] hover:text-[--cream]'
+                        )}
+                      >
+                        <Icon className="h-3 w-3" />
+                        {cat}
+                      </button>
+                    )
+                  })}
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-[--muted] font-ui">Show:</span>
+                  <Select value={recurringFilter} onValueChange={(v) => setRecurringFilter(v as RecurringFilter)}>
+                    <SelectTrigger className="w-40 bg-[--surface] border-[--border-hover]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Items</SelectItem>
+                      <SelectItem value="one-time">One-time</SelectItem>
+                      <SelectItem value="recurring">Recurring</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <Accordion
                 type="multiple"
-                key={`accordion-${selectedTimelineCategory || 'all'}-${recurringFilter}`}
+                key={`accordion-${selectedTimelineCategory || 'all'}-${recurringFilter}-${selectedBudgetCategory || 'all'}`}
                 defaultValue={filteredCategories?.map(c => c.name)}
                 className="space-y-2 mt-4"
               >
