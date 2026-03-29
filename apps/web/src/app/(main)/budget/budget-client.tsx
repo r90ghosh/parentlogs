@@ -397,22 +397,22 @@ export default function BudgetClient() {
       {filteredStats && (
         <div className="flex items-center gap-1.5 flex-wrap py-1">
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-copper-dim text-copper text-[13px] font-ui font-bold tabular-nums border border-copper/20">
-            <span className="text-[10px] font-medium opacity-75">
+            <span className="text-[11px] font-semibold">
               {selectedBrandView === 'premium' ? 'Estimate' : 'Value'}
             </span>
             {budgetService.formatPrice(filteredStats.grandTotal || 0)}
           </span>
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-sage-dim text-sage text-[13px] font-ui font-bold tabular-nums border border-sage/20">
-            <span className="text-[10px] font-medium opacity-75">Purchased</span>
+            <span className="text-[11px] font-semibold">Purchased</span>
             {budgetService.formatPrice(filteredStats.purchasedTotal || 0)}
           </span>
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-sky-dim text-sky text-[13px] font-ui font-bold tabular-nums border border-sky/20">
-            <span className="text-[10px] font-medium opacity-75">Remaining</span>
+            <span className="text-[11px] font-semibold">Remaining</span>
             {budgetService.formatPrice(filteredStats.remainingTotal || 0)}
           </span>
           {(filteredStats.monthlyRecurring || 0) > 0 && (
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gold-dim text-gold text-[13px] font-ui font-bold tabular-nums border border-gold/20">
-              <span className="text-[10px] font-medium opacity-75">Recurring</span>
+              <span className="text-[11px] font-semibold">Recurring</span>
               {budgetService.formatPrice(filteredStats.monthlyRecurring || 0)}/mo
             </span>
           )}
