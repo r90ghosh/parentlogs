@@ -365,6 +365,8 @@ export function TasksPageClient({
         </div>
       </Reveal>
 
+      <MedicalDisclaimer className="mb-4" />
+
       {/* Calendar View (lazy-loaded) */}
       {view === 'calendar' && <TasksCalendarView tasks={tasks} />}
 
@@ -610,7 +612,6 @@ export function TasksPageClient({
         </>
       )}
 
-      <MedicalDisclaimer className="mt-10" />
     </div>
   )
 }

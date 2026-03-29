@@ -381,6 +381,8 @@ export default function BudgetClient() {
         </div>
       </div>
 
+      <MedicalDisclaimer className="mb-4" />
+
       {/* Budget Timeline Bar */}
       {summary && summary.categories.length > 0 && (
         <BudgetTimelineBar
@@ -771,7 +773,6 @@ export default function BudgetClient() {
         onClose={() => setSelectedItemForDetails(null)}
       />
 
-      <MedicalDisclaimer className="mt-10" />
     </div>
   )
 }

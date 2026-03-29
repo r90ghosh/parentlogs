@@ -54,6 +54,8 @@ export function JourneyPageClient() {
         </p>
       </div>
 
+      <MedicalDisclaimer className="mb-4" />
+
       {/* Mood history summary (if available) */}
       {moodHistory && moodHistory.length > 0 && (
         <Reveal variant="card" delay={80} className="mb-5 rounded-xl bg-[--surface] border border-[--border] p-4 shadow-card">
@@ -106,7 +108,6 @@ export function JourneyPageClient() {
         <DadChallengeTiles maxTiles={7} />
       </Reveal>
 
-      <MedicalDisclaimer className="mt-10" />
     </main>
   )
 }

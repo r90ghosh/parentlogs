@@ -180,6 +180,8 @@ export default async function ArticlePage({ params }: PageProps) {
 
       {/* Content */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <MedicalDisclaimer className="mb-4 max-w-2xl mx-auto" />
+
         <ArticleContent content={displayContent} />
 
         {/* Paywall gate for locked articles */}
@@ -225,11 +227,6 @@ export default async function ArticlePage({ params }: PageProps) {
               </Link>
             </Button>
           </div>
-        )}
-
-        {/* Medical disclaimer */}
-        {!isLocked && (
-          <MedicalDisclaimer className="mt-10 max-w-2xl mx-auto" />
         )}
 
         {/* Related articles */}

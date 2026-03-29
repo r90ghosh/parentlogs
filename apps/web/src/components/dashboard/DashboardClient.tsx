@@ -102,6 +102,8 @@ export function DashboardClient() {
         overdueCount={taskStats.overdue}
       />
 
+      <MedicalDisclaimer className="mb-4" />
+
       {/* Payment Failed Banner */}
       {isPastDue && (
         <div className="mb-6 p-4 rounded-2xl bg-coral/10 border border-coral/20 flex items-start gap-3">
@@ -201,8 +203,6 @@ export function DashboardClient() {
         </div>
       </div>
 
-      {/* Medical Disclaimer */}
-      <MedicalDisclaimer className="mt-10" />
     </div>
   )
 }

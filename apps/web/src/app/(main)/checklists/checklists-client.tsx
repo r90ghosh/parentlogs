@@ -59,6 +59,8 @@ export default function ChecklistsClient() {
       </div>
       </Reveal>
 
+      <MedicalDisclaimer className="mb-4" />
+
       {/* Timeline Filter */}
       {!isLoading && checklistStats && (
         <Reveal delay={50}>
@@ -137,7 +139,6 @@ export default function ChecklistsClient() {
         </Card>
       )}
 
-      <MedicalDisclaimer className="mt-10" />
     </div>
   )
 }

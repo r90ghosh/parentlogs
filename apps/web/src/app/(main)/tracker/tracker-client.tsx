@@ -87,6 +87,8 @@ export default function TrackerClient() {
         </div>
       </div>
 
+      <MedicalDisclaimer className="mb-4" />
+
       {/* Shift Briefing */}
       <Reveal delay={80}>
       <Card3DTilt maxTilt={3} gloss>
@@ -325,9 +327,6 @@ export default function TrackerClient() {
         )}
       </div>
       </Reveal>
-
-      {/* Medical Disclaimer */}
-      <MedicalDisclaimer className="mt-8" />
     </div>
   )
 }

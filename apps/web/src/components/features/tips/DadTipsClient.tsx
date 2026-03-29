@@ -82,6 +82,8 @@ export function DadTipsClient() {
         </div>
       </section>
 
+      <MedicalDisclaimer className="max-w-2xl mx-auto mb-4" />
+
       {/* Topic selector — sticky below marketing header */}
       <div className="sticky top-12 md:top-14 z-20 bg-[--surface]/95 backdrop-blur-[16px] border-b border-[--border]">
         <div className="max-w-2xl mx-auto">
@@ -101,7 +103,6 @@ export function DadTipsClient() {
         />
       </div>
 
-      <MedicalDisclaimer className="max-w-2xl mx-auto mb-8" />
     </div>
   )
 }
