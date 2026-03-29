@@ -381,14 +381,6 @@ export default function BudgetClient() {
         </div>
       </div>
 
-      {/* Brand Toggle Filter */}
-      {allTemplates.length > 0 && (
-        <BrandToggleFilter
-          selectedView={selectedBrandView}
-          onViewChange={setSelectedBrandView}
-        />
-      )}
-
       {/* Budget Timeline Bar */}
       {summary && summary.categories.length > 0 && (
         <BudgetTimelineBar
@@ -598,18 +590,24 @@ export default function BudgetClient() {
                     )
                   })}
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-[--muted] font-ui">Show:</span>
-                  <Select value={recurringFilter} onValueChange={(v) => setRecurringFilter(v as RecurringFilter)}>
-                    <SelectTrigger className="w-40 bg-[--surface] border-[--border-hover]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Items</SelectItem>
-                      <SelectItem value="one-time">One-time</SelectItem>
-                      <SelectItem value="recurring">Recurring</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="flex items-center justify-between gap-3 flex-wrap">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-[--muted] font-ui">Show:</span>
+                    <Select value={recurringFilter} onValueChange={(v) => setRecurringFilter(v as RecurringFilter)}>
+                      <SelectTrigger className="w-40 bg-[--surface] border-[--border-hover]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Items</SelectItem>
+                        <SelectItem value="one-time">One-time</SelectItem>
+                        <SelectItem value="recurring">Recurring</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <BrandToggleFilter
+                    selectedView={selectedBrandView}
+                    onViewChange={setSelectedBrandView}
+                  />
                 </div>
               </div>
 
