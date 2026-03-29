@@ -188,6 +188,39 @@ export function TasksPageClient({
     // Otherwise use the regular tasks list
     const baseList = selectedWeek !== null ? allTasks : tasks
 
+    // When a week is explicitly selected, show ALL tasks for that week (any status)
+    // and skip tab/category/free-window filters — the user is browsing by week
+    if (selectedWeek !== null) {
+      let weekTasks = baseList.filter(t => getEffectiveWeek(t) === selectedWeek && !t.is_backlog)
+
+      // Still apply search if active
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase()
+        weekTasks = weekTasks.filter(t =>
+          t.title.toLowerCase().includes(query) ||
+          t.description?.toLowerCase().includes(query)
+        )
+      }
+
+      // Sort: pending first, then completed, then by due date
+      const sortedWeekTasks = [...weekTasks].sort((a, b) => {
+        const statusOrder = { pending: 0, snoozed: 1, skipped: 2, completed: 3 }
+        const sa = statusOrder[a.status as keyof typeof statusOrder] ?? 0
+        const sb = statusOrder[b.status as keyof typeof statusOrder] ?? 0
+        if (sa !== sb) return sa - sb
+        return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+      })
+
+      return {
+        thisWeekTasks: [],
+        comingUpTasks: [],
+        earlierTasks: [],
+        focusTask: null,
+        filteredTasks: sortedWeekTasks,
+        phaseTasks: sortedWeekTasks,
+      }
+    }
+
     let filtered = baseList.filter(t => t.status === 'pending' && !t.is_backlog)
 
     // Apply 30-day free window filter for non-premium users
@@ -219,29 +252,6 @@ export function TasksPageClient({
         t.title.toLowerCase().includes(query) ||
         t.description?.toLowerCase().includes(query)
       )
-    }
-
-    // Apply week filter
-    if (selectedWeek !== null) {
-      filtered = filtered.filter(t => getEffectiveWeek(t) === selectedWeek)
-    }
-
-    // When a week is selected, show all tasks from that week
-    // Otherwise, separate by week as usual
-    if (selectedWeek !== null) {
-      // Sort by due date within the week
-      const sortedFiltered = [...filtered].sort((a, b) => {
-        return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
-      })
-
-      return {
-        thisWeekTasks: [],
-        comingUpTasks: [],
-        earlierTasks: [],
-        focusTask: null,
-        filteredTasks: sortedFiltered,
-        phaseTasks: sortedFiltered,
-      }
     }
 
     // Separate by week (normal view) — use effective week to handle null week_due
