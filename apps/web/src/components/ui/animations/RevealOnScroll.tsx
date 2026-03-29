@@ -33,8 +33,15 @@ export function RevealOnScroll({ children, delay = 0, className = '' }: RevealOn
     )
 
     observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
+
+    // Safety fallback: always reveal after delay + 800ms to prevent content from staying hidden
+    const fallback = setTimeout(() => setIsVisible(true), (delay || 0) + 800)
+
+    return () => {
+      observer.disconnect()
+      clearTimeout(fallback)
+    }
+  }, [delay])
 
   return (
     <div
