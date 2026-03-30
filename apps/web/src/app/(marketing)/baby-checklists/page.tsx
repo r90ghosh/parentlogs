@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Reveal } from '@/components/ui/animations/Reveal'
+import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 import { cn } from '@/lib/utils'
 
 import type { Metadata } from 'next'
@@ -79,6 +80,11 @@ export default async function PublicChecklistsPage() {
           </div>
         </div>
       </section>
+
+      {/* Medical Disclaimer */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <MedicalDisclaimer />
+      </div>
 
       {/* Checklists Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

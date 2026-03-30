@@ -158,7 +158,7 @@ export function createFamilyService(supabase: AppSupabaseClient) {
         .select('*')
         .eq('family_id', resolved.familyId)
 
-      return (members || []) as FamilyMember[]
+      return (members || []) as unknown as FamilyMember[]
     },
 
     async getPartnerActivity(familyId: string): Promise<{

@@ -91,7 +91,7 @@ export function ContentPreview() {
             <div className="text-center">
               <div className="flex items-center justify-center gap-2 mb-1">
                 <BookOpen className="h-5 w-5 text-copper" />
-                <span className="font-display font-bold text-2xl text-[--white]">40+</span>
+                <span className="font-display font-bold text-2xl text-[--white]">50+</span>
               </div>
               <span className="font-ui text-sm text-[--muted]">Articles</span>
             </div>
@@ -209,8 +209,8 @@ export function ContentPreview() {
         {/* CTA */}
         <div className="mt-12 text-center">
           <Button asChild variant="outline" size="lg" className="border-[--border-hover] text-[--cream] hover:bg-[--card] hover:border-[--border-hover] font-ui">
-            <Link href="/content">
-              Browse All Resources
+            <Link href="/blog">
+              Browse All Articles
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>

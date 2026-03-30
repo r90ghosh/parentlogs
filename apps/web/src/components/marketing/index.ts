@@ -16,8 +16,13 @@ export { VideoCard } from './VideoCard'
 export { ContentFilters } from './ContentFilters'
 export { ResourceLibrary } from './ResourceLibrary'
 export { ArticleContent } from './ArticleContent'
-export { PaywallGate } from './PaywallGate'
+
 export { RelatedContent } from './RelatedContent'
+
+// Blog components
+export { BlogCard } from './BlogCard'
+export { EmailCapture } from './EmailCapture'
+export { ShareButtons } from './ShareButtons'
 
 // About & FAQ
 export { AboutContent } from './AboutContent'

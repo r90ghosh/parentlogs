@@ -91,34 +91,10 @@ export function JsonLd() {
       },
       {
         '@type': 'Question',
-        name: 'Is there a free plan?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Yes! The Dad Center offers a free tier that includes a 30-day rolling task window, 4 weeks of briefings from signup, and 30 days of push notifications. Free should feel complete — you get real value before ever paying.',
-        },
-      },
-      {
-        '@type': 'Question',
         name: 'Can both parents use the same subscription?',
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'Absolutely. One subscription covers the whole family — both partners share full access. No need to pay twice.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'What do the weekly briefings include?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: "Weekly briefings cover what's happening with the baby's development, what your partner may be experiencing, practical tasks for the week, health and wellness tips, and preparation milestones — all tailored to your specific week of pregnancy or parenting stage.",
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'When should I start using The Dad Center?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'You can start at any point during pregnancy or early parenthood. The earlier the better — many dads join in the first trimester to stay ahead of the curve. But the app adapts to wherever you are in your journey.',
         },
       },
     ],

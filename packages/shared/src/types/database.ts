@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      analytics_events: {
+        Row: {
+          created_at: string | null
+          event_name: string
+          id: string
+          page_path: string | null
+          platform: string
+          properties: Json | null
+          session_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_name: string
+          id?: string
+          page_path?: string | null
+          platform?: string
+          properties?: Json | null
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_name?: string
+          id?: string
+          page_path?: string | null
+          platform?: string
+          properties?: Json | null
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       articles: {
         Row: {
           content: string
@@ -175,6 +208,63 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      blog_posts: {
+        Row: {
+          author: string | null
+          category: string | null
+          content: string
+          created_at: string | null
+          excerpt: string | null
+          featured_image: string | null
+          id: string
+          meta_description: string | null
+          meta_title: string | null
+          published_at: string | null
+          read_time: number | null
+          slug: string
+          status: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          content: string
+          created_at?: string | null
+          excerpt?: string | null
+          featured_image?: string | null
+          id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          read_time?: number | null
+          slug: string
+          status?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          content?: string
+          created_at?: string | null
+          excerpt?: string | null
+          featured_image?: string | null
+          id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          read_time?: number | null
+          slug?: string
+          status?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       briefing_templates: {
         Row: {
@@ -632,6 +722,30 @@ export type Database = {
           },
         ]
       }
+      email_subscribers: {
+        Row: {
+          email: string
+          id: string
+          source: string | null
+          subscribed_at: string | null
+          unsubscribed_at: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          source?: string | null
+          subscribed_at?: string | null
+          unsubscribed_at?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          source?: string | null
+          subscribed_at?: string | null
+          unsubscribed_at?: string | null
+        }
+        Relationships: []
+      }
       families: {
         Row: {
           baby_name: string | null
@@ -1006,11 +1120,20 @@ export type Database = {
         Row: {
           created_at: string | null
           email_enabled: boolean | null
+          email_lifecycle: boolean | null
+          email_milestones: boolean | null
+          email_task_digest: boolean | null
+          email_weekly_briefing: boolean | null
           id: string
+          milestone_notifications: boolean | null
+          mood_reminders: boolean | null
+          onboarding_nudges: boolean | null
           partner_activity: boolean | null
+          preferred_notification_time: string | null
           push_enabled: boolean | null
           quiet_hours_end: string | null
           quiet_hours_start: string | null
+          re_engagement_emails: boolean | null
           task_reminders_1_day: boolean | null
           task_reminders_3_day: boolean | null
           task_reminders_7_day: boolean | null
@@ -1023,11 +1146,20 @@ export type Database = {
         Insert: {
           created_at?: string | null
           email_enabled?: boolean | null
+          email_lifecycle?: boolean | null
+          email_milestones?: boolean | null
+          email_task_digest?: boolean | null
+          email_weekly_briefing?: boolean | null
           id?: string
+          milestone_notifications?: boolean | null
+          mood_reminders?: boolean | null
+          onboarding_nudges?: boolean | null
           partner_activity?: boolean | null
+          preferred_notification_time?: string | null
           push_enabled?: boolean | null
           quiet_hours_end?: string | null
           quiet_hours_start?: string | null
+          re_engagement_emails?: boolean | null
           task_reminders_1_day?: boolean | null
           task_reminders_3_day?: boolean | null
           task_reminders_7_day?: boolean | null
@@ -1040,11 +1172,20 @@ export type Database = {
         Update: {
           created_at?: string | null
           email_enabled?: boolean | null
+          email_lifecycle?: boolean | null
+          email_milestones?: boolean | null
+          email_task_digest?: boolean | null
+          email_weekly_briefing?: boolean | null
           id?: string
+          milestone_notifications?: boolean | null
+          mood_reminders?: boolean | null
+          onboarding_nudges?: boolean | null
           partner_activity?: boolean | null
+          preferred_notification_time?: string | null
           push_enabled?: boolean | null
           quiet_hours_end?: string | null
           quiet_hours_start?: string | null
+          re_engagement_emails?: boolean | null
           task_reminders_1_day?: boolean | null
           task_reminders_3_day?: boolean | null
           task_reminders_7_day?: boolean | null
@@ -1108,6 +1249,42 @@ export type Database = {
           },
         ]
       }
+      page_engagements: {
+        Row: {
+          created_at: string | null
+          duration_bucket: string
+          duration_seconds: number
+          id: string
+          page_group: string
+          page_path: string
+          platform: string
+          session_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          duration_bucket: string
+          duration_seconds: number
+          id?: string
+          page_group: string
+          page_path: string
+          platform?: string
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          duration_bucket?: string
+          duration_seconds?: number
+          id?: string
+          page_group?: string
+          page_path?: string
+          platform?: string
+          session_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           active_baby_id: string | null
@@ -1115,16 +1292,22 @@ export type Database = {
           created_at: string | null
           email: string
           family_id: string | null
+          first_briefing_viewed_at: string | null
+          first_mood_checkin_at: string | null
+          first_task_completed_at: string | null
           full_name: string | null
           has_seen_welcome: boolean
           id: string
+          last_active_at: string | null
           onboarding_completed: boolean | null
+          partner_invited_at: string | null
           role: Database["public"]["Enums"]["user_role"] | null
           signup_week: number | null
           subscription_expires_at: string | null
           subscription_tier:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+          timezone: string | null
           updated_at: string | null
         }
         Insert: {
@@ -1133,16 +1316,22 @@ export type Database = {
           created_at?: string | null
           email: string
           family_id?: string | null
+          first_briefing_viewed_at?: string | null
+          first_mood_checkin_at?: string | null
+          first_task_completed_at?: string | null
           full_name?: string | null
           has_seen_welcome?: boolean
           id: string
+          last_active_at?: string | null
           onboarding_completed?: boolean | null
+          partner_invited_at?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
           signup_week?: number | null
           subscription_expires_at?: string | null
           subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+          timezone?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -1151,16 +1340,22 @@ export type Database = {
           created_at?: string | null
           email?: string
           family_id?: string | null
+          first_briefing_viewed_at?: string | null
+          first_mood_checkin_at?: string | null
+          first_task_completed_at?: string | null
           full_name?: string | null
           has_seen_welcome?: boolean
           id?: string
+          last_active_at?: string | null
           onboarding_completed?: boolean | null
+          partner_invited_at?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
           signup_week?: number | null
           subscription_expires_at?: string | null
           subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+          timezone?: string | null
           updated_at?: string | null
         }
         Relationships: [
@@ -1214,6 +1409,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      revenucat_webhook_events: {
+        Row: {
+          created_at: string
+          event_id: string
+          event_type: string
+          id: string
+          processed_at: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          event_type: string
+          id?: string
+          processed_at?: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          event_type?: string
+          id?: string
+          processed_at?: string
+        }
+        Relationships: []
       }
       subscriptions: {
         Row: {
@@ -1524,6 +1743,10 @@ export type Database = {
       initialize_family_tasks_with_catchup: {
         Args: { p_due_date: string; p_family_id: string; p_signup_week: number }
         Returns: number
+      }
+      invoke_notification_job: {
+        Args: { notification_type: string }
+        Returns: undefined
       }
       is_family_member: { Args: { family_uuid: string }; Returns: boolean }
       is_premium_user: { Args: never; Returns: boolean }

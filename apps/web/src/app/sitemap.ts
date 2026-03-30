@@ -15,7 +15,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/content`,
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/videos`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
@@ -58,27 +64,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Fetch all article slugs
-  let articlePages: MetadataRoute.Sitemap = []
-  try {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-    const { data } = await supabase.from('articles').select('slug')
-
-    if (data) {
-      articlePages = data.map((article) => ({
-        url: `${baseUrl}/content/articles/${article.slug}`,
-        lastModified: new Date(),
-        changeFrequency: 'monthly' as const,
-        priority: 0.7,
-      }))
-    }
-  } catch (error) {
-    console.error('Error fetching articles for sitemap:', error)
-  }
-
   // Checklist detail pages
   const checklistPages: MetadataRoute.Sitemap = Array.from({ length: 15 }, (_, i) => ({
     url: `${baseUrl}/baby-checklists/CL-${String(i + 1).padStart(2, '0')}`,
@@ -87,5 +72,38 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  return [...staticPages, ...articlePages, ...checklistPages]
+  // Tip detail pages
+  const tipSlugs = ['baby-changing', 'bottle-prep', 'swaddling', 'bath-time', 'car-seat', 'burping']
+  const tipPages: MetadataRoute.Sitemap = tipSlugs.map((slug) => ({
+    url: `${baseUrl}/tips/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }))
+
+  // Blog posts
+  let blogPages: MetadataRoute.Sitemap = []
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+    const { data } = await supabase
+      .from('blog_posts')
+      .select('slug, published_at')
+      .eq('status', 'published')
+
+    if (data) {
+      blogPages = data.map((post) => ({
+        url: `${baseUrl}/blog/${post.slug}`,
+        lastModified: post.published_at ? new Date(post.published_at) : new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+      }))
+    }
+  } catch (error) {
+    console.error('Error fetching blog posts for sitemap:', error)
+  }
+
+  return [...staticPages, ...blogPages, ...checklistPages, ...tipPages]
 }

@@ -10,7 +10,8 @@ The Dad Center is a pregnancy and parenting companion app designed primarily for
 - [Dad Tips](https://thedadcenter.com/tips): Illustrated step-by-step parenting guides (diaper changing, bottle prep, swaddling, bath time, car seat installation, burping)
 - [Budget Guide](https://thedadcenter.com/budget-guide): Comprehensive baby budget planner with 200+ items and real price ranges
 - [Baby Checklists](https://thedadcenter.com/baby-checklists): 15 curated preparation checklists (hospital bag, nursery, registry, baby-proofing, and more)
-- [Articles](https://thedadcenter.com/content): 50+ parenting articles with practical advice for new dads
+- [Blog](https://thedadcenter.com/blog): 50+ parenting articles with practical advice for new dads
+- [Videos](https://thedadcenter.com/videos): Curated video library for expectant and new dads
 
 ## Dad Tips Topics
 

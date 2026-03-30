@@ -63,6 +63,35 @@ export default async function ChecklistDetailPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-[--bg]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Home',
+                item: 'https://thedadcenter.com',
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Baby Checklists',
+                item: 'https://thedadcenter.com/baby-checklists',
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: checklist.name,
+                item: `https://thedadcenter.com/baby-checklists/${id}`,
+              },
+            ],
+          }),
+        }}
+      />
       {/* Header */}
       <div className="bg-gradient-to-b from-[--surface] to-[--bg] pt-24 pb-12 md:pt-32 md:pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

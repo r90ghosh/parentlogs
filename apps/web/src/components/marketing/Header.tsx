@@ -20,10 +20,11 @@ const navLinks: NavLink[] = [
   { href: '#features', label: 'Features' },
   { href: '#how-it-works', label: 'How It Works' },
   { href: '#pricing', label: 'Pricing' },
+  { href: '/blog', label: 'Blog' },
   {
     label: 'Resources',
     children: [
-      { href: '/content', label: 'Content' },
+      { href: '/videos', label: 'Videos' },
       { href: '/budget-guide', label: 'Budget Guide' },
       { href: '/baby-checklists', label: 'Checklists' },
       { href: '/tips', label: 'Dad Tips' },

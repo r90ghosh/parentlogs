@@ -16,6 +16,8 @@ export interface Article {
   reviewedBy?: string | null
   content: string
   sources?: string[]
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Video {
@@ -70,6 +72,8 @@ function transformArticle(row: Record<string, unknown>): Article {
     reviewedBy: row.reviewed_by as string | null,
     content: row.content as string,
     sources: (row.sources as string[]) || [],
+    createdAt: row.created_at as string,
+    updatedAt: row.updated_at as string,
   }
 }
 
@@ -320,7 +324,7 @@ export async function getArticlesList(): Promise<Omit<Article, 'content'>[]> {
 
   const { data, error } = await supabase
     .from('articles')
-    .select('slug, title, stage, stage_label, week, excerpt, read_time, is_free, reviewed_by, sources')
+    .select('slug, title, stage, stage_label, week, excerpt, read_time, is_free, reviewed_by, sources, created_at, updated_at')
     .order('week', { ascending: true, nullsFirst: false })
 
   if (error) {
@@ -339,6 +343,8 @@ export async function getArticlesList(): Promise<Omit<Article, 'content'>[]> {
     isFree: row.is_free,
     reviewedBy: row.reviewed_by,
     sources: row.sources || [],
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
     content: '', // Not fetched for list
   }))
 }

@@ -1,12 +1,14 @@
 import Link from 'next/link'
 import { Twitter, Linkedin, Instagram, Mail, Smartphone } from 'lucide-react'
 import { Logo } from '@/components/ui/logo'
+import { EmailCapture } from './EmailCapture'
 
 const footerLinks = {
   product: [
     { label: 'Features', href: '/#features' },
     { label: 'Pricing', href: '/#pricing' },
-    { label: 'Content', href: '/content' },
+    { label: 'Blog', href: '/blog' },
+    { label: 'Videos', href: '/videos' },
     { label: 'Budget Guide', href: '/budget-guide' },
     { label: 'Checklists', href: '/baby-checklists' },
   ],
@@ -130,6 +132,15 @@ export function Footer() {
               </li>
             </ul>
           </div>
+        </div>
+
+        {/* Email Capture */}
+        <div className="py-8 border-t border-[--border]">
+          <EmailCapture
+            source="footer"
+            heading="Get weekly dad tips"
+            description="Practical advice for expecting and new dads — no spam, unsubscribe anytime."
+          />
         </div>
 
         {/* Medical disclaimer */}
