@@ -138,7 +138,7 @@ export function Header() {
                   </button>
                   {isDropdownOpen && (
                     <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2">
-                      <div className="bg-[--surface] border border-[--border] rounded-xl shadow-lg py-2 min-w-[180px]">
+                      <div className="bg-[--popover] border border-[--border-hover] rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.25)] py-2 min-w-[180px] backdrop-blur-xl">
                         {link.children.map((child) => (
                           <Link
                             key={child.href}
