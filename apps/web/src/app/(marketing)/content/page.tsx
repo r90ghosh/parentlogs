@@ -7,10 +7,19 @@ import { ContentFilters } from '@/components/marketing/ContentFilters'
 import { ResourceLibrary } from '@/components/marketing/ResourceLibrary'
 import { Button } from '@/components/ui/button'
 
-export const metadata = {
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
   title: 'Parenting Resources for Dads | The Dad Center',
   description:
     'Expert-reviewed articles and curated videos covering pregnancy through toddlerhood. Written for dads, by dads.',
+  keywords: ['parenting articles', 'dad resources', 'pregnancy guides', 'new dad advice', 'baby care articles', 'fatherhood tips'],
+  alternates: { canonical: '/content' },
+  openGraph: {
+    title: 'Parenting Resources for Dads | The Dad Center',
+    description: 'Expert-reviewed articles and curated videos covering pregnancy through toddlerhood. Written for dads, by dads.',
+    url: '/content',
+  },
 }
 
 interface PageProps {

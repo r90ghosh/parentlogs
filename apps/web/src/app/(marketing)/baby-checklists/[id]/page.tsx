@@ -27,9 +27,11 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: `${checklist.name} Checklist — ${checklist.items.length} Items | The Dad Center`,
     description: checklist.description,
+    alternates: { canonical: `/baby-checklists/${id}` },
     openGraph: {
       title: `${checklist.name} Checklist | The Dad Center`,
       description: checklist.description,
+      url: `/baby-checklists/${id}`,
     },
   }
 }

@@ -5,13 +5,18 @@ import { getBudgetStatsByCategory, formatBudgetPrice } from '@tdc/shared/utils'
 import { PublicBudgetBrowser } from '@/components/marketing/PublicBudgetBrowser'
 import { Button } from '@/components/ui/button'
 
-export const metadata = {
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
   title: 'Baby Budget Guide — What You\'ll Actually Spend | The Dad Center',
   description:
     'A comprehensive, dad-friendly baby budget guide covering every expense from pregnancy through toddlerhood. See real price ranges and plan ahead.',
+  keywords: ['baby budget', 'how much does a baby cost', 'baby expenses', 'pregnancy budget', 'newborn costs', 'baby planning finances'],
+  alternates: { canonical: '/budget-guide' },
   openGraph: {
     title: 'Baby Budget Guide — What You\'ll Actually Spend | The Dad Center',
     description: 'Plan your baby expenses with our comprehensive budget guide. Real price ranges from pregnancy through 12+ months.',
+    url: '/budget-guide',
   },
 }
 

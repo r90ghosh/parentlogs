@@ -33,10 +33,12 @@ export async function generateMetadata({ params }: PageProps) {
   return {
     title: `${article.title} | The Dad Center`,
     description: article.excerpt,
+    alternates: { canonical: `/content/articles/${slug}` },
     openGraph: {
       title: article.title,
       description: article.excerpt,
       type: 'article',
+      url: `/content/articles/${slug}`,
     },
   }
 }

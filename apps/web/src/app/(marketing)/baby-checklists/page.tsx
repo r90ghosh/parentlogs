@@ -8,13 +8,18 @@ import { Badge } from '@/components/ui/badge'
 import { Reveal } from '@/components/ui/animations/Reveal'
 import { cn } from '@/lib/utils'
 
-export const metadata = {
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
   title: 'Baby Preparation Checklists — 15 Essential Lists | The Dad Center',
   description:
     'Get organized with 15 curated baby preparation checklists covering hospital bag, nursery setup, baby essentials, and more. Made for dads.',
+  keywords: ['baby checklist', 'hospital bag checklist', 'nursery checklist', 'baby essentials list', 'newborn preparation', 'baby registry checklist'],
+  alternates: { canonical: '/baby-checklists' },
   openGraph: {
     title: 'Baby Preparation Checklists — 15 Essential Lists | The Dad Center',
     description: 'Get organized with 15 curated baby preparation checklists. From hospital bag to first year firsts.',
+    url: '/baby-checklists',
   },
 }
 
