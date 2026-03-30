@@ -7,6 +7,7 @@ import { taskService } from '@/lib/services'
 import type { TaskFilters, ServiceContext } from '@tdc/services'
 import { FamilyTask, TaskAssignee, TaskStatus, TriageAction } from '@tdc/shared/types'
 import { useUser } from '@/components/user-provider'
+import { trackActivity } from '@/lib/track-activity'
 
 export type CreateTaskInput = {
   title: string
@@ -55,6 +56,7 @@ export function useCompleteTask() {
   return useMutation({
     mutationFn: (id: string) => taskService.completeTask(id, ctx),
     onSuccess: () => {
+      if (ctx?.userId) trackActivity(ctx.userId, 'task_completed')
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
       queryClient.invalidateQueries({ queryKey: ['tasks-timeline'] })
       queryClient.invalidateQueries({ queryKey: ['dashboard'] })

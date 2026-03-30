@@ -2,6 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { dadJourneyService } from '@/lib/services'
 import { ContentPhase, DadProfile } from '@tdc/shared/types/dad-journey'
+import { trackActivity } from '@/lib/track-activity'
 
 export function useDadChallengeContent(phase: ContentPhase) {
   return useQuery({
@@ -37,6 +38,7 @@ export function useSubmitMoodCheckin() {
   return useMutation({
     mutationFn: dadJourneyService.submitMoodCheckin,
     onSuccess: (_, { userId }) => {
+      trackActivity(userId, 'mood_checkin')
       queryClient.invalidateQueries({ queryKey: ['mood-checkin', userId] })
       queryClient.invalidateQueries({ queryKey: ['mood-history', userId] })
       queryClient.invalidateQueries({ queryKey: ['dashboard'] })

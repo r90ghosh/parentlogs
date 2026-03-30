@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils'
 import { isPregnancyStage, getBabySize } from '@tdc/shared/utils'
 import { Reveal, Card3DTilt, ScrollProgressBar } from '@/components/ui/animations'
 import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
+import { trackActivity } from '@/lib/track-activity'
 
 import {
   BriefingHero,
@@ -36,6 +37,11 @@ export default function BriefingClient() {
   const currentWeek = activeBaby?.current_week ?? family?.current_week ?? 1
   const isPregnancy = isPregnancyStage(stage)
   const maxWeek = isPregnancy ? 40 : 104
+
+  // Track briefing viewed (once per user)
+  useEffect(() => {
+    if (profile?.id) trackActivity(profile.id, 'briefing_viewed')
+  }, [profile?.id])
 
   // Handle URL params for week navigation from archive
   useEffect(() => {

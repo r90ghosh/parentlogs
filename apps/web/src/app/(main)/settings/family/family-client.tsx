@@ -5,6 +5,7 @@ import { useFamily, useFamilyMembers, useUpdateFamily } from '@/hooks/use-family
 import { useBabies } from '@/hooks/use-babies'
 import { familyService } from '@/lib/services'
 import { useUser } from '@/components/user-provider'
+import { trackActivity } from '@/lib/track-activity'
 import { AddBabyDialog } from '@/components/settings/add-baby-dialog'
 import { isPregnancyStage } from '@tdc/shared/utils'
 import { Button } from '@/components/ui/button'
@@ -95,6 +96,7 @@ export default function FamilyClient() {
     try {
       await navigator.clipboard.writeText(family.invite_code)
       setCopied(true)
+      trackActivity(profile.id, 'partner_invited')
       toast({ title: 'Invite code copied!' })
       setTimeout(() => setCopied(false), 2000)
     } catch {

@@ -1,7 +1,8 @@
 'use client'
 
-import { createContext, useContext, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useRef, ReactNode } from 'react'
 import { User as AppUser, Family, Baby } from '@tdc/shared/types'
+import { trackActivity } from '@/lib/track-activity'
 
 /**
  * User context for server-fetched data
@@ -63,6 +64,15 @@ interface UserProviderProps {
  * }
  */
 export function UserProvider({ user, profile, family, activeBaby, children }: UserProviderProps) {
+  const tracked = useRef(false)
+
+  useEffect(() => {
+    if (!tracked.current && user?.id) {
+      tracked.current = true
+      trackActivity(user.id, 'page_active')
+    }
+  }, [user?.id])
+
   return (
     <UserContext.Provider value={{ user, profile, family, activeBaby }}>
       {children}
