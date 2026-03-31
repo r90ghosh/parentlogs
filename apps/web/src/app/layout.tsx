@@ -5,6 +5,7 @@ import { Providers } from '@/components/providers'
 import { Toaster } from '@/components/ui/sonner'
 import { CookieConsent } from '@/components/shared/cookie-consent'
 import { FeedbackWidget } from '@/components/shared/feedback-widget'
+import { GoogleTagManager, GoogleTagManagerNoscript } from '@/components/shared/gtm'
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -95,7 +96,9 @@ export default function RootLayout({
         />
       </head>
       <body className={`${playfair.variable} ${jost.variable} ${karla.variable} font-body antialiased`}>
+        <GoogleTagManagerNoscript />
         <Providers>
+          <GoogleTagManager />
           {children}
           <Toaster />
           <FeedbackWidget />

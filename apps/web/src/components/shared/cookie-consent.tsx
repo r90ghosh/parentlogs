@@ -28,6 +28,8 @@ export function CookieConsent() {
     // Start tracking immediately on accept without reload
     if (value === 'accepted') {
       import('@/lib/analytics').then(({ initAnalytics }) => initAnalytics())
+      // Notify GTM component to load (same-tab event)
+      window.dispatchEvent(new Event('cookie-consent-changed'))
     }
   }
 

@@ -10,6 +10,26 @@ interface AnalyticsEvent {
   timestamp: string
 }
 
+// --- GTM DataLayer ---
+declare global {
+  interface Window {
+    dataLayer?: Record<string, unknown>[]
+  }
+}
+
+function pushToDataLayer(event: string, params?: Record<string, unknown>) {
+  if (typeof window !== 'undefined' && window.dataLayer) {
+    window.dataLayer.push({ event, ...params })
+  }
+}
+
+// Events that should also fire in GTM/GA4 for conversion tracking
+const GTM_EVENTS = new Set([
+  'sign_up', 'login', 'onboarding_completed',
+  'upgrade_viewed', 'begin_checkout', 'purchase', 'subscription_canceled',
+  'family_created', 'family_joined',
+])
+
 // --- State ---
 let userId: string | null = null
 let sessionId: string | null = null
@@ -75,8 +95,40 @@ export function initAnalytics() {
   // Flush every 30 seconds as catch-all
   flushTimer = setInterval(flush, 30_000)
 
+  // Capture UTM parameters for attribution
+  captureUtmParams()
+
   if (process.env.NODE_ENV === 'development') {
     console.log('[Analytics] Initialized, session:', sessionId)
+  }
+}
+
+function captureUtmParams() {
+  try {
+    const params = new URLSearchParams(window.location.search)
+    const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']
+    const utmData: Record<string, string> = {}
+
+    for (const key of utmKeys) {
+      const value = params.get(key)
+      if (value) utmData[key] = value
+    }
+
+    if (Object.keys(utmData).length > 0) {
+      sessionStorage.setItem('utm_params', JSON.stringify(utmData))
+      pushToDataLayer('utm_captured', utmData)
+    }
+  } catch {
+    // Ignore — SSR or no access to sessionStorage
+  }
+}
+
+export function getStoredUtmParams(): Record<string, string> | null {
+  try {
+    const raw = sessionStorage.getItem('utm_params')
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
   }
 }
 
@@ -94,6 +146,11 @@ export function trackEvent(eventName: string, properties: EventProperties = {}) 
     page_path: getPagePath(),
     timestamp: new Date().toISOString(),
   })
+
+  // Forward key events to GTM dataLayer for GA4 conversion tracking
+  if (GTM_EVENTS.has(eventName)) {
+    pushToDataLayer(eventName, properties as Record<string, unknown>)
+  }
 
   // Flush when batch threshold reached
   if (eventQueue.length >= 10) flush()
