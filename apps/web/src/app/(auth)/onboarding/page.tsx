@@ -1,8 +1,9 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { Suspense, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { CheckCircle } from 'lucide-react'
+import { CheckCircle, Loader2 } from 'lucide-react'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
@@ -14,8 +15,22 @@ const features = [
   'Baby tracker with shift handoff',
 ]
 
-export default function OnboardingWelcome() {
+function OnboardingWelcomeContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    // Check for invite code from URL param (cross-browser) or localStorage (same browser)
+    const fromUrl = searchParams.get('invite')
+    const fromStorage = localStorage.getItem('tdc_invite_code')
+    const inviteCode = fromUrl || fromStorage
+
+    if (inviteCode) {
+      // Persist to localStorage so join page can read it
+      localStorage.setItem('tdc_invite_code', inviteCode.toUpperCase())
+      router.push('/onboarding/role?next=join')
+    }
+  }, [searchParams, router])
 
   return (
     <Reveal variant="card" delay={100}>
@@ -64,7 +79,7 @@ export default function OnboardingWelcome() {
                   <Button
                     variant="outline"
                     className="w-full border-[--border-hover] text-[--muted] hover:bg-[--card-hover] hover:text-[--cream] font-ui"
-                    onClick={() => router.push('/onboarding/join')}
+                    onClick={() => router.push('/onboarding/role?next=join')}
                   >
                     Join Partner&apos;s Family
                   </Button>
@@ -75,5 +90,20 @@ export default function OnboardingWelcome() {
         </div>
       </Card3DTilt>
     </Reveal>
+  )
+}
+
+export default function OnboardingWelcome() {
+  return (
+    <Suspense fallback={
+      <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
+        <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
+        <div className="py-12 flex items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-copper" />
+        </div>
+      </div>
+    }>
+      <OnboardingWelcomeContent />
+    </Suspense>
   )
 }

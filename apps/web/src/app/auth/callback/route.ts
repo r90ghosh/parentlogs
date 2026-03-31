@@ -52,16 +52,27 @@ export async function GET(request: Request) {
       .eq('id', data.user!.id)
       .single()
 
+    // Check for invite code from URL param (emailRedirectTo) or user metadata
+    const inviteParam = searchParams.get('invite')
+    const inviteFromMeta = data.user?.user_metadata?.invite_code as string | undefined
+    const inviteCode = inviteParam || inviteFromMeta
+
     // Determine redirect destination based on user state
     let redirectTo = next
 
     if (profileError || !profile) {
-      // New user or profile not yet created - send to onboarding
       redirectTo = '/onboarding'
     } else if (!profile.onboarding_completed) {
       redirectTo = '/onboarding'
     } else if (!profile.family_id) {
       redirectTo = '/onboarding/family'
+    }
+
+    // Append invite code to onboarding redirects so it survives cross-browser
+    if (inviteCode && redirectTo.startsWith('/onboarding') && !redirectTo.includes('/family')) {
+      const redirectUrl = new URL(`${origin}${redirectTo}`)
+      redirectUrl.searchParams.set('invite', inviteCode)
+      return NextResponse.redirect(redirectUrl)
     }
 
     return NextResponse.redirect(`${origin}${redirectTo}`)

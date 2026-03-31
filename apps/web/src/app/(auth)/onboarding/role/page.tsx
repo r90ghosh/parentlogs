@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth/auth-context'
 import { useUpdateRole } from '@/hooks/use-profile'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -38,11 +38,13 @@ const roles: Array<{ id: UserRole; label: string; description: string; emoji: st
  * Auto-advances on tap — no separate Continue button needed.
  * Protected by the onboarding layout (server-side auth check).
  */
-export default function OnboardingRole() {
+function OnboardingRoleContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { user } = useAuth()
   const updateRole = useUpdateRole()
 
+  const nextParam = searchParams.get('next')
   const [error, setError] = useState<string | null>(null)
 
   // Wait for client-side auth state to sync
@@ -60,7 +62,7 @@ export default function OnboardingRole() {
 
     try {
       await updateRole.mutateAsync({ userId: user.id, role })
-      router.push('/onboarding/family')
+      router.push(nextParam === 'join' ? '/onboarding/join' : '/onboarding/family')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save role')
     }
@@ -152,5 +154,20 @@ export default function OnboardingRole() {
         </div>
       </Card3DTilt>
     </Reveal>
+  )
+}
+
+export default function OnboardingRole() {
+  return (
+    <Suspense fallback={
+      <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
+        <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
+        <div className="py-12 flex items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-copper" />
+        </div>
+      </div>
+    }>
+      <OnboardingRoleContent />
+    </Suspense>
   )
 }

@@ -26,9 +26,9 @@ import * as Sentry from '@sentry/nextjs'
 interface AuthContextType {
   user: User | null
   session: Session | null
-  signUp: (email: string, password: string, metadata?: { full_name?: string; role?: string }) => Promise<{ error: Error | null }>
+  signUp: (email: string, password: string, metadata?: { full_name?: string; role?: string }, inviteCode?: string) => Promise<{ error: Error | null }>
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>
-  signInWithGoogle: () => Promise<{ error: Error | null }>
+  signInWithGoogle: (inviteCode?: string) => Promise<{ error: Error | null }>
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<{ error: Error | null }>
   updatePassword: (password: string) => Promise<{ error: Error | null }>
@@ -76,13 +76,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [supabase.auth])
 
-  const signUp = async (email: string, password: string, metadata?: { full_name?: string; role?: string }) => {
+  const signUp = async (email: string, password: string, metadata?: { full_name?: string; role?: string }, inviteCode?: string) => {
+    const redirectUrl = new URL(`${window.location.origin}/auth/callback`)
+    if (inviteCode) redirectUrl.searchParams.set('invite', inviteCode)
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: metadata,
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        data: { ...metadata, ...(inviteCode && { invite_code: inviteCode }) },
+        emailRedirectTo: redirectUrl.toString(),
       },
     })
     return { error: error as Error | null }
@@ -93,12 +96,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error as Error | null }
   }
 
-  const signInWithGoogle = async () => {
-    const redirectTo = `${window.location.origin}/auth/callback`
+  const signInWithGoogle = async (inviteCode?: string) => {
+    const redirectUrl = new URL(`${window.location.origin}/auth/callback`)
+    if (inviteCode) redirectUrl.searchParams.set('invite', inviteCode)
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo,
+        redirectTo: redirectUrl.toString(),
       },
     })
     return { error: error as Error | null }

@@ -238,18 +238,68 @@ export default function FamilyClient() {
             </div>
           ))}
 
-          {/* Invite Partner — Coming Soon */}
-          <div className="pt-4 border-t border-[--border]">
-            <div className="flex items-center gap-2 mb-2">
-              <Label className="font-ui font-semibold text-[11px] uppercase tracking-[0.12em] text-[--muted]">
-                Invite Partner
-              </Label>
-              <span className="px-2 py-0.5 rounded-full text-[9px] font-ui font-semibold uppercase tracking-[0.1em] bg-copper/15 text-copper border border-copper/25">
-                Coming Soon
-              </span>
+          {/* Invite Partner */}
+          <div className="pt-4 border-t border-[--border] space-y-3">
+            <Label className="font-ui font-semibold text-[11px] uppercase tracking-[0.12em] text-[--muted]">
+              Invite Partner
+            </Label>
+
+            {/* Invite code display */}
+            <div className="flex items-center gap-2">
+              <div className="flex-1 bg-[--card] border border-[--border] rounded-lg px-4 py-3 text-center">
+                <span className="font-mono text-lg tracking-[0.2em] text-copper font-semibold">
+                  {family.invite_code}
+                </span>
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleCopyInviteCode}
+                className="border-[--border-hover] hover:bg-[--card-hover] shrink-0"
+              >
+                {copied ? <Check className="h-4 w-4 text-sage" /> : <Copy className="h-4 w-4" />}
+              </Button>
             </div>
+
+            {/* Share invite link */}
+            <Button
+              variant="outline"
+              className="w-full border-copper/30 text-copper hover:bg-copper/10 font-ui"
+              onClick={async () => {
+                if (!family?.invite_code) return
+                try {
+                  const inviteLink = `${window.location.origin}/signup?invite=${family.invite_code}`
+                  await navigator.clipboard.writeText(inviteLink)
+                  toast({ title: 'Invite link copied!', description: 'Share this link with your partner to join your family.' })
+                } catch {
+                  toast({ title: 'Failed to copy link', variant: 'destructive' })
+                }
+              }}
+            >
+              <Copy className="mr-2 h-4 w-4" />
+              Copy Invite Link
+            </Button>
+
+            {/* Regenerate */}
+            {isOwner && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleRegenerateCode}
+                disabled={isRegenerating}
+                className="text-[--muted] hover:text-[--cream] font-ui text-xs"
+              >
+                {isRegenerating ? (
+                  <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                ) : (
+                  <RefreshCw className="mr-2 h-3 w-3" />
+                )}
+                Regenerate Code
+              </Button>
+            )}
+
             <p className="font-body text-xs text-[--dim]">
-              Partner invitations will be available soon. Your family data is safe and ready.
+              Your partner can use this code or link to join your family after signing up.
             </p>
           </div>
         </CardContent>

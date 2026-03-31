@@ -1750,6 +1750,15 @@ export type Database = {
       }
       is_family_member: { Args: { family_uuid: string }; Returns: boolean }
       is_premium_user: { Args: never; Returns: boolean }
+      join_family: { Args: { p_invite_code: string }; Returns: Json }
+      lookup_family_by_invite: {
+        Args: { p_code: string }
+        Returns: {
+          family_id: string
+          family_name: string
+          family_stage: string
+        }[]
+      }
       regenerate_invite_code: { Args: { p_family_id: string }; Returns: string }
       whitelist_email: {
         Args: { p_email: string; p_notes?: string }

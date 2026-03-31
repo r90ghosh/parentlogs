@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partner Sync Flows — The Dad Center</title>
+<style>
+  /* ============================================================
+     RESET & BASE
+     ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #12100e;
+    --surface: #1a1714;
+    --card: #201c18;
+    --card-hover: #282420;
+    --white: #faf6f0;
+    --cream: #ede6dc;
+    --muted: #7a6f62;
+    --dim: #4a4239;
+    --copper: #c4703f;
+    --copper-dim: rgba(196, 112, 63, 0.15);
+    --copper-glow: rgba(196, 112, 63, 0.25);
+    --gold: #d4a853;
+    --gold-dim: rgba(212, 168, 83, 0.15);
+    --sage: #6b8f71;
+    --sage-dim: rgba(107, 143, 113, 0.15);
+    --coral: #d4836b;
+    --coral-dim: rgba(212, 131, 107, 0.15);
+    --sky: #5b9bd5;
+    --sky-dim: rgba(91, 155, 213, 0.15);
+    --rose: #c47a8f;
+    --border: rgba(237, 230, 220, 0.08);
+    --border-hover: rgba(237, 230, 220, 0.15);
+    --shadow-card: 0 2px 12px rgba(0,0,0,0.35);
+    --shadow-hover: 0 4px 24px rgba(0,0,0,0.45);
+    --shadow-lift: 0 8px 32px rgba(0,0,0,0.5);
+    --shadow-copper: 0 4px 20px rgba(196, 112, 63, 0.2);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+
+  body {
+    font-family: 'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--cream);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ============================================================
+     FONTS (system approximation of Playfair / Jost / Karla)
+     ============================================================ */
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Jost:wght@300;400;500;600&family=Karla:wght@400;500;600;700&display=swap');
+
+  .font-display { font-family: 'Playfair Display', Georgia, 'Times New Roman', serif; }
+  .font-body { font-family: 'Jost', -apple-system, sans-serif; }
+  .font-ui { font-family: 'Karla', -apple-system, sans-serif; }
+
+  /* ============================================================
+     BACKGROUND PARTICLES & NOISE
+     ============================================================ */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(196,112,63,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 80%, rgba(212,168,83,0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ============================================================
+     LAYOUT
+     ============================================================ */
+  .page-wrapper {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ============================================================
+     SIDEBAR NAV
+     ============================================================ */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 280px;
+    height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 32px 0;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar-logo {
+    padding: 0 24px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  .sidebar-logo h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.02em;
+  }
+
+  .sidebar-logo span {
+    font-family: 'Karla', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-top: 4px;
+  }
+
+  .nav-section {
+    padding: 8px 16px;
+  }
+
+  .nav-section-label {
+    font-family: 'Karla', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    padding: 4px 8px 8px;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'Karla', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .nav-link:hover {
+    background: var(--copper-dim);
+    color: var(--cream);
+  }
+
+  .nav-link.active {
+    background: var(--copper-dim);
+    color: var(--copper);
+    font-weight: 600;
+  }
+
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .nav-dot.copper { background: var(--copper); }
+  .nav-dot.sage { background: var(--sage); }
+  .nav-dot.gold { background: var(--gold); }
+  .nav-dot.coral { background: var(--coral); }
+  .nav-dot.sky { background: var(--sky); }
+
+  /* ============================================================
+     MAIN CONTENT
+     ============================================================ */
+  .main-content {
+    margin-left: 280px;
+    flex: 1;
+    min-width: 0;
+    padding: 40px 48px 80px;
+  }
+
+  /* ============================================================
+     HERO HEADER
+     ============================================================ */
+  .hero {
+    text-align: center;
+    padding: 48px 0 56px;
+    position: relative;
+  }
+
+  .hero::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--copper), var(--gold));
+    margin: 32px auto 0;
+    border-radius: 2px;
+  }
+
+  .hero-pre {
+    font-family: 'Karla', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--copper);
+    margin-bottom: 12px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .hero p {
+    font-family: 'Jost', sans-serif;
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* ============================================================
+     LEGEND
+     ============================================================ */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 48px;
+    box-shadow: var(--shadow-card);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Karla', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .legend-swatch {
+    width: 12px; height: 12px;
+    border-radius: 4px;
+  }
+
+  .legend-swatch.copper { background: var(--copper); }
+  .legend-swatch.sage { background: var(--sage); }
+  .legend-swatch.gold { background: var(--gold); }
+  .legend-swatch.coral { background: var(--coral); }
+  .legend-swatch.sky { background: var(--sky); }
+
+  /* ============================================================
+     FLOW SECTION
+     ============================================================ */
+  .flow-section {
+    margin-bottom: 32px;
+  }
+
+  .flow-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.25s ease;
+    box-shadow: var(--shadow-card);
+  }
+
+  .flow-header:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+  }
+
+  .flow-header.open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-color: transparent;
+  }
+
+  .flow-number {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .flow-number.copper { background: var(--copper-dim); color: var(--copper); }
+  .flow-number.sage { background: var(--sage-dim); color: var(--sage); }
+  .flow-number.gold { background: var(--gold-dim); color: var(--gold); }
+  .flow-number.coral { background: var(--coral-dim); color: var(--coral); }
+  .flow-number.sky { background: var(--sky-dim); color: var(--sky); }
+
+  .flow-title-group { flex: 1; min-width: 0; }
+
+  .flow-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.3;
+  }
+
+  .flow-subtitle {
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .flow-chevron {
+    width: 20px; height: 20px;
+    flex-shrink: 0;
+    color: var(--dim);
+    transition: transform 0.3s ease;
+  }
+
+  .flow-header.open .flow-chevron {
+    transform: rotate(180deg);
+  }
+
+  .flow-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 16px 16px;
+  }
+
+  .flow-body.open {
+    max-height: 5000px;
+  }
+
+  .flow-body-inner {
+    padding: 32px;
+  }
+
+  /* ============================================================
+     FLOW DIAGRAM
+     ============================================================ */
+  .flow-diagram {
+    position: relative;
+    padding-left: 28px;
+  }
+
+  /* Vertical connector line */
+  .flow-diagram::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--border-hover) 0%, var(--dim) 50%, var(--border-hover) 100%);
+    border-radius: 2px;
+  }
+
+  .flow-step {
+    position: relative;
+    margin-bottom: 4px;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: stepReveal 0.4s ease forwards;
+  }
+
+  .flow-step:nth-child(1) { animation-delay: 0.05s; }
+  .flow-step:nth-child(2) { animation-delay: 0.1s; }
+  .flow-step:nth-child(3) { animation-delay: 0.15s; }
+  .flow-step:nth-child(4) { animation-delay: 0.2s; }
+  .flow-step:nth-child(5) { animation-delay: 0.25s; }
+  .flow-step:nth-child(6) { animation-delay: 0.3s; }
+  .flow-step:nth-child(7) { animation-delay: 0.35s; }
+  .flow-step:nth-child(8) { animation-delay: 0.4s; }
+  .flow-step:nth-child(9) { animation-delay: 0.45s; }
+  .flow-step:nth-child(10) { animation-delay: 0.5s; }
+  .flow-step:nth-child(11) { animation-delay: 0.55s; }
+  .flow-step:nth-child(12) { animation-delay: 0.6s; }
+
+  @keyframes stepReveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Dot on the vertical line */
+  .flow-step::before {
+    content: '';
+    position: absolute;
+    left: -22px;
+    top: 18px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--dim);
+    border: 2px solid var(--surface);
+    z-index: 2;
+    transition: all 0.25s ease;
+  }
+
+  .flow-step.copper::before { background: var(--copper); box-shadow: 0 0 8px var(--copper-glow); }
+  .flow-step.sage::before { background: var(--sage); }
+  .flow-step.gold::before { background: var(--gold); box-shadow: 0 0 8px var(--gold-dim); }
+  .flow-step.coral::before { background: var(--coral); }
+  .flow-step.sky::before { background: var(--sky); }
+
+  .step-card {
+    padding: 14px 18px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    cursor: default;
+  }
+
+  .step-card:hover {
+    border-color: var(--border-hover);
+    background: var(--card-hover);
+    box-shadow: var(--shadow-card);
+    transform: translateX(4px);
+  }
+
+  .flow-step.copper .step-card { border-left: 3px solid var(--copper); }
+  .flow-step.sage .step-card { border-left: 3px solid var(--sage); }
+  .flow-step.gold .step-card { border-left: 3px solid var(--gold); }
+  .flow-step.coral .step-card { border-left: 3px solid var(--coral); }
+  .flow-step.sky .step-card { border-left: 3px solid var(--sky); }
+
+  .step-label {
+    font-family: 'Karla', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  .step-label.copper { color: var(--copper); }
+  .step-label.sage { color: var(--sage); }
+  .step-label.gold { color: var(--gold); }
+  .step-label.coral { color: var(--coral); }
+  .step-label.sky { color: var(--sky); }
+
+  .step-title {
+    font-family: 'Karla', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 2px;
+  }
+
+  .step-detail {
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .step-detail code {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 11.5px;
+    color: var(--copper);
+    background: var(--copper-dim);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .step-detail .route {
+    color: var(--sky);
+    background: var(--sky-dim);
+  }
+
+  .step-detail .rpc {
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  /* Sub-steps (nested operations) */
+  .sub-steps {
+    margin-top: 10px;
+    padding-left: 14px;
+    border-left: 2px solid var(--border);
+  }
+
+  .sub-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 4px 0;
+    font-family: 'Jost', sans-serif;
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .sub-step-icon {
+    flex-shrink: 0;
+    font-size: 13px;
+    margin-top: 1px;
+    width: 18px;
+    text-align: center;
+  }
+
+  /* Divider within flow */
+  .flow-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 20px -28px;
+    padding-left: 28px;
+  }
+
+  .flow-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-hover), transparent);
+  }
+
+  .flow-divider-text {
+    font-family: 'Karla', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+    white-space: nowrap;
+  }
+
+  /* ============================================================
+     SCENARIO TABS (for subscription flow)
+     ============================================================ */
+  .scenario-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+
+  .scenario-tab {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Karla', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .scenario-tab:hover {
+    color: var(--cream);
+    background: var(--card);
+  }
+
+  .scenario-tab.active {
+    background: var(--copper);
+    color: var(--bg);
+    box-shadow: var(--shadow-copper);
+  }
+
+  .scenario-panel {
+    display: none;
+  }
+
+  .scenario-panel.active {
+    display: block;
+  }
+
+  /* ============================================================
+     SECURITY DIAGRAM (special layout for Flow 4)
+     ============================================================ */
+  .security-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 8px;
+  }
+
+  .security-box {
+    padding: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.25s ease;
+  }
+
+  .security-box:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-card);
+  }
+
+  .security-box h4 {
+    font-family: 'Karla', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+
+  .security-box.rls { border-top: 3px solid var(--coral); }
+  .security-box.rls h4 { color: var(--coral); }
+
+  .security-box.sub { border-top: 3px solid var(--gold); }
+  .security-box.sub h4 { color: var(--gold); }
+
+  .security-box.trigger { border-top: 3px solid var(--sky); }
+  .security-box.trigger h4 { color: var(--sky); }
+
+  .security-box.members { border-top: 3px solid var(--sage); }
+  .security-box.members h4 { color: var(--sage); }
+
+  .access-rule {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 0;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: var(--cream);
+    line-height: 1.5;
+  }
+
+  .access-icon {
+    flex-shrink: 0;
+    font-size: 14px;
+    width: 20px;
+    text-align: center;
+    margin-top: 1px;
+  }
+
+  .access-icon.allow { color: var(--sage); }
+  .access-icon.block { color: var(--coral); }
+  .access-icon.bypass { color: var(--gold); }
+
+  /* ============================================================
+     DASHBOARD CARD GRID (for Flow 5)
+     ============================================================ */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .dashboard-col h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .dashboard-col h3 .emoji {
+    margin-right: 8px;
+  }
+
+  .card-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+    cursor: default;
+  }
+
+  .card-item:hover {
+    border-color: var(--border-hover);
+    transform: translateX(4px);
+    box-shadow: var(--shadow-card);
+  }
+
+  .card-rank {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .card-rank.copper { background: var(--copper-dim); color: var(--copper); }
+  .card-rank.sage { background: var(--sage-dim); color: var(--sage); }
+  .card-rank.gold { background: var(--gold-dim); color: var(--gold); }
+  .card-rank.sky { background: var(--sky-dim); color: var(--sky); }
+  .card-rank.muted { background: rgba(122,111,98,0.15); color: var(--muted); }
+
+  .card-info { flex: 1; min-width: 0; }
+
+  .card-name {
+    font-family: 'Karla', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cream);
+  }
+
+  .card-condition {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 1px;
+  }
+
+  .card-badge {
+    font-family: 'Karla', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .card-badge.always { background: var(--sage-dim); color: var(--sage); }
+  .card-badge.conditional { background: var(--copper-dim); color: var(--copper); }
+  .card-badge.role { background: var(--sky-dim); color: var(--sky); }
+
+  /* ============================================================
+     MOBILE MENU TOGGLE
+     ============================================================ */
+  .mobile-toggle {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 200;
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--cream);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-card);
+  }
+
+  .mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 90;
+  }
+
+  /* ============================================================
+     SCROLL PROGRESS
+     ============================================================ */
+  .scroll-progress {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    z-index: 500;
+    background: transparent;
+  }
+
+  .scroll-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--copper), var(--gold));
+    transition: width 0.1s linear;
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 1024px) {
+    .sidebar {
+      transform: translateX(-100%);
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+    }
+
+    .mobile-toggle {
+      display: flex;
+    }
+
+    .mobile-overlay.open {
+      display: block;
+    }
+
+    .main-content {
+      margin-left: 0;
+      padding: 24px 20px 60px;
+    }
+
+    .security-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .scenario-tabs {
+      flex-wrap: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero h1 {
+      font-size: 24px;
+    }
+
+    .legend {
+      gap: 10px;
+      padding: 16px;
+    }
+
+    .flow-body-inner {
+      padding: 20px;
+    }
+  }
+
+  /* ============================================================
+     FLOW ARROW CONNECTOR (between major sections)
+     ============================================================ */
+  .connector-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+    color: var(--dim);
+  }
+
+  .connector-arrow svg {
+    animation: arrowPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes arrowPulse {
+    0%, 100% { opacity: 0.4; transform: translateY(0); }
+    50% { opacity: 0.8; transform: translateY(3px); }
+  }
+
+  /* ============================================================
+     ANNOTATION CALLOUT
+     ============================================================ */
+  .callout {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 16px 0;
+  }
+
+  .callout-icon {
+    flex-shrink: 0;
+    font-size: 16px;
+    margin-top: 1px;
+  }
+
+  .callout-text {
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .callout-text strong {
+    color: var(--cream);
+    font-weight: 600;
+  }
+
+  .callout.copper { border-left: 3px solid var(--copper); }
+  .callout.gold { border-left: 3px solid var(--gold); }
+  .callout.sage { border-left: 3px solid var(--sage); }
+  .callout.coral { border-left: 3px solid var(--coral); }
+  .callout.sky { border-left: 3px solid var(--sky); }
+</style>
+</head>
+<body>
+
+<!-- Scroll Progress -->
+<div class="scroll-progress">
+  <div class="scroll-progress-bar" id="scrollBar"></div>
+</div>
+
+<!-- Mobile Toggle -->
+<button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <line x1="3" y1="5" x2="17" y2="5"/>
+    <line x1="3" y1="10" x2="17" y2="10"/>
+    <line x1="3" y1="15" x2="17" y2="15"/>
+  </svg>
+</button>
+
+<!-- Mobile Overlay -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<div class="page-wrapper">
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h2 class="font-display">The Dad Center</h2>
+      <span class="font-ui">Partner Sync Flows</span>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Flows</div>
+      <a class="nav-link" data-target="flow-1">
+        <span class="nav-dot copper"></span>
+        Dad Signs Up & Invites Mom
+      </a>
+      <a class="nav-link" data-target="flow-2">
+        <span class="nav-dot sage"></span>
+        Mom Receives Invite & Joins
+      </a>
+      <a class="nav-link" data-target="flow-3">
+        <span class="nav-dot gold"></span>
+        Subscription Propagation
+      </a>
+      <a class="nav-link" data-target="flow-4">
+        <span class="nav-dot coral"></span>
+        Security Layer
+      </a>
+      <a class="nav-link" data-target="flow-5">
+        <span class="nav-dot sky"></span>
+        Dashboard Card Logic
+      </a>
+    </div>
+
+    <div class="nav-section" style="margin-top:auto; padding-top:24px; border-top:1px solid var(--border);">
+      <div class="nav-section-label">Quick Stats</div>
+      <div style="padding:8px 12px; font-family:'Jost',sans-serif; font-size:12px; color:var(--dim); line-height:1.8;">
+        5 flows documented<br>
+        4 Stripe webhook handlers<br>
+        3 SECURITY DEFINER RPCs<br>
+        1 subscription trigger guard<br>
+        2 members max per family
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Hero -->
+    <header class="hero">
+      <div class="hero-pre font-ui">System Architecture Reference</div>
+      <h1 class="font-display">Partner Sync</h1>
+      <p>Complete flow reference for family invitation, joining, subscription propagation, security, and dashboard personalization.</p>
+    </header>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-swatch copper"></div>
+        User Action
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch sage"></div>
+        Success / Complete
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch gold"></div>
+        Premium / Subscription
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch coral"></div>
+        Error / Blocked
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch sky"></div>
+        Info / System
+      </div>
+    </div>
+
+    <!-- ============================================================
+         FLOW 1: Dad Signs Up & Invites Mom
+         ============================================================ -->
+    <section class="flow-section" id="flow-1">
+      <div class="flow-header" onclick="toggleFlow(this)">
+        <div class="flow-number copper">1</div>
+        <div class="flow-title-group">
+          <div class="flow-title font-display">Dad Signs Up & Invites Mom</div>
+          <div class="flow-subtitle font-body">Account creation, onboarding, family setup, and invite link generation</div>
+        </div>
+        <svg class="flow-chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+      </div>
+      <div class="flow-body">
+        <div class="flow-body-inner">
+          <div class="flow-diagram">
+
+            <div class="flow-step copper">
+              <div class="step-card">
+                <div class="step-label copper">User Action</div>
+                <div class="step-title">Dad visits thedadcenter.com</div>
+                <div class="step-detail">Lands on marketing page. Clicks <strong>"Get Started"</strong> CTA.</div>
+              </div>
+            </div>
+
+            <div class="flow-step copper">
+              <div class="step-card">
+                <div class="step-label copper">Signup</div>
+                <div class="step-title"><code class="route">/signup</code> &mdash; Create Account</div>
+                <div class="step-detail">Email + password <em>or</em> Google OAuth via <code>signInWithGoogle()</code>. Zod-validated form: name (2+ chars), email, password (8+ chars), confirm.</div>
+              </div>
+            </div>
+
+            <div class="flow-step sky">
+              <div class="step-card">
+                <div class="step-label sky">System</div>
+                <div class="step-title">Email Confirmation</div>
+                <div class="step-detail">Supabase sends confirmation email. User clicks link.</div>
+              </div>
+            </div>
+
+            <div class="flow-step sky">
+              <div class="step-card">
+                <div class="step-label sky">Redirect</div>
+                <div class="step-title"><code class="route">/auth/callback</code> &rarr; <code class="route">/onboarding</code></div>
+                <div class="step-detail">Auth callback exchanges code for session, then redirects to onboarding welcome page.</div>
+              </div>
+            </div>
+
+            <div class="flow-step copper">
+              <div class="step-card">
+                <div class="step-label copper">Onboarding Step 1 of 3</div>
+                <div class="step-title"><code class="route">/onboarding/role</code> &mdash; Select Role</div>
+                <div class="step-detail">Dad picks <strong>"Dad"</strong> (or Mom / Other). Auto-advances on tap &mdash; no Continue button. Calls <code class="rpc">useUpdateRole()</code> mutation.</div>
+              </div>
+            </div>
+
+            <div class="flow-step copper">
+              <div class="step-card">
+                <div class="step-label copper">Onboarding Step 2 of 3</div>
+                <div class="step-title"><code class="route">/onboarding/family</code> &mdash; Family Setup</div>
+                <div class="step-detail">Toggle: <strong>Expecting</strong> vs <strong>Baby Born</strong>. Sets due date or birth date + optional baby name.</div>
+                <div class="sub-steps">
+                  <div class="sub-step"><span class="sub-step-icon">&#9654;</span>Calls <code class="rpc">create_family_for_user()</code> RPC &mdash; creates family + generates invite_code (12-char hex)</div>
+                  <div class="sub-step"><span class="sub-step-icon">&#9654;</span>Sets <code>signup_week</code> on profile for free window calculation</div>
+                  <div class="sub-step"><span class="sub-step-icon">&#9654;</span>Calls <code class="rpc">initialize_family_tasks_with_catchup()</code> &mdash; generates ~200 personalized tasks</div>
+                  <div class="sub-step"><span class="sub-step-icon">&#9654;</span>Shows animated progress bar during task generation</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step sage">
+              <div class="step-card">
+                <div class="step-label sage">Onboarding Step 3 of 3</div>
+                <div class="step-title"><code class="route">/onboarding/ready</code> &mdash; "You're all set!"</div>
+                <div class="step-detail">Confirmation screen showing task count. Navigates to dashboard.</div>
+              </div>
+            </div>
+
+            <div class="flow-step sage">
+              <div class="step-card">
+                <div class="step-label sage">Complete</div>
+                <div class="step-title"><code class="route">/dashboard</code></div>
+                <div class="step-detail">Priority-ordered cards. Dad sees all cards including <strong>InvitePartnerCard</strong>.</div>
+              </div>
+            </div>
+
+            <div class="flow-divider">
+              <div class="flow-divider-line"></div>
+              <div class="flow-divider-text">Later, on Dashboard</div>
+              <div class="flow-divider-line"></div>
+            </div>
+
+            <div class="flow-step copper">
+              <div class="step-card">
+                <div class="step-label copper">Invite Partner</div>
+                <div class="step-title">InvitePartnerCard &mdash; Copy Invite Link</div>
+                <div class="step-detail">Displays 12-char invite code in monospace with copy button. <strong>"Copy Invite Link"</strong> button creates <code>thedadcenter.com/signup?invite=ABCDEF123456</code> and copies to clipboard.</div>
+                <div class="sub-steps">
+                  <div class="sub-step"><span class="sub-step-icon">&#9654;</span>Fires <code class="rpc">trackActivity(profile.id, 'partner_invited')</code></div>
+                  <div class="sub-step"><span class="sub-step-icon">&#9654;</span>Shows toast: "Invite link copied!"</div>
+                  <div class="sub-step"><span class="sub-step-icon">&#9654;</span>Also available via Settings &gt; Family &gt; copy code / share link</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FLOW 2: Mom Receives Invite & Joins
+         ============================================================ -->
+    <section class="flow-section" id="flow-2">
+      <div class="flow-header" onclick="toggleFlow(this)">
+        <div class="flow-number sage">2</div>
+        <div class="flow-title-group">
+          <div class="flow-title font-display">Mom Receives Invite & Joins</div>
+          <div class="flow-subtitle font-body">Deep link handling, invite code lookup, atomic family join with subscription sync</div>
+        </div>
+        <svg class="flow-chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+      </div>
+      <div class="flow-body">
+        <div class="flow-body-inner">
+          <div class="flow-diagram">
+
+            <div class="flow-step copper">
+              <div class="step-card">
+                <div class="step-label copper">Deep Link</div>
+                <div class="step-title">Mom clicks invite link</div>
+                <div class="step-detail"><code class="route">/signup?invite=ABCDEF123456</code> &mdash; invite code is captured from URL query param and saved to <code>localStorage</code> as <code>tdc_invite_code</code>.</div>
+              </div>
+            </div>
+
+            <div class="flow-step copper">
+              <div class="step-card">
+                <div class="step-label copper">Signup</div>
+                <div class="step-title"><code class="route">/signup</code> &mdash; Create Account</div>
+                <div class="step-detail">Mom signs up normally. The invite code persists in localStorage through the signup + email confirmation flow.</div>
+              </div>
+            </div>
+
+            <div class="flow-step sky">
+              <div class="step-card">
+                <div class="step-label sky">System</div>
+                <div class="step-title">Email Confirmation &rarr; <code class="route">/auth/callback</code> &rarr; <code class="route">/onboarding</code></div>
+                <div class="step-detail">Standard auth flow. On the welcome page, <code>useEffect</code> checks localStorage for <code>tdc_invite_code</code> &mdash; if found, auto-redirects to <code class="route">/onboarding/role?next=join</code>.</div>
+              </div>
+            </div>
+
+            <div class="flow-step copper">
+              <div class="step-card">
+                <div class="step-label copper">Onboarding Step 1</div>
+                <div class="step-title"><code class="route">/onboarding/role?next=join</code> &mdash; Select Role</div>
+                <div class="step-detail">Mom picks <strong>"Mom"</strong>. The <code>next=join</code> query param routes to <code class="route">/onboarding/join</code> instead of <code class="route">/onboarding/family</code>.</div>
+              </div>
+            </div>
+
+            <div class="flow-step sky">
+              <div class="step-card">
+                <div class="step-label sky">Validation</div>
+                <div class="step-title"><code class="route">/onboarding/join</code> &mdash; Invite Code Pre-filled</div>
+                <div class="step-detail">Code pre-filled from localStorage. As user types (or on load), debounced validation calls <code class="rpc">lookup_family_by_invite(p_code)</code>.</div>
+                <div class="sub-steps">
+                  <div class="sub-step"><span class="sub-step-icon">&#9654;</span><code class="rpc">lookup_family_by_invite()</code> &mdash; SECURITY DEFINER, returns <code>family_name</code> + <code>family_stage</code> only</div>
+                  <div class="sub-step"><span class="sub-step-icon">&#9654;</span>Shows: <span style="color:var(--copper);">"Found family! Stage: Expecting"</span></div>
+                  <div class="sub-step"><span class="sub-step-icon">&#9654;</span>Join button enabled only when family is found</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step gold">
+              <div class="step-card">
+                <div class="step-label gold">Atomic Join</div>
+                <div class="step-title">Clicks "Join Family" &rarr; <code class="rpc">join_family(p_invite_code)</code></div>
+                <div class="step-detail">Single SECURITY DEFINER RPC performs all operations atomically:</div>
+                <div class="sub-steps">
+                  <div class="sub-step"><span class="sub-step-icon" style="color:var(--sage);">&#10003;</span>Validates invite code against <code>families.invite_code</code></div>
+                  <div class="sub-step"><span class="sub-step-icon" style="color:var(--sage);">&#10003;</span>Checks caller isn't already in a family</div>
+                  <div class="sub-step"><span class="sub-step-icon" style="color:var(--sage);">&#10003;</span>Enforces <code>COUNT(*) &lt; 2</code> member limit</div>
+                  <div class="sub-step"><span class="sub-step-icon" style="color:var(--sage);">&#10003;</span>Sets <code>family_id</code> on Mom's profile</div>
+                  <div class="sub-step"><span class="sub-step-icon" style="color:var(--gold);">&#9733;</span>Syncs <code>subscription_tier</code> + <code>subscription_expires_at</code> from existing family member</div>
+                  <div class="sub-step"><span class="sub-step-icon" style="color:var(--sage);">&#10003;</span>Sets <code>active_baby_id</code> to family's primary baby</div>
+                  <div class="sub-step"><span class="sub-step-icon">&#8594;</span>Returns <code>{ family_id, tier, baby_id }</code></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step sky">
+              <div class="step-card">
+                <div class="step-label sky">Notification</div>
+                <div class="step-title"><code>POST /api/partner-joined</code> &mdash; Email Dad</div>
+                <div class="step-detail">Fire-and-forget. Route authenticates caller, finds family owner via <code>families.owner_id</code>, triggers email via <code class="rpc">triggerEmail('partner_joined', owner_id, { partner_name })</code>.</div>
+              </div>
+            </div>
+
+            <div class="flow-step sage">
+              <div class="step-card">
+                <div class="step-label sage">Cleanup</div>
+                <div class="step-title">Clear localStorage &rarr; <code class="route">/onboarding/complete</code></div>
+                <div class="step-detail">Removes <code>tdc_invite_code</code> from localStorage. Navigates to completion screen.</div>
+              </div>
+            </div>
+
+            <div class="flow-step sage">
+              <div class="step-card">
+                <div class="step-label sage">Complete</div>
+                <div class="step-title"><code class="route">/dashboard</code> &mdash; Shared family view</div>
+                <div class="step-detail">Mom sees shared tasks, partner activity card. Dad's InvitePartnerCard disappears (hasPartner now true).</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FLOW 3: Subscription Propagation
+         ============================================================ -->
+    <section class="flow-section" id="flow-3">
+      <div class="flow-header" onclick="toggleFlow(this)">
+        <div class="flow-number gold">3</div>
+        <div class="flow-title-group">
+          <div class="flow-title font-display">Subscription Propagation</div>
+          <div class="flow-subtitle font-body">How one subscription covers the whole family across 4 scenarios</div>
+        </div>
+        <svg class="flow-chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+      </div>
+      <div class="flow-body">
+        <div class="flow-body-inner">
+
+          <div class="callout gold">
+            <span class="callout-icon">&#9888;</span>
+            <div class="callout-text">
+              <strong>All Stripe webhooks go through a single canonical handler:</strong> <code>apps/web/src/app/api/stripe/webhook/route.ts</code>. Idempotency is enforced via <code>stripe_webhook_events</code> table with UNIQUE constraint on <code>event_id</code>.
+            </div>
+          </div>
+
+          <div class="scenario-tabs" id="scenarioTabs">
+            <button class="scenario-tab active" data-scenario="a">A: Subscribe Before Join</button>
+            <button class="scenario-tab" data-scenario="b">B: Subscribe After Join</button>
+            <button class="scenario-tab" data-scenario="c">C: Cancellation</button>
+            <button class="scenario-tab" data-scenario="d">D: Lifetime Purchase</button>
+          </div>
+
+          <!-- Scenario A -->
+          <div class="scenario-panel active" id="scenario-a">
+            <div class="flow-diagram">
+              <div class="flow-step gold">
+                <div class="step-card">
+                  <div class="step-label gold">Webhook</div>
+                  <div class="step-title"><code>customer.subscription.created</code></div>
+                  <div class="step-detail">Stripe fires webhook when Dad subscribes ($4.99/mo or $39.99/yr).</div>
+                </div>
+              </div>
+              <div class="flow-step sky">
+                <div class="step-card">
+                  <div class="step-label sky">Handler</div>
+                  <div class="step-title"><code>handleSubscriptionUpdate()</code></div>
+                  <div class="step-detail">Finds user by <code>stripe_customer_id</code> in subscriptions table. Determines tier from status (active/trialing = premium).</div>
+                  <div class="sub-steps">
+                    <div class="sub-step"><span class="sub-step-icon" style="color:var(--sage);">&#10003;</span>Updates <code>subscriptions</code> record (tier, status, period dates)</div>
+                    <div class="sub-step"><span class="sub-step-icon" style="color:var(--sage);">&#10003;</span>Updates Dad's <code>profiles.subscription_tier = 'premium'</code></div>
+                    <div class="sub-step"><span class="sub-step-icon" style="color:var(--muted);">&#8709;</span>Propagates to family members &mdash; <strong>no-op</strong>, Mom hasn't joined yet</div>
+                    <div class="sub-step"><span class="sub-step-icon">&#9993;</span>Triggers <code>subscription_confirmed</code> email to Dad</div>
+                  </div>
+                </div>
+              </div>
+              <div class="flow-step sage">
+                <div class="step-card">
+                  <div class="step-label sage">Later: Mom Joins</div>
+                  <div class="step-title"><code class="rpc">join_family()</code> syncs subscription</div>
+                  <div class="step-detail">The RPC queries existing family members for premium/lifetime tier and copies it to Mom's profile. <strong>Mom gets premium immediately on join.</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scenario B -->
+          <div class="scenario-panel" id="scenario-b">
+            <div class="flow-diagram">
+              <div class="flow-step sky">
+                <div class="step-card">
+                  <div class="step-label sky">State</div>
+                  <div class="step-title">Mom already joined family (both on free tier)</div>
+                  <div class="step-detail">Both Dad and Mom are in the same family. Both have <code>subscription_tier = 'free'</code>.</div>
+                </div>
+              </div>
+              <div class="flow-step gold">
+                <div class="step-card">
+                  <div class="step-label gold">Webhook</div>
+                  <div class="step-title"><code>customer.subscription.created</code></div>
+                  <div class="step-detail">Dad subscribes after Mom is already in the family.</div>
+                </div>
+              </div>
+              <div class="flow-step sky">
+                <div class="step-card">
+                  <div class="step-label sky">Handler</div>
+                  <div class="step-title"><code>handleSubscriptionUpdate()</code></div>
+                  <div class="step-detail">Same handler as Scenario A, but this time the family propagation query finds Mom:</div>
+                  <div class="sub-steps">
+                    <div class="sub-step"><span class="sub-step-icon" style="color:var(--sage);">&#10003;</span>Updates Dad: <code>subscription_tier = 'premium'</code></div>
+                    <div class="sub-step"><span class="sub-step-icon" style="color:var(--gold);">&#9733;</span>Propagates to Mom: <code>UPDATE profiles SET subscription_tier='premium', subscription_expires_at=... WHERE family_id=... AND id != dad_id</code></div>
+                  </div>
+                </div>
+              </div>
+              <div class="flow-step sage">
+                <div class="step-card">
+                  <div class="step-label sage">Result</div>
+                  <div class="step-title">Both users immediately premium</div>
+                  <div class="step-detail">Mom's next page load shows premium features. No action required from her.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scenario C -->
+          <div class="scenario-panel" id="scenario-c">
+            <div class="flow-diagram">
+              <div class="flow-step coral">
+                <div class="step-card">
+                  <div class="step-label coral">Webhook</div>
+                  <div class="step-title"><code>customer.subscription.deleted</code></div>
+                  <div class="step-detail">Stripe fires when subscription is fully canceled (not just "cancel at period end").</div>
+                </div>
+              </div>
+              <div class="flow-step sky">
+                <div class="step-card">
+                  <div class="step-label sky">Handler</div>
+                  <div class="step-title"><code>handleSubscriptionCanceled()</code></div>
+                  <div class="step-detail">Calculates grace period: <strong>max(current_period_end, 7 days from now)</strong>.</div>
+                  <div class="sub-steps">
+                    <div class="sub-step"><span class="sub-step-icon" style="color:var(--coral);">!</span>Updates subscription status to <code>'canceled'</code></div>
+                    <div class="sub-step"><span class="sub-step-icon" style="color:var(--gold);">&#9733;</span>Keeps tier as <code>'premium'</code> during grace period (client checks still pass)</div>
+                    <div class="sub-step"><span class="sub-step-icon" style="color:var(--sage);">&#10003;</span>Sets <code>subscription_expires_at</code> on ALL family members</div>
+                    <div class="sub-step"><span class="sub-step-icon">&#9993;</span>Triggers <code>subscription_expiring</code> email with days remaining</div>
+                  </div>
+                </div>
+              </div>
+              <div class="flow-step gold">
+                <div class="step-card">
+                  <div class="step-label gold">Grace Period</div>
+                  <div class="step-title">Both stay premium until <code>subscription_expires_at</code></div>
+                  <div class="step-detail">Client-side <code>isPremium</code> checks continue to pass. A cron job or on-read check downgrades tier to <code>'free'</code> after expiry.</div>
+                </div>
+              </div>
+              <div class="flow-step coral">
+                <div class="step-card">
+                  <div class="step-label coral">Post-Expiry</div>
+                  <div class="step-title">Both downgrade to free</div>
+                  <div class="step-detail">Paywall overlays appear. Tasks limited to 30-day rolling window. Briefings limited to 4 weeks from signup.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scenario D -->
+          <div class="scenario-panel" id="scenario-d">
+            <div class="flow-diagram">
+              <div class="flow-step gold">
+                <div class="step-card">
+                  <div class="step-label gold">Webhook</div>
+                  <div class="step-title"><code>checkout.session.completed</code> (mode: payment)</div>
+                  <div class="step-detail">Lifetime purchase uses Stripe <strong>payment mode</strong>, not subscription mode. Metadata: <code>plan: 'lifetime'</code>.</div>
+                </div>
+              </div>
+              <div class="flow-step sky">
+                <div class="step-card">
+                  <div class="step-label sky">Handler</div>
+                  <div class="step-title"><code>handleCheckoutComplete()</code></div>
+                  <div class="step-detail">Detects lifetime purchase from session metadata:</div>
+                  <div class="sub-steps">
+                    <div class="sub-step"><span class="sub-step-icon" style="color:var(--sage);">&#10003;</span>Upserts <code>subscriptions</code>: tier = 'lifetime', status = 'active'</div>
+                    <div class="sub-step"><span class="sub-step-icon" style="color:var(--sage);">&#10003;</span>Updates Dad: <code>subscription_tier = 'lifetime'</code>, <code>subscription_expires_at = null</code></div>
+                    <div class="sub-step"><span class="sub-step-icon" style="color:var(--gold);">&#9733;</span>Propagates lifetime to ALL family members: <code>WHERE family_id=... AND id != dad_id</code></div>
+                    <div class="sub-step"><span class="sub-step-icon">&#9993;</span>Triggers <code>subscription_confirmed</code> email (plan: 'lifetime')</div>
+                  </div>
+                </div>
+              </div>
+              <div class="flow-step sage">
+                <div class="step-card">
+                  <div class="step-label sage">Result</div>
+                  <div class="step-title">Lifetime never expires</div>
+                  <div class="step-detail"><code>subscription_expires_at = null</code> &mdash; no grace period, no cron downgrade, permanent premium for the whole family.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FLOW 4: Security Layer
+         ============================================================ -->
+    <section class="flow-section" id="flow-4">
+      <div class="flow-header" onclick="toggleFlow(this)">
+        <div class="flow-number coral">4</div>
+        <div class="flow-title-group">
+          <div class="flow-title font-display">Security Layer</div>
+          <div class="flow-subtitle font-body">RLS policies, SECURITY DEFINER RPCs, subscription field protection, member limits</div>
+        </div>
+        <svg class="flow-chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+      </div>
+      <div class="flow-body">
+        <div class="flow-body-inner">
+
+          <div class="callout coral">
+            <span class="callout-icon">&#128274;</span>
+            <div class="callout-text">
+              <strong>All security functions defined in:</strong> <code>supabase/migrations/20260330000001_partner_sync_security_fixes.sql</code>. Every SECURITY DEFINER function uses <code>SET search_path = ''</code> and fully-qualified table names.
+            </div>
+          </div>
+
+          <div class="security-grid">
+
+            <!-- RLS Protection -->
+            <div class="security-box rls">
+              <h4>RLS Protection</h4>
+              <div class="access-rule">
+                <span class="access-icon block">&#10005;</span>
+                <div><strong>families SELECT</strong> &mdash; requires <code>is_family_member(id)</code>. Non-members cannot read any family data.</div>
+              </div>
+              <div class="access-rule">
+                <span class="access-icon bypass">&#9889;</span>
+                <div><strong>Bypassed by</strong> <code>lookup_family_by_invite()</code> &mdash; SECURITY DEFINER, returns only <code>name</code> + <code>stage</code> (minimal exposure).</div>
+              </div>
+              <div class="access-rule">
+                <span class="access-icon bypass">&#9889;</span>
+                <div><strong>Bypassed by</strong> <code>join_family()</code> &mdash; SECURITY DEFINER, performs atomic join with full validation.</div>
+              </div>
+              <div class="access-rule">
+                <span class="access-icon allow">&#10003;</span>
+                <div><strong>profiles UPDATE</strong> &mdash; <code>auth.uid() = id</code> (user can update own profile only).</div>
+              </div>
+            </div>
+
+            <!-- Subscription Protection -->
+            <div class="security-box trigger">
+              <h4>Subscription Field Trigger</h4>
+              <div class="access-rule">
+                <span class="access-icon block">&#10005;</span>
+                <div><strong><code>current_user = 'authenticated'</code></strong> (client SDK) &mdash; subscription_tier and subscription_expires_at silently reverted to OLD values. Cannot modify.</div>
+              </div>
+              <div class="access-rule">
+                <span class="access-icon allow">&#10003;</span>
+                <div><strong><code>current_user = 'postgres'</code></strong> (SECURITY DEFINER) &mdash; <code>join_family()</code> can sync subscription tier on join.</div>
+              </div>
+              <div class="access-rule">
+                <span class="access-icon allow">&#10003;</span>
+                <div><strong><code>current_user = 'service_role'</code></strong> (admin key) &mdash; Stripe webhook handler can update subscription fields.</div>
+              </div>
+            </div>
+
+            <!-- Who Can Modify -->
+            <div class="security-box sub">
+              <h4>Who Can Modify Subscription</h4>
+              <div class="access-rule">
+                <span class="access-icon allow">&#10003;</span>
+                <div><code>join_family()</code> RPC &mdash; SECURITY DEFINER runs as <code>postgres</code></div>
+              </div>
+              <div class="access-rule">
+                <span class="access-icon allow">&#10003;</span>
+                <div>Stripe webhook &mdash; uses <code>getSupabaseAdmin()</code> (service_role key)</div>
+              </div>
+              <div class="access-rule">
+                <span class="access-icon block">&#10005;</span>
+                <div>Client SDK <code>supabase.from('profiles').update()</code> &mdash; trigger silently blocks changes</div>
+              </div>
+            </div>
+
+            <!-- Member Limit -->
+            <div class="security-box members">
+              <h4>Member Limit</h4>
+              <div class="access-rule">
+                <span class="access-icon allow">&#10003;</span>
+                <div><code>join_family()</code> checks <code>COUNT(*) FROM profiles WHERE family_id = v_family_id</code></div>
+              </div>
+              <div class="access-rule">
+                <span class="access-icon block">&#10005;</span>
+                <div>If count &ge; 2: <code>RAISE EXCEPTION 'This family already has the maximum number of members'</code></div>
+              </div>
+              <div class="access-rule">
+                <span class="access-icon block">&#10005;</span>
+                <div>If caller already in a family: <code>RAISE EXCEPTION 'You are already in a family'</code></div>
+              </div>
+              <div class="access-rule">
+                <span class="access-icon allow">&#10003;</span>
+                <div>Invite code regeneration: only <code>families.owner_id</code> can call <code>regenerate_invite_code()</code></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FLOW 5: Dashboard Card Logic
+         ============================================================ -->
+    <section class="flow-section" id="flow-5">
+      <div class="flow-header" onclick="toggleFlow(this)">
+        <div class="flow-number sky">5</div>
+        <div class="flow-title-group">
+          <div class="flow-title font-display">Dashboard Card Logic</div>
+          <div class="flow-subtitle font-body">Priority engine from use-dashboard-context.ts &mdash; role-aware, partner-aware card ordering</div>
+        </div>
+        <svg class="flow-chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+      </div>
+      <div class="flow-body">
+        <div class="flow-body-inner">
+
+          <div class="callout sky">
+            <span class="callout-icon">&#128736;</span>
+            <div class="callout-text">
+              <strong>Source:</strong> <code>apps/web/src/hooks/use-dashboard-context.ts</code>. The <code>useDashboardCards()</code> hook returns a priority-sorted, visibility-filtered array of card IDs. Cards self-render based on their own data hooks.
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+
+            <!-- Dad's Dashboard -->
+            <div class="dashboard-col">
+              <h3 class="font-display"><span class="emoji">&#128104;</span>Dad's Dashboard</h3>
+
+              <div class="card-item">
+                <div class="card-rank copper">1</div>
+                <div class="card-info">
+                  <div class="card-name">MoodCheckinCard</div>
+                  <div class="card-condition">visible: isDad</div>
+                </div>
+                <span class="card-badge role">Dad Only</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank muted">2</div>
+                <div class="card-info">
+                  <div class="card-name">ShiftBriefingCard</div>
+                  <div class="card-condition">visible: isPostBirth && hasPartner</div>
+                </div>
+                <span class="card-badge conditional">Conditional</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank sage">3</div>
+                <div class="card-info">
+                  <div class="card-name">BriefingTeaserCard</div>
+                  <div class="card-condition">visible: true</div>
+                </div>
+                <span class="card-badge always">Always</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank sage">4</div>
+                <div class="card-info">
+                  <div class="card-name">TasksDueCard</div>
+                  <div class="card-condition">visible: true</div>
+                </div>
+                <span class="card-badge always">Always</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank copper">5</div>
+                <div class="card-info">
+                  <div class="card-name">OnYourMindCard</div>
+                  <div class="card-condition">visible: isDad</div>
+                </div>
+                <span class="card-badge role">Dad Only</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank sage">6</div>
+                <div class="card-info">
+                  <div class="card-name">QuickActionsBar</div>
+                  <div class="card-condition">visible: true</div>
+                </div>
+                <span class="card-badge always">Always</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank gold">6.5</div>
+                <div class="card-info">
+                  <div class="card-name">UpgradePromptCard</div>
+                  <div class="card-condition">visible: isFree</div>
+                </div>
+                <span class="card-badge conditional">Free Only</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank copper">7</div>
+                <div class="card-info">
+                  <div class="card-name">PersonalizeCard</div>
+                  <div class="card-condition">visible: isDad && !hasCompletedProfile</div>
+                </div>
+                <span class="card-badge conditional">Conditional</span>
+              </div>
+
+              <div class="card-item" style="border-color: var(--sage); border-width: 1px; border-style: dashed;">
+                <div class="card-rank sage">7</div>
+                <div class="card-info">
+                  <div class="card-name">InvitePartnerCard</div>
+                  <div class="card-condition">visible: !hasPartner &mdash; <strong style="color:var(--sage);">disappears when Mom joins</strong></div>
+                </div>
+                <span class="card-badge conditional">Conditional</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank sage">8</div>
+                <div class="card-info">
+                  <div class="card-name">BudgetSnapshotCard</div>
+                  <div class="card-condition">visible: true</div>
+                </div>
+                <span class="card-badge always">Always</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank sage">9</div>
+                <div class="card-info">
+                  <div class="card-name">ChecklistProgressCard</div>
+                  <div class="card-condition">visible: true</div>
+                </div>
+                <span class="card-badge always">Always</span>
+              </div>
+            </div>
+
+            <!-- Mom's Dashboard -->
+            <div class="dashboard-col">
+              <h3 class="font-display"><span class="emoji">&#128105;</span>Mom's Dashboard</h3>
+
+              <div class="card-item" style="border-color: var(--sky); border-width: 1px;">
+                <div class="card-rank sky">1</div>
+                <div class="card-info">
+                  <div class="card-name">PartnerActivityCard</div>
+                  <div class="card-condition">visible: !isDad &mdash; shows Dad's recent tasks</div>
+                </div>
+                <span class="card-badge role">Mom Only</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank muted">2</div>
+                <div class="card-info">
+                  <div class="card-name">ShiftBriefingCard</div>
+                  <div class="card-condition">visible: isPostBirth && hasPartner</div>
+                </div>
+                <span class="card-badge conditional">Conditional</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank sage">3</div>
+                <div class="card-info">
+                  <div class="card-name">BriefingTeaserCard</div>
+                  <div class="card-condition">visible: true</div>
+                </div>
+                <span class="card-badge always">Always</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank sage">4</div>
+                <div class="card-info">
+                  <div class="card-name">TasksDueCard</div>
+                  <div class="card-condition">visible: true</div>
+                </div>
+                <span class="card-badge always">Always</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank sage">6</div>
+                <div class="card-info">
+                  <div class="card-name">QuickActionsBar</div>
+                  <div class="card-condition">visible: true</div>
+                </div>
+                <span class="card-badge always">Always</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank gold">6.5</div>
+                <div class="card-info">
+                  <div class="card-name">UpgradePromptCard</div>
+                  <div class="card-condition">visible: isFree</div>
+                </div>
+                <span class="card-badge conditional">Free Only</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank sage">8</div>
+                <div class="card-info">
+                  <div class="card-name">BudgetSnapshotCard</div>
+                  <div class="card-condition">visible: true</div>
+                </div>
+                <span class="card-badge always">Always</span>
+              </div>
+
+              <div class="card-item">
+                <div class="card-rank sage">9</div>
+                <div class="card-info">
+                  <div class="card-name">ChecklistProgressCard</div>
+                  <div class="card-condition">visible: true</div>
+                </div>
+                <span class="card-badge always">Always</span>
+              </div>
+
+              <div class="callout sky" style="margin-top:16px;">
+                <span class="callout-icon">&#128712;</span>
+                <div class="callout-text">
+                  Mom does <strong>not</strong> see: MoodCheckinCard, OnYourMindCard, PersonalizeCard, InvitePartnerCard (she joined, so hasPartner = true for Dad too).
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="text-align:center; padding:48px 0 24px; border-top:1px solid var(--border); margin-top:32px;">
+      <div style="font-family:'Playfair Display',serif; font-size:16px; color:var(--white); margin-bottom:8px;">The Dad Center</div>
+      <div style="font-family:'Jost',sans-serif; font-size:13px; color:var(--dim);">
+        Partner Sync Flow Reference &mdash; Generated from codebase analysis
+      </div>
+      <div style="font-family:'Karla',sans-serif; font-size:11px; color:var(--dim); margin-top:12px;">
+        Source files: <code style="font-size:11px; color:var(--muted);">webhook/route.ts</code> &middot;
+        <code style="font-size:11px; color:var(--muted);">use-dashboard-context.ts</code> &middot;
+        <code style="font-size:11px; color:var(--muted);">onboarding/join/page.tsx</code> &middot;
+        <code style="font-size:11px; color:var(--muted);">partner_sync_security_fixes.sql</code>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // ============================================================
+  // Flow Section Toggle
+  // ============================================================
+  function toggleFlow(header) {
+    const body = header.nextElementSibling;
+    const isOpen = header.classList.contains('open');
+
+    // Close all others
+    document.querySelectorAll('.flow-header.open').forEach(h => {
+      if (h !== header) {
+        h.classList.remove('open');
+        h.nextElementSibling.classList.remove('open');
+      }
+    });
+
+    // Toggle current
+    header.classList.toggle('open');
+    body.classList.toggle('open');
+
+    // Restart step animations when opening
+    if (!isOpen) {
+      body.querySelectorAll('.flow-step').forEach(step => {
+        step.style.animation = 'none';
+        step.offsetHeight; // trigger reflow
+        step.style.animation = '';
+      });
+
+      // Scroll into view after a brief delay
+      setTimeout(() => {
+        header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }
+
+  // ============================================================
+  // Scenario Tabs
+  // ============================================================
+  document.getElementById('scenarioTabs')?.addEventListener('click', (e) => {
+    const tab = e.target.closest('.scenario-tab');
+    if (!tab) return;
+
+    const scenario = tab.dataset.scenario;
+
+    // Update tabs
+    document.querySelectorAll('.scenario-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+
+    // Update panels
+    document.querySelectorAll('.scenario-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('scenario-' + scenario)?.classList.add('active');
+
+    // Re-trigger step animations
+    const panel = document.getElementById('scenario-' + scenario);
+    panel?.querySelectorAll('.flow-step').forEach(step => {
+      step.style.animation = 'none';
+      step.offsetHeight;
+      step.style.animation = '';
+    });
+  });
+
+  // ============================================================
+  // Sidebar Navigation
+  // ============================================================
+  document.querySelectorAll('.nav-link[data-target]').forEach(link => {
+    link.addEventListener('click', () => {
+      const targetId = link.dataset.target;
+      const section = document.getElementById(targetId);
+      if (!section) return;
+
+      // Open the section
+      const header = section.querySelector('.flow-header');
+      if (header && !header.classList.contains('open')) {
+        toggleFlow(header);
+      }
+
+      // Close mobile sidebar
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('mobileOverlay').classList.remove('open');
+
+      // Scroll to section
+      setTimeout(() => {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
+
+      // Update active nav
+      document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+
+  // ============================================================
+  // Mobile Toggle
+  // ============================================================
+  document.getElementById('mobileToggle')?.addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('mobileOverlay').classList.toggle('open');
+  });
+
+  document.getElementById('mobileOverlay')?.addEventListener('click', () => {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('mobileOverlay').classList.remove('open');
+  });
+
+  // ============================================================
+  // Scroll Progress Bar
+  // ============================================================
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    document.getElementById('scrollBar').style.width = progress + '%';
+  });
+
+  // ============================================================
+  // Active Section Tracking
+  // ============================================================
+  const observerOptions = { rootMargin: '-20% 0px -70% 0px' };
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        document.querySelectorAll('.nav-link').forEach(link => {
+          link.classList.toggle('active', link.dataset.target === id);
+        });
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.flow-section').forEach(section => {
+    sectionObserver.observe(section);
+  });
+
+  // ============================================================
+  // Open first flow by default
+  // ============================================================
+  window.addEventListener('DOMContentLoaded', () => {
+    const firstHeader = document.querySelector('.flow-header');
+    if (firstHeader) {
+      toggleFlow(firstHeader);
+    }
+  });
+</script>
+
+</body>
+</html>

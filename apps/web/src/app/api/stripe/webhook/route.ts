@@ -128,6 +128,24 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
       .eq('id', userId)
     if (profileError) throw profileError
 
+    // Propagate lifetime to all family members
+    const { data: lifetimeUserProfile } = await getSupabaseAdmin()
+      .from('profiles')
+      .select('family_id')
+      .eq('id', userId)
+      .single()
+
+    if (lifetimeUserProfile?.family_id) {
+      await getSupabaseAdmin()
+        .from('profiles')
+        .update({
+          subscription_tier: 'lifetime',
+          subscription_expires_at: null,
+        })
+        .eq('family_id', lifetimeUserProfile.family_id)
+        .neq('id', userId) // Don't double-update the subscriber
+    }
+
     triggerEmail('subscription_confirmed', userId, { plan: 'lifetime' }).catch((err) => console.error('Email trigger failed:', err))
   }
 }
@@ -197,6 +215,24 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     })
     .eq('id', userId)
   if (profileError) throw profileError
+
+  // Propagate subscription to all family members
+  const { data: userProfile } = await getSupabaseAdmin()
+    .from('profiles')
+    .select('family_id')
+    .eq('id', userId)
+    .single()
+
+  if (tier !== 'free' && userProfile?.family_id) {
+    await getSupabaseAdmin()
+      .from('profiles')
+      .update({
+        subscription_tier: tier,
+        subscription_expires_at: periodEnd.toISOString(),
+      })
+      .eq('family_id', userProfile.family_id)
+      .neq('id', userId) // Don't double-update the subscriber
+  }
 
   const isNewSubscription = subscription.status === 'active'
     && tier === 'premium'

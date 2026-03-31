@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -27,11 +28,20 @@ const signupSchema = z.object({
 
 type SignupForm = z.infer<typeof signupSchema>
 
-export default function SignupPage() {
+function SignupPageContent() {
   const { signUp, signInWithGoogle } = useAuth()
+  const searchParams = useSearchParams()
+  const inviteCode = searchParams.get('invite') || (typeof window !== 'undefined' ? localStorage.getItem('tdc_invite_code') : null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+
+  useEffect(() => {
+    const inviteFromUrl = searchParams.get('invite')
+    if (inviteFromUrl) {
+      localStorage.setItem('tdc_invite_code', inviteFromUrl.toUpperCase())
+    }
+  }, [searchParams])
 
   const { register, handleSubmit, formState: { errors } } = useForm<SignupForm>({
     resolver: zodResolver(signupSchema),
@@ -43,7 +53,7 @@ export default function SignupPage() {
 
     const { error } = await signUp(data.email, data.password, {
       full_name: data.full_name,
-    })
+    }, inviteCode || undefined)
 
     if (error) {
       setError(error.message)
@@ -58,7 +68,7 @@ export default function SignupPage() {
     setIsLoading(true)
     setError(null)
 
-    const { error } = await signInWithGoogle()
+    const { error } = await signInWithGoogle(inviteCode || undefined)
     if (error) {
       setError(error.message)
       setIsLoading(false)
@@ -295,5 +305,20 @@ export default function SignupPage() {
         </div>
       </Card3DTilt>
     </Reveal>
+  )
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={
+      <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
+        <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
+        <div className="py-12 flex items-center justify-center">
+          <Loader2 className="h-6 w-6 animate-spin text-copper" />
+        </div>
+      </div>
+    }>
+      <SignupPageContent />
+    </Suspense>
   )
 }

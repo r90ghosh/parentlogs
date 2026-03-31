@@ -24,7 +24,14 @@ function OnboardingJoinContent() {
   const { user } = useAuth()
   const supabase = createClient()
 
-  const [inviteCode, setInviteCode] = useState(searchParams.get('code') || '')
+  const [inviteCode, setInviteCode] = useState(() => {
+    const fromUrl = searchParams.get('code')
+    if (fromUrl) return fromUrl
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('tdc_invite_code') || ''
+    }
+    return ''
+  })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [familyInfo, setFamilyInfo] = useState<{ name: string | null; stage: string | null } | null>(null)
@@ -40,19 +47,17 @@ function OnboardingJoinContent() {
   // Validate code as user types
   useEffect(() => {
     const validateCode = async () => {
-      if (inviteCode.length !== 8) {
+      if (inviteCode.length !== 8 && inviteCode.length !== 12) {
         setFamilyInfo(null)
         return
       }
 
-      const { data, error } = await supabase
-        .from('families')
-        .select('name, stage')
-        .eq('invite_code', inviteCode.toUpperCase())
-        .single()
+      const { data, error } = await supabase.rpc('lookup_family_by_invite', {
+        p_code: inviteCode,
+      })
 
-      if (!error && data) {
-        setFamilyInfo(data)
+      if (!error && data && data.length > 0) {
+        setFamilyInfo({ name: data[0].family_name, stage: data[0].family_stage })
         setError(null)
       } else {
         setFamilyInfo(null)
@@ -61,7 +66,8 @@ function OnboardingJoinContent() {
 
     const debounce = setTimeout(validateCode, 300)
     return () => clearTimeout(debounce)
-  }, [inviteCode, supabase])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inviteCode])
 
   const handleJoin = async () => {
     if (!user || !familyInfo) return
@@ -70,24 +76,22 @@ function OnboardingJoinContent() {
     setError(null)
 
     try {
-      const { data: family, error: familyError } = await supabase
-        .from('families')
-        .select('id')
-        .eq('invite_code', inviteCode.toUpperCase())
-        .single()
+      const { data, error: joinError } = await supabase.rpc('join_family', {
+        p_invite_code: inviteCode,
+      })
 
-      if (familyError) {
-        throw new Error('Invalid invite code')
+      if (joinError) {
+        throw new Error(joinError.message)
       }
 
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ family_id: family.id })
-        .eq('id', user.id)
+      // Clear stored invite code from deep link
+      localStorage.removeItem('tdc_invite_code')
 
-      if (profileError) {
-        throw profileError
-      }
+      // Notify family owner that partner joined (fire-and-forget)
+      fetch('/api/partner-joined', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      }).catch(() => {})
 
       router.push('/onboarding/complete')
     } catch (err) {
@@ -132,10 +136,10 @@ function OnboardingJoinContent() {
           <Input
             id="inviteCode"
             type="text"
-            placeholder="ABCD1234"
+            placeholder="Enter code"
             value={inviteCode}
             onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
-            maxLength={8}
+            maxLength={12}
             className="bg-[--card] border-[--border-hover] text-center text-xl font-mono tracking-wider uppercase"
           />
         </div>
