@@ -5,6 +5,7 @@ import { Check, X, Sparkles, Crown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+import { trackEvent } from '@/lib/analytics'
 
 const plans = [
   {
@@ -162,7 +163,7 @@ export function Pricing() {
                     }`}
                     size="default"
                   >
-                    <Link href={plan.ctaLink}>{plan.cta}</Link>
+                    <Link href={plan.ctaLink} onClick={() => trackEvent('cta_clicked', { button: `pricing_${plan.name.toLowerCase()}`, page: 'landing' })}>{plan.cta}</Link>
                   </Button>
                 </div>
               </Card3DTilt>

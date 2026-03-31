@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+import { trackEvent } from '@/lib/analytics'
 
 function SplitLetterHeading() {
   const ref = useRef<HTMLHeadingElement>(null)
@@ -272,7 +273,7 @@ export function Hero() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
               <MagneticButton maxOffset={6}>
                 <Button asChild size="lg" className="btn-glow-hover bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] px-7 py-3.5 h-auto shadow-copper">
-                  <Link href="/signup">
+                  <Link href="/signup" onClick={() => trackEvent('cta_clicked', { button: 'hero_start_free', page: 'landing' })}>
                     Start Free
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
@@ -282,7 +283,7 @@ export function Hero() {
                 variant="outline"
                 size="lg"
                 className="border-copper/50 text-[--cream] hover:bg-copper hover:text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] px-7 py-3.5 h-auto transition-all"
-                onClick={scrollToHowItWorks}
+                onClick={() => { trackEvent('cta_clicked', { button: 'hero_how_it_works', page: 'landing' }); scrollToHowItWorks() }}
               >
                 <Play className="mr-2 h-5 w-5" />
                 See How It Works

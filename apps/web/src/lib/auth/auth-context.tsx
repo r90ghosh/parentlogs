@@ -26,7 +26,7 @@ import * as Sentry from '@sentry/nextjs'
 interface AuthContextType {
   user: User | null
   session: Session | null
-  signUp: (email: string, password: string, metadata?: { full_name?: string; role?: string }, inviteCode?: string) => Promise<{ error: Error | null }>
+  signUp: (email: string, password: string, metadata?: { full_name?: string; role?: string }, inviteCode?: string) => Promise<{ data: { user: User | null } | null; error: Error | null }>
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>
   signInWithGoogle: (inviteCode?: string) => Promise<{ error: Error | null }>
   signOut: () => Promise<void>
@@ -80,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const redirectUrl = new URL(`${window.location.origin}/auth/callback`)
     if (inviteCode) redirectUrl.searchParams.set('invite', inviteCode)
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -88,7 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         emailRedirectTo: redirectUrl.toString(),
       },
     })
-    return { error: error as Error | null }
+    return { data, error: error as Error | null }
   }
 
   const signIn = async (email: string, password: string) => {
@@ -149,7 +149,7 @@ export function useAuth() {
       return {
         user: null,
         session: null,
-        signUp: async () => ({ error: new Error('Not available during SSR') }),
+        signUp: async () => ({ data: null, error: new Error('Not available during SSR') }),
         signIn: async () => ({ error: new Error('Not available during SSR') }),
         signInWithGoogle: async () => ({ error: new Error('Not available during SSR') }),
         signOut: async () => {},

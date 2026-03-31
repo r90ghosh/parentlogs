@@ -1,8 +1,11 @@
+'use client'
+
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Reveal } from '@/components/ui/animations/Reveal'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
+import { trackEvent } from '@/lib/analytics'
 
 export function FinalCTA() {
   return (
@@ -48,7 +51,7 @@ export function FinalCTA() {
 
             <MagneticButton maxOffset={6}>
               <Button asChild size="lg" className="btn-glow-hover relative z-[1] bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-sm uppercase tracking-[0.08em] px-10 py-4 h-auto shadow-copper">
-                <Link href="/signup">
+                <Link href="/signup" onClick={() => trackEvent('cta_clicked', { button: 'final_cta', page: 'landing' })}>
                   Start Your Journey Free
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>

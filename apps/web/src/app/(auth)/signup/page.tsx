@@ -7,6 +7,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useAuth } from '@/lib/auth/auth-context'
+import { analytics, getStoredUtmParams } from '@/lib/analytics'
+import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -51,7 +53,7 @@ function SignupPageContent() {
     setIsLoading(true)
     setError(null)
 
-    const { error } = await signUp(data.email, data.password, {
+    const { data: authData, error } = await signUp(data.email, data.password, {
       full_name: data.full_name,
     }, inviteCode || undefined)
 
@@ -59,6 +61,24 @@ function SignupPageContent() {
       setError(error.message)
       setIsLoading(false)
     } else {
+      analytics.signUp('email')
+
+      // Save UTM params to profile (fire-and-forget)
+      const userId = authData?.user?.id
+      if (userId) {
+        const utmParams = getStoredUtmParams()
+        if (utmParams) {
+          const supabase = createClient()
+          supabase.from('profiles').update({
+            utm_source: utmParams.utm_source || null,
+            utm_medium: utmParams.utm_medium || null,
+            utm_campaign: utmParams.utm_campaign || null,
+            utm_content: utmParams.utm_content || null,
+            utm_term: utmParams.utm_term || null,
+          }).eq('id', userId).then()
+        }
+      }
+
       setSuccess(true)
       setIsLoading(false)
     }
@@ -67,6 +87,15 @@ function SignupPageContent() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     setError(null)
+
+    // Fire analytics before OAuth redirect (flushed via sendBeacon on page hide)
+    analytics.signUp('google')
+
+    // Persist UTM params in a cookie so the server-side auth callback can save them
+    const utmParams = getStoredUtmParams()
+    if (utmParams) {
+      document.cookie = `utm_params=${encodeURIComponent(JSON.stringify(utmParams))};path=/;max-age=3600;SameSite=Lax`
+    }
 
     const { error } = await signInWithGoogle(inviteCode || undefined)
     if (error) {

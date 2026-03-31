@@ -1309,6 +1309,11 @@ export type Database = {
             | null
           timezone: string | null
           updated_at: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
         }
         Insert: {
           active_baby_id?: string | null
@@ -1333,6 +1338,11 @@ export type Database = {
             | null
           timezone?: string | null
           updated_at?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
         }
         Update: {
           active_baby_id?: string | null
@@ -1357,6 +1367,11 @@ export type Database = {
             | null
           timezone?: string | null
           updated_at?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
         }
         Relationships: [
           {

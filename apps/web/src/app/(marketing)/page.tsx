@@ -8,10 +8,12 @@ import { Testimonials } from '@/components/marketing/Testimonials'
 import { Pricing } from '@/components/marketing/Pricing'
 import { FinalCTA } from '@/components/marketing/FinalCTA'
 import { JsonLd } from '@/components/marketing/JsonLd'
+import { ScrollDepthTracker } from '@/components/marketing/ScrollDepthTracker'
 
 export default function LandingPage() {
   return (
     <>
+      <ScrollDepthTracker />
       <JsonLd />
       <Hero />
       <SnakeTimeline />

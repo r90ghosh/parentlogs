@@ -45,6 +45,25 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(exchangeError.message)}`)
     }
 
+    // Save UTM params from cookie to profile (fire-and-forget for OAuth signups)
+    const utmCookie = cookieStore.get('utm_params')?.value
+    if (utmCookie) {
+      try {
+        const utmParams = JSON.parse(decodeURIComponent(utmCookie))
+        await supabase.from('profiles').update({
+          utm_source: utmParams.utm_source || null,
+          utm_medium: utmParams.utm_medium || null,
+          utm_campaign: utmParams.utm_campaign || null,
+          utm_content: utmParams.utm_content || null,
+          utm_term: utmParams.utm_term || null,
+        }).eq('id', data.user!.id)
+        // Clear the cookie after saving
+        cookieStore.set('utm_params', '', { path: '/', maxAge: 0 })
+      } catch {
+        // Ignore — malformed cookie
+      }
+    }
+
     // Check if user has completed onboarding
     const { data: profile, error: profileError } = await supabase
       .from('profiles')

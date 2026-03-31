@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth/auth-context'
 import { useCompleteOnboarding } from '@/hooks/use-profile'
 import { createClient } from '@/lib/supabase/client'
+import { analytics } from '@/lib/analytics'
 import { Button } from '@/components/ui/button'
 import { CheckCircle, Rocket, ListTodo, BookOpen, Lightbulb, Loader2 } from 'lucide-react'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
@@ -48,10 +49,10 @@ export default function OnboardingReady() {
       if (!user || isCompleted) return
 
       try {
-        // Fetch family_id first
+        // Fetch family_id and role
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
-          .select('family_id')
+          .select('family_id, role')
           .eq('id', user.id)
           .single()
 
@@ -59,6 +60,7 @@ export default function OnboardingReady() {
           // If no family yet, still proceed with completion
           await completeOnboarding.mutateAsync(user.id)
           setIsCompleted(true)
+          analytics.onboardingCompleted(profile?.role || 'unknown')
           return
         }
 
@@ -75,6 +77,7 @@ export default function OnboardingReady() {
         // Mark onboarding complete
         await completeOnboarding.mutateAsync(user.id)
         setIsCompleted(true)
+        analytics.onboardingCompleted(profile?.role || 'unknown')
       } catch (err) {
         console.error('[OnboardingReady] Error:', err)
         setError(err instanceof Error ? err.message : 'Failed to complete setup')

@@ -8,6 +8,7 @@ export { HowItWorks } from './HowItWorks'
 export { Testimonials } from './Testimonials'
 export { Pricing } from './Pricing'
 export { FinalCTA } from './FinalCTA'
+export { ScrollDepthTracker } from './ScrollDepthTracker'
 export { Footer } from './Footer'
 
 // Resources page components

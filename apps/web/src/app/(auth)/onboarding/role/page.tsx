@@ -4,6 +4,7 @@ import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth/auth-context'
 import { useUpdateRole } from '@/hooks/use-profile'
+import { trackEvent } from '@/lib/analytics'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -62,6 +63,7 @@ function OnboardingRoleContent() {
 
     try {
       await updateRole.mutateAsync({ userId: user.id, role })
+      trackEvent('onboarding_role_selected', { role })
       router.push(nextParam === 'join' ? '/onboarding/join' : '/onboarding/family')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save role')

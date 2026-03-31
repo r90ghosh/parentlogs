@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Calendar,
   CheckSquare,
@@ -5,13 +7,14 @@ import {
   DollarSign,
   Smile,
   Compass,
+  ArrowRight,
 } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { MagneticButton } from '@/components/ui/animations/MagneticButton'
-import { ArrowRight } from 'lucide-react'
+import { trackEvent } from '@/lib/analytics'
 
 const features = [
   {
@@ -96,7 +99,7 @@ export function Features() {
         <Reveal delay={600} className="mt-16 text-center">
           <MagneticButton>
             <Button asChild size="lg" className="btn-glow-hover bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold text-[13px] uppercase tracking-[0.08em] shadow-copper">
-              <Link href="/signup">
+              <Link href="/signup" onClick={() => trackEvent('cta_clicked', { button: 'features_start_free', page: 'landing' })}>
                 Start Your Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
