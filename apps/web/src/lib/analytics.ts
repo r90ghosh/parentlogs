@@ -26,7 +26,7 @@ function pushToDataLayer(event: string, params?: Record<string, unknown>) {
 // Events that should also fire in GTM/GA4 for conversion tracking
 const GTM_EVENTS = new Set([
   'sign_up', 'login', 'onboarding_completed',
-  'onboarding_role_selected', 'onboarding_family_created', 'onboarding_ready',
+  'onboarding_role_selected', 'onboarding_family_created',
   'upgrade_viewed', 'begin_checkout', 'purchase', 'subscription_canceled',
   'family_created', 'family_joined',
   'cta_clicked', 'scroll_depth',

@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useAuth } from '@/lib/auth/auth-context'
 import { analytics, getStoredUtmParams } from '@/lib/analytics'
-import { createClient } from '@/lib/supabase/client'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -63,20 +63,11 @@ function SignupPageContent() {
     } else {
       analytics.signUp('email')
 
-      // Save UTM params to profile (fire-and-forget)
-      const userId = authData?.user?.id
-      if (userId) {
-        const utmParams = getStoredUtmParams()
-        if (utmParams) {
-          const supabase = createClient()
-          supabase.from('profiles').update({
-            utm_source: utmParams.utm_source || null,
-            utm_medium: utmParams.utm_medium || null,
-            utm_campaign: utmParams.utm_campaign || null,
-            utm_content: utmParams.utm_content || null,
-            utm_term: utmParams.utm_term || null,
-          }).eq('id', userId).then()
-        }
+      // Persist UTM params in a cookie so the auth callback can save them
+      // (RLS blocks client-side update before email confirmation)
+      const utmParams = getStoredUtmParams()
+      if (utmParams) {
+        document.cookie = `utm_params=${encodeURIComponent(JSON.stringify(utmParams))};path=/;max-age=3600;SameSite=Lax;Secure`
       }
 
       setSuccess(true)
@@ -94,7 +85,7 @@ function SignupPageContent() {
     // Persist UTM params in a cookie so the server-side auth callback can save them
     const utmParams = getStoredUtmParams()
     if (utmParams) {
-      document.cookie = `utm_params=${encodeURIComponent(JSON.stringify(utmParams))};path=/;max-age=3600;SameSite=Lax`
+      document.cookie = `utm_params=${encodeURIComponent(JSON.stringify(utmParams))};path=/;max-age=3600;SameSite=Lax;Secure`
     }
 
     const { error } = await signInWithGoogle(inviteCode || undefined)

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth/auth-context'
 import { createClient } from '@/lib/supabase/client'
-import { analytics, trackEvent } from '@/lib/analytics'
+import { trackEvent } from '@/lib/analytics'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -109,7 +109,6 @@ export default function OnboardingFamily() {
 
       setProgress(100)
       trackEvent('onboarding_family_created', { stage })
-      analytics.familyCreated()
 
       // Small delay to show 100% progress
       setTimeout(() => {

@@ -49,13 +49,18 @@ export async function GET(request: Request) {
     const utmCookie = cookieStore.get('utm_params')?.value
     if (utmCookie) {
       try {
-        const utmParams = JSON.parse(decodeURIComponent(utmCookie))
+        const raw = JSON.parse(decodeURIComponent(utmCookie))
+        const sanitize = (v: unknown): string | null => {
+          if (typeof v !== 'string') return null
+          const trimmed = v.trim().slice(0, 255)
+          return trimmed || null
+        }
         await supabase.from('profiles').update({
-          utm_source: utmParams.utm_source || null,
-          utm_medium: utmParams.utm_medium || null,
-          utm_campaign: utmParams.utm_campaign || null,
-          utm_content: utmParams.utm_content || null,
-          utm_term: utmParams.utm_term || null,
+          utm_source: sanitize(raw.utm_source),
+          utm_medium: sanitize(raw.utm_medium),
+          utm_campaign: sanitize(raw.utm_campaign),
+          utm_content: sanitize(raw.utm_content),
+          utm_term: sanitize(raw.utm_term),
         }).eq('id', data.user!.id)
         // Clear the cookie after saving
         cookieStore.set('utm_params', '', { path: '/', maxAge: 0 })
