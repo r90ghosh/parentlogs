@@ -1,46 +1,57 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Script from 'next/script'
+import { useEffect, useRef } from 'react'
 
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
 
 export function GoogleTagManager() {
-  const [hasConsent, setHasConsent] = useState(false)
+  const injected = useRef(false)
 
   useEffect(() => {
-    const consent = localStorage.getItem('cookie-consent')
-    if (consent === 'accepted') setHasConsent(true)
+    if (injected.current || !GTM_ID) return
 
-    // Listen for consent granted in the same tab
-    const handler = () => {
-      if (localStorage.getItem('cookie-consent') === 'accepted') {
-        setHasConsent(true)
+    function injectGTM() {
+      if (injected.current) return
+      const consent = localStorage.getItem('cookie-consent')
+      if (consent !== 'accepted') return
+
+      injected.current = true
+
+      // Initialize dataLayer
+      window.dataLayer = window.dataLayer || []
+      window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
+
+      // Inject GTM script
+      const script = document.createElement('script')
+      script.async = true
+      script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`
+      document.head.appendChild(script)
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[GTM] Loaded:', GTM_ID)
       }
     }
-    window.addEventListener('cookie-consent-changed', handler)
-    // Also listen for cross-tab changes
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'cookie-consent' && e.newValue === 'accepted') {
-        setHasConsent(true)
-      }
-    })
+
+    // Try immediately (consent may already be accepted)
+    injectGTM()
+
+    // Listen for consent granted in the same tab
+    const consentHandler = () => injectGTM()
+    window.addEventListener('cookie-consent-changed', consentHandler)
+
+    // Listen for cross-tab consent changes
+    const storageHandler = (e: StorageEvent) => {
+      if (e.key === 'cookie-consent' && e.newValue === 'accepted') injectGTM()
+    }
+    window.addEventListener('storage', storageHandler)
+
     return () => {
-      window.removeEventListener('cookie-consent-changed', handler)
+      window.removeEventListener('cookie-consent-changed', consentHandler)
+      window.removeEventListener('storage', storageHandler)
     }
   }, [])
 
-  if (!hasConsent || !GTM_ID) return null
-
-  return (
-    <Script id="gtm" strategy="afterInteractive">
-      {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${GTM_ID}');`}
-    </Script>
-  )
+  return null
 }
 
 export function GoogleTagManagerNoscript() {
