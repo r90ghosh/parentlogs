@@ -72,7 +72,7 @@ export function WelcomeOverlay({ onDismiss }: WelcomeOverlayProps) {
     addTimer(() => setHeadlineEnter(true), 200)
     addTimer(() => setBodyEnter(true), 600)
     addTimer(() => setCtaEnter(true), 1200)
-    addTimer(() => dismiss(), 5000)
+    addTimer(() => dismiss(), 10000)
   }, [addTimer, dismiss])
 
   // Canvas particle animations
