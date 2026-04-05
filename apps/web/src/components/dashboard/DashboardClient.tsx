@@ -9,7 +9,6 @@ import { useWelcomeAnimation } from '@/hooks/use-welcome-animation'
 import { WelcomeOverlay } from '@/components/welcome/WelcomeOverlay'
 import { DashboardHeader } from './DashboardHeader'
 import { QuickActionsBar } from './QuickActionsBar'
-import { MoodCheckinCard } from './MoodCheckinCard'
 import { BriefingTeaserCard } from './BriefingTeaserCard'
 import { TasksDueCard } from './TasksDueCard'
 import { OnYourMindCard } from './OnYourMindCard'
@@ -49,7 +48,7 @@ import { AlertTriangle, CreditCard, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 
 // Full-width card IDs (render at top, spanning both columns)
-const FULL_WIDTH_CARDS = ['mood', 'partner-activity', 'shift-briefing']
+const FULL_WIDTH_CARDS = ['partner-activity', 'shift-briefing']
 
 // Left column card IDs
 const LEFT_COLUMN_CARDS = ['briefing-teaser', 'on-your-mind', 'upgrade-prompt', 'invite-partner', 'personalize']
@@ -77,7 +76,6 @@ export function DashboardClient() {
   const taskStats = dashboardData?.taskStats || { completed: 0, remaining: 0, overdue: 0 }
 
   const cardComponents: Record<string, React.ReactNode> = {
-    'mood': <MoodCheckinCard />,
     'partner-activity': <PartnerActivityCard partner={dashboardData?.partner || null} />,
     'shift-briefing': null, // Future phase — placeholder
     'briefing-teaser': <BriefingTeaserCard />,
@@ -140,7 +138,7 @@ export function DashboardClient() {
         </div>
       )}
 
-      {/* Full-width cards (mood check-in, partner activity, shift briefing) */}
+      {/* Full-width cards (partner activity, shift briefing) */}
       {fullWidthCards.length > 0 && (
         <div className="space-y-4 mb-6">
           {fullWidthCards.map((card) => {

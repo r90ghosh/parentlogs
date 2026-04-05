@@ -1,7 +1,7 @@
 'use client'
 
 import { useUser } from '@/components/user-provider'
-import { useLastCheckin, useDadProfile } from '@/hooks/use-dad-journey'
+import { useDadProfile } from '@/hooks/use-dad-journey'
 import { useDashboardData } from '@/hooks/use-dashboard'
 import { useFamily } from '@/hooks/use-family'
 
@@ -14,7 +14,6 @@ export interface DashboardCard {
 export function useDashboardCards(): DashboardCard[] {
   const { profile, activeBaby } = useUser()
   const { data: family } = useFamily()
-  const { data: lastCheckin } = useLastCheckin(profile.id)
   const { data: dadProfile } = useDadProfile(profile.id)
   const currentWeek = activeBaby?.current_week ?? family?.current_week ?? 1
   const { data: dashboardData } = useDashboardData(profile.family_id, currentWeek, activeBaby?.id)
@@ -22,17 +21,12 @@ export function useDashboardCards(): DashboardCard[] {
   const isDad = profile.role === 'dad'
   const isPostBirth = (activeBaby?.stage || family?.stage) === 'post-birth'
   const hasPartner = !!dashboardData?.partner
-  const hasCheckedIn = !!lastCheckin
   const hasCompletedProfile = !!dadProfile?.work_situation
-
-  // Suppress unused variable warning — hasCheckedIn drives mood card behavior
-  void hasCheckedIn
 
   const isFree = profile.subscription_tier === 'free' || !profile.subscription_tier
 
   return [
-    { id: 'mood', priority: 1, visible: isDad },
-    { id: 'partner-activity', priority: 1, visible: !isDad }, // Mom sees this instead of mood
+    { id: 'partner-activity', priority: 1, visible: !isDad },
     { id: 'shift-briefing', priority: 2, visible: isPostBirth && hasPartner },
     { id: 'briefing-teaser', priority: 3, visible: true },
     { id: 'tasks-due', priority: 4, visible: true },

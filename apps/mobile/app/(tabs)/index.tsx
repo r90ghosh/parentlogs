@@ -21,7 +21,6 @@ import { useSubscriptionStatus } from '@/hooks/use-subscription'
 import { useBabies } from '@/hooks/use-babies'
 import { CardEntrance } from '@/components/animations'
 import {
-  MoodCheckinCard,
   BriefingTeaserCard,
   TasksDueCard,
   QuickActionsBar,
@@ -52,7 +51,7 @@ export default function DashboardScreen() {
   const queryClient = useQueryClient()
   const { profile, family } = useAuth()
   const { isVisible: showWelcome, dismiss: dismissWelcome } = useWelcomeAnimation()
-  const { tasksQuery, briefingQuery, moodQuery } = useDashboardData()
+  const { tasksQuery, briefingQuery } = useDashboardData()
   const { data: subStatus } = useSubscriptionStatus()
   const { data: babies } = useBabies()
   const { data: backlogCount } = useBacklogCount()
@@ -60,12 +59,11 @@ export default function DashboardScreen() {
 
   const isLoading = tasksQuery.isLoading && briefingQuery.isLoading
   const isRefreshing =
-    tasksQuery.isRefetching || briefingQuery.isRefetching || moodQuery.isRefetching
+    tasksQuery.isRefetching || briefingQuery.isRefetching
 
   const onRefresh = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['tasks-due'] })
     queryClient.invalidateQueries({ queryKey: ['current-briefing'] })
-    queryClient.invalidateQueries({ queryKey: ['mood-today'] })
     queryClient.invalidateQueries({ queryKey: ['subscription-status'] })
     queryClient.invalidateQueries({ queryKey: ['babies'] })
     queryClient.invalidateQueries({ queryKey: ['backlog-count'] })
@@ -143,15 +141,8 @@ export default function DashboardScreen() {
           </View>
         ) : (
           <View style={styles.cardsContainer}>
-            {/* 1. Mood Check-in (dad only) */}
-            {profile?.role === 'dad' && (
-              <CardEntrance delay={80}>
-                <MoodCheckinCard todaysCheckin={moodQuery.data} />
-              </CardEntrance>
-            )}
-
-            {/* 2. Briefing Teaser */}
-            <CardEntrance delay={160}>
+            {/* 1. Briefing Teaser */}
+            <CardEntrance delay={80}>
               <BriefingTeaserCard
                 briefing={briefingQuery.data}
                 currentWeek={currentWeek}
@@ -159,49 +150,49 @@ export default function DashboardScreen() {
               />
             </CardEntrance>
 
-            {/* 3. Tasks Due */}
-            <CardEntrance delay={240}>
+            {/* 2. Tasks Due */}
+            <CardEntrance delay={160}>
               <TasksDueCard tasks={tasksQuery.data} />
             </CardEntrance>
 
-            {/* 4. Welcome Catch-Up (if backlog > 0) */}
+            {/* 3. Welcome Catch-Up (if backlog > 0) */}
             {(backlogCount ?? 0) > 0 && (
-              <CardEntrance delay={320}>
+              <CardEntrance delay={240}>
                 <WelcomeCatchUpCard />
               </CardEntrance>
             )}
 
-            {/* 5. On Your Mind (dad only) */}
+            {/* 4. On Your Mind (dad only) */}
             {profile?.role === 'dad' && (
-              <CardEntrance delay={400}>
+              <CardEntrance delay={320}>
                 <OnYourMindCard />
               </CardEntrance>
             )}
 
-            {/* 6. Quick Actions */}
-            <CardEntrance delay={480}>
+            {/* 5. Quick Actions */}
+            <CardEntrance delay={400}>
               <QuickActionsBar />
             </CardEntrance>
 
-            {/* 7. Personalize Card (dad only, if no profile) */}
+            {/* 6. Personalize Card (dad only, if no profile) */}
             {profile?.role === 'dad' && (
-              <CardEntrance delay={560}>
+              <CardEntrance delay={480}>
                 <PersonalizeCard />
               </CardEntrance>
             )}
 
-            {/* 8. Budget Snapshot */}
-            <CardEntrance delay={640}>
+            {/* 7. Budget Snapshot */}
+            <CardEntrance delay={560}>
               <BudgetSnapshotCard />
             </CardEntrance>
 
-            {/* 9. Checklist Progress */}
-            <CardEntrance delay={720}>
+            {/* 8. Checklist Progress */}
+            <CardEntrance delay={640}>
               <ChecklistProgressCard />
             </CardEntrance>
 
-            {/* 10. Upgrade Prompt (free tier only) */}
-            <CardEntrance delay={800}>
+            {/* 9. Upgrade Prompt (free tier only) */}
+            <CardEntrance delay={720}>
               <UpgradePromptCard />
             </CardEntrance>
           </View>

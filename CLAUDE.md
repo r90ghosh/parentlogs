@@ -120,17 +120,16 @@ These render as pill-button navigation (similar to the Briefing page's week numb
 
 ## Dashboard Card Priority (Dad)
 
-1. Mood Check-in (collapses after check-in)
-2. Shift Briefing (post-birth + partner logged)
-3. Briefing Teaser (always)
-4. Tasks Due This Week
-5. On Your Mind (2 challenge tiles)
-6. Quick Actions
-7. Personalize Card / Invite Partner
-8. Budget Snapshot
-9. Checklist Progress
+1. Shift Briefing (post-birth + partner logged)
+2. Briefing Teaser (always)
+3. Tasks Due This Week
+4. On Your Mind (2 challenge tiles)
+5. Quick Actions
+6. Personalize Card / Invite Partner
+7. Budget Snapshot
+8. Checklist Progress
 
-Mom sees Partner Activity Card at position 1 instead of Mood Check-in. No On Your Mind tiles.
+Mom sees Partner Activity Card at position 1. No On Your Mind tiles.
 
 ## Build Status
 V2 complete (17 phases) + "Warm Luxury Editorial" visual redesign (13 phases). All animation components integrated across every page.
