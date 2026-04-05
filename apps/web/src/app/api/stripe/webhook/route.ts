@@ -10,7 +10,12 @@ import { triggerEmail } from '@/lib/email/trigger-email'
 import Stripe from 'stripe'
 
 export async function POST(request: NextRequest) {
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+  if (!webhookSecret) {
+    console.error('STRIPE_WEBHOOK_SECRET is not configured')
+    return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+  }
+
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')
 
@@ -41,8 +46,16 @@ export async function POST(request: NextRequest) {
     .select('id')
     .single()
 
-  if (dedupeError || !inserted) {
-    // Event already processed (conflict) or error — skip
+  if (dedupeError) {
+    if (dedupeError.code === 'PGRST116') {
+      // Event already processed (conflict) — skip
+      return NextResponse.json({ received: true, duplicate: true })
+    }
+    // Real database error — return 500 so Stripe retries
+    console.error('Idempotency check failed:', dedupeError)
+    return NextResponse.json({ error: 'Database error' }, { status: 500 })
+  }
+  if (!inserted) {
     return NextResponse.json({ received: true, duplicate: true })
   }
 
@@ -223,12 +236,12 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     .eq('id', userId)
     .single()
 
-  if (tier !== 'free' && userProfile?.family_id) {
+  if (userProfile?.family_id) {
     await getSupabaseAdmin()
       .from('profiles')
       .update({
         subscription_tier: tier,
-        subscription_expires_at: periodEnd.toISOString(),
+        subscription_expires_at: tier === 'free' ? null : periodEnd.toISOString(),
       })
       .eq('family_id', userProfile.family_id)
       .neq('id', userId) // Don't double-update the subscriber

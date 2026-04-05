@@ -1,9 +1,8 @@
 import { useMemo } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useServiceContext } from './use-service-context'
-import { taskService, briefingService, dadJourneyService } from '@/lib/services'
-import type { MoodLevel } from '@tdc/shared/types/dad-journey'
+import { taskService, briefingService } from '@/lib/services'
 
 export function useDashboardData() {
   const { user, profile, family } = useAuth()
@@ -35,32 +34,5 @@ export function useDashboardData() {
     staleTime: 1000 * 60 * 10,
   })
 
-  const moodQuery = useQuery({
-    queryKey: ['mood-today', user?.id],
-    queryFn: () => dadJourneyService.getLastCheckin(user!.id),
-    enabled: !!user?.id,
-    staleTime: 1000 * 30,
-  })
-
-  return { tasksQuery, briefingQuery, moodQuery, user, profile, family }
-}
-
-export function useSubmitMood() {
-  const queryClient = useQueryClient()
-  const { user, family } = useAuth()
-
-  return useMutation({
-    mutationFn: (mood: MoodLevel) => {
-      if (!user?.id || !family?.id) throw new Error('Not authenticated')
-      return dadJourneyService.submitMoodCheckin({
-        userId: user.id,
-        familyId: family.id,
-        mood,
-      })
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['mood-today', user?.id] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
-    },
-  })
+  return { tasksQuery, briefingQuery, user, profile, family }
 }

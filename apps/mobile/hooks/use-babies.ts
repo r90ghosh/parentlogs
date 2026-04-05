@@ -31,7 +31,6 @@ export function useSwitchBaby() {
       queryClient.invalidateQueries({ queryKey: ['baby'] })
       queryClient.invalidateQueries({ queryKey: ['tasks-due'] })
       queryClient.invalidateQueries({ queryKey: ['current-briefing'] })
-      queryClient.invalidateQueries({ queryKey: ['mood-today'] })
       queryClient.invalidateQueries({ queryKey: ['dashboard'] })
       queryClient.invalidateQueries({ queryKey: ['tracker-logs'] })
       queryClient.invalidateQueries({ queryKey: ['checklists'] })
