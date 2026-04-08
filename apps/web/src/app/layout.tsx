@@ -46,6 +46,28 @@ export const metadata: Metadata = {
     statusBarStyle: 'default',
     title: 'The Dad Center',
   },
+  openGraph: {
+    type: 'website',
+    siteName: 'The Dad Center',
+    title: 'The Dad Center — Your week-by-week parenting playbook',
+    description: 'Expert-curated tasks, weekly briefings, and partner sync for pregnancy through early parenthood. Built by dads, for dads who refuse to wing it.',
+    url: 'https://thedadcenter.com',
+    locale: 'en_US',
+    images: [
+      {
+        url: '/og-default.png',
+        width: 1200,
+        height: 630,
+        alt: 'The Dad Center — Your week-by-week parenting playbook',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'The Dad Center — Your week-by-week parenting playbook',
+    description: 'Expert-curated tasks, weekly briefings, and partner sync for pregnancy through early parenthood. Built by dads, for dads who refuse to wing it.',
+    images: ['/og-default.png'],
+  },
 }
 
 export const viewport: Viewport = {
