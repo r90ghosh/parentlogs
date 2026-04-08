@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
+import { triggerEmail } from '@/lib/email/trigger-email'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -72,9 +73,21 @@ export async function GET(request: Request) {
     // Check if user has completed onboarding
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('onboarding_completed, family_id')
+      .select('onboarding_completed, family_id, created_at')
       .eq('id', data.user!.id)
       .single()
+
+    // Fire welcome email for new signups (fire-and-forget so it never blocks redirect).
+    // The handle_new_user() trigger creates the profile within milliseconds of auth.users
+    // insertion, so a 60s window reliably distinguishes "fresh signup" from "returning sign-in".
+    if (profile?.created_at) {
+      const profileAgeMs = Date.now() - new Date(profile.created_at).getTime()
+      if (profileAgeMs < 60_000) {
+        triggerEmail('welcome', data.user!.id).catch((err) =>
+          console.error('Welcome email trigger failed:', err)
+        )
+      }
+    }
 
     // Check for invite code from URL param (emailRedirectTo) or user metadata
     const inviteParam = searchParams.get('invite')
