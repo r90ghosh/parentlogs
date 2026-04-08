@@ -5,6 +5,25 @@ const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const resendApiKey = Deno.env.get("RESEND_API_KEY")!;
 
+// Verify the caller is a service-role JWT issued for this project.
+// With verify_jwt: true, Supabase's gateway has already validated the signature
+// before the function runs, so decoding the payload here is safe.
+function isServiceRoleCaller(authHeader: string | null): boolean {
+  if (!authHeader) return false;
+  const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+  if (!token) return false;
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) return false;
+    const b64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const padded = b64 + "=".repeat((4 - (b64.length % 4)) % 4);
+    const payload = JSON.parse(atob(padded));
+    return payload.role === "service_role";
+  } catch {
+    return false;
+  }
+}
+
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 const FROM_EMAIL = "The Dad Center <noreply@thedadcenter.com>";
@@ -41,8 +60,7 @@ const PREFERENCE_MAP: Record<string, string> = {
 // --- Main Handler ---
 
 Deno.serve(async (req: Request) => {
-  const authHeader = req.headers.get("Authorization");
-  if (authHeader !== `Bearer ${supabaseServiceKey}`) {
+  if (!isServiceRoleCaller(req.headers.get("Authorization"))) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { "Content-Type": "application/json" },
