@@ -291,6 +291,18 @@ export function Hero() {
             </div>
           </Reveal>
 
+          {/* Secondary discovery link */}
+          <Reveal delay={260}>
+            <Link
+              href="/pregnancy-week"
+              onClick={() => trackEvent('cta_clicked', { button: 'hero_pregnancy_week_guide', page: 'landing' })}
+              className="inline-flex items-center gap-1.5 font-ui text-sm text-[--muted] hover:text-copper transition-colors mb-4"
+            >
+              Or browse the free pregnancy week guide
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </Reveal>
+
           {/* App store coming soon */}
           <Reveal delay={280}>
             <p className="font-ui text-[11px] uppercase tracking-[0.12em] text-[--muted] flex items-center justify-center gap-2 mb-16">

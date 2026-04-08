@@ -8,9 +8,11 @@ const footerLinks = {
     { label: 'Features', href: '/#features' },
     { label: 'Pricing', href: '/#pricing' },
     { label: 'Blog', href: '/blog' },
+    { label: 'Pregnancy Week Guide', href: '/pregnancy-week' },
     { label: 'Videos', href: '/videos' },
     { label: 'Budget Guide', href: '/budget-guide' },
     { label: 'Checklists', href: '/baby-checklists' },
+    { label: 'Dad Tips', href: '/tips' },
   ],
   legal: [
     { label: 'Privacy Policy', href: '/privacy' },

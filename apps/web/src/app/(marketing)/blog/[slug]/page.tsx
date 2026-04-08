@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Clock, ArrowRight } from 'lucide-react'
+import { ArrowLeft, Clock, ArrowRight, Baby } from 'lucide-react'
 import { getPostBySlug, getRelatedPosts, getAllPublishedSlugs, blogCategories, type BlogCategory } from '@/lib/blog'
 import { ArticleContent } from '@/components/marketing/ArticleContent'
 import { BlogCard } from '@/components/marketing/BlogCard'
@@ -177,6 +177,28 @@ export default async function BlogPostPage({ params }: PageProps) {
       {/* Content */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <ArticleContent content={post.content.replace(/^#\s+.+\n+/, '')} />
+
+        {/* Pregnancy week guide internal link */}
+        <Link
+          href="/pregnancy-week"
+          className="group mt-12 flex items-center gap-4 p-5 rounded-2xl bg-copper/5 border border-copper/20 hover:border-copper/40 hover:bg-copper/10 transition-colors"
+        >
+          <div className="shrink-0 w-12 h-12 rounded-xl bg-copper/15 flex items-center justify-center">
+            <Baby className="h-6 w-6 text-copper" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="font-ui text-xs uppercase tracking-wider text-copper mb-0.5">
+              Related guide
+            </div>
+            <div className="font-display text-base font-semibold text-[--white]">
+              Pregnancy Week-by-Week — for Dads
+            </div>
+            <div className="font-body text-sm text-[--muted]">
+              Free walkthrough of weeks 4 through 40, no signup needed.
+            </div>
+          </div>
+          <ArrowRight className="h-5 w-5 text-[--muted] group-hover:text-copper transition-colors shrink-0" />
+        </Link>
 
         {/* Bottom CTA */}
         <div className="mt-12 p-8 rounded-2xl bg-[--surface]/50 border border-[--border] text-center">

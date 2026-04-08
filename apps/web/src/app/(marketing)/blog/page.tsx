@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { PenLine } from 'lucide-react'
+import { PenLine, Baby, ArrowRight } from 'lucide-react'
 import { getPublishedPosts, blogCategories, blogStages, type BlogCategory } from '@/lib/blog'
 import { BlogCard } from '@/components/marketing/BlogCard'
 import { EmailCapture } from '@/components/marketing/EmailCapture'
@@ -89,6 +89,27 @@ export default async function BlogPage({ searchParams }: PageProps) {
       {/* Medical Disclaimer */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <MedicalDisclaimer />
+      </div>
+
+      {/* Pregnancy week guide callout */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <Link
+          href="/pregnancy-week"
+          className="group flex items-center gap-4 p-5 rounded-2xl bg-copper/5 border border-copper/20 hover:border-copper/40 hover:bg-copper/10 transition-colors"
+        >
+          <div className="shrink-0 w-12 h-12 rounded-xl bg-copper/15 flex items-center justify-center">
+            <Baby className="h-6 w-6 text-copper" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h2 className="font-display text-lg font-semibold text-[--white]">
+              Pregnancy Week-by-Week Guide
+            </h2>
+            <p className="font-body text-sm text-[--muted]">
+              Free walkthrough for dads, weeks 4 through 40 — baby development, partner support, and what to focus on.
+            </p>
+          </div>
+          <ArrowRight className="h-5 w-5 text-[--muted] group-hover:text-copper transition-colors shrink-0" />
+        </Link>
       </div>
 
       {/* Filters */}

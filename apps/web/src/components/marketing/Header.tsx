@@ -24,6 +24,7 @@ const navLinks: NavLink[] = [
   {
     label: 'Resources',
     children: [
+      { href: '/pregnancy-week', label: 'Pregnancy Week Guide' },
       { href: '/videos', label: 'Videos' },
       { href: '/budget-guide', label: 'Budget Guide' },
       { href: '/baby-checklists', label: 'Checklists' },
@@ -136,22 +137,29 @@ export function Header() {
                   >
                     {link.label}
                   </button>
-                  {isDropdownOpen && (
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2">
-                      <div className="bg-[--popover] border border-[--border-hover] rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.25)] py-2 min-w-[180px] backdrop-blur-xl">
-                        {link.children.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            className="block px-4 py-2.5 font-ui text-sm text-[--cream]/70 hover:text-copper hover:bg-[--card] transition-colors"
-                            onClick={() => setIsDropdownOpen(false)}
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
-                      </div>
+                  <div
+                    className={cn(
+                      'absolute top-full left-1/2 -translate-x-1/2 pt-2 transition-opacity duration-150',
+                      isDropdownOpen
+                        ? 'opacity-100 pointer-events-auto'
+                        : 'opacity-0 pointer-events-none'
+                    )}
+                    aria-hidden={!isDropdownOpen}
+                  >
+                    <div className="bg-[--popover] border border-[--border-hover] rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.25)] py-2 min-w-[180px] backdrop-blur-xl">
+                      {link.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className="block px-4 py-2.5 font-ui text-sm text-[--cream]/70 hover:text-copper hover:bg-[--card] transition-colors"
+                          onClick={() => setIsDropdownOpen(false)}
+                          tabIndex={isDropdownOpen ? 0 : -1}
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
                     </div>
-                  )}
+                  </div>
                 </div>
               ) : (
                 <a
