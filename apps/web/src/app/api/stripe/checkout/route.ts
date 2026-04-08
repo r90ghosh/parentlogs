@@ -62,8 +62,13 @@ export async function POST(request: NextRequest) {
     const isLifetime = plan === 'lifetime'
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL
-    if (!appUrl || appUrl.includes('localhost')) {
-      console.error('NEXT_PUBLIC_APP_URL is not set or is localhost in production')
+    if (!appUrl) {
+      console.error('NEXT_PUBLIC_APP_URL is not set')
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+    }
+    // Only block localhost in production — local dev legitimately uses localhost
+    if (process.env.NODE_ENV === 'production' && appUrl.includes('localhost')) {
+      console.error('NEXT_PUBLIC_APP_URL is localhost in production')
       return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
     }
 
