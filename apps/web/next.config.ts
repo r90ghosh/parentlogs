@@ -43,12 +43,7 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      {
-        source: '/resources/:path*',
-        destination: '/content/:path*',
-        permanent: true,
-      },
-      // Content migration redirects
+      // Content migration redirects — /content was replaced by /blog
       {
         source: '/content/articles/:slug',
         destination: '/blog/:slug',
@@ -56,7 +51,18 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/content',
-        destination: '/videos',
+        destination: '/blog',
+        permanent: true,
+      },
+      // Old /resources/* tree also resolves to /blog/* (collapse the chain)
+      {
+        source: '/resources/articles/:slug',
+        destination: '/blog/:slug',
+        permanent: true,
+      },
+      {
+        source: '/resources/:path*',
+        destination: '/blog',
         permanent: true,
       },
       // Old article slug redirects (renamed 2026-03-18) — now pointing to /blog/

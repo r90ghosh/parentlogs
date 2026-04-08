@@ -14,8 +14,6 @@ export { Footer } from './Footer'
 // Resources page components
 export { ArticleCard } from './ArticleCard'
 export { VideoCard } from './VideoCard'
-export { ContentFilters } from './ContentFilters'
-export { ResourceLibrary } from './ResourceLibrary'
 export { ArticleContent } from './ArticleContent'
 
 export { RelatedContent } from './RelatedContent'

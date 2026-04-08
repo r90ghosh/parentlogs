@@ -61,36 +61,50 @@ export default async function ChecklistDetailPage({ params }: PageProps) {
     .filter(cl => cl.checklist_id !== checklist.checklist_id)
     .slice(0, 3)
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://thedadcenter.com' },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Baby Checklists',
+        item: 'https://thedadcenter.com/baby-checklists',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: checklist.name,
+        item: `https://thedadcenter.com/baby-checklists/${id}`,
+      },
+    ],
+  }
+
+  const itemListLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `${checklist.name} Checklist`,
+    description: checklist.description,
+    url: `https://thedadcenter.com/baby-checklists/${id}`,
+    numberOfItems: checklist.items.length,
+    itemListElement: checklist.items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.item,
+      ...(item.details ? { description: item.details } : {}),
+    })),
+  }
+
   return (
     <div className="min-h-screen bg-[--bg]">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              {
-                '@type': 'ListItem',
-                position: 1,
-                name: 'Home',
-                item: 'https://thedadcenter.com',
-              },
-              {
-                '@type': 'ListItem',
-                position: 2,
-                name: 'Baby Checklists',
-                item: 'https://thedadcenter.com/baby-checklists',
-              },
-              {
-                '@type': 'ListItem',
-                position: 3,
-                name: checklist.name,
-                item: `https://thedadcenter.com/baby-checklists/${id}`,
-              },
-            ],
-          }),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }}
       />
       {/* Header */}
       <div className="bg-gradient-to-b from-[--surface] to-[--bg] pt-24 pb-12 md:pt-32 md:pb-16">
