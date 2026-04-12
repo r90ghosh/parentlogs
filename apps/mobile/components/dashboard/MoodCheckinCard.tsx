@@ -2,8 +2,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { format, subDays } from 'date-fns'
 import { GlassCard } from '@/components/glass'
 import { MoodEmojiPop } from '@/components/animations'
-import { useSubmitMood } from '@/hooks/use-dashboard'
-import { useMoodHistory } from '@/hooks/use-journey'
+import { useSubmitMood, useMoodHistory } from '@/hooks/use-journey'
 import type { MoodLevel, MoodCheckin } from '@tdc/shared/types/dad-journey'
 
 const MOODS: { level: MoodLevel; emoji: string; label: string }[] = [
@@ -122,7 +121,7 @@ export function MoodCheckinCard({ todaysCheckin }: MoodCheckinCardProps) {
             emoji={mood.emoji}
             label={mood.label}
             isSelected={false}
-            onPress={() => submitMood.mutate(mood.level)}
+            onPress={() => submitMood.mutate({ mood: mood.level })}
           />
         ))}
       </View>

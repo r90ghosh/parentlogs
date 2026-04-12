@@ -197,7 +197,7 @@ export default function BriefingWeekScreen() {
                 <Text style={styles.sectionIntro}>
                   Here's what to focus on this week:
                 </Text>
-                {briefing.dad_focus.map((item, idx) => (
+                {briefing.dad_focus.map((item: string, idx: number) => (
                   <View key={idx} style={styles.focusItem}>
                     <View style={styles.focusBullet} />
                     <Text style={styles.focusText}>{item}</Text>

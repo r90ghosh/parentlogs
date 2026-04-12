@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { dadJourneyService } from '@/lib/services'
-import type { ContentPhase, DadProfile } from '@tdc/shared/types/dad-journey'
+import type { ContentPhase, DadProfile, MoodLevel } from '@tdc/shared/types/dad-journey'
 import { familyStageToContentPhase } from '@tdc/shared/utils/stage-mapping'
 import type { FamilyStage } from '@tdc/shared/types'
 
@@ -46,6 +46,24 @@ export function useMoodHistory(limit = 7) {
     queryFn: () => dadJourneyService.getRecentCheckins(user!.id, limit),
     enabled: !!user?.id,
     staleTime: 1000 * 60 * 2,
+  })
+}
+
+export function useSubmitMood() {
+  const queryClient = useQueryClient()
+  const { user, family } = useAuth()
+
+  return useMutation({
+    mutationFn: (params: { mood: MoodLevel; situationFlags?: string[]; note?: string; phase?: ContentPhase }) =>
+      dadJourneyService.submitMoodCheckin({
+        userId: user!.id,
+        familyId: family!.id,
+        ...params,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['mood-history', user?.id] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+    },
   })
 }
 

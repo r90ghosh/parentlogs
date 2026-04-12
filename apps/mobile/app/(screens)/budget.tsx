@@ -85,7 +85,7 @@ export default function BudgetScreen() {
   const browseItems = useMemo(() => {
     if (!templatesQuery.data) return []
     if (selectedPriority === 'all') return templatesQuery.data
-    return templatesQuery.data.filter((t) => t.priority === selectedPriority)
+    return templatesQuery.data.filter((t: BudgetTemplate) => t.priority === selectedPriority)
   }, [templatesQuery.data, selectedPriority])
 
   // Get family budget items
@@ -97,7 +97,7 @@ export default function BudgetScreen() {
   // Build a set of template IDs already in the family budget
   const addedTemplateIds = useMemo(() => {
     const set = new Set<string>()
-    myBudgetItems.forEach((item) => {
+    myBudgetItems.forEach((item: FamilyBudgetItem) => {
       if (item.budget_template_id) set.add(item.budget_template_id)
     })
     return set
@@ -501,8 +501,8 @@ export default function BudgetScreen() {
           }
           renderItem={
             activeTab === 'browse'
-              ? (renderBrowseItem as any) // eslint-disable-line @typescript-eslint/no-explicit-any -- union data type, render functions matched conditionally
-              : (renderMyBudgetItem as any) // eslint-disable-line @typescript-eslint/no-explicit-any
+              ? (renderBrowseItem as any)  
+              : (renderMyBudgetItem as any)  
           }
           contentContainerStyle={[
             styles.listContent,

@@ -49,7 +49,7 @@ export default function PregnancyWeeksScreen() {
 
     // Filter to pregnancy briefings only (PREG-W prefix, weeks 1-40)
     const pregnancyBriefings = briefings.filter(
-      (b) => b.briefing_id.startsWith('PREG-W') && b.week >= 1 && b.week <= 40
+      (b: BriefingTemplate) => b.briefing_id.startsWith('PREG-W') && b.week >= 1 && b.week <= 40
     )
 
     const weekMap = new Map<number, BriefingTemplate>()
