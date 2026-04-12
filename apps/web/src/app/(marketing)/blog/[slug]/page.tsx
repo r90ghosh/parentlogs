@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowLeft, Clock, ArrowRight, Baby } from 'lucide-react'
 import { getPostBySlug, getRelatedPosts, getAllPublishedSlugs, blogCategories, type BlogCategory } from '@/lib/blog'
 import { ArticleContent } from '@/components/marketing/ArticleContent'
@@ -43,13 +44,15 @@ export async function generateMetadata({ params }: PageProps) {
       modifiedTime: post.updatedAt,
       section: blogCategories[post.category as BlogCategory]?.label || post.category,
       authors: [post.author],
-      images: [{ url: `/blog/${slug}/opengraph-image`, width: 1200, height: 630, alt: title }],
+      images: [post.featuredImage
+        ? { url: post.featuredImage, width: 1200, height: 630, alt: title }
+        : { url: `/blog/${slug}/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: [`/blog/${slug}/opengraph-image`],
+      images: [post.featuredImage || `/blog/${slug}/opengraph-image`],
     },
   }
 }
@@ -177,6 +180,22 @@ export default async function BlogPostPage({ params }: PageProps) {
           <ShareButtons url={`/blog/${slug}`} title={post.title} description={post.excerpt} />
         </div>
       </div>
+
+      {/* Featured Image */}
+      {post.featuredImage && (
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative w-full aspect-[2/1] max-h-[400px] rounded-2xl overflow-hidden">
+            <Image
+              src={post.featuredImage}
+              alt={post.title}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 896px, 896px"
+              className="object-cover"
+              priority
+            />
+          </div>
+        </div>
+      )}
 
       {/* Content */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

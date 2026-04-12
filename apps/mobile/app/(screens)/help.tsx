@@ -74,6 +74,15 @@ const FAQ_ITEMS = [
   },
 ]
 
+const CONTACT_CATEGORIES = [
+  'General',
+  'Bug Report',
+  'Feature Request',
+  'Billing',
+  'Account',
+  'Other',
+]
+
 export default function HelpScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
@@ -82,6 +91,7 @@ export default function HelpScreen() {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null)
   const [name, setName] = useState(profile?.full_name ?? '')
   const [email, setEmail] = useState(user?.email ?? '')
+  const [category, setCategory] = useState('General')
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -100,11 +110,14 @@ export default function HelpScreen() {
 
     setIsSubmitting(true)
     try {
+      const fullSubject = subject.trim()
+        ? `[${category}] ${subject.trim()}`
+        : `[${category}]`
       await contactService.submitMessage({
         user_id: user!.id,
         name: name.trim(),
         email: email.trim(),
-        subject: subject.trim(),
+        subject: fullSubject,
         message: message.trim(),
       })
       setSubmitted(true)
@@ -202,6 +215,34 @@ export default function HelpScreen() {
                   keyboardType="email-address"
                   autoCapitalize="none"
                 />
+              </View>
+              <View style={styles.fieldGroup}>
+                <Text style={styles.fieldLabel}>Category</Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.categoryPills}
+                >
+                  {CONTACT_CATEGORIES.map((cat) => (
+                    <Pressable
+                      key={cat}
+                      onPress={() => setCategory(cat)}
+                      style={[
+                        styles.categoryPill,
+                        category === cat && styles.categoryPillSelected,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.categoryPillText,
+                          category === cat && styles.categoryPillTextSelected,
+                        ]}
+                      >
+                        {cat}
+                      </Text>
+                    </Pressable>
+                  ))}
+                </ScrollView>
               </View>
               <View style={styles.fieldGroup}>
                 <Text style={styles.fieldLabel}>Subject</Text>
@@ -441,6 +482,32 @@ const styles = StyleSheet.create({
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
     color: '#faf6f0',
+  },
+
+  // Category pills
+  categoryPills: {
+    gap: 8,
+    paddingVertical: 4,
+  },
+  categoryPill: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 16,
+    backgroundColor: 'rgba(237,230,220,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(237,230,220,0.08)',
+  },
+  categoryPillSelected: {
+    backgroundColor: 'rgba(196,112,63,0.15)',
+    borderColor: '#c4703f',
+  },
+  categoryPillText: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 13,
+    color: '#7a6f62',
+  },
+  categoryPillTextSelected: {
+    color: '#c4703f',
   },
 
   // Success

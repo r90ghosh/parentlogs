@@ -1,5 +1,6 @@
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
 interface ArticleContentProps {
@@ -74,16 +75,24 @@ export function ArticleContent({ content, className }: ArticleContentProps) {
           pre: ({ children }) => (
             <pre className="my-6 rounded-lg overflow-hidden">{children}</pre>
           ),
-          a: ({ href, children }) => (
-            <a
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-copper/90 hover:text-copper underline underline-offset-4 decoration-copper/40"
-            >
-              {children}
-            </a>
-          ),
+          a: ({ href, children }) => {
+            const isInternal = href?.startsWith('/') || href?.includes('thedadcenter.com')
+            if (isInternal) {
+              const path = href?.includes('thedadcenter.com')
+                ? new URL(href).pathname
+                : href
+              return (
+                <Link href={path || '#'} className="text-copper/90 hover:text-copper underline underline-offset-4 decoration-copper/40">
+                  {children}
+                </Link>
+              )
+            }
+            return (
+              <a href={href} target="_blank" rel="noopener noreferrer" className="text-copper/90 hover:text-copper underline underline-offset-4 decoration-copper/40">
+                {children}
+              </a>
+            )
+          },
           hr: () => <hr className="my-10 border-[--border]/60" />,
           table: ({ children }) => (
             <div className="overflow-x-auto my-8">

@@ -12,6 +12,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="welcome" />
       <Stack.Screen name="role" />
       <Stack.Screen name="family" />
+      <Stack.Screen name="invite" />
       <Stack.Screen name="ready" />
     </Stack>
   )

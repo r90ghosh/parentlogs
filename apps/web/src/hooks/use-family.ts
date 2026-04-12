@@ -2,19 +2,8 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { familyService } from '@/lib/services'
-import type { ServiceContext } from '@tdc/services'
 import { Family } from '@tdc/shared/types'
-import { useOptionalUser } from '@/components/user-provider'
-
-function useServiceContext(): Partial<ServiceContext> | undefined {
-  const userData = useOptionalUser()
-  if (!userData?.user) return undefined
-  return {
-    userId: userData.user.id,
-    familyId: userData.profile?.family_id ?? undefined,
-    subscriptionTier: userData.profile?.subscription_tier ?? undefined,
-  } as Partial<ServiceContext>
-}
+import { useServiceContext } from './use-service-context'
 
 export function useFamily() {
   const ctx = useServiceContext()

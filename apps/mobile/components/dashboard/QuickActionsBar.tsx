@@ -1,26 +1,32 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
-import { ClipboardList, Wallet, Compass } from 'lucide-react-native'
+import { ClipboardPlus, BarChart3, CalendarPlus, Wallet } from 'lucide-react-native'
 import * as Haptics from 'expo-haptics'
 
 const ACTIONS = [
   {
-    label: 'Checklists',
-    icon: ClipboardList,
-    route: '/(screens)/checklists' as const,
-    color: '#d4a853',
+    label: 'Add Task',
+    icon: ClipboardPlus,
+    route: '/(screens)/create-task' as const,
+    color: '#6b8f71',
+  },
+  {
+    label: 'Log Data',
+    icon: BarChart3,
+    route: '/(tabs)/tracker/log' as const,
+    color: '#c4703f',
+  },
+  {
+    label: 'Add Event',
+    icon: CalendarPlus,
+    route: '/(screens)/create-task' as const,
+    color: '#5b9bd5',
   },
   {
     label: 'Budget',
     icon: Wallet,
     route: '/(screens)/budget' as const,
-    color: '#6b8f71',
-  },
-  {
-    label: 'Journey',
-    icon: Compass,
-    route: '/(screens)/journey' as const,
-    color: '#5b9bd5',
+    color: '#d4a853',
   },
 ]
 

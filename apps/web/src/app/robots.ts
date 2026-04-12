@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: ['/', '/videos', '/blog', '/blog/*', '/budget-guide', '/baby-checklists', '/baby-checklists/*', '/tips', '/upgrade', '/privacy', '/terms'],
+        allow: ['/', '/videos', '/blog', '/blog/*', '/budget-guide', '/baby-checklists', '/baby-checklists/*', '/tips', '/tips/*', '/pregnancy-week', '/pregnancy-week/*', '/about', '/faq', '/upgrade', '/privacy', '/terms'],
         disallow: [
           '/dashboard',
           '/tasks',

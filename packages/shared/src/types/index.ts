@@ -396,3 +396,6 @@ export type PremiumFeature =
 
 // Tips Types (re-export)
 export type { TipSection, TipTopic, IllustrationProps, IllustrationComponent } from './tips'
+
+// Service Context (shared between web & mobile hook factories)
+export type { ServiceContext, BriefingContext } from './service-context'

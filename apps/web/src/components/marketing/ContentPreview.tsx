@@ -119,6 +119,7 @@ export function ContentPreview() {
             const colors = colorClasses[article.color as keyof typeof colorClasses]
             return (
               <Reveal key={article.id} delay={80 + index * 80}>
+              <Link href={`/pregnancy-week/${article.id.replace('week-', '')}`}>
               <Card3DTilt maxTilt={3} gloss>
               <article
                 className="group relative p-6 rounded-xl bg-[--card] border border-[--border] shadow-card transition-all duration-300"
@@ -149,6 +150,7 @@ export function ContentPreview() {
 
               </article>
               </Card3DTilt>
+              </Link>
               </Reveal>
             )
           })}

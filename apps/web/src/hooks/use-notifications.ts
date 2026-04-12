@@ -3,20 +3,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient, type InfiniteData } from '@tanstack/react-query'
 import { notificationService } from '@/services/notification-service'
-import type { ServiceContext } from '@tdc/services'
 import { notificationHistoryService } from '@/lib/services'
 import { NotificationPreferences, Notification } from '@tdc/shared/types'
-import { useOptionalUser } from '@/components/user-provider'
-
-function useServiceContext(): Partial<ServiceContext> | undefined {
-  const userData = useOptionalUser()
-  if (!userData?.user) return undefined
-  return {
-    userId: userData.user.id,
-    familyId: userData.profile?.family_id ?? undefined,
-    subscriptionTier: userData.profile?.subscription_tier ?? undefined,
-  } as Partial<ServiceContext>
-}
+import { useServiceContext } from './use-service-context'
 
 export function useNotificationPermission() {
   const [permission, setPermission] = useState<NotificationPermission>('default')

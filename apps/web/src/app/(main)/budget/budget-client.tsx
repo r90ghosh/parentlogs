@@ -63,6 +63,7 @@ import {
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import { BudgetTemplate, FamilyBudgetItem, BudgetBrandView } from '@tdc/shared/types'
+import type { BudgetSummary } from '@tdc/services'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 import { getCategoryStyle, CATEGORY_ICONS } from '@/lib/budget-constants'
@@ -77,7 +78,7 @@ function getBrandViewPrice(template: BudgetTemplate, brandView: BudgetBrandView)
 }
 
 export default function BudgetClient() {
-  const { data: summary, isLoading } = useBudgetSummary()
+  const { data: summary, isLoading } = useBudgetSummary() as { data: BudgetSummary | null | undefined, isLoading: boolean }
   const { activeBaby } = useUser()
   const { data: family } = useFamily()
   const addToBudget = useAddToBudget()

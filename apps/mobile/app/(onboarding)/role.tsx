@@ -51,7 +51,7 @@ export default function RoleScreen() {
       />
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.step}>Step 1 of 3</Text>
+          <Text style={styles.step}>Step 1 of 4</Text>
           <Text style={styles.title}>Who are you?</Text>
           <Text style={styles.subtitle}>
             We'll personalize your experience based on your role

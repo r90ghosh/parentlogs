@@ -35,6 +35,8 @@ export default function ScreensLayout() {
       <Stack.Screen name="upgrade-success" />
       <Stack.Screen name="feedback" />
       <Stack.Screen name="personalize" />
+      <Stack.Screen name="pregnancy-weeks" />
+      <Stack.Screen name="videos" />
     </Stack>
   )
 }

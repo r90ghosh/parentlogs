@@ -2,23 +2,13 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { subscriptionService } from '@/lib/services'
-import type { ServiceContext } from '@tdc/services'
 import { createCheckoutSession, createPortalSession, type PricingPlan } from '@/lib/stripe/checkout'
 import { PremiumFeature, SubscriptionTier } from '@tdc/shared/types'
 import { useRouter } from 'next/navigation'
 import { useCallback, useMemo } from 'react'
 import { useUser } from '@/components/user-provider'
 import { isInGracePeriod, gracePeriodDaysRemaining } from '@tdc/shared/utils/subscription-utils'
-
-function useServiceContext(): Partial<ServiceContext> | undefined {
-  const { user, profile } = useUser()
-  if (!user) return undefined
-  return {
-    userId: user.id,
-    familyId: profile?.family_id ?? undefined,
-    subscriptionTier: profile?.subscription_tier ?? undefined,
-  } as Partial<ServiceContext>
-}
+import { useServiceContext } from './use-service-context'
 
 export function useSubscription() {
   const ctx = useServiceContext()

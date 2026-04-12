@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useAuth } from '@/components/providers/AuthProvider'
-import { supabase } from '@/lib/supabase'
+import { profileService } from '@/lib/services'
 
 export function useWelcomeAnimation() {
   const { profile, user, refreshProfile } = useAuth()
@@ -21,10 +21,7 @@ export function useWelcomeAnimation() {
 
     if (!user?.id) return
 
-    await supabase
-      .from('profiles')
-      .update({ has_seen_welcome: true })
-      .eq('id', user.id)
+    await profileService.markWelcomeSeen(user.id)
 
     await refreshProfile()
   }, [user?.id, refreshProfile])

@@ -8,84 +8,36 @@ import { SingleTipView } from '@/components/features/tips/SingleTipView'
 
 export const revalidate = false
 
-const tipMeta: Record<string, { title: string; description: string; keywords: string[] }> = {
+const tipMeta: Record<string, { title: string; description: string }> = {
   'baby-changing': {
     title: 'How to Change a Diaper — Step-by-Step Guide for Dads',
     description:
       'Learn how to change a diaper in 5 simple steps with illustrated instructions. Prep, position, swap, clean, and button up — a practical guide for new dads.',
-    keywords: [
-      'how to change a diaper',
-      'diaper changing steps',
-      'baby changing guide',
-      'new dad diaper tips',
-      'diaper changing for beginners',
-      'newborn diaper change',
-    ],
   },
   'bottle-prep': {
     title: 'How to Prepare a Baby Bottle — Step-by-Step Guide for Dads',
     description:
       'Learn how to prepare a baby bottle safely in 2 easy steps. Clean, mix, test, and feed — a practical formula feeding guide for new dads.',
-    keywords: [
-      'how to make a baby bottle',
-      'bottle feeding guide',
-      'formula preparation steps',
-      'baby bottle prep',
-      'new dad bottle feeding',
-      'how to mix baby formula',
-    ],
   },
   'swaddling': {
     title: 'How to Swaddle a Baby — Step-by-Step Guide for Dads',
     description:
       'Learn how to swaddle a baby in 2 simple steps with illustrated instructions. Diamond setup and wrap technique — a practical guide for new dads.',
-    keywords: [
-      'how to swaddle a baby',
-      'swaddling techniques',
-      'baby swaddle guide',
-      'newborn swaddling steps',
-      'swaddle wrap for beginners',
-      'how to swaddle a newborn',
-    ],
   },
   'bath-time': {
     title: 'How to Bathe a Baby — Step-by-Step Guide for Dads',
     description:
       'Learn how to give your baby a bath in 2 simple steps. Setup, water temperature, washing order, and drying — a practical bath time guide for new dads.',
-    keywords: [
-      'how to bathe a baby',
-      'baby bath time guide',
-      'newborn bath steps',
-      'baby bath temperature',
-      'first baby bath tips',
-      'how to wash a newborn',
-    ],
   },
   'car-seat': {
     title: 'How to Install a Car Seat — Step-by-Step Guide for Dads',
     description:
       'Learn how to install a car seat and secure your baby in 2 steps. Base installation and harness adjustment — a practical car seat guide for new dads.',
-    keywords: [
-      'how to install a car seat',
-      'car seat installation guide',
-      'baby car seat setup',
-      'car seat safety tips',
-      'rear-facing car seat installation',
-      'how to strap baby in car seat',
-    ],
   },
   'burping': {
     title: 'How to Burp a Baby — Step-by-Step Guide for Dads',
     description:
       'Learn how to burp a baby with 2 effective techniques. Over-the-shoulder and sitting positions — a practical burping guide for new dads.',
-    keywords: [
-      'how to burp a baby',
-      'baby burping techniques',
-      'burping a newborn',
-      'best burping positions',
-      'how to burp a newborn',
-      'baby gas relief tips',
-    ],
   },
 }
 
@@ -131,7 +83,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${meta.title} | The Dad Center`,
     description: meta.description,
-    keywords: meta.keywords,
     alternates: { canonical: `/tips/${slug}` },
     openGraph: {
       title: meta.title,
@@ -191,6 +142,16 @@ export default async function TipDetailPage({ params }: PageProps) {
 
   const howToSchema = buildHowToJsonLd(slug)
 
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://thedadcenter.com' },
+      { '@type': 'ListItem', position: 2, name: 'Dad Tips', item: 'https://thedadcenter.com/tips' },
+      { '@type': 'ListItem', position: 3, name: topic.name, item: `https://thedadcenter.com/tips/${slug}` },
+    ],
+  }
+
   return (
     <>
       {howToSchema && (
@@ -199,6 +160,10 @@ export default async function TipDetailPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
         />
       )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
       <div className="min-h-screen bg-[--bg]">
         {/* Hero area */}

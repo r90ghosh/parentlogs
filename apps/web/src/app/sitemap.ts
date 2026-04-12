@@ -93,13 +93,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  // Pregnancy week guide index
+  // Pregnancy week guide index + trimester pages
   const pregnancyIndex: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/pregnancy-week`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/pregnancy-week/first-trimester`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/pregnancy-week/second-trimester`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/pregnancy-week/third-trimester`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.85,
     },
   ]
 

@@ -8,20 +8,6 @@ export const metadata: Metadata = {
   title: 'Dad Tips — Visual Step-by-Step Parenting Guides | The Dad Center',
   description:
     'Illustrated how-to guides for new dads: diaper changing, bottle prep, swaddling, bath time, car seat installation, and burping. Simple visual steps you can follow at 3am.',
-  keywords: [
-    'new dad tips',
-    'how to change a diaper',
-    'bottle feeding guide',
-    'how to swaddle a baby',
-    'baby bath time tips',
-    'car seat installation guide',
-    'how to burp a baby',
-    'parenting tips for dads',
-    'newborn care guide',
-    'first-time dad advice',
-    'diaper changing steps',
-    'baby care instructions',
-  ],
   alternates: {
     canonical: '/tips',
   },
@@ -140,6 +126,20 @@ export default function DadTipsPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      {/* BreadcrumbList */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://thedadcenter.com' },
+              { '@type': 'ListItem', position: 2, name: 'Dad Tips', item: 'https://thedadcenter.com/tips' },
+            ],
+          }),
+        }}
       />
 
       <div className="min-h-screen bg-[--bg]">

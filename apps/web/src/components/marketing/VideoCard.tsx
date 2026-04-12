@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { Video, Play, ExternalLink } from 'lucide-react'
 import type { Video as VideoType } from '@/lib/content'
 
@@ -35,10 +36,12 @@ export function VideoCard({ video }: VideoCardProps) {
       {/* Thumbnail */}
       <div className="relative aspect-video bg-[--card] overflow-hidden">
         {video.youtubeId ? (
-          <img
+          <Image
             src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`}
             alt={video.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[--card] to-[--surface]">

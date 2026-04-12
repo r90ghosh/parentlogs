@@ -46,7 +46,7 @@ export default function ReadyScreen() {
         <Animated.View
           entering={FadeInDown.delay(400).springify().damping(12)}
         >
-          <Text style={styles.step}>Step 3 of 3</Text>
+          <Text style={styles.step}>Step 4 of 4</Text>
           <Text style={styles.title}>You're all set!</Text>
           <Text style={styles.subtitle}>
             Your personalized dashboard, weekly briefings, and task timeline are

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Dad Center — Review Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Jost:wght@300;400;500;600&family=Karla:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #12100e;
+    --surface: #1a1714;
+    --card: #201c18;
+    --card-hover: #282420;
+    --white: #faf6f0;
+    --cream: #ede6dc;
+    --muted: #7a6f62;
+    --dim: #4a4239;
+    --copper: #c4703f;
+    --gold: #d4a853;
+    --sage: #6b8f71;
+    --coral: #d4836b;
+    --sky: #5b9bd5;
+    --rose: #c47a8f;
+    --border: rgba(237,230,220,0.08);
+    --border-hover: rgba(237,230,220,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--bg);
+    color: var(--cream);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+  .header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: var(--white);
+  }
+  .header h1 span { color: var(--copper); }
+  .header-meta {
+    font-family: 'Karla', sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .export-btn {
+    font-family: 'Karla', sans-serif;
+    padding: 8px 20px;
+    background: var(--copper);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .export-btn:hover { background: #d4803f; transform: translateY(-1px); }
+
+  /* Stats bar */
+  .stats-bar {
+    max-width: 1400px;
+    margin: 24px auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+  .stat-card:hover { border-color: var(--border-hover); }
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-family: 'Karla', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+  .stat-card.p0 .stat-number { color: var(--coral); }
+  .stat-card.seo .stat-number { color: var(--sky); }
+  .stat-card.code .stat-number { color: var(--gold); }
+  .stat-card.ui .stat-number { color: var(--rose); }
+  .stat-card.selected .stat-number { color: var(--sage); }
+  .stat-card.total .stat-number { color: var(--copper); }
+
+  /* Tabs */
+  .tabs-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 4px;
+    border: 1px solid var(--border);
+  }
+  .tab {
+    font-family: 'Karla', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+    text-align: center;
+  }
+  .tab:hover { color: var(--cream); background: var(--card); }
+  .tab.active { background: var(--copper); color: var(--white); }
+  .tab .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    margin-left: 6px;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .filter-label {
+    font-family: 'Karla', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+  .filter-pill {
+    font-family: 'Karla', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-pill:hover { border-color: var(--border-hover); color: var(--cream); }
+  .filter-pill.active { border-color: var(--copper); color: var(--copper); background: rgba(196,112,63,0.1); }
+  .filter-pill.active-p0 { border-color: var(--coral); color: var(--coral); background: rgba(212,131,107,0.1); }
+  .filter-pill.active-p1 { border-color: var(--gold); color: var(--gold); background: rgba(212,168,83,0.1); }
+  .filter-pill.active-p2 { border-color: var(--sage); color: var(--sage); background: rgba(107,143,113,0.1); }
+
+  /* Content */
+  .content { max-width: 1400px; margin: 0 auto; padding: 0 40px 80px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Issue cards */
+  .issue-grid {
+    display: grid;
+    gap: 12px;
+  }
+  .issue-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px;
+    align-items: start;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .issue-card:hover {
+    border-color: var(--border-hover);
+    background: var(--card-hover);
+    transform: translateY(-1px);
+  }
+  .issue-card.selected {
+    border-color: var(--copper);
+    box-shadow: 0 0 0 1px var(--copper), 0 4px 20px rgba(196,112,63,0.1);
+  }
+
+  /* Checkbox */
+  .checkbox-wrap {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 2px;
+  }
+  .checkbox {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--dim);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .checkbox:checked {
+    background: var(--copper);
+    border-color: var(--copper);
+  }
+  .checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 11px;
+    border: solid var(--white);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  /* Issue content */
+  .issue-body { min-width: 0; }
+  .issue-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .issue-id {
+    font-family: 'Karla', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    background: var(--surface);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .priority-badge {
+    font-family: 'Karla', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .priority-badge.p0 { background: rgba(212,131,107,0.2); color: var(--coral); }
+  .priority-badge.p1 { background: rgba(212,168,83,0.15); color: var(--gold); }
+  .priority-badge.p2 { background: rgba(107,143,113,0.15); color: var(--sage); }
+
+  .effort-badge {
+    font-family: 'Karla', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 4px;
+    background: rgba(91,155,213,0.12);
+    color: var(--sky);
+  }
+
+  .issue-title {
+    font-family: 'Jost', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .issue-fix {
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .issue-fix strong { color: var(--cream); font-weight: 500; }
+  .issue-file {
+    font-family: 'Karla', sans-serif;
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 6px;
+    word-break: break-all;
+  }
+
+  /* Right meta */
+  .issue-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    padding-top: 2px;
+  }
+
+  /* Phase badges */
+  .phase-badge {
+    font-family: 'Karla', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(196,112,63,0.1);
+    color: var(--copper);
+    white-space: nowrap;
+  }
+
+  /* Section headers */
+  .section-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--white);
+    margin: 32px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-header .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .section-header .dot.p0 { background: var(--coral); }
+  .section-header .dot.p1 { background: var(--gold); }
+  .section-header .dot.p2 { background: var(--sage); }
+
+  /* Summary panel */
+  .summary-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 16px 40px;
+    backdrop-filter: blur(20px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    transition: transform 0.3s;
+  }
+  .summary-panel.hidden { transform: translateY(100%); }
+  .summary-text {
+    font-family: 'Karla', sans-serif;
+    font-size: 14px;
+    color: var(--cream);
+  }
+  .summary-text span { color: var(--copper); font-weight: 700; }
+  .summary-effort {
+    font-family: 'Karla', sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* Phase overview */
+  .phase-overview {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 32px;
+  }
+  .phase-overview h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  .phase-timeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 12px;
+  }
+  .phase-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    transition: all 0.2s;
+  }
+  .phase-item:hover { border-color: var(--border-hover); }
+  .phase-name {
+    font-family: 'Karla', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--copper);
+    margin-bottom: 4px;
+  }
+  .phase-desc {
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+  .phase-ids {
+    font-family: 'Karla', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .phase-effort {
+    font-family: 'Karla', sans-serif;
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 4px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header { padding: 16px 20px; }
+    .stats-bar, .tabs-container, .content { padding: 0 20px; }
+    .issue-card { grid-template-columns: auto 1fr; }
+    .issue-meta { display: none; }
+    .stats-bar { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Intro text */
+  .intro {
+    font-family: 'Jost', sans-serif;
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 800px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .intro strong { color: var(--cream); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <h1>The Dad Center <span>Review Dashboard</span></h1>
+      <div class="header-meta">April 12, 2026 &mdash; Web + Mobile Monorepo Audit</div>
+    </div>
+    <button class="export-btn" onclick="exportSelected()">Export Selected as JSON</button>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-card total">
+    <div class="stat-number" id="stat-total">45</div>
+    <div class="stat-label">Total Issues</div>
+  </div>
+  <div class="stat-card p0">
+    <div class="stat-number" id="stat-p0">8</div>
+    <div class="stat-label">P0 Critical</div>
+  </div>
+  <div class="stat-card seo">
+    <div class="stat-number">15</div>
+    <div class="stat-label">SEO Issues</div>
+  </div>
+  <div class="stat-card code">
+    <div class="stat-number">11</div>
+    <div class="stat-label">Code/Arch</div>
+  </div>
+  <div class="stat-card ui">
+    <div class="stat-number">19</div>
+    <div class="stat-label">UI/UX Gaps</div>
+  </div>
+  <div class="stat-card selected">
+    <div class="stat-number" id="stat-selected">0</div>
+    <div class="stat-label">Selected</div>
+  </div>
+</div>
+
+<div class="tabs-container">
+  <div class="tabs">
+    <button class="tab active" data-tab="overview" onclick="switchTab('overview', this)">Overview</button>
+    <button class="tab" data-tab="seo" onclick="switchTab('seo', this)">SEO <span class="badge">15</span></button>
+    <button class="tab" data-tab="code" onclick="switchTab('code', this)">Code & Arch <span class="badge">11</span></button>
+    <button class="tab" data-tab="ui" onclick="switchTab('ui', this)">UI/UX & Mobile <span class="badge">19</span></button>
+  </div>
+</div>
+
+<div class="content">
+  <!-- OVERVIEW TAB -->
+  <div class="tab-panel active" id="panel-overview">
+    <p class="intro">
+      This audit covers <strong>45 issues</strong> across SEO, code architecture, and UI/UX consistency between the web and mobile apps.
+      <strong>Check the boxes</strong> on issues you want to prioritize. Selected items will be tracked across tabs.
+      Use the tabs above to dive into each category.
+    </p>
+
+    <div class="phase-overview">
+      <h2>Recommended Implementation Phases</h2>
+      <div class="phase-timeline">
+        <div class="phase-item">
+          <div class="phase-name">Phase 1</div>
+          <div class="phase-desc">Quick SEO Wins</div>
+          <div class="phase-ids">S1, S2, S3, S11, S12</div>
+          <div class="phase-effort">~1 day</div>
+        </div>
+        <div class="phase-item">
+          <div class="phase-name">Phase 2</div>
+          <div class="phase-desc">Schema + OG Images</div>
+          <div class="phase-ids">S4, S5, S6, S7, S8, S9, S10</div>
+          <div class="phase-effort">~1-2 days</div>
+        </div>
+        <div class="phase-item">
+          <div class="phase-name">Phase 3</div>
+          <div class="phase-desc">Architecture Foundation</div>
+          <div class="phase-ids">C3, C5, C6, C7, C11</div>
+          <div class="phase-effort">~1 week</div>
+        </div>
+        <div class="phase-item">
+          <div class="phase-name">Phase 4</div>
+          <div class="phase-desc">Mobile UI Foundation</div>
+          <div class="phase-ids">U1, U2, U4, U5, U9, U11</div>
+          <div class="phase-effort">~1-2 weeks</div>
+        </div>
+        <div class="phase-item">
+          <div class="phase-name">Phase 5</div>
+          <div class="phase-desc">Core Deduplication</div>
+          <div class="phase-ids">C2, C4</div>
+          <div class="phase-effort">~1-2 weeks</div>
+        </div>
+        <div class="phase-item">
+          <div class="phase-name">Phase 6</div>
+          <div class="phase-desc">Mobile Animations</div>
+          <div class="phase-ids">U6, U7, U8, U10, U12</div>
+          <div class="phase-effort">~1 week</div>
+        </div>
+        <div class="phase-item">
+          <div class="phase-name">Phase 7</div>
+          <div class="phase-desc">RevenueCat Webhook</div>
+          <div class="phase-ids">C1</div>
+          <div class="phase-effort">~2-3 days</div>
+        </div>
+        <div class="phase-item">
+          <div class="phase-name">Phase 8</div>
+          <div class="phase-desc">Light Mode + Features</div>
+          <div class="phase-ids">U3, U13-U18, U19</div>
+          <div class="phase-effort">~2-3 weeks</div>
+        </div>
+        <div class="phase-item">
+          <div class="phase-name">Phase 9</div>
+          <div class="phase-desc">Quality Infrastructure</div>
+          <div class="phase-ids">C8, C9, C10, S13, S14</div>
+          <div class="phase-effort">Ongoing</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- All P0 issues -->
+    <div class="section-header"><div class="dot p0"></div> All P0 Critical Issues</div>
+    <div class="issue-grid" id="p0-overview"></div>
+  </div>
+
+  <!-- SEO TAB -->
+  <div class="tab-panel" id="panel-seo">
+    <p class="intro">SEO audit of all public marketing pages. Focus: structured data gaps, internal linking, Core Web Vitals, and content opportunities.</p>
+
+    <div class="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-pill active" onclick="filterIssues('seo', 'all', this)">All</button>
+      <button class="filter-pill" onclick="filterIssues('seo', 'p0', this)">P0 Critical</button>
+      <button class="filter-pill" onclick="filterIssues('seo', 'p1', this)">P1 Important</button>
+      <button class="filter-pill" onclick="filterIssues('seo', 'p2', this)">P2 Nice to Have</button>
+    </div>
+
+    <div class="issue-grid" id="seo-issues"></div>
+  </div>
+
+  <!-- CODE TAB -->
+  <div class="tab-panel" id="panel-code">
+    <p class="intro">Architecture and code quality issues across the monorepo. Focus: hook duplication, service gaps, subscription sync, and testing.</p>
+
+    <div class="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-pill active" onclick="filterIssues('code', 'all', this)">All</button>
+      <button class="filter-pill" onclick="filterIssues('code', 'p0', this)">P0 Critical</button>
+      <button class="filter-pill" onclick="filterIssues('code', 'p1', this)">P1 Important</button>
+      <button class="filter-pill" onclick="filterIssues('code', 'p2', this)">P2 Nice to Have</button>
+    </div>
+
+    <div class="issue-grid" id="code-issues"></div>
+  </div>
+
+  <!-- UI TAB -->
+  <div class="tab-panel" id="panel-ui">
+    <p class="intro">UI/UX consistency gaps between web and mobile. Focus: missing components, animation parity, design system adherence, and feature gaps.</p>
+
+    <div class="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-pill active" onclick="filterIssues('ui', 'all', this)">All</button>
+      <button class="filter-pill" onclick="filterIssues('ui', 'p0', this)">P0 Foundation</button>
+      <button class="filter-pill" onclick="filterIssues('ui', 'p1', this)">P1 Polish</button>
+      <button class="filter-pill" onclick="filterIssues('ui', 'p2', this)">P2 Parity</button>
+    </div>
+
+    <div class="issue-grid" id="ui-issues"></div>
+  </div>
+</div>
+
+<div class="summary-panel hidden" id="summary-panel">
+  <div class="summary-text"><span id="summary-count">0</span> issues selected</div>
+  <div class="summary-effort" id="summary-effort"></div>
+  <button class="export-btn" onclick="exportSelected()">Export Selected</button>
+</div>
+
+<script>
+const issues = [
+  // SEO issues
+  { id: "S1", cat: "seo", priority: "p0", title: "ArticleContent renders ALL markdown links as target=\"_blank\" — kills internal link equity", fix: "Detect internal links (start with / or thedadcenter.com) and render with Next.js <Link>. Only apply target=\"_blank\" to truly external links.", file: "apps/web/src/components/marketing/ArticleContent.tsx:77-86", effort: "20 min", phase: "Phase 1" },
+  { id: "S2", cat: "seo", priority: "p0", title: "VideoCard uses raw <img> for YouTube thumbnails — no lazy load, no WebP/AVIF, CLS risk", fix: "Replace with next/image using fill mode. The img.youtube.com domain is already in remotePatterns.", file: "apps/web/src/components/marketing/VideoCard.tsx:38-42", effort: "15 min", phase: "Phase 1" },
+  { id: "S3", cat: "seo", priority: "p0", title: "robots.txt allow list missing /tips/*, /pregnancy-week/*, /about, /faq", fix: "Add missing paths to the allow array for consistency.", file: "apps/web/src/app/robots.ts:8", effort: "5 min", phase: "Phase 1" },
+  { id: "S4", cat: "seo", priority: "p1", title: "About page has ZERO structured data — missing Organization schema", fix: "Add Organization JSON-LD with name, url, logo, description, foundingDate, contactPoint, sameAs.", file: "apps/web/src/app/(marketing)/about/page.tsx", effort: "15 min", phase: "Phase 2" },
+  { id: "S5", cat: "seo", priority: "p1", title: "Videos page has no structured data — missing VideoObject schema", fix: "Add CollectionPage + ItemList of VideoObject entries (name, description, thumbnailUrl, uploadDate, embedUrl).", file: "apps/web/src/app/(marketing)/videos/page.tsx", effort: "30 min", phase: "Phase 2" },
+  { id: "S6", cat: "seo", priority: "p1", title: "Budget Guide page has no structured data", fix: "Add CollectionPage or ItemList schema listing budget categories.", file: "apps/web/src/app/(marketing)/budget-guide/page.tsx", effort: "20 min", phase: "Phase 2" },
+  { id: "S7", cat: "seo", priority: "p1", title: "Baby Checklists listing page missing CollectionPage schema", fix: "Add CollectionPage + ItemList of all checklists. Individual checklist pages already have schema.", file: "apps/web/src/app/(marketing)/baby-checklists/page.tsx", effort: "15 min", phase: "Phase 2" },
+  { id: "S8", cat: "seo", priority: "p1", title: "BreadcrumbList schema missing on 8+ pages", fix: "Add BreadcrumbList JSON-LD to: /blog, /tips, /tips/[slug], /videos, /budget-guide, /about, /faq, /baby-checklists. Pattern: Home > Page Name.", file: "Multiple marketing page files", effort: "30 min", phase: "Phase 2" },
+  { id: "S9", cat: "seo", priority: "p1", title: "Missing dedicated OG images on 5 page types", fix: "Create opengraph-image.tsx for: About, FAQ, Videos, baby-checklists/[id], tips/[slug]. Follow existing blog/[slug] pattern.", file: "5 new opengraph-image.tsx files", effort: "1-2 hrs", phase: "Phase 2" },
+  { id: "S10", cat: "seo", priority: "p1", title: "Duplicate FAQPage schema on homepage AND /faq page", fix: "Keep homepage FAQPage to 2-3 unique questions that don't overlap with /faq, or remove homepage FAQPage entirely.", file: "apps/web/src/components/marketing/JsonLd.tsx:72-101", effort: "10 min", phase: "Phase 2" },
+  { id: "S11", cat: "seo", priority: "p2", title: "Homepage ContentPreview article cards are NOT linked — missed internal linking", fix: "Wrap each article card in a <Link> to /pregnancy-week/{number}. Currently static <article> with no href.", file: "apps/web/src/components/marketing/ContentPreview.tsx:117-155", effort: "10 min", phase: "Phase 1" },
+  { id: "S12", cat: "seo", priority: "p2", title: "Root layout title doesn't match marketing layout title", fix: "Root: \"Your Parenting Command Center\" vs Marketing: \"Operating System for Modern Fatherhood\". Use title template: { template: '%s | The Dad Center', default: '...' }", file: "apps/web/src/app/layout.tsx", effort: "5 min", phase: "Phase 1" },
+  { id: "S13", cat: "seo", priority: "p2", title: "No trimester landing pages for high-volume keywords", fix: "Create 3 pages: /pregnancy-week/first-trimester, /second-trimester, /third-trimester. Hub pages aggregating respective weeks with unique content + schema.", file: "New files under apps/web/src/app/(marketing)/pregnancy-week/", effort: "2-3 hrs", phase: "Phase 9" },
+  { id: "S14", cat: "seo", priority: "p2", title: "Blog featuredImage field exists but never displayed", fix: "If featuredImage is populated, display as hero image on blog posts and use in OG image generation.", file: "apps/web/src/components/marketing/ArticleContent.tsx + blog/[slug]/opengraph-image.tsx", effort: "1 hr", phase: "Phase 9" },
+  { id: "S15", cat: "seo", priority: "p2", title: "keywords meta tag used inconsistently across pages", fix: "Either remove from all pages (Google ignores) or add consistently everywhere. Low impact either way.", file: "Multiple page metadata exports", effort: "15 min", phase: "Phase 9" },
+
+  // Code/Architecture issues
+  { id: "C1", cat: "code", priority: "p0", title: "RevenueCat has NO server-side webhook — mobile purchase sync relies entirely on client", fix: "Create RevenueCat webhook API route mirroring Stripe webhook logic: handle INITIAL_PURCHASE, RENEWAL, CANCELLATION, EXPIRATION, BILLING_ISSUE. Update profiles.subscription_tier and propagate to family members.", file: "apps/web/src/app/api/revenuecat/webhook/route.ts (new)", effort: "2-3 days", phase: "Phase 7" },
+  { id: "C2", cat: "code", priority: "p1", title: "13+ hooks are near-identical between web and mobile (tasks, budget, checklists, tracker, briefings, etc.)", fix: "Create hook factories in packages/shared/src/hooks/ that accept useServiceContext as DI. Each platform provides its own context implementation. Start with: tasks, checklists, budget, tracker, briefings, babies.", file: "packages/shared/src/hooks/ (new directory)", effort: "4-5 days", phase: "Phase 5" },
+  { id: "C3", cat: "code", priority: "p1", title: "Web useServiceContext defined 6 times in different hook files", fix: "Extract to single apps/web/src/hooks/use-service-context.ts mirroring mobile's pattern. Prerequisite for C2.", file: "apps/web/src/hooks/use-service-context.ts (new)", effort: "0.5 day", phase: "Phase 3" },
+  { id: "C4", cat: "code", priority: "p1", title: "Analytics event helpers are identical between platforms but transport differs", fix: "Extract shared event types + analytics helper object to packages/shared/src/analytics/. Keep platform-specific transport in each app.", file: "packages/shared/src/analytics/ (new)", effort: "2-3 days", phase: "Phase 5" },
+  { id: "C5", cat: "code", priority: "p1", title: "Web doesn't export articlesService despite having articles table", fix: "Add createArticlesService(supabase) to apps/web/src/lib/services.ts. One-line fix.", file: "apps/web/src/lib/services.ts", effort: "0.5 day", phase: "Phase 3" },
+  { id: "C6", cat: "code", priority: "p1", title: "Query key patterns diverge between web and mobile for same data", fix: "Define canonical queryKeys factory in packages/shared/src/constants/query-keys.ts. Adopt across all hooks on both platforms.", file: "packages/shared/src/constants/query-keys.ts (new)", effort: "1 day", phase: "Phase 3" },
+  { id: "C7", cat: "code", priority: "p1", title: "Android submit config missing from eas.json", fix: "Add submit.production.android section with serviceAccountKeyPath and track fields.", file: "apps/mobile/eas.json", effort: "1 hr", phase: "Phase 3" },
+  { id: "C8", cat: "code", priority: "p2", title: "Zero test files across entire monorepo", fix: "Add Vitest to workspace root. Configure in turbo.json. Start with packages/services (pure functions, easily mockable). Defer component/E2E tests.", file: "packages/services/vitest.config.ts + __tests__/ (new)", effort: "3-5 days", phase: "Phase 9" },
+  { id: "C9", cat: "code", priority: "p2", title: "Database types in packages/shared require manual regeneration", fix: "Add scripts/check-db-types.sh that diffs generated types vs committed database.ts. Add to turbo pipeline or pre-commit hook.", file: "scripts/check-db-types.sh (new)", effort: "0.5 day", phase: "Phase 9" },
+  { id: "C10", cat: "code", priority: "p2", title: "Realtime sync hooks diverge significantly between platforms", fix: "Create factory in packages/shared for core channel subscription logic. Leave toast/presence as platform-specific extensions.", file: "packages/shared/src/hooks/create-realtime-sync.ts (new)", effort: "1-2 days", phase: "Phase 9" },
+  { id: "C11", cat: "code", priority: "p2", title: "Mobile use-welcome-animation bypasses service layer — calls Supabase directly", fix: "Use profileService.markWelcomeSeen() instead of direct supabase.from('profiles').update(...).", file: "apps/mobile/hooks/use-welcome-animation.ts", effort: "1 hr", phase: "Phase 3" },
+
+  // UI/UX issues
+  { id: "U1", cat: "ui", priority: "p0", title: "No reusable Button component on mobile — 37+ files redefine button styles inline", fix: "Create components/ui/Button.tsx with all web variants (copper, gold, destructive, outline, secondary, ghost, link) + sizes (sm, default, lg) + loading/disabled states + haptic feedback.", file: "apps/mobile/components/ui/Button.tsx (new)", effort: "1-2 days", phase: "Phase 4" },
+  { id: "U2", cat: "ui", priority: "p0", title: "No reusable TextInput component — 15+ files duplicate input styles", fix: "Create components/ui/TextInput.tsx with focus border (copper), error state (coral), label, consistent font/padding.", file: "apps/mobile/components/ui/TextInput.tsx (new)", effort: "1 day", phase: "Phase 4" },
+  { id: "U3", cat: "ui", priority: "p0", title: "436 hardcoded dark-mode colors across 73 files — light mode is completely broken", fix: "Create centralized theme colors object in ThemeProvider. Migrate all 73 files from hardcoded hex values to theme-aware references. The GlassCard component is the correct pattern to replicate.", file: "apps/mobile/components/providers/ThemeProvider.tsx + 73 screen files", effort: "5-8 days", phase: "Phase 8" },
+  { id: "U4", cat: "ui", priority: "p1", title: "No Card/CardHeader/CardTitle/CardContent component set", fix: "Create based on existing GlassCard with subcomponents matching web API. Include card-copper-top style variant.", file: "apps/mobile/components/ui/Card.tsx (new)", effort: "1 day", phase: "Phase 4" },
+  { id: "U5", cat: "ui", priority: "p1", title: "No Badge component — ad-hoc badge-like views scattered across files", fix: "Create Badge with web variants: copper, gold, sage, coral, outline, muted.", file: "apps/mobile/components/ui/Badge.tsx (new)", effort: "0.5 day", phase: "Phase 4" },
+  { id: "U6", cat: "ui", priority: "p1", title: "TypewriterGreeting missing on mobile dashboard — static text instead", fix: "Create Reanimated-based TypewriterGreeting with copper blinking cursor. This is the signature brand animation.", file: "apps/mobile/components/animations/TypewriterGreeting.tsx (new)", effort: "1 day", phase: "Phase 6" },
+  { id: "U7", cat: "ui", priority: "p1", title: "CopperDivider missing on mobile dashboard", fix: "Create animated line-draw with traveling glow tip using Reanimated width interpolation.", file: "apps/mobile/components/animations/CopperDivider.tsx (new)", effort: "0.5 day", phase: "Phase 6" },
+  { id: "U8", cat: "ui", priority: "p1", title: "RevealOnScroll missing — cards only animate on mount, not on scroll visibility", fix: "Create scroll-triggered fade-up wrapper using useAnimatedScrollHandler + useAnimatedStyle.", file: "apps/mobile/components/animations/RevealOnScroll.tsx (new)", effort: "1 day", phase: "Phase 6" },
+  { id: "U9", cat: "ui", priority: "p1", title: "Shadow system missing — web has 5 shadow levels, mobile has none", fix: "Create shadows.ts constants (card, hover, lift, copper, gold) and apply to GlassCard and all card surfaces.", file: "apps/mobile/lib/shadows.ts (new)", effort: "0.5 day", phase: "Phase 4" },
+  { id: "U10", cat: "ui", priority: "p1", title: "No sliding tab indicator — web has animated copper underline between bottom nav tabs", fix: "Add Reanimated animated tab indicator matching web's sliding copper line.", file: "apps/mobile/app/(tabs)/_layout.tsx", effort: "0.5 day", phase: "Phase 6" },
+  { id: "U11", cat: "ui", priority: "p1", title: "Screen header inconsistency — varying back button styles, sizes, icons", fix: "Create reusable ScreenHeader with title, leftAction (back/close), rightAction slots. Standardize sizing and styling.", file: "apps/mobile/components/ui/ScreenHeader.tsx (new)", effort: "1-2 days", phase: "Phase 4" },
+  { id: "U12", cat: "ui", priority: "p1", title: "AppBackground is flat dark — missing WarmBackground noise texture + radial gradients", fix: "Add noise texture asset + copper/gold radial gradient overlays to match web's warm feel.", file: "apps/mobile/components/shared/AppBackground.tsx", effort: "0.5 day", phase: "Phase 6" },
+  { id: "U13", cat: "ui", priority: "p2", title: "No pregnancy week guide on mobile", fix: "Create native screen using existing articlesService / briefing data. Web has full /pregnancy-week hub + 40 detail pages.", file: "apps/mobile/app/(screens)/pregnancy-week.tsx (new)", effort: "2-3 days", phase: "Phase 8" },
+  { id: "U14", cat: "ui", priority: "p2", title: "No video browser on mobile", fix: "Create native video browser screen. Web has full /videos page with thumbnails and categories.", file: "apps/mobile/app/(screens)/videos.tsx (new)", effort: "1-2 days", phase: "Phase 8" },
+  { id: "U15", cat: "ui", priority: "p2", title: "No contact form on mobile — help screen opens external links only", fix: "Port web's contact form using same Supabase function. Web has full react-hook-form + zod validation.", file: "apps/mobile/app/(screens)/help.tsx", effort: "1 day", phase: "Phase 8" },
+  { id: "U16", cat: "ui", priority: "p2", title: "QuickActionsBar actions diverge between platforms", fix: "Web: Add Task, Log Data, Add Event, Log Expense. Mobile: Checklists, Budget, Journey. Align to show same primary daily actions.", file: "apps/mobile/components/dashboard/QuickActionsBar.tsx", effort: "0.5 day", phase: "Phase 8" },
+  { id: "U17", cat: "ui", priority: "p2", title: "\"Dad Tips\" and \"Budget Guide\" open external WebBrowser instead of native screens", fix: "Build native screens for these instead of using WebBrowser.openBrowserAsync.", file: "apps/mobile/app/(tabs)/more.tsx", effort: "1-2 days", phase: "Phase 8" },
+  { id: "U18", cat: "ui", priority: "p2", title: "Invite partner step missing from mobile onboarding (web: 7 steps, mobile: 4)", fix: "Add invite partner step to onboarding flow. Critical for the family co-parenting experience.", file: "apps/mobile/app/(onboarding)/ (new screen)", effort: "1 day", phase: "Phase 8" },
+  { id: "U19", cat: "ui", priority: "p2", title: "Missing Dialog/Modal, Select, Skeleton, Progress, Tabs components", fix: "Build mobile UI component library matching web's shadcn components. Currently only Toast.tsx exists.", file: "apps/mobile/components/ui/ (multiple new files)", effort: "3-4 days", phase: "Phase 8" },
+];
+
+// Render functions
+function renderIssue(issue) {
+  const checked = isSelected(issue.id) ? 'checked' : '';
+  const selectedClass = isSelected(issue.id) ? 'selected' : '';
+  return `
+    <div class="issue-card ${selectedClass}" data-id="${issue.id}" data-priority="${issue.priority}" data-cat="${issue.cat}" onclick="toggleFromCard(event, '${issue.id}')">
+      <div class="checkbox-wrap">
+        <input type="checkbox" class="checkbox" id="cb-${issue.id}" ${checked} onclick="toggleIssue(event, '${issue.id}')" />
+      </div>
+      <div class="issue-body">
+        <div class="issue-header">
+          <span class="issue-id">${issue.id}</span>
+          <span class="priority-badge ${issue.priority}">${issue.priority.toUpperCase()}</span>
+          <span class="effort-badge">${issue.effort}</span>
+        </div>
+        <div class="issue-title">${issue.title}</div>
+        <div class="issue-fix"><strong>Fix:</strong> ${issue.fix}</div>
+        <div class="issue-file">${issue.file}</div>
+      </div>
+      <div class="issue-meta">
+        <span class="phase-badge">${issue.phase}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderIssues(containerId, filteredIssues) {
+  document.getElementById(containerId).innerHTML = filteredIssues.map(renderIssue).join('');
+}
+
+// Selection state
+let selected = new Set(JSON.parse(localStorage.getItem('tdc-selected') || '[]'));
+
+function isSelected(id) { return selected.has(id); }
+
+function toggleIssue(e, id) {
+  e.stopPropagation();
+  if (selected.has(id)) selected.delete(id);
+  else selected.add(id);
+  localStorage.setItem('tdc-selected', JSON.stringify([...selected]));
+  updateUI();
+}
+
+function toggleFromCard(e, id) {
+  if (e.target.classList.contains('checkbox')) return;
+  const cb = document.getElementById('cb-' + id);
+  cb.checked = !cb.checked;
+  if (selected.has(id)) selected.delete(id);
+  else selected.add(id);
+  localStorage.setItem('tdc-selected', JSON.stringify([...selected]));
+  updateUI();
+}
+
+function updateUI() {
+  // Update stat
+  document.getElementById('stat-selected').textContent = selected.size;
+  document.getElementById('summary-count').textContent = selected.size;
+
+  // Update summary panel
+  const panel = document.getElementById('summary-panel');
+  if (selected.size > 0) {
+    panel.classList.remove('hidden');
+    const selectedIssues = issues.filter(i => selected.has(i.id));
+    const efforts = selectedIssues.map(i => i.effort).join(', ');
+    document.getElementById('summary-effort').textContent = 'Efforts: ' + efforts;
+  } else {
+    panel.classList.add('hidden');
+  }
+
+  // Update all cards
+  document.querySelectorAll('.issue-card').forEach(card => {
+    const id = card.dataset.id;
+    const cb = card.querySelector('.checkbox');
+    if (selected.has(id)) {
+      card.classList.add('selected');
+      if (cb) cb.checked = true;
+    } else {
+      card.classList.remove('selected');
+      if (cb) cb.checked = false;
+    }
+  });
+}
+
+// Tab switching
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + tabId).classList.add('active');
+}
+
+// Filtering
+function filterIssues(cat, priority, btn) {
+  const bar = btn.parentElement;
+  bar.querySelectorAll('.filter-pill').forEach(p => p.className = 'filter-pill');
+  if (priority === 'p0') btn.className = 'filter-pill active-p0';
+  else if (priority === 'p1') btn.className = 'filter-pill active-p1';
+  else if (priority === 'p2') btn.className = 'filter-pill active-p2';
+  else btn.className = 'filter-pill active';
+
+  const filtered = priority === 'all'
+    ? issues.filter(i => i.cat === cat)
+    : issues.filter(i => i.cat === cat && i.priority === priority);
+  renderIssues(cat + '-issues', filtered);
+}
+
+// Export
+function exportSelected() {
+  const selectedIssues = issues.filter(i => selected.has(i.id));
+  if (selectedIssues.length === 0) {
+    alert('No issues selected. Click on issue cards to select them first.');
+    return;
+  }
+  const json = JSON.stringify(selectedIssues, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'tdc-selected-issues.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Initial render
+renderIssues('seo-issues', issues.filter(i => i.cat === 'seo'));
+renderIssues('code-issues', issues.filter(i => i.cat === 'code'));
+renderIssues('ui-issues', issues.filter(i => i.cat === 'ui'));
+
+// P0 overview
+renderIssues('p0-overview', issues.filter(i => i.priority === 'p0'));
+
+updateUI();
+</script>
+</body>
+</html>

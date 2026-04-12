@@ -28,7 +28,10 @@ const karla = Karla({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://thedadcenter.com'),
-  title: 'The Dad Center - Your Parenting Command Center',
+  title: {
+    template: '%s | The Dad Center',
+    default: 'The Dad Center — The Operating System for Modern Fatherhood',
+  },
   description: 'Expert-curated tasks, weekly briefings, and partner sync for pregnancy through early parenthood.',
   manifest: '/manifest.json',
   icons: {

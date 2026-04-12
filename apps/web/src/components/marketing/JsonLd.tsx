@@ -69,37 +69,6 @@ export function JsonLd() {
     ],
   }
 
-  const faqPage = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: 'What is The Dad Center?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'The Dad Center is a pregnancy and parenting companion app designed primarily for dads. It provides week-by-week briefings, task management, mood tracking, budget planning, checklists, and a dad journey system with challenge tiles across 7 pillars.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'How much does The Dad Center cost?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'The Dad Center offers three pricing options: $4.99/month, $39.99/year (just $3.33/month), or a one-time lifetime purchase of $99.99. There is also a generous free tier to get started.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Can both parents use the same subscription?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Absolutely. One subscription covers the whole family — both partners share full access. No need to pay twice.',
-        },
-      },
-    ],
-  }
-
   return (
     <>
       <script
@@ -113,10 +82,6 @@ export function JsonLd() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApp) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPage) }}
       />
     </>
   )

@@ -15,7 +15,6 @@ export const metadata: Metadata = {
   title: 'Baby Preparation Checklists — 15 Essential Lists | The Dad Center',
   description:
     'Get organized with 15 curated baby preparation checklists covering hospital bag, nursery setup, baby essentials, and more. Made for dads.',
-  keywords: ['baby checklist', 'hospital bag checklist', 'nursery checklist', 'baby essentials list', 'newborn preparation', 'baby registry checklist'],
   alternates: { canonical: '/baby-checklists' },
   openGraph: {
     title: 'Baby Preparation Checklists — 15 Essential Lists | The Dad Center',
@@ -30,8 +29,44 @@ export default async function PublicChecklistsPage() {
   const totalItems = checklists.reduce((sum, cl) => sum + cl.itemCount, 0)
   const freeCount = checklists.filter(cl => !cl.is_premium).length
 
+  const collectionSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Baby Preparation Checklists',
+    description:
+      'Get organized with 15 curated baby preparation checklists covering hospital bag, nursery setup, baby essentials, and more.',
+    url: 'https://thedadcenter.com/baby-checklists',
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: checklists.length,
+      itemListElement: checklists.map((cl, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: cl.name,
+        url: `https://thedadcenter.com/baby-checklists/${cl.checklist_id}`,
+      })),
+    },
+  }
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://thedadcenter.com' },
+      { '@type': 'ListItem', position: 2, name: 'Baby Checklists', item: 'https://thedadcenter.com/baby-checklists' },
+    ],
+  }
+
   return (
     <div className="min-h-screen bg-[--bg]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       {/* Hero Section */}
       <section className="relative pt-24 pb-12 md:pt-32 md:pb-16">
         <div className="absolute inset-0 bg-gradient-to-b from-[--surface] via-[--bg] to-[--bg]" />

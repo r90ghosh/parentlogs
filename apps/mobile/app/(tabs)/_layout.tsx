@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Tabs, useRouter } from 'expo-router'
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native'
 import { BlurView } from 'expo-blur'
@@ -17,6 +17,7 @@ import { useUnreadNotificationCount } from '@/hooks/use-notifications'
 import { useRealtimeSync } from '@/hooks/use-realtime-sync'
 import { ToastProvider } from '@/components/ui/Toast'
 import { useTheme } from '@/components/providers/ThemeProvider'
+import { AnimatedTabBar } from '@/components/animations/TabIndicator'
 
 const NotificationBell = React.memo(function NotificationBell() {
   const router = useRouter()
@@ -69,35 +70,19 @@ export default function TabLayout() {
   useRealtimeSync()
   const { isDark } = useTheme()
 
+  const renderTabBar = useCallback(
+    (props: any) => <AnimatedTabBar {...props} isDark={isDark} />,
+    [isDark]
+  )
+
   return (
     <ToastProvider>
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <TabHeader />
       <Tabs
+        tabBar={renderTabBar}
         screenOptions={{
           headerShown: false,
-          tabBarActiveTintColor: '#c4703f',
-          tabBarInactiveTintColor: isDark ? '#7a6f62' : '#6b7280',
-          tabBarLabelStyle: {
-            fontFamily: 'Karla-Medium',
-            fontSize: 11,
-          },
-          tabBarStyle: {
-            position: 'absolute',
-            borderTopWidth: 1,
-            borderTopColor: isDark ? 'rgba(237,230,220,0.08)' : 'rgba(0,0,0,0.06)',
-            backgroundColor:
-              Platform.OS === 'ios' ? 'transparent' : (isDark ? 'rgba(26,23,20,0.95)' : 'rgba(255,255,255,0.85)'),
-            elevation: 0,
-          },
-          tabBarBackground: () =>
-            Platform.OS === 'ios' ? (
-              <BlurView
-                tint={isDark ? 'dark' : 'light'}
-                intensity={isDark ? 80 : 60}
-                style={StyleSheet.absoluteFill}
-              />
-            ) : null,
           sceneStyle: { backgroundColor: 'transparent' },
         }}
         screenListeners={{

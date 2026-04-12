@@ -55,7 +55,7 @@ export default function ArchiveClient() {
       'post-birth': [],
     }
 
-    briefings.forEach(b => {
+    briefings.forEach((b: BriefingTemplate) => {
       if (b.stage === 'post-birth') {
         groups['post-birth'].push(b)
       } else if (isPregnancyStage(b.stage as FamilyStage)) {

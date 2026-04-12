@@ -11,9 +11,11 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "db:reset": "supabase db reset",
-    "db:generate-types": "supabase gen types typescript --project-id oeeeiquclwfpypojjigx > packages/shared/src/types/database.ts"
+    "db:generate-types": "supabase gen types typescript --project-id oeeeiquclwfpypojjigx > packages/shared/src/types/database.ts",
+    "db:check-types": "./scripts/check-db-types.sh"
   },
   "devDependencies": {
-    "turbo": "^2.4.0"
+    "turbo": "^2.4.0",
+    "vitest": "^3.1.0"
   }
 }

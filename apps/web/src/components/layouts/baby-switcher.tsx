@@ -13,7 +13,7 @@ import { useUser } from '@/components/user-provider'
 import { useBabies, useSwitchBaby } from '@/hooks/use-babies'
 import { cn } from '@/lib/utils'
 import { isPregnancyStage } from '@tdc/shared/utils'
-import { Baby as BabyType } from '@tdc/shared/types'
+import type { Baby as BabyType } from '@tdc/shared/types'
 import Link from 'next/link'
 
 function getWeekLabel(baby: BabyType): string {
@@ -91,7 +91,7 @@ export function BabySwitcher() {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-56">
-        {babies.map((baby) => {
+        {babies.map((baby: BabyType) => {
           const isActive = baby.id === activeBaby?.id
           return (
             <DropdownMenuItem

@@ -82,7 +82,7 @@ export default function FamilyScreen() {
     }
 
     setIsLoading(false)
-    router.push('/(onboarding)/ready')
+    router.push('/(onboarding)/invite')
   }
 
   return (
@@ -100,7 +100,7 @@ export default function FamilyScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.header}>
-            <Text style={styles.step}>Step 2 of 3</Text>
+            <Text style={styles.step}>Step 2 of 4</Text>
             <Text style={styles.title}>Your family</Text>
             <Text style={styles.subtitle}>
               When is the baby expected? This helps us personalize your timeline.

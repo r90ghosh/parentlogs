@@ -13,6 +13,9 @@
     "@supabase/supabase-js": "^2.89.0",
     "date-fns": "^4.1.0"
   },
+  "scripts": {
+    "test": "vitest run"
+  },
   "devDependencies": {
     "@tdc/tsconfig": "workspace:*",
     "typescript": "^5.0.0"

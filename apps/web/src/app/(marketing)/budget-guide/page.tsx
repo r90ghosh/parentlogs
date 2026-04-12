@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   title: 'Baby Budget Guide — What You\'ll Actually Spend | The Dad Center',
   description:
     'A comprehensive, dad-friendly baby budget guide covering every expense from pregnancy through toddlerhood. See real price ranges and plan ahead.',
-  keywords: ['baby budget', 'how much does a baby cost', 'baby expenses', 'pregnancy budget', 'newborn costs', 'baby planning finances'],
   alternates: { canonical: '/budget-guide' },
   openGraph: {
     title: 'Baby Budget Guide — What You\'ll Actually Spend | The Dad Center',
@@ -30,8 +29,39 @@ export default async function PublicBudgetPage() {
   const totalItems = templates.length
   const categories = new Set(templates.map(t => t.category.split(' - ')[0].trim()))
 
+  const pageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Baby Budget Guide — What You\'ll Actually Spend',
+    description:
+      'A comprehensive, dad-friendly baby budget guide covering every expense from pregnancy through toddlerhood. See real price ranges and plan ahead.',
+    url: 'https://thedadcenter.com/budget-guide',
+    isPartOf: {
+      '@type': 'WebSite',
+      name: 'The Dad Center',
+      url: 'https://thedadcenter.com',
+    },
+  }
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://thedadcenter.com' },
+      { '@type': 'ListItem', position: 2, name: 'Budget Guide', item: 'https://thedadcenter.com/budget-guide' },
+    ],
+  }
+
   return (
     <div className="min-h-screen bg-[--bg]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       {/* Hero Section */}
       <section className="relative pt-24 pb-12 md:pt-32 md:pb-16">
         <div className="absolute inset-0 bg-gradient-to-b from-[--surface] via-[--bg] to-[--bg]" />

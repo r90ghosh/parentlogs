@@ -33,12 +33,13 @@ import {
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import type { FamilyBudgetItem } from '@tdc/shared/types'
+import type { BudgetSummary } from '@tdc/services'
 import { Reveal } from '@/components/ui/animations/Reveal'
 import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
 import { getCategoryStyle } from '@/lib/budget-constants'
 
 export default function MyBudgetClient() {
-  const { data: summary, isLoading } = useBudgetSummary()
+  const { data: summary, isLoading } = useBudgetSummary() as { data: BudgetSummary | null | undefined, isLoading: boolean }
   const removeBudgetItem = useRemoveBudgetItem()
   const markAsPurchased = useMarkAsPurchased()
 

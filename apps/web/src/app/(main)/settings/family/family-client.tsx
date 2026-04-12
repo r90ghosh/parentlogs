@@ -8,6 +8,7 @@ import { useUser } from '@/components/user-provider'
 import { trackActivity } from '@/lib/track-activity'
 import { AddBabyDialog } from '@/components/settings/add-baby-dialog'
 import { isPregnancyStage } from '@tdc/shared/utils'
+import type { Baby as BabyType } from '@tdc/shared/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -314,7 +315,7 @@ export default function FamilyClient() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {babies?.map((baby, index) => (
+          {babies?.map((baby: BabyType, index: number) => (
             <div key={baby.id} className="p-3 bg-[--card]/50 rounded-lg space-y-3">
               <div className="flex items-center justify-between">
                 <p className="font-body text-[--white] font-medium">

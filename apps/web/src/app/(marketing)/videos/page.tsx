@@ -13,7 +13,6 @@ export const metadata: Metadata = {
   title: 'Videos — Curated Parenting Videos | The Dad Center',
   description:
     'Expert-curated video guides covering pregnancy through toddlerhood. Bite-sized, dad-friendly videos from trusted sources.',
-  keywords: ['parenting videos', 'dad videos', 'pregnancy videos', 'new dad guides', 'baby care videos', 'fatherhood tips'],
   alternates: { canonical: '/videos' },
   openGraph: {
     title: 'Videos — Curated Parenting Videos | The Dad Center',
@@ -106,16 +105,63 @@ async function VideosContent({ searchParams }: PageProps) {
 }
 
 export default async function VideosPage(props: PageProps) {
-  const [counts, { user, profile }] = await Promise.all([
+  const [counts, allVideos, { user, profile }] = await Promise.all([
     getContentCounts(),
+    getFilteredContent({ stage: 'all', format: 'videos' }),
     getServerAuth(),
   ])
 
   const isAuthenticated = !!user
   const isPremium = profile?.subscription_tier === 'premium' || profile?.subscription_tier === 'lifetime'
 
+  const collectionSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Dad Center Video Library',
+    description:
+      'Video guides for expectant and new fathers',
+    url: 'https://thedadcenter.com/videos',
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: allVideos.videos.map((video, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        item: {
+          '@type': 'VideoObject',
+          name: video.title,
+          description: video.description,
+          url: video.url,
+          ...(video.youtubeId
+            ? { thumbnailUrl: `https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg` }
+            : {}),
+          ...(video.youtubeId
+            ? { embedUrl: `https://www.youtube.com/embed/${video.youtubeId}` }
+            : {}),
+          uploadDate: '2025-01-01',
+        },
+      })),
+    },
+  }
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://thedadcenter.com' },
+      { '@type': 'ListItem', position: 2, name: 'Videos', item: 'https://thedadcenter.com/videos' },
+    ],
+  }
+
   return (
     <div className="min-h-screen bg-[--bg]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       {/* Header Section */}
       <section className="relative pt-24 pb-12 md:pt-32 md:pb-16">
         {/* Background */}

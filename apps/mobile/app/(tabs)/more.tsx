@@ -22,8 +22,9 @@ import {
   BookOpen,
   Receipt,
   MessageSquarePlus,
+  Baby,
+  Video,
 } from 'lucide-react-native'
-import * as WebBrowser from 'expo-web-browser'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
@@ -131,14 +132,24 @@ export default function MoreScreen() {
               onPress={() => router.push('/(screens)/content')}
             />
             <MenuItem
+              icon={<Baby size={20} color="#c47a8f" />}
+              label="Pregnancy Weeks"
+              onPress={() => router.push('/(screens)/pregnancy-weeks')}
+            />
+            <MenuItem
+              icon={<Video size={20} color="#c4703f" />}
+              label="Video Library"
+              onPress={() => router.push('/(screens)/videos')}
+            />
+            <MenuItem
               icon={<BookOpen size={20} color="#5b9bd5" />}
               label="Dad Tips"
-              onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/resources')}
+              onPress={() => router.push('/(screens)/content')}
             />
             <MenuItem
               icon={<Receipt size={20} color="#d4a853" />}
               label="Budget Guide"
-              onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/resources')}
+              onPress={() => router.push('/(screens)/budget')}
             />
           </GlassCard>
         </CardEntrance>

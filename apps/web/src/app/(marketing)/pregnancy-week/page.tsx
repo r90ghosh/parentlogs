@@ -104,6 +104,31 @@ export default async function PregnancyWeekIndexPage() {
         <MedicalDisclaimer />
       </div>
 
+      {/* Browse by Trimester */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+        <h2 className="font-display text-2xl md:text-3xl font-bold text-[--white] mb-6">
+          Browse by Trimester
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {TRIMESTERS.map((trimester) => (
+            <Link
+              key={trimester.key}
+              href={`/pregnancy-week/${trimester.key}`}
+              className="group p-6 rounded-2xl bg-[--surface]/50 border border-[--border] hover:border-copper/40 hover:bg-[--surface] transition-colors"
+            >
+              <h3 className="font-display text-lg font-semibold text-[--white] group-hover:text-copper transition-colors mb-1">
+                {trimester.label}
+              </h3>
+              <p className="font-body text-sm text-[--muted] mb-3">{trimester.subtitle}</p>
+              <span className="inline-flex items-center gap-1 font-ui text-xs font-medium text-copper">
+                View guide
+                <ArrowRight className="h-3 w-3" />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </div>
+
       {/* Trimester sections */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
         {TRIMESTERS.map((trimester) => {
@@ -117,11 +142,20 @@ export default async function PregnancyWeekIndexPage() {
 
           return (
             <section key={trimester.key}>
-              <div className="mb-6">
-                <h2 className="font-display text-2xl md:text-3xl font-bold text-[--white]">
-                  {trimester.label}
-                </h2>
-                <p className="font-body text-sm text-[--muted] mt-1">{trimester.subtitle}</p>
+              <div className="flex items-baseline justify-between mb-6">
+                <div>
+                  <h2 className="font-display text-2xl md:text-3xl font-bold text-[--white]">
+                    {trimester.label}
+                  </h2>
+                  <p className="font-body text-sm text-[--muted] mt-1">{trimester.subtitle}</p>
+                </div>
+                <Link
+                  href={`/pregnancy-week/${trimester.key}`}
+                  className="hidden sm:inline-flex items-center gap-1 font-ui text-xs font-medium text-copper hover:text-copper/80 transition-colors"
+                >
+                  Full guide
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {weeksInRange.map((week) => {
