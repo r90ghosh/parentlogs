@@ -38,16 +38,18 @@ export async function generateMetadata({ params }: PageProps) {
       title,
       description,
       type: 'article',
-      url: `/blog/${slug}`,
+      url: `https://thedadcenter.com/blog/${slug}`,
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
       section: blogCategories[post.category as BlogCategory]?.label || post.category,
       authors: [post.author],
+      images: [{ url: `/blog/${slug}/opengraph-image`, width: 1200, height: 630, alt: title }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
+      images: [`/blog/${slug}/opengraph-image`],
     },
   }
 }
@@ -73,9 +75,9 @@ export default async function BlogPostPage({ params }: PageProps) {
     wordCount: post.content.split(/\s+/).length,
     articleSection: categoryConfig?.label || post.category,
     author: {
-      '@type': 'Organization',
-      name: 'The Dad Center',
-      url: 'https://thedadcenter.com',
+      '@type': 'Person',
+      name: 'The Dad Center Team',
+      url: 'https://thedadcenter.com/about',
     },
     publisher: {
       '@type': 'Organization',
@@ -90,7 +92,9 @@ export default async function BlogPostPage({ params }: PageProps) {
       '@type': 'WebPage',
       '@id': `https://thedadcenter.com/blog/${slug}`,
     },
-    ...(post.featuredImage && { image: post.featuredImage }),
+    image: post.featuredImage
+      ? { '@type': 'ImageObject', url: post.featuredImage, width: 1200, height: 630 }
+      : { '@type': 'ImageObject', url: `https://thedadcenter.com/blog/${slug}/opengraph-image`, width: 1200, height: 630 },
   }
 
   const breadcrumbJsonLd = {

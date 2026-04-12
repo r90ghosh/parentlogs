@@ -24,9 +24,9 @@ A newborn's stomach is the size of a grape. That's not a metaphor. It's literall
 
 So the loop goes like this:
 
-Baby wakes up. Change the diaper. Feed the baby (20-40 minutes for breastfeeding, shorter for a bottle). Burp the baby. Rock or soothe the baby back to sleep. Set the baby down. Baby sleeps for 90 minutes to 2 hours. Baby wakes up. Repeat.
+Baby wakes up. Change the diaper. Feed the baby (20-40 minutes for [breastfeeding](/blog/dads-guide-to-breastfeeding), shorter for a bottle). Burp the baby. Rock or soothe the baby back to sleep. Set the baby down. Baby sleeps for 90 minutes to 2 hours. Baby wakes up. Repeat.
 
-Every two hours for the first six months. Stretching to two or three hours in later months. That's the real schedule. Your newborn sleeps 15-18 hours a day, which sounds luxurious until you understand those hours come in fragments scattered across the full 24-hour clock with zero regard for whether it's noon or 3 AM.
+Every two hours for the first six months. Stretching to two or three hours in later months. That's the real schedule. Your newborn [sleeps 15-18 hours a day](https://www.nichd.nih.gov/health/topics/sleep/conditioninfo/how-much), which sounds luxurious until you understand those hours come in fragments scattered across the full 24-hour clock with zero regard for whether it's noon or 3 AM.
 
 Every single one of those wake-ups requires a full cycle. Diaper. Feed. Burp. Soothe. You can't skip steps. You can sometimes shorten them, and you get faster at the mechanical parts, but the loop is the loop.
 
@@ -102,13 +102,13 @@ Take a breath. Try a different approach. Put her on the other shoulder. Change t
 
 This is, honestly, one of the hardest things I've ever done. Harder than anything at work, harder than any physical challenge. Staying emotionally regulated while sleep-deprived and listening to a baby cry at full volume in your ear is elite-level self-control. Give yourself credit for doing it at all.
 
-Nobody tells dads this is hard. Or if they do, it's in a joking way. "Get ready for no sleep, haha." As if it's just inconvenient. It's not inconvenient. It's destabilizing. Sleep deprivation at this level affects your mood, your patience, your judgment, your ability to function at work, your relationship. It's serious. And the sooner you treat it seriously by building systems to manage it, the better off your whole family will be.
+Nobody tells dads this is hard. Or if they do, it's in a joking way. "Get ready for no sleep, haha." As if it's just inconvenient. It's not inconvenient. It's destabilizing. Sleep deprivation at this level affects your mood, your patience, your judgment, your ability to function at work, [your relationship](/blog/postpartum-marriage-crisis-dad-experience). It's serious. And the sooner you treat it seriously by building systems to manage it, the better off your whole family will be.
 
 ## What Helped Us
 
-- **The Halo swaddle.** Arms in, tight, like a baby burrito. Game changer until around month 3 when she started Houdini-ing her arms out and waking herself up. Then we switched to a sleep sack.
+- **The Halo swaddle.** Arms in, tight, like a baby burrito. Game changer until around month 3 when she started Houdini-ing her arms out and waking herself up. Then we switched to a sleep sack. (Follow [AAP safe sleep guidelines](https://www.aap.org/en/patient-care/safe-sleep/) for whatever setup you choose.)
 - **White noise machine, loud.** Not the gentle ocean sounds. Actual static, at a volume that feels aggressive. It mimics the sound inside the womb, which is apparently about as loud as a vacuum cleaner. We used a Dohm.
-- **Complete darkness.** Blackout curtains for their room, no nightlights, no hallway light. When you need to see, use a dim red or orange light. Regular light signals "daytime" to their brain.
+- **Complete darkness.** Blackout curtains for their room, no nightlights, no hallway light. When you need to see, use a dim red or orange light. Regular light [signals "daytime" to their brain](https://www.stanfordchildrens.org/en/topic/default?id=infant-sleep-90-P02237).
 - **Shifts.** This is load balancing and it saved us. If one parent does all the night shifts and all the day care, that person will break. It's not a willpower issue. It's math. We did it a few different ways: I took the midnight to 3 AM block, she slept from 10 PM to 3 AM uninterrupted, then we switched. Some weeks we alternated whole nights. Find whatever model works for your household, but the principle is the same. Both parents need one stretch of 3-4 consecutive hours. Non-negotiable.
 - **Formula as a tool, not a failure.** My honest hot take: the pressure around exclusive breastfeeding causes real damage to families. If a bottle of formula at midnight means both parents get an extra sleep cycle, that is a net positive for the baby's environment. A rested parent is a better parent. Period. Talk to your pediatrician about what works for your family and ignore anyone who has opinions about how you feed your child.
 - **Lower every standard you have.** The house will be messy. Meals will be frozen pizza and takeout. You will wear the same shirt three days in a row. This is temporary. The chaos of the first few months is not a reflection of your competence as a parent. It's just the math of 2-hour sleep cycles plus a tiny human who needs constant care.
@@ -119,6 +119,6 @@ Here's what I want to tell you at 4 AM when the baby won't sleep and you're stan
 
 What's initially overwhelming becomes muscle memory after a few months. The diaper changes get fast. The bottle prep becomes automatic. The swaddle technique that took you four attempts at week one takes eight seconds by month two. You're building a skill set in real time under the worst possible conditions, and the fact that you're still standing, still trying, still showing up for the 3 AM shift means you're doing it right.
 
-It gets easier. Then it gets hard in a different way. Then easier again. That's the whole first year.
+It gets easier. Then it gets hard in a different way. Then easier again. That's [the whole first year](/blog/life-with-newborn-month-by-month).
 
-You'll be fine. Even when you're not.
+You'll be fine. Even when you're not. If you're still in the thick of the [first month](/blog/surviving-first-month-with-newborn-dad), hang in there.

@@ -9,7 +9,7 @@ import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Blog — Guides, Tips & Real Numbers for Dads | The Dad Center',
+  title: 'Dad Guides, Tips & Real Costs | The Dad Center',
   description:
     'Practical guides, real cost breakdowns, and honest advice for expecting and new dads. No fluff, no condescension — just what you need to know.',
   alternates: { canonical: '/blog' },
@@ -54,11 +54,14 @@ export default async function BlogPage({ searchParams }: PageProps) {
     name: 'The Dad Center Blog',
     description: 'Guides, tips, and real numbers for expecting and new dads.',
     url: 'https://thedadcenter.com/blog',
-    mainEntity: posts.map((post) => ({
+    mainEntity: posts.map((post, i) => ({
       '@type': 'Article',
+      position: i + 1,
       headline: post.title,
+      description: post.excerpt,
       url: `https://thedadcenter.com/blog/${post.slug}`,
       datePublished: post.publishedAt,
+      author: { '@type': 'Person', name: 'The Dad Center Team' },
     })),
   }
 

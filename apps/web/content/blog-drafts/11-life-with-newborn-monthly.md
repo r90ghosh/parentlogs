@@ -18,13 +18,13 @@ read_time: 8
 - Wednesday: Same. I think it was Wednesday.
 - Thursday: My mom came over. I cried in the shower. The baby slept through it.
 - Got good at swaddling. Bad at everything else.
-- She sleeps 16 hours a day but somehow never when I need her to.
+- She sleeps 16 hours a day but somehow [never when I need her to](/blog/newborn-sleep-schedule-what-actually-happens).
 - The 2-hour cycle runs your entire life now. Diaper. Feed. Sleep. Diaper. Feed. Sleep. It doesn't vary. It doesn't negotiate.
 - Went to Target at 10pm for gas drops. Then again the next night for a different brand of gas drops. Then the night after for diaper cream because the brand we bought gave her a rash.
 - My wife is bleeding through pads every two hours and can barely walk to the bathroom without help. Nobody mentioned this part at the birthing class.
 - I changed a diaper in the dark and got poop on the wall somehow. Left it there until morning.
 - The baby doesn't move, doesn't hold her head up, barely opens her eyes. She's basically a warm loaf that screams. I love her so much it scares me.
-- Someone asked me how fatherhood was going. I said "great." I have no memory of the last 72 hours.
+- Someone asked me how fatherhood was going. I said "great." I have no memory of the last 72 hours. If you're in this exact phase, [our first-time dad tips](/blog/first-time-dad-tips) might help.
 - Your world shrinks to a 15-minute driving radius. The pediatrician's office. The pharmacy. Target. Home. That's the whole map.
 - Made dinner once this week. Ordered delivery the other six nights.
 - The anxiety about doing something wrong is constant. Is she breathing. Is she too hot. Is that cry different from the other cry. Is the soft spot supposed to look like that.
@@ -37,11 +37,11 @@ read_time: 8
 
 ## Month 2
 
-The fog doesn't lift but it changes shape, you stop checking if the baby is breathing every ten minutes and start checking every thirty instead, which feels like progress, and the 2-hour cycle stretches to something closer to 2.5 or 3 hours which doesn't sound like much but it's the difference between total desperation and survivable desperation, your wife starts having good days mixed in with the terrible ones but the terrible days are really terrible now because she's not numb anymore she's feeling everything and the fights start over nothing, a $15 heated towel rack she wants to return, who forgot to start the laundry, why you loaded the dishwasher wrong again, and you want to be patient because you read the articles about postpartum mood changes and you know she's recovering from something massive but it's hard to be patient when you're also running on 4 hours of broken sleep and you haven't had a conversation about anything other than the baby in weeks, and somewhere in there the baby smiles for the first time and it's probably just gas but you don't care because your brain lights up like you won the lottery, and you think okay, I can do this, and then at 3am she's screaming again and you're standing in the dark bouncing and shushing and wondering what happened to your life, not in a sad way exactly, just in a factual way, like observing that the river changed course and your house is on a different street now.
+The fog doesn't lift but it changes shape, you stop checking if the baby is breathing every ten minutes and start checking every thirty instead, which feels like progress, and the 2-hour cycle stretches to something closer to 2.5 or 3 hours which doesn't sound like much but it's the difference between total desperation and survivable desperation, your wife starts having good days mixed in with the terrible ones but the terrible days are really terrible now because she's not numb anymore she's feeling everything and the fights start over nothing, a $15 heated towel rack she wants to return, who forgot to start the laundry, why you loaded the dishwasher wrong again, and you want to be patient because you read the articles about [postpartum mood changes](https://www.postpartum.net/) and you know she's recovering from something massive but it's hard to be patient when you're also running on 4 hours of broken sleep and you haven't had a conversation about anything other than the baby in weeks, and somewhere in there the baby smiles for the first time and it's probably just gas but you don't care because your brain lights up like you won the lottery, and you think okay, I can do this, and then at 3am she's screaming again and you're standing in the dark bouncing and shushing and wondering what happened to your life, not in a sad way exactly, just in a factual way, like observing that the river changed course and your house is on a different street now.
 
 ## Month 3
 
-Her neck muscles finally work. She holds her head up during tummy time and looks around with this expression like she's just now realizing other things exist. The pediatrician says she's tracking perfectly. I've never been so proud of someone for holding their own head.
+Her neck muscles finally work. She holds her head up during tummy time and looks around with this expression like she's just now realizing other things exist. The pediatrician says she's [tracking perfectly](https://www.cdc.gov/ncbddd/actearly/milestones/index.html). I've never been so proud of someone for holding their own head.
 
 We attempted a restaurant. Picked a place with booth seating and went at 4:30pm like we're retired. She lasted 35 minutes before meltdown. My wife ate with one hand while bouncing the car seat with the other. I ate an entire burger in under 4 minutes. We tipped 30% and basically fled. Still counts as going out. We talked about it afterward like we'd pulled off a heist.
 
@@ -63,7 +63,7 @@ My wife said she felt like a milk machine. That all I saw when I looked at her w
 
 We started taking turns leaving the house alone. Saturday mornings, she'd leave for two hours. Sunday mornings, I would. She'd go to a coffee shop or Target by herself. I'd go to the gym or just drive around listening to music like I was 19 again. It's not couples therapy. It's just space. But it helped more than I expected. The resentment wasn't about dish soap. It was about not having a single hour in the day where someone wasn't needing something from you.
 
-Here's the thing nobody puts in the baby books: the hardest part of month 4 isn't the baby. The baby is easy compared to month 1. The hardest part is you and your partner remembering that you actually like each other.
+Here's the thing nobody puts in the baby books: the hardest part of month 4 isn't the baby. The baby is easy compared to month 1. The hardest part is you and your partner remembering that you actually like each other. I wrote a whole separate piece about [what the postpartum marriage crisis actually looks like](/blog/postpartum-marriage-crisis-dad-experience) because this section alone couldn't cover it.
 
 I googled divorce lawyers one night. Not seriously. Or maybe seriously. It was 2am and I was angry and sleep-deprived and she'd said something that landed wrong and I just typed it in and looked at the results and closed the tab. I don't think I'm the only dad who's done that. I know I'm not because three of my friends have admitted the same thing when we finally talked about it months later, after the worst had passed.
 
@@ -71,7 +71,7 @@ I googled divorce lawyers one night. Not seriously. Or maybe seriously. It was 2
 
 I was short with everyone. My boss. My mom on the phone. The guy at the grocery store who took too long at self-checkout. My stomach hurt most days. Tight, like I was bracing for something.
 
-The baby was fine. The baby was great, actually. Laughing now. Grabbing things. Interested in the world. She'd sit in her bouncer and watch me cook and I'd narrate what I was doing and she'd babble back. Those moments were good.
+The baby was fine. The baby was great, actually. Laughing now. Grabbing things. Interested in the world. She'd sit in her bouncer and watch me cook and I'd narrate what I was doing and she'd babble back. We started rotating [toys that matched her age](/blog/best-baby-toys-by-age-0-12-months) and she'd actually engage with them now. Those moments were good.
 
 The rest wasn't.
 

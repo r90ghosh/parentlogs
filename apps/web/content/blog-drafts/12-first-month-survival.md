@@ -18,9 +18,9 @@ You're home. The hospital let you leave with a whole baby and no manual. Three d
 
 Your life now runs on a 2-hour cycle. Doesn't matter what time it is. Doesn't matter if it's Tuesday or Saturday. The cycle goes:
 
-1. **Baby wakes up crying.** This is the start signal. Every time.
+1. **Baby wakes up crying.** This is the start signal. Every time. (For what [newborn sleep actually looks like](/blog/newborn-sleep-schedule-what-actually-happens), read that first.)
 2. **Change the diaper.** Remove the old one. Wipe front to back. Let the skin air-dry for a few seconds. Apply a thin layer of barrier cream. New diaper on. The whole thing takes 2 minutes once you've done it 30 times.
-3. **Mom feeds the baby.** If breastfeeding, this takes 20-40 minutes. Your job during this time is covered in Division of Labor below.
+3. **Mom feeds the baby.** If breastfeeding, this takes 20-40 minutes. See [our breastfeeding guide](/blog/dads-guide-to-breastfeeding) for your role. Your job during this time is covered in Division of Labor below.
 4. **Burp the baby.** Over your shoulder or sitting up on your lap, hand supporting the chin. Pat firmly between the shoulder blades. Not gentle taps. Firm, rhythmic pats.
 5. **Baby sleeps.** Could be 45 minutes. Could be 2 hours. This is your window to do everything else.
 6. **Repeat.**
@@ -41,7 +41,7 @@ Per week, roughly:
 - **Maxi pads with cooling gel:** Your partner goes through these every 2 hours for post-delivery bleeding. Stock up before you come home. She won't want to shop for them herself.
 - **Nursing pads:** If breastfeeding. Disposable ones, 2-4/day.
 
-Buy in bulk before the due date. You're going to end up at Target at 10pm anyway because you'll run out of something weird like gas drops or a different size nasal aspirator. But at least have the basics covered.
+Buy in bulk before the due date. For what this actually [costs over a full year](/blog/how-much-does-a-baby-cost-first-year), we tracked every dollar. You're going to end up at Target at 10pm anyway because you'll run out of something weird like gas drops or a different size nasal aspirator. But at least have the basics covered.
 
 Different diaper brands fit differently and cause different rashes. Buy small packs of 2-3 brands to test before committing to a case of 200. Same goes for swaddles. Temperature regulation matters and not all swaddles breathe the same way.
 
@@ -71,14 +71,14 @@ Thirty minutes doesn't sound like much. In month one, it's everything.
 
 Don't Google it. Don't ask the Facebook group. Call.
 
-1. **Fever over 100.4 in a baby under 3 months.** This is an emergency room visit, not a "wait and see." Newborns can't fight infection the way older babies can.
+1. **Fever over 100.4 in a baby under 3 months.** This is an emergency room visit, not a "wait and see." [Newborns can't fight infection](https://www.healthychildren.org/English/ages-stages/baby/Pages/default.aspx) the way older babies can.
 2. **Baby hasn't had a wet diaper in 8+ hours.** Could mean dehydration. Track wet diapers if you're not sure. There should be 6-8 per day by day 5.
 3. **Jaundice that's getting worse, not better.** Yellowing of the skin and eyes. Common in the first week, but if it's spreading or deepening after day 3-4, call.
 4. **Mom's bleeding soaks through a pad in under an hour.** Postpartum bleeding is normal. Hemorrhage-level bleeding is not. If she's filling a pad in 60 minutes or passing clots larger than a golf ball, go to the ER.
-5. **Either parent is having thoughts of self-harm.** Postpartum depression hits moms and dads. If you or your partner are in a dark place that feels different from normal exhaustion, call your OB or your own doctor. Today. Not next week.
+5. **Either parent is having thoughts of self-harm.** Postpartum depression hits [moms and dads](https://www.who.int/health-topics/newborn-health). If you or your partner are in a dark place that feels different from normal exhaustion, call your OB or your own doctor. Today. Not next week.
 
 ## One More Thing
 
 The anxiety about whether you're competent enough to do this goes away faster than you think. It only lasts until the first time you successfully change a diaper, survive a blowout, calm a screaming baby at 4am by yourself. Repetition builds confidence. Not reading about it. Doing it.
 
-You're going to be fine. Not today. But eventually.
+You're going to be fine. Not today. But eventually. Here's [what the next eleven months look like](/blog/life-with-newborn-month-by-month).

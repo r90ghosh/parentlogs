@@ -14,7 +14,7 @@ read_time: 8
 
 You will forget something. Accept that now. This list is about making sure the thing you forget is something you can live without for 48 hours.
 
-Most hospital bag guides are written for moms. Makes sense. She's the one doing the heavy lifting. But you're going to be there too, potentially for two or three days, sleeping on a surface that hospitals optimistically call a "bed," and you need your own stuff. More importantly, you need to be the person who has the stuff she'll ask for at 2 AM that isn't in her bag.
+Most [hospital bag guides](https://www.marchofdimes.org/find-support/topics/planning-baby/getting-ready-labor-and-delivery) are written for moms. Makes sense. She's the one doing the heavy lifting. But you're going to be there too, potentially for two or three days, sleeping on a surface that hospitals optimistically call a "bed," and you need your own stuff. More importantly, you need to be the person who has the stuff she'll ask for at 2 AM that isn't in her bag.
 
 ## The Checklist
 
@@ -43,7 +43,7 @@ A note on the table above: this is a starting point. Your partner will have spec
 ## Things Nobody Tells You to Bring
 
 **1. A small cooler bag or insulated lunch box.**
-If your partner plans to breastfeed, the hospital will give you supplies to store colostrum and early milk. Having a small insulated bag means you're not scrambling later. Also handy for keeping your own drinks cold because the in-room fridge is tiny and already full of hospital stuff.
+If your partner plans to [breastfeed](/blog/dads-guide-to-breastfeeding), the hospital will give you supplies to store colostrum and early milk. Having a small insulated bag means you're not scrambling later. Also handy for keeping your own drinks cold because the in-room fridge is tiny and already full of hospital stuff.
 
 **2. A headlamp or clip-on book light.**
 The overhead lights in a hospital room have two settings: operating theater and complete darkness. When the baby is sleeping and your partner is sleeping and you need to find the pacifier that fell behind the bed, you'll understand why this is on the list.
@@ -84,7 +84,7 @@ A full-size camera with multiple lenses. Your phone camera is fine. You are not 
 
 ## About the Delivery Preferences Document
 
-I'm calling it a "Delivery Preferences Document" instead of a "birth plan" on purpose. "Birth plan" implies you can plan birth. You can't. What you can do is clearly communicate your preferences so the medical team knows what matters to you when things are moving fast.
+I'm calling it a "Delivery Preferences Document" instead of a "birth plan" on purpose. (If you haven't already, read the full breakdown on [what to expect in the delivery room](/blog/delivery-room-what-to-expect-dad).) "Birth plan" implies you can plan birth. You can't. What you can do is clearly communicate your preferences so the medical team knows what matters to you when things are moving fast.
 
 Print four or five copies. Here's why: nurses work in shifts. Your labor might span two or even three shift changes. Every time a new nurse walks in, they need to know what you've already discussed. Having a printed sheet they can clip to the chart saves everyone time and prevents you from repeating yourself during contractions.
 
@@ -92,10 +92,10 @@ What goes in the document: lighting preferences (most couples want dim lights, j
 
 There's a practical reason beyond comfort. Stress reduces oxytocin production. Oxytocin drives labor contractions. Anything that reduces stress, including a predictable environment with fewer surprises, can actually help labor progress more smoothly. Random interruptions from staff checking in, unexpected visitors, harsh fluorescent lights. All of those create small stress responses. Your preferences document is a tool for reducing unnecessary friction. It's not a demand list. It's a communication tool. Nurses appreciate it because it tells them what you care about without making them guess.
 
-One more thing. Do a pre-delivery visit to the hospital during the third trimester. Most hospitals offer this and it's worth the hour. Find out where to park (including at 2 AM when the main lot might be locked), where to check in after hours, what the delivery rooms look like, where you'll sleep, and what the NICU looks like just in case. Locate the cafeteria, the nearest coffee. Walk from the parking lot to the check-in desk to the delivery floor. Time it. Know which elevator bank to use. When it's go time and your partner is having contractions in the passenger seat, you do not want to be circling a parking garage reading signs.
+One more thing. Do a [pre-delivery visit to the hospital](https://my.clevelandclinic.org/health/articles/9677-pregnancy-labor-delivery-and-postpartum-care-frequently-asked-questions) during the third trimester. Most hospitals offer this and it's worth the hour. Find out where to park (including at 2 AM when the main lot might be locked), where to check in after hours, what the delivery rooms look like, where you'll sleep, and what the NICU looks like just in case. Locate the cafeteria, the nearest coffee. Walk from the parking lot to the check-in desk to the delivery floor. Time it. Know which elevator bank to use. When it's go time and your partner is having contractions in the passenger seat, you do not want to be circling a parking garage reading signs.
 
 Reducing surprise-related stress starts before you even get to the hospital. Stress is not abstract here. It has a direct physiological effect: cortisol and adrenaline reduce oxytocin production, and oxytocin is what drives labor contractions. A calmer environment can literally help labor progress more smoothly. Everything you do to eliminate uncertainty and surprise is functional, not just emotional. Walk the route. Know the layout. You want zero confusion on game day.
 
 The hospital visit also gives you a chance to ask the practical questions nobody thinks about. What's the Wi-Fi situation? Where can you do laundry if the stay extends? Is there a fridge you can use? What are visiting hours? Can you order food delivery to the room? Small details, but they matter at hour 30 when you're running on vending machine coffee.
 
-Pack the bag at 35 weeks. Not 37. Not "when it feels close." Thirty-five weeks, bags by the door, car seat installed.
+Pack the bag at [35 weeks](/pregnancy-week). Not 37. Not "when it feels close." Thirty-five weeks, bags by the door, car seat installed. And once you're home from the hospital, the real adventure starts -- here's an honest look at [surviving the first month with a newborn](/blog/surviving-first-month-with-newborn-dad).

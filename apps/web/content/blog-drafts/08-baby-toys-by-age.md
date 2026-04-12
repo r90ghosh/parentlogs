@@ -12,7 +12,7 @@ read_time: 8
 
 # Baby Toys by Age: What Actually Holds Their Attention (0-12 Months)
 
-**The single most useful thing I learned about baby toys: give them one.**
+**The single most useful thing I learned about baby toys: give them one.** It's one of the [first-time dad tips](/blog/first-time-dad-tips) I wish I'd gotten earlier.
 
 One toy. Not five spread across a play mat. Not a rotating basket of options. One. A baby with a single toy will explore it for 30+ minutes. Turning it, mouthing it, dropping it, picking it up, testing it from every angle their little hands can manage. Hand that same baby five toys and you'll watch them grab one, hold it for 5-10 seconds, drop it, grab the next, drop it, grab another. It looks like playing. It's actually overstimulation preventing focus.
 
@@ -30,7 +30,7 @@ Here's my hot take: the baby toy industry has a financial incentive to make you 
 
 You barely need toys at this stage. Newborns can only see about 8-12 inches in front of their face, and their vision is blurry. High-contrast black and white cards propped up near them during tummy time do more than any stuffed animal. A single rattle with a gentle sound. Maybe a crinkle cloth. That's it. Your face is the most interesting thing in their world right now. Your voice is the most stimulating toy they have.
 
-I know this sounds like I'm telling you to do nothing. I'm telling you to do nothing with toys. Do everything with your presence. Hold them, talk to them, make faces from eight inches away. They're wiring up the visual cortex, the auditory system, basic social connection. All of that runs on you, not on a $35 sensory set from Target. Save your money for month four. That's when things actually get interesting.
+I know this sounds like I'm telling you to do nothing. I'm telling you to do nothing with toys. Do everything with your presence. Hold them, talk to them, make faces from eight inches away. They're wiring up the visual cortex, the auditory system, basic social connection. [Zero to Three](https://www.zerotothree.org/) has a solid breakdown of these early milestones if you want the developmental science behind it. All of that runs on you, not on a $35 sensory set from Target. Save your money for month four. That's when things actually get interesting.
 
 ## 3-6 Months: The Grab-and-Mouth Phase
 
@@ -59,7 +59,7 @@ A note on the push button toys. We had a toy with a switch that toggled a light 
 
 ## 9-12 Months: Watching It Come Together
 
-Something shifts around nine months. The baby stops just reacting to toys and starts using them with intention. You can see the thinking happening. They'll pick up a ball, look at you, hold it out, and wait for you to react before they drop it. That's not random motor activity. That's communication.
+Something shifts around nine months. Watching our [life with a newborn month by month](/blog/life-with-newborn-month-by-month), this was the phase where everything changed. The baby stops just reacting to toys and starts using them with intention. You can see the thinking happening. They'll pick up a ball, look at you, hold it out, and wait for you to react before they drop it. That's not random motor activity. That's communication.
 
 This period is where I stopped thinking of my daughter as a baby who plays with things and started thinking of her as a tiny person who's figuring out how the world works in real time. She'd take a toy phone, hold it to her ear, and babble. She'd pick up a spoon and try to feed her stuffed bear. She was testing ideas about what objects are for. Pull toys start making sense here because crawling and walking are emerging and they connect movement with an outcome behind them. Nesting toys work because they're beginning to understand that small fits inside big. Simple musical instruments work because they're linking their own action to a specific sound.
 
@@ -75,15 +75,15 @@ Here's how to think about the entire first year as a progression:
 
 Each skill builds on the last. You can't do transfer well until you've mastered grasp and release. You can't use a button toy until you've developed finger isolation from months of grabbing. When you understand this chain, buying toys gets simple: figure out where your baby is in the progression, get one or two things that support the current skill and one that previews the next, and wait.
 
-Subscription toy boxes (Lovevery, Monti Kids, etc.) are built around this exact idea. They send age-appropriate toys monthly so you don't have to figure out the progression yourself. They're not cheap, usually $30-40 per month. But if the alternative is buying ten random toys from Amazon and hoping something sticks, the subscription is better value. You're paying for the curation, not just the plastic.
+Subscription toy boxes (Lovevery, Monti Kids, etc.) are built around this exact idea. The [AAP's ages and stages guide](https://www.aap.org/en/patient-care/ages-and-stages/) maps out the same developmental progression if you want to understand the science behind it. They send age-appropriate toys monthly so you don't have to figure out the progression yourself. They're not cheap, usually $30-40 per month. But if the alternative is buying ten random toys from Amazon and hoping something sticks, the subscription is better value. You're paying for the curation, not just the plastic.
 
 ## Save Your Money
 
 Three categories where I see dads overspend every time:
 
-**Electronic "learning" toys that do everything.** If the toy lights up, plays music, and talks when you press twelve different buttons, your baby is going to press buttons to watch lights. They're not learning the alphabet at four months old. The toy is entertaining them, not developing them. There's a difference.
+**Electronic "learning" toys that do everything.** If the toy lights up, plays music, and talks when you press twelve different buttons, your baby is going to press buttons to watch lights. They're not learning the alphabet at four months old. The toy is entertaining them, not developing them. There's a difference. (Also check the [CPSC toy safety guides](https://www.cpsc.gov/Safety-Education/Safety-Guides/Toys) before buying anything with small parts or batteries.)
 
-**Anything labeled "educational" for under six months.** A $40 "baby Einstein" rattle does the same thing as a $6 one from the grocery store. At this age, they're learning from interaction with you, not from product engineering. The marketing is aimed at parent anxiety, not child development.
+**Anything labeled "educational" for under six months.** A $40 "baby Einstein" rattle does the same thing as a $6 one from the grocery store. At this age, they're learning from interaction with you, not from product engineering. The marketing is aimed at parent anxiety, not child development. Put that money toward something that actually matters in the [first year budget](/blog/how-much-does-a-baby-cost-first-year).
 
 **Giant playsets before they can sit independently.** That $200 activity center looks amazing in the box. Your four-month-old is going to sit in it and stare blankly while the toys spin around them. They can't reach most of the attachments. They can't understand the cause and effect yet. Wait until they can sit and reach with intention. The same toy at seven months will be worth every dollar. At four months it's expensive furniture.
 

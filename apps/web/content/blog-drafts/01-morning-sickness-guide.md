@@ -20,9 +20,9 @@ I tried rubbing her back. She told me to stop. I offered water. She shook her he
 
 Morning sickness is a garbage name for it. It happens morning, noon, 3 AM, during dinner, in the car, at work, sometimes just from walking past a Subway. Roughly 70-80% of pregnant women deal with nausea in the first trimester. Some get it mild. Some are on their knees over a toilet for weeks straight.
 
-The culprit is HCG, a hormone that basically doubles every two days during early pregnancy. Her body is building an entire organ from scratch (the placenta) while simultaneously keeping a rapidly growing embryo alive. That takes a staggering amount of metabolic energy. The nausea is a side effect of her body doing something incredibly difficult.
+The culprit is HCG, a hormone that [basically doubles every two days](https://www.acog.org/womens-health/faqs/morning-sickness-nausea-and-vomiting-of-pregnancy) during early pregnancy. Her body is building an entire organ from scratch (the placenta) while simultaneously keeping a rapidly growing embryo alive. That takes a staggering amount of metabolic energy. The nausea is a side effect of her body doing something incredibly difficult.
 
-Here's the thing most guys don't realize: it peaks around weeks 8-12 and usually fades by week 14-16. But "usually" is doing a lot of heavy lifting in that sentence. Some women get hit with it the entire pregnancy. And the food aversions? Those can stick around even after the baby arrives. Chicken smelled wrong to my wife for months after delivery. Just the way it goes sometimes.
+Here's the thing most guys don't realize: it peaks around [weeks 8-12 and usually fades by week 14-16](/pregnancy-week). But "usually" is doing a lot of heavy lifting in that sentence. Some women get hit with it the entire pregnancy. And the food aversions? Those can stick around even after the baby arrives. Chicken smelled wrong to my wife for months after delivery. Just the way it goes sometimes.
 
 ## The Stuff That Works
 
@@ -40,9 +40,9 @@ Not everything works for everyone. Your partner's body is going to be annoyingly
 
 **Electrolyte drinks.** Pedialyte, coconut water, Liquid IV. Dehydration is the real danger with severe morning sickness. I cannot stress this enough. Dehydration from vomiting can land her in the ER getting IV fluids. Push hydration aggressively. Keep water, sports drinks, and electrolyte packets everywhere. The car. Her office. The nightstand. Her bag.
 
-**B6 + Unisom combo.** This is one of the most commonly recommended treatments by OBs. Talk to her doctor first, but many practitioners suggest 25mg of vitamin B6 with half a Unisom tablet. It's over-the-counter and it genuinely helps a lot of women.
+**B6 + Unisom combo.** This is one of the [most commonly recommended treatments](https://americanpregnancy.org/pregnancy-symptoms/morning-sickness-during-pregnancy/) by OBs. Talk to her doctor first, but many practitioners suggest 25mg of vitamin B6 with half a Unisom tablet. It's over-the-counter and it genuinely helps a lot of women.
 
-**Cold foods over hot foods.** Hot meals produce more aroma. Cold sandwiches, yogurt, fruit, cold cereal. Anything that doesn't fill the kitchen with smell. This alone can reduce how many times a day she feels the wave coming.
+**Cold foods over hot foods.** Hot meals produce more aroma. [Mayo Clinic recommends](https://www.mayoclinic.org/diseases-conditions/morning-sickness/symptoms-causes/syc-20375254) cold sandwiches, yogurt, fruit, cold cereal. Anything that doesn't fill the kitchen with smell. This alone can reduce how many times a day she feels the wave coming.
 
 **Small meals constantly.** Five or six tiny meals beat three normal ones. An empty stomach makes nausea worse. A too-full stomach makes nausea worse. The sweet spot is "I just ate a little bit" sustained throughout the day. Keep snack portions small and frequent.
 
@@ -70,4 +70,4 @@ Be ready to handle meals differently. If certain smells are triggering her, you 
 
 And look. I'll be blunt about this. If she's going through weeks of vomiting and exhaustion and you're checked out, she is going to remember that. Not in a resentful scorekeeping way, or maybe in exactly that way. The first trimester is often the hardest stretch physically, and it happens before you have a visible belly or an ultrasound photo to make it feel real. It's easy to underestimate what she's going through because she looks fine from the outside. She's not fine. Show up. And if it gets severe, if she can't keep water down for 24 hours, if she's losing weight, if she's dizzy or faint, call the OB. Don't wait for her to tell you it's bad enough. Consult the gynecologist for anything that feels beyond normal. That's what they're there for.
 
-The parking lot moment comes for every dad. The moment you realize you're in over your head and you don't have a playbook. You do now.
+The parking lot moment comes for every dad. The moment you realize you're in over your head and you don't have a playbook. You do now. And once the first trimester fog lifts, there's a whole new set of things to prepare for -- from [what to expect in the delivery room](/blog/delivery-room-what-to-expect-dad) to [the bigger picture of becoming a dad for the first time](/blog/first-time-dad-tips).

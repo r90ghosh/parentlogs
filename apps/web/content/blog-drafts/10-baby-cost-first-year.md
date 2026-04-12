@@ -16,7 +16,7 @@ $23,847.
 
 That's what our baby cost in year one. I know because I tracked it. Every diaper subscription, every urgent Target run at 11pm, every lactation consultant visit our insurance didn't cover. I started a spreadsheet the day we came home from the hospital because I'm that guy. The one who tracks mileage on road trips and splits restaurant bills to the penny.
 
-My wife thinks it's obsessive. She's probably right. But now I have real data instead of the vague "$12,000 to $15,000" number every article on the internet throws around. That range is technically possible. It's also misleading. Your actual number depends almost entirely on your lifestyle, your insurance, your childcare situation, and how many times you end up on DoorDash because nobody has the energy to cook.
+My wife thinks it's obsessive. She's probably right. But now I have real data instead of the vague "$12,000 to $15,000" number every article on the internet throws around. (The [USDA's last published estimate](https://www.fns.usda.gov/cnpp/expenditures-children-families) was even higher when you adjust for inflation.) That range is technically possible. It's also misleading. Your actual number depends almost entirely on your lifestyle, your insurance, your childcare situation, and how many times you end up on DoorDash because nobody has the energy to cook.
 
 Here's where the money went.
 
@@ -36,7 +36,7 @@ This is the category that varies the most family to family. If you have excellen
 
 That lactation consultant line is worth calling out. Insurance companies will cover all sorts of things but often cap lactation support at one visit. One. When your wife is in pain and your baby isn't gaining weight and you're both running on four hours of sleep, you are not going to comparison shop lactation consultants. You're going to call whoever can come tomorrow and hand them your credit card.
 
-Also worth noting: we had a straightforward vaginal delivery with no complications. If your partner needs a C-section, NICU time, or any specialist follow-up, the medical total can double. A friend of ours had a 5-day NICU stay and their out-of-pocket hit $6,800 for that alone. Check your plan's out-of-pocket maximum now, before anything happens. That number is your ceiling and you should know it.
+Also worth noting: we had a straightforward vaginal delivery with no complications. If your partner needs a C-section, NICU time, or any specialist follow-up, the medical total can double. A friend of ours had a 5-day NICU stay and their out-of-pocket hit $6,800 for that alone. Check your plan's out-of-pocket maximum now, before anything happens — [Healthcare.gov](https://www.healthcare.gov/) has tools to compare plans if you're shopping. That number is your ceiling and you should know it.
 
 ## Gear and Equipment
 
@@ -46,7 +46,7 @@ The crib was **$280** (basic convertible, nothing fancy). Car seat was **$350** 
 
 Bouncer seat: **$65**. High chair: **$130** (waited until 5 months to buy it). Baby monitor: **$110**. Bottle warmer, bottle drying rack, two different types of bottles because the first ones caused gas: **$95** total. Breast pump accessories and storage bags: **$70** over the year.
 
-Then there's the accumulation of small stuff. Nail clippers. A rectal thermometer. Nose Frida (the one where you literally suck the snot out, and yes, it works). Tummy time mat. A mirror for the back seat so you can see her while driving. Blackout curtains for the nursery. Individually, none of these break $30. Collectively, they added up to around **$220** over the year.
+Then there's the accumulation of small stuff. Nail clippers. A rectal thermometer. Nose Frida (the one where you literally suck the snot out, and yes, it works). Tummy time mat. [Toys that are actually age-appropriate](/blog/best-baby-toys-by-age-0-12-months). A mirror for the back seat so you can see her while driving. Blackout curtains for the nursery. Individually, none of these break $30. Collectively, they added up to around **$220** over the year.
 
 The big surprise was how much we spent replacing things. We went through three different swaddle brands before finding one that worked for her body temperature. Bought two sleep sacks in the wrong size because the sizing charts are lies. Tried four pacifier shapes before she'd accept one. Every baby has specific preferences and you won't know what they are until you've already paid for the wrong thing.
 
@@ -68,7 +68,7 @@ A thousand dollars. On something you throw in the garbage.
 
 ## Formula and Food
 
-My wife breastfed for 7 months, then we supplemented, then fully switched to formula by month 9. Those last three months of formula cost **$540** (about $180/month for name brand). If you're formula-feeding from the start, multiply that by 4 and add $720 to the total.
+My wife breastfed for 7 months, then we supplemented, then fully switched to formula by month 9. If you're navigating that transition, our [breastfeeding guide](/blog/dads-guide-to-breastfeeding) covers what dads actually need to know. Those last three months of formula cost **$540** (about $180/month for name brand). If you're formula-feeding from the start, multiply that by 4 and add $720 to the total.
 
 Solid foods started at 6 months. Baby food pouches, puffs, teething crackers, fruit: about **$85/month** for 6 months = **$510**. We made some of our own (sweet potato and banana were easy wins) but bought most of it. Some weeks she'd refuse everything we made and only eat the store-bought stuff. Babies have opinions. Strong, irrational, unwavering opinions about the texture of sweet potato.
 
@@ -84,7 +84,7 @@ That's what we paid for part-time childcare. Not full-time. Part-time. Three day
 
 Full-time daycare in our city runs $1,400-$2,000/month. A full-time nanny is $2,500-$4,000/month depending on experience and whether they'll do light housework. We went with a nanny share for three days, which brought the per-family cost down, but it was still the single biggest line item by a wide margin.
 
-If you're reading this during pregnancy and haven't priced out childcare yet, do it now. Not next month. Now. Waitlists at daycares in most cities are 6-12 months long. We got on three waitlists at 20 weeks pregnant and still only got into our second choice. For a much deeper breakdown on finding and vetting childcare, we wrote a separate piece on [hiring a nanny or night nurse](/blog/hiring-nanny-night-nurse-guide).
+If you're reading this during pregnancy and haven't priced out childcare yet, do it now. Not next month. Now. Waitlists at daycares in most cities are 6-12 months long. We got on three waitlists at 20 weeks pregnant and still only got into our second choice. For a much deeper breakdown on finding and vetting childcare, we wrote a separate piece on [how to find a nanny, with interview questions](/blog/how-to-find-a-nanny-interview-questions).
 
 ## Clothing
 
@@ -102,7 +102,7 @@ DoorDash and meal delivery. We averaged $120/month more than our pre-baby food d
 
 Grocery inflation. Buying more convenience food, more ready-to-eat snacks, more "I don't have time to meal plan so I'm just grabbing whatever" items. Our grocery bill went up about **$200/month** for the first six months, then settled to about $100/month above baseline. Call it **$1,800** for the year.
 
-Extra Target and Amazon runs. This one is embarrassing. For the first month, we were literally at Target every night. Forgot burp cloths. Need a different bottle. This swaddle doesn't fit. Need more gas drops. Vitamin drops. A nasal aspirator (then a different nasal aspirator because the first one was the wrong size). Nursing pads. Nipple cream. Another pack of onesies because she blew through three in one day. Those little trips add up to probably **$600** over the year in stuff that didn't fit any other category.
+Extra Target and Amazon runs. This one is embarrassing. For the [first month](/blog/surviving-first-month-with-newborn-dad), we were literally at Target every night. Forgot burp cloths. Need a different bottle. This swaddle doesn't fit. Need more gas drops. Vitamin drops. A nasal aspirator (then a different nasal aspirator because the first one was the wrong size). Nursing pads. Nipple cream. Another pack of onesies because she blew through three in one day. Those little trips add up to probably **$600** over the year in stuff that didn't fit any other category.
 
 Then there's the stuff you buy for yourself to cope. New noise-canceling headphones because you're up at 3am and need a podcast to survive the feed. A better coffee maker. The gym membership you bought in month 4 because you needed to get out of the house. I'm not counting these in the total because they're technically personal spending. But they happened because of the baby, and that line is blurry.
 
@@ -143,6 +143,6 @@ Then there's the stuff you buy for yourself to cope. New noise-canceling headpho
 
 The remaining $1,684 to reach my $23,847 tracking number is scattered across dozens of small charges I couldn't cleanly categorize. A white noise machine. Batteries. A trunk organizer for the stroller. Extra sets of crib sheets. The copay for the time I went to urgent care because I threw out my back carrying the car seat wrong.
 
-Your number will be different. Could be $14,000 if you have great insurance, family help with childcare, and buy used. Could be $35,000 if you're in a high cost-of-living city with full-time daycare. The point isn't the exact figure.
+Your number will be different. Could be $14,000 if you have great insurance, family help with childcare, and buy used. Could be $35,000 if you're in a high cost-of-living city with full-time daycare — [BLS consumer expenditure data](https://www.bls.gov/cex/) confirms the range is enormous depending on region. The point isn't the exact figure.
 
 It's that you should track it. Because the money goes somewhere whether you're watching or not.
