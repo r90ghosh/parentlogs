@@ -87,9 +87,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
   }
 
-  // RevenueCat sends the secret in the Authorization header as a Bearer token
+  // RevenueCat sends the secret in the Authorization header.
+  // Accept both "Bearer <secret>" and raw "<secret>" formats.
   const authHeader = request.headers.get('authorization')
-  if (!authHeader || authHeader !== `Bearer ${webhookSecret}`) {
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : authHeader
+  if (!token || token !== webhookSecret) {
     return NextResponse.json({ error: 'Invalid authorization' }, { status: 401 })
   }
 
