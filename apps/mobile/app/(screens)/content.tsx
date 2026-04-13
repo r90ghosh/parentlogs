@@ -216,7 +216,8 @@ const styles = StyleSheet.create({
   filterPillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#7a6f62',
+    color: '#ede6dc',
+    lineHeight: 18,
   },
   filterPillTextActive: {
     color: '#faf6f0',

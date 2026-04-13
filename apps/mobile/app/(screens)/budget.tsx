@@ -697,9 +697,10 @@ const styles = StyleSheet.create({
     borderColor: '#c4703f',
   },
   timelinePillText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 14,
-    color: '#faf6f0',
+    fontFamily: 'Karla-Medium',
+    fontSize: 13,
+    color: '#ede6dc',
+    lineHeight: 18,
   },
   timelinePillTextActive: {
     color: '#c4703f',
@@ -727,9 +728,10 @@ const styles = StyleSheet.create({
     borderColor: '#d4a853',
   },
   priorityPillText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#faf6f0',
+    color: '#ede6dc',
+    lineHeight: 18,
   },
   priorityPillTextActive: {
     color: '#d4a853',
