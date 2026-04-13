@@ -121,6 +121,7 @@ const PLANS = [
 
 export default function LandingScreen() {
   const colors = useColors()
+  const isDark = colors.bg === '#12100e'
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { enterGuestMode } = useAuth()
@@ -132,11 +133,13 @@ export default function LandingScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-      {/* Decorative orbs */}
-      <View style={styles.orbContainer} pointerEvents="none">
-        <View style={[styles.orbCopper, { backgroundColor: colors.copperDim }]} />
-        <View style={[styles.orbGold, { backgroundColor: colors.goldDim }]} />
-      </View>
+      {/* Decorative orbs — dark mode only (they clash with the light gradient) */}
+      {isDark && (
+        <View style={styles.orbContainer} pointerEvents="none">
+          <View style={[styles.orbCopper, { backgroundColor: colors.copperDim }]} />
+          <View style={[styles.orbGold, { backgroundColor: colors.goldDim }]} />
+        </View>
+      )}
 
       <ScrollView
         style={styles.scrollView}
