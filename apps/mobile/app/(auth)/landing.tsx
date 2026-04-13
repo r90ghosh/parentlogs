@@ -6,7 +6,8 @@ import {
   ScrollView,
   Platform,
 } from 'react-native'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
+import { useAuth } from '@/components/providers/AuthProvider'
 import { BrandLogoIcon } from '@/components/BrandLogo'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -119,6 +120,14 @@ const PLANS = [
 
 export default function LandingScreen() {
   const insets = useSafeAreaInsets()
+  const router = useRouter()
+  const { enterGuestMode } = useAuth()
+
+  const handleBrowseAsGuest = () => {
+    enterGuestMode()
+    router.replace('/(guest)')
+  }
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -191,6 +200,11 @@ export default function LandingScreen() {
               </Pressable>
             </Link>
           </View>
+
+          {/* Browse as Guest */}
+          <Pressable onPress={handleBrowseAsGuest} style={styles.guestRow}>
+            <Text style={styles.guestText}>Browse as Guest</Text>
+          </Pressable>
 
           {/* Trust stats */}
           <View style={styles.statsRow}>
@@ -595,7 +609,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
-    marginBottom: 32,
+    marginBottom: 16,
   },
   signInLabel: {
     fontFamily: 'Karla-Regular',
@@ -606,6 +620,17 @@ const styles = StyleSheet.create({
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
     color: '#c4703f',
+  },
+
+  // Guest
+  guestRow: {
+    marginBottom: 32,
+  },
+  guestText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 14,
+    color: '#7a6f62',
+    textAlign: 'center',
   },
 
   // Stats

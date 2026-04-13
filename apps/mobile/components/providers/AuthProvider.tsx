@@ -37,8 +37,11 @@ interface AuthContextType {
   profile: Profile | null
   family: Family | null
   isLoading: boolean
+  isGuest: boolean
   signOut: () => Promise<void>
   refreshProfile: () => Promise<void>
+  enterGuestMode: () => void
+  exitGuestMode: () => void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -49,8 +52,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [family, setFamily] = useState<Family | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [profileLoaded, setProfileLoaded] = useState(false)
+  const [isGuest, setIsGuest] = useState(false)
   const router = useRouter()
   const segments = useSegments()
+
+  const enterGuestMode = () => setIsGuest(true)
+  const exitGuestMode = () => setIsGuest(false)
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -135,11 +142,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const inAuthGroup = segments[0] === '(auth)'
     const inOnboarding = segments[0] === '(onboarding)'
     const inApp = segments[0] === '(tabs)' || segments[0] === '(screens)'
+    const inGuest = segments[0] === '(guest)'
+    const inScreens = segments[0] === '(screens)'
     const atRoot = !segments[0]
 
-    if (!session && !inAuthGroup) {
-      router.replace('/(auth)/landing')
-    } else if (session && profileLoaded && (inAuthGroup || atRoot)) {
+    if (!session && !inAuthGroup && !inGuest) {
+      // Allow guests to browse content screens (modals pushed from guest tabs)
+      if (isGuest && inScreens) {
+        // Allow — guest can browse read-only content
+      } else if (isGuest) {
+        router.replace('/(guest)')
+      } else {
+        router.replace('/(auth)/landing')
+      }
+    } else if (session && (inGuest || inAuthGroup || atRoot) && profileLoaded) {
+      // Authenticated user landed in guest/auth/root — send to app
+      setIsGuest(false)
       if (!profile?.onboarding_completed) {
         router.replace('/(onboarding)/role')
       } else {
@@ -148,7 +166,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } else if (session && profileLoaded && inApp && profile && !profile.onboarding_completed) {
       router.replace('/(onboarding)/role')
     }
-  }, [session, profile, profileLoaded, isLoading, segments])
+  }, [session, profile, profileLoaded, isLoading, segments, isGuest])
 
   const signOut = async () => {
     // Deactivate device token before signing out
@@ -177,8 +195,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         profile,
         family,
         isLoading,
+        isGuest,
         signOut,
         refreshProfile,
+        enterGuestMode,
+        exitGuestMode,
       }}
     >
       {children}

@@ -77,6 +77,7 @@ function RootContent() {
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(onboarding)" />
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(guest)" />
         <Stack.Screen name="(screens)" options={{ presentation: 'modal' }} />
         <Stack.Screen name="+not-found" />
       </Stack>
