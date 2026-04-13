@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from 'react-native'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -8,6 +9,52 @@ import { useColors } from '@/hooks/use-colors'
 import { CardEntrance } from '@/components/animations'
 import { ScreenHeader } from '@/components/ui'
 import { GlassCard } from '@/components/glass'
+
+// --- Lightweight markdown block types ---
+type MdBlock =
+  | { type: 'h1'; text: string }
+  | { type: 'h2'; text: string }
+  | { type: 'h3'; text: string }
+  | { type: 'bullet'; text: string }
+  | { type: 'paragraph'; text: string }
+  | { type: 'spacer' }
+
+function parseMarkdownBlocks(raw: string): MdBlock[] {
+  const lines = raw.split('\n')
+  const blocks: MdBlock[] = []
+  for (const line of lines) {
+    const trimmed = line.trim()
+    if (!trimmed) {
+      blocks.push({ type: 'spacer' })
+    } else if (trimmed.startsWith('### ')) {
+      blocks.push({ type: 'h3', text: trimmed.slice(4) })
+    } else if (trimmed.startsWith('## ')) {
+      blocks.push({ type: 'h2', text: trimmed.slice(3) })
+    } else if (trimmed.startsWith('# ')) {
+      blocks.push({ type: 'h1', text: trimmed.slice(2) })
+    } else if (/^[-*] /.test(trimmed)) {
+      blocks.push({ type: 'bullet', text: trimmed.slice(2) })
+    } else {
+      blocks.push({ type: 'paragraph', text: trimmed })
+    }
+  }
+  return blocks
+}
+
+/** Render inline bold (**text**) within a string */
+function renderInlineMarkdown(text: string, baseStyle: object, boldStyle: object): React.ReactNode[] {
+  const parts = text.split(/(\*\*[^*]+\*\*)/)
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) {
+      return (
+        <Text key={i} style={boldStyle}>
+          {part.slice(2, -2)}
+        </Text>
+      )
+    }
+    return <Text key={i}>{part}</Text>
+  })
+}
 
 export default function ArticleScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
@@ -21,6 +68,11 @@ export default function ArticleScreen() {
     profile?.subscription_tier === 'premium' || profile?.subscription_tier === 'lifetime'
 
   const isLocked = article && !article.is_free && !isPremium
+
+  const contentBlocks = useMemo(
+    () => (article?.content ? parseMarkdownBlocks(article.content) : []),
+    [article?.content]
+  )
 
   function formatDate(dateStr: string | null): string {
     if (!dateStr) return ''
@@ -100,22 +152,66 @@ export default function ArticleScreen() {
             </GlassCard>
           ) : (
             <>
-              {article.content.split('\n').map((paragraph, idx) =>
-                paragraph.trim() ? (
-                  <Text key={idx} style={[styles.bodyText, { color: colors.textSecondary }]}>
-                    {paragraph}
-                  </Text>
-                ) : (
-                  <View key={idx} style={styles.paragraphSpacer} />
-                )
-              )}
+              {contentBlocks.map((block, idx) => {
+                switch (block.type) {
+                  case 'h1':
+                    return (
+                      <Text key={idx} style={[styles.heading1, { color: colors.textPrimary }]}>
+                        {block.text}
+                      </Text>
+                    )
+                  case 'h2':
+                    return (
+                      <Text key={idx} style={[styles.heading2, { color: colors.textPrimary }]}>
+                        {block.text}
+                      </Text>
+                    )
+                  case 'h3':
+                    return (
+                      <Text key={idx} style={[styles.heading3, { color: colors.textPrimary }]}>
+                        {block.text}
+                      </Text>
+                    )
+                  case 'bullet':
+                    return (
+                      <View key={idx} style={styles.bulletRow}>
+                        <Text style={[styles.bulletDot, { color: colors.copper }]}>{'\u2022'}</Text>
+                        <Text style={[styles.bodyText, { color: colors.textSecondary, flex: 1 }]}>
+                          {renderInlineMarkdown(
+                            block.text,
+                            styles.bodyText,
+                            { fontFamily: 'Jost-SemiBold' }
+                          )}
+                        </Text>
+                      </View>
+                    )
+                  case 'spacer':
+                    return <View key={idx} style={styles.paragraphSpacer} />
+                  default:
+                    return (
+                      <Text key={idx} style={[styles.bodyText, { color: colors.textSecondary }]}>
+                        {renderInlineMarkdown(
+                          block.text,
+                          styles.bodyText,
+                          { fontFamily: 'Jost-SemiBold' }
+                        )}
+                      </Text>
+                    )
+                }
+              })}
 
               {/* Sources */}
-              {article.sources ? (
+              {article.sources && article.sources.length > 0 ? (
                 <>
                   <View style={[styles.divider, { backgroundColor: colors.border }]} />
                   <Text style={[styles.sourcesHeader, { color: colors.textPrimary }]}>Sources</Text>
-                  <Text style={[styles.sourcesText, { color: colors.textMuted }]}>{article.sources}</Text>
+                  {(Array.isArray(article.sources) ? article.sources : [article.sources]).map(
+                    (source, idx) => (
+                      <Text key={idx} style={[styles.sourcesText, { color: colors.textMuted }]}>
+                        {'\u2022'} {source}
+                      </Text>
+                    )
+                  )}
                 </>
               ) : null}
 
@@ -179,12 +275,46 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
 
+  // Headings
+  heading1: {
+    fontFamily: 'PlayfairDisplay-Bold',
+    fontSize: 22,
+    lineHeight: 30,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  heading2: {
+    fontFamily: 'PlayfairDisplay-Bold',
+    fontSize: 19,
+    lineHeight: 26,
+    marginTop: 18,
+    marginBottom: 8,
+  },
+  heading3: {
+    fontFamily: 'Jost-SemiBold',
+    fontSize: 17,
+    lineHeight: 24,
+    marginTop: 16,
+    marginBottom: 6,
+  },
+
   // Body content
   bodyText: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
     lineHeight: 26,
     marginBottom: 12,
+  },
+  bulletRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    marginBottom: 8,
+    paddingLeft: 4,
+  },
+  bulletDot: {
+    fontSize: 16,
+    lineHeight: 26,
   },
   paragraphSpacer: {
     height: 8,
@@ -200,6 +330,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Regular',
     fontSize: 13,
     lineHeight: 20,
+    marginBottom: 4,
   },
 
   // Medical disclaimer

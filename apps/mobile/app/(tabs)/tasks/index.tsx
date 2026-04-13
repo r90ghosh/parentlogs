@@ -287,76 +287,29 @@ export default function TasksScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-      {/* Sticky header area */}
-      <View style={[styles.headerArea, { borderBottomColor: colors.subtleBg }]}>
-        <View style={[styles.pageTitleRow, { paddingTop: 12 }]}>
-          <Text style={[styles.pageTitle, { color: colors.textPrimary }]}>Tasks</Text>
-          <Pressable
-            onPress={() => setViewMode(viewMode === 'list' ? 'calendar' : 'list')}
-            style={[styles.viewToggleButton, { backgroundColor: colors.subtleBg }]}
-          >
-            {viewMode === 'list' ? (
-              <CalendarDays size={20} color={colors.textMuted} />
-            ) : (
-              <LayoutList size={20} color={colors.copper} />
-            )}
-          </Pressable>
-        </View>
-
-        {/* Search */}
-        <View style={[styles.searchContainer, { backgroundColor: colors.subtleBg, borderColor: colors.border }]}>
-          <Search size={16} color={colors.textMuted} style={styles.searchIcon} />
-          <TextInput
-            style={[styles.searchInput, { color: colors.textSecondary }]}
-            placeholder="Search tasks..."
-            placeholderTextColor={colors.textDim}
-            value={searchTerm}
-            onChangeText={setSearchTerm}
-            returnKeyType="search"
-            clearButtonMode="while-editing"
-          />
-        </View>
-
-        {/* Stats Row */}
-        <TaskStatsRow
-          stats={stats}
-          activeFilter={statFilter}
-          onFilterPress={handleStatFilter}
-        />
-
-        {/* Filter Tabs */}
-        <View style={styles.filterTabsWrap}>
-          <TaskFilterTabs
-            activeTab={activeTab}
-            onTabPress={handleTabChange}
-            catchUpCount={stats.catchUpQueue}
-          />
-        </View>
-
-        {/* Week pills bar */}
-        <WeekNavPills
-          currentWeek={currentWeek}
-          selectedWeek={selectedWeek}
-          maxWeek={maxWeek}
-          onSelect={(week) => setSelectedWeek(selectedWeek === week ? null : week)}
-          taskCountByWeek={taskCountByWeek}
-          showPhaseLabels
-          showHeader
-          onClearSelection={() => setSelectedWeek(null)}
-        />
-      </View>
-
       {/* Task content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.copper} />
         </View>
       ) : viewMode === 'calendar' ? (
-        <TaskCalendar
-          tasks={allTasks.filter((t) => t.status === 'pending' || t.status === 'snoozed')}
-          onComplete={handleComplete}
-          onSnooze={handleSnooze}
-        />
+        <>
+          {/* Title + view toggle for calendar mode */}
+          <View style={[styles.pageTitleRow, { paddingTop: 12 }]}>
+            <Text style={[styles.pageTitle, { color: colors.textPrimary }]}>Tasks</Text>
+            <Pressable
+              onPress={() => setViewMode('list')}
+              style={[styles.viewToggleButton, { backgroundColor: colors.subtleBg }]}
+            >
+              <LayoutList size={20} color={colors.copper} />
+            </Pressable>
+          </View>
+          <TaskCalendar
+            tasks={allTasks.filter((t) => t.status === 'pending' || t.status === 'snoozed')}
+            onComplete={handleComplete}
+            onSnooze={handleSnooze}
+          />
+        </>
       ) : (
         <ScrollView
           style={styles.scrollView}
@@ -365,6 +318,7 @@ export default function TasksScreen() {
             { paddingBottom: insets.bottom + 100 },
           ]}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
           refreshControl={
             <RefreshControl
               refreshing={isRefetching}
@@ -374,6 +328,63 @@ export default function TasksScreen() {
             />
           }
         >
+          {/* Header area — scrolls with content */}
+          <View style={styles.headerArea}>
+            <View style={[styles.pageTitleRow, { paddingTop: 12 }]}>
+              <Text style={[styles.pageTitle, { color: colors.textPrimary }]}>Tasks</Text>
+              <Pressable
+                onPress={() => setViewMode('calendar')}
+                style={[styles.viewToggleButton, { backgroundColor: colors.subtleBg }]}
+              >
+                <CalendarDays size={20} color={colors.textMuted} />
+              </Pressable>
+            </View>
+
+            {/* Search */}
+            <View style={[styles.searchContainer, { backgroundColor: colors.subtleBg, borderColor: colors.border }]}>
+              <Search size={16} color={colors.textMuted} style={styles.searchIcon} />
+              <TextInput
+                style={[styles.searchInput, { color: colors.textSecondary }]}
+                placeholder="Search tasks..."
+                placeholderTextColor={colors.textDim}
+                value={searchTerm}
+                onChangeText={setSearchTerm}
+                returnKeyType="search"
+                clearButtonMode="while-editing"
+              />
+            </View>
+
+            {/* Stats Row */}
+            <TaskStatsRow
+              stats={stats}
+              activeFilter={statFilter}
+              onFilterPress={handleStatFilter}
+            />
+
+            {/* Filter Tabs */}
+            <View style={styles.filterTabsWrap}>
+              <TaskFilterTabs
+                activeTab={activeTab}
+                onTabPress={handleTabChange}
+                catchUpCount={stats.catchUpQueue}
+              />
+            </View>
+
+            {/* Week pills bar */}
+            <WeekNavPills
+              currentWeek={currentWeek}
+              selectedWeek={selectedWeek}
+              maxWeek={maxWeek}
+              onSelect={(week) => setSelectedWeek(selectedWeek === week ? null : week)}
+              taskCountByWeek={taskCountByWeek}
+              showPhaseLabels
+              showHeader
+              onClearSelection={() => setSelectedWeek(null)}
+            />
+          </View>
+
+          {/* Task list content */}
+          <View style={styles.taskListArea}>
           {showGroupedView && groups ? (
             /* Grouped view: Due Today / This Week / Coming Up */
             <>
@@ -565,6 +576,7 @@ export default function TasksScreen() {
                 </View>
               </CardEntrance>
             )}
+          </View>
         </ScrollView>
       )}
 
@@ -591,7 +603,6 @@ const styles = StyleSheet.create({
   },
   headerArea: {
     paddingBottom: 8,
-    borderBottomWidth: 1,
   },
   pageTitleRow: {
     flexDirection: 'row',
@@ -642,7 +653,8 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  scrollContent: {
+  scrollContent: {},
+  taskListArea: {
     paddingHorizontal: 20,
     paddingTop: 20,
   },

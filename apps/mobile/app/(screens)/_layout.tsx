@@ -10,7 +10,7 @@ export default function ScreensLayout() {
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: 'transparent' },
-          presentation: 'modal',
+          presentation: 'fullScreenModal',
           animation: 'slide_from_bottom',
         }}
       >
