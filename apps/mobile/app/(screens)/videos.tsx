@@ -117,27 +117,29 @@ export default function VideosScreen() {
       <ScreenHeader title="Video Library" />
 
       {/* Stage filter pills */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.filterContent}
-        style={styles.filterBar}
-      >
-        {STAGE_FILTERS.map((filter) => {
-          const isActive = selectedStage === filter.value
-          return (
-            <Pressable
-              key={filter.label}
-              onPress={() => setSelectedStage(filter.value)}
-              style={[styles.filterPill, isActive && styles.filterPillActive]}
-            >
-              <Text style={[styles.filterPillText, isActive && styles.filterPillTextActive]}>
-                {filter.label}
-              </Text>
-            </Pressable>
-          )
-        })}
-      </ScrollView>
+      <View style={styles.filterBar}>
+        <ScrollView
+          horizontal
+          nestedScrollEnabled
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filterContent}
+        >
+          {STAGE_FILTERS.map((filter) => {
+            const isActive = selectedStage === filter.value
+            return (
+              <Pressable
+                key={filter.label}
+                onPress={() => setSelectedStage(filter.value)}
+                style={[styles.filterPill, isActive && styles.filterPillActive]}
+              >
+                <Text style={[styles.filterPillText, isActive && styles.filterPillTextActive]}>
+                  {filter.label}
+                </Text>
+              </Pressable>
+            )
+          })}
+        </ScrollView>
+      </View>
 
       {/* Content */}
       {isLoading ? (
@@ -177,6 +179,7 @@ const styles = StyleSheet.create({
   // Filter pills
   filterBar: {
     marginBottom: 12,
+    minHeight: 42,
   },
   filterContent: {
     paddingHorizontal: 20,

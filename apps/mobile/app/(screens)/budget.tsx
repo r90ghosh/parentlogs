@@ -428,37 +428,40 @@ export default function BudgetScreen() {
           </View>
 
           {/* Priority filter pills */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.priorityContent}
-            style={styles.priorityBar}
-          >
-            {PRIORITY_FILTERS.map((filter) => (
-              <Pressable
-                key={filter.id}
-                onPress={() => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                  setSelectedPriority(
-                    selectedPriority === filter.id ? 'all' : filter.id
-                  )
-                }}
-                style={[
-                  styles.priorityPill,
-                  selectedPriority === filter.id && styles.priorityPillActive,
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.priorityPillText,
-                    selectedPriority === filter.id && styles.priorityPillTextActive,
-                  ]}
-                >
-                  {filter.label}
-                </Text>
-              </Pressable>
-            ))}
-          </ScrollView>
+          <View style={styles.priorityBar}>
+            <ScrollView
+              horizontal
+              nestedScrollEnabled
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.priorityContent}
+            >
+              {PRIORITY_FILTERS.map((filter) => {
+                const isActive = selectedPriority === filter.id
+                return (
+                  <Pressable
+                    key={filter.id}
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                      setSelectedPriority(isActive ? 'all' : filter.id)
+                    }}
+                    style={[
+                      styles.priorityPill,
+                      isActive && styles.priorityPillActive,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.priorityPillText,
+                        isActive && styles.priorityPillTextActive,
+                      ]}
+                    >
+                      {filter.label}
+                    </Text>
+                  </Pressable>
+                )
+              })}
+            </ScrollView>
+          </View>
         </>
       )}
 
@@ -713,6 +716,7 @@ const styles = StyleSheet.create({
   // Priority filter bar
   priorityBar: {
     marginBottom: 12,
+    minHeight: 38,
   },
   priorityContent: {
     paddingHorizontal: 20,
