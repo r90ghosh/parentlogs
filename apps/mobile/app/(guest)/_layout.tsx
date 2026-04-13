@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router'
 import { Platform, StyleSheet, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Compass, CreditCard } from 'lucide-react-native'
+import { Compass, CreditCard, Home } from 'lucide-react-native'
 
 export default function GuestLayout() {
   const insets = useSafeAreaInsets()
@@ -27,6 +27,15 @@ export default function GuestLayout() {
           },
         }}
       >
+        <Tabs.Screen
+          name="home"
+          options={{
+            title: 'Home',
+            tabBarIcon: ({ color, size }) => (
+              <Home size={size} color={color} />
+            ),
+          }}
+        />
         <Tabs.Screen
           name="index"
           options={{
