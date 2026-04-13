@@ -3,6 +3,7 @@ import { Platform, StyleSheet, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Compass, CreditCard, Home } from 'lucide-react-native'
 import { useColors } from '@/hooks/use-colors'
+import { AppBackground } from '@/components/shared/AppBackground'
 
 export default function GuestLayout() {
   const colors = useColors()
@@ -10,6 +11,7 @@ export default function GuestLayout() {
 
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
+      <AppBackground />
       <Tabs
         screenOptions={{
           headerShown: false,
