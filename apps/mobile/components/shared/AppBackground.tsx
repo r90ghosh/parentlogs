@@ -4,7 +4,7 @@ import { FloatingParticles } from '@/components/animations/FloatingParticles'
 import { useTheme } from '@/components/providers/ThemeProvider'
 import { useColors } from '@/hooks/use-colors'
 
-export function AppBackground() {
+export function AppBackground({ particles = true }: { particles?: boolean }) {
   const { isDark } = useTheme()
   const colors = useColors()
 
@@ -34,7 +34,7 @@ export function AppBackground() {
           style={StyleSheet.absoluteFill}
         />
       )}
-      <FloatingParticles />
+      {particles && <FloatingParticles />}
     </View>
   )
 }

@@ -5,7 +5,7 @@ import { AppBackground } from '@/components/shared/AppBackground'
 export default function OnboardingLayout() {
   return (
     <View style={{ flex: 1 }}>
-      <AppBackground />
+      <AppBackground particles={false} />
       <Stack
         screenOptions={{
           headerShown: false,

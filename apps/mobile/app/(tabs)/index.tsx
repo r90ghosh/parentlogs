@@ -143,7 +143,7 @@ export default function DashboardScreen() {
             layout={reducedMotion ? undefined : LinearTransition.springify().damping(16).stiffness(200)}
           >
             {/* 1. Briefing Teaser */}
-            <CardEntrance delay={80}>
+            <CardEntrance delay={40}>
               <BriefingTeaserCard
                 briefing={briefingQuery.data}
                 currentWeek={currentWeek}
@@ -152,48 +152,48 @@ export default function DashboardScreen() {
             </CardEntrance>
 
             {/* 2. Tasks Due */}
-            <CardEntrance delay={160}>
+            <CardEntrance delay={80}>
               <TasksDueCard tasks={tasksQuery.data} />
             </CardEntrance>
 
             {/* 3. Welcome Catch-Up (if backlog > 0) */}
             {(backlogCount ?? 0) > 0 && (
-              <CardEntrance delay={240}>
+              <CardEntrance delay={120}>
                 <WelcomeCatchUpCard />
               </CardEntrance>
             )}
 
             {/* 4. On Your Mind (dad only) */}
             {profile?.role === 'dad' && (
-              <CardEntrance delay={320}>
+              <CardEntrance delay={160}>
                 <OnYourMindCard />
               </CardEntrance>
             )}
 
             {/* 5. Quick Actions */}
-            <CardEntrance delay={400}>
+            <CardEntrance delay={200}>
               <QuickActionsBar />
             </CardEntrance>
 
             {/* 6. Personalize Card (dad only, if no profile) */}
             {profile?.role === 'dad' && (
-              <CardEntrance delay={480}>
+              <CardEntrance delay={240}>
                 <PersonalizeCard />
               </CardEntrance>
             )}
 
             {/* 7. Budget Snapshot */}
-            <CardEntrance delay={560}>
+            <CardEntrance delay={280}>
               <BudgetSnapshotCard />
             </CardEntrance>
 
             {/* 8. Checklist Progress */}
-            <CardEntrance delay={640}>
+            <CardEntrance delay={320}>
               <ChecklistProgressCard />
             </CardEntrance>
 
             {/* 9. Upgrade Prompt (free tier only) */}
-            <CardEntrance delay={720}>
+            <CardEntrance delay={360}>
               <UpgradePromptCard />
             </CardEntrance>
           </Animated.View>

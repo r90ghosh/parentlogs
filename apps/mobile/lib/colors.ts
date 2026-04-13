@@ -96,8 +96,8 @@ const dark: ColorTokens = {
   ctaGradient: ['#c4703f', '#d4a853'],
 
   blurTint: 'systemChromeMaterialDark',
-  blurIntensity: 65,
-  headerBlurIntensity: 80,
+  blurIntensity: 50,
+  headerBlurIntensity: 60,
 
   glassInnerBorder: 'rgba(255,255,255,0.08)',
 }
@@ -144,8 +144,8 @@ const light: ColorTokens = {
   ctaGradient: ['#c4703f', '#d4a853'],
 
   blurTint: 'systemChromeMaterialLight',
-  blurIntensity: 80,
-  headerBlurIntensity: 60,
+  blurIntensity: 60,
+  headerBlurIntensity: 50,
 
   glassInnerBorder: 'rgba(255,255,255,0.30)',
 }

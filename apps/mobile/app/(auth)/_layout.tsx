@@ -5,7 +5,7 @@ import { AppBackground } from '@/components/shared/AppBackground'
 export default function AuthLayout() {
   return (
     <View style={{ flex: 1 }}>
-      <AppBackground />
+      <AppBackground /> {/* Landing page keeps particles for visual appeal */}
       <Stack
         screenOptions={{
           headerShown: false,
