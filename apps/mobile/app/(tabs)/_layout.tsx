@@ -54,7 +54,7 @@ function TabHeader() {
   return (
     <View style={[
       styles.header,
-      { paddingTop: insets.top + 4 },
+      { paddingTop: insets.top + 8 },
       !isDark && {
         backgroundColor: 'transparent',
         borderBottomColor: 'rgba(0,0,0,0.06)',
@@ -167,6 +167,7 @@ const styles = StyleSheet.create({
     height: 36,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'visible',
   },
   badge: {
     position: 'absolute',

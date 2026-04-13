@@ -392,15 +392,15 @@ export default function BudgetScreen() {
       {/* Timeline bar (browse mode only) */}
       {activeTab === 'browse' && (
         <>
-          <FlatList
+          <ScrollView
             horizontal
-            data={BUDGET_TIMELINE_CATEGORIES}
-            keyExtractor={(item) => item.id}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.timelineContent}
             style={styles.timelineBar}
-            renderItem={({ item }) => (
+          >
+            {BUDGET_TIMELINE_CATEGORIES.map((item) => (
               <Pressable
+                key={item.id}
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
                   setSelectedPeriod(
@@ -421,8 +421,8 @@ export default function BudgetScreen() {
                   {item.label}
                 </Text>
               </Pressable>
-            )}
-          />
+            ))}
+          </ScrollView>
 
           {/* Priority filter pills */}
           <ScrollView

@@ -186,11 +186,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,
-    backgroundColor: 'rgba(237,230,220,0.06)',
+    backgroundColor: 'rgba(237,230,220,0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(237,230,220,0.12)',
     marginRight: 8,
   },
   filterPillActive: {
     backgroundColor: '#c4703f',
+    borderColor: '#c4703f',
   },
   filterPillText: {
     fontFamily: 'Karla-Medium',
