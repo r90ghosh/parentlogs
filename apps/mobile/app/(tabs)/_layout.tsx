@@ -70,35 +70,33 @@ function TabHeader() {
     { paddingTop: insets.top + 8, borderBottomColor: colors.subtleBg },
   ]
 
-  const headerContent = isMoreSubScreen ? (
-    <>
-      <View style={styles.headerSpacer} />
-      <NotificationBell />
-    </>
-  ) : (
-    <>
-      <BabySwitcher />
-      <NotificationBell />
-    </>
-  )
-
   const headerStyle = isMoreSubScreen ? compactStyle : fullStyle
 
+  // Render bell OUTSIDE BlurView to prevent iOS clipping
   if (Platform.OS === 'ios') {
     return (
-      <BlurView
-        tint={colors.blurTint}
-        intensity={colors.headerBlurIntensity}
-        style={headerStyle}
-      >
-        {headerContent}
-      </BlurView>
+      <View style={{ position: 'relative' }}>
+        <BlurView
+          tint={colors.blurTint}
+          intensity={colors.headerBlurIntensity}
+          style={headerStyle}
+        >
+          {isMoreSubScreen ? <View style={{ flex: 1 }} /> : <BabySwitcher />}
+          {/* Spacer for the bell area */}
+          <View style={styles.bellButton} />
+        </BlurView>
+        {/* Bell rendered outside BlurView so badge isn't clipped */}
+        <View style={[styles.bellOverlay, { top: (isMoreSubScreen ? insets.top + 4 : insets.top + 8) }]}>
+          <NotificationBell />
+        </View>
+      </View>
     )
   }
 
   return (
     <View style={[headerStyle, { backgroundColor: colors.surface }]}>
-      {headerContent}
+      {isMoreSubScreen ? <View style={{ flex: 1 }} /> : <BabySwitcher />}
+      <NotificationBell />
     </View>
   )
 }
@@ -211,7 +209,15 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 4,
+  },
+  bellOverlay: {
+    position: 'absolute',
+    right: 16,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
   },
   badge: {
     position: 'absolute',
