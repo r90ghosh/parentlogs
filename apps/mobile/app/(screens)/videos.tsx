@@ -64,7 +64,7 @@ export default function VideosScreen() {
                 )}
                 {/* Play overlay */}
                 <View style={styles.playOverlay}>
-                  <View style={[styles.playButton, { backgroundColor: colors.copperGlow.replace('0.25)', '0.9)') }]}>
+                  <View style={[styles.playButton, { backgroundColor: colors.copper }]}>
                     <Play size={18} color={colors.textPrimary} fill={colors.textPrimary} />
                   </View>
                 </View>

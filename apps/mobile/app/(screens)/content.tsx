@@ -11,11 +11,12 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { ArrowLeft, Newspaper, Lock } from 'lucide-react-native'
+import { Newspaper, Lock } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useArticles, type Article } from '@/hooks/use-content'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
+import { ScreenHeader } from '@/components/ui'
 import { useColors } from '@/hooks/use-colors'
 
 const STAGE_FILTERS: { value: string | undefined; label: string }[] = [
@@ -95,14 +96,7 @@ export default function ContentScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-          <ArrowLeft size={20} color={colors.textPrimary} />
-        </Pressable>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Blog</Text>
-        <View style={styles.headerSpacer} />
-      </View>
+      <ScreenHeader title="Blog" />
 
       {/* Stage filter pills */}
       <View style={styles.filterBar}>
@@ -170,30 +164,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'transparent',
-  },
-
-  // Header
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingBottom: 12,
-  },
-  backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    flex: 1,
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  headerSpacer: {
-    width: 36,
   },
 
   // Filter pills

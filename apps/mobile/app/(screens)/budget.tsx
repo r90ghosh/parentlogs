@@ -15,7 +15,6 @@ import {
   Platform,
 } from 'react-native'
 import { BlurView } from 'expo-blur'
-import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   X,
@@ -28,6 +27,7 @@ import {
 } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
+import { ScreenHeader } from '@/components/ui/ScreenHeader'
 import {
   useBudgetTemplates,
   useBudgetSummary,
@@ -59,7 +59,6 @@ const PRIORITY_FILTERS: { id: PriorityFilter; label: string }[] = [
 
 export default function BudgetScreen() {
   const insets = useSafeAreaInsets()
-  const router = useRouter()
   const { profile } = useAuth()
   const colors = useColors()
   const [selectedPeriod, setSelectedPeriod] = useState<BudgetPeriod | null>(null)
@@ -160,6 +159,7 @@ export default function BudgetScreen() {
       const isAdded = addedTemplateIds.has(item.budget_id)
       const hasBrands = item.brand_premium || item.brand_value
       return (
+        <CardEntrance delay={index * 60}>
         <GlassCard style={styles.budgetItemCard}>
           <View style={styles.budgetItemHeader}>
             <View style={styles.budgetItemInfo}>
@@ -221,6 +221,7 @@ export default function BudgetScreen() {
             )}
           </View>
         </GlassCard>
+        </CardEntrance>
       )
     },
     [addedTemplateIds, addToBudget.isPending, colors]
@@ -228,6 +229,7 @@ export default function BudgetScreen() {
 
   const renderMyBudgetItem = useCallback(
     ({ item, index }: { item: FamilyBudgetItem; index: number }) => (
+      <CardEntrance delay={index * 60}>
       <Pressable
         onPress={() => handleTogglePurchased(item.id, item.is_purchased)}
       >
@@ -273,6 +275,7 @@ export default function BudgetScreen() {
           </View>
         </GlassCard>
       </Pressable>
+      </CardEntrance>
     ),
     [togglePurchased, colors]
   )
@@ -327,12 +330,7 @@ export default function BudgetScreen() {
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Budget Planner</Text>
-        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
-          <X size={20} color={colors.textMuted} />
-        </Pressable>
-      </View>
+      <ScreenHeader title="Budget Planner" leftAction="close" transparent />
 
       {/* Tab toggle */}
       <View style={styles.tabRow}>
@@ -622,24 +620,6 @@ export default function BudgetScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingBottom: 12,
-  },
-  headerTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
-  },
-  closeButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 
   // Tab toggle

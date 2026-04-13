@@ -8,11 +8,11 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native'
-import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { X, ChevronDown, ChevronUp, Compass } from 'lucide-react-native'
+import { ChevronDown, ChevronUp, Compass } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
+import { ScreenHeader } from '@/components/ui/ScreenHeader'
 import { useCurrentPhase, useJourneyContent } from '@/hooks/use-journey'
 import { useColors } from '@/hooks/use-colors'
 import { PILLAR_CONFIG } from '@tdc/shared/constants/dad-pillar-config'
@@ -142,7 +142,6 @@ function PillarTile({ content, config, isExpanded, onToggle, delay }: PillarTile
 
 export default function JourneyScreen() {
   const insets = useSafeAreaInsets()
-  const router = useRouter()
   const colors = useColors()
   const phase = useCurrentPhase()
   const contentQuery = useJourneyContent(phase)
@@ -167,12 +166,7 @@ export default function JourneyScreen() {
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Dad Journey</Text>
-        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
-          <X size={20} color={colors.textMuted} />
-        </Pressable>
-      </View>
+      <ScreenHeader title="Dad Journey" leftAction="close" transparent />
 
       {contentQuery.isLoading ? (
         <View style={styles.loadingContainer}>
@@ -257,24 +251,6 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingBottom: 12,
-  },
-  headerTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
-  },
-  closeButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   scrollContent: {
     paddingHorizontal: 20,

@@ -1,13 +1,11 @@
 import { Stack } from 'expo-router'
-import { useColors } from '@/hooks/use-colors'
 
 export default function ScreensLayout() {
-  const colors = useColors()
   return (
     <Stack
       screenOptions={{
         headerShown: false,
-        contentStyle: { backgroundColor: colors.bg },
+        contentStyle: { backgroundColor: 'transparent' },
         presentation: 'modal',
         animation: 'slide_from_bottom',
       }}

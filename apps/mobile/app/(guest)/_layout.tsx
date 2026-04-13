@@ -9,7 +9,7 @@ export default function GuestLayout() {
   const insets = useSafeAreaInsets()
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.bg }]}>
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <Tabs
         screenOptions={{
           headerShown: false,

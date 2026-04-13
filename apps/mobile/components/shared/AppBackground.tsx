@@ -34,7 +34,7 @@ export function AppBackground() {
           style={StyleSheet.absoluteFill}
         />
       )}
-      <FloatingParticles count={18} />
+      <FloatingParticles />
     </View>
   )
 }

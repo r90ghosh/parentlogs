@@ -9,10 +9,8 @@ import {
   RefreshControl,
   Alert,
 } from 'react-native'
-import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
-  X,
   Check,
   ChevronDown,
   ChevronUp,
@@ -30,6 +28,7 @@ import {
 } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
+import { ScreenHeader } from '@/components/ui/ScreenHeader'
 import {
   useChecklists,
   useChecklistById,
@@ -216,8 +215,8 @@ function ChecklistCard({ checklist, isExpanded, onToggle }: ChecklistCardProps) 
                   ) : null}
                 </View>
                 {item.required && (
-                  <View style={[styles.requiredBadge, { backgroundColor: colors.coralDim }]}>
-                    <Text style={[styles.requiredText, { color: colors.coral }]}>Req</Text>
+                  <View style={[styles.requiredBadge, { backgroundColor: colors.copperDim }]}>
+                    <Text style={[styles.requiredText, { color: colors.copper }]}>Req</Text>
                   </View>
                 )}
               </Pressable>
@@ -233,7 +232,6 @@ function ChecklistCard({ checklist, isExpanded, onToggle }: ChecklistCardProps) 
 
 export default function ChecklistsScreen() {
   const insets = useSafeAreaInsets()
-  const router = useRouter()
   const colors = useColors()
   const checklistsQuery = useChecklists()
   const [expandedId, setExpandedId] = useState<string | null>(null)
@@ -263,12 +261,7 @@ export default function ChecklistsScreen() {
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Checklists</Text>
-        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
-          <X size={20} color={colors.textMuted} />
-        </Pressable>
-      </View>
+      <ScreenHeader title="Checklists" leftAction="close" transparent />
 
       {/* Content */}
       {checklistsQuery.isLoading ? (
@@ -315,24 +308,6 @@ export default function ChecklistsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingBottom: 12,
-  },
-  headerTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
-  },
-  closeButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 
   // List

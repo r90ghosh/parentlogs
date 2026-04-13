@@ -173,6 +173,7 @@ export default function LandingScreen() {
             <Pressable
               style={({ pressed }) => [
                 styles.ctaButtonWrapper,
+                { shadowColor: colors.copper },
                 pressed && styles.ctaButtonPressed,
               ]}
             >
@@ -378,6 +379,7 @@ export default function LandingScreen() {
               <Pressable
                 style={({ pressed }) => [
                   styles.ctaButtonWrapper,
+                  { shadowColor: colors.copper },
                   pressed && styles.ctaButtonPressed,
                 ]}
               >
@@ -413,6 +415,7 @@ export default function LandingScreen() {
               <Pressable
                 style={({ pressed }) => [
                   styles.ctaButtonWrapper,
+                  { shadowColor: colors.copper },
                   pressed && styles.ctaButtonPressed,
                 ]}
               >
@@ -461,6 +464,7 @@ function StickyBottomBar({ bottomInset }: { bottomInset: number }) {
         <Pressable
           style={({ pressed }) => [
             styles.stickyButtonWrapper,
+            { shadowColor: colors.copper },
             pressed && styles.ctaButtonPressed,
           ]}
         >
@@ -571,7 +575,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 14,
     overflow: 'hidden',
-    shadowColor: '#c4703f',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
@@ -893,7 +896,6 @@ const styles = StyleSheet.create({
   stickyButtonWrapper: {
     borderRadius: 12,
     overflow: 'hidden',
-    shadowColor: '#c4703f',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 8,

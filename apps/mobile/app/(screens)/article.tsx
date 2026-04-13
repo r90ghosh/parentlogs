@@ -1,11 +1,13 @@
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Pressable } from 'react-native'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { ArrowLeft, ShieldCheck } from 'lucide-react-native'
+import { ShieldCheck } from 'lucide-react-native'
 import { useArticle } from '@/hooks/use-content'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useColors } from '@/hooks/use-colors'
 import { CardEntrance } from '@/components/animations'
+import { ScreenHeader } from '@/components/ui'
+import { GlassCard } from '@/components/glass'
 
 export default function ArticleScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
@@ -28,14 +30,8 @@ export default function ArticleScreen() {
 
   if (isLoading) {
     return (
-      <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-          <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-            <ArrowLeft size={20} color={colors.textPrimary} />
-          </Pressable>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Article</Text>
-          <View style={styles.headerSpacer} />
-        </View>
+      <View style={styles.container}>
+        <ScreenHeader title="Article" />
         <View style={styles.loadingContainer}>
           <ActivityIndicator color={colors.copper} size="large" />
         </View>
@@ -45,14 +41,8 @@ export default function ArticleScreen() {
 
   if (error || !article) {
     return (
-      <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-          <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-            <ArrowLeft size={20} color={colors.textPrimary} />
-          </Pressable>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Article</Text>
-          <View style={styles.headerSpacer} />
-        </View>
+      <View style={styles.container}>
+        <ScreenHeader title="Article" />
         <View style={styles.errorContainer}>
           <Text style={[styles.errorTitle, { color: colors.textPrimary }]}>Article not found</Text>
           <Text style={[styles.errorSubtitle, { color: colors.textMuted }]}>
@@ -64,15 +54,8 @@ export default function ArticleScreen() {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-          <ArrowLeft size={20} color={colors.textPrimary} />
-        </Pressable>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Article</Text>
-        <View style={styles.headerSpacer} />
-      </View>
+    <View style={styles.container}>
+      <ScreenHeader title="Article" />
 
       <ScrollView
         contentContainerStyle={[
@@ -103,7 +86,7 @@ export default function ArticleScreen() {
 
           {/* Content body or paywall */}
           {isLocked ? (
-            <View style={styles.paywallContainer}>
+            <GlassCard style={styles.paywallContainer}>
               <Text style={[styles.paywallTitle, { color: colors.gold }]}>Premium Content</Text>
               <Text style={[styles.paywallText, { color: colors.textMuted }]}>
                 This article is available to premium subscribers. Upgrade to unlock the full library of expert-reviewed articles.
@@ -114,7 +97,7 @@ export default function ArticleScreen() {
               >
                 <Text style={[styles.upgradeButtonText, { color: colors.textPrimary }]}>Upgrade Now</Text>
               </Pressable>
-            </View>
+            </GlassCard>
           ) : (
             <>
               {article.content.split('\n').map((paragraph, idx) =>
@@ -151,30 +134,7 @@ export default function ArticleScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-
-  // Header
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingBottom: 12,
-  },
-  backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    flex: 1,
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  headerSpacer: {
-    width: 36,
+    backgroundColor: 'transparent',
   },
 
   // Scroll content
