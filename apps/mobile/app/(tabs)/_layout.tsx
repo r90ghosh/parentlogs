@@ -53,19 +53,36 @@ function TabHeader() {
   const colors = useColors()
   const segments = useSegments()
 
-  // Hide TabHeader when on a More sub-screen (not the More index)
+  // On More sub-screens: show compact header with just the notification bell
   const isMoreSubScreen =
     segments.length >= 3 &&
     segments[1] === 'more' &&
     segments[2] !== undefined &&
     (segments[2] as string) !== 'index'
 
-  if (isMoreSubScreen) return null
+  const compactStyle = [
+    styles.headerCompact,
+    { paddingTop: insets.top + 4, borderBottomColor: colors.subtleBg },
+  ]
 
-  const headerStyle = [
+  const fullStyle = [
     styles.header,
     { paddingTop: insets.top + 8, borderBottomColor: colors.subtleBg },
   ]
+
+  const headerContent = isMoreSubScreen ? (
+    <>
+      <View style={styles.headerSpacer} />
+      <NotificationBell />
+    </>
+  ) : (
+    <>
+      <BabySwitcher />
+      <NotificationBell />
+    </>
+  )
+
+  const headerStyle = isMoreSubScreen ? compactStyle : fullStyle
 
   if (Platform.OS === 'ios') {
     return (
@@ -74,16 +91,14 @@ function TabHeader() {
         intensity={colors.headerBlurIntensity}
         style={headerStyle}
       >
-        <BabySwitcher />
-        <NotificationBell />
+        {headerContent}
       </BlurView>
     )
   }
 
   return (
     <View style={[headerStyle, { backgroundColor: colors.surface }]}>
-      <BabySwitcher />
-      <NotificationBell />
+      {headerContent}
     </View>
   )
 }
@@ -180,6 +195,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 8,
     borderBottomWidth: 1,
+  },
+  headerCompact: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingHorizontal: 16,
+    paddingBottom: 4,
+  },
+  headerSpacer: {
+    flex: 1,
   },
   bellButton: {
     width: 36,
