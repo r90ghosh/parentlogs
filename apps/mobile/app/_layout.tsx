@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import * as SplashScreen from 'expo-splash-screen'
@@ -22,10 +22,10 @@ export {
 // Initialize Sentry before anything else
 initSentry()
 
-SplashScreen.preventAutoHideAsync()
+SplashScreen.preventAutoHideAsync().catch(() => {})
 
 function RootLayout() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontsError] = useFonts({
     'PlayfairDisplay-Bold': require('../assets/fonts/PlayfairDisplay-Bold.ttf'),
     'Jost-Regular': require('../assets/fonts/Jost-Regular.ttf'),
     'Jost-Medium': require('../assets/fonts/Jost-Medium.ttf'),
@@ -34,15 +34,25 @@ function RootLayout() {
     'Karla-SemiBold': require('../assets/fonts/Karla-SemiBold.ttf'),
   })
 
+  const [fontsTimedOut, setFontsTimedOut] = useState(false)
+
+  // Fallback: if fonts don't load in 4s, proceed anyway (system font will render)
   useEffect(() => {
-    if (fontsLoaded) {
-      SplashScreen.hideAsync()
+    const timer = setTimeout(() => setFontsTimedOut(true), 4000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const ready = fontsLoaded || !!fontsError || fontsTimedOut
+
+  useEffect(() => {
+    if (ready) {
+      SplashScreen.hideAsync().catch(() => {})
       const cleanup = initAnalytics()
       return cleanup
     }
-  }, [fontsLoaded])
+  }, [ready])
 
-  if (!fontsLoaded) return null
+  if (!ready) return null
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

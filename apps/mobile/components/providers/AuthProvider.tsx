@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { useRouter, useSegments } from 'expo-router'
 import { pushNotificationService } from '@/services/push-notification-service'
 import { initRevenueCat } from './RevenueCatProvider'
+import { queryClient } from './QueryProvider'
 import { isInGracePeriod } from '@tdc/shared/utils/subscription-utils'
 import { Sentry, setSentryUser, clearSentryUser } from '@/lib/sentry'
 import { identifyUser, resetUser } from '@/lib/analytics'
@@ -105,19 +106,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
+    let mounted = true
+
+    // 1. Get initial session immediately (fast — reads from local storage)
+    supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
+      if (!mounted) return
+      setSession(initialSession)
+      if (initialSession?.user) {
+        // Fire non-blocking side effects
+        initRevenueCat(initialSession.user.id)
+        identifyUser(initialSession.user.id)
+        setSentryUser(initialSession.user.id, initialSession.user.email)
+        pushNotificationService.register(initialSession.user.id).catch(() => {})
+        // Fetch profile (awaited so route protection works)
+        await fetchProfile(initialSession.user.id)
+        // Prefetch tab data in background (fire and forget)
+        prefetchTabData(initialSession.user.id).catch(() => {})
+      }
+      if (mounted) setIsLoading(false)
+    }).catch(() => {
+      if (mounted) setIsLoading(false)
+    })
+
+    // 2. Listen for auth state changes (sign in / sign out / token refresh)
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setSession(session)
-      if (session?.user) {
-        await fetchProfile(session.user.id)
-        // Initialize RevenueCat with user ID
-        initRevenueCat(session.user.id)
-        // Identify user for analytics + error tracking
-        identifyUser(session.user.id)
-        setSentryUser(session.user.id, session.user.email)
-        // Register for push notifications (fire and forget)
-        pushNotificationService.register(session.user.id).catch(() => {})
+    } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+      if (!mounted) return
+      setSession(newSession)
+      if (newSession?.user) {
+        await fetchProfile(newSession.user.id)
+        initRevenueCat(newSession.user.id)
+        identifyUser(newSession.user.id)
+        setSentryUser(newSession.user.id, newSession.user.email)
+        pushNotificationService.register(newSession.user.id).catch(() => {})
+        // Prefetch tab data after sign-in
+        if (event === 'SIGNED_IN') {
+          prefetchTabData(newSession.user.id).catch(() => {})
+        }
 
         // Handle password recovery deep-link — navigate to change password screen
         if (event === 'PASSWORD_RECOVERY') {
@@ -129,12 +155,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setProfileLoaded(false)
         resetUser()
         clearSentryUser()
+        // Clear query cache on sign out
+        queryClient.clear()
       }
       setIsLoading(false)
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [])
+
+  // Prefetch tab data so switching tabs feels instant
+  async function prefetchTabData(userId: string) {
+    const prefetches: Promise<unknown>[] = [
+      // Dashboard queries
+      queryClient.prefetchQuery({
+        queryKey: ['tasks-due'],
+        queryFn: async () => {
+          const { data } = await supabase.from('family_tasks').select('*').eq('status', 'pending').order('due_date').limit(10)
+          return data ?? []
+        },
+        staleTime: 1000 * 60 * 5,
+      }),
+      queryClient.prefetchQuery({
+        queryKey: ['current-briefing'],
+        queryFn: async () => {
+          const { data } = await supabase.from('briefings').select('*').order('week').limit(1).maybeSingle()
+          return data
+        },
+        staleTime: 1000 * 60 * 30, // Briefings rarely change — 30 min
+      }),
+      queryClient.prefetchQuery({
+        queryKey: ['babies', userId],
+        queryFn: async () => {
+          const { data } = await supabase.from('babies').select('*')
+          return data ?? []
+        },
+        staleTime: 1000 * 60 * 10,
+      }),
+    ]
+    await Promise.allSettled(prefetches)
+  }
 
   // Route protection
   useEffect(() => {
