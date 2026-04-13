@@ -11,14 +11,15 @@ import {
   Platform,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, ChevronRight } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { useColors } from '@/hooks/use-colors'
 import { useWelcomeAnimation } from '@/hooks/use-welcome-animation'
 import { useDashboardData } from '@/hooks/use-dashboard'
 import { useSubscriptionStatus } from '@/hooks/use-subscription'
 import { useBabies } from '@/hooks/use-babies'
+import Animated, { LinearTransition, useReducedMotion } from 'react-native-reanimated'
 import { CardEntrance } from '@/components/animations'
 import {
   BriefingTeaserCard,
@@ -47,6 +48,7 @@ function getFirstName(fullName: string | null): string {
 }
 
 export default function DashboardScreen() {
+  const colors = useColors()
   const insets = useSafeAreaInsets()
   const queryClient = useQueryClient()
   const { profile, family } = useAuth()
@@ -55,6 +57,7 @@ export default function DashboardScreen() {
   const { data: subStatus } = useSubscriptionStatus()
   const { data: babies } = useBabies()
   const { data: backlogCount } = useBacklogCount()
+  const reducedMotion = useReducedMotion()
   const isPastDue = subStatus?.status === 'past_due'
 
   const isLoading = tasksQuery.isLoading && briefingQuery.isLoading
@@ -77,12 +80,7 @@ export default function DashboardScreen() {
   const currentWeek = activeBaby?.current_week ?? (family as { current_week?: number })?.current_week ?? 1
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
@@ -97,15 +95,15 @@ export default function DashboardScreen() {
           <RefreshControl
             refreshing={isRefreshing}
             onRefresh={onRefresh}
-            tintColor="#c4703f"
-            colors={['#c4703f']}
+            tintColor={colors.copper}
+            colors={[colors.copper]}
           />
         }
       >
         {/* Greeting header */}
         <CardEntrance delay={0}>
           <View style={styles.greetingContainer}>
-            <Text style={styles.greeting}>
+            <Text style={[styles.greeting, { color: colors.textPrimary }]}>
               {getGreeting()}, {getFirstName(profile?.full_name ?? null)}
             </Text>
           </View>
@@ -121,26 +119,29 @@ export default function DashboardScreen() {
                   : 'https://play.google.com/store/account/subscriptions'
                 Linking.openURL(url)
               }}
-              style={styles.pastDueBanner}
+              style={[styles.pastDueBanner, { backgroundColor: colors.coralDim, borderColor: 'rgba(212,131,107,0.2)' }]}
             >
-              <AlertTriangle size={16} color="#d4836b" />
+              <AlertTriangle size={16} color={colors.coral} />
               <View style={styles.pastDueBannerContent}>
-                <Text style={styles.pastDueTitle}>Payment failed</Text>
+                <Text style={[styles.pastDueTitle, { color: colors.coral }]}>Payment failed</Text>
                 <Text style={styles.pastDueDesc}>
                   Update your payment method to keep premium access.
                 </Text>
               </View>
-              <ChevronRight size={14} color="#d4836b" />
+              <ChevronRight size={14} color={colors.coral} />
             </Pressable>
           </CardEntrance>
         )}
 
         {isLoading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#c4703f" />
+            <ActivityIndicator size="large" color={colors.copper} />
           </View>
         ) : (
-          <View style={styles.cardsContainer}>
+          <Animated.View
+            style={styles.cardsContainer}
+            layout={reducedMotion ? undefined : LinearTransition.springify().damping(16).stiffness(200)}
+          >
             {/* 1. Briefing Teaser */}
             <CardEntrance delay={80}>
               <BriefingTeaserCard
@@ -195,7 +196,7 @@ export default function DashboardScreen() {
             <CardEntrance delay={720}>
               <UpgradePromptCard />
             </CardEntrance>
-          </View>
+          </Animated.View>
         )}
       </ScrollView>
 
@@ -207,7 +208,6 @@ export default function DashboardScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   scrollView: {
     flex: 1,
@@ -221,7 +221,6 @@ const styles = StyleSheet.create({
   greeting: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 24,
-    color: '#faf6f0',
   },
   loadingContainer: {
     paddingTop: 80,
@@ -237,9 +236,7 @@ const styles = StyleSheet.create({
     padding: 14,
     marginBottom: 16,
     borderRadius: 16,
-    backgroundColor: 'rgba(212,131,107,0.1)',
     borderWidth: 1,
-    borderColor: 'rgba(212,131,107,0.2)',
   },
   pastDueBannerContent: {
     flex: 1,
@@ -247,7 +244,6 @@ const styles = StyleSheet.create({
   pastDueTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#d4836b',
   },
   pastDueDesc: {
     fontFamily: 'Karla-Regular',

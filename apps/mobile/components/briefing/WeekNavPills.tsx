@@ -7,6 +7,7 @@ import {
   StyleSheet,
   type LayoutChangeEvent,
 } from 'react-native'
+import { useColors } from '@/hooks/use-colors'
 
 interface WeekNavPillsProps {
   currentWeek: number
@@ -44,6 +45,7 @@ export function WeekNavPills({
   showHeader = false,
   onClearSelection,
 }: WeekNavPillsProps) {
+  const colors = useColors()
   const scrollRef = useRef<ScrollView>(null)
   const containerWidth = useRef(0)
 
@@ -77,10 +79,10 @@ export function WeekNavPills({
     <View>
       {showHeader && (
         <View style={styles.header}>
-          <Text style={styles.headerLabel}>Tasks by Week</Text>
+          <Text style={[styles.headerLabel, { color: colors.textMuted }]}>Tasks by Week</Text>
           {selectedWeek !== null && onClearSelection && (
             <Pressable onPress={onClearSelection} hitSlop={8}>
-              <Text style={styles.showAllText}>Show all</Text>
+              <Text style={[styles.showAllText, { color: colors.copper }]}>Show all</Text>
             </Pressable>
           )}
         </View>
@@ -97,13 +99,15 @@ export function WeekNavPills({
                 hitSlop={{ top: 10, bottom: 10 }}
                 style={[
                   styles.phaseItem,
-                  isActive && styles.phaseItemActive,
+                  { borderBottomColor: colors.border },
+                  isActive && { borderBottomColor: colors.copper },
                 ]}
               >
                 <Text
                   style={[
                     styles.phaseText,
-                    isActive && styles.phaseTextActive,
+                    { color: colors.textMuted },
+                    isActive && { color: colors.copper },
                   ]}
                 >
                   {phase.label}
@@ -132,15 +136,17 @@ export function WeekNavPills({
                 onPress={() => onSelect(week)}
                 style={[
                   styles.pill,
-                  isSelected && styles.pillSelected,
-                  isCurrent && !isSelected && styles.pillCurrent,
+                  { backgroundColor: colors.subtleBg, borderColor: 'transparent' },
+                  isSelected && { backgroundColor: colors.copper, borderColor: colors.copper },
+                  isCurrent && !isSelected && { borderColor: colors.copperGlow },
                 ]}
               >
                 <Text
                   style={[
                     styles.pillText,
-                    isSelected && styles.pillTextSelected,
-                    isCurrent && !isSelected && styles.pillTextCurrent,
+                    { color: colors.textMuted },
+                    isSelected && { color: colors.textPrimary },
+                    isCurrent && !isSelected && { color: colors.copper },
                   ]}
                 >
                   {week}
@@ -149,13 +155,14 @@ export function WeekNavPills({
                   <View
                     style={[
                       styles.currentDot,
-                      isSelected && styles.currentDotSelected,
+                      { backgroundColor: colors.copper },
+                      isSelected && { backgroundColor: colors.textPrimary },
                     ]}
                   />
                 )}
                 {count > 0 && !isSelected && (
-                  <View style={styles.badge}>
-                    <Text style={styles.badgeText}>{count}</Text>
+                  <View style={[styles.badge, { backgroundColor: 'rgba(196,112,63,0.8)' }]}>
+                    <Text style={[styles.badgeText, { color: colors.textPrimary }]}>{count}</Text>
                   </View>
                 )}
               </Pressable>
@@ -178,14 +185,12 @@ const styles = StyleSheet.create({
   headerLabel: {
     fontFamily: 'Karla-Medium',
     fontSize: 11,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
   showAllText: {
     fontFamily: 'Karla-Medium',
     fontSize: 12,
-    color: '#c4703f',
   },
   phaseRow: {
     flexDirection: 'row',
@@ -197,20 +202,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 6,
     borderBottomWidth: 2,
-    borderBottomColor: 'rgba(237,230,220,0.08)',
-  },
-  phaseItemActive: {
-    borderBottomColor: '#c4703f',
   },
   phaseText: {
     fontFamily: 'Karla-Medium',
     fontSize: 11,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
-  },
-  phaseTextActive: {
-    color: '#c4703f',
   },
   scrollContent: {
     paddingHorizontal: 16,
@@ -223,27 +220,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(237,230,220,0.06)',
     borderWidth: 1,
-    borderColor: 'transparent',
-  },
-  pillSelected: {
-    backgroundColor: '#c4703f',
-    borderColor: '#c4703f',
-  },
-  pillCurrent: {
-    borderColor: 'rgba(196,112,63,0.4)',
   },
   pillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#7a6f62',
-  },
-  pillTextSelected: {
-    color: '#faf6f0',
-  },
-  pillTextCurrent: {
-    color: '#c4703f',
   },
   currentDot: {
     position: 'absolute',
@@ -251,10 +232,6 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#c4703f',
-  },
-  currentDotSelected: {
-    backgroundColor: '#faf6f0',
   },
   badge: {
     position: 'absolute',
@@ -263,7 +240,6 @@ const styles = StyleSheet.create({
     minWidth: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: 'rgba(196,112,63,0.8)',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 3,
@@ -271,6 +247,5 @@ const styles = StyleSheet.create({
   badgeText: {
     fontFamily: 'Karla-Medium',
     fontSize: 8,
-    color: '#faf6f0',
   },
 })

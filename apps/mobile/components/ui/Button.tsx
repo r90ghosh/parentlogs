@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native'
 import * as Haptics from 'expo-haptics'
+import { useColors, type ColorTokens } from '@/hooks/use-colors'
 
 type ButtonVariant = 'copper' | 'gold' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
 type ButtonSize = 'sm' | 'default' | 'lg'
@@ -23,49 +24,51 @@ interface ButtonProps extends Omit<PressableProps, 'children' | 'style'> {
   style?: ViewStyle
 }
 
-const variantStyles: Record<ButtonVariant, { base: ViewStyle; pressed: ViewStyle; text: TextStyle; loaderColor: string }> = {
-  copper: {
-    base: { backgroundColor: '#c4703f' },
-    pressed: { backgroundColor: '#a85e34' },
-    text: { color: '#faf6f0' },
-    loaderColor: '#faf6f0',
-  },
-  gold: {
-    base: { backgroundColor: '#d4a853' },
-    pressed: { backgroundColor: '#c09540' },
-    text: { color: '#12100e' },
-    loaderColor: '#12100e',
-  },
-  destructive: {
-    base: { backgroundColor: '#d4836b' },
-    pressed: { backgroundColor: '#c0715a' },
-    text: { color: '#faf6f0' },
-    loaderColor: '#faf6f0',
-  },
-  outline: {
-    base: { backgroundColor: 'transparent', borderWidth: 1, borderColor: 'rgba(237,230,220,0.15)' },
-    pressed: { backgroundColor: 'rgba(255,255,255,0.03)' },
-    text: { color: '#ede6dc' },
-    loaderColor: '#ede6dc',
-  },
-  secondary: {
-    base: { backgroundColor: '#1a1714' },
-    pressed: { backgroundColor: '#201c18' },
-    text: { color: '#ede6dc' },
-    loaderColor: '#ede6dc',
-  },
-  ghost: {
-    base: { backgroundColor: 'transparent' },
-    pressed: { backgroundColor: 'rgba(255,255,255,0.05)' },
-    text: { color: '#ede6dc' },
-    loaderColor: '#ede6dc',
-  },
-  link: {
-    base: { backgroundColor: 'transparent' },
-    pressed: { opacity: 0.7 },
-    text: { color: '#c4703f', textDecorationLine: 'underline' },
-    loaderColor: '#c4703f',
-  },
+function getVariantStyles(colors: ColorTokens): Record<ButtonVariant, { base: ViewStyle; pressed: ViewStyle; text: TextStyle; loaderColor: string }> {
+  return {
+    copper: {
+      base: { backgroundColor: colors.copper },
+      pressed: { backgroundColor: '#a85e34' },
+      text: { color: colors.textPrimary },
+      loaderColor: colors.textPrimary,
+    },
+    gold: {
+      base: { backgroundColor: colors.gold },
+      pressed: { backgroundColor: '#c09540' },
+      text: { color: colors.bg },
+      loaderColor: colors.bg,
+    },
+    destructive: {
+      base: { backgroundColor: colors.coral },
+      pressed: { backgroundColor: '#c0715a' },
+      text: { color: colors.textPrimary },
+      loaderColor: colors.textPrimary,
+    },
+    outline: {
+      base: { backgroundColor: 'transparent', borderWidth: 1, borderColor: colors.borderHover },
+      pressed: { backgroundColor: colors.pressed },
+      text: { color: colors.textSecondary },
+      loaderColor: colors.textSecondary,
+    },
+    secondary: {
+      base: { backgroundColor: colors.surface },
+      pressed: { backgroundColor: colors.card },
+      text: { color: colors.textSecondary },
+      loaderColor: colors.textSecondary,
+    },
+    ghost: {
+      base: { backgroundColor: 'transparent' },
+      pressed: { backgroundColor: colors.pressed },
+      text: { color: colors.textSecondary },
+      loaderColor: colors.textSecondary,
+    },
+    link: {
+      base: { backgroundColor: 'transparent' },
+      pressed: { opacity: 0.7 },
+      text: { color: colors.copper, textDecorationLine: 'underline' },
+      loaderColor: colors.copper,
+    },
+  }
 }
 
 const sizeStyles: Record<ButtonSize, { container: ViewStyle; text: TextStyle }> = {
@@ -97,7 +100,9 @@ export const Button = forwardRef<View, ButtonProps>(function Button(
   },
   ref,
 ) {
-  const v = variantStyles[variant]
+  const colors = useColors()
+  const variantMap = getVariantStyles(colors)
+  const v = variantMap[variant]
   const s = sizeStyles[size]
   const isDisabled = disabled || loading
 

@@ -14,7 +14,6 @@ import {
   Platform,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 import { useQueryClient } from '@tanstack/react-query'
 import {
@@ -37,6 +36,7 @@ import {
 import { format, isToday, isYesterday } from 'date-fns'
 import * as Haptics from 'expo-haptics'
 import { useTrackerLogs, useDeleteLog, useUpdateLog } from '@/hooks/use-tracker'
+import { useColors, type ColorTokens } from '@/hooks/use-colors'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance, StaggerList } from '@/components/animations'
 import type { LogType, BabyLog } from '@tdc/shared/types'
@@ -48,18 +48,20 @@ interface LogTypeConfig {
   label: string
 }
 
-const LOG_TYPE_CONFIG: Record<LogType, LogTypeConfig> = {
-  feeding: { icon: Milk, color: '#5b9bd5', bgColor: 'rgba(91,155,213,0.15)', label: 'Feeding' },
-  diaper: { icon: Baby, color: '#d4a853', bgColor: 'rgba(212,168,83,0.15)', label: 'Diaper' },
-  sleep: { icon: Moon, color: '#c47a8f', bgColor: 'rgba(196,122,143,0.15)', label: 'Sleep' },
-  temperature: { icon: Thermometer, color: '#d4836b', bgColor: 'rgba(212,131,107,0.15)', label: 'Temperature' },
-  medicine: { icon: Pill, color: '#6b8f71', bgColor: 'rgba(107,143,113,0.15)', label: 'Medicine' },
-  vitamin_d: { icon: Sun, color: '#d4a853', bgColor: 'rgba(212,168,83,0.15)', label: 'Vitamin D' },
-  mood: { icon: Smile, color: '#c47a8f', bgColor: 'rgba(196,122,143,0.15)', label: 'Mood' },
-  weight: { icon: Scale, color: '#5b9bd5', bgColor: 'rgba(91,155,213,0.15)', label: 'Weight' },
-  height: { icon: Ruler, color: '#5b9bd5', bgColor: 'rgba(91,155,213,0.15)', label: 'Height' },
-  milestone: { icon: Star, color: '#c4703f', bgColor: 'rgba(196,112,63,0.15)', label: 'Milestone' },
-  custom: { icon: Plus, color: '#7a6f62', bgColor: 'rgba(237,230,220,0.06)', label: 'Custom' },
+function getLogTypeConfig(colors: ColorTokens): Record<LogType, LogTypeConfig> {
+  return {
+    feeding: { icon: Milk, color: colors.sky, bgColor: colors.skyDim, label: 'Feeding' },
+    diaper: { icon: Baby, color: colors.gold, bgColor: colors.goldDim, label: 'Diaper' },
+    sleep: { icon: Moon, color: colors.rose, bgColor: colors.roseDim, label: 'Sleep' },
+    temperature: { icon: Thermometer, color: colors.coral, bgColor: colors.coralDim, label: 'Temperature' },
+    medicine: { icon: Pill, color: colors.sage, bgColor: colors.sageDim, label: 'Medicine' },
+    vitamin_d: { icon: Sun, color: colors.gold, bgColor: colors.goldDim, label: 'Vitamin D' },
+    mood: { icon: Smile, color: colors.rose, bgColor: colors.roseDim, label: 'Mood' },
+    weight: { icon: Scale, color: colors.sky, bgColor: colors.skyDim, label: 'Weight' },
+    height: { icon: Ruler, color: colors.sky, bgColor: colors.skyDim, label: 'Height' },
+    milestone: { icon: Star, color: colors.copper, bgColor: colors.copperDim, label: 'Milestone' },
+    custom: { icon: Plus, color: colors.textMuted, bgColor: colors.subtleBg, label: 'Custom' },
+  }
 }
 
 const ALL_LOG_TYPES: LogType[] = [
@@ -106,6 +108,8 @@ function formatDateHeader(dateStr: string): string {
 }
 
 export default function HistoryScreen() {
+  const colors = useColors()
+  const LOG_TYPE_CONFIG = getLogTypeConfig(colors)
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -188,18 +192,13 @@ export default function HistoryScreen() {
   )
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: 8 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ChevronLeft size={22} color="#faf6f0" />
+      <View style={[styles.header, { paddingTop: 8, backgroundColor: colors.overlay, borderBottomColor: colors.border }]}>
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+          <ChevronLeft size={22} color={colors.textPrimary} />
         </Pressable>
-        <Text style={styles.headerTitle}>Log History</Text>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Log History</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -216,7 +215,7 @@ export default function HistoryScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor="#c4703f"
+            tintColor={colors.copper}
           />
         }
         showsVerticalScrollIndicator={false}
@@ -232,13 +231,15 @@ export default function HistoryScreen() {
               onPress={() => setTypeFilter('all')}
               style={[
                 styles.filterPill,
-                typeFilter === 'all' && styles.filterPillSelected,
+                { backgroundColor: colors.subtleBg, borderColor: colors.border },
+                typeFilter === 'all' && { backgroundColor: colors.copper, borderColor: colors.copper },
               ]}
             >
               <Text
                 style={[
                   styles.filterPillText,
-                  typeFilter === 'all' && styles.filterPillTextSelected,
+                  { color: colors.textMuted },
+                  typeFilter === 'all' && { color: colors.textPrimary },
                 ]}
               >
                 All
@@ -252,13 +253,15 @@ export default function HistoryScreen() {
                   onPress={() => setTypeFilter(type)}
                   style={[
                     styles.filterPill,
-                    typeFilter === type && styles.filterPillSelected,
+                    { backgroundColor: colors.subtleBg, borderColor: colors.border },
+                    typeFilter === type && { backgroundColor: colors.copper, borderColor: colors.copper },
                   ]}
                 >
                   <Text
                     style={[
                       styles.filterPillText,
-                      typeFilter === type && styles.filterPillTextSelected,
+                      { color: colors.textMuted },
+                      typeFilter === type && { color: colors.textPrimary },
                     ]}
                   >
                     {config.label}
@@ -272,7 +275,7 @@ export default function HistoryScreen() {
         {/* Loading */}
         {isLoading && (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#c4703f" />
+            <ActivityIndicator size="large" color={colors.copper} />
           </View>
         )}
 
@@ -280,7 +283,7 @@ export default function HistoryScreen() {
         {!isLoading && (!logs || logs.length === 0) && (
           <CardEntrance delay={80}>
             <GlassCard style={styles.emptyCard}>
-              <Text style={styles.emptyText}>No logs found</Text>
+              <Text style={[styles.emptyText, { color: colors.textMuted }]}>No logs found</Text>
             </GlassCard>
           </CardEntrance>
         )}
@@ -289,7 +292,7 @@ export default function HistoryScreen() {
         {!isLoading &&
           Object.entries(groupedLogs).map(([date, dateLogs]) => (
             <View key={date} style={styles.dateGroup}>
-              <Text style={styles.dateHeader}>{formatDateHeader(date)}</Text>
+              <Text style={[styles.dateHeader, { color: colors.textMuted }]}>{formatDateHeader(date)}</Text>
               <StaggerList staggerMs={50}>
                 {(dateLogs || []).map((log) => {
                   const config =
@@ -313,14 +316,14 @@ export default function HistoryScreen() {
                         </View>
                         <View style={styles.logEntryContent}>
                           <View style={styles.logEntryTop}>
-                            <Text style={styles.logEntryType}>
+                            <Text style={[styles.logEntryType, { color: colors.textPrimary }]}>
                               {config.label}
                             </Text>
-                            <Text style={styles.logEntryTime}>
+                            <Text style={[styles.logEntryTime, { color: colors.textDim }]}>
                               {format(new Date(log.logged_at), 'h:mm a')}
                             </Text>
                           </View>
-                          <Text style={styles.logEntryDetail} numberOfLines={2}>
+                          <Text style={[styles.logEntryDetail, { color: colors.textMuted }]} numberOfLines={2}>
                             {formatLogDetails(log)}
                             {log.notes ? ` - ${log.notes}` : ''}
                           </Text>
@@ -330,7 +333,7 @@ export default function HistoryScreen() {
                           style={styles.deleteButton}
                           hitSlop={8}
                         >
-                          <Trash2 size={16} color="#d4836b" />
+                          <Trash2 size={16} color={colors.coral} />
                         </Pressable>
                       </GlassCard>
                     </Pressable>
@@ -349,25 +352,25 @@ export default function HistoryScreen() {
         onRequestClose={() => setEditingLog(null)}
       >
         <KeyboardAvoidingView
-          style={historyEditStyles.overlay}
+          style={[historyEditStyles.overlay, { backgroundColor: colors.overlay }]}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-          <View style={historyEditStyles.sheet}>
+          <View style={[historyEditStyles.sheet, { backgroundColor: colors.card, borderTopColor: colors.border }]}>
             <View style={historyEditStyles.sheetHeader}>
-              <Text style={historyEditStyles.sheetTitle}>Edit Notes</Text>
+              <Text style={[historyEditStyles.sheetTitle, { color: colors.textPrimary }]}>Edit Notes</Text>
               <Pressable
                 onPress={() => setEditingLog(null)}
-                style={historyEditStyles.closeBtn}
+                style={[historyEditStyles.closeBtn, { backgroundColor: colors.subtleBg }]}
               >
-                <X size={20} color="#7a6f62" />
+                <X size={20} color={colors.textMuted} />
               </Pressable>
             </View>
             <TextInput
-              style={historyEditStyles.notesInput}
+              style={[historyEditStyles.notesInput, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
               value={editNotes}
               onChangeText={setEditNotes}
               placeholder="Add notes..."
-              placeholderTextColor="#4a4239"
+              placeholderTextColor={colors.textDim}
               multiline
               maxLength={500}
               textAlignVertical="top"
@@ -376,11 +379,12 @@ export default function HistoryScreen() {
               onPress={handleSaveEdit}
               style={[
                 historyEditStyles.saveBtn,
+                { backgroundColor: colors.copper },
                 updateLog.isPending && historyEditStyles.saveBtnDisabled,
               ]}
               disabled={updateLog.isPending}
             >
-              <Text style={historyEditStyles.saveBtnText}>
+              <Text style={[historyEditStyles.saveBtnText, { color: colors.textPrimary }]}>
                 {updateLog.isPending ? 'Saving...' : 'Save'}
               </Text>
             </Pressable>
@@ -395,16 +399,13 @@ const historyEditStyles = StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.6)',
   },
   sheet: {
-    backgroundColor: '#201c18',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 24,
     paddingBottom: 40,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.08)',
   },
   sheetHeader: {
     flexDirection: 'row',
@@ -415,31 +416,25 @@ const historyEditStyles = StyleSheet.create({
   sheetTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 18,
-    color: '#faf6f0',
   },
   closeBtn: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   notesInput: {
-    backgroundColor: 'rgba(237,230,220,0.05)',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.10)',
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#faf6f0',
     minHeight: 100,
     marginBottom: 16,
   },
   saveBtn: {
-    backgroundColor: '#c4703f',
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',
@@ -450,14 +445,12 @@ const historyEditStyles = StyleSheet.create({
   saveBtnText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
 })
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   header: {
     position: 'absolute',
@@ -470,22 +463,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingBottom: 12,
-    backgroundColor: 'rgba(18,16,14,0.9)',
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.08)',
   },
   backButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 18,
-    color: '#faf6f0',
   },
   headerSpacer: {
     width: 36,
@@ -504,21 +493,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 16,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
-  },
-  filterPillSelected: {
-    backgroundColor: '#c4703f',
-    borderColor: '#c4703f',
   },
   filterPillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 12,
-    color: '#7a6f62',
-  },
-  filterPillTextSelected: {
-    color: '#faf6f0',
   },
   loadingContainer: {
     paddingVertical: 60,
@@ -531,7 +510,6 @@ const styles = StyleSheet.create({
   emptyText: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#7a6f62',
   },
   dateGroup: {
     marginBottom: 24,
@@ -539,7 +517,6 @@ const styles = StyleSheet.create({
   dateHeader: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
     marginBottom: 8,
   },
   logEntry: {
@@ -567,17 +544,14 @@ const styles = StyleSheet.create({
   logEntryType: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#faf6f0',
   },
   logEntryTime: {
     fontFamily: 'Karla-Medium',
     fontSize: 11,
-    color: '#4a4239',
   },
   logEntryDetail: {
     fontFamily: 'Jost-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginTop: 2,
   },
   deleteButton: {

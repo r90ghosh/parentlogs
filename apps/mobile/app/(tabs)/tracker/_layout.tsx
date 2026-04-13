@@ -5,7 +5,7 @@ export default function TrackerLayout() {
     <Stack
       screenOptions={{
         headerShown: false,
-        contentStyle: { backgroundColor: '#12100e' },
+        contentStyle: { backgroundColor: 'transparent' },
       }}
     />
   )

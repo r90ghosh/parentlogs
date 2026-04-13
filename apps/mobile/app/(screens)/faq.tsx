@@ -12,15 +12,16 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import {
   X,
   ChevronDown,
   ChevronUp,
   Mail,
 } from 'lucide-react-native'
+import { LinearGradient } from 'expo-linear-gradient'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
+import { useColors } from '@/hooks/use-colors'
 
 if (
   Platform.OS === 'android' &&
@@ -129,6 +130,7 @@ const FAQ_CATEGORIES: FaqCategory[] = [
 export default function FaqScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const colors = useColors()
   const [expandedKey, setExpandedKey] = useState<string | null>(null)
 
   function toggleFaq(key: string) {
@@ -138,16 +140,11 @@ export default function FaqScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={styles.headerTitle}>FAQ</Text>
-        <Pressable onPress={() => router.back()} style={styles.closeButton}>
-          <X size={20} color="#7a6f62" />
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>FAQ</Text>
+        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
+          <X size={20} color={colors.textMuted} />
         </Pressable>
       </View>
 
@@ -161,7 +158,7 @@ export default function FaqScreen() {
       >
         {FAQ_CATEGORIES.map((category, catIndex) => (
           <CardEntrance key={category.title} delay={catIndex * 100}>
-            <Text style={styles.sectionTitle}>{category.title}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>{category.title}</Text>
             <GlassCard style={styles.section}>
               {category.items.map((item, itemIndex) => {
                 const key = `${catIndex}-${itemIndex}`
@@ -173,19 +170,19 @@ export default function FaqScreen() {
                     onPress={() => toggleFaq(key)}
                     style={[
                       styles.faqRow,
-                      !isLast && styles.faqRowBorder,
+                      !isLast && [styles.faqRowBorder, { borderBottomColor: colors.subtleBg }],
                     ]}
                   >
                     <View style={styles.faqHeader}>
-                      <Text style={styles.faqQuestion}>{item.q}</Text>
+                      <Text style={[styles.faqQuestion, { color: colors.textSecondary }]}>{item.q}</Text>
                       {isExpanded ? (
-                        <ChevronUp size={16} color="#7a6f62" />
+                        <ChevronUp size={16} color={colors.textMuted} />
                       ) : (
-                        <ChevronDown size={16} color="#7a6f62" />
+                        <ChevronDown size={16} color={colors.textMuted} />
                       )}
                     </View>
                     {isExpanded && (
-                      <Text style={styles.faqAnswer}>{item.a}</Text>
+                      <Text style={[styles.faqAnswer, { color: colors.textMuted }]}>{item.a}</Text>
                     )}
                   </Pressable>
                 )
@@ -200,19 +197,19 @@ export default function FaqScreen() {
             onPress={() =>
               Linking.openURL('mailto:info@thedadcenter.com')
             }
-            style={styles.contactCard}
+            style={[styles.contactCard, { borderColor: colors.copperDim }]}
           >
             <LinearGradient
-              colors={['rgba(196,112,63,0.12)', 'rgba(212,168,83,0.08)']}
+              colors={[colors.copperDim, colors.goldDim]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.contactGradient}
             >
-              <View style={styles.contactIconCircle}>
-                <Mail size={20} color="#c4703f" />
+              <View style={[styles.contactIconCircle, { backgroundColor: colors.copperDim }]}>
+                <Mail size={20} color={colors.copper} />
               </View>
-              <Text style={styles.contactTitle}>Still have questions?</Text>
-              <Text style={styles.contactSubtitle}>
+              <Text style={[styles.contactTitle, { color: colors.textPrimary }]}>Still have questions?</Text>
+              <Text style={[styles.contactSubtitle, { color: colors.textMuted }]}>
                 Tap to email us — we typically respond within 24 hours.
               </Text>
             </LinearGradient>
@@ -226,7 +223,7 @@ export default function FaqScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
+    backgroundColor: 'transparent',
   },
   flex: {
     flex: 1,
@@ -241,13 +238,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   closeButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -260,7 +255,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
     marginBottom: 12,
@@ -279,7 +273,6 @@ const styles = StyleSheet.create({
   },
   faqRowBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   faqHeader: {
     flexDirection: 'row',
@@ -289,14 +282,12 @@ const styles = StyleSheet.create({
   faqQuestion: {
     fontFamily: 'Karla-Medium',
     fontSize: 15,
-    color: '#ede6dc',
     flex: 1,
     marginRight: 12,
   },
   faqAnswer: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     lineHeight: 22,
     marginTop: 10,
   },
@@ -307,7 +298,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: 'rgba(196,112,63,0.15)',
   },
   contactGradient: {
     alignItems: 'center',
@@ -318,7 +308,6 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(196,112,63,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 12,
@@ -326,13 +315,11 @@ const styles = StyleSheet.create({
   contactTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 18,
-    color: '#faf6f0',
     marginBottom: 6,
   },
   contactSubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 21,
   },

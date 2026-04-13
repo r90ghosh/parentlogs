@@ -15,7 +15,6 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import {
   X,
   HelpCircle,
@@ -31,6 +30,7 @@ import { contactService } from '@/lib/services'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import * as WebBrowser from 'expo-web-browser'
+import { useColors } from '@/hooks/use-colors'
 
 if (
   Platform.OS === 'android' &&
@@ -87,6 +87,7 @@ export default function HelpScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { user, profile } = useAuth()
+  const colors = useColors()
 
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null)
   const [name, setName] = useState(profile?.full_name ?? '')
@@ -130,16 +131,11 @@ export default function HelpScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={styles.headerTitle}>Help & Support</Text>
-        <Pressable onPress={() => router.back()} style={styles.closeButton}>
-          <X size={20} color="#7a6f62" />
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Help & Support</Text>
+        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
+          <X size={20} color={colors.textMuted} />
         </Pressable>
       </View>
 
@@ -153,7 +149,7 @@ export default function HelpScreen() {
       >
         {/* FAQ Section */}
         <CardEntrance delay={0}>
-          <Text style={styles.sectionTitle}>Frequently Asked Questions</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Frequently Asked Questions</Text>
           <GlassCard style={styles.section}>
             {FAQ_ITEMS.map((item, index) => (
               <Pressable
@@ -161,19 +157,19 @@ export default function HelpScreen() {
                 onPress={() => toggleFaq(index)}
                 style={[
                   styles.faqRow,
-                  index < FAQ_ITEMS.length - 1 && styles.faqRowBorder,
+                  index < FAQ_ITEMS.length - 1 && [styles.faqRowBorder, { borderBottomColor: colors.subtleBg }],
                 ]}
               >
                 <View style={styles.faqHeader}>
-                  <Text style={styles.faqQuestion}>{item.q}</Text>
+                  <Text style={[styles.faqQuestion, { color: colors.textSecondary }]}>{item.q}</Text>
                   {expandedIdx === index ? (
-                    <ChevronUp size={16} color="#7a6f62" />
+                    <ChevronUp size={16} color={colors.textMuted} />
                   ) : (
-                    <ChevronDown size={16} color="#7a6f62" />
+                    <ChevronDown size={16} color={colors.textMuted} />
                   )}
                 </View>
                 {expandedIdx === index && (
-                  <Text style={styles.faqAnswer}>{item.a}</Text>
+                  <Text style={[styles.faqAnswer, { color: colors.textMuted }]}>{item.a}</Text>
                 )}
               </Pressable>
             ))}
@@ -182,42 +178,42 @@ export default function HelpScreen() {
 
         {/* Contact Form Section */}
         <CardEntrance delay={120}>
-          <Text style={styles.sectionTitle}>Contact Us</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Contact Us</Text>
           {submitted ? (
             <GlassCard style={styles.successCard}>
-              <CheckCircle size={40} color="#6b8f71" />
-              <Text style={styles.successTitle}>Message Sent!</Text>
-              <Text style={styles.successDescription}>
+              <CheckCircle size={40} color={colors.sage} />
+              <Text style={[styles.successTitle, { color: colors.textPrimary }]}>Message Sent!</Text>
+              <Text style={[styles.successDescription, { color: colors.textMuted }]}>
                 Thanks for reaching out. We typically respond within 24 hours.
               </Text>
             </GlassCard>
           ) : (
             <GlassCard style={styles.formCard}>
               <View style={styles.fieldGroup}>
-                <Text style={styles.fieldLabel}>Name</Text>
+                <Text style={[styles.fieldLabel, { color: colors.textMuted }]}>Name</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                   value={name}
                   onChangeText={setName}
                   placeholder="Your name"
-                  placeholderTextColor="#4a4239"
+                  placeholderTextColor={colors.textDim}
                   autoCapitalize="words"
                 />
               </View>
               <View style={styles.fieldGroup}>
-                <Text style={styles.fieldLabel}>Email</Text>
+                <Text style={[styles.fieldLabel, { color: colors.textMuted }]}>Email</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                   value={email}
                   onChangeText={setEmail}
                   placeholder="your@email.com"
-                  placeholderTextColor="#4a4239"
+                  placeholderTextColor={colors.textDim}
                   keyboardType="email-address"
                   autoCapitalize="none"
                 />
               </View>
               <View style={styles.fieldGroup}>
-                <Text style={styles.fieldLabel}>Category</Text>
+                <Text style={[styles.fieldLabel, { color: colors.textMuted }]}>Category</Text>
                 <ScrollView
                   horizontal
                   showsHorizontalScrollIndicator={false}
@@ -229,13 +225,15 @@ export default function HelpScreen() {
                       onPress={() => setCategory(cat)}
                       style={[
                         styles.categoryPill,
-                        category === cat && styles.categoryPillSelected,
+                        { backgroundColor: colors.subtleBg, borderColor: colors.border },
+                        category === cat && { backgroundColor: colors.copperDim, borderColor: colors.copper },
                       ]}
                     >
                       <Text
                         style={[
                           styles.categoryPillText,
-                          category === cat && styles.categoryPillTextSelected,
+                          { color: colors.textMuted },
+                          category === cat && { color: colors.copper },
                         ]}
                       >
                         {cat}
@@ -245,23 +243,23 @@ export default function HelpScreen() {
                 </ScrollView>
               </View>
               <View style={styles.fieldGroup}>
-                <Text style={styles.fieldLabel}>Subject</Text>
+                <Text style={[styles.fieldLabel, { color: colors.textMuted }]}>Subject</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                   value={subject}
                   onChangeText={setSubject}
                   placeholder="What's this about?"
-                  placeholderTextColor="#4a4239"
+                  placeholderTextColor={colors.textDim}
                 />
               </View>
               <View style={styles.fieldGroup}>
-                <Text style={styles.fieldLabel}>Message</Text>
+                <Text style={[styles.fieldLabel, { color: colors.textMuted }]}>Message</Text>
                 <TextInput
-                  style={[styles.input, styles.textArea]}
+                  style={[styles.input, styles.textArea, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                   value={message}
                   onChangeText={setMessage}
                   placeholder="Tell us how we can help..."
-                  placeholderTextColor="#4a4239"
+                  placeholderTextColor={colors.textDim}
                   multiline
                   numberOfLines={4}
                   textAlignVertical="top"
@@ -272,15 +270,16 @@ export default function HelpScreen() {
                 disabled={isSubmitting}
                 style={[
                   styles.submitButton,
+                  { backgroundColor: colors.copper },
                   isSubmitting && styles.submitButtonDisabled,
                 ]}
               >
                 {isSubmitting ? (
-                  <ActivityIndicator color="#faf6f0" />
+                  <ActivityIndicator color={colors.textPrimary} />
                 ) : (
                   <>
-                    <Send size={16} color="#faf6f0" />
-                    <Text style={styles.submitButtonText}>Send Message</Text>
+                    <Send size={16} color={colors.textPrimary} />
+                    <Text style={[styles.submitButtonText, { color: colors.textPrimary }]}>Send Message</Text>
                   </>
                 )}
               </Pressable>
@@ -290,7 +289,7 @@ export default function HelpScreen() {
 
         {/* Quick Links Section */}
         <CardEntrance delay={240}>
-          <Text style={styles.sectionTitle}>Quick Links</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Quick Links</Text>
           <GlassCard style={styles.section}>
             <Pressable
               onPress={() =>
@@ -299,16 +298,17 @@ export default function HelpScreen() {
               style={({ pressed }) => [
                 styles.linkRow,
                 styles.linkRowBorder,
-                pressed && styles.linkRowPressed,
+                { borderBottomColor: colors.subtleBg },
+                pressed && { backgroundColor: colors.pressed },
               ]}
             >
               <View style={styles.linkRowLeft}>
-                <ExternalLink size={18} color="#7a6f62" />
-                <Text style={styles.linkRowLabel}>Privacy Policy</Text>
+                <ExternalLink size={18} color={colors.textMuted} />
+                <Text style={[styles.linkRowLabel, { color: colors.textSecondary }]}>Privacy Policy</Text>
               </View>
               <ChevronDown
                 size={16}
-                color="#4a4239"
+                color={colors.textDim}
                 style={{ transform: [{ rotate: '-90deg' }] }}
               />
             </Pressable>
@@ -319,16 +319,17 @@ export default function HelpScreen() {
               style={({ pressed }) => [
                 styles.linkRow,
                 styles.linkRowBorder,
-                pressed && styles.linkRowPressed,
+                { borderBottomColor: colors.subtleBg },
+                pressed && { backgroundColor: colors.pressed },
               ]}
             >
               <View style={styles.linkRowLeft}>
-                <ExternalLink size={18} color="#7a6f62" />
-                <Text style={styles.linkRowLabel}>Terms of Service</Text>
+                <ExternalLink size={18} color={colors.textMuted} />
+                <Text style={[styles.linkRowLabel, { color: colors.textSecondary }]}>Terms of Service</Text>
               </View>
               <ChevronDown
                 size={16}
-                color="#4a4239"
+                color={colors.textDim}
                 style={{ transform: [{ rotate: '-90deg' }] }}
               />
             </Pressable>
@@ -338,16 +339,16 @@ export default function HelpScreen() {
               }
               style={({ pressed }) => [
                 styles.linkRow,
-                pressed && styles.linkRowPressed,
+                pressed && { backgroundColor: colors.pressed },
               ]}
             >
               <View style={styles.linkRowLeft}>
-                <Mail size={18} color="#7a6f62" />
-                <Text style={styles.linkRowLabel}>Email Support</Text>
+                <Mail size={18} color={colors.textMuted} />
+                <Text style={[styles.linkRowLabel, { color: colors.textSecondary }]}>Email Support</Text>
               </View>
               <ChevronDown
                 size={16}
-                color="#4a4239"
+                color={colors.textDim}
                 style={{ transform: [{ rotate: '-90deg' }] }}
               />
             </Pressable>
@@ -361,7 +362,7 @@ export default function HelpScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
+    backgroundColor: 'transparent',
   },
   flex: {
     flex: 1,
@@ -376,13 +377,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   closeButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -395,7 +394,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
     marginBottom: 12,
@@ -414,7 +412,6 @@ const styles = StyleSheet.create({
   },
   faqRowBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   faqHeader: {
     flexDirection: 'row',
@@ -424,14 +421,12 @@ const styles = StyleSheet.create({
   faqQuestion: {
     fontFamily: 'Karla-Medium',
     fontSize: 15,
-    color: '#ede6dc',
     flex: 1,
     marginRight: 12,
   },
   faqAnswer: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     lineHeight: 22,
     marginTop: 10,
   },
@@ -447,26 +442,21 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#7a6f62',
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#201c18',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#ede6dc',
   },
   textArea: {
     minHeight: 100,
     paddingTop: 14,
   },
   submitButton: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     flexDirection: 'row',
@@ -481,7 +471,6 @@ const styles = StyleSheet.create({
   submitButtonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
 
   // Category pills
@@ -493,21 +482,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 16,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
-  },
-  categoryPillSelected: {
-    backgroundColor: 'rgba(196,112,63,0.15)',
-    borderColor: '#c4703f',
   },
   categoryPillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#7a6f62',
-  },
-  categoryPillTextSelected: {
-    color: '#c4703f',
   },
 
   // Success
@@ -520,12 +499,10 @@ const styles = StyleSheet.create({
   successTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 22,
-    color: '#faf6f0',
   },
   successDescription: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -540,10 +517,6 @@ const styles = StyleSheet.create({
   },
   linkRowBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
-  },
-  linkRowPressed: {
-    backgroundColor: 'rgba(237,230,220,0.04)',
   },
   linkRowLeft: {
     flexDirection: 'row',
@@ -553,6 +526,5 @@ const styles = StyleSheet.create({
   linkRowLabel: {
     fontFamily: 'Karla-Medium',
     fontSize: 15,
-    color: '#ede6dc',
   },
 })

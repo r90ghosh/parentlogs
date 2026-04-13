@@ -11,12 +11,13 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { useRouter, useLocalSearchParams } from 'expo-router'
-import { LinearGradient } from 'expo-linear-gradient'
 import { ArrowLeft, Mail, CheckCircle } from 'lucide-react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { supabase } from '@/lib/supabase'
+import { useColors } from '@/hooks/use-colors'
 
 export default function ForgotPasswordScreen() {
+  const colors = useColors()
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const params = useLocalSearchParams<{ email?: string }>()
@@ -52,26 +53,22 @@ export default function ForgotPasswordScreen() {
 
   if (sent) {
     return (
-      <View style={styles.container}>
-        <LinearGradient
-          colors={['#12100e', '#1a1714', '#12100e']}
-          style={StyleSheet.absoluteFill}
-        />
+      <View style={[styles.container, { backgroundColor: 'transparent' }]}>
         <View
           style={[
             styles.centeredContent,
             { paddingTop: insets.top + 60, paddingBottom: insets.bottom + 24 },
           ]}
         >
-          <View style={styles.successIconCircle}>
-            <CheckCircle size={32} color="#6b8f71" />
+          <View style={[styles.successIconCircle, { backgroundColor: colors.sageDim }]}>
+            <CheckCircle size={32} color={colors.sage} />
           </View>
-          <Text style={styles.successTitle}>Check your email</Text>
-          <Text style={styles.successDescription}>
+          <Text style={[styles.successTitle, { color: colors.textPrimary }]}>Check your email</Text>
+          <Text style={[styles.successDescription, { color: colors.textMuted }]}>
             We sent a password reset link to{'\n'}
-            <Text style={styles.successEmail}>{email.trim()}</Text>
+            <Text style={[styles.successEmail, { color: colors.textSecondary }]}>{email.trim()}</Text>
           </Text>
-          <Text style={styles.successHint}>
+          <Text style={[styles.successHint, { color: colors.textDim }]}>
             Click the link to reset your password in your browser. Once done,
             come back here and sign in with your new password.
           </Text>
@@ -80,10 +77,11 @@ export default function ForgotPasswordScreen() {
             onPress={() => router.back()}
             style={({ pressed }) => [
               styles.backToLoginButton,
+              { backgroundColor: colors.card, borderColor: colors.borderHover },
               pressed && styles.buttonPressed,
             ]}
           >
-            <Text style={styles.backToLoginText}>Back to Login</Text>
+            <Text style={[styles.backToLoginText, { color: colors.copper }]}>Back to Login</Text>
           </Pressable>
         </View>
       </View>
@@ -91,16 +89,11 @@ export default function ForgotPasswordScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft size={20} color="#ede6dc" />
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+          <ArrowLeft size={20} color={colors.textSecondary} />
         </Pressable>
       </View>
 
@@ -117,32 +110,32 @@ export default function ForgotPasswordScreen() {
         >
           {/* Icon + title */}
           <View style={styles.iconContainer}>
-            <View style={styles.iconCircle}>
-              <Mail size={28} color="#c4703f" />
+            <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>
+              <Mail size={28} color={colors.copper} />
             </View>
-            <Text style={styles.title}>Forgot Password?</Text>
-            <Text style={styles.description}>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>Forgot Password?</Text>
+            <Text style={[styles.description, { color: colors.textMuted }]}>
               Enter your email and we'll send you a link to reset your password.
             </Text>
           </View>
 
           {/* Error */}
           {error && (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{error}</Text>
+            <View style={[styles.errorContainer, { backgroundColor: colors.coralDim, borderColor: colors.coral }]}>
+              <Text style={[styles.errorText, { color: colors.coral }]}>{error}</Text>
             </View>
           )}
 
           {/* Form */}
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Email</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>Email</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                 value={email}
                 onChangeText={setEmail}
                 placeholder="you@example.com"
-                placeholderTextColor="#4a4239"
+                placeholderTextColor={colors.textDim}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoComplete="email"
@@ -156,14 +149,15 @@ export default function ForgotPasswordScreen() {
               disabled={isLoading}
               style={({ pressed }) => [
                 styles.button,
+                { backgroundColor: colors.copper },
                 pressed && styles.buttonPressed,
                 isLoading && styles.buttonDisabled,
               ]}
             >
               {isLoading ? (
-                <ActivityIndicator color="#faf6f0" />
+                <ActivityIndicator color={colors.textPrimary} />
               ) : (
-                <Text style={styles.buttonText}>Send Reset Link</Text>
+                <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Send Reset Link</Text>
               )}
             </Pressable>
           </View>
@@ -176,7 +170,6 @@ export default function ForgotPasswordScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   flex: {
     flex: 1,
@@ -191,7 +184,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -208,7 +200,6 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: 'rgba(196,112,63,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
@@ -216,22 +207,18 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 24,
-    color: '#faf6f0',
     marginBottom: 12,
   },
   description: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 22,
     paddingHorizontal: 16,
   },
   errorContainer: {
-    backgroundColor: 'rgba(212,131,107,0.12)',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(212,131,107,0.2)',
     paddingHorizontal: 16,
     paddingVertical: 12,
     marginBottom: 20,
@@ -239,7 +226,6 @@ const styles = StyleSheet.create({
   errorText: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#d4836b',
   },
   form: {
     gap: 20,
@@ -250,21 +236,16 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#ede6dc',
   },
   input: {
-    backgroundColor: '#201c18',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#ede6dc',
   },
   button: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -280,7 +261,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
 
   // Success state
@@ -294,7 +274,6 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: 'rgba(107,143,113,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 24,
@@ -302,40 +281,33 @@ const styles = StyleSheet.create({
   successTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 24,
-    color: '#faf6f0',
     marginBottom: 12,
   },
   successDescription: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 24,
     marginBottom: 8,
   },
   successEmail: {
-    color: '#ede6dc',
     fontFamily: 'Jost-Medium',
   },
   successHint: {
     fontFamily: 'Karla-Regular',
     fontSize: 13,
-    color: '#4a4239',
     textAlign: 'center',
     lineHeight: 20,
     marginBottom: 32,
   },
   backToLoginButton: {
-    backgroundColor: '#201c18',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.12)',
     paddingVertical: 14,
     paddingHorizontal: 32,
   },
   backToLoginText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 15,
-    color: '#c4703f',
   },
 })

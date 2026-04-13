@@ -9,10 +9,10 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { ArrowLeft, Sliders } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { useDadProfile, useUpsertDadProfile } from '@/hooks/use-journey'
+import { useColors } from '@/hooks/use-colors'
 
 // Work situation options
 const WORK_SITUATIONS = [
@@ -62,12 +62,13 @@ function supportValueToFamilyNearby(value: string): boolean {
 interface SectionCardProps {
   title: string
   children: React.ReactNode
+  colors: ReturnType<typeof useColors>
 }
 
-function SectionCard({ title, children }: SectionCardProps) {
+function SectionCard({ title, children, colors }: SectionCardProps) {
   return (
     <GlassCard style={sectionStyles.card}>
-      <Text style={sectionStyles.title}>{title}</Text>
+      <Text style={[sectionStyles.title, { color: colors.textMuted }]}>{title}</Text>
       {children}
     </GlassCard>
   )
@@ -80,7 +81,6 @@ const sectionStyles = StyleSheet.create({
   title: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 1,
     marginBottom: 12,
@@ -92,9 +92,10 @@ interface PillGroupProps {
   selected: string | null
   onSelect: (value: string) => void
   wrap?: boolean
+  colors: ReturnType<typeof useColors>
 }
 
-function PillGroup({ options, selected, onSelect, wrap = true }: PillGroupProps) {
+function PillGroup({ options, selected, onSelect, wrap = true, colors }: PillGroupProps) {
   return (
     <View style={[pillStyles.row, wrap && pillStyles.wrap]}>
       {options.map((opt) => {
@@ -105,13 +106,15 @@ function PillGroup({ options, selected, onSelect, wrap = true }: PillGroupProps)
             onPress={() => onSelect(opt.value)}
             style={[
               pillStyles.pill,
-              isSelected ? pillStyles.pillSelected : pillStyles.pillUnselected,
+              isSelected
+                ? { backgroundColor: colors.copperDim, borderWidth: 1, borderColor: colors.copper }
+                : { backgroundColor: colors.subtleBg, borderWidth: 1, borderColor: colors.textDim },
             ]}
           >
             <Text
               style={[
                 pillStyles.text,
-                isSelected ? pillStyles.textSelected : pillStyles.textUnselected,
+                { color: isSelected ? colors.copper : colors.textMuted },
               ]}
             >
               {opt.label}
@@ -127,9 +130,10 @@ interface MultiPillGroupProps {
   options: { value: string; label: string }[]
   selected: string[]
   onToggle: (value: string) => void
+  colors: ReturnType<typeof useColors>
 }
 
-function MultiPillGroup({ options, selected, onToggle }: MultiPillGroupProps) {
+function MultiPillGroup({ options, selected, onToggle, colors }: MultiPillGroupProps) {
   return (
     <View style={[pillStyles.row, pillStyles.wrap]}>
       {options.map((opt) => {
@@ -140,13 +144,15 @@ function MultiPillGroup({ options, selected, onToggle }: MultiPillGroupProps) {
             onPress={() => onToggle(opt.value)}
             style={[
               pillStyles.pill,
-              isSelected ? pillStyles.pillSelected : pillStyles.pillUnselected,
+              isSelected
+                ? { backgroundColor: colors.copperDim, borderWidth: 1, borderColor: colors.copper }
+                : { backgroundColor: colors.subtleBg, borderWidth: 1, borderColor: colors.textDim },
             ]}
           >
             <Text
               style={[
                 pillStyles.text,
-                isSelected ? pillStyles.textSelected : pillStyles.textUnselected,
+                { color: isSelected ? colors.copper : colors.textMuted },
               ]}
             >
               {opt.label}
@@ -171,31 +177,16 @@ const pillStyles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 20,
   },
-  pillSelected: {
-    backgroundColor: 'rgba(196,112,63,0.18)',
-    borderWidth: 1,
-    borderColor: '#c4703f',
-  },
-  pillUnselected: {
-    backgroundColor: 'rgba(237,230,220,0.06)',
-    borderWidth: 1,
-    borderColor: '#4a4239',
-  },
   text: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-  },
-  textSelected: {
-    color: '#c4703f',
-  },
-  textUnselected: {
-    color: '#7a6f62',
   },
 })
 
 export default function PersonalizeScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const colors = useColors()
   const { data: profile, isLoading: profileLoading } = useDadProfile()
   const upsertProfile = useUpsertDadProfile()
 
@@ -241,17 +232,12 @@ export default function PersonalizeScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft size={20} color="#ede6dc" />
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+          <ArrowLeft size={20} color={colors.textSecondary} />
         </Pressable>
-        <Text style={styles.headerTitle}>Personalize</Text>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Personalize</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -264,29 +250,30 @@ export default function PersonalizeScreen() {
       >
         {/* Icon */}
         <View style={styles.iconContainer}>
-          <View style={styles.iconCircle}>
-            <Sliders size={28} color="#c4703f" />
+          <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>
+            <Sliders size={28} color={colors.copper} />
           </View>
-          <Text style={styles.iconDescription}>
+          <Text style={[styles.iconDescription, { color: colors.textMuted }]}>
             Tell us a bit about yourself so we can tailor your experience.
           </Text>
         </View>
 
         {profileLoading ? (
-          <ActivityIndicator color="#c4703f" style={styles.loader} />
+          <ActivityIndicator color={colors.copper} style={styles.loader} />
         ) : (
           <View style={styles.form}>
             {/* Work Situation */}
-            <SectionCard title="Work Situation">
+            <SectionCard title="Work Situation" colors={colors}>
               <PillGroup
                 options={WORK_SITUATIONS}
                 selected={workSituation}
                 onSelect={setWorkSituation}
+                colors={colors}
               />
             </SectionCard>
 
             {/* First Time Dad */}
-            <SectionCard title="First Time Dad">
+            <SectionCard title="First Time Dad" colors={colors}>
               <PillGroup
                 options={[
                   { value: 'yes', label: 'Yes' },
@@ -297,40 +284,44 @@ export default function PersonalizeScreen() {
                 }
                 onSelect={(v) => setIsFirstTimeDad(v === 'yes')}
                 wrap={false}
+                colors={colors}
               />
             </SectionCard>
 
             {/* Primary Concerns */}
-            <SectionCard title="Primary Concerns">
+            <SectionCard title="Primary Concerns" colors={colors}>
               <MultiPillGroup
                 options={CONCERN_OPTIONS}
                 selected={concerns}
                 onToggle={toggleConcern}
+                colors={colors}
               />
             </SectionCard>
 
             {/* Partner Relationship */}
-            <SectionCard title="Partner Relationship">
+            <SectionCard title="Partner Relationship" colors={colors}>
               <PillGroup
                 options={PARTNER_RELATIONSHIP_OPTIONS}
                 selected={partnerRelationship}
                 onSelect={setPartnerRelationship}
+                colors={colors}
               />
             </SectionCard>
 
             {/* Support System */}
-            <SectionCard title="Support System">
+            <SectionCard title="Support System" colors={colors}>
               <PillGroup
                 options={SUPPORT_OPTIONS}
                 selected={supportSystem}
                 onSelect={setSupportSystem}
+                colors={colors}
               />
             </SectionCard>
 
             {/* Error */}
             {upsertProfile.isError && (
-              <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>
+              <View style={[styles.errorContainer, { backgroundColor: colors.coralDim, borderColor: 'rgba(212,131,107,0.2)' }]}>
+                <Text style={[styles.errorText, { color: colors.coral }]}>
                   Something went wrong. Please try again.
                 </Text>
               </View>
@@ -342,14 +333,15 @@ export default function PersonalizeScreen() {
               disabled={upsertProfile.isPending}
               style={({ pressed }) => [
                 styles.button,
+                { backgroundColor: colors.copper },
                 pressed && styles.buttonPressed,
                 upsertProfile.isPending && styles.buttonDisabled,
               ]}
             >
               {upsertProfile.isPending ? (
-                <ActivityIndicator color="#faf6f0" />
+                <ActivityIndicator color={colors.textPrimary} />
               ) : (
-                <Text style={styles.buttonText}>Save</Text>
+                <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Save</Text>
               )}
             </Pressable>
           </View>
@@ -362,7 +354,7 @@ export default function PersonalizeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
+    backgroundColor: 'transparent',
   },
   header: {
     flexDirection: 'row',
@@ -375,14 +367,12 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   headerSpacer: {
     width: 36,
@@ -400,7 +390,6 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: 'rgba(196,112,63,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -408,7 +397,6 @@ const styles = StyleSheet.create({
   iconDescription: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 22,
     paddingHorizontal: 16,
@@ -420,20 +408,16 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   errorContainer: {
-    backgroundColor: 'rgba(212,131,107,0.12)',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(212,131,107,0.2)',
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   errorText: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#d4836b',
   },
   button: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -449,6 +433,5 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
 })

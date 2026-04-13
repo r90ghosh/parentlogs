@@ -8,6 +8,7 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
+import { useColors } from '@/hooks/use-colors'
 
 interface CopperDividerProps {
   delay?: number
@@ -16,6 +17,7 @@ interface CopperDividerProps {
 
 export function CopperDivider({ delay = 0, width = '100%' }: CopperDividerProps) {
   const reducedMotion = useReducedMotion()
+  const colors = useColors()
   const lineProgress = useSharedValue(reducedMotion ? 1 : 0)
   const dotOpacity = useSharedValue(reducedMotion ? 0 : 1)
 
@@ -44,8 +46,8 @@ export function CopperDivider({ delay = 0, width = '100%' }: CopperDividerProps)
 
   return (
     <View style={[styles.container, { width }]}>
-      <Animated.View style={[styles.line, lineStyle]} />
-      <Animated.View style={[styles.dot, dotStyle]} />
+      <Animated.View style={[styles.line, { backgroundColor: colors.copper }, lineStyle]} />
+      <Animated.View style={[styles.dot, { backgroundColor: colors.gold }, dotStyle]} />
     </View>
   )
 }
@@ -58,14 +60,12 @@ const styles = StyleSheet.create({
   },
   line: {
     height: 1,
-    backgroundColor: '#c4703f',
   },
   dot: {
     position: 'absolute',
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#d4a853',
     marginLeft: -3,
   },
 })

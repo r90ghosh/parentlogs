@@ -1,13 +1,14 @@
 import { View, Text, Pressable, StyleSheet, Share } from 'react-native'
 import { useRouter } from 'expo-router'
-import { LinearGradient } from 'expo-linear-gradient'
 import { useAuth } from '@/components/providers/AuthProvider'
 import * as Haptics from 'expo-haptics'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { GlassCard } from '@/components/glass'
 import { UserPlus } from 'lucide-react-native'
+import { useColors } from '@/hooks/use-colors'
 
 export default function ReadyScreen() {
+  const colors = useColors()
   const router = useRouter()
   const { refreshProfile, family } = useAuth()
 
@@ -30,25 +31,21 @@ export default function ReadyScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#201c18', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <View style={styles.content}>
         <Animated.View
           entering={FadeInDown.delay(200).springify().damping(12)}
           style={styles.emojiContainer}
         >
-          <Text style={styles.emoji}>🎉</Text>
+          <Text style={styles.emoji}>{'\u{1F389}'}</Text>
         </Animated.View>
 
         <Animated.View
           entering={FadeInDown.delay(400).springify().damping(12)}
         >
-          <Text style={styles.step}>Step 4 of 4</Text>
-          <Text style={styles.title}>You're all set!</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.step, { color: colors.copper }]}>Step 4 of 4</Text>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>You're all set!</Text>
+          <Text style={[styles.subtitle, { color: colors.textMuted }]}>
             Your personalized dashboard, weekly briefings, and task timeline are
             ready. Welcome to The Dad Center.
           </Text>
@@ -59,14 +56,14 @@ export default function ReadyScreen() {
           style={styles.features}
         >
           {[
-            { icon: '📋', text: 'Weekly briefings tailored to your timeline' },
-            { icon: '✅', text: 'Tasks organized by trimester and phase' },
-            { icon: '💰', text: 'Budget planner with real pricing data' },
-            { icon: '📊', text: 'Baby development tracker' },
+            { icon: '\u{1F4CB}', text: 'Weekly briefings tailored to your timeline' },
+            { icon: '\u2705', text: 'Tasks organized by trimester and phase' },
+            { icon: '\u{1F4B0}', text: 'Budget planner with real pricing data' },
+            { icon: '\u{1F4CA}', text: 'Baby development tracker' },
           ].map((feature, i) => (
-            <View key={i} style={styles.featureRow}>
+            <View key={i} style={[styles.featureRow, { backgroundColor: colors.glassBg, borderColor: colors.subtleBg }]}>
               <Text style={styles.featureIcon}>{feature.icon}</Text>
-              <Text style={styles.featureText}>{feature.text}</Text>
+              <Text style={[styles.featureText, { color: colors.textSecondary }]}>{feature.text}</Text>
             </View>
           ))}
         </Animated.View>
@@ -76,24 +73,25 @@ export default function ReadyScreen() {
           entering={FadeInDown.delay(750).springify().damping(12)}
           style={styles.inviteContainer}
         >
-          <GlassCard style={styles.inviteCard}>
-            <View style={styles.inviteAccent} />
+          <GlassCard style={[styles.inviteCard, { borderColor: colors.goldGlow }]}>
+            <View style={[styles.inviteAccent, { backgroundColor: colors.gold }]} />
             <View style={styles.inviteInner}>
               <View style={styles.inviteHeader}>
-                <UserPlus size={18} color="#d4a853" />
-                <Text style={styles.inviteTitle}>Invite Your Partner</Text>
+                <UserPlus size={18} color={colors.gold} />
+                <Text style={[styles.inviteTitle, { color: colors.textPrimary }]}>Invite Your Partner</Text>
               </View>
-              <Text style={styles.inviteSubtitle}>
+              <Text style={[styles.inviteSubtitle, { color: colors.textMuted }]}>
                 Share access — one subscription covers both of you
               </Text>
               <Pressable
                 onPress={handleShareInvite}
                 style={({ pressed }) => [
                   styles.shareButton,
+                  { backgroundColor: colors.goldDim, borderColor: colors.goldGlow },
                   pressed && styles.shareButtonPressed,
                 ]}
               >
-                <Text style={styles.shareButtonText}>Share Invite</Text>
+                <Text style={[styles.shareButtonText, { color: colors.gold }]}>Share Invite</Text>
               </Pressable>
             </View>
           </GlassCard>
@@ -106,12 +104,13 @@ export default function ReadyScreen() {
             onPress={handleStart}
             style={({ pressed }) => [
               styles.button,
+              { backgroundColor: colors.copper },
               pressed && styles.buttonPressed,
             ]}
           >
-            <Text style={styles.buttonText}>I'm Ready</Text>
+            <Text style={[styles.buttonText, { color: colors.textPrimary }]}>I'm Ready</Text>
           </Pressable>
-          <Text style={styles.disclaimerText}>
+          <Text style={[styles.disclaimerText, { color: colors.textDim }]}>
             The Dad Center provides educational information only and is not a substitute for medical advice. Always consult your healthcare provider.
           </Text>
         </Animated.View>
@@ -123,7 +122,6 @@ export default function ReadyScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   content: {
     flex: 1,
@@ -140,7 +138,6 @@ const styles = StyleSheet.create({
   step: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#c4703f',
     marginBottom: 12,
     textTransform: 'uppercase',
     letterSpacing: 1.5,
@@ -149,14 +146,12 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 32,
-    color: '#faf6f0',
     textAlign: 'center',
     marginBottom: 12,
   },
   subtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 24,
   },
@@ -172,11 +167,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     flexDirection: 'row',
     padding: 0,
-    borderColor: 'rgba(212,168,83,0.2)',
   },
   inviteAccent: {
     width: 3,
-    backgroundColor: '#d4a853',
     borderTopLeftRadius: 12,
     borderBottomLeftRadius: 12,
   },
@@ -193,19 +186,15 @@ const styles = StyleSheet.create({
   inviteTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   inviteSubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     marginBottom: 14,
     lineHeight: 20,
   },
   shareButton: {
-    backgroundColor: 'rgba(212,168,83,0.15)',
     borderWidth: 1,
-    borderColor: 'rgba(212,168,83,0.3)',
     borderRadius: 8,
     paddingVertical: 10,
     alignItems: 'center',
@@ -216,18 +205,15 @@ const styles = StyleSheet.create({
   shareButtonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#d4a853',
   },
   featureRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
-    backgroundColor: 'rgba(32,28,24,0.6)',
     borderRadius: 12,
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.06)',
   },
   featureIcon: {
     fontSize: 20,
@@ -235,11 +221,9 @@ const styles = StyleSheet.create({
   featureText: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#ede6dc',
     flex: 1,
   },
   button: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -250,12 +234,10 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   disclaimerText: {
     fontFamily: 'Karla-Regular',
     fontSize: 11,
-    color: '#4a4239',
     textAlign: 'center',
     marginTop: 16,
     paddingHorizontal: 20,

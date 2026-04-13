@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { View, Text, Animated, StyleSheet } from 'react-native'
+import { useColors } from '@/hooks/use-colors'
 
 interface BriefingProgressBarProps {
   week: number
@@ -7,6 +8,7 @@ interface BriefingProgressBarProps {
 }
 
 export function BriefingProgressBar({ week, isPregnancy }: BriefingProgressBarProps) {
+  const colors = useColors()
   const total = isPregnancy ? 40 : 104
   const progress = Math.min(Math.max(week / total, 0), 1)
 
@@ -22,13 +24,14 @@ export function BriefingProgressBar({ week, isPregnancy }: BriefingProgressBarPr
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>
+      <Text style={[styles.label, { color: colors.textMuted }]}>
         Week {week} of {total}
       </Text>
-      <View style={styles.track}>
+      <View style={[styles.track, { backgroundColor: colors.textDim }]}>
         <Animated.View
           style={[
             styles.fill,
+            { backgroundColor: colors.copper },
             {
               width: animWidth.interpolate({
                 inputRange: [0, 1],
@@ -49,18 +52,15 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Karla-Medium',
     fontSize: 12,
-    color: '#7a6f62',
     marginBottom: 6,
   },
   track: {
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#4a4239',
     overflow: 'hidden',
   },
   fill: {
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#c4703f',
   },
 })

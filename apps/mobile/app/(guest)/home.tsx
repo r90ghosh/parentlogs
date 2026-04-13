@@ -9,19 +9,17 @@ import { Link } from 'expo-router'
 import { BrandLogoIcon } from '@/components/BrandLogo'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
-import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated'
+import Animated, { FadeIn } from 'react-native-reanimated'
 import {
   BookOpen,
   CheckSquare,
   Activity,
   DollarSign,
-  Check,
-  Crown,
-  Sparkles,
   ArrowRight,
 } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance, StaggerList } from '@/components/animations'
+import { useColors } from '@/hooks/use-colors'
 
 const FEATURES = [
   {
@@ -78,7 +76,7 @@ const APP_HIGHLIGHTS = [
     icon: CheckSquare,
   },
   {
-    week: '0–3 Months',
+    week: '0\u20133 Months',
     title: 'The Fourth Trimester',
     quote: 'Set up feeding station. Learn swaddle technique. Track feeds and diapers. Split night shifts fairly. — From day one, you know what to do.',
     icon: Activity,
@@ -86,18 +84,14 @@ const APP_HIGHLIGHTS = [
 ]
 
 export default function GuestHome() {
+  const colors = useColors()
   const insets = useSafeAreaInsets()
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <View style={styles.orbContainer} pointerEvents="none">
-        <View style={styles.orbCopper} />
-        <View style={styles.orbGold} />
+        <View style={[styles.orbCopper, { backgroundColor: colors.copperDim }]} />
+        <View style={[styles.orbGold, { backgroundColor: colors.goldDim }]} />
       </View>
 
       <ScrollView
@@ -113,13 +107,13 @@ export default function GuestHome() {
       >
         {/* Hero */}
         <Animated.View entering={FadeIn.duration(600)} style={styles.heroSection}>
-          <Text style={styles.preLabel}>FOR MODERN DADS</Text>
+          <Text style={[styles.preLabel, { color: colors.copper }]}>FOR MODERN DADS</Text>
           <BrandLogoIcon size={56} />
-          <Text style={styles.heroTitle}>The Dad Center</Text>
-          <Text style={styles.heroSubtitle}>
+          <Text style={[styles.heroTitle, { color: colors.textPrimary }]}>The Dad Center</Text>
+          <Text style={[styles.heroSubtitle, { color: colors.copper }]}>
             The operating system for modern fatherhood
           </Text>
-          <Text style={styles.heroDescription}>
+          <Text style={[styles.heroDescription, { color: colors.textMuted }]}>
             Week-by-week guidance, actionable tasks, and zero fluff. Finally, a
             parenting app that respects your intelligence.
           </Text>
@@ -127,22 +121,22 @@ export default function GuestHome() {
           <Link href="/(auth)/signup" asChild>
             <Pressable style={({ pressed }) => [styles.ctaWrapper, pressed && styles.ctaPressed]}>
               <LinearGradient
-                colors={['#c4703f', '#d4a853']}
+                colors={colors.ctaGradient as unknown as [string, string]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={styles.ctaGradient}
               >
-                <Text style={styles.ctaText}>Get Started Free</Text>
-                <ArrowRight size={18} color="#12100e" />
+                <Text style={[styles.ctaText, { color: colors.bg }]}>Get Started Free</Text>
+                <ArrowRight size={18} color={colors.bg} />
               </LinearGradient>
             </Pressable>
           </Link>
 
           <View style={styles.signInRow}>
-            <Text style={styles.signInLabel}>Already have an account? </Text>
+            <Text style={[styles.signInLabel, { color: colors.textMuted }]}>Already have an account? </Text>
             <Link href="/(auth)/login" asChild>
               <Pressable>
-                <Text style={styles.signInLink}>Sign In</Text>
+                <Text style={[styles.signInLink, { color: colors.copper }]}>Sign In</Text>
               </Pressable>
             </Link>
           </View>
@@ -154,8 +148,8 @@ export default function GuestHome() {
               { value: 'Evidence', label: 'Based' },
             ].map((stat) => (
               <View key={stat.label} style={styles.statItem}>
-                <Text style={styles.statValue}>{stat.value}</Text>
-                <Text style={styles.statLabel}>{stat.label}</Text>
+                <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stat.value}</Text>
+                <Text style={[styles.statLabel, { color: colors.textMuted }]}>{stat.label}</Text>
               </View>
             ))}
           </View>
@@ -164,8 +158,8 @@ export default function GuestHome() {
         {/* Features */}
         <View style={styles.section}>
           <CardEntrance delay={100}>
-            <Text style={styles.sectionPreLabel}>FEATURES</Text>
-            <Text style={styles.sectionTitle}>
+            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>FEATURES</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
               Everything you need,{'\n'}nothing you don't
             </Text>
           </CardEntrance>
@@ -173,11 +167,11 @@ export default function GuestHome() {
             {FEATURES.map((feature, index) => (
               <CardEntrance key={feature.title} delay={200 + index * 120}>
                 <GlassCard style={styles.featureCard}>
-                  <View style={styles.featureIconContainer}>
-                    <feature.icon size={22} color="#c4703f" strokeWidth={1.5} />
+                  <View style={[styles.featureIconContainer, { backgroundColor: colors.copperDim, borderColor: colors.copperGlow }]}>
+                    <feature.icon size={22} color={colors.copper} strokeWidth={1.5} />
                   </View>
-                  <Text style={styles.featureTitle}>{feature.title}</Text>
-                  <Text style={styles.featureDescription}>{feature.description}</Text>
+                  <Text style={[styles.featureTitle, { color: colors.textPrimary }]}>{feature.title}</Text>
+                  <Text style={[styles.featureDescription, { color: colors.textMuted }]}>{feature.description}</Text>
                 </GlassCard>
               </CardEntrance>
             ))}
@@ -187,21 +181,21 @@ export default function GuestHome() {
         {/* How It Works */}
         <View style={styles.section}>
           <CardEntrance delay={100}>
-            <Text style={styles.sectionPreLabel}>HOW IT WORKS</Text>
-            <Text style={styles.sectionTitle}>Up and running{'\n'}in 2 minutes</Text>
+            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>HOW IT WORKS</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Up and running{'\n'}in 2 minutes</Text>
           </CardEntrance>
           <StaggerList staggerMs={100}>
             {STEPS.map((step) => (
               <View key={step.number} style={styles.stepRow}>
                 <View style={styles.stepNumberContainer}>
-                  <LinearGradient colors={['#c4703f', '#d4a853']} style={styles.stepNumberGradient}>
-                    <Text style={styles.stepNumber}>{step.number}</Text>
+                  <LinearGradient colors={colors.ctaGradient as unknown as [string, string]} style={styles.stepNumberGradient}>
+                    <Text style={[styles.stepNumber, { color: colors.bg }]}>{step.number}</Text>
                   </LinearGradient>
-                  {step.number !== '3' && <View style={styles.stepLine} />}
+                  {step.number !== '3' && <View style={[styles.stepLine, { backgroundColor: colors.copperGlow }]} />}
                 </View>
                 <View style={styles.stepContent}>
-                  <Text style={styles.stepTitle}>{step.title}</Text>
-                  <Text style={styles.stepDescription}>{step.description}</Text>
+                  <Text style={[styles.stepTitle, { color: colors.textPrimary }]}>{step.title}</Text>
+                  <Text style={[styles.stepDescription, { color: colors.textMuted }]}>{step.description}</Text>
                 </View>
               </View>
             ))}
@@ -211,27 +205,27 @@ export default function GuestHome() {
         {/* Inside The App */}
         <View style={styles.section}>
           <CardEntrance delay={100}>
-            <Text style={styles.sectionPreLabel}>INSIDE THE APP</Text>
-            <Text style={styles.sectionTitle}>Your Roadmap{'\n'}at Every Stage</Text>
+            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>INSIDE THE APP</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Your Roadmap{'\n'}at Every Stage</Text>
           </CardEntrance>
           {APP_HIGHLIGHTS.map((highlight, index) => (
             <CardEntrance key={highlight.week} delay={200 + index * 120}>
               <GlassCard style={styles.highlightCard}>
                 <View style={styles.attributionRow}>
                   <LinearGradient
-                    colors={['#c4703f', '#d4a853']}
+                    colors={colors.ctaGradient as unknown as [string, string]}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                     style={styles.avatarCircle}
                   >
-                    <highlight.icon size={16} color="#faf6f0" />
+                    <highlight.icon size={16} color={colors.textPrimary} />
                   </LinearGradient>
                   <View>
-                    <Text style={styles.authorName}>{highlight.week}</Text>
-                    <Text style={styles.authorContext}>{highlight.title}</Text>
+                    <Text style={[styles.authorName, { color: colors.textPrimary }]}>{highlight.week}</Text>
+                    <Text style={[styles.authorContext, { color: colors.textMuted }]}>{highlight.title}</Text>
                   </View>
                 </View>
-                <Text style={styles.quoteText}>{highlight.quote}</Text>
+                <Text style={[styles.quoteText, { color: colors.textSecondary }]}>{highlight.quote}</Text>
               </GlassCard>
             </CardEntrance>
           ))}
@@ -240,20 +234,20 @@ export default function GuestHome() {
         {/* Final CTA */}
         <View style={[styles.section, styles.finalCta]}>
           <CardEntrance delay={100}>
-            <Text style={styles.finalCtaTitle}>Ready to stop{'\n'}winging it?</Text>
-            <Text style={styles.finalCtaSubtitle}>
+            <Text style={[styles.finalCtaTitle, { color: colors.textPrimary }]}>Ready to stop{'\n'}winging it?</Text>
+            <Text style={[styles.finalCtaSubtitle, { color: colors.textMuted }]}>
               Join thousands of prepared dads who refuse to leave fatherhood to chance.
             </Text>
             <Link href="/(auth)/signup" asChild>
               <Pressable style={({ pressed }) => [styles.ctaWrapper, pressed && styles.ctaPressed]}>
                 <LinearGradient
-                  colors={['#c4703f', '#d4a853']}
+                  colors={colors.ctaGradient as unknown as [string, string]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
                   style={styles.ctaGradient}
                 >
-                  <Text style={styles.ctaText}>Get Started Free</Text>
-                  <ArrowRight size={18} color="#12100e" />
+                  <Text style={[styles.ctaText, { color: colors.bg }]}>Get Started Free</Text>
+                  <ArrowRight size={18} color={colors.bg} />
                 </LinearGradient>
               </Pressable>
             </Link>
@@ -265,61 +259,61 @@ export default function GuestHome() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#12100e' },
+  container: { flex: 1 },
   scrollView: { flex: 1 },
   scrollContent: { paddingHorizontal: 24 },
 
   orbContainer: { ...StyleSheet.absoluteFillObject, overflow: 'hidden' },
-  orbCopper: { position: 'absolute', width: 300, height: 300, top: '8%', right: -100, borderRadius: 150, backgroundColor: 'rgba(196,112,63,0.06)' },
-  orbGold: { position: 'absolute', width: 200, height: 200, top: '35%', left: -60, borderRadius: 100, backgroundColor: 'rgba(212,168,83,0.04)' },
+  orbCopper: { position: 'absolute', width: 300, height: 300, top: '8%', right: -100, borderRadius: 150 },
+  orbGold: { position: 'absolute', width: 200, height: 200, top: '35%', left: -60, borderRadius: 100 },
 
   heroSection: { alignItems: 'center', marginBottom: 56 },
-  preLabel: { fontFamily: 'Karla-SemiBold', fontSize: 11, color: '#c4703f', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 16 },
-  heroTitle: { fontFamily: 'PlayfairDisplay-Bold', fontSize: 36, color: '#faf6f0', textAlign: 'center', marginBottom: 12 },
-  heroSubtitle: { fontFamily: 'Jost-Medium', fontSize: 18, color: '#c4703f', textAlign: 'center', marginBottom: 16 },
-  heroDescription: { fontFamily: 'Jost-Regular', fontSize: 15, color: '#7a6f62', textAlign: 'center', lineHeight: 24, maxWidth: 320, marginBottom: 32 },
+  preLabel: { fontFamily: 'Karla-SemiBold', fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 16 },
+  heroTitle: { fontFamily: 'PlayfairDisplay-Bold', fontSize: 36, textAlign: 'center', marginBottom: 12 },
+  heroSubtitle: { fontFamily: 'Jost-Medium', fontSize: 18, textAlign: 'center', marginBottom: 16 },
+  heroDescription: { fontFamily: 'Jost-Regular', fontSize: 15, textAlign: 'center', lineHeight: 24, maxWidth: 320, marginBottom: 32 },
 
   ctaWrapper: { alignSelf: 'center', borderRadius: 14, overflow: 'hidden', shadowColor: '#c4703f', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 8 },
   ctaPressed: { opacity: 0.85, transform: [{ scale: 0.97 }] },
   ctaGradient: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 16, paddingHorizontal: 40, borderRadius: 14 },
-  ctaText: { fontFamily: 'Karla-SemiBold', fontSize: 16, color: '#12100e', letterSpacing: 0.5 },
+  ctaText: { fontFamily: 'Karla-SemiBold', fontSize: 16, letterSpacing: 0.5 },
 
   signInRow: { flexDirection: 'row', alignItems: 'center', marginTop: 20, marginBottom: 32 },
-  signInLabel: { fontFamily: 'Karla-Regular', fontSize: 14, color: '#7a6f62' },
-  signInLink: { fontFamily: 'Karla-SemiBold', fontSize: 14, color: '#c4703f' },
+  signInLabel: { fontFamily: 'Karla-Regular', fontSize: 14 },
+  signInLink: { fontFamily: 'Karla-SemiBold', fontSize: 14 },
 
   statsRow: { flexDirection: 'row', justifyContent: 'center', gap: 24 },
   statItem: { alignItems: 'center' },
-  statValue: { fontFamily: 'PlayfairDisplay-Bold', fontSize: 20, color: '#faf6f0', marginBottom: 2 },
-  statLabel: { fontFamily: 'Karla-Regular', fontSize: 11, color: '#7a6f62', textTransform: 'uppercase', letterSpacing: 0.8 },
+  statValue: { fontFamily: 'PlayfairDisplay-Bold', fontSize: 20, marginBottom: 2 },
+  statLabel: { fontFamily: 'Karla-Regular', fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.8 },
 
   section: { marginBottom: 56 },
-  sectionPreLabel: { fontFamily: 'Karla-SemiBold', fontSize: 11, color: '#c4703f', letterSpacing: 2, textTransform: 'uppercase', textAlign: 'center', marginBottom: 12 },
-  sectionTitle: { fontFamily: 'PlayfairDisplay-Bold', fontSize: 28, color: '#faf6f0', textAlign: 'center', lineHeight: 36, marginBottom: 28 },
+  sectionPreLabel: { fontFamily: 'Karla-SemiBold', fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', textAlign: 'center', marginBottom: 12 },
+  sectionTitle: { fontFamily: 'PlayfairDisplay-Bold', fontSize: 28, textAlign: 'center', lineHeight: 36, marginBottom: 28 },
 
   featuresGrid: { gap: 12 },
   featureCard: { padding: 20 },
-  featureIconContainer: { width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(196,112,63,0.1)', borderWidth: 1, borderColor: 'rgba(196,112,63,0.2)', alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
-  featureTitle: { fontFamily: 'Karla-SemiBold', fontSize: 16, color: '#faf6f0', marginBottom: 6 },
-  featureDescription: { fontFamily: 'Jost-Regular', fontSize: 14, color: '#7a6f62', lineHeight: 21 },
+  featureIconContainer: { width: 44, height: 44, borderRadius: 22, borderWidth: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
+  featureTitle: { fontFamily: 'Karla-SemiBold', fontSize: 16, marginBottom: 6 },
+  featureDescription: { fontFamily: 'Jost-Regular', fontSize: 14, lineHeight: 21 },
 
   stepRow: { flexDirection: 'row', marginBottom: 24 },
   stepNumberContainer: { alignItems: 'center', marginRight: 16, width: 36 },
   stepNumberGradient: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
-  stepNumber: { fontFamily: 'Karla-SemiBold', fontSize: 16, color: '#12100e' },
-  stepLine: { width: 2, flex: 1, backgroundColor: 'rgba(196,112,63,0.2)', marginTop: 8, borderRadius: 1 },
+  stepNumber: { fontFamily: 'Karla-SemiBold', fontSize: 16 },
+  stepLine: { width: 2, flex: 1, marginTop: 8, borderRadius: 1 },
   stepContent: { flex: 1, paddingTop: 4 },
-  stepTitle: { fontFamily: 'Karla-SemiBold', fontSize: 16, color: '#faf6f0', marginBottom: 4 },
-  stepDescription: { fontFamily: 'Jost-Regular', fontSize: 14, color: '#7a6f62', lineHeight: 21 },
+  stepTitle: { fontFamily: 'Karla-SemiBold', fontSize: 16, marginBottom: 4 },
+  stepDescription: { fontFamily: 'Jost-Regular', fontSize: 14, lineHeight: 21 },
 
   highlightCard: { padding: 20, marginBottom: 12 },
-  quoteText: { fontFamily: 'Jost-Regular', fontSize: 15, color: '#ede6dc', lineHeight: 24, fontStyle: 'italic', marginTop: 12 },
+  quoteText: { fontFamily: 'Jost-Regular', fontSize: 15, lineHeight: 24, fontStyle: 'italic', marginTop: 12 },
   attributionRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   avatarCircle: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
-  authorName: { fontFamily: 'Karla-SemiBold', fontSize: 13, color: '#faf6f0' },
-  authorContext: { fontFamily: 'Karla-Regular', fontSize: 11, color: '#7a6f62', marginTop: 1 },
+  authorName: { fontFamily: 'Karla-SemiBold', fontSize: 13 },
+  authorContext: { fontFamily: 'Karla-Regular', fontSize: 11, marginTop: 1 },
 
   finalCta: { alignItems: 'center', paddingTop: 24, marginBottom: 24 },
-  finalCtaTitle: { fontFamily: 'PlayfairDisplay-Bold', fontSize: 30, color: '#faf6f0', textAlign: 'center', lineHeight: 40, marginBottom: 12 },
-  finalCtaSubtitle: { fontFamily: 'Jost-Regular', fontSize: 15, color: '#7a6f62', textAlign: 'center', lineHeight: 24, maxWidth: 300, marginBottom: 28 },
+  finalCtaTitle: { fontFamily: 'PlayfairDisplay-Bold', fontSize: 30, textAlign: 'center', lineHeight: 40, marginBottom: 12 },
+  finalCtaSubtitle: { fontFamily: 'Jost-Regular', fontSize: 15, textAlign: 'center', lineHeight: 24, maxWidth: 300, marginBottom: 28 },
 })

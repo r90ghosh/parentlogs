@@ -10,13 +10,13 @@ import {
   Image,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { Video, Play, ExternalLink } from 'lucide-react-native'
 import * as WebBrowser from 'expo-web-browser'
 import { useVideos, type Video as VideoType } from '@/hooks/use-videos'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import { ScreenHeader } from '@/components/ui'
+import { useColors } from '@/hooks/use-colors'
 
 const STAGE_FILTERS: { value: string | undefined; label: string }[] = [
   { value: undefined, label: 'All' },
@@ -31,6 +31,7 @@ const STAGE_FILTERS: { value: string | undefined; label: string }[] = [
 
 export default function VideosScreen() {
   const insets = useSafeAreaInsets()
+  const colors = useColors()
   const [selectedStage, setSelectedStage] = useState<string | undefined>(undefined)
   const { data: videos, isLoading } = useVideos(selectedStage)
 
@@ -49,7 +50,7 @@ export default function VideosScreen() {
           <Pressable onPress={() => handleVideoPress(item)}>
             <GlassCard style={styles.videoCard}>
               {/* Thumbnail */}
-              <View style={styles.thumbnailContainer}>
+              <View style={[styles.thumbnailContainer, { backgroundColor: colors.card }]}>
                 {thumbnailUri ? (
                   <Image
                     source={{ uri: thumbnailUri }}
@@ -57,45 +58,45 @@ export default function VideosScreen() {
                     resizeMode="cover"
                   />
                 ) : (
-                  <View style={styles.thumbnailPlaceholder}>
-                    <Video size={32} color="#4a4239" />
+                  <View style={[styles.thumbnailPlaceholder, { backgroundColor: colors.surface }]}>
+                    <Video size={32} color={colors.textDim} />
                   </View>
                 )}
                 {/* Play overlay */}
                 <View style={styles.playOverlay}>
-                  <View style={styles.playButton}>
-                    <Play size={18} color="#faf6f0" fill="#faf6f0" />
+                  <View style={[styles.playButton, { backgroundColor: colors.copperGlow.replace('0.25)', '0.9)') }]}>
+                    <Play size={18} color={colors.textPrimary} fill={colors.textPrimary} />
                   </View>
                 </View>
                 {/* Free badge */}
-                <View style={styles.freeBadge}>
-                  <Text style={styles.freeBadgeText}>FREE</Text>
+                <View style={[styles.freeBadge, { backgroundColor: colors.sage }]}>
+                  <Text style={[styles.freeBadgeText, { color: colors.textPrimary }]}>FREE</Text>
                 </View>
               </View>
 
               {/* Content */}
               <View style={styles.videoContent}>
                 {item.stage_label ? (
-                  <View style={styles.stageBadge}>
-                    <Text style={styles.stageBadgeText}>{item.stage_label}</Text>
+                  <View style={[styles.stageBadge, { backgroundColor: colors.subtleBg }]}>
+                    <Text style={[styles.stageBadgeText, { color: colors.textMuted }]}>{item.stage_label}</Text>
                   </View>
                 ) : null}
-                <Text style={styles.videoTitle} numberOfLines={2}>
+                <Text style={[styles.videoTitle, { color: colors.textSecondary }]} numberOfLines={2}>
                   {item.title}
                 </Text>
                 {item.description ? (
-                  <Text style={styles.videoDescription} numberOfLines={2}>
+                  <Text style={[styles.videoDescription, { color: colors.textMuted }]} numberOfLines={2}>
                     {item.description}
                   </Text>
                 ) : null}
-                <View style={styles.videoFooter}>
+                <View style={[styles.videoFooter, { borderTopColor: colors.subtleBg }]}>
                   <View style={styles.sourceRow}>
-                    <Video size={12} color="#7a6f62" />
-                    <Text style={styles.sourceText}>{item.source}</Text>
+                    <Video size={12} color={colors.textMuted} />
+                    <Text style={[styles.sourceText, { color: colors.textMuted }]}>{item.source}</Text>
                   </View>
                   <View style={styles.watchRow}>
-                    <Text style={styles.watchText}>Watch</Text>
-                    <ExternalLink size={12} color="#c4703f" />
+                    <Text style={[styles.watchText, { color: colors.copper }]}>Watch</Text>
+                    <ExternalLink size={12} color={colors.copper} />
                   </View>
                 </View>
               </View>
@@ -104,16 +105,11 @@ export default function VideosScreen() {
         </CardEntrance>
       )
     },
-    [handleVideoPress]
+    [handleVideoPress, colors]
   )
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
       <ScreenHeader title="Video Library" />
 
       {/* Stage filter pills */}
@@ -130,9 +126,17 @@ export default function VideosScreen() {
               <Pressable
                 key={filter.label}
                 onPress={() => setSelectedStage(filter.value)}
-                style={[styles.filterPill, isActive && styles.filterPillActive]}
+                style={[
+                  styles.filterPill,
+                  { backgroundColor: colors.subtleBg, borderColor: colors.borderHover },
+                  isActive && { backgroundColor: colors.copper, borderColor: colors.copper },
+                ]}
               >
-                <Text style={[styles.filterPillText, isActive && styles.filterPillTextActive]}>
+                <Text style={[
+                  styles.filterPillText,
+                  { color: colors.textSecondary },
+                  isActive && { color: colors.textPrimary },
+                ]}>
                   {filter.label}
                 </Text>
               </Pressable>
@@ -144,13 +148,13 @@ export default function VideosScreen() {
       {/* Content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color="#c4703f" size="large" />
+          <ActivityIndicator color={colors.copper} size="large" />
         </View>
       ) : !videos || videos.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Video size={40} color="#4a4239" />
-          <Text style={styles.emptyTitle}>No videos available</Text>
-          <Text style={styles.emptySubtitle}>
+          <Video size={40} color={colors.textDim} />
+          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No videos available</Text>
+          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
             Check back soon for new video content
           </Text>
         </View>
@@ -173,7 +177,7 @@ export default function VideosScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
+    backgroundColor: 'transparent',
   },
 
   // Filter pills
@@ -188,23 +192,13 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,
-    backgroundColor: 'rgba(237,230,220,0.1)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.12)',
     marginRight: 8,
-  },
-  filterPillActive: {
-    backgroundColor: '#c4703f',
-    borderColor: '#c4703f',
   },
   filterPillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#ede6dc',
     lineHeight: 18,
-  },
-  filterPillTextActive: {
-    color: '#faf6f0',
   },
 
   // List
@@ -220,7 +214,6 @@ const styles = StyleSheet.create({
   },
   thumbnailContainer: {
     height: 180,
-    backgroundColor: '#201c18',
     position: 'relative',
   },
   thumbnail: {
@@ -232,7 +225,6 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1a1714',
   },
   playOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -243,7 +235,6 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: 'rgba(196,112,63,0.9)',
     alignItems: 'center',
     justifyContent: 'center',
     paddingLeft: 3,
@@ -255,12 +246,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
-    backgroundColor: '#6b8f71',
   },
   freeBadgeText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 10,
-    color: '#faf6f0',
     letterSpacing: 0.5,
   },
   videoContent: {
@@ -271,26 +260,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 8,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     marginBottom: 8,
   },
   stageBadgeText: {
     fontFamily: 'Karla-Medium',
     fontSize: 10,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   videoTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#ede6dc',
     marginBottom: 4,
   },
   videoDescription: {
     fontFamily: 'Jost-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     lineHeight: 18,
     marginBottom: 12,
   },
@@ -300,7 +285,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.06)',
   },
   sourceRow: {
     flexDirection: 'row',
@@ -310,7 +294,6 @@ const styles = StyleSheet.create({
   sourceText: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
   },
   watchRow: {
     flexDirection: 'row',
@@ -320,7 +303,6 @@ const styles = StyleSheet.create({
   watchText: {
     fontFamily: 'Karla-Medium',
     fontSize: 12,
-    color: '#c4703f',
   },
 
   // Loading / Empty
@@ -339,13 +321,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
     textAlign: 'center',
   },
   emptySubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
   },
 })

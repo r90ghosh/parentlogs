@@ -3,9 +3,11 @@ import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
 import { AlertTriangle, Sparkles } from 'lucide-react-native'
 import { useGracePeriodStatus } from '@/hooks/use-subscription'
+import { useColors } from '@/hooks/use-colors'
 
 export function GracePeriodBanner() {
   const router = useRouter()
+  const colors = useColors()
   const { isInGracePeriod, daysRemaining, expiresAt } = useGracePeriodStatus()
 
   const daysSinceExpiry = useMemo(() => {
@@ -22,28 +24,28 @@ export function GracePeriodBanner() {
       : `${daysSinceExpiry} day${daysSinceExpiry === 1 ? '' : 's'} ago`
 
   return (
-    <View style={styles.banner}>
-      <View style={styles.accentBar} />
+    <View style={[styles.banner, { backgroundColor: colors.card, borderColor: colors.coralDim }]}>
+      <View style={[styles.accentBar, { backgroundColor: colors.coral }]} />
       <View style={styles.inner}>
         <View style={styles.row}>
-          <View style={styles.iconBadge}>
-            <AlertTriangle size={18} color="#d4836b" />
+          <View style={[styles.iconBadge, { backgroundColor: colors.coralDim }]}>
+            <AlertTriangle size={18} color={colors.coral} />
           </View>
           <View style={styles.textBlock}>
-            <Text style={styles.title}>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>
               Your subscription expired {expiredLabel}
             </Text>
-            <Text style={styles.subtitle}>
+            <Text style={[styles.subtitle, { color: colors.textMuted }]}>
               {daysRemaining} day{daysRemaining === 1 ? '' : 's'} remaining before access is restricted
             </Text>
           </View>
         </View>
         <Pressable
           onPress={() => router.push('/(screens)/upgrade')}
-          style={styles.cta}
+          style={[styles.cta, { backgroundColor: colors.copper }]}
         >
-          <Sparkles size={14} color="#12100e" />
-          <Text style={styles.ctaText}>Renew</Text>
+          <Sparkles size={14} color={colors.bg} />
+          <Text style={[styles.ctaText, { color: colors.bg }]}>Renew</Text>
         </Pressable>
       </View>
     </View>
@@ -52,10 +54,8 @@ export function GracePeriodBanner() {
 
 const styles = StyleSheet.create({
   banner: {
-    backgroundColor: '#201c18',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(212,131,107,0.25)',
     overflow: 'hidden',
     marginHorizontal: 16,
     marginTop: 16,
@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
   },
   accentBar: {
     width: 4,
-    backgroundColor: '#d4836b',
     borderTopLeftRadius: 12,
     borderBottomLeftRadius: 12,
   },
@@ -81,7 +80,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: 'rgba(212,131,107,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
@@ -92,13 +90,11 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#faf6f0',
     marginBottom: 2,
   },
   subtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     lineHeight: 16,
   },
   cta: {
@@ -106,13 +102,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    backgroundColor: '#c4703f',
     borderRadius: 8,
     paddingVertical: 10,
   },
   ctaText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#12100e',
   },
 })

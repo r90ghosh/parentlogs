@@ -12,7 +12,6 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import {
   X,
   Users,
@@ -33,6 +32,7 @@ import {
 import { familyService } from '@/lib/services'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
+import { useColors } from '@/hooks/use-colors'
 import * as Haptics from 'expo-haptics'
 
 function formatDate(dateStr: string | null | undefined): string {
@@ -56,6 +56,7 @@ export default function FamilyScreen() {
   const { data: members, isLoading: membersLoading } = useFamilyMembers()
   const updateFamily = useUpdateFamily()
   const regenerateInviteCode = useRegenerateInviteCode()
+  const colors = useColors()
 
   const [babyName, setBabyName] = useState('')
   const [originalBabyName, setOriginalBabyName] = useState('')
@@ -165,17 +166,13 @@ export default function FamilyScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={styles.headerTitle}>Family</Text>
-        <Pressable onPress={() => router.back()} style={styles.closeButton}>
-          <X size={20} color="#7a6f62" />
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Family</Text>
+        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
+          <X size={20} color={colors.textMuted} />
         </Pressable>
       </View>
 
@@ -189,45 +186,45 @@ export default function FamilyScreen() {
       >
         {/* Section 1: Family Details */}
         <CardEntrance delay={0}>
-          <Text style={styles.sectionTitle}>Family Details</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Family Details</Text>
           <GlassCard style={styles.section}>
-            <View style={styles.inputRow}>
+            <View style={[styles.inputRow, { borderBottomColor: colors.border }]}>
               <View style={styles.inputLabelRow}>
-                <Baby size={18} color="#c47a8f" />
-                <Text style={styles.inputLabel}>Baby Name</Text>
+                <Baby size={18} color={colors.rose} />
+                <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Baby Name</Text>
               </View>
               <TextInput
-                style={styles.textInput}
+                style={[styles.textInput, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                 value={babyName}
                 onChangeText={setBabyName}
                 placeholder="Baby's name or nickname"
-                placeholderTextColor="#4a4239"
+                placeholderTextColor={colors.textDim}
                 autoCapitalize="words"
               />
             </View>
 
-            <View style={styles.detailRow}>
+            <View style={[styles.detailRow, { borderBottomColor: colors.border }]}>
               <View style={styles.detailRowLeft}>
-                <Calendar size={18} color="#5b9bd5" />
-                <Text style={styles.detailLabel}>Due Date</Text>
+                <Calendar size={18} color={colors.sky} />
+                <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Due Date</Text>
               </View>
-              <Text style={styles.detailValue}>
+              <Text style={[styles.detailValue, { color: colors.textMuted }]}>
                 {formatDate(familyData?.due_date ?? family?.due_date)}
               </Text>
             </View>
 
             <View style={[styles.detailRow, styles.lastRow]}>
               <View style={styles.detailRowLeft}>
-                <Calendar size={18} color="#6b8f71" />
-                <Text style={styles.detailLabel}>Birth Date</Text>
+                <Calendar size={18} color={colors.sage} />
+                <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Birth Date</Text>
               </View>
-              <Text style={styles.detailValue}>
+              <Text style={[styles.detailValue, { color: colors.textMuted }]}>
                 {formatDate(familyData?.birth_date)}
               </Text>
             </View>
 
             <View style={styles.dateHintContainer}>
-              <Text style={styles.dateHint}>
+              <Text style={[styles.dateHint, { color: colors.textDim }]}>
                 Edit dates in the web app at thedadcenter.com
               </Text>
             </View>
@@ -238,14 +235,15 @@ export default function FamilyScreen() {
                 disabled={updateFamily.isPending}
                 style={({ pressed }) => [
                   styles.saveButton,
+                  { backgroundColor: colors.copper },
                   pressed && styles.saveButtonPressed,
                   updateFamily.isPending && styles.saveButtonDisabled,
                 ]}
               >
                 {updateFamily.isPending ? (
-                  <ActivityIndicator color="#faf6f0" size="small" />
+                  <ActivityIndicator color={colors.textPrimary} size="small" />
                 ) : (
-                  <Text style={styles.saveButtonText}>Save</Text>
+                  <Text style={[styles.saveButtonText, { color: colors.textPrimary }]}>Save</Text>
                 )}
               </Pressable>
             )}
@@ -254,11 +252,11 @@ export default function FamilyScreen() {
 
         {/* Section 2: Members */}
         <CardEntrance delay={80}>
-          <Text style={styles.sectionTitle}>Members</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Members</Text>
           <GlassCard style={styles.section}>
             {membersLoading ? (
               <View style={styles.loadingContainer}>
-                <ActivityIndicator color="#c4703f" size="small" />
+                <ActivityIndicator color={colors.copper} size="small" />
               </View>
             ) : members && members.length > 0 ? (
               members.map((member, index) => (
@@ -266,22 +264,23 @@ export default function FamilyScreen() {
                   key={member.id}
                   style={[
                     styles.memberRow,
+                    { borderBottomColor: colors.border },
                     index === members.length - 1 && styles.lastRow,
                   ]}
                 >
                   <View style={styles.memberLeft}>
-                    <View style={styles.avatar}>
-                      <Text style={styles.avatarText}>
+                    <View style={[styles.avatar, { backgroundColor: colors.copperGlow }]}>
+                      <Text style={[styles.avatarText, { color: colors.copper }]}>
                         {(member.full_name || member.email || '?')
                           .charAt(0)
                           .toUpperCase()}
                       </Text>
                     </View>
                     <View>
-                      <Text style={styles.memberName}>
+                      <Text style={[styles.memberName, { color: colors.textSecondary }]}>
                         {member.full_name || 'Unknown'}
                       </Text>
-                      <Text style={styles.memberRole}>
+                      <Text style={[styles.memberRole, { color: colors.textMuted }]}>
                         {member.role
                           ? member.role.charAt(0).toUpperCase() +
                             member.role.slice(1)
@@ -290,13 +289,13 @@ export default function FamilyScreen() {
                     </View>
                   </View>
                   {member.is_owner && (
-                    <Crown size={16} color="#d4a853" />
+                    <Crown size={16} color={colors.gold} />
                   )}
                 </View>
               ))
             ) : (
               <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>No members found</Text>
+                <Text style={[styles.emptyText, { color: colors.textDim }]}>No members found</Text>
               </View>
             )}
           </GlassCard>
@@ -304,27 +303,27 @@ export default function FamilyScreen() {
 
         {/* Section 3: Invite Code */}
         <CardEntrance delay={160}>
-          <Text style={styles.sectionTitle}>Invite Code</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Invite Code</Text>
           <GlassCard style={styles.section}>
-            <View style={styles.inviteCodeContainer}>
-              <Text style={styles.inviteCodeValue}>
+            <View style={[styles.inviteCodeContainer, { borderBottomColor: colors.border }]}>
+              <Text style={[styles.inviteCodeValue, { color: colors.sage }]}>
                 {family?.invite_code || '------'}
               </Text>
 
               <View style={styles.inviteActions}>
                 <Pressable
                   onPress={handleCopyInviteCode}
-                  style={styles.inviteActionButton}
+                  style={[styles.inviteActionButton, { backgroundColor: colors.sageDim }]}
                 >
-                  <Copy size={18} color="#6b8f71" />
-                  <Text style={styles.inviteActionLabel}>Copy</Text>
+                  <Copy size={18} color={colors.sage} />
+                  <Text style={[styles.inviteActionLabel, { color: colors.sage }]}>Copy</Text>
                 </Pressable>
                 <Pressable
                   onPress={handleShareInviteCode}
-                  style={styles.inviteActionButton}
+                  style={[styles.inviteActionButton, { backgroundColor: colors.sageDim }]}
                 >
-                  <Share2 size={18} color="#6b8f71" />
-                  <Text style={styles.inviteActionLabel}>Share</Text>
+                  <Share2 size={18} color={colors.sage} />
+                  <Text style={[styles.inviteActionLabel, { color: colors.sage }]}>Share</Text>
                 </Pressable>
               </View>
             </View>
@@ -334,15 +333,15 @@ export default function FamilyScreen() {
               disabled={regenerateInviteCode.isPending}
               style={({ pressed }) => [
                 styles.regenerateButton,
-                pressed && styles.regenerateButtonPressed,
+                pressed && { backgroundColor: colors.pressed },
               ]}
             >
               {regenerateInviteCode.isPending ? (
-                <ActivityIndicator color="#7a6f62" size="small" />
+                <ActivityIndicator color={colors.textMuted} size="small" />
               ) : (
                 <>
-                  <RefreshCw size={14} color="#7a6f62" />
-                  <Text style={styles.regenerateText}>Regenerate Code</Text>
+                  <RefreshCw size={14} color={colors.textMuted} />
+                  <Text style={[styles.regenerateText, { color: colors.textMuted }]}>Regenerate Code</Text>
                 </>
               )}
             </Pressable>
@@ -351,19 +350,20 @@ export default function FamilyScreen() {
 
         {/* Section 4: Leave Family */}
         <CardEntrance delay={240}>
-          <Text style={styles.dangerSectionTitle}>Danger Zone</Text>
-          <GlassCard style={styles.dangerSection}>
+          <Text style={[styles.dangerSectionTitle, { color: colors.coral }]}>Danger Zone</Text>
+          <GlassCard style={[styles.dangerSection, { borderColor: 'rgba(212,131,107,0.15)' }]}>
             <Pressable
               onPress={handleLeaveFamily}
               style={({ pressed }) => [
                 styles.leaveButton,
-                pressed && styles.leaveButtonPressed,
+                { backgroundColor: colors.coralDim, borderColor: 'rgba(212,131,107,0.2)' },
+                pressed && { backgroundColor: 'rgba(212,131,107,0.18)' },
               ]}
             >
-              <LogOut size={18} color="#d4836b" />
-              <Text style={styles.leaveButtonText}>Leave Family</Text>
+              <LogOut size={18} color={colors.coral} />
+              <Text style={[styles.leaveButtonText, { color: colors.coral }]}>Leave Family</Text>
             </Pressable>
-            <Text style={styles.leaveDescription}>
+            <Text style={[styles.leaveDescription, { color: colors.textDim }]}>
               This will remove you from this family. You will need a new invite
               code to rejoin.
             </Text>
@@ -377,7 +377,6 @@ export default function FamilyScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   flex: {
     flex: 1,
@@ -392,13 +391,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   closeButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -411,7 +408,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
     marginBottom: 12,
@@ -428,7 +424,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   inputLabelRow: {
     flexDirection: 'row',
@@ -439,18 +434,14 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontFamily: 'Karla-Medium',
     fontSize: 15,
-    color: '#ede6dc',
   },
   textInput: {
-    backgroundColor: '#201c18',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#ede6dc',
   },
 
   detailRow: {
@@ -460,7 +451,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   detailRowLeft: {
     flexDirection: 'row',
@@ -470,12 +460,10 @@ const styles = StyleSheet.create({
   detailLabel: {
     fontFamily: 'Karla-Medium',
     fontSize: 15,
-    color: '#ede6dc',
   },
   detailValue: {
     fontFamily: 'Karla-Regular',
     fontSize: 14,
-    color: '#7a6f62',
   },
   lastRow: {
     borderBottomWidth: 0,
@@ -488,11 +476,9 @@ const styles = StyleSheet.create({
   dateHint: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#4a4239',
   },
 
   saveButton: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -508,7 +494,6 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
 
   // Members
@@ -523,7 +508,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   memberLeft: {
     flexDirection: 'row',
@@ -534,24 +518,20 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(196,112,63,0.2)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#c4703f',
   },
   memberName: {
     fontFamily: 'Karla-Medium',
     fontSize: 15,
-    color: '#ede6dc',
   },
   memberRole: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginTop: 2,
   },
   emptyContainer: {
@@ -561,7 +541,6 @@ const styles = StyleSheet.create({
   emptyText: {
     fontFamily: 'Karla-Regular',
     fontSize: 14,
-    color: '#4a4239',
   },
 
   // Invite Code
@@ -570,12 +549,10 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   inviteCodeValue: {
     fontFamily: 'Jost-Medium',
     fontSize: 24,
-    color: '#6b8f71',
     letterSpacing: 3,
     marginBottom: 20,
   },
@@ -590,12 +567,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 12,
-    backgroundColor: 'rgba(107,143,113,0.12)',
   },
   inviteActionLabel: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#6b8f71',
   },
   regenerateButton: {
     flexDirection: 'row',
@@ -605,20 +580,15 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 16,
   },
-  regenerateButtonPressed: {
-    backgroundColor: 'rgba(237,230,220,0.04)',
-  },
   regenerateText: {
     fontFamily: 'Karla-Regular',
     fontSize: 13,
-    color: '#7a6f62',
   },
 
   // Leave Family
   dangerSectionTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#d4836b',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
     marginBottom: 12,
@@ -628,7 +598,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 24,
     padding: 0,
-    borderColor: 'rgba(212,131,107,0.15)',
   },
   leaveButton: {
     flexDirection: 'row',
@@ -636,23 +605,16 @@ const styles = StyleSheet.create({
     gap: 14,
     paddingVertical: 16,
     paddingHorizontal: 16,
-    backgroundColor: 'rgba(212,131,107,0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(212,131,107,0.2)',
     borderRadius: 0,
-  },
-  leaveButtonPressed: {
-    backgroundColor: 'rgba(212,131,107,0.18)',
   },
   leaveButtonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 15,
-    color: '#d4836b',
   },
   leaveDescription: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#4a4239',
     lineHeight: 18,
     paddingHorizontal: 16,
     paddingVertical: 12,

@@ -9,11 +9,11 @@ import {
   StyleSheet,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { ChevronLeft, ChevronRight, Check, Square } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { useColors } from '@/hooks/use-colors'
 import { MedicalDisclaimer } from '@/components/shared/MedicalDisclaimer'
 import { useBriefingByWeek } from '@/hooks/use-briefings'
 import { useTasks, useCompleteTask } from '@/hooks/use-tasks'
@@ -30,6 +30,7 @@ import type { FamilyStage } from '@tdc/shared/types'
 import { startOfWeek, endOfWeek, isWithinInterval, parseISO } from 'date-fns'
 
 export default function BriefingWeekScreen() {
+  const colors = useColors()
   const { weekId } = useLocalSearchParams<{ weekId: string }>()
   const router = useRouter()
   const insets = useSafeAreaInsets()
@@ -76,37 +77,33 @@ export default function BriefingWeekScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       {/* Fixed Header */}
-      <View style={[styles.header, { paddingTop: 8 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ChevronLeft size={22} color="#faf6f0" />
+      <View style={[styles.header, { paddingTop: 8, backgroundColor: colors.overlay, borderBottomColor: colors.border }]}>
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+          <ChevronLeft size={22} color={colors.textPrimary} />
         </Pressable>
         <View style={styles.headerNav}>
           <Pressable
             onPress={() => navigateWeek(-1)}
             disabled={week <= 1}
-            style={[styles.navButton, week <= 1 && styles.navButtonDisabled]}
+            style={[styles.navButton, { backgroundColor: colors.subtleBg }, week <= 1 && styles.navButtonDisabled]}
           >
-            <ChevronLeft size={18} color={week <= 1 ? '#4a4239' : '#ede6dc'} />
+            <ChevronLeft size={18} color={week <= 1 ? colors.textDim : colors.textSecondary} />
           </Pressable>
-          <Text style={styles.headerTitle}>Week {week}</Text>
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Week {week}</Text>
           <Pressable
             onPress={() => navigateWeek(1)}
             disabled={week >= maxWeek}
             style={[
               styles.navButton,
+              { backgroundColor: colors.subtleBg },
               week >= maxWeek && styles.navButtonDisabled,
             ]}
           >
             <ChevronRight
               size={18}
-              color={week >= maxWeek ? '#4a4239' : '#ede6dc'}
+              color={week >= maxWeek ? colors.textDim : colors.textSecondary}
             />
           </Pressable>
         </View>
@@ -126,21 +123,21 @@ export default function BriefingWeekScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor="#c4703f"
+            tintColor={colors.copper}
           />
         }
         showsVerticalScrollIndicator={false}
       >
         {isLoading && (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#c4703f" />
+            <ActivityIndicator size="large" color={colors.copper} />
           </View>
         )}
 
         {!isLoading && !briefing && (
           <CardEntrance delay={0}>
             <GlassCard style={styles.emptyCard}>
-              <Text style={styles.emptyText}>
+              <Text style={[styles.emptyText, { color: colors.textMuted }]}>
                 No briefing available for Week {week}.
               </Text>
             </GlassCard>
@@ -152,22 +149,22 @@ export default function BriefingWeekScreen() {
             {/* Hero */}
             <CardEntrance delay={0}>
               <View style={styles.hero}>
-                <Text style={styles.weekLabel}>
+                <Text style={[styles.weekLabel, { color: colors.copper }]}>
                   WEEK {briefing.week}
                   {week === currentWeek && (
-                    <Text style={styles.currentBadge}> — THIS WEEK</Text>
+                    <Text style={{ color: colors.gold }}> — THIS WEEK</Text>
                   )}
                 </Text>
-                <Text style={styles.heroTitle}>{briefing.title}</Text>
+                <Text style={[styles.heroTitle, { color: colors.textPrimary }]}>{briefing.title}</Text>
                 <BriefingProgressBar week={week} isPregnancy={isPregnancy} />
                 {babySize && (
-                  <View style={styles.babySizeRow}>
+                  <View style={[styles.babySizeRow, { backgroundColor: colors.pressed }]}>
                     <Text style={styles.babySizeEmoji}>{babySize.emoji}</Text>
                     <View>
-                      <Text style={styles.babySizeFruit}>
+                      <Text style={[styles.babySizeFruit, { color: colors.textSecondary }]}>
                         Baby is the size of a {babySize.fruit}
                       </Text>
-                      <Text style={styles.babySizeDetail}>
+                      <Text style={[styles.babySizeDetail, { color: colors.textMuted }]}>
                         {formatLength(babySize)} long, {formatWeight(babySize)}
                       </Text>
                     </View>
@@ -177,30 +174,30 @@ export default function BriefingWeekScreen() {
             </CardEntrance>
 
             <StaggerList staggerMs={100}>
-              <BriefingSection title="Baby Update" icon="👶" accentColor="#5b9bd5">
-                <Text style={styles.sectionBody}>{briefing.baby_update}</Text>
+              <BriefingSection title="Baby Update" icon="👶" accentColor={colors.sky}>
+                <Text style={[styles.sectionBody, { color: colors.textSecondary }]}>{briefing.baby_update}</Text>
               </BriefingSection>
 
               <BriefingSection
                 title={role === 'dad' ? "What She's Experiencing" : 'Your Body'}
                 icon="💝"
-                accentColor="#c47a8f"
+                accentColor={colors.rose}
               >
-                <Text style={styles.sectionBody}>{briefing.mom_update}</Text>
+                <Text style={[styles.sectionBody, { color: colors.textSecondary }]}>{briefing.mom_update}</Text>
               </BriefingSection>
 
               <BriefingSection
                 title="Your Focus This Week"
                 icon="🎯"
-                accentColor="#c4703f"
+                accentColor={colors.copper}
               >
-                <Text style={styles.sectionIntro}>
+                <Text style={[styles.sectionIntro, { color: colors.textSecondary }]}>
                   Here's what to focus on this week:
                 </Text>
                 {briefing.dad_focus.map((item: string, idx: number) => (
                   <View key={idx} style={styles.focusItem}>
-                    <View style={styles.focusBullet} />
-                    <Text style={styles.focusText}>{item}</Text>
+                    <View style={[styles.focusBullet, { backgroundColor: colors.copper }]} />
+                    <Text style={[styles.focusText, { color: colors.textSecondary }]}>{item}</Text>
                   </View>
                 ))}
               </BriefingSection>
@@ -212,9 +209,9 @@ export default function BriefingWeekScreen() {
               <BriefingSection
                 title="Relationship Check-In"
                 icon="💜"
-                accentColor="#9b7fd4"
+                accentColor={colors.purple}
               >
-                <Text style={styles.sectionBody}>
+                <Text style={[styles.sectionBody, { color: colors.textSecondary }]}>
                   {briefing.relationship_tip}
                 </Text>
               </BriefingSection>
@@ -223,9 +220,9 @@ export default function BriefingWeekScreen() {
                 <BriefingSection
                   title="Coming Up"
                   icon="📆"
-                  accentColor="#d4a853"
+                  accentColor={colors.gold}
                 >
-                  <Text style={styles.sectionBody}>{briefing.coming_up}</Text>
+                  <Text style={[styles.sectionBody, { color: colors.textSecondary }]}>{briefing.coming_up}</Text>
                 </BriefingSection>
               )}
             </StaggerList>
@@ -234,28 +231,30 @@ export default function BriefingWeekScreen() {
               <BriefingSection
                 title="This Week's Tasks"
                 icon="✅"
-                accentColor="#c4703f"
+                accentColor={colors.copper}
               >
                 {thisWeekTasks.map((task) => (
                   <Pressable
                     key={task.id}
                     onPress={() => completeTask.mutate(task.id)}
-                    style={weekTaskStyles.row}
+                    style={[weekTaskStyles.row, { borderBottomColor: colors.subtleBg }]}
                   >
                     <View
                       style={[
                         weekTaskStyles.checkbox,
-                        task.status === 'completed' && weekTaskStyles.checkboxChecked,
+                        { borderColor: colors.textDim },
+                        task.status === 'completed' && { backgroundColor: colors.sage, borderColor: colors.sage },
                       ]}
                     >
                       {task.status === 'completed' && (
-                        <Check size={11} color="#12100e" />
+                        <Check size={11} color={colors.bg} />
                       )}
                     </View>
                     <Text
                       style={[
                         weekTaskStyles.taskTitle,
-                        task.status === 'completed' && weekTaskStyles.taskTitleDone,
+                        { color: colors.textSecondary },
+                        task.status === 'completed' && { textDecorationLine: 'line-through', color: colors.textMuted },
                       ]}
                       numberOfLines={2}
                     >
@@ -268,13 +267,13 @@ export default function BriefingWeekScreen() {
 
             {briefing.medical_source && (
               <CardEntrance delay={400}>
-                <View style={styles.sourceFooter}>
-                  <View style={styles.sourceBadge}>
-                    <Text style={styles.sourceBadgeText}>
+                <View style={[styles.sourceFooter, { borderTopColor: colors.border }]}>
+                  <View style={[styles.sourceBadge, { backgroundColor: colors.sageDim }]}>
+                    <Text style={[styles.sourceBadgeText, { color: colors.sage }]}>
                       Source-Referenced
                     </Text>
                   </View>
-                  <Text style={styles.sourceText}>
+                  <Text style={[styles.sourceText, { color: colors.textMuted }]}>
                     Sources: {briefing.medical_source}
                   </Text>
                 </View>
@@ -295,7 +294,6 @@ export default function BriefingWeekScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   header: {
     position: 'absolute',
@@ -308,15 +306,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingBottom: 12,
-    backgroundColor: 'rgba(18,16,14,0.9)',
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.08)',
   },
   backButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -329,7 +324,6 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -339,7 +333,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 18,
-    color: '#faf6f0',
   },
   headerSpacer: {
     width: 36,
@@ -362,7 +355,6 @@ const styles = StyleSheet.create({
   emptyText: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#7a6f62',
     textAlign: 'center',
   },
   hero: {
@@ -374,16 +366,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Karla-SemiBold',
     fontSize: 12,
     letterSpacing: 1.5,
-    color: '#c4703f',
     marginBottom: 6,
-  },
-  currentBadge: {
-    color: '#d4a853',
   },
   heroTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 24,
-    color: '#faf6f0',
     lineHeight: 32,
     marginBottom: 12,
   },
@@ -391,7 +378,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: 'rgba(237,230,220,0.04)',
     borderRadius: 12,
     padding: 12,
   },
@@ -401,24 +387,20 @@ const styles = StyleSheet.create({
   babySizeFruit: {
     fontFamily: 'Jost-Medium',
     fontSize: 15,
-    color: '#ede6dc',
   },
   babySizeDetail: {
     fontFamily: 'Jost-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     marginTop: 2,
   },
   sectionBody: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#ede6dc',
     lineHeight: 23,
   },
   sectionIntro: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#ede6dc',
     marginBottom: 12,
   },
   focusItem: {
@@ -431,25 +413,21 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#c4703f',
     marginTop: 8,
   },
   focusText: {
     flex: 1,
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#ede6dc',
     lineHeight: 22,
   },
   sourceFooter: {
     marginTop: 16,
     paddingTop: 16,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.08)',
   },
   sourceBadge: {
     alignSelf: 'flex-start',
-    backgroundColor: 'rgba(107,143,113,0.15)',
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
@@ -458,12 +436,10 @@ const styles = StyleSheet.create({
   sourceBadgeText: {
     fontFamily: 'Karla-Medium',
     fontSize: 11,
-    color: '#6b8f71',
   },
   sourceText: {
     fontFamily: 'Jost-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     lineHeight: 18,
   },
 })
@@ -475,32 +451,21 @@ const weekTaskStyles = StyleSheet.create({
     gap: 10,
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   checkbox: {
     width: 20,
     height: 20,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: '#4a4239',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 1,
     flexShrink: 0,
   },
-  checkboxChecked: {
-    backgroundColor: '#6b8f71',
-    borderColor: '#6b8f71',
-  },
   taskTitle: {
     flex: 1,
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#ede6dc',
     lineHeight: 20,
-  },
-  taskTitleDone: {
-    textDecorationLine: 'line-through',
-    color: '#7a6f62',
   },
 })

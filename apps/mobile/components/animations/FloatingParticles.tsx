@@ -9,14 +9,30 @@ import Animated, {
   withDelay,
   Easing,
 } from 'react-native-reanimated'
+import { useColors } from '@/hooks/use-colors'
+import type { ColorTokens } from '@/hooks/use-colors'
 
-const COLORS = [
-  'rgba(196, 112, 63, 0.6)',
-  'rgba(212, 168, 83, 0.5)',
-  'rgba(237, 230, 220, 0.3)',
-  'rgba(196, 112, 63, 0.4)',
-  'rgba(212, 168, 83, 0.35)',
-]
+function getParticleColors(colors: ColorTokens): string[] {
+  // Decorative particles: warm copper/gold tones
+  // Dark mode: softer opacity against dark bg
+  // Light mode: slightly higher opacity to show against light bg
+  const isDark = colors.bg === '#12100e'
+  return isDark
+    ? [
+        'rgba(196,112,63,0.6)',
+        'rgba(212,168,83,0.5)',
+        'rgba(237,230,220,0.3)',
+        'rgba(196,112,63,0.4)',
+        'rgba(212,168,83,0.35)',
+      ]
+    : [
+        'rgba(196,112,63,0.35)',
+        'rgba(212,168,83,0.3)',
+        'rgba(0,0,0,0.08)',
+        'rgba(196,112,63,0.25)',
+        'rgba(212,168,83,0.2)',
+      ]
+}
 
 interface Particle {
   id: number
@@ -25,7 +41,7 @@ interface Particle {
   duration: number
   delay: number
   drift: number
-  color: string
+  colorIndex: number
 }
 
 function generateParticles(count: number): Particle[] {
@@ -36,11 +52,11 @@ function generateParticles(count: number): Particle[] {
     duration: (11 + Math.random() * 9) * 1000,
     delay: Math.random() * 10000,
     drift: (Math.random() - 0.5) * 60,
-    color: COLORS[i % COLORS.length],
+    colorIndex: i % 5,
   }))
 }
 
-function Star({ particle }: { particle: Particle }) {
+function Star({ particle, particleColors }: { particle: Particle; particleColors: string[] }) {
   const { height } = Dimensions.get('window')
   const translateY = useSharedValue(0)
   const translateX = useSharedValue(0)
@@ -88,7 +104,7 @@ function Star({ particle }: { particle: Particle }) {
           width: particle.size,
           height: particle.size,
           borderRadius: particle.size / 2,
-          backgroundColor: particle.color,
+          backgroundColor: particleColors[particle.colorIndex],
         },
         animatedStyle,
       ]}
@@ -98,14 +114,16 @@ function Star({ particle }: { particle: Particle }) {
 
 export function FloatingParticles({ count = 18 }: { count?: number }) {
   const reducedMotion = useReducedMotion()
+  const colors = useColors()
   const particles = useMemo(() => generateParticles(count), [count])
+  const particleColors = useMemo(() => getParticleColors(colors), [colors])
 
   if (reducedMotion) return null
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
       {particles.map((p) => (
-        <Star key={p.id} particle={p} />
+        <Star key={p.id} particle={p} particleColors={particleColors} />
       ))}
     </View>
   )

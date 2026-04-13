@@ -2,6 +2,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
 import { Crown, Check, Sparkles } from 'lucide-react-native'
 import { PAYWALL_COPY } from '@tdc/shared/constants'
+import { useColors } from '@/hooks/use-colors'
 
 const PREMIUM_FEATURES = [
   'Full task timeline (pregnancy to 24 months)',
@@ -33,6 +34,7 @@ export function PaywallOverlay({
   children,
 }: PaywallOverlayProps) {
   const router = useRouter()
+  const colors = useColors()
   const copy = featureKey ? PAYWALL_COPY[featureKey] : undefined
   const headline = message || copy?.headline || 'Premium Feature'
   const body =
@@ -42,22 +44,22 @@ export function PaywallOverlay({
   return (
     <View style={styles.container}>
       {children}
-      <View style={styles.overlay}>
+      <View style={[styles.overlay, { backgroundColor: colors.overlay }]}>
         <View style={styles.content}>
           {/* Crown icon */}
-          <View style={styles.iconBadge}>
-            <Crown size={24} color="#d4a853" />
+          <View style={[styles.iconBadge, { backgroundColor: colors.goldDim }]}>
+            <Crown size={24} color={colors.gold} />
           </View>
 
-          <Text style={styles.headline}>{headline}</Text>
-          <Text style={styles.body}>{body}</Text>
+          <Text style={[styles.headline, { color: colors.textPrimary }]}>{headline}</Text>
+          <Text style={[styles.body, { color: colors.textMuted }]}>{body}</Text>
 
           {/* Feature list */}
-          <View style={styles.featureList}>
+          <View style={[styles.featureList, { backgroundColor: colors.card, borderColor: colors.border }]}>
             {PREMIUM_FEATURES.map((f) => (
               <View key={f} style={styles.featureRow}>
-                <Check size={14} color="#c4703f" />
-                <Text style={styles.featureText}>{f}</Text>
+                <Check size={14} color={colors.copper} />
+                <Text style={[styles.featureText, { color: colors.textPrimary }]}>{f}</Text>
               </View>
             ))}
           </View>
@@ -65,21 +67,21 @@ export function PaywallOverlay({
           {/* Primary CTA: Annual */}
           <Pressable
             onPress={() => router.push('/(screens)/upgrade')}
-            style={styles.primaryCta}
+            style={[styles.primaryCta, { backgroundColor: colors.copper }]}
           >
-            <Sparkles size={16} color="#12100e" />
-            <Text style={styles.primaryCtaText}>Upgrade — $39.99/yr ($3.33/mo)</Text>
+            <Sparkles size={16} color={colors.bg} />
+            <Text style={[styles.primaryCtaText, { color: colors.bg }]}>Upgrade — $39.99/yr ($3.33/mo)</Text>
           </Pressable>
 
           {/* Secondary CTA: Monthly */}
           <Pressable
             onPress={() => router.push('/(screens)/upgrade')}
-            style={styles.secondaryCta}
+            style={[styles.secondaryCta, { borderColor: colors.borderHover }]}
           >
-            <Text style={styles.secondaryCtaText}>Or $4.99/month</Text>
+            <Text style={[styles.secondaryCtaText, { color: colors.textMuted }]}>Or $4.99/month</Text>
           </Pressable>
 
-          <Text style={styles.guarantee}>Free for 30 days — no credit card needed</Text>
+          <Text style={[styles.guarantee, { color: colors.textDim }]}>Free for 30 days — no credit card needed</Text>
         </View>
       </View>
     </View>
@@ -92,7 +94,6 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(18,16,14,0.85)',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 12,
@@ -108,7 +109,6 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: 'rgba(212,168,83,0.2)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -116,24 +116,20 @@ const styles = StyleSheet.create({
   headline: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 18,
-    color: '#faf6f0',
     textAlign: 'center',
     marginBottom: 8,
   },
   body: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 20,
     marginBottom: 20,
   },
   featureList: {
     alignSelf: 'stretch',
-    backgroundColor: '#201c18',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
     padding: 14,
     gap: 8,
     marginBottom: 20,
@@ -146,7 +142,6 @@ const styles = StyleSheet.create({
   featureText: {
     fontFamily: 'Jost-Regular',
     fontSize: 12,
-    color: '#faf6f0',
     flex: 1,
   },
   primaryCta: {
@@ -154,7 +149,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#c4703f',
     borderRadius: 10,
     paddingVertical: 14,
     alignSelf: 'stretch',
@@ -163,7 +157,6 @@ const styles = StyleSheet.create({
   primaryCtaText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 15,
-    color: '#12100e',
   },
   secondaryCta: {
     alignItems: 'center',
@@ -172,17 +165,14 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignSelf: 'stretch',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.15)',
     marginBottom: 12,
   },
   secondaryCtaText: {
     fontFamily: 'Karla-Regular',
     fontSize: 13,
-    color: '#7a6f62',
   },
   guarantee: {
     fontFamily: 'Jost-Regular',
     fontSize: 11,
-    color: '#4a4239',
   },
 })

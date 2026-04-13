@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { View, StyleSheet, type ViewStyle } from 'react-native'
+import { View, type ViewStyle } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -7,13 +7,17 @@ import Animated, {
   Easing,
   useReducedMotion,
 } from 'react-native-reanimated'
+import { useColors, type ColorTokens } from '@/hooks/use-colors'
 
 type ProgressVariant = 'copper' | 'gold' | 'sage'
 
-const VARIANT_COLORS: Record<ProgressVariant, string> = {
-  copper: '#c4703f',
-  gold: '#d4a853',
-  sage: '#6b8f71',
+function getVariantColor(variant: ProgressVariant, colors: ColorTokens): string {
+  const map: Record<ProgressVariant, string> = {
+    copper: colors.copper,
+    gold: colors.gold,
+    sage: colors.sage,
+  }
+  return map[variant]
 }
 
 interface ProgressProps {
@@ -29,6 +33,7 @@ export function Progress({
   height = 6,
   style,
 }: ProgressProps) {
+  const colors = useColors()
   const reducedMotion = useReducedMotion()
   const clampedValue = Math.min(100, Math.max(0, value))
   const progress = useSharedValue(reducedMotion ? clampedValue : 0)
@@ -42,24 +47,15 @@ export function Progress({
         })
   }, [clampedValue, reducedMotion, progress])
 
+  const fillColor = getVariantColor(variant, colors)
+
   const fillStyle = useAnimatedStyle(() => ({
     width: `${progress.value}%` as unknown as number,
-    backgroundColor: VARIANT_COLORS[variant],
   }))
 
   return (
-    <View style={[styles.track, { height, borderRadius: height / 2 }, style]}>
-      <Animated.View style={[styles.fill, { borderRadius: height / 2 }, fillStyle]} />
+    <View style={[{ height, borderRadius: height / 2, backgroundColor: colors.border, overflow: 'hidden' }, style]}>
+      <Animated.View style={[{ height: '100%', borderRadius: height / 2, backgroundColor: fillColor }, fillStyle]} />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  track: {
-    backgroundColor: 'rgba(237,230,220,0.08)',
-    overflow: 'hidden',
-  },
-  fill: {
-    height: '100%',
-  },
-})

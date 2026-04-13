@@ -11,12 +11,12 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { ArrowLeft, Newspaper, Lock } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useArticles, type Article } from '@/hooks/use-content'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
+import { useColors } from '@/hooks/use-colors'
 
 const STAGE_FILTERS: { value: string | undefined; label: string }[] = [
   { value: undefined, label: 'All' },
@@ -32,6 +32,7 @@ export default function ContentScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { profile } = useAuth()
+  const colors = useColors()
   const [selectedStage, setSelectedStage] = useState<string | undefined>(undefined)
 
   const { data: articles, isLoading } = useArticles(selectedStage)
@@ -62,26 +63,26 @@ export default function ContentScreen() {
       <CardEntrance delay={index * 80}>
         <Pressable onPress={() => handleArticlePress(item)}>
           <GlassCard style={styles.articleCard}>
-            <Text style={styles.articleTitle}>{item.title}</Text>
+            <Text style={[styles.articleTitle, { color: colors.textSecondary }]}>{item.title}</Text>
             {item.excerpt ? (
-              <Text style={styles.articleExcerpt} numberOfLines={2}>
+              <Text style={[styles.articleExcerpt, { color: colors.textMuted }]} numberOfLines={2}>
                 {item.excerpt}
               </Text>
             ) : null}
             <View style={styles.badgeRow}>
               {item.stage ? (
-                <View style={styles.stageBadge}>
-                  <Text style={styles.stageBadgeText}>{item.stage}</Text>
+                <View style={[styles.stageBadge, { backgroundColor: colors.subtleBg }]}>
+                  <Text style={[styles.stageBadgeText, { color: colors.textMuted }]}>{item.stage}</Text>
                 </View>
               ) : null}
               {item.is_free ? (
-                <View style={styles.freeBadge}>
-                  <Text style={styles.freeBadgeText}>Free</Text>
+                <View style={[styles.freeBadge, { backgroundColor: colors.sageDim }]}>
+                  <Text style={[styles.freeBadgeText, { color: colors.sage }]}>Free</Text>
                 </View>
               ) : (
-                <View style={styles.premiumBadge}>
-                  <Lock size={10} color="#d4a853" />
-                  <Text style={styles.premiumBadgeText}>Premium</Text>
+                <View style={[styles.premiumBadge, { backgroundColor: colors.goldDim }]}>
+                  <Lock size={10} color={colors.gold} />
+                  <Text style={[styles.premiumBadgeText, { color: colors.gold }]}>Premium</Text>
                 </View>
               )}
             </View>
@@ -89,22 +90,17 @@ export default function ContentScreen() {
         </Pressable>
       </CardEntrance>
     ),
-    [handleArticlePress]
+    [handleArticlePress, colors]
   )
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft size={20} color="#faf6f0" />
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+          <ArrowLeft size={20} color={colors.textPrimary} />
         </Pressable>
-        <Text style={styles.headerTitle}>Blog</Text>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Blog</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -122,9 +118,17 @@ export default function ContentScreen() {
               <Pressable
                 key={filter.label}
                 onPress={() => setSelectedStage(filter.value)}
-                style={[styles.filterPill, isActive && styles.filterPillActive]}
+                style={[
+                  styles.filterPill,
+                  { backgroundColor: colors.subtleBg, borderColor: colors.borderHover },
+                  isActive && { backgroundColor: colors.copper, borderColor: colors.copper },
+                ]}
               >
-                <Text style={[styles.filterPillText, isActive && styles.filterPillTextActive]}>
+                <Text style={[
+                  styles.filterPillText,
+                  { color: colors.textSecondary },
+                  isActive && { color: colors.textPrimary },
+                ]}>
                   {filter.label}
                 </Text>
               </Pressable>
@@ -136,13 +140,13 @@ export default function ContentScreen() {
       {/* Content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color="#c4703f" size="large" />
+          <ActivityIndicator color={colors.copper} size="large" />
         </View>
       ) : !articles || articles.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Newspaper size={40} color="#4a4239" />
-          <Text style={styles.emptyTitle}>No articles available</Text>
-          <Text style={styles.emptySubtitle}>
+          <Newspaper size={40} color={colors.textDim} />
+          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No articles available</Text>
+          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
             Check back soon for new content
           </Text>
         </View>
@@ -165,7 +169,7 @@ export default function ContentScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
+    backgroundColor: 'transparent',
   },
 
   // Header
@@ -179,7 +183,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -187,7 +190,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
     textAlign: 'center',
   },
   headerSpacer: {
@@ -206,23 +208,13 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,
-    backgroundColor: 'rgba(237,230,220,0.1)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.12)',
     marginRight: 8,
-  },
-  filterPillActive: {
-    backgroundColor: '#c4703f',
-    borderColor: '#c4703f',
   },
   filterPillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#ede6dc',
     lineHeight: 18,
-  },
-  filterPillTextActive: {
-    color: '#faf6f0',
   },
 
   // List
@@ -238,12 +230,10 @@ const styles = StyleSheet.create({
   articleTitle: {
     fontFamily: 'Karla-Medium',
     fontSize: 16,
-    color: '#ede6dc',
   },
   articleExcerpt: {
     fontFamily: 'Jost-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     marginTop: 4,
   },
   badgeRow: {
@@ -256,12 +246,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 8,
-    backgroundColor: 'rgba(237,230,220,0.06)',
   },
   stageBadgeText: {
     fontFamily: 'Karla-Medium',
     fontSize: 10,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -269,12 +257,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 8,
-    backgroundColor: 'rgba(107,143,113,0.15)',
   },
   freeBadgeText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 10,
-    color: '#6b8f71',
   },
   premiumBadge: {
     flexDirection: 'row',
@@ -283,12 +269,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 8,
-    backgroundColor: 'rgba(212,168,83,0.12)',
   },
   premiumBadgeText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 10,
-    color: '#d4a853',
   },
 
   // Loading / Empty
@@ -307,13 +291,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
     textAlign: 'center',
   },
   emptySubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
   },
 })

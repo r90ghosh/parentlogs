@@ -1,5 +1,6 @@
 import { ScrollView, Text, Pressable, StyleSheet, View } from 'react-native'
 import * as Haptics from 'expo-haptics'
+import { useColors } from '@/hooks/use-colors'
 
 export type TaskTab = 'active' | 'my-tasks' | 'partner' | 'completed' | 'catch-up'
 
@@ -24,6 +25,8 @@ interface TaskFilterTabsProps {
 }
 
 export function TaskFilterTabs({ activeTab, onTabPress, catchUpCount }: TaskFilterTabsProps) {
+  const colors = useColors()
+
   const visibleTabs = TABS.filter(
     (tab) => !(tab.hideIfZero && catchUpCount === 0)
   )
@@ -48,20 +51,22 @@ export function TaskFilterTabs({ activeTab, onTabPress, catchUpCount }: TaskFilt
             onPress={() => handlePress(tab.key)}
             style={[
               styles.pill,
-              isActive && styles.pillActive,
+              { backgroundColor: colors.pressed, borderColor: colors.subtleBg },
+              isActive && { backgroundColor: colors.copperDim, borderColor: colors.copperGlow },
             ]}
           >
             <Text
               style={[
                 styles.pillText,
-                isActive && styles.pillTextActive,
+                { color: colors.textMuted },
+                isActive && { color: colors.copper },
               ]}
             >
               {tab.label}
             </Text>
             {tab.key === 'catch-up' && catchUpCount > 0 && (
-              <View style={styles.badge}>
-                <Text style={styles.badgeText}>{catchUpCount}</Text>
+              <View style={[styles.badge, { backgroundColor: colors.goldGlow }]}>
+                <Text style={[styles.badgeText, { color: colors.gold }]}>{catchUpCount}</Text>
               </View>
             )}
           </Pressable>
@@ -83,25 +88,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: 'rgba(237,230,220,0.04)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.06)',
     gap: 6,
-  },
-  pillActive: {
-    backgroundColor: 'rgba(196,112,63,0.15)',
-    borderColor: 'rgba(196,112,63,0.4)',
   },
   pillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#7a6f62',
-  },
-  pillTextActive: {
-    color: '#c4703f',
   },
   badge: {
-    backgroundColor: 'rgba(212,168,83,0.25)',
     borderRadius: 8,
     minWidth: 18,
     height: 18,
@@ -112,6 +106,5 @@ const styles = StyleSheet.create({
   badgeText: {
     fontFamily: 'Karla-Bold',
     fontSize: 10,
-    color: '#d4a853',
   },
 })

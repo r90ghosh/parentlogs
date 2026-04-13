@@ -8,6 +8,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { ChevronDown } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
+import { useColors } from '@/hooks/use-colors'
 
 interface BriefingSectionProps {
   title: string
@@ -22,11 +23,14 @@ export function BriefingSection({
   icon,
   children,
   defaultExpanded = true,
-  accentColor = '#c4703f',
+  accentColor,
 }: BriefingSectionProps) {
+  const colors = useColors()
   const reducedMotion = useReducedMotion()
   const [expanded, setExpanded] = useState(defaultExpanded)
   const rotation = useSharedValue(defaultExpanded ? 180 : 0)
+
+  const resolvedAccent = accentColor ?? colors.copper
 
   const toggleExpanded = () => {
     const next = !expanded
@@ -39,14 +43,14 @@ export function BriefingSection({
   }))
 
   return (
-    <GlassCard style={[styles.card, { borderTopColor: accentColor }]}>
+    <GlassCard style={[styles.card, { borderTopColor: resolvedAccent }]}>
       <Pressable onPress={toggleExpanded} style={styles.header}>
         <View style={styles.headerLeft}>
           <Text style={styles.icon}>{icon}</Text>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>{title}</Text>
         </View>
         <Animated.View style={chevronStyle}>
-          <ChevronDown size={18} color="#7a6f62" />
+          <ChevronDown size={18} color={colors.textMuted} />
         </Animated.View>
       </Pressable>
       {expanded && (
@@ -81,7 +85,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   content: {
     paddingHorizontal: 16,

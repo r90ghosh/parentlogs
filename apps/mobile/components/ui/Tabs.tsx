@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react'
 import { Pressable, Text, StyleSheet, ScrollView, type ViewStyle } from 'react-native'
 import * as Haptics from 'expo-haptics'
+import { useColors } from '@/hooks/use-colors'
 
 interface Tab {
   key: string
@@ -15,6 +16,7 @@ interface TabsProps {
 }
 
 export function Tabs({ tabs, activeTab, onTabChange, style }: TabsProps) {
+  const colors = useColors()
   const scrollRef = useRef<ScrollView>(null)
 
   // Scroll active tab into view on mount
@@ -42,9 +44,9 @@ export function Tabs({ tabs, activeTab, onTabChange, style }: TabsProps) {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
               onTabChange(tab.key)
             }}
-            style={[styles.tab, isActive && styles.tabActive]}
+            style={[styles.tab, isActive && { backgroundColor: colors.copper }]}
           >
-            <Text style={[styles.tabText, isActive && styles.tabTextActive]}>
+            <Text style={[styles.tabText, { color: colors.textMuted }, isActive && { color: colors.textPrimary }]}>
               {tab.label}
             </Text>
           </Pressable>
@@ -65,15 +67,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: 'transparent',
   },
-  tabActive: {
-    backgroundColor: '#c4703f',
-  },
   tabText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
-  },
-  tabTextActive: {
-    color: '#faf6f0',
   },
 })

@@ -2,25 +2,27 @@ import { Tabs } from 'expo-router'
 import { Platform, StyleSheet, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Compass, CreditCard, Home } from 'lucide-react-native'
+import { useColors } from '@/hooks/use-colors'
 
 export default function GuestLayout() {
+  const colors = useColors()
   const insets = useSafeAreaInsets()
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.bg }]}>
       <Tabs
         screenOptions={{
           headerShown: false,
           sceneStyle: { backgroundColor: 'transparent' },
           tabBarStyle: {
-            backgroundColor: Platform.OS === 'ios' ? 'rgba(26,23,20,0.85)' : 'rgba(26,23,20,0.97)',
-            borderTopColor: 'rgba(237,230,220,0.08)',
+            backgroundColor: Platform.OS === 'ios' ? colors.glassBg : colors.surface,
+            borderTopColor: colors.border,
             borderTopWidth: 1,
             paddingBottom: insets.bottom || 8,
             height: 56 + (insets.bottom || 8),
           },
-          tabBarActiveTintColor: '#c4703f',
-          tabBarInactiveTintColor: '#4a4239',
+          tabBarActiveTintColor: colors.copper,
+          tabBarInactiveTintColor: colors.textDim,
           tabBarLabelStyle: {
             fontFamily: 'Karla-Medium',
             fontSize: 11,
@@ -62,6 +64,5 @@ export default function GuestLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
 })

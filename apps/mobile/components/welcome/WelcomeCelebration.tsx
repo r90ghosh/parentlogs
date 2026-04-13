@@ -21,6 +21,7 @@ import Animated, {
   FadeIn,
   runOnJS,
 } from 'react-native-reanimated'
+import { useColors } from '@/hooks/use-colors'
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window')
 
@@ -346,6 +347,7 @@ interface WelcomeCelebrationProps {
 
 export function WelcomeCelebration({ onDismiss }: WelcomeCelebrationProps) {
   const reducedMotion = useReducedMotion()
+  const colors = useColors()
   const modalOpacity = useSharedValue(1)
 
   // Memoize all particle configs so they're created once
@@ -420,14 +422,14 @@ export function WelcomeCelebration({ onDismiss }: WelcomeCelebrationProps) {
   if (reducedMotion) {
     return (
       <Modal transparent visible statusBarTranslucent animationType="fade">
-        <Animated.View style={[styles.fullScreen]} entering={FadeIn.duration(400)}>
+        <Animated.View style={[styles.fullScreen, { backgroundColor: colors.bg }]} entering={FadeIn.duration(400)}>
           <LinearGradient
-            colors={['#12100e', '#1a1714', '#12100e']}
+            colors={colors.bgGradient as unknown as [string, string, ...string[]]}
             style={StyleSheet.absoluteFill}
           />
           <View style={styles.contentContainer}>
-            <Text style={styles.headline}>Welcome to{'\n'}Fatherhood</Text>
-            <Text style={styles.body}>
+            <Text style={[styles.headline, { color: colors.copper }]}>Welcome to{'\n'}Fatherhood</Text>
+            <Text style={[styles.body, { color: colors.textSecondary }]}>
               The greatest adventure of your life just started. We're here for every step, every sleepless night, and every first smile.
             </Text>
             <Pressable
@@ -435,9 +437,9 @@ export function WelcomeCelebration({ onDismiss }: WelcomeCelebrationProps) {
                 Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
                 onDismiss()
               }}
-              style={({ pressed }) => [styles.ctaButton, pressed && styles.ctaPressed]}
+              style={({ pressed }) => [styles.ctaButton, { backgroundColor: colors.copper, shadowColor: colors.copper }, pressed && styles.ctaPressed]}
             >
-              <Text style={styles.ctaText}>LET'S GO</Text>
+              <Text style={[styles.ctaText, { color: colors.textPrimary }]}>LET'S GO</Text>
             </Pressable>
           </View>
         </Animated.View>
@@ -447,10 +449,10 @@ export function WelcomeCelebration({ onDismiss }: WelcomeCelebrationProps) {
 
   return (
     <Modal transparent visible statusBarTranslucent>
-      <Animated.View style={[styles.fullScreen, modalStyle]}>
+      <Animated.View style={[styles.fullScreen, { backgroundColor: colors.bg }, modalStyle]}>
         {/* Layer 1: Background gradient */}
         <LinearGradient
-          colors={['#12100e', '#1a1714', '#12100e']}
+          colors={colors.bgGradient as unknown as [string, string, ...string[]]}
           style={StyleSheet.absoluteFill}
         />
 
@@ -484,20 +486,20 @@ export function WelcomeCelebration({ onDismiss }: WelcomeCelebrationProps) {
 
         {/* Layer 6: Content */}
         <View style={styles.contentContainer}>
-          <Animated.Text style={[styles.headline, headlineStyle]}>
+          <Animated.Text style={[styles.headline, { color: colors.copper }, headlineStyle]}>
             Welcome to{'\n'}Fatherhood
           </Animated.Text>
 
-          <Animated.Text style={[styles.body, bodyStyle]}>
+          <Animated.Text style={[styles.body, { color: colors.textSecondary }, bodyStyle]}>
             The greatest adventure of your life just started. We're here for every step, every sleepless night, and every first smile.
           </Animated.Text>
 
           <Animated.View style={ctaStyle}>
             <Pressable
               onPress={handleCTAPress}
-              style={({ pressed }) => [styles.ctaButton, pressed && styles.ctaPressed]}
+              style={({ pressed }) => [styles.ctaButton, { backgroundColor: colors.copper, shadowColor: colors.copper }, pressed && styles.ctaPressed]}
             >
-              <Text style={styles.ctaText}>LET'S GO</Text>
+              <Text style={[styles.ctaText, { color: colors.textPrimary }]}>LET'S GO</Text>
             </Pressable>
           </Animated.View>
         </View>
@@ -509,7 +511,6 @@ export function WelcomeCelebration({ onDismiss }: WelcomeCelebrationProps) {
 const styles = StyleSheet.create({
   fullScreen: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   particleLayer: {
     ...StyleSheet.absoluteFillObject,
@@ -525,7 +526,6 @@ const styles = StyleSheet.create({
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 52,
     lineHeight: 58,
-    color: '#c4703f',
     textAlign: 'center',
     marginBottom: 24,
   },
@@ -533,17 +533,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Regular',
     fontSize: 17,
     lineHeight: 28,
-    color: '#ede6dc',
     textAlign: 'center',
     maxWidth: 340,
     marginBottom: 40,
   },
   ctaButton: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     paddingHorizontal: 48,
-    shadowColor: '#c4703f',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.3,
     shadowRadius: 15,
@@ -556,7 +553,6 @@ const styles = StyleSheet.create({
   ctaText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
     letterSpacing: 1.5,
   },
 })

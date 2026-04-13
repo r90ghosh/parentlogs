@@ -8,6 +8,7 @@ import type { Baby as BabyType } from '@tdc/shared/types'
 import { isPregnancyStage } from '@tdc/shared/utils/pregnancy-utils'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useBabies, useSwitchBaby } from '@/hooks/use-babies'
+import { useColors } from '@/hooks/use-colors'
 
 function getWeekLabel(baby: BabyType): string {
   if (isPregnancyStage(baby.stage)) {
@@ -30,6 +31,7 @@ export function BabySwitcher() {
   const { data: babies } = useBabies()
   const switchBaby = useSwitchBaby()
   const router = useRouter()
+  const colors = useColors()
   const [sheetOpen, setSheetOpen] = useState(false)
 
   const activeBabyId = profile?.active_baby_id
@@ -68,22 +70,22 @@ export function BabySwitcher() {
               onPress={() => handleSwitch(baby.id)}
               style={({ pressed }) => [
                 styles.babyRow,
-                isActive && styles.babyRowActive,
-                pressed && styles.babyRowPressed,
+                isActive && { backgroundColor: colors.copperDim },
+                pressed && { backgroundColor: colors.pressed },
               ]}
             >
-              <View style={[styles.rowIconCircle, isActive && styles.rowIconCircleActive]}>
-                <Baby size={16} color={isActive ? '#c4703f' : '#7a6f62'} />
+              <View style={[styles.rowIconCircle, { backgroundColor: colors.subtleBg }, isActive && { backgroundColor: colors.copperDim }]}>
+                <Baby size={16} color={isActive ? colors.copper : colors.textMuted} />
               </View>
               <View style={styles.rowTextContainer}>
-                <Text style={[styles.rowName, isActive && styles.rowNameActive]}>
+                <Text style={[styles.rowName, { color: colors.textSecondary }, isActive && { color: colors.copper, fontFamily: 'Karla-SemiBold' }]}>
                   {baby.baby_name || `Baby ${baby.sort_order + 1}`}
                 </Text>
-                <Text style={styles.rowMeta}>
+                <Text style={[styles.rowMeta, { color: colors.textMuted }]}>
                   {getStageBadge(baby)} · {getWeekLabel(baby)}
                 </Text>
               </View>
-              {isActive && <Check size={16} color="#c4703f" />}
+              {isActive && <Check size={16} color={colors.copper} />}
             </Pressable>
           )
         })}
@@ -92,30 +94,36 @@ export function BabySwitcher() {
           onPress={handleAddBaby}
           style={({ pressed }) => [
             styles.addBabyRow,
-            pressed && styles.babyRowPressed,
+            { borderTopColor: colors.subtleBg },
+            pressed && { backgroundColor: colors.pressed },
           ]}
         >
-          <View style={styles.addIconCircle}>
-            <Plus size={16} color="#7a6f62" />
+          <View style={[styles.addIconCircle, { backgroundColor: colors.subtleBg }]}>
+            <Plus size={16} color={colors.textMuted} />
           </View>
-          <Text style={styles.addBabyText}>Add baby</Text>
+          <Text style={[styles.addBabyText, { color: colors.textSecondary }]}>Add baby</Text>
         </Pressable>
       </>
     )
   }
 
+  const containerStyle = {
+    backgroundColor: colors.copperDim,
+    borderColor: colors.copperGlow,
+  }
+
   // Single baby — compact display
   if (!isMultiBaby) {
     return (
-      <View style={styles.singleContainer}>
-        <View style={styles.iconCircle}>
-          <Baby size={14} color="#c4703f" />
+      <View style={[styles.singleContainer, containerStyle]}>
+        <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>
+          <Baby size={14} color={colors.copper} />
         </View>
         <View style={styles.textContainer}>
-          <Text style={styles.babyName} numberOfLines={1}>
+          <Text style={[styles.babyName, { color: colors.textPrimary }]} numberOfLines={1}>
             {activeBaby.baby_name || 'Baby'}
           </Text>
-          <Text style={styles.babyMeta}>
+          <Text style={[styles.babyMeta, { color: colors.textMuted }]}>
             {getStageBadge(activeBaby)} · {getWeekLabel(activeBaby)}
           </Text>
         </View>
@@ -133,21 +141,22 @@ export function BabySwitcher() {
         }}
         style={({ pressed }) => [
           styles.multiContainer,
-          pressed && styles.multiContainerPressed,
+          containerStyle,
+          pressed && { backgroundColor: colors.copperGlow },
         ]}
       >
-        <View style={styles.iconCircle}>
-          <Baby size={14} color="#c4703f" />
+        <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>
+          <Baby size={14} color={colors.copper} />
         </View>
         <View style={styles.textContainer}>
-          <Text style={styles.babyName} numberOfLines={1}>
+          <Text style={[styles.babyName, { color: colors.textPrimary }]} numberOfLines={1}>
             {activeBaby.baby_name || 'Baby'}
           </Text>
-          <Text style={styles.babyMeta}>
+          <Text style={[styles.babyMeta, { color: colors.textMuted }]}>
             {getStageBadge(activeBaby)} · {getWeekLabel(activeBaby)}
           </Text>
         </View>
-        <ChevronDown size={14} color="#7a6f62" />
+        <ChevronDown size={14} color={colors.textMuted} />
       </Pressable>
 
       <Modal
@@ -157,20 +166,20 @@ export function BabySwitcher() {
         onRequestClose={() => setSheetOpen(false)}
       >
         <View style={styles.modalOverlay}>
-          <Pressable style={styles.modalBackdrop} onPress={() => setSheetOpen(false)} />
+          <Pressable style={[styles.modalBackdrop, { backgroundColor: colors.overlay }]} onPress={() => setSheetOpen(false)} />
           {Platform.OS === 'ios' ? (
-            <BlurView tint="dark" intensity={40} style={styles.sheet}>
-              <View style={styles.sheetHandle} />
+            <BlurView tint={colors.blurTint} intensity={40} style={[styles.sheet, { borderColor: colors.border }]}>
+              <View style={[styles.sheetHandle, { backgroundColor: colors.borderHover }]} />
               <View style={styles.sheetContent}>
-                <Text style={styles.sheetTitle}>Switch Baby</Text>
+                <Text style={[styles.sheetTitle, { color: colors.textMuted }]}>Switch Baby</Text>
                 {renderBabyList()}
               </View>
             </BlurView>
           ) : (
-            <View style={[styles.sheet, styles.sheetAndroid]}>
-              <View style={styles.sheetHandle} />
+            <View style={[styles.sheet, { borderColor: colors.border, backgroundColor: colors.glassBg }]}>
+              <View style={[styles.sheetHandle, { backgroundColor: colors.borderHover }]} />
               <View style={styles.sheetContent}>
-                <Text style={styles.sheetTitle}>Switch Baby</Text>
+                <Text style={[styles.sheetTitle, { color: colors.textMuted }]}>Switch Baby</Text>
                 {renderBabyList()}
               </View>
             </View>
@@ -182,7 +191,6 @@ export function BabySwitcher() {
 }
 
 const styles = StyleSheet.create({
-  // Shared container style for both single and multi baby
   singleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -190,11 +198,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 12,
-    backgroundColor: 'rgba(196,112,63,0.08)',
     borderWidth: 1,
-    borderColor: 'rgba(196,112,63,0.15)',
   },
-  // Same as singleContainer but tappable
   multiContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -202,19 +207,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 12,
-    backgroundColor: 'rgba(196,112,63,0.08)',
     borderWidth: 1,
-    borderColor: 'rgba(196,112,63,0.15)',
-  },
-  multiContainerPressed: {
-    backgroundColor: 'rgba(196,112,63,0.15)',
   },
 
   iconCircle: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'rgba(196,112,63,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -225,23 +224,19 @@ const styles = StyleSheet.create({
   babyName: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#faf6f0',
   },
   babyMeta: {
     fontFamily: 'Karla-Regular',
     fontSize: 10,
-    color: '#7a6f62',
     marginTop: 1,
   },
 
-  // Modal overlay
   modalOverlay: {
     flex: 1,
     justifyContent: 'flex-end',
   },
   modalBackdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   sheet: {
     borderTopLeftRadius: 24,
@@ -249,23 +244,17 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderBottomWidth: 0,
-    borderColor: 'rgba(237,230,220,0.08)',
     paddingBottom: 34,
-  },
-  sheetAndroid: {
-    backgroundColor: 'rgba(32,28,24,0.97)',
   },
   sheetHandle: {
     width: 36,
     height: 4,
     borderRadius: 2,
-    backgroundColor: 'rgba(237,230,220,0.15)',
     alignSelf: 'center',
     marginTop: 12,
     marginBottom: 16,
   },
 
-  // Bottom sheet content
   sheetContent: {
     paddingHorizontal: 20,
     paddingBottom: 16,
@@ -273,13 +262,11 @@ const styles = StyleSheet.create({
   sheetTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
     marginBottom: 16,
   },
 
-  // Baby row in sheet
   babyRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -289,22 +276,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 4,
   },
-  babyRowActive: {
-    backgroundColor: 'rgba(196,112,63,0.1)',
-  },
-  babyRowPressed: {
-    backgroundColor: 'rgba(237,230,220,0.04)',
-  },
   rowIconCircle: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  rowIconCircleActive: {
-    backgroundColor: 'rgba(196,112,63,0.15)',
   },
   rowTextContainer: {
     flex: 1,
@@ -313,20 +290,13 @@ const styles = StyleSheet.create({
   rowName: {
     fontFamily: 'Karla-Medium',
     fontSize: 15,
-    color: '#ede6dc',
-  },
-  rowNameActive: {
-    color: '#c4703f',
-    fontFamily: 'Karla-SemiBold',
   },
   rowMeta: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginTop: 2,
   },
 
-  // Add baby row
   addBabyRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -336,19 +306,16 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginTop: 8,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.06)',
   },
   addIconCircle: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   addBabyText: {
     fontFamily: 'Karla-Medium',
     fontSize: 15,
-    color: '#ede6dc',
   },
 })

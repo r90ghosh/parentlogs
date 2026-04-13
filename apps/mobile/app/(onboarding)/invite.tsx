@@ -13,15 +13,16 @@ import {
   ScrollView,
 } from 'react-native'
 import { useRouter } from 'expo-router'
-import { LinearGradient } from 'expo-linear-gradient'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { UserPlus, Share2, Copy } from 'lucide-react-native'
 import * as Clipboard from 'expo-clipboard'
 import * as Haptics from 'expo-haptics'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { GlassCard } from '@/components/glass'
+import { useColors } from '@/hooks/use-colors'
 
 export default function InviteScreen() {
+  const colors = useColors()
   const [email, setEmail] = useState('')
   const [isSending, setIsSending] = useState(false)
   const [codeCopied, setCodeCopied] = useState(false)
@@ -86,11 +87,7 @@ export default function InviteScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
@@ -103,17 +100,17 @@ export default function InviteScreen() {
             entering={FadeInDown.delay(200).springify().damping(12)}
             style={styles.iconContainer}
           >
-            <View style={styles.iconCircle}>
-              <UserPlus size={28} color="#d4a853" />
+            <View style={[styles.iconCircle, { backgroundColor: colors.goldDim, borderColor: colors.goldGlow }]}>
+              <UserPlus size={28} color={colors.gold} />
             </View>
           </Animated.View>
 
           <Animated.View
             entering={FadeInDown.delay(400).springify().damping(12)}
           >
-            <Text style={styles.step}>Step 3 of 4</Text>
-            <Text style={styles.title}>Invite your partner</Text>
-            <Text style={styles.subtitle}>
+            <Text style={[styles.step, { color: colors.copper }]}>Step 3 of 4</Text>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>Invite your partner</Text>
+            <Text style={[styles.subtitle, { color: colors.textMuted }]}>
               One subscription covers both of you. Share access so you can track
               everything together.
             </Text>
@@ -124,15 +121,15 @@ export default function InviteScreen() {
             <Animated.View
               entering={FadeInDown.delay(550).springify().damping(12)}
             >
-              <GlassCard style={styles.codeCard}>
-                <View style={styles.codeAccent} />
+              <GlassCard style={[styles.codeCard, { borderColor: colors.goldGlow }]}>
+                <View style={[styles.codeAccent, { backgroundColor: colors.gold }]} />
                 <View style={styles.codeInner}>
-                  <Text style={styles.codeLabel}>Your family invite code</Text>
+                  <Text style={[styles.codeLabel, { color: colors.textMuted }]}>Your family invite code</Text>
                   <View style={styles.codeRow}>
-                    <Text style={styles.codeText}>{inviteCode}</Text>
-                    <Pressable onPress={handleCopyCode} style={styles.copyButton}>
-                      <Copy size={16} color={codeCopied ? '#6b8f71' : '#d4a853'} />
-                      <Text style={[styles.copyText, codeCopied && styles.copyTextCopied]}>
+                    <Text style={[styles.codeText, { color: colors.gold }]}>{inviteCode}</Text>
+                    <Pressable onPress={handleCopyCode} style={[styles.copyButton, { backgroundColor: colors.goldDim, borderColor: colors.goldGlow }]}>
+                      <Copy size={16} color={codeCopied ? colors.sage : colors.gold} />
+                      <Text style={[styles.copyText, { color: colors.gold }, codeCopied && { color: colors.sage }]}>
                         {codeCopied ? 'Copied' : 'Copy'}
                       </Text>
                     </Pressable>
@@ -148,13 +145,13 @@ export default function InviteScreen() {
             style={styles.form}
           >
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Partner's email (optional)</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>Partner's email (optional)</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                 value={email}
                 onChangeText={setEmail}
                 placeholder="partner@email.com"
-                placeholderTextColor="#4a4239"
+                placeholderTextColor={colors.textDim}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -172,16 +169,17 @@ export default function InviteScreen() {
               disabled={isSending}
               style={({ pressed }) => [
                 styles.sendButton,
+                { backgroundColor: colors.copper },
                 pressed && styles.buttonPressed,
                 isSending && styles.buttonDisabled,
               ]}
             >
               {isSending ? (
-                <ActivityIndicator color="#faf6f0" />
+                <ActivityIndicator color={colors.textPrimary} />
               ) : (
                 <>
-                  <Share2 size={18} color="#faf6f0" />
-                  <Text style={styles.sendButtonText}>Share Invite</Text>
+                  <Share2 size={18} color={colors.textPrimary} />
+                  <Text style={[styles.sendButtonText, { color: colors.textPrimary }]}>Share Invite</Text>
                 </>
               )}
             </Pressable>
@@ -190,10 +188,11 @@ export default function InviteScreen() {
               onPress={handleShareInvite}
               style={({ pressed }) => [
                 styles.shareSystemButton,
+                { backgroundColor: colors.goldDim, borderColor: colors.goldGlow },
                 pressed && styles.buttonPressed,
               ]}
             >
-              <Text style={styles.shareSystemText}>Share via other apps</Text>
+              <Text style={[styles.shareSystemText, { color: colors.gold }]}>Share via other apps</Text>
             </Pressable>
 
             <Pressable
@@ -203,7 +202,7 @@ export default function InviteScreen() {
                 pressed && styles.buttonPressed,
               ]}
             >
-              <Text style={styles.skipText}>Skip for now</Text>
+              <Text style={[styles.skipText, { color: colors.textMuted }]}>Skip for now</Text>
             </Pressable>
           </Animated.View>
         </ScrollView>
@@ -215,7 +214,6 @@ export default function InviteScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   flex: {
     flex: 1,
@@ -234,16 +232,13 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: 'rgba(212,168,83,0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(212,168,83,0.25)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   step: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#c4703f',
     marginBottom: 12,
     textTransform: 'uppercase',
     letterSpacing: 1.5,
@@ -252,14 +247,12 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 28,
-    color: '#faf6f0',
     textAlign: 'center',
     marginBottom: 8,
   },
   subtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 24,
   },
@@ -270,11 +263,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 0,
     marginTop: 28,
-    borderColor: 'rgba(212,168,83,0.2)',
   },
   codeAccent: {
     width: 3,
-    backgroundColor: '#d4a853',
     borderTopLeftRadius: 12,
     borderBottomLeftRadius: 12,
   },
@@ -285,7 +276,6 @@ const styles = StyleSheet.create({
   codeLabel: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 0.8,
     marginBottom: 8,
@@ -298,7 +288,6 @@ const styles = StyleSheet.create({
   codeText: {
     fontFamily: 'Jost-SemiBold',
     fontSize: 22,
-    color: '#d4a853',
     letterSpacing: 2,
   },
   copyButton: {
@@ -308,17 +297,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
-    backgroundColor: 'rgba(212,168,83,0.1)',
     borderWidth: 1,
-    borderColor: 'rgba(212,168,83,0.2)',
   },
   copyText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#d4a853',
-  },
-  copyTextCopied: {
-    color: '#6b8f71',
   },
 
   // Form
@@ -331,18 +314,14 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#ede6dc',
   },
   input: {
-    backgroundColor: '#201c18',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#ede6dc',
   },
 
   // Actions
@@ -351,7 +330,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   sendButton: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -362,12 +340,9 @@ const styles = StyleSheet.create({
   sendButtonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   shareSystemButton: {
-    backgroundColor: 'rgba(212,168,83,0.1)',
     borderWidth: 1,
-    borderColor: 'rgba(212,168,83,0.25)',
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
@@ -375,7 +350,6 @@ const styles = StyleSheet.create({
   shareSystemText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 15,
-    color: '#d4a853',
   },
   skipButton: {
     paddingVertical: 14,
@@ -384,7 +358,6 @@ const styles = StyleSheet.create({
   skipText: {
     fontFamily: 'Karla-Medium',
     fontSize: 15,
-    color: '#7a6f62',
   },
   buttonPressed: {
     opacity: 0.85,

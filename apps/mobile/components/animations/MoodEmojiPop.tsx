@@ -6,6 +6,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 import * as Haptics from 'expo-haptics'
+import { useColors } from '@/hooks/use-colors'
 
 interface MoodEmojiPopProps {
   emoji: string
@@ -21,6 +22,7 @@ export function MoodEmojiPop({
   onPress,
 }: MoodEmojiPopProps) {
   const reducedMotion = useReducedMotion()
+  const colors = useColors()
   const scale = useSharedValue(1)
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -42,13 +44,18 @@ export function MoodEmojiPop({
       <Animated.View
         style={[
           styles.emojiContainer,
-          isSelected && styles.selectedContainer,
+          { backgroundColor: colors.subtleBg },
+          isSelected && {
+            backgroundColor: colors.copperGlow,
+            borderWidth: 2,
+            borderColor: colors.copper,
+          },
           animatedStyle,
         ]}
       >
         <Text style={styles.emoji}>{emoji}</Text>
       </Animated.View>
-      <Text style={[styles.label, isSelected && styles.selectedLabel]}>
+      <Text style={[styles.label, { color: colors.textMuted }, isSelected && { color: colors.copper }]}>
         {label}
       </Text>
     </Pressable>
@@ -64,14 +71,8 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  selectedContainer: {
-    backgroundColor: 'rgba(196,112,63,0.2)',
-    borderWidth: 2,
-    borderColor: '#c4703f',
   },
   emoji: {
     fontSize: 28,
@@ -79,9 +80,5 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
-  },
-  selectedLabel: {
-    color: '#c4703f',
   },
 })

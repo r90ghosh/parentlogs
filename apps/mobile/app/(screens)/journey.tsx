@@ -10,33 +10,33 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { X, ChevronDown, ChevronUp, Compass } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import { useCurrentPhase, useJourneyContent } from '@/hooks/use-journey'
+import { useColors } from '@/hooks/use-colors'
 import { PILLAR_CONFIG } from '@tdc/shared/constants/dad-pillar-config'
 import type { DadChallengeContent, DadChallengePillar } from '@tdc/shared/types/dad-journey'
 import * as Haptics from 'expo-haptics'
 
-const PILLAR_COLORS: Record<DadChallengePillar, string> = {
-  anxiety: '#d4836b',
-  baby_bonding: '#6b8f71',
-  relationship: '#c47a8f',
-  finances: '#5b9bd5',
-  knowledge: '#c4703f',
-  planning: '#d4a853',
-  extended_family: '#7a6f62',
+const PILLAR_COLOR_KEYS: Record<DadChallengePillar, 'coral' | 'sage' | 'rose' | 'sky' | 'copper' | 'gold' | 'textMuted'> = {
+  anxiety: 'coral',
+  baby_bonding: 'sage',
+  relationship: 'rose',
+  finances: 'sky',
+  knowledge: 'copper',
+  planning: 'gold',
+  extended_family: 'textMuted',
 }
 
-const PILLAR_BG_COLORS: Record<DadChallengePillar, string> = {
-  anxiety: 'rgba(212,131,107,0.1)',
-  baby_bonding: 'rgba(107,143,113,0.1)',
-  relationship: 'rgba(196,122,143,0.1)',
-  finances: 'rgba(91,155,213,0.1)',
-  knowledge: 'rgba(196,112,63,0.1)',
-  planning: 'rgba(212,168,83,0.1)',
-  extended_family: 'rgba(122,111,98,0.1)',
+const PILLAR_BG_KEYS: Record<DadChallengePillar, 'coralDim' | 'sageDim' | 'roseDim' | 'skyDim' | 'copperDim' | 'goldDim' | 'subtleBg'> = {
+  anxiety: 'coralDim',
+  baby_bonding: 'sageDim',
+  relationship: 'roseDim',
+  finances: 'skyDim',
+  knowledge: 'copperDim',
+  planning: 'goldDim',
+  extended_family: 'subtleBg',
 }
 
 interface PillarTileProps {
@@ -48,8 +48,11 @@ interface PillarTileProps {
 }
 
 function PillarTile({ content, config, isExpanded, onToggle, delay }: PillarTileProps) {
-  const color = PILLAR_COLORS[content.pillar]
-  const bgColor = PILLAR_BG_COLORS[content.pillar]
+  const colors = useColors()
+  const colorKey = PILLAR_COLOR_KEYS[content.pillar]
+  const bgKey = PILLAR_BG_KEYS[content.pillar]
+  const color = colors[colorKey]
+  const bgColor = colors[bgKey]
 
   return (
     <CardEntrance delay={delay}>
@@ -71,32 +74,32 @@ function PillarTile({ content, config, isExpanded, onToggle, delay }: PillarTile
             <Text style={[styles.pillarLabel, { color }]}>
               {config?.label || content.pillar}
             </Text>
-            <Text style={styles.pillarHeadline}>{content.headline}</Text>
+            <Text style={[styles.pillarHeadline, { color: colors.textSecondary }]}>{content.headline}</Text>
           </View>
           {isExpanded ? (
-            <ChevronUp size={18} color="#7a6f62" />
+            <ChevronUp size={18} color={colors.textMuted} />
           ) : (
-            <ChevronDown size={18} color="#7a6f62" />
+            <ChevronDown size={18} color={colors.textMuted} />
           )}
         </Pressable>
 
         {/* Preview text (always visible) */}
         {!isExpanded && (
-          <Text style={styles.pillarPreview} numberOfLines={2}>
+          <Text style={[styles.pillarPreview, { color: colors.textMuted }]} numberOfLines={2}>
             {content.preview}
           </Text>
         )}
 
         {/* Expanded content */}
         {isExpanded && (
-          <View style={styles.expandedContent}>
+          <View style={[styles.expandedContent, { borderTopColor: colors.border }]}>
             {/* Narrative */}
-            <Text style={styles.narrative}>{content.narrative}</Text>
+            <Text style={[styles.narrative, { color: colors.textSecondary }]}>{content.narrative}</Text>
 
             {/* Action Items */}
             {content.action_items?.length > 0 && (
               <View style={styles.actionSection}>
-                <Text style={styles.actionSectionTitle}>Action Items</Text>
+                <Text style={[styles.actionSectionTitle, { color: colors.textMuted }]}>Action Items</Text>
                 {content.action_items.map((action, idx) => (
                   <View key={idx} style={styles.actionItem}>
                     <View
@@ -106,8 +109,8 @@ function PillarTile({ content, config, isExpanded, onToggle, delay }: PillarTile
                       ]}
                     />
                     <View style={styles.actionContent}>
-                      <Text style={styles.actionTitle}>{action.title}</Text>
-                      <Text style={styles.actionDesc}>
+                      <Text style={[styles.actionTitle, { color: colors.textSecondary }]}>{action.title}</Text>
+                      <Text style={[styles.actionDesc, { color: colors.textMuted }]}>
                         {action.description}
                       </Text>
                     </View>
@@ -119,11 +122,11 @@ function PillarTile({ content, config, isExpanded, onToggle, delay }: PillarTile
             {/* Dad Quotes */}
             {content.dad_quotes?.length > 0 && (
               <View style={styles.quotesSection}>
-                <Text style={styles.actionSectionTitle}>From the Trenches</Text>
+                <Text style={[styles.actionSectionTitle, { color: colors.textMuted }]}>From the Trenches</Text>
                 {content.dad_quotes.map((q, idx) => (
-                  <View key={idx} style={styles.quoteCard}>
-                    <Text style={styles.quoteText}>"{q.quote}"</Text>
-                    <Text style={styles.quoteAttribution}>
+                  <View key={idx} style={[styles.quoteCard, { backgroundColor: colors.pressed, borderLeftColor: colors.copperGlow }]}>
+                    <Text style={[styles.quoteText, { color: colors.textSecondary }]}>"{q.quote}"</Text>
+                    <Text style={[styles.quoteAttribution, { color: colors.textMuted }]}>
                       — {q.attribution}
                     </Text>
                   </View>
@@ -140,6 +143,7 @@ function PillarTile({ content, config, isExpanded, onToggle, delay }: PillarTile
 export default function JourneyScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const colors = useColors()
   const phase = useCurrentPhase()
   const contentQuery = useJourneyContent(phase)
   const [expandedPillar, setExpandedPillar] = useState<string | null>(null)
@@ -160,29 +164,25 @@ export default function JourneyScreen() {
     .replace(/\b\w/g, (c) => c.toUpperCase())
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={styles.headerTitle}>Dad Journey</Text>
-        <Pressable onPress={() => router.back()} style={styles.closeButton}>
-          <X size={20} color="#7a6f62" />
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Dad Journey</Text>
+        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
+          <X size={20} color={colors.textMuted} />
         </Pressable>
       </View>
 
       {contentQuery.isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color="#c4703f" size="large" />
+          <ActivityIndicator color={colors.copper} size="large" />
         </View>
       ) : sortedContent.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Compass size={40} color="#4a4239" />
-          <Text style={styles.emptyTitle}>No challenges yet</Text>
-          <Text style={styles.emptySubtitle}>
+          <Compass size={40} color={colors.textDim} />
+          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No challenges yet</Text>
+          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
             Challenge content for your current phase will appear here
           </Text>
         </View>
@@ -198,23 +198,23 @@ export default function JourneyScreen() {
             <RefreshControl
               refreshing={contentQuery.isRefetching}
               onRefresh={handleRefresh}
-              tintColor="#c4703f"
+              tintColor={colors.copper}
             />
           }
         >
           {/* Phase header */}
           <CardEntrance delay={0}>
             <View style={styles.phaseHeader}>
-              <Compass size={20} color="#c4703f" />
+              <Compass size={20} color={colors.copper} />
               <View>
-                <Text style={styles.phaseLabel}>Your current phase</Text>
-                <Text style={styles.phaseName}>{phaseLabel}</Text>
+                <Text style={[styles.phaseLabel, { color: colors.textMuted }]}>Your current phase</Text>
+                <Text style={[styles.phaseName, { color: colors.textPrimary }]}>{phaseLabel}</Text>
               </View>
             </View>
           </CardEntrance>
 
           <CardEntrance delay={60}>
-            <Text style={styles.introText}>
+            <Text style={[styles.introText, { color: colors.textMuted }]}>
               Seven pillars of the dad journey. Tap to explore challenges,
               actions, and real stories from other dads.
             </Text>
@@ -242,7 +242,7 @@ export default function JourneyScreen() {
           })}
 
           {/* Disclaimer */}
-          <Text style={styles.disclaimerText}>
+          <Text style={[styles.disclaimerText, { color: colors.textDim }]}>
             Content is for informational and self-reflection purposes only. For mental health concerns, please consult a qualified professional.
           </Text>
         </ScrollView>
@@ -254,7 +254,6 @@ export default function JourneyScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   flex: {
     flex: 1,
@@ -269,13 +268,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   closeButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -295,20 +292,17 @@ const styles = StyleSheet.create({
   phaseLabel: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
   phaseName: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
     marginTop: 2,
   },
   introText: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     lineHeight: 20,
     marginBottom: 8,
   },
@@ -351,13 +345,11 @@ const styles = StyleSheet.create({
   pillarHeadline: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 15,
-    color: '#ede6dc',
     marginTop: 2,
   },
   pillarPreview: {
     fontFamily: 'Jost-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     lineHeight: 18,
     paddingHorizontal: 16,
     paddingBottom: 16,
@@ -368,13 +360,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 16,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.06)',
     paddingTop: 16,
   },
   narrative: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#ede6dc',
     lineHeight: 22,
     marginBottom: 20,
   },
@@ -386,7 +376,6 @@ const styles = StyleSheet.create({
   actionSectionTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 0.8,
     marginBottom: 12,
@@ -408,12 +397,10 @@ const styles = StyleSheet.create({
   actionTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#ede6dc',
   },
   actionDesc: {
     fontFamily: 'Jost-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     marginTop: 2,
     lineHeight: 18,
   },
@@ -423,24 +410,20 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   quoteCard: {
-    backgroundColor: 'rgba(237,230,220,0.04)',
     borderRadius: 10,
     padding: 14,
     marginBottom: 8,
     borderLeftWidth: 3,
-    borderLeftColor: 'rgba(196,112,63,0.3)',
   },
   quoteText: {
     fontFamily: 'Jost-Regular',
     fontStyle: 'italic',
     fontSize: 13,
-    color: '#ede6dc',
     lineHeight: 20,
   },
   quoteAttribution: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginTop: 8,
   },
 
@@ -448,7 +431,6 @@ const styles = StyleSheet.create({
   disclaimerText: {
     fontFamily: 'Karla-Regular',
     fontSize: 11,
-    color: '#4a4239',
     textAlign: 'center',
     marginTop: 8,
     paddingHorizontal: 20,
@@ -471,13 +453,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
     textAlign: 'center',
   },
   emptySubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
   },
 })

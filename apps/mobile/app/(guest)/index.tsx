@@ -13,6 +13,7 @@ import {
 import { BrandLogoIcon } from '@/components/BrandLogo'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
+import { useColors } from '@/hooks/use-colors'
 
 const CONTENT_SECTIONS = [
   {
@@ -20,61 +21,57 @@ const CONTENT_SECTIONS = [
     description: '40 weeks of development milestones, trimester by trimester.',
     icon: Baby,
     route: '/(screens)/pregnancy-weeks' as const,
-    accentColor: '#c4703f',
-    accentBg: 'rgba(196,112,63,0.12)',
-    accentBorder: 'rgba(196,112,63,0.2)',
+    accentKey: 'copper' as const,
   },
   {
     title: 'Blog',
     description: 'Evidence-based guides on pregnancy, birth, and early parenting.',
     icon: Newspaper,
     route: '/(screens)/content' as const,
-    accentColor: '#5b9bd5',
-    accentBg: 'rgba(91,155,213,0.12)',
-    accentBorder: 'rgba(91,155,213,0.2)',
+    accentKey: 'sky' as const,
   },
   {
     title: 'Video Library',
     description: 'Curated videos covering every stage of the journey.',
     icon: Video,
     route: '/(screens)/videos' as const,
-    accentColor: '#d4a853',
-    accentBg: 'rgba(212,168,83,0.12)',
-    accentBorder: 'rgba(212,168,83,0.2)',
+    accentKey: 'gold' as const,
   },
 ]
 
 export default function GuestExploreScreen() {
+  const colors = useColors()
   const insets = useSafeAreaInsets()
   const router = useRouter()
 
-  return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+  const accentMap = {
+    copper: { color: colors.copper, bg: colors.copperDim, border: colors.copperGlow },
+    sky: { color: colors.sky, bg: colors.skyDim, border: colors.sky },
+    gold: { color: colors.gold, bg: colors.goldDim, border: colors.goldGlow },
+  }
 
+  return (
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       {/* Header */}
       <Animated.View
         entering={FadeIn.duration(400)}
-        style={[styles.header, { paddingTop: insets.top + 12 }]}
+        style={[styles.header, { paddingTop: insets.top + 12, borderBottomColor: colors.subtleBg }]}
       >
         <View style={styles.headerLeft}>
           <BrandLogoIcon size={28} />
-          <Text style={styles.headerTitle}>The Dad Center</Text>
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>The Dad Center</Text>
         </View>
         <Pressable
           onPress={() => router.push('/(auth)/signup')}
           style={styles.signUpButton}
         >
           <LinearGradient
-            colors={['#c4703f', '#d4a853']}
+            colors={colors.ctaGradient as unknown as [string, string]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={styles.signUpGradient}
           >
-            <Text style={styles.signUpText}>Sign Up</Text>
+            <Text style={[styles.signUpText, { color: colors.bg }]}>Sign Up</Text>
           </LinearGradient>
         </Pressable>
       </Animated.View>
@@ -89,57 +86,60 @@ export default function GuestExploreScreen() {
       >
         {/* Welcome */}
         <CardEntrance delay={100}>
-          <Text style={styles.sectionPreLabel}>GUEST MODE</Text>
-          <Text style={styles.welcomeTitle}>
+          <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>GUEST MODE</Text>
+          <Text style={[styles.welcomeTitle, { color: colors.textPrimary }]}>
             Explore what's{'\n'}inside
           </Text>
-          <Text style={styles.welcomeSubtitle}>
+          <Text style={[styles.welcomeSubtitle, { color: colors.textMuted }]}>
             Browse our content library. Sign up to unlock personalized
             briefings, task tracking, and partner sync.
           </Text>
         </CardEntrance>
 
         {/* Content cards */}
-        {CONTENT_SECTIONS.map((section, index) => (
-          <CardEntrance key={section.title} delay={200 + index * 120}>
-            <Pressable onPress={() => router.push(section.route)}>
-              <GlassCard style={styles.contentCard}>
-                <View style={styles.cardRow}>
-                  <View
-                    style={[
-                      styles.iconContainer,
-                      {
-                        backgroundColor: section.accentBg,
-                        borderColor: section.accentBorder,
-                      },
-                    ]}
-                  >
-                    <section.icon
-                      size={22}
-                      color={section.accentColor}
-                      strokeWidth={1.5}
-                    />
+        {CONTENT_SECTIONS.map((section, index) => {
+          const accent = accentMap[section.accentKey]
+          return (
+            <CardEntrance key={section.title} delay={200 + index * 120}>
+              <Pressable onPress={() => router.push(section.route)}>
+                <GlassCard style={styles.contentCard}>
+                  <View style={styles.cardRow}>
+                    <View
+                      style={[
+                        styles.iconContainer,
+                        {
+                          backgroundColor: accent.bg,
+                          borderColor: accent.border,
+                        },
+                      ]}
+                    >
+                      <section.icon
+                        size={22}
+                        color={accent.color}
+                        strokeWidth={1.5}
+                      />
+                    </View>
+                    <View style={styles.cardInfo}>
+                      <Text style={[styles.cardTitle, { color: colors.textPrimary }]}>{section.title}</Text>
+                      <Text style={[styles.cardDescription, { color: colors.textMuted }]}>
+                        {section.description}
+                      </Text>
+                    </View>
+                    <ChevronRight size={18} color={colors.textDim} />
                   </View>
-                  <View style={styles.cardInfo}>
-                    <Text style={styles.cardTitle}>{section.title}</Text>
-                    <Text style={styles.cardDescription}>
-                      {section.description}
-                    </Text>
-                  </View>
-                  <ChevronRight size={18} color="#4a4239" />
-                </View>
-              </GlassCard>
-            </Pressable>
-          </CardEntrance>
-        ))}
+                </GlassCard>
+              </Pressable>
+            </CardEntrance>
+          )
+        })}
 
         {/* Sign up nudge */}
         <CardEntrance delay={600}>
-          <GlassCard style={styles.nudgeCard}>
-            <Text style={styles.nudgeTitle}>
+          <GlassCard style={[styles.nudgeCard, { borderColor: colors.copperGlow }]}>
+            <Text style={[styles.nudgeTitle, { color: colors.textPrimary }]}>
               Ready for the full experience?
             </Text>
-            <Text style={styles.nudgeSubtitle}>
+            <Text style={[styles.nudgeSubtitle, { color: colors.textMuted }]}>
               Get personalized weekly briefings, smart task management, and
               partner sync — all tailored to your due date.
             </Text>
@@ -148,13 +148,13 @@ export default function GuestExploreScreen() {
               style={styles.nudgeButton}
             >
               <LinearGradient
-                colors={['#c4703f', '#d4a853']}
+                colors={colors.ctaGradient as unknown as [string, string]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={styles.nudgeGradient}
               >
-                <Text style={styles.nudgeButtonText}>Create Free Account</Text>
-                <ArrowRight size={16} color="#12100e" />
+                <Text style={[styles.nudgeButtonText, { color: colors.bg }]}>Create Free Account</Text>
+                <ArrowRight size={16} color={colors.bg} />
               </LinearGradient>
             </Pressable>
           </GlassCard>
@@ -167,7 +167,6 @@ export default function GuestExploreScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   scrollView: {
     flex: 1,
@@ -184,7 +183,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   headerLeft: {
     flexDirection: 'row',
@@ -194,7 +192,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 18,
-    color: '#faf6f0',
   },
   signUpButton: {
     borderRadius: 10,
@@ -208,7 +205,6 @@ const styles = StyleSheet.create({
   signUpText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#12100e',
     letterSpacing: 0.3,
   },
 
@@ -216,7 +212,6 @@ const styles = StyleSheet.create({
   sectionPreLabel: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 11,
-    color: '#c4703f',
     letterSpacing: 2,
     textTransform: 'uppercase',
     textAlign: 'center',
@@ -226,7 +221,6 @@ const styles = StyleSheet.create({
   welcomeTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 30,
-    color: '#faf6f0',
     textAlign: 'center',
     lineHeight: 40,
     marginBottom: 12,
@@ -234,7 +228,6 @@ const styles = StyleSheet.create({
   welcomeSubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 24,
     maxWidth: 320,
@@ -267,13 +260,11 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
     marginBottom: 4,
   },
   cardDescription: {
     fontFamily: 'Jost-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     lineHeight: 19,
   },
 
@@ -282,19 +273,16 @@ const styles = StyleSheet.create({
     padding: 24,
     marginTop: 12,
     borderWidth: 1,
-    borderColor: 'rgba(196,112,63,0.2)',
   },
   nudgeTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
     textAlign: 'center',
     marginBottom: 8,
   },
   nudgeSubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: 20,
@@ -321,7 +309,6 @@ const styles = StyleSheet.create({
   nudgeButtonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 15,
-    color: '#12100e',
     letterSpacing: 0.3,
   },
 })

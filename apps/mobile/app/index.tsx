@@ -1,9 +1,11 @@
 import { View, ActivityIndicator } from 'react-native'
+import { useColors } from '@/hooks/use-colors'
 
 export default function Index() {
+  const colors = useColors()
   return (
-    <View style={{ flex: 1, backgroundColor: '#12100e', justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="large" color="#c4703f" />
+    <View style={{ flex: 1, backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" color={colors.copper} />
     </View>
   )
 }

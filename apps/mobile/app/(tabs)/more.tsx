@@ -25,6 +25,7 @@ import {
   Video,
 } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { useColors } from '@/hooks/use-colors'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import * as Haptics from 'expo-haptics'
@@ -38,6 +39,7 @@ interface MenuItemProps {
 }
 
 function MenuItem({ icon, label, onPress, color, showChevron = true }: MenuItemProps) {
+  const colors = useColors()
   return (
     <Pressable
       onPress={() => {
@@ -46,21 +48,23 @@ function MenuItem({ icon, label, onPress, color, showChevron = true }: MenuItemP
       }}
       style={({ pressed }) => [
         styles.menuItem,
-        pressed && styles.menuItemPressed,
+        { borderBottomColor: colors.subtleBg },
+        pressed && { backgroundColor: colors.pressed },
       ]}
     >
       <View style={styles.menuItemLeft}>
         {icon}
-        <Text style={[styles.menuItemLabel, color ? { color } : null]}>
+        <Text style={[styles.menuItemLabel, { color: color || colors.textSecondary }]}>
           {label}
         </Text>
       </View>
-      {showChevron && <ChevronRight size={18} color="#4a4239" />}
+      {showChevron && <ChevronRight size={18} color={colors.textDim} />}
     </Pressable>
   )
 }
 
 export default function MoreScreen() {
+  const colors = useColors()
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { signOut, profile, family } = useAuth()
@@ -73,11 +77,7 @@ export default function MoreScreen() {
         : 'Free Plan'
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <ScrollView
         style={styles.flex}
         contentContainerStyle={[
@@ -92,56 +92,56 @@ export default function MoreScreen() {
         {/* Profile header */}
         <CardEntrance delay={0}>
           <View style={styles.profileHeader}>
-            <View style={styles.avatarCircle}>
-              <Text style={styles.avatarText}>
+            <View style={[styles.avatarCircle, { backgroundColor: colors.copperGlow, borderColor: 'rgba(196,112,63,0.3)' }]}>
+              <Text style={[styles.avatarText, { color: colors.copper }]}>
                 {(profile?.full_name || 'U').charAt(0).toUpperCase()}
               </Text>
             </View>
             <View style={styles.profileHeaderInfo}>
-              <Text style={styles.profileName}>
+              <Text style={[styles.profileName, { color: colors.textPrimary }]}>
                 {profile?.full_name || 'User'}
               </Text>
-              <Text style={styles.profileTier}>{tierLabel}</Text>
+              <Text style={[styles.profileTier, { color: colors.textMuted }]}>{tierLabel}</Text>
             </View>
           </View>
         </CardEntrance>
 
         {/* Tools section */}
         <CardEntrance delay={80}>
-          <Text style={styles.sectionTitle}>Tools</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Tools</Text>
           <GlassCard style={styles.section}>
             <MenuItem
-              icon={<DollarSign size={20} color="#d4a853" />}
+              icon={<DollarSign size={20} color={colors.gold} />}
               label="Budget Planner"
               onPress={() => router.push('/(screens)/budget')}
             />
             <MenuItem
-              icon={<ClipboardList size={20} color="#6b8f71" />}
+              icon={<ClipboardList size={20} color={colors.sage} />}
               label="Checklists"
               onPress={() => router.push('/(screens)/checklists')}
             />
             <MenuItem
-              icon={<Compass size={20} color="#5b9bd5" />}
+              icon={<Compass size={20} color={colors.sky} />}
               label="Dad Journey"
               onPress={() => router.push('/(screens)/journey')}
             />
             <MenuItem
-              icon={<Newspaper size={20} color="#5b9bd5" />}
+              icon={<Newspaper size={20} color={colors.sky} />}
               label="Blog"
               onPress={() => router.push('/(screens)/content')}
             />
             <MenuItem
-              icon={<Baby size={20} color="#c47a8f" />}
+              icon={<Baby size={20} color={colors.rose} />}
               label="Pregnancy Weeks"
               onPress={() => router.push('/(screens)/pregnancy-weeks')}
             />
             <MenuItem
-              icon={<Video size={20} color="#c4703f" />}
+              icon={<Video size={20} color={colors.copper} />}
               label="Video Library"
               onPress={() => router.push('/(screens)/videos')}
             />
             <MenuItem
-              icon={<BookOpen size={20} color="#5b9bd5" />}
+              icon={<BookOpen size={20} color={colors.sky} />}
               label="Dad Tips"
               onPress={() => router.push('/(screens)/content')}
             />
@@ -150,15 +150,15 @@ export default function MoreScreen() {
 
         {/* Family section */}
         <CardEntrance delay={160}>
-          <Text style={styles.sectionTitle}>Family</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Family</Text>
           <GlassCard style={styles.section}>
             <MenuItem
-              icon={<Users size={20} color="#c47a8f" />}
+              icon={<Users size={20} color={colors.rose} />}
               label="Family Members"
               onPress={() => router.push('/(screens)/family')}
             />
             <MenuItem
-              icon={<UserPlus size={20} color="#6b8f71" />}
+              icon={<UserPlus size={20} color={colors.sage} />}
               label="Invite Partner"
               onPress={() => router.push('/(screens)/family')}
             />
@@ -167,35 +167,35 @@ export default function MoreScreen() {
 
         {/* Account section */}
         <CardEntrance delay={240}>
-          <Text style={styles.sectionTitle}>Account</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Account</Text>
           <GlassCard style={styles.section}>
             <MenuItem
-              icon={<User size={20} color="#ede6dc" />}
+              icon={<User size={20} color={colors.textSecondary} />}
               label="Profile"
               onPress={() => router.push('/(screens)/settings')}
             />
             <MenuItem
-              icon={<Palette size={20} color="#c4703f" />}
+              icon={<Palette size={20} color={colors.copper} />}
               label="Appearance"
               onPress={() => router.push('/(screens)/appearance')}
             />
             <MenuItem
-              icon={<Bell size={20} color="#5b9bd5" />}
+              icon={<Bell size={20} color={colors.sky} />}
               label="Notifications"
               onPress={() => router.push('/(screens)/notifications')}
             />
             <MenuItem
-              icon={<CreditCard size={20} color="#d4a853" />}
+              icon={<CreditCard size={20} color={colors.gold} />}
               label="Subscription"
               onPress={() => router.push('/(screens)/upgrade')}
             />
             <MenuItem
-              icon={<HelpCircle size={20} color="#6b8f71" />}
+              icon={<HelpCircle size={20} color={colors.sage} />}
               label="Help & Support"
               onPress={() => router.push('/(screens)/help')}
             />
             <MenuItem
-              icon={<MessageSquarePlus size={20} color="#c4703f" />}
+              icon={<MessageSquarePlus size={20} color={colors.copper} />}
               label="Send Feedback"
               onPress={() => router.push('/(screens)/feedback')}
             />
@@ -204,15 +204,15 @@ export default function MoreScreen() {
 
         {/* Info section */}
         <CardEntrance delay={320}>
-          <Text style={styles.sectionTitle}>Info</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Info</Text>
           <GlassCard style={styles.section}>
             <MenuItem
-              icon={<Info size={20} color="#c4703f" />}
+              icon={<Info size={20} color={colors.copper} />}
               label="About The Dad Center"
               onPress={() => router.push('/(screens)/about')}
             />
             <MenuItem
-              icon={<MessageCircleQuestion size={20} color="#5b9bd5" />}
+              icon={<MessageCircleQuestion size={20} color={colors.sky} />}
               label="FAQ"
               onPress={() => router.push('/(screens)/faq')}
             />
@@ -228,22 +228,22 @@ export default function MoreScreen() {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
                   router.push('/(screens)/upgrade')
                 }}
-                style={styles.upgradeCard}
+                style={[styles.upgradeCard, { borderColor: colors.goldDim }]}
               >
                 <LinearGradient
-                  colors={['rgba(196,112,63,0.15)', 'rgba(212,168,83,0.1)']}
+                  colors={[colors.copperDim, colors.goldDim]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   style={styles.upgradeGradient}
                 >
-                  <Crown size={22} color="#d4a853" />
+                  <Crown size={22} color={colors.gold} />
                   <View style={styles.upgradeInfo}>
-                    <Text style={styles.upgradeTitle}>Upgrade to Premium</Text>
-                    <Text style={styles.upgradeSubtitle}>
+                    <Text style={[styles.upgradeTitle, { color: colors.gold }]}>Upgrade to Premium</Text>
+                    <Text style={[styles.upgradeSubtitle, { color: colors.textMuted }]}>
                       Full timeline, partner sync & more
                     </Text>
                   </View>
-                  <ChevronRight size={18} color="#d4a853" />
+                  <ChevronRight size={18} color={colors.gold} />
                 </LinearGradient>
               </Pressable>
             </CardEntrance>
@@ -253,13 +253,13 @@ export default function MoreScreen() {
         <CardEntrance delay={480}>
           <GlassCard style={styles.section}>
             <MenuItem
-              icon={<LogOut size={20} color="#d4836b" />}
+              icon={<LogOut size={20} color={colors.coral} />}
               label="Sign Out"
               onPress={() => Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
                 { text: 'Cancel', style: 'cancel' },
                 { text: 'Sign Out', style: 'destructive', onPress: signOut },
               ])}
-              color="#d4836b"
+              color={colors.coral}
               showChevron={false}
             />
           </GlassCard>
@@ -272,7 +272,6 @@ export default function MoreScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   flex: {
     flex: 1,
@@ -292,16 +291,13 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: 'rgba(196,112,63,0.2)',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(196,112,63,0.3)',
   },
   avatarText: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#c4703f',
   },
   profileHeaderInfo: {
     flex: 1,
@@ -309,12 +305,10 @@ const styles = StyleSheet.create({
   profileName: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 22,
-    color: '#faf6f0',
   },
   profileTier: {
     fontFamily: 'Karla-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     marginTop: 2,
   },
 
@@ -322,7 +316,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
     marginBottom: 12,
@@ -342,10 +335,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
-  },
-  menuItemPressed: {
-    backgroundColor: 'rgba(237,230,220,0.04)',
   },
   menuItemLeft: {
     flexDirection: 'row',
@@ -355,7 +344,6 @@ const styles = StyleSheet.create({
   menuItemLabel: {
     fontFamily: 'Karla-Medium',
     fontSize: 16,
-    color: '#ede6dc',
   },
 
   // Upgrade CTA
@@ -364,7 +352,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: 'rgba(212,168,83,0.2)',
   },
   upgradeGradient: {
     flexDirection: 'row',
@@ -379,12 +366,10 @@ const styles = StyleSheet.create({
   upgradeTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#d4a853',
   },
   upgradeSubtitle: {
     fontFamily: 'Karla-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     marginTop: 2,
   },
 })

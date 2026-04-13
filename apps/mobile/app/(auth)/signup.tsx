@@ -13,13 +13,14 @@ import {
 } from 'react-native'
 import { Link } from 'expo-router'
 import { Square, CheckSquare } from 'lucide-react-native'
-import { LinearGradient } from 'expo-linear-gradient'
 import { BrandLogo } from '@/components/BrandLogo'
 import { supabase } from '@/lib/supabase'
 import { signInWithGoogle } from '@/lib/google-auth'
 import { signInWithApple } from '@/lib/apple-auth'
+import { useColors } from '@/hooks/use-colors'
 
 export default function SignupScreen() {
+  const colors = useColors()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -86,11 +87,7 @@ export default function SignupScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
@@ -102,7 +99,7 @@ export default function SignupScreen() {
           {/* Header */}
           <View style={styles.header}>
             <BrandLogo size={40} textSize={30} />
-            <Text style={styles.subtitle}>
+            <Text style={[styles.subtitle, { color: colors.textMuted }]}>
               Join thousands of dads who refuse to wing it
             </Text>
           </View>
@@ -110,26 +107,26 @@ export default function SignupScreen() {
           {/* Form */}
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Full Name</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>Full Name</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                 value={fullName}
                 onChangeText={setFullName}
                 placeholder="Your name"
-                placeholderTextColor="#4a4239"
+                placeholderTextColor={colors.textDim}
                 autoCapitalize="words"
                 autoComplete="name"
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Email</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>Email</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                 value={email}
                 onChangeText={setEmail}
                 placeholder="you@example.com"
-                placeholderTextColor="#4a4239"
+                placeholderTextColor={colors.textDim}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoComplete="email"
@@ -138,13 +135,13 @@ export default function SignupScreen() {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Password</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>Password</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                 value={password}
                 onChangeText={setPassword}
                 placeholder="At least 6 characters"
-                placeholderTextColor="#4a4239"
+                placeholderTextColor={colors.textDim}
                 secureTextEntry
                 autoComplete="new-password"
               />
@@ -158,11 +155,11 @@ export default function SignupScreen() {
               accessibilityState={{ checked: ageConfirmed }}
             >
               {ageConfirmed ? (
-                <CheckSquare size={20} color="#c4703f" />
+                <CheckSquare size={20} color={colors.copper} />
               ) : (
-                <Square size={20} color="#7a6f62" />
+                <Square size={20} color={colors.textMuted} />
               )}
-              <Text style={styles.ageText}>I confirm I am 18 years or older</Text>
+              <Text style={[styles.ageText, { color: colors.textSecondary }]}>I confirm I am 18 years or older</Text>
             </Pressable>
 
             <Pressable
@@ -170,22 +167,23 @@ export default function SignupScreen() {
               disabled={!ageConfirmed || isLoading}
               style={({ pressed }) => [
                 styles.button,
+                { backgroundColor: colors.copper },
                 pressed && styles.buttonPressed,
                 (!ageConfirmed || isLoading) && styles.buttonDisabled,
               ]}
             >
               {isLoading ? (
-                <ActivityIndicator color="#faf6f0" />
+                <ActivityIndicator color={colors.textPrimary} />
               ) : (
-                <Text style={styles.buttonText}>Create Account</Text>
+                <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Create Account</Text>
               )}
             </Pressable>
 
             {/* Divider */}
             <View style={styles.divider}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>or</Text>
-              <View style={styles.dividerLine} />
+              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+              <Text style={[styles.dividerText, { color: colors.textDim }]}>or</Text>
+              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
             </View>
 
             {/* Apple Sign In (iOS only, shown above Google per Apple guidelines) */}
@@ -213,24 +211,25 @@ export default function SignupScreen() {
               disabled={isGoogleLoading}
               style={({ pressed }) => [
                 styles.googleButton,
+                { backgroundColor: colors.card, borderColor: colors.borderHover },
                 pressed && styles.buttonPressed,
                 isGoogleLoading && styles.buttonDisabled,
               ]}
             >
               {isGoogleLoading ? (
-                <ActivityIndicator color="#ede6dc" />
+                <ActivityIndicator color={colors.textSecondary} />
               ) : (
-                <Text style={styles.googleButtonText}>Continue with Google</Text>
+                <Text style={[styles.googleButtonText, { color: colors.textSecondary }]}>Continue with Google</Text>
               )}
             </Pressable>
           </View>
 
           {/* Footer */}
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Already have an account? </Text>
+            <Text style={[styles.footerText, { color: colors.textMuted }]}>Already have an account? </Text>
             <Link href="/(auth)/login" asChild>
               <Pressable>
-                <Text style={styles.linkText}>Sign In</Text>
+                <Text style={[styles.linkText, { color: colors.copper }]}>Sign In</Text>
               </Pressable>
             </Link>
           </View>
@@ -243,7 +242,6 @@ export default function SignupScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   flex: {
     flex: 1,
@@ -258,16 +256,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 48,
   },
-  brand: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 32,
-    color: '#faf6f0',
-    marginBottom: 8,
-  },
   subtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#7a6f62',
     textAlign: 'center',
   },
   form: {
@@ -279,18 +270,14 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#ede6dc',
   },
   input: {
-    backgroundColor: '#201c18',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#ede6dc',
   },
   ageRow: {
     flexDirection: 'row',
@@ -301,11 +288,9 @@ const styles = StyleSheet.create({
   ageText: {
     fontFamily: 'Karla-Regular',
     fontSize: 14,
-    color: '#ede6dc',
     flex: 1,
   },
   button: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -321,7 +306,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   divider: {
     flexDirection: 'row',
@@ -331,12 +315,10 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: 'rgba(237,230,220,0.08)',
   },
   dividerText: {
     fontFamily: 'Karla-Regular',
     fontSize: 13,
-    color: '#4a4239',
   },
   appleButton: {
     backgroundColor: '#000000',
@@ -351,10 +333,8 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   googleButton: {
-    backgroundColor: '#201c18',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.12)',
     paddingVertical: 16,
     alignItems: 'center',
     justifyContent: 'center',
@@ -362,7 +342,6 @@ const styles = StyleSheet.create({
   googleButtonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#ede6dc',
   },
   footer: {
     flexDirection: 'row',
@@ -373,11 +352,9 @@ const styles = StyleSheet.create({
   footerText: {
     fontFamily: 'Karla-Regular',
     fontSize: 14,
-    color: '#7a6f62',
   },
   linkText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#c4703f',
   },
 })

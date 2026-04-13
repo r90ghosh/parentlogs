@@ -12,9 +12,9 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { ArrowLeft, MessageSquarePlus, CheckCircle } from 'lucide-react-native'
 import { useSubmitFeedback } from '@/hooks/use-feedback'
+import { useColors } from '@/hooks/use-colors'
 
 type FeedbackType = 'bug' | 'feature' | 'question' | 'other'
 
@@ -28,6 +28,7 @@ const FEEDBACK_TYPES: { value: FeedbackType; label: string }[] = [
 export default function FeedbackScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const colors = useColors()
   const submitFeedback = useSubmitFeedback()
 
   const [selectedType, setSelectedType] = useState<FeedbackType | null>(null)
@@ -56,25 +57,20 @@ export default function FeedbackScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft size={20} color="#ede6dc" />
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+          <ArrowLeft size={20} color={colors.textSecondary} />
         </Pressable>
-        <Text style={styles.headerTitle}>Send Feedback</Text>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Send Feedback</Text>
         <View style={styles.headerSpacer} />
       </View>
 
       {succeeded ? (
         <View style={styles.successContainer}>
-          <CheckCircle size={56} color="#6b8f71" />
-          <Text style={styles.successTitle}>Thanks for your feedback!</Text>
-          <Text style={styles.successSubtitle}>
+          <CheckCircle size={56} color={colors.sage} />
+          <Text style={[styles.successTitle, { color: colors.textPrimary }]}>Thanks for your feedback!</Text>
+          <Text style={[styles.successSubtitle, { color: colors.textMuted }]}>
             We read every message and use it to make the app better.
           </Text>
         </View>
@@ -93,18 +89,18 @@ export default function FeedbackScreen() {
           >
             {/* Icon */}
             <View style={styles.iconContainer}>
-              <View style={styles.iconCircle}>
-                <MessageSquarePlus size={28} color="#c4703f" />
+              <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>
+                <MessageSquarePlus size={28} color={colors.copper} />
               </View>
-              <Text style={styles.iconDescription}>
+              <Text style={[styles.iconDescription, { color: colors.textMuted }]}>
                 Help us improve The Dad Center. Tell us what's working, what's broken, or what you'd love to see.
               </Text>
             </View>
 
             {/* Error */}
             {submitFeedback.isError && (
-              <View style={styles.errorContainer}>
-                <Text style={styles.errorText}>
+              <View style={[styles.errorContainer, { backgroundColor: colors.coralDim, borderColor: 'rgba(212,131,107,0.2)' }]}>
+                <Text style={[styles.errorText, { color: colors.coral }]}>
                   Something went wrong. Please try again.
                 </Text>
               </View>
@@ -114,7 +110,7 @@ export default function FeedbackScreen() {
             <View style={styles.form}>
               {/* Type selector */}
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Type</Text>
+                <Text style={[styles.label, { color: colors.textSecondary }]}>Type</Text>
                 <View style={styles.typeRow}>
                   {FEEDBACK_TYPES.map((ft) => {
                     const isSelected = selectedType === ft.value
@@ -124,13 +120,15 @@ export default function FeedbackScreen() {
                         onPress={() => setSelectedType(ft.value)}
                         style={[
                           styles.typePill,
-                          isSelected ? styles.typePillSelected : styles.typePillUnselected,
+                          isSelected
+                            ? { backgroundColor: colors.copperDim, borderWidth: 1, borderColor: colors.copper }
+                            : { backgroundColor: colors.subtleBg, borderWidth: 1, borderColor: colors.border },
                         ]}
                       >
                         <Text
                           style={[
                             styles.typePillText,
-                            isSelected ? styles.typePillTextSelected : styles.typePillTextUnselected,
+                            { color: isSelected ? colors.copper : colors.textMuted },
                           ]}
                         >
                           {ft.label}
@@ -143,19 +141,19 @@ export default function FeedbackScreen() {
 
               {/* Message */}
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Message</Text>
+                <Text style={[styles.label, { color: colors.textSecondary }]}>Message</Text>
                 <TextInput
-                  style={styles.textArea}
+                  style={[styles.textArea, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                   value={message}
                   onChangeText={setMessage}
                   placeholder="Tell us what's on your mind..."
-                  placeholderTextColor="#4a4239"
+                  placeholderTextColor={colors.textDim}
                   multiline
                   maxLength={2000}
                   textAlignVertical="top"
                   autoCapitalize="sentences"
                 />
-                <Text style={styles.charCount}>
+                <Text style={[styles.charCount, { color: colors.textMuted }]}>
                   {charCount} / 2000
                   {charCount > 0 && charCount < 10
                     ? ` (${10 - charCount} more to go)`
@@ -169,14 +167,15 @@ export default function FeedbackScreen() {
                 disabled={isDisabled}
                 style={({ pressed }) => [
                   styles.button,
+                  { backgroundColor: colors.copper },
                   pressed && styles.buttonPressed,
                   isDisabled && styles.buttonDisabled,
                 ]}
               >
                 {submitFeedback.isPending ? (
-                  <ActivityIndicator color="#faf6f0" />
+                  <ActivityIndicator color={colors.textPrimary} />
                 ) : (
-                  <Text style={styles.buttonText}>Submit Feedback</Text>
+                  <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Submit Feedback</Text>
                 )}
               </Pressable>
             </View>
@@ -190,7 +189,7 @@ export default function FeedbackScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
+    backgroundColor: 'transparent',
   },
   flex: {
     flex: 1,
@@ -206,14 +205,12 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   headerSpacer: {
     width: 36,
@@ -230,7 +227,6 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: 'rgba(196,112,63,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -238,16 +234,13 @@ const styles = StyleSheet.create({
   iconDescription: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 22,
     paddingHorizontal: 16,
   },
   errorContainer: {
-    backgroundColor: 'rgba(212,131,107,0.12)',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(212,131,107,0.2)',
     paddingHorizontal: 16,
     paddingVertical: 12,
     marginBottom: 20,
@@ -255,7 +248,6 @@ const styles = StyleSheet.create({
   errorText: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#d4836b',
   },
   form: {
     gap: 20,
@@ -266,7 +258,6 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#ede6dc',
   },
   typeRow: {
     flexDirection: 'row',
@@ -279,48 +270,27 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
   },
-  typePillSelected: {
-    backgroundColor: 'rgba(196,112,63,0.18)',
-    borderWidth: 1,
-    borderColor: '#c4703f',
-  },
-  typePillUnselected: {
-    backgroundColor: 'rgba(237,230,220,0.06)',
-    borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
-  },
   typePillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
   },
-  typePillTextSelected: {
-    color: '#c4703f',
-  },
-  typePillTextUnselected: {
-    color: '#7a6f62',
-  },
   textArea: {
-    backgroundColor: '#201c18',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
     paddingHorizontal: 16,
     paddingTop: 14,
     paddingBottom: 14,
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#ede6dc',
     minHeight: 120,
     textAlignVertical: 'top',
   },
   charCount: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     textAlign: 'right',
   },
   button: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -336,7 +306,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   successContainer: {
     flex: 1,
@@ -348,13 +317,11 @@ const styles = StyleSheet.create({
   successTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 22,
-    color: '#faf6f0',
     textAlign: 'center',
   },
   successSubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 22,
   },

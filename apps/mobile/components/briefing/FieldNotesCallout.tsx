@@ -1,17 +1,20 @@
 import { View, Text, StyleSheet } from 'react-native'
+import { useColors } from '@/hooks/use-colors'
 
 interface FieldNotesCalloutProps {
   notes: string
 }
 
 export function FieldNotesCallout({ notes }: FieldNotesCalloutProps) {
+  const colors = useColors()
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { borderLeftColor: colors.copper, backgroundColor: colors.pressed }]}>
       <View style={styles.inner}>
         <Text style={styles.icon}>📝</Text>
         <View style={styles.textContainer}>
-          <Text style={styles.label}>FROM THE TRENCHES</Text>
-          <Text style={styles.notes}>{notes}</Text>
+          <Text style={[styles.label, { color: colors.copper }]}>FROM THE TRENCHES</Text>
+          <Text style={[styles.notes, { color: colors.textSecondary }]}>{notes}</Text>
         </View>
       </View>
     </View>
@@ -22,8 +25,6 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 12,
     borderLeftWidth: 4,
-    borderLeftColor: '#c4703f',
-    backgroundColor: 'rgba(196,112,63,0.04)',
     padding: 16,
     marginBottom: 12,
   },
@@ -42,13 +43,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Karla-SemiBold',
     fontSize: 11,
     letterSpacing: 1.2,
-    color: '#c4703f',
     marginBottom: 8,
   },
   notes: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#ede6dc',
     lineHeight: 22,
     fontStyle: 'italic',
   },

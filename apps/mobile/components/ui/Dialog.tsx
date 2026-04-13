@@ -1,6 +1,7 @@
 import { Modal, View, Text, Pressable, StyleSheet, type ViewStyle } from 'react-native'
 import { X } from 'lucide-react-native'
 import * as Haptics from 'expo-haptics'
+import { useColors } from '@/hooks/use-colors'
 
 interface DialogProps {
   open: boolean
@@ -19,6 +20,8 @@ export function Dialog({
   children,
   style,
 }: DialogProps) {
+  const colors = useColors()
+
   const handleClose = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
     onOpenChange(false)
@@ -31,14 +34,14 @@ export function Dialog({
       animationType="fade"
       onRequestClose={handleClose}
     >
-      <Pressable style={styles.overlay} onPress={handleClose}>
-        <Pressable style={[styles.dialog, style]} onPress={(e) => e.stopPropagation()}>
-          <Pressable onPress={handleClose} style={styles.closeButton}>
-            <X size={18} color="#7a6f62" />
+      <Pressable style={[styles.overlay, { backgroundColor: colors.overlay }]} onPress={handleClose}>
+        <Pressable style={[styles.dialog, { backgroundColor: colors.card, borderColor: colors.border }, style]} onPress={(e) => e.stopPropagation()}>
+          <Pressable onPress={handleClose} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
+            <X size={18} color={colors.textMuted} />
           </Pressable>
 
-          {title && <Text style={styles.title}>{title}</Text>}
-          {description && <Text style={styles.description}>{description}</Text>}
+          {title && <Text style={[styles.title, { color: colors.textPrimary }]}>{title}</Text>}
+          {description && <Text style={[styles.description, { color: colors.textMuted }]}>{description}</Text>}
           {children && <View style={styles.content}>{children}</View>}
         </Pressable>
       </Pressable>
@@ -49,18 +52,15 @@ export function Dialog({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 24,
   },
   dialog: {
     width: '100%',
-    backgroundColor: '#201c18',
     borderRadius: 16,
     padding: 24,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
   },
   closeButton: {
     position: 'absolute',
@@ -69,7 +69,6 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 1,
@@ -77,13 +76,11 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Jost-SemiBold',
     fontSize: 18,
-    color: '#faf6f0',
     paddingRight: 36,
   },
   description: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     marginTop: 8,
     lineHeight: 20,
   },

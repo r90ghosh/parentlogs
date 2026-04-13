@@ -1,14 +1,17 @@
 import { useEffect } from 'react'
-import { StyleSheet, type ViewStyle } from 'react-native'
+import { View, type ViewStyle, type LayoutChangeEvent } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
-  withSequence,
   withTiming,
   Easing,
   useReducedMotion,
 } from 'react-native-reanimated'
+import { LinearGradient } from 'expo-linear-gradient'
+import { useColors } from '@/hooks/use-colors'
+
+const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
 
 interface SkeletonProps {
   width?: number | string
@@ -23,40 +26,93 @@ export function Skeleton({
   borderRadius = 8,
   style,
 }: SkeletonProps) {
+  const colors = useColors()
   const reducedMotion = useReducedMotion()
-  const opacity = useSharedValue(reducedMotion ? 0.5 : 0.3)
+  const translateX = useSharedValue(0)
+  const measuredWidth = useSharedValue(200)
 
   useEffect(() => {
     if (reducedMotion) return
 
-    opacity.value = withRepeat(
-      withSequence(
-        withTiming(0.7, { duration: 800, easing: Easing.inOut(Easing.ease) }),
-        withTiming(0.3, { duration: 800, easing: Easing.inOut(Easing.ease) })
-      ),
+    // Start off-screen left, sweep to off-screen right
+    translateX.value = -measuredWidth.value
+    translateX.value = withRepeat(
+      withTiming(measuredWidth.value, {
+        duration: 1500,
+        easing: Easing.inOut(Easing.ease),
+      }),
       -1,
       false
     )
-  }, [reducedMotion, opacity])
+  }, [reducedMotion, translateX, measuredWidth])
 
   const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
+    transform: [{ translateX: translateX.value }],
   }))
 
+  const handleLayout = (e: LayoutChangeEvent) => {
+    const w = e.nativeEvent.layout.width
+    if (w > 0) {
+      measuredWidth.value = w
+      if (!reducedMotion) {
+        translateX.value = -w
+        translateX.value = withRepeat(
+          withTiming(w, {
+            duration: 1500,
+            easing: Easing.inOut(Easing.ease),
+          }),
+          -1,
+          false
+        )
+      }
+    }
+  }
+
+  if (reducedMotion) {
+    return (
+      <View
+        style={[
+          {
+            width: width as number,
+            height,
+            borderRadius,
+            backgroundColor: colors.cardHover,
+            opacity: 0.5,
+          },
+          style,
+        ]}
+      />
+    )
+  }
+
   return (
-    <Animated.View
+    <View
+      onLayout={handleLayout}
       style={[
-        styles.skeleton,
-        { width: width as number, height, borderRadius },
-        animatedStyle,
+        {
+          width: width as number,
+          height,
+          borderRadius,
+          backgroundColor: colors.card,
+          overflow: 'hidden',
+        },
         style,
       ]}
-    />
+    >
+      <AnimatedLinearGradient
+        colors={[colors.card, colors.cardHover, colors.card]}
+        start={{ x: 0, y: 0.5 }}
+        end={{ x: 1, y: 0.5 }}
+        style={[
+          {
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            width: '100%',
+          },
+          animatedStyle,
+        ]}
+      />
+    </View>
   )
 }
-
-const styles = StyleSheet.create({
-  skeleton: {
-    backgroundColor: '#282420',
-  },
-})

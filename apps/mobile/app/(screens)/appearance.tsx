@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router'
 import { ChevronLeft } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
+import { useColors } from '@/hooks/use-colors'
 import * as Haptics from 'expo-haptics'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from '@/components/providers/ThemeProvider'
@@ -36,7 +37,8 @@ const THEME_OPTIONS: ThemeOption[] = [
 export default function AppearanceScreen() {
   const router = useRouter()
   const insets = useSafeAreaInsets()
-  const { theme: selected, setTheme, isDark } = useTheme()
+  const { theme: selected, setTheme } = useTheme()
+  const colors = useColors()
 
   const handleSelect = (option: ThemePreference) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
@@ -47,17 +49,17 @@ export default function AppearanceScreen() {
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ChevronLeft size={20} color={isDark ? '#ede6dc' : '#1a1a2e'} />
+      <View style={[styles.header, { paddingTop: insets.top + 12, borderBottomColor: colors.border }]}>
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+          <ChevronLeft size={20} color={colors.textSecondary} />
         </Pressable>
-        <Text style={[styles.headerTitle, !isDark && { color: '#1a1a2e' }]}>Appearance</Text>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Appearance</Text>
         <View style={styles.headerSpacer} />
       </View>
 
       <View style={styles.content}>
         <CardEntrance delay={0}>
-          <Text style={styles.sectionLabel}>Theme</Text>
+          <Text style={[styles.sectionLabel, { color: colors.textMuted }]}>Theme</Text>
           <GlassCard style={styles.optionsCard}>
             {THEME_OPTIONS.map((option, index) => {
               const isSelected = selected === option.id
@@ -68,24 +70,24 @@ export default function AppearanceScreen() {
                   onPress={() => handleSelect(option.id)}
                   style={({ pressed }) => [
                     styles.optionRow,
-                    isSelected && styles.optionRowSelected,
-                    !isLast && styles.optionRowBorder,
-                    pressed && styles.optionRowPressed,
+                    isSelected && { backgroundColor: colors.copperDim },
+                    !isLast && [styles.optionRowBorder, { borderBottomColor: colors.border }],
+                    pressed && { backgroundColor: colors.pressed },
                   ]}
                 >
-                  {isSelected && <View style={styles.selectedAccent} />}
+                  {isSelected && <View style={[styles.selectedAccent, { backgroundColor: colors.copper }]} />}
 
                   <View style={styles.optionContent}>
-                    <Text style={[styles.optionLabel, !isDark && { color: '#1a1a2e' }]}>
+                    <Text style={[styles.optionLabel, { color: colors.textPrimary }]}>
                       {option.label}
                     </Text>
-                    <Text style={[styles.optionDescription, !isDark && { color: '#3d3d56' }]}>
+                    <Text style={[styles.optionDescription, { color: colors.textMuted }]}>
                       {option.description}
                     </Text>
                   </View>
 
-                  <View style={[styles.radio, isSelected && styles.radioSelected]}>
-                    {isSelected && <View style={styles.radioDot} />}
+                  <View style={[styles.radio, { borderColor: colors.textDim }, isSelected && { borderColor: colors.copper }]}>
+                    {isSelected && <View style={[styles.radioDot, { backgroundColor: colors.copper }]} />}
                   </View>
                 </Pressable>
               )
@@ -100,7 +102,6 @@ export default function AppearanceScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   header: {
     flexDirection: 'row',
@@ -108,13 +109,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   backButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -122,7 +121,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
     textAlign: 'center',
   },
   headerSpacer: {
@@ -135,7 +133,6 @@ const styles = StyleSheet.create({
   sectionLabel: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
     marginBottom: 12,
@@ -152,15 +149,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     position: 'relative',
   },
-  optionRowSelected: {
-    backgroundColor: 'rgba(196,112,63,0.06)',
-  },
   optionRowBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
-  },
-  optionRowPressed: {
-    backgroundColor: 'rgba(237,230,220,0.04)',
   },
   selectedAccent: {
     position: 'absolute',
@@ -168,7 +158,6 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: 3,
-    backgroundColor: '#c4703f',
   },
   optionContent: {
     flex: 1,
@@ -177,30 +166,23 @@ const styles = StyleSheet.create({
   optionLabel: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
     marginBottom: 2,
   },
   optionDescription: {
     fontFamily: 'Jost-Regular',
     fontSize: 13,
-    color: '#7a6f62',
   },
   radio: {
     width: 20,
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: '#4a4239',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  radioSelected: {
-    borderColor: '#c4703f',
   },
   radioDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#c4703f',
   },
 })

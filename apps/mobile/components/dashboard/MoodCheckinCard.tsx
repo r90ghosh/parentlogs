@@ -2,6 +2,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { format, subDays } from 'date-fns'
 import { GlassCard } from '@/components/glass'
 import { MoodEmojiPop } from '@/components/animations'
+import { useColors } from '@/hooks/use-colors'
 import { useSubmitMood, useMoodHistory } from '@/hooks/use-journey'
 import type { MoodLevel, MoodCheckin } from '@tdc/shared/types/dad-journey'
 
@@ -42,6 +43,7 @@ interface MoodCheckinCardProps {
 }
 
 export function MoodCheckinCard({ todaysCheckin }: MoodCheckinCardProps) {
+  const colors = useColors()
   const submitMood = useSubmitMood()
   const { data: history } = useMoodHistory(7)
 
@@ -60,8 +62,8 @@ export function MoodCheckinCard({ todaysCheckin }: MoodCheckinCardProps) {
         <View style={styles.checkedInRow}>
           <Text style={styles.checkedEmoji}>{moodConfig?.emoji ?? '✓'}</Text>
           <View>
-            <Text style={styles.checkedTitle}>Checked in today</Text>
-            <Text style={styles.checkedSubtitle}>
+            <Text style={[styles.checkedTitle, { color: colors.sage }]}>Checked in today</Text>
+            <Text style={[styles.checkedSubtitle, { color: colors.textMuted }]}>
               Feeling {moodConfig?.label?.toLowerCase() ?? todaysCheckin.mood}
             </Text>
           </View>
@@ -79,7 +81,9 @@ export function MoodCheckinCard({ todaysCheckin }: MoodCheckinCardProps) {
                   key={dateStr}
                   style={[
                     styles.historyDot,
-                    checkin ? styles.historyDotFilled : styles.historyDotEmpty,
+                    checkin
+                      ? { backgroundColor: colors.copperDim }
+                      : { backgroundColor: colors.textDim },
                   ]}
                 >
                   {checkin && (
@@ -95,15 +99,15 @@ export function MoodCheckinCard({ todaysCheckin }: MoodCheckinCardProps) {
 
         {/* Streak */}
         {streak > 0 && (
-          <Text style={styles.streakText}>🔥 {streak} day streak</Text>
+          <Text style={[styles.streakText, { color: colors.gold }]}>🔥 {streak} day streak</Text>
         )}
 
         {(todaysCheckin.mood === 'struggling' || todaysCheckin.mood === 'rough') && (
-          <View style={styles.crisisResources}>
-            <Text style={styles.crisisText}>
+          <View style={[styles.crisisResources, { borderTopColor: colors.subtleBg }]}>
+            <Text style={[styles.crisisText, { color: colors.textMuted }]}>
               If you're having a tough time, you're not alone. Talk to someone:
             </Text>
-            <Text style={styles.crisisPhone}>Postpartum Support International: 1-800-944-4773</Text>
+            <Text style={[styles.crisisPhone, { color: colors.sky }]}>Postpartum Support International: 1-800-944-4773</Text>
           </View>
         )}
       </GlassCard>
@@ -112,8 +116,8 @@ export function MoodCheckinCard({ todaysCheckin }: MoodCheckinCardProps) {
 
   return (
     <GlassCard style={styles.card}>
-      <Text style={styles.title}>How are you feeling?</Text>
-      <Text style={styles.subtitle}>Quick daily check-in</Text>
+      <Text style={[styles.title, { color: colors.textPrimary }]}>How are you feeling?</Text>
+      <Text style={[styles.subtitle, { color: colors.textMuted }]}>Quick daily check-in</Text>
       <View style={styles.emojiRow}>
         {MOODS.map((mood) => (
           <MoodEmojiPop
@@ -136,13 +140,11 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 18,
-    color: '#faf6f0',
     marginBottom: 4,
   },
   subtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     marginBottom: 16,
   },
   emojiRow: {
@@ -160,31 +162,26 @@ const styles = StyleSheet.create({
   checkedTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 15,
-    color: '#6b8f71',
   },
   checkedSubtitle: {
     fontFamily: 'Karla-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     marginTop: 2,
   },
   crisisResources: {
     marginTop: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.06)',
   },
   crisisText: {
     fontFamily: 'Karla-Regular',
     fontSize: 11,
-    color: '#7a6f62',
     lineHeight: 16,
     marginBottom: 4,
   },
   crisisPhone: {
     fontFamily: 'Karla-Medium',
     fontSize: 11,
-    color: '#5b9bd5',
     lineHeight: 16,
   },
   historyRow: {
@@ -200,19 +197,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  historyDotFilled: {
-    backgroundColor: 'rgba(196,112,63,0.12)',
-  },
-  historyDotEmpty: {
-    backgroundColor: '#4a4239',
-  },
   historyDotEmoji: {
     fontSize: 14,
   },
   streakText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#d4a853',
     marginTop: 8,
   },
 })

@@ -17,12 +17,13 @@ import { useUnreadNotificationCount } from '@/hooks/use-notifications'
 import { useRealtimeSync } from '@/hooks/use-realtime-sync'
 import { ToastProvider } from '@/components/ui/Toast'
 import { useTheme } from '@/components/providers/ThemeProvider'
+import { useColors } from '@/hooks/use-colors'
 import { AnimatedTabBar } from '@/components/animations/TabIndicator'
 
 const NotificationBell = React.memo(function NotificationBell() {
   const router = useRouter()
   const { data: unreadCount } = useUnreadNotificationCount()
-  const { isDark } = useTheme()
+  const colors = useColors()
   const count = unreadCount ?? 0
 
   return (
@@ -35,10 +36,10 @@ const NotificationBell = React.memo(function NotificationBell() {
       accessibilityLabel={count > 0 ? `Notifications, ${count} unread` : 'Notifications'}
       accessibilityRole="button"
     >
-      <Bell size={20} color={isDark ? '#7a6f62' : '#6b7280'} />
+      <Bell size={20} color={colors.textMuted} />
       {count > 0 && (
-        <View style={[styles.badge, !isDark && { borderColor: '#f5f7fa' }]}>
-          <Text style={styles.badgeText}>
+        <View style={[styles.badge, { backgroundColor: colors.copper, borderColor: colors.bg }]}>
+          <Text style={[styles.badgeText, { color: colors.textPrimary }]}>
             {count > 99 ? '99+' : count}
           </Text>
         </View>
@@ -49,17 +50,28 @@ const NotificationBell = React.memo(function NotificationBell() {
 
 function TabHeader() {
   const insets = useSafeAreaInsets()
-  const { isDark } = useTheme()
+  const colors = useColors()
+
+  const headerStyle = [
+    styles.header,
+    { paddingTop: insets.top + 8, borderBottomColor: colors.subtleBg },
+  ]
+
+  if (Platform.OS === 'ios') {
+    return (
+      <BlurView
+        tint={colors.blurTint}
+        intensity={colors.headerBlurIntensity}
+        style={headerStyle}
+      >
+        <BabySwitcher />
+        <NotificationBell />
+      </BlurView>
+    )
+  }
 
   return (
-    <View style={[
-      styles.header,
-      { paddingTop: insets.top + 8 },
-      !isDark && {
-        backgroundColor: 'transparent',
-        borderBottomColor: 'rgba(0,0,0,0.06)',
-      },
-    ]}>
+    <View style={[headerStyle, { backgroundColor: colors.surface }]}>
       <BabySwitcher />
       <NotificationBell />
     </View>
@@ -150,17 +162,14 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#12100e',
     paddingHorizontal: 16,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   bellButton: {
     width: 36,
@@ -176,17 +185,14 @@ const styles = StyleSheet.create({
     minWidth: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#c4703f',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 4,
     borderWidth: 2,
-    borderColor: '#12100e',
   },
   badgeText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 10,
-    color: '#faf6f0',
     lineHeight: 12,
   },
 })

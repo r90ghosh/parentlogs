@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { View, Text, Animated, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useColors } from '@/hooks/use-colors'
 
 type ToastState = { message: string; type: 'info' | 'success' | 'error' }
 let showToastFn: ((toast: ToastState) => void) | null = null
@@ -10,6 +11,7 @@ export function showToast(message: string, type: 'info' | 'success' | 'error' = 
 }
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
+  const colors = useColors()
   const insets = useSafeAreaInsets()
   const [toast, setToast] = useState<ToastState | null>(null)
   const translateY = useRef(new Animated.Value(-100)).current
@@ -32,10 +34,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
   const bgColor =
     toast.type === 'success'
-      ? 'rgba(107,143,113,0.9)'
+      ? `${colors.sage}E6`
       : toast.type === 'error'
-        ? 'rgba(212,131,107,0.9)'
-        : 'rgba(32,28,24,0.95)'
+        ? `${colors.coral}E6`
+        : colors.glassBg
 
   return (
     <>
@@ -43,10 +45,15 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       <Animated.View
         style={[
           styles.toast,
-          { top: insets.top + 8, backgroundColor: bgColor, transform: [{ translateY }] },
+          {
+            top: insets.top + 8,
+            backgroundColor: bgColor,
+            borderColor: colors.borderHover,
+            transform: [{ translateY }],
+          },
         ]}
       >
-        <Text style={styles.toastText}>{toast.message}</Text>
+        <Text style={[styles.toastText, { color: colors.textPrimary }]}>{toast.message}</Text>
       </Animated.View>
     </>
   )
@@ -61,7 +68,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.15)',
     zIndex: 9999,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -72,7 +78,6 @@ const styles = StyleSheet.create({
   toastText: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#faf6f0',
     textAlign: 'center',
   },
 })

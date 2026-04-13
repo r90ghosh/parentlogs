@@ -7,6 +7,7 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
+import { useColors } from '@/hooks/use-colors'
 
 interface TypewriterGreetingProps {
   text: string
@@ -22,6 +23,7 @@ export function TypewriterGreeting({
   onComplete,
 }: TypewriterGreetingProps) {
   const reducedMotion = useReducedMotion()
+  const colors = useColors()
   const [charCount, setCharCount] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const [showCursor, setShowCursor] = useState(true)
@@ -76,11 +78,11 @@ export function TypewriterGreeting({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>
+      <Text style={[styles.text, { color: colors.textPrimary }]}>
         {text.slice(0, charCount)}
       </Text>
       {showCursor && (
-        <Animated.View style={[styles.cursor, cursorAnimatedStyle]} />
+        <Animated.View style={[styles.cursor, { backgroundColor: colors.copper }, cursorAnimatedStyle]} />
       )}
     </View>
   )
@@ -94,12 +96,10 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 28,
-    color: '#faf6f0',
   },
   cursor: {
     width: 2,
     height: 28,
-    backgroundColor: '#c4703f',
     marginLeft: 2,
     borderRadius: 1,
   },

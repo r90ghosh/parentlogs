@@ -12,11 +12,11 @@ import {
   Platform,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { ChevronLeft } from 'lucide-react-native'
 import * as Haptics from 'expo-haptics'
 import { useCreateLog } from '@/hooks/use-tracker'
+import { useColors } from '@/hooks/use-colors'
 import { MedicalDisclaimer } from '@/components/shared/MedicalDisclaimer'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
@@ -40,10 +40,12 @@ function OptionPill({
   label,
   selected,
   onPress,
+  colors,
 }: {
   label: string
   selected: boolean
   onPress: () => void
+  colors: ReturnType<typeof useColors>
 }) {
   return (
     <Pressable
@@ -51,12 +53,17 @@ function OptionPill({
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
         onPress()
       }}
-      style={[styles.optionPill, selected && styles.optionPillSelected]}
+      style={[
+        styles.optionPill,
+        { backgroundColor: colors.subtleBg, borderColor: colors.border },
+        selected && { backgroundColor: colors.copper, borderColor: colors.copper },
+      ]}
     >
       <Text
         style={[
           styles.optionPillText,
-          selected && styles.optionPillTextSelected,
+          { color: colors.textMuted },
+          selected && { color: colors.textPrimary },
         ]}
       >
         {label}
@@ -66,6 +73,7 @@ function OptionPill({
 }
 
 export default function LogScreen() {
+  const colors = useColors()
   const { type: typeParam } = useLocalSearchParams<{ type: string }>()
   const logType = (typeParam || 'feeding') as LogType
   const router = useRouter()
@@ -185,18 +193,13 @@ export default function LogScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: 8 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ChevronLeft size={22} color="#faf6f0" />
+      <View style={[styles.header, { paddingTop: 8, backgroundColor: colors.overlay, borderBottomColor: colors.border }]}>
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+          <ChevronLeft size={22} color={colors.textPrimary} />
         </Pressable>
-        <Text style={styles.headerTitle}>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
           {LOG_TITLES[logType] || 'Log Entry'}
         </Text>
         <View style={styles.headerSpacer} />
@@ -223,52 +226,58 @@ export default function LogScreen() {
               {/* Feeding */}
               {logType === 'feeding' && (
                 <>
-                  <Text style={styles.fieldLabel}>Type</Text>
+                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Type</Text>
                   <View style={styles.optionRow}>
                     <OptionPill
                       label="Breast"
                       selected={feedingType === 'breast'}
                       onPress={() => setFeedingType('breast')}
+                      colors={colors}
                     />
                     <OptionPill
                       label="Bottle"
                       selected={feedingType === 'bottle'}
                       onPress={() => setFeedingType('bottle')}
+                      colors={colors}
                     />
                     <OptionPill
                       label="Solid"
                       selected={feedingType === 'solid'}
                       onPress={() => setFeedingType('solid')}
+                      colors={colors}
                     />
                   </View>
 
                   {feedingType === 'breast' && (
                     <>
-                      <Text style={styles.fieldLabel}>Side</Text>
+                      <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Side</Text>
                       <View style={styles.optionRow}>
                         <OptionPill
                           label="Left"
                           selected={feedingSide === 'left'}
                           onPress={() => setFeedingSide('left')}
+                          colors={colors}
                         />
                         <OptionPill
                           label="Right"
                           selected={feedingSide === 'right'}
                           onPress={() => setFeedingSide('right')}
+                          colors={colors}
                         />
                         <OptionPill
                           label="Both"
                           selected={feedingSide === 'both'}
                           onPress={() => setFeedingSide('both')}
+                          colors={colors}
                         />
                       </View>
-                      <Text style={styles.fieldLabel}>Duration (minutes)</Text>
+                      <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Duration (minutes)</Text>
                       <TextInput
-                        style={styles.input}
+                        style={[styles.input, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
                         value={feedingDuration}
                         onChangeText={setFeedingDuration}
                         placeholder="15"
-                        placeholderTextColor="#4a4239"
+                        placeholderTextColor={colors.textDim}
                         keyboardType="number-pad"
                       />
                     </>
@@ -276,13 +285,13 @@ export default function LogScreen() {
 
                   {(feedingType === 'bottle' || feedingType === 'solid') && (
                     <>
-                      <Text style={styles.fieldLabel}>Amount (oz)</Text>
+                      <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Amount (oz)</Text>
                       <TextInput
-                        style={styles.input}
+                        style={[styles.input, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
                         value={feedingAmount}
                         onChangeText={setFeedingAmount}
                         placeholder="4"
-                        placeholderTextColor="#4a4239"
+                        placeholderTextColor={colors.textDim}
                         keyboardType="decimal-pad"
                       />
                     </>
@@ -293,22 +302,25 @@ export default function LogScreen() {
               {/* Diaper */}
               {logType === 'diaper' && (
                 <>
-                  <Text style={styles.fieldLabel}>Type</Text>
+                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Type</Text>
                   <View style={styles.optionRow}>
                     <OptionPill
                       label="Wet"
                       selected={diaperType === 'wet'}
                       onPress={() => setDiaperType('wet')}
+                      colors={colors}
                     />
                     <OptionPill
                       label="Dirty"
                       selected={diaperType === 'dirty'}
                       onPress={() => setDiaperType('dirty')}
+                      colors={colors}
                     />
                     <OptionPill
                       label="Both"
                       selected={diaperType === 'both'}
                       onPress={() => setDiaperType('both')}
+                      colors={colors}
                     />
                   </View>
                 </>
@@ -317,31 +329,34 @@ export default function LogScreen() {
               {/* Sleep */}
               {logType === 'sleep' && (
                 <>
-                  <Text style={styles.fieldLabel}>Duration (minutes)</Text>
+                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Duration (minutes)</Text>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
                     value={sleepDuration}
                     onChangeText={setSleepDuration}
                     placeholder="60"
-                    placeholderTextColor="#4a4239"
+                    placeholderTextColor={colors.textDim}
                     keyboardType="number-pad"
                   />
-                  <Text style={styles.fieldLabel}>Quality</Text>
+                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Quality</Text>
                   <View style={styles.optionRow}>
                     <OptionPill
                       label="Good"
                       selected={sleepQuality === 'good'}
                       onPress={() => setSleepQuality('good')}
+                      colors={colors}
                     />
                     <OptionPill
                       label="Fair"
                       selected={sleepQuality === 'fair'}
                       onPress={() => setSleepQuality('fair')}
+                      colors={colors}
                     />
                     <OptionPill
                       label="Poor"
                       selected={sleepQuality === 'poor'}
                       onPress={() => setSleepQuality('poor')}
+                      colors={colors}
                     />
                   </View>
                 </>
@@ -350,14 +365,14 @@ export default function LogScreen() {
               {/* Temperature */}
               {logType === 'temperature' && (
                 <>
-                  <Text style={styles.fieldLabel}>Temperature</Text>
+                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Temperature</Text>
                   <View style={styles.inputRow}>
                     <TextInput
-                      style={[styles.input, styles.inputFlex]}
+                      style={[styles.input, styles.inputFlex, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
                       value={temperature}
                       onChangeText={setTemperature}
                       placeholder="98.6"
-                      placeholderTextColor="#4a4239"
+                      placeholderTextColor={colors.textDim}
                       keyboardType="decimal-pad"
                     />
                     <View style={styles.unitToggle}>
@@ -365,15 +380,17 @@ export default function LogScreen() {
                         label="°F"
                         selected={temperatureUnit === 'F'}
                         onPress={() => setTemperatureUnit('F')}
+                        colors={colors}
                       />
                       <OptionPill
                         label="°C"
                         selected={temperatureUnit === 'C'}
                         onPress={() => setTemperatureUnit('C')}
+                        colors={colors}
                       />
                     </View>
                   </View>
-                  <Text style={styles.fieldDisclaimer}>
+                  <Text style={[styles.fieldDisclaimer, { color: colors.textDim }]}>
                     For concerns about your baby's temperature, contact your pediatrician.
                   </Text>
                 </>
@@ -382,23 +399,23 @@ export default function LogScreen() {
               {/* Medicine */}
               {logType === 'medicine' && (
                 <>
-                  <Text style={styles.fieldLabel}>Medicine Name</Text>
+                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Medicine Name</Text>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
                     value={medicineName}
                     onChangeText={setMedicineName}
                     placeholder="Tylenol"
-                    placeholderTextColor="#4a4239"
+                    placeholderTextColor={colors.textDim}
                   />
-                  <Text style={styles.fieldLabel}>Dosage</Text>
+                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Dosage</Text>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
                     value={medicineDosage}
                     onChangeText={setMedicineDosage}
                     placeholder="2.5ml"
-                    placeholderTextColor="#4a4239"
+                    placeholderTextColor={colors.textDim}
                   />
-                  <Text style={styles.fieldDisclaimer}>
+                  <Text style={[styles.fieldDisclaimer, { color: colors.textDim }]}>
                     Always verify medication dosages with your pediatrician.
                   </Text>
                 </>
@@ -407,7 +424,7 @@ export default function LogScreen() {
               {/* Vitamin D */}
               {logType === 'vitamin_d' && (
                 <View style={styles.vitaminDContainer}>
-                  <Text style={styles.vitaminDText}>
+                  <Text style={[styles.vitaminDText, { color: colors.textSecondary }]}>
                     Tap Save to log Vitamin D as given.
                   </Text>
                 </View>
@@ -416,7 +433,7 @@ export default function LogScreen() {
               {/* Mood */}
               {logType === 'mood' && (
                 <>
-                  <Text style={styles.fieldLabel}>Mood Level</Text>
+                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Mood Level</Text>
                   <View style={styles.moodRow}>
                     {[
                       { level: 1, emoji: '😢' },
@@ -435,7 +452,8 @@ export default function LogScreen() {
                         }}
                         style={[
                           styles.moodButton,
-                          moodLevel === level && styles.moodButtonSelected,
+                          { backgroundColor: colors.subtleBg },
+                          moodLevel === level && { backgroundColor: colors.copper, transform: [{ scale: 1.1 }] },
                         ]}
                       >
                         <Text style={styles.moodEmoji}>{emoji}</Text>
@@ -448,14 +466,14 @@ export default function LogScreen() {
               {/* Weight */}
               {logType === 'weight' && (
                 <>
-                  <Text style={styles.fieldLabel}>Weight</Text>
+                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Weight</Text>
                   <View style={styles.inputRow}>
                     <TextInput
-                      style={[styles.input, styles.inputFlex]}
+                      style={[styles.input, styles.inputFlex, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
                       value={weight}
                       onChangeText={setWeight}
                       placeholder="12.5"
-                      placeholderTextColor="#4a4239"
+                      placeholderTextColor={colors.textDim}
                       keyboardType="decimal-pad"
                     />
                     <View style={styles.unitToggle}>
@@ -463,11 +481,13 @@ export default function LogScreen() {
                         label="lbs"
                         selected={weightUnit === 'lbs'}
                         onPress={() => setWeightUnit('lbs')}
+                        colors={colors}
                       />
                       <OptionPill
                         label="kg"
                         selected={weightUnit === 'kg'}
                         onPress={() => setWeightUnit('kg')}
+                        colors={colors}
                       />
                     </View>
                   </View>
@@ -477,14 +497,14 @@ export default function LogScreen() {
               {/* Height */}
               {logType === 'height' && (
                 <>
-                  <Text style={styles.fieldLabel}>Height</Text>
+                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Height</Text>
                   <View style={styles.inputRow}>
                     <TextInput
-                      style={[styles.input, styles.inputFlex]}
+                      style={[styles.input, styles.inputFlex, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
                       value={height}
                       onChangeText={setHeight}
                       placeholder="24"
-                      placeholderTextColor="#4a4239"
+                      placeholderTextColor={colors.textDim}
                       keyboardType="decimal-pad"
                     />
                     <View style={styles.unitToggle}>
@@ -492,11 +512,13 @@ export default function LogScreen() {
                         label="in"
                         selected={heightUnit === 'in'}
                         onPress={() => setHeightUnit('in')}
+                        colors={colors}
                       />
                       <OptionPill
                         label="cm"
                         selected={heightUnit === 'cm'}
                         onPress={() => setHeightUnit('cm')}
+                        colors={colors}
                       />
                     </View>
                   </View>
@@ -506,13 +528,13 @@ export default function LogScreen() {
               {/* Milestone */}
               {logType === 'milestone' && (
                 <>
-                  <Text style={styles.fieldLabel}>Milestone</Text>
+                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Milestone</Text>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
                     value={milestoneName}
                     onChangeText={setMilestoneName}
                     placeholder="First smile"
-                    placeholderTextColor="#4a4239"
+                    placeholderTextColor={colors.textDim}
                   />
                 </>
               )}
@@ -520,25 +542,25 @@ export default function LogScreen() {
               {/* Custom */}
               {logType === 'custom' && (
                 <>
-                  <Text style={styles.fieldLabel}>Log Type</Text>
+                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Log Type</Text>
                   <TextInput
-                    style={styles.input}
+                    style={[styles.input, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
                     value={customType}
                     onChangeText={setCustomType}
                     placeholder="Bath time"
-                    placeholderTextColor="#4a4239"
+                    placeholderTextColor={colors.textDim}
                   />
                 </>
               )}
 
               {/* Notes */}
-              <Text style={styles.fieldLabel}>Notes (optional)</Text>
+              <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Notes (optional)</Text>
               <TextInput
-                style={[styles.input, styles.notesInput]}
+                style={[styles.input, styles.notesInput, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
                 value={notes}
                 onChangeText={setNotes}
                 placeholder="Add any notes..."
-                placeholderTextColor="#4a4239"
+                placeholderTextColor={colors.textDim}
                 multiline
                 numberOfLines={3}
                 textAlignVertical="top"
@@ -550,13 +572,14 @@ export default function LogScreen() {
                 disabled={isSubmitting}
                 style={[
                   styles.submitButton,
+                  { backgroundColor: colors.copper },
                   isSubmitting && styles.submitButtonDisabled,
                 ]}
               >
                 {isSubmitting ? (
-                  <ActivityIndicator size="small" color="#faf6f0" />
+                  <ActivityIndicator size="small" color={colors.textPrimary} />
                 ) : (
-                  <Text style={styles.submitButtonText}>Save Log</Text>
+                  <Text style={[styles.submitButtonText, { color: colors.textPrimary }]}>Save Log</Text>
                 )}
               </Pressable>
             </GlassCard>
@@ -571,7 +594,6 @@ export default function LogScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   flex1: {
     flex: 1,
@@ -587,22 +609,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingBottom: 12,
-    backgroundColor: 'rgba(18,16,14,0.9)',
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.08)',
   },
   backButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 18,
-    color: '#faf6f0',
   },
   headerSpacer: {
     width: 36,
@@ -619,20 +637,16 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#ede6dc',
     marginBottom: 8,
     marginTop: 16,
   },
   input: {
-    backgroundColor: 'rgba(237,230,220,0.06)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#faf6f0',
   },
   inputFlex: {
     flex: 1,
@@ -660,21 +674,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 20,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
-  },
-  optionPillSelected: {
-    backgroundColor: '#c4703f',
-    borderColor: '#c4703f',
   },
   optionPillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#7a6f62',
-  },
-  optionPillTextSelected: {
-    color: '#faf6f0',
   },
   moodRow: {
     flexDirection: 'row',
@@ -685,13 +689,8 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  moodButtonSelected: {
-    backgroundColor: '#c4703f',
-    transform: [{ scale: 1.1 }],
   },
   moodEmoji: {
     fontSize: 24,
@@ -703,11 +702,9 @@ const styles = StyleSheet.create({
   vitaminDText: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#ede6dc',
     textAlign: 'center',
   },
   submitButton: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -719,12 +716,10 @@ const styles = StyleSheet.create({
   submitButtonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   fieldDisclaimer: {
     fontFamily: 'Karla-Regular',
     fontSize: 11,
-    color: '#4a4239',
     marginTop: 8,
     lineHeight: 16,
   },

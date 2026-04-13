@@ -9,13 +9,13 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { ArrowLeft, BookOpen, ChevronRight } from 'lucide-react-native'
 import { useBriefingsList } from '@/hooks/use-briefings'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import type { BriefingTemplate } from '@tdc/shared/types'
+import { useColors } from '@/hooks/use-colors'
 
 const STAGE_ORDER = [
   'first-trimester',
@@ -48,6 +48,7 @@ export default function BriefingArchiveScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { family } = useAuth()
+  const colors = useColors()
   const { data: briefings, isLoading } = useBriefingsList()
 
   const currentWeek = family?.current_week ?? null
@@ -78,7 +79,7 @@ export default function BriefingArchiveScreen() {
   }
 
   const renderSectionHeader = ({ section }: { section: BriefingSection }) => (
-    <Text style={styles.sectionHeader}>{section.title}</Text>
+    <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>{section.title}</Text>
   )
 
   const renderItem = ({
@@ -94,20 +95,20 @@ export default function BriefingArchiveScreen() {
         <Pressable onPress={() => handleBriefingPress(item.week)}>
           <GlassCard style={styles.briefingCard}>
             <View style={styles.briefingRow}>
-              <View style={styles.weekBadge}>
-                <Text style={styles.weekBadgeText}>W{item.week}</Text>
+              <View style={[styles.weekBadge, { backgroundColor: colors.copperDim }]}>
+                <Text style={[styles.weekBadgeText, { color: colors.copper }]}>W{item.week}</Text>
               </View>
               <View style={styles.briefingInfo}>
-                <Text style={styles.briefingTitle} numberOfLines={2}>
+                <Text style={[styles.briefingTitle, { color: colors.textSecondary }]} numberOfLines={2}>
                   {item.title}
                 </Text>
                 {isCurrentWeek && (
-                  <View style={styles.currentWeekBadge}>
-                    <Text style={styles.currentWeekText}>THIS WEEK</Text>
+                  <View style={[styles.currentWeekBadge, { backgroundColor: colors.copperDim }]}>
+                    <Text style={[styles.currentWeekText, { color: colors.copper }]}>THIS WEEK</Text>
                   </View>
                 )}
               </View>
-              <ChevronRight size={18} color="#4a4239" />
+              <ChevronRight size={18} color={colors.textDim} />
             </View>
           </GlassCard>
         </Pressable>
@@ -117,30 +118,25 @@ export default function BriefingArchiveScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft size={20} color="#ede6dc" />
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+          <ArrowLeft size={20} color={colors.textSecondary} />
         </Pressable>
-        <Text style={styles.headerTitle}>Briefing Archive</Text>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Briefing Archive</Text>
         <View style={styles.headerSpacer} />
       </View>
 
       {/* Content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color="#c4703f" size="large" />
+          <ActivityIndicator color={colors.copper} size="large" />
         </View>
       ) : sections.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <BookOpen size={40} color="#4a4239" />
-          <Text style={styles.emptyTitle}>No briefings available yet</Text>
-          <Text style={styles.emptySubtitle}>
+          <BookOpen size={40} color={colors.textDim} />
+          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No briefings available yet</Text>
+          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
             Briefings will appear here as your journey progresses
           </Text>
         </View>
@@ -165,7 +161,7 @@ export default function BriefingArchiveScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
+    backgroundColor: 'transparent',
   },
   header: {
     flexDirection: 'row',
@@ -178,14 +174,12 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   headerSpacer: {
     width: 36,
@@ -198,7 +192,6 @@ const styles = StyleSheet.create({
   sectionHeader: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
     marginTop: 20,
@@ -218,14 +211,12 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 12,
-    backgroundColor: 'rgba(196,112,63,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   weekBadgeText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#c4703f',
   },
   briefingInfo: {
     flex: 1,
@@ -235,7 +226,6 @@ const styles = StyleSheet.create({
   briefingTitle: {
     fontFamily: 'Karla-Medium',
     fontSize: 15,
-    color: '#ede6dc',
   },
   currentWeekBadge: {
     alignSelf: 'flex-start',
@@ -243,12 +233,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 8,
-    backgroundColor: 'rgba(196,112,63,0.15)',
   },
   currentWeekText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 10,
-    color: '#c4703f',
   },
 
   // Loading / Empty
@@ -267,13 +255,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
     textAlign: 'center',
   },
   emptySubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
   },
 })

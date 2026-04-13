@@ -2,6 +2,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { CheckCircle2, Clock } from 'lucide-react-native'
 import { formatDistanceToNow } from 'date-fns'
 import { GlassCard } from '@/components/glass'
+import { useColors, type ColorTokens } from '@/hooks/use-colors'
 import { useAuth } from '@/components/providers/AuthProvider'
 
 type RecentTask = {
@@ -19,10 +20,10 @@ interface PartnerActivityCardProps {
   }
 }
 
-function getAvatarColor(role: string | undefined): string {
-  if (role === 'mom') return '#c47a8f'
-  if (role === 'dad') return '#5b9bd5'
-  return '#7a6f62'
+function getAvatarColor(role: string | undefined, colors: ColorTokens): string {
+  if (role === 'mom') return colors.rose
+  if (role === 'dad') return colors.sky
+  return colors.textMuted
 }
 
 function formatLastActive(updatedAt: string | null): string {
@@ -35,11 +36,12 @@ function formatLastActive(updatedAt: string | null): string {
 }
 
 export function PartnerActivityCard({ data }: PartnerActivityCardProps) {
+  const colors = useColors()
   const { profile } = useAuth()
 
   // Partner role is the opposite of the current user
   const partnerRole = profile?.role === 'dad' ? 'mom' : profile?.role === 'mom' ? 'dad' : undefined
-  const avatarColor = getAvatarColor(partnerRole)
+  const avatarColor = getAvatarColor(partnerRole, colors)
 
   return (
     <GlassCard style={styles.card}>
@@ -49,25 +51,29 @@ export function PartnerActivityCard({ data }: PartnerActivityCardProps) {
           <Text style={[styles.avatarInitial, { color: avatarColor }]}>{data.initial}</Text>
         </View>
         <View style={styles.headerText}>
-          <Text style={styles.name}>{data.name}</Text>
-          <Text style={styles.lastActive}>{formatLastActive(data.updatedAt)}</Text>
+          <Text style={[styles.name, { color: colors.textPrimary }]}>{data.name}</Text>
+          <Text style={[styles.lastActive, { color: colors.textMuted }]}>{formatLastActive(data.updatedAt)}</Text>
         </View>
       </View>
 
       {/* Recent tasks */}
       {data.recentTasks.length > 0 && (
-        <View style={styles.taskList}>
+        <View style={[styles.taskList, { borderTopColor: colors.subtleBg }]}>
           {data.recentTasks.map((task, index) => {
             const isCompleted = task.status === 'completed'
             return (
               <View key={index} style={styles.taskRow}>
                 {isCompleted ? (
-                  <CheckCircle2 size={15} color="#6b8f71" />
+                  <CheckCircle2 size={15} color={colors.sage} />
                 ) : (
-                  <Clock size={15} color="#c4703f" />
+                  <Clock size={15} color={colors.copper} />
                 )}
                 <Text
-                  style={[styles.taskTitle, isCompleted && styles.taskTitleCompleted]}
+                  style={[
+                    styles.taskTitle,
+                    { color: colors.textSecondary },
+                    isCompleted && { color: colors.textMuted, textDecorationLine: 'line-through' as const },
+                  ]}
                   numberOfLines={1}
                 >
                   {task.title}
@@ -79,7 +85,7 @@ export function PartnerActivityCard({ data }: PartnerActivityCardProps) {
       )}
 
       {data.recentTasks.length === 0 && (
-        <Text style={styles.noActivity}>No recent task activity</Text>
+        <Text style={[styles.noActivity, { color: colors.textDim, borderTopColor: colors.subtleBg }]}>No recent task activity</Text>
       )}
     </GlassCard>
   )
@@ -113,19 +119,16 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 15,
-    color: '#faf6f0',
   },
   lastActive: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginTop: 2,
   },
   taskList: {
     gap: 8,
     paddingTop: 4,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.06)',
   },
   taskRow: {
     flexDirection: 'row',
@@ -136,18 +139,11 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'Jost-Regular',
     fontSize: 13,
-    color: '#ede6dc',
-  },
-  taskTitleCompleted: {
-    color: '#7a6f62',
-    textDecorationLine: 'line-through',
   },
   noActivity: {
     fontFamily: 'Karla-Regular',
     fontSize: 13,
-    color: '#4a4239',
     paddingTop: 4,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.06)',
   },
 })

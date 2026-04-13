@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import {
   ArrowLeft,
   CheckCircle,
@@ -19,21 +18,23 @@ import {
 import { useBacklogTasks, useTriageTask } from '@/hooks/use-triage'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
+import { useColors } from '@/hooks/use-colors'
 import * as Haptics from 'expo-haptics'
 import { format } from 'date-fns'
 
-const CATEGORY_COLORS: Record<string, string> = {
-  medical: '#d4836b',
-  shopping: '#5b9bd5',
-  planning: '#d4a853',
-  financial: '#6b8f71',
-  partner: '#c47a8f',
-  self_care: '#c4703f',
+const CATEGORY_COLOR_KEYS: Record<string, 'coral' | 'sky' | 'gold' | 'sage' | 'rose' | 'copper'> = {
+  medical: 'coral',
+  shopping: 'sky',
+  planning: 'gold',
+  financial: 'sage',
+  partner: 'rose',
+  self_care: 'copper',
 }
 
 export default function TriageScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const colors = useColors()
   const { data, isLoading } = useBacklogTasks()
   const triageMutation = useTriageTask()
   const [triagedIds, setTriagedIds] = useState<Set<string>>(new Set())
@@ -53,71 +54,69 @@ export default function TriageScreen() {
     [currentTask, triageMutation]
   )
 
-  const categoryColor =
-    CATEGORY_COLORS[currentTask?.category ?? ''] ?? '#7a6f62'
+  const categoryColorKey = CATEGORY_COLOR_KEYS[currentTask?.category ?? '']
+  const categoryColor = categoryColorKey ? colors[categoryColorKey] : colors.textMuted
+  const categoryDimKey = categoryColorKey ? (`${categoryColorKey}Dim` as keyof typeof colors) : null
+  const categoryBg = (categoryDimKey ? colors[categoryDimKey] : colors.subtleBg) as string
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft size={20} color="#ede6dc" />
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+          <ArrowLeft size={20} color={colors.textSecondary} />
         </Pressable>
-        <Text style={styles.headerTitle}>Task Triage</Text>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Task Triage</Text>
         <View style={styles.headerSpacer} />
       </View>
 
       {isLoading ? (
         <View style={styles.centerContainer}>
-          <ActivityIndicator color="#c4703f" size="large" />
+          <ActivityIndicator color={colors.copper} size="large" />
         </View>
       ) : total === 0 ? (
-        /* Empty state — no backlog tasks at all */
+        /* Empty state -- no backlog tasks at all */
         <View style={styles.centerContainer}>
-          <CheckCircle size={40} color="#6b8f71" />
-          <Text style={styles.celebrationTitle}>No Backlog</Text>
-          <Text style={styles.celebrationSubtitle}>
+          <CheckCircle size={40} color={colors.sage} />
+          <Text style={[styles.celebrationTitle, { color: colors.textPrimary }]}>No Backlog</Text>
+          <Text style={[styles.celebrationSubtitle, { color: colors.textMuted }]}>
             You're all caught up — no tasks need triage.
           </Text>
           <Pressable
-            style={styles.backToTasksButton}
+            style={[styles.backToTasksButton, { backgroundColor: colors.copperDim }]}
             onPress={() => router.back()}
           >
-            <Text style={styles.backToTasksText}>Go Back</Text>
+            <Text style={[styles.backToTasksText, { color: colors.copper }]}>Go Back</Text>
           </Pressable>
         </View>
       ) : backlogTasks.length === 0 ? (
-        /* Completion state — all tasks triaged */
+        /* Completion state -- all tasks triaged */
         <View style={styles.centerContainer}>
-          <PartyPopper size={44} color="#d4a853" />
-          <Text style={styles.celebrationTitle}>All Caught Up!</Text>
-          <Text style={styles.celebrationSubtitle}>
+          <PartyPopper size={44} color={colors.gold} />
+          <Text style={[styles.celebrationTitle, { color: colors.textPrimary }]}>All Caught Up!</Text>
+          <Text style={[styles.celebrationSubtitle, { color: colors.textMuted }]}>
             You've triaged all {total} task{total !== 1 ? 's' : ''}
           </Text>
           <Pressable
-            style={styles.backToTasksButton}
+            style={[styles.backToTasksButton, { backgroundColor: colors.copperDim }]}
             onPress={() => router.back()}
           >
-            <Text style={styles.backToTasksText}>Back to Tasks</Text>
+            <Text style={[styles.backToTasksText, { color: colors.copper }]}>Back to Tasks</Text>
           </Pressable>
         </View>
       ) : (
         <View style={styles.content}>
           {/* Progress */}
           <View style={styles.progressSection}>
-            <Text style={styles.progressText}>
+            <Text style={[styles.progressText, { color: colors.textMuted }]}>
               {progress} of {total}
             </Text>
-            <View style={styles.progressBarBg}>
+            <View style={[styles.progressBarBg, { backgroundColor: colors.subtleBg }]}>
               <View
                 style={[
                   styles.progressBarFill,
-                  { width: total > 0 ? `${(progress / total) * 100}%` : '0%' },
+                  { width: total > 0 ? `${(progress / total) * 100}%` : '0%', backgroundColor: colors.copper },
                 ]}
               />
             </View>
@@ -126,16 +125,16 @@ export default function TriageScreen() {
           {/* Task card */}
           <CardEntrance key={currentTask.id} delay={0}>
             <GlassCard style={styles.taskCard}>
-              <Text style={styles.taskTitle}>{currentTask.title}</Text>
+              <Text style={[styles.taskTitle, { color: colors.textPrimary }]}>{currentTask.title}</Text>
               {currentTask.description ? (
-                <Text style={styles.taskDescription}>
+                <Text style={[styles.taskDescription, { color: colors.textMuted }]}>
                   {currentTask.description}
                 </Text>
               ) : null}
               <View style={styles.badgeRow}>
                 {currentTask.due_date ? (
-                  <View style={styles.dueBadge}>
-                    <Text style={styles.dueBadgeText}>
+                  <View style={[styles.dueBadge, { backgroundColor: colors.goldDim }]}>
+                    <Text style={[styles.dueBadgeText, { color: colors.gold }]}>
                       Due: {format(new Date(currentTask.due_date), 'MMM d, yyyy')}
                     </Text>
                   </View>
@@ -143,7 +142,7 @@ export default function TriageScreen() {
                 <View
                   style={[
                     styles.categoryBadge,
-                    { backgroundColor: `${categoryColor}20` },
+                    { backgroundColor: categoryBg },
                   ]}
                 >
                   <Text style={[styles.categoryBadgeText, { color: categoryColor }]}>
@@ -157,29 +156,29 @@ export default function TriageScreen() {
           {/* Action buttons */}
           <View style={styles.actionRow}>
             <Pressable
-              style={[styles.actionButton, styles.actionCompleted]}
+              style={[styles.actionButton, { backgroundColor: colors.sageDim }]}
               onPress={() => handleTriage('completed')}
             >
-              <CheckCircle size={22} color="#6b8f71" />
-              <Text style={[styles.actionText, { color: '#6b8f71' }]}>
+              <CheckCircle size={22} color={colors.sage} />
+              <Text style={[styles.actionText, { color: colors.sage }]}>
                 Already Did
               </Text>
             </Pressable>
             <Pressable
-              style={[styles.actionButton, styles.actionAdd]}
+              style={[styles.actionButton, { backgroundColor: colors.copperDim }]}
               onPress={() => handleTriage('added')}
             >
-              <Plus size={22} color="#c4703f" />
-              <Text style={[styles.actionText, { color: '#c4703f' }]}>
+              <Plus size={22} color={colors.copper} />
+              <Text style={[styles.actionText, { color: colors.copper }]}>
                 Add to List
               </Text>
             </Pressable>
             <Pressable
-              style={[styles.actionButton, styles.actionSkip]}
+              style={[styles.actionButton, { backgroundColor: colors.subtleBg }]}
               onPress={() => handleTriage('skipped')}
             >
-              <SkipForward size={22} color="#7a6f62" />
-              <Text style={[styles.actionText, { color: '#7a6f62' }]}>
+              <SkipForward size={22} color={colors.textMuted} />
+              <Text style={[styles.actionText, { color: colors.textMuted }]}>
                 Skip
               </Text>
             </Pressable>
@@ -193,7 +192,6 @@ export default function TriageScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   header: {
     flexDirection: 'row',
@@ -206,14 +204,12 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   headerSpacer: {
     width: 36,
@@ -231,18 +227,15 @@ const styles = StyleSheet.create({
   progressText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#7a6f62',
     marginBottom: 8,
   },
   progressBarBg: {
     height: 6,
     borderRadius: 3,
-    backgroundColor: 'rgba(237,230,220,0.06)',
   },
   progressBarFill: {
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#c4703f',
   },
 
   // Task card
@@ -252,12 +245,10 @@ const styles = StyleSheet.create({
   taskTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
   },
   taskDescription: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     marginTop: 8,
     lineHeight: 20,
   },
@@ -268,7 +259,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   dueBadge: {
-    backgroundColor: 'rgba(212,168,83,0.12)',
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 20,
@@ -276,7 +266,6 @@ const styles = StyleSheet.create({
   dueBadgeText: {
     fontFamily: 'Karla-Medium',
     fontSize: 12,
-    color: '#d4a853',
   },
   categoryBadge: {
     paddingHorizontal: 10,
@@ -302,15 +291,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     gap: 6,
   },
-  actionCompleted: {
-    backgroundColor: 'rgba(107,143,113,0.12)',
-  },
-  actionAdd: {
-    backgroundColor: 'rgba(196,112,63,0.12)',
-  },
-  actionSkip: {
-    backgroundColor: 'rgba(237,230,220,0.06)',
-  },
   actionText: {
     fontFamily: 'Karla-Medium',
     fontSize: 12,
@@ -327,18 +307,15 @@ const styles = StyleSheet.create({
   celebrationTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 24,
-    color: '#faf6f0',
     textAlign: 'center',
   },
   celebrationSubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
   },
   backToTasksButton: {
     marginTop: 12,
-    backgroundColor: 'rgba(196,112,63,0.15)',
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 12,
@@ -346,6 +323,5 @@ const styles = StyleSheet.create({
   backToTasksText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#c4703f',
   },
 })

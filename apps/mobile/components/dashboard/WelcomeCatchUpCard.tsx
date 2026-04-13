@@ -2,10 +2,12 @@ import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
 import { RefreshCw } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
+import { useColors } from '@/hooks/use-colors'
 import { useBacklogCount } from '@/hooks/use-triage'
 
 export function WelcomeCatchUpCard() {
   const router = useRouter()
+  const colors = useColors()
   const { data: backlogCount } = useBacklogCount()
 
   if (!backlogCount || backlogCount === 0) return null
@@ -13,21 +15,21 @@ export function WelcomeCatchUpCard() {
   return (
     <GlassCard style={styles.card}>
       <View style={styles.header}>
-        <View style={styles.iconBadge}>
-          <RefreshCw size={18} color="#d4a853" />
+        <View style={[styles.iconBadge, { backgroundColor: colors.goldDim }]}>
+          <RefreshCw size={18} color={colors.gold} />
         </View>
         <View style={styles.headerText}>
-          <Text style={styles.title}>Welcome back!</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>Welcome back!</Text>
+          <Text style={[styles.subtitle, { color: colors.textMuted }]}>
             You have {backlogCount} task{backlogCount === 1 ? '' : 's'} that need attention
           </Text>
         </View>
       </View>
       <Pressable
         onPress={() => router.push('/(screens)/triage')}
-        style={styles.cta}
+        style={[styles.cta, { backgroundColor: colors.goldDim, borderColor: colors.goldGlow }]}
       >
-        <Text style={styles.ctaText}>Review Tasks</Text>
+        <Text style={[styles.ctaText, { color: colors.gold }]}>Review Tasks</Text>
       </Pressable>
     </GlassCard>
   )
@@ -47,7 +49,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(212,168,83,0.12)',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
@@ -58,26 +59,21 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 17,
-    color: '#faf6f0',
     marginBottom: 4,
   },
   subtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     lineHeight: 18,
   },
   cta: {
-    backgroundColor: 'rgba(212,168,83,0.12)',
     borderRadius: 10,
     paddingVertical: 12,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(212,168,83,0.2)',
   },
   ctaText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 15,
-    color: '#d4a853',
   },
 })

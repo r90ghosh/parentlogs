@@ -29,6 +29,7 @@ import {
 import * as Haptics from 'expo-haptics'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
+import { useColors } from '@/hooks/use-colors'
 import { useTaskById, useCompleteTask, useSnoozeTask, useSkipTask, useUpdateTask, useDeleteTask } from '@/hooks/use-tasks'
 import { format } from 'date-fns'
 
@@ -57,25 +58,25 @@ function getCategoryIcon(category: string) {
   }
 }
 
-function getCategoryColor(category: string): string {
+function getCategoryColor(category: string, colors: ReturnType<typeof useColors>): string {
   switch (category?.toLowerCase()) {
     case 'medical':
     case 'healthcare':
     case 'health':
-      return '#c47a8f'
+      return colors.rose
     case 'shopping':
     case 'gear':
     case 'nursery':
-      return '#d4a853'
+      return colors.gold
     case 'financial':
     case 'legal':
     case 'insurance':
-      return '#6b8f71'
+      return colors.sage
     case 'partner':
     case 'relationship':
-      return '#c47a8f'
+      return colors.rose
     default:
-      return '#5b9bd5'
+      return colors.sky
   }
 }
 
@@ -94,16 +95,16 @@ function getAssigneeLabel(assignee: string): string {
   }
 }
 
-function getAssigneeColor(assignee: string): string {
+function getAssigneeColor(assignee: string, colors: ReturnType<typeof useColors>): string {
   switch (assignee) {
     case 'dad':
-      return '#5b9bd5'
+      return colors.sky
     case 'mom':
-      return '#c47a8f'
+      return colors.rose
     case 'both':
-      return '#d4a853'
+      return colors.gold
     default:
-      return '#7a6f62'
+      return colors.textMuted
   }
 }
 
@@ -114,6 +115,7 @@ const SNOOZE_OPTIONS: { label: string; days: number }[] = [
 ]
 
 export default function TaskDetailScreen() {
+  const colors = useColors()
   const { id } = useLocalSearchParams<{ id: string }>()
   const router = useRouter()
   const insets = useSafeAreaInsets()
@@ -199,13 +201,9 @@ export default function TaskDetailScreen() {
 
   if (isLoading) {
     return (
-      <View style={styles.container}>
-        <LinearGradient
-          colors={['#12100e', '#1a1714', '#12100e']}
-          style={StyleSheet.absoluteFill}
-        />
+      <View style={[styles.container, { backgroundColor: 'transparent' }]}>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#c4703f" />
+          <ActivityIndicator size="large" color={colors.copper} />
         </View>
       </View>
     )
@@ -213,44 +211,35 @@ export default function TaskDetailScreen() {
 
   if (!task) {
     return (
-      <View style={styles.container}>
-        <LinearGradient
-          colors={['#12100e', '#1a1714', '#12100e']}
-          style={StyleSheet.absoluteFill}
-        />
-        <View style={[styles.header, { paddingTop: 12 }]}>
-          <Pressable onPress={() => router.back()} style={styles.backButton}>
-            <ArrowLeft size={20} color="#ede6dc" />
+      <View style={[styles.container, { backgroundColor: 'transparent' }]}>
+        <View style={[styles.header, { paddingTop: 12, borderBottomColor: colors.subtleBg }]}>
+          <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+            <ArrowLeft size={20} color={colors.textSecondary} />
           </Pressable>
         </View>
         <View style={styles.loadingContainer}>
-          <Text style={styles.errorText}>Task not found</Text>
+          <Text style={[styles.errorText, { color: colors.textMuted }]}>Task not found</Text>
         </View>
       </View>
     )
   }
 
   const CategoryIcon = getCategoryIcon(task.category)
-  const categoryColor = getCategoryColor(task.category)
-  const assigneeColor = getAssigneeColor(task.assigned_to)
+  const categoryColor = getCategoryColor(task.category, colors)
+  const assigneeColor = getAssigneeColor(task.assigned_to, colors)
   const isCompleted = task.status === 'completed'
   const isActionable = task.status === 'pending' || task.status === 'snoozed'
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: 12 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft size={20} color="#ede6dc" />
+      <View style={[styles.header, { paddingTop: 12, borderBottomColor: colors.subtleBg }]}>
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+          <ArrowLeft size={20} color={colors.textSecondary} />
         </Pressable>
-        <Text style={styles.headerTitle}>Task Details</Text>
-        <Pressable onPress={handleDelete} style={styles.deleteButton}>
-          <Trash2 size={18} color="#d4836b" />
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Task Details</Text>
+        <Pressable onPress={handleDelete} style={[styles.deleteButton, { backgroundColor: colors.coralDim }]}>
+          <Trash2 size={18} color={colors.coral} />
         </Pressable>
       </View>
 
@@ -264,7 +253,7 @@ export default function TaskDetailScreen() {
       >
         {/* Title */}
         <CardEntrance delay={0}>
-          <Text style={styles.title}>{task.title}</Text>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>{task.title}</Text>
         </CardEntrance>
 
         {/* Meta badges */}
@@ -292,9 +281,9 @@ export default function TaskDetailScreen() {
               </Text>
             </View>
             {task.due_date && (
-              <View style={styles.metaBadge}>
-                <Clock size={12} color="#7a6f62" />
-                <Text style={styles.metaBadgeTextMuted}>
+              <View style={[styles.metaBadge, { backgroundColor: colors.subtleBg }]}>
+                <Clock size={12} color={colors.textMuted} />
+                <Text style={[styles.metaBadgeTextMuted, { color: colors.textMuted }]}>
                   Due {format(new Date(task.due_date), 'MMM d, yyyy')}
                 </Text>
               </View>
@@ -304,9 +293,9 @@ export default function TaskDetailScreen() {
 
         {isCompleted && task.completed_at && (
           <CardEntrance delay={120}>
-            <View style={styles.completedBanner}>
-              <CheckCircle2 size={16} color="#6b8f71" />
-              <Text style={styles.completedText}>
+            <View style={[styles.completedBanner, { backgroundColor: colors.sageDim }]}>
+              <CheckCircle2 size={16} color={colors.sage} />
+              <Text style={[styles.completedText, { color: colors.sage }]}>
                 Completed on {format(new Date(task.completed_at), 'MMM d, yyyy')}
               </Text>
             </View>
@@ -317,8 +306,8 @@ export default function TaskDetailScreen() {
         {task.description && (
           <CardEntrance delay={160}>
             <GlassCard style={styles.sectionCard}>
-              <Text style={styles.sectionTitle}>Description</Text>
-              <Text style={styles.sectionBody}>{task.description}</Text>
+              <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Description</Text>
+              <Text style={[styles.sectionBody, { color: colors.textSecondary }]}>{task.description}</Text>
             </GlassCard>
           </CardEntrance>
         )}
@@ -326,12 +315,12 @@ export default function TaskDetailScreen() {
         {/* Why it matters */}
         {task.why_it_matters && (
           <CardEntrance delay={240}>
-            <GlassCard style={[styles.sectionCard, styles.whyCard]}>
+            <GlassCard style={[styles.sectionCard, styles.whyCard, { borderLeftColor: colors.gold }]}>
               <View style={styles.whyHeader}>
-                <Lightbulb size={16} color="#d4a853" />
-                <Text style={styles.whyTitle}>Why It Matters</Text>
+                <Lightbulb size={16} color={colors.gold} />
+                <Text style={[styles.whyTitle, { color: colors.gold }]}>Why It Matters</Text>
               </View>
-              <Text style={styles.whyBody}>{task.why_it_matters}</Text>
+              <Text style={[styles.whyBody, { color: colors.textSecondary }]}>{task.why_it_matters}</Text>
             </GlassCard>
           </CardEntrance>
         )}
@@ -339,13 +328,13 @@ export default function TaskDetailScreen() {
         {/* Notes */}
         <CardEntrance delay={320}>
           <GlassCard style={styles.sectionCard}>
-            <Text style={styles.sectionTitle}>Notes</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Notes</Text>
             <TextInput
-              style={styles.notesInput}
+              style={[styles.notesInput, { color: colors.textSecondary }]}
               multiline
               maxLength={2000}
               placeholder="Add personal notes..."
-              placeholderTextColor="#4a4239"
+              placeholderTextColor={colors.textDim}
               value={notes}
               onChangeText={handleNotesChange}
               textAlignVertical="top"
@@ -356,11 +345,11 @@ export default function TaskDetailScreen() {
 
       {/* Bottom action buttons */}
       {isActionable && (
-        <View style={[styles.bottomActions, { paddingBottom: insets.bottom + 16 }]}>
+        <View style={[styles.bottomActions, { paddingBottom: insets.bottom + 16, backgroundColor: colors.overlay, borderTopColor: colors.border }]}>
           <View style={styles.secondaryActions}>
             <Pressable onPress={handleSkip} style={styles.secondaryButton}>
-              <SkipForward size={18} color="#7a6f62" />
-              <Text style={styles.secondaryButtonText}>Skip</Text>
+              <SkipForward size={18} color={colors.textMuted} />
+              <Text style={[styles.secondaryButtonText, { color: colors.textMuted }]}>Skip</Text>
             </Pressable>
 
             {/* Snooze picker: 1d / 3d / 7d */}
@@ -369,10 +358,10 @@ export default function TaskDetailScreen() {
                 <Pressable
                   key={opt.days}
                   onPress={() => handleSnooze(opt.days)}
-                  style={styles.snoozeOption}
+                  style={[styles.snoozeOption, { borderColor: 'rgba(196,112,63,0.3)', backgroundColor: 'rgba(196,112,63,0.08)' }]}
                 >
-                  <Clock size={14} color="#c4703f" />
-                  <Text style={styles.snoozeOptionText}>{opt.label}</Text>
+                  <Clock size={14} color={colors.copper} />
+                  <Text style={[styles.snoozeOptionText, { color: colors.copper }]}>{opt.label}</Text>
                 </Pressable>
               ))}
             </View>
@@ -389,11 +378,11 @@ export default function TaskDetailScreen() {
               style={styles.completeGradient}
             >
               {completeTask.isPending ? (
-                <ActivityIndicator color="#faf6f0" />
+                <ActivityIndicator color={colors.textPrimary} />
               ) : (
                 <>
-                  <CheckCircle2 size={20} color="#faf6f0" />
-                  <Text style={styles.completeText}>Mark Complete</Text>
+                  <CheckCircle2 size={20} color={colors.textPrimary} />
+                  <Text style={[styles.completeText, { color: colors.textPrimary }]}>Mark Complete</Text>
                 </>
               )}
             </LinearGradient>
@@ -407,7 +396,6 @@ export default function TaskDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   header: {
     flexDirection: 'row',
@@ -416,13 +404,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   backButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -430,14 +416,12 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(212,131,107,0.1)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   scrollView: {
     flex: 1,
@@ -454,12 +438,10 @@ const styles = StyleSheet.create({
   errorText: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#7a6f62',
   },
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 26,
-    color: '#faf6f0',
     lineHeight: 34,
     marginBottom: 16,
   },
@@ -476,7 +458,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 8,
-    backgroundColor: 'rgba(237,230,220,0.06)',
   },
   metaBadgeText: {
     fontFamily: 'Karla-Medium',
@@ -486,13 +467,11 @@ const styles = StyleSheet.create({
   metaBadgeTextMuted: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
   },
   completedBanner: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: 'rgba(107,143,113,0.1)',
     borderRadius: 8,
     padding: 12,
     marginBottom: 20,
@@ -500,7 +479,6 @@ const styles = StyleSheet.create({
   completedText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#6b8f71',
   },
   sectionCard: {
     padding: 20,
@@ -509,7 +487,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 12,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 1,
     marginBottom: 8,
@@ -517,12 +494,10 @@ const styles = StyleSheet.create({
   sectionBody: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#ede6dc',
     lineHeight: 24,
   },
   whyCard: {
     borderLeftWidth: 3,
-    borderLeftColor: '#d4a853',
   },
   whyHeader: {
     flexDirection: 'row',
@@ -533,18 +508,15 @@ const styles = StyleSheet.create({
   whyTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#d4a853',
   },
   whyBody: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#ede6dc',
     lineHeight: 24,
   },
   notesInput: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#ede6dc',
     minHeight: 80,
     lineHeight: 22,
   },
@@ -555,9 +527,7 @@ const styles = StyleSheet.create({
     right: 0,
     paddingHorizontal: 20,
     paddingTop: 16,
-    backgroundColor: 'rgba(18,16,14,0.95)',
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.08)',
   },
   secondaryActions: {
     flexDirection: 'row',
@@ -574,7 +544,6 @@ const styles = StyleSheet.create({
   secondaryButtonText: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#7a6f62',
   },
   snoozePickerRow: {
     flexDirection: 'row',
@@ -588,13 +557,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: 'rgba(196,112,63,0.3)',
-    backgroundColor: 'rgba(196,112,63,0.08)',
   },
   snoozeOptionText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#c4703f',
   },
   completeButton: {
     borderRadius: 12,
@@ -611,6 +577,5 @@ const styles = StyleSheet.create({
   completeText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
 })

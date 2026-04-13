@@ -2,6 +2,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
 import { CheckSquare, ChevronRight, Circle, CheckCircle2 } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
+import { useColors, type ColorTokens } from '@/hooks/use-colors'
 import type { FamilyTask } from '@tdc/shared/types'
 import { format, isToday, isTomorrow, isPast } from 'date-fns'
 
@@ -17,21 +18,22 @@ function getDueLabel(dueDate: string): string {
   return format(date, 'MMM d')
 }
 
-function getAssigneeBadgeColor(assignee: string): string {
+function getAssigneeBadgeColor(assignee: string, colors: ColorTokens): string {
   switch (assignee) {
     case 'dad':
-      return '#5b9bd5'
+      return colors.sky
     case 'mom':
-      return '#c47a8f'
+      return colors.rose
     case 'both':
-      return '#d4a853'
+      return colors.gold
     default:
-      return '#7a6f62'
+      return colors.textMuted
   }
 }
 
 export function TasksDueCard({ tasks }: TasksDueCardProps) {
   const router = useRouter()
+  const colors = useColors()
   const allTasks = tasks ?? []
   const pendingTasks = allTasks.filter((t) => t.status === 'pending')
   const completedCount = allTasks.filter((t) => t.status === 'completed').length
@@ -43,63 +45,66 @@ export function TasksDueCard({ tasks }: TasksDueCardProps) {
     <Pressable onPress={() => router.push('/(tabs)/tasks')}>
       <GlassCard style={styles.card}>
         <View style={styles.header}>
-          <View style={styles.iconBadge}>
-            <CheckSquare size={18} color="#6b8f71" />
+          <View style={[styles.iconBadge, { backgroundColor: colors.sageDim }]}>
+            <CheckSquare size={18} color={colors.sage} />
           </View>
           <View style={styles.headerText}>
-            <Text style={styles.title}>Tasks Due</Text>
-            <Text style={styles.statsText}>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>Tasks Due</Text>
+            <Text style={[styles.statsText, { color: colors.textMuted }]}>
               {completedCount}/{totalCount} completed
             </Text>
           </View>
-          <ChevronRight size={20} color="#7a6f62" />
+          <ChevronRight size={20} color={colors.textMuted} />
         </View>
 
         {/* Progress bar */}
-        <View style={styles.progressBar}>
+        <View style={[styles.progressBar, { backgroundColor: colors.border }]}>
           <View
-            style={[styles.progressFill, { width: `${progressPercent}%` }]}
+            style={[styles.progressFill, { width: `${progressPercent}%`, backgroundColor: colors.sage }]}
           />
         </View>
 
         {/* Task list */}
         {displayTasks.length > 0 ? (
           <View style={styles.taskList}>
-            {displayTasks.map((task) => (
-              <View key={task.id} style={styles.taskRow}>
-                <Circle size={16} color="#4a4239" />
-                <Text style={styles.taskTitle} numberOfLines={1}>
-                  {task.title}
-                </Text>
-                <View
-                  style={[
-                    styles.assigneeBadge,
-                    { backgroundColor: getAssigneeBadgeColor(task.assigned_to) + '20' },
-                  ]}
-                >
-                  <Text
+            {displayTasks.map((task) => {
+              const badgeColor = getAssigneeBadgeColor(task.assigned_to, colors)
+              return (
+                <View key={task.id} style={styles.taskRow}>
+                  <Circle size={16} color={colors.textDim} />
+                  <Text style={[styles.taskTitle, { color: colors.textSecondary }]} numberOfLines={1}>
+                    {task.title}
+                  </Text>
+                  <View
                     style={[
-                      styles.assigneeText,
-                      { color: getAssigneeBadgeColor(task.assigned_to) },
+                      styles.assigneeBadge,
+                      { backgroundColor: badgeColor + '20' },
                     ]}
                   >
-                    {task.assigned_to}
-                  </Text>
+                    <Text
+                      style={[
+                        styles.assigneeText,
+                        { color: badgeColor },
+                      ]}
+                    >
+                      {task.assigned_to}
+                    </Text>
+                  </View>
+                  <Text style={[styles.dueLabel, { color: colors.textMuted }]}>{getDueLabel(task.due_date)}</Text>
                 </View>
-                <Text style={styles.dueLabel}>{getDueLabel(task.due_date)}</Text>
-              </View>
-            ))}
+              )
+            })}
           </View>
         ) : (
           <View style={styles.emptyState}>
-            <CheckCircle2 size={20} color="#6b8f71" />
-            <Text style={styles.emptyText}>All caught up!</Text>
+            <CheckCircle2 size={20} color={colors.sage} />
+            <Text style={[styles.emptyText, { color: colors.sage }]}>All caught up!</Text>
           </View>
         )}
 
         <View style={styles.ctaRow}>
-          <Text style={styles.ctaText}>View all tasks</Text>
-          <ChevronRight size={14} color="#c4703f" />
+          <Text style={[styles.ctaText, { color: colors.copper }]}>View all tasks</Text>
+          <ChevronRight size={14} color={colors.copper} />
         </View>
       </GlassCard>
     </Pressable>
@@ -120,7 +125,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(107,143,113,0.12)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -130,25 +134,21 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 17,
-    color: '#faf6f0',
   },
   statsText: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginTop: 2,
   },
   progressBar: {
     height: 4,
     borderRadius: 2,
-    backgroundColor: 'rgba(237,230,220,0.08)',
     marginBottom: 16,
     overflow: 'hidden',
   },
   progressFill: {
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#6b8f71',
   },
   taskList: {
     gap: 12,
@@ -163,7 +163,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#ede6dc',
   },
   assigneeBadge: {
     paddingHorizontal: 8,
@@ -179,7 +178,6 @@ const styles = StyleSheet.create({
   dueLabel: {
     fontFamily: 'Karla-Regular',
     fontSize: 11,
-    color: '#7a6f62',
     minWidth: 48,
     textAlign: 'right',
   },
@@ -194,7 +192,6 @@ const styles = StyleSheet.create({
   emptyText: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#6b8f71',
   },
   ctaRow: {
     flexDirection: 'row',
@@ -204,6 +201,5 @@ const styles = StyleSheet.create({
   ctaText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#c4703f',
   },
 })

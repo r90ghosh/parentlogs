@@ -14,9 +14,9 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native'
+import { BlurView } from 'expo-blur'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import {
   X,
   Check,
@@ -36,6 +36,7 @@ import {
   useAddCustomBudgetItem,
 } from '@/hooks/use-budget'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { useColors } from '@/hooks/use-colors'
 import type { BudgetPeriod, BudgetPriority, BudgetTemplate, FamilyBudgetItem } from '@tdc/shared/types'
 import { BUDGET_TIMELINE_CATEGORIES } from '@tdc/shared/utils/budget-timeline'
 import * as Haptics from 'expo-haptics'
@@ -60,6 +61,7 @@ export default function BudgetScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { profile } = useAuth()
+  const colors = useColors()
   const [selectedPeriod, setSelectedPeriod] = useState<BudgetPeriod | null>(null)
   const [activeTab, setActiveTab] = useState<TabMode>('browse')
   const [selectedPriority, setSelectedPriority] = useState<PriorityFilter>('all')
@@ -161,22 +163,22 @@ export default function BudgetScreen() {
         <GlassCard style={styles.budgetItemCard}>
           <View style={styles.budgetItemHeader}>
             <View style={styles.budgetItemInfo}>
-              <Text style={styles.budgetItemName}>{item.item}</Text>
-              <Text style={styles.budgetItemCategory}>{item.category}</Text>
+              <Text style={[styles.budgetItemName, { color: colors.textSecondary }]}>{item.item}</Text>
+              <Text style={[styles.budgetItemCategory, { color: colors.textMuted }]}>{item.category}</Text>
             </View>
             <View style={styles.budgetItemPriceCol}>
-              <Text style={styles.budgetItemPrice}>
+              <Text style={[styles.budgetItemPrice, { color: colors.gold }]}>
                 {formatRange(item.price_min, item.price_max)}
               </Text>
               {item.priority === 'must-have' && (
-                <View style={styles.mustHaveBadge}>
-                  <Text style={styles.mustHaveText}>Must-have</Text>
+                <View style={[styles.mustHaveBadge, { backgroundColor: colors.copperDim }]}>
+                  <Text style={[styles.mustHaveText, { color: colors.copper }]}>Must-have</Text>
                 </View>
               )}
             </View>
           </View>
           {item.description ? (
-            <Text style={styles.budgetItemDesc} numberOfLines={2}>
+            <Text style={[styles.budgetItemDesc, { color: colors.textMuted }]} numberOfLines={2}>
               {item.description}
             </Text>
           ) : null}
@@ -184,16 +186,16 @@ export default function BudgetScreen() {
             <View style={styles.brandsContainer}>
               {item.brand_premium ? (
                 <View style={styles.brandRow}>
-                  <Crown size={12} color="#d4a853" />
-                  <Text style={styles.brandPremiumText} numberOfLines={1}>
+                  <Crown size={12} color={colors.gold} />
+                  <Text style={[styles.brandPremiumText, { color: colors.gold }]} numberOfLines={1}>
                     {item.brand_premium}
                   </Text>
                 </View>
               ) : null}
               {item.brand_value ? (
                 <View style={styles.brandRow}>
-                  <Sparkles size={12} color="#6b8f71" />
-                  <Text style={styles.brandValueText} numberOfLines={1}>
+                  <Sparkles size={12} color={colors.sage} />
+                  <Text style={[styles.brandValueText, { color: colors.sage }]} numberOfLines={1}>
                     {item.brand_value}
                   </Text>
                 </View>
@@ -201,27 +203,27 @@ export default function BudgetScreen() {
             </View>
           )}
           <View style={styles.budgetItemFooter}>
-            <Text style={styles.budgetItemPeriod}>{item.period}</Text>
+            <Text style={[styles.budgetItemPeriod, { color: colors.textDim }]}>{item.period}</Text>
             {!isAdded ? (
               <Pressable
                 onPress={() => handleAddItem(item.budget_id)}
-                style={styles.addButton}
+                style={[styles.addButton, { backgroundColor: colors.copperDim, borderColor: colors.copperGlow }]}
                 disabled={addToBudget.isPending}
               >
-                <Plus size={14} color="#c4703f" />
-                <Text style={styles.addButtonText}>Add</Text>
+                <Plus size={14} color={colors.copper} />
+                <Text style={[styles.addButtonText, { color: colors.copper }]}>Add</Text>
               </Pressable>
             ) : (
               <View style={styles.addedBadge}>
-                <Check size={12} color="#6b8f71" />
-                <Text style={styles.addedText}>Added</Text>
+                <Check size={12} color={colors.sage} />
+                <Text style={[styles.addedText, { color: colors.sage }]}>Added</Text>
               </View>
             )}
           </View>
         </GlassCard>
       )
     },
-    [addedTemplateIds, addToBudget.isPending]
+    [addedTemplateIds, addToBudget.isPending, colors]
   )
 
   const renderMyBudgetItem = useCallback(
@@ -240,28 +242,30 @@ export default function BudgetScreen() {
               <View
                 style={[
                   styles.checkbox,
-                  item.is_purchased && styles.checkboxChecked,
+                  { borderColor: colors.textDim },
+                  item.is_purchased && { backgroundColor: colors.sage, borderColor: colors.sage },
                 ]}
               >
                 {item.is_purchased && (
-                  <Check size={12} color="#12100e" />
+                  <Check size={12} color={colors.bg} />
                 )}
               </View>
               <View style={styles.budgetItemInfo}>
                 <Text
                   style={[
                     styles.budgetItemName,
-                    item.is_purchased && styles.budgetItemNamePurchased,
+                    { color: colors.textSecondary },
+                    item.is_purchased && { textDecorationLine: 'line-through', color: colors.textMuted },
                   ]}
                 >
                   {item.item}
                 </Text>
-                <Text style={styles.budgetItemCategory}>
+                <Text style={[styles.budgetItemCategory, { color: colors.textMuted }]}>
                   {item.category}
                 </Text>
               </View>
             </View>
-            <Text style={styles.budgetItemPrice}>
+            <Text style={[styles.budgetItemPrice, { color: colors.gold }]}>
               {formatPrice(
                 item.actual_price || item.estimated_price || 0
               )}
@@ -270,7 +274,7 @@ export default function BudgetScreen() {
         </GlassCard>
       </Pressable>
     ),
-    [togglePurchased]
+    [togglePurchased, colors]
   )
 
   const isLoading =
@@ -288,25 +292,25 @@ export default function BudgetScreen() {
             <GlassCard style={styles.summaryCard}>
               <View style={styles.summaryRow}>
                 <View style={styles.summaryItem}>
-                  <Text style={styles.summaryLabel}>Total Budget</Text>
-                  <Text style={styles.summaryValue}>
+                  <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Total Budget</Text>
+                  <Text style={[styles.summaryValue, { color: colors.textSecondary }]}>
                     {formatRange(
                       summaryQuery.data.grandTotalMin,
                       summaryQuery.data.grandTotalMax
                     )}
                   </Text>
                 </View>
-                <View style={styles.summaryDivider} />
+                <View style={[styles.summaryDivider, { backgroundColor: colors.border }]} />
                 <View style={styles.summaryItem}>
-                  <Text style={styles.summaryLabel}>Purchased</Text>
-                  <Text style={[styles.summaryValue, styles.summaryValueGreen]}>
+                  <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Purchased</Text>
+                  <Text style={[styles.summaryValue, { color: colors.sage }]}>
                     {formatPrice(summaryQuery.data.purchasedTotal)}
                   </Text>
                 </View>
-                <View style={styles.summaryDivider} />
+                <View style={[styles.summaryDivider, { backgroundColor: colors.border }]} />
                 <View style={styles.summaryItem}>
-                  <Text style={styles.summaryLabel}>Remaining</Text>
-                  <Text style={styles.summaryValue}>
+                  <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Remaining</Text>
+                  <Text style={[styles.summaryValue, { color: colors.textSecondary }]}>
                     {formatPrice(summaryQuery.data.remainingTotal)}
                   </Text>
                 </View>
@@ -316,42 +320,39 @@ export default function BudgetScreen() {
         )}
       </View>
     ),
-    [activeTab, summaryQuery.data]
+    [activeTab, summaryQuery.data, colors]
   )
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={styles.headerTitle}>Budget Planner</Text>
-        <Pressable onPress={() => router.back()} style={styles.closeButton}>
-          <X size={20} color="#7a6f62" />
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Budget Planner</Text>
+        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
+          <X size={20} color={colors.textMuted} />
         </Pressable>
       </View>
 
       {/* Tab toggle */}
       <View style={styles.tabRow}>
-        <View style={styles.tabContainer}>
+        <View style={[styles.tabContainer, { backgroundColor: colors.glassBg, borderColor: colors.border }]}>
           <Pressable
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
               setActiveTab('browse')
             }}
-            style={[styles.tab, activeTab === 'browse' && styles.tabActive]}
+            style={[styles.tab, activeTab === 'browse' && { backgroundColor: colors.copperDim }]}
           >
             <ShoppingCart
               size={14}
-              color={activeTab === 'browse' ? '#c4703f' : '#7a6f62'}
+              color={activeTab === 'browse' ? colors.copper : colors.textMuted}
             />
             <Text
               style={[
                 styles.tabText,
-                activeTab === 'browse' && styles.tabTextActive,
+                { color: colors.textMuted },
+                activeTab === 'browse' && { color: colors.copper },
               ]}
             >
               Browse
@@ -362,16 +363,17 @@ export default function BudgetScreen() {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
               setActiveTab('my-budget')
             }}
-            style={[styles.tab, activeTab === 'my-budget' && styles.tabActive]}
+            style={[styles.tab, activeTab === 'my-budget' && { backgroundColor: colors.copperDim }]}
           >
             <DollarSign
               size={14}
-              color={activeTab === 'my-budget' ? '#c4703f' : '#7a6f62'}
+              color={activeTab === 'my-budget' ? colors.copper : colors.textMuted}
             />
             <Text
               style={[
                 styles.tabText,
-                activeTab === 'my-budget' && styles.tabTextActive,
+                { color: colors.textMuted },
+                activeTab === 'my-budget' && { color: colors.copper },
               ]}
             >
               My Budget
@@ -381,10 +383,10 @@ export default function BudgetScreen() {
         {activeTab === 'my-budget' && (
           <Pressable
             onPress={() => setShowCustomModal(true)}
-            style={styles.addCustomButton}
+            style={[styles.addCustomButton, { backgroundColor: colors.copperDim, borderColor: colors.copperGlow }]}
             accessibilityLabel="Add custom item"
           >
-            <Plus size={16} color="#c4703f" />
+            <Plus size={16} color={colors.copper} />
           </Pressable>
         )}
       </View>
@@ -410,13 +412,15 @@ export default function BudgetScreen() {
                     }}
                     style={[
                       styles.timelinePill,
-                      isActive && styles.timelinePillActive,
+                      { backgroundColor: colors.pillBg, borderColor: colors.borderHover },
+                      isActive && { backgroundColor: colors.copperGlow, borderColor: colors.copper },
                     ]}
                   >
                     <Text
                       style={[
                         styles.timelinePillText,
-                        isActive && styles.timelinePillTextActive,
+                        { color: colors.textSecondary },
+                        isActive && { color: colors.copper },
                       ]}
                     >
                       {item.label}
@@ -446,13 +450,15 @@ export default function BudgetScreen() {
                     }}
                     style={[
                       styles.priorityPill,
-                      isActive && styles.priorityPillActive,
+                      { backgroundColor: colors.pillBg, borderColor: colors.borderHover },
+                      isActive && { backgroundColor: colors.goldGlow, borderColor: colors.gold },
                     ]}
                   >
                     <Text
                       style={[
                         styles.priorityPillText,
-                        isActive && styles.priorityPillTextActive,
+                        { color: colors.textSecondary },
+                        isActive && { color: colors.gold },
                       ]}
                     >
                       {filter.label}
@@ -468,17 +474,17 @@ export default function BudgetScreen() {
       {/* Content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color="#c4703f" size="large" />
+          <ActivityIndicator color={colors.copper} size="large" />
         </View>
       ) : currentData.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <DollarSign size={40} color="#4a4239" />
-          <Text style={styles.emptyTitle}>
+          <DollarSign size={40} color={colors.textDim} />
+          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>
             {activeTab === 'browse'
               ? 'No items found'
               : 'Your budget is empty'}
           </Text>
-          <Text style={styles.emptySubtitle}>
+          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
             {activeTab === 'browse'
               ? 'Try selecting a different period or filter'
               : 'Browse items and add them to your budget'}
@@ -494,8 +500,8 @@ export default function BudgetScreen() {
           }
           renderItem={
             activeTab === 'browse'
-              ? (renderBrowseItem as any)  
-              : (renderMyBudgetItem as any)  
+              ? (renderBrowseItem as any)
+              : (renderMyBudgetItem as any)
           }
           contentContainerStyle={[
             styles.listContent,
@@ -504,7 +510,7 @@ export default function BudgetScreen() {
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={ListHeaderComponent}
           ListFooterComponent={
-            <Text style={styles.disclaimerText}>
+            <Text style={[styles.disclaimerText, { color: colors.textDim }]}>
               For planning purposes only. Not financial or medical advice. Consult your pediatrician before administering any medication.
             </Text>
           }
@@ -512,7 +518,7 @@ export default function BudgetScreen() {
             <RefreshControl
               refreshing={isRefreshing}
               onRefresh={handleRefresh}
-              tintColor="#c4703f"
+              tintColor={colors.copper}
             />
           }
         />
@@ -526,31 +532,34 @@ export default function BudgetScreen() {
         onRequestClose={() => setShowCustomModal(false)}
       >
         <KeyboardAvoidingView
-          style={styles.modalOverlay}
+          style={[styles.modalOverlay, Platform.OS !== 'ios' && { backgroundColor: colors.overlay }]}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-          <View style={styles.modalSheet}>
+          {Platform.OS === 'ios' && (
+            <BlurView tint={colors.blurTint} intensity={30} style={StyleSheet.absoluteFill} />
+          )}
+          <View style={[styles.modalSheet, { backgroundColor: colors.card, borderTopColor: colors.border }]}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Add Custom Item</Text>
+              <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>Add Custom Item</Text>
               <Pressable
                 onPress={() => setShowCustomModal(false)}
-                style={styles.modalClose}
+                style={[styles.modalClose, { backgroundColor: colors.subtleBg }]}
               >
-                <X size={20} color="#7a6f62" />
+                <X size={20} color={colors.textMuted} />
               </Pressable>
             </View>
 
-            <Text style={styles.inputLabel}>Item Name</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Item Name</Text>
             <TextInput
-              style={styles.textInput}
+              style={[styles.textInput, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
               value={customItemName}
               onChangeText={setCustomItemName}
               placeholder="e.g. Baby Monitor"
-              placeholderTextColor="#4a4239"
+              placeholderTextColor={colors.textDim}
               maxLength={80}
             />
 
-            <Text style={styles.inputLabel}>Category</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Category</Text>
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -562,13 +571,15 @@ export default function BudgetScreen() {
                   onPress={() => setCustomCategory(cat)}
                   style={[
                     styles.categoryPill,
-                    customCategory === cat && styles.categoryPillSelected,
+                    { backgroundColor: colors.subtleBg, borderColor: colors.border },
+                    customCategory === cat && { backgroundColor: colors.copperDim, borderColor: colors.copper },
                   ]}
                 >
                   <Text
                     style={[
                       styles.categoryPillText,
-                      customCategory === cat && styles.categoryPillTextSelected,
+                      { color: colors.textMuted },
+                      customCategory === cat && { color: colors.copper },
                     ]}
                   >
                     {cat}
@@ -577,13 +588,13 @@ export default function BudgetScreen() {
               ))}
             </ScrollView>
 
-            <Text style={styles.inputLabel}>Estimated Price (optional)</Text>
+            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Estimated Price (optional)</Text>
             <TextInput
-              style={styles.textInput}
+              style={[styles.textInput, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
               value={customPrice}
               onChangeText={setCustomPrice}
               placeholder="e.g. 49.99"
-              placeholderTextColor="#4a4239"
+              placeholderTextColor={colors.textDim}
               keyboardType="decimal-pad"
               maxLength={10}
             />
@@ -592,11 +603,12 @@ export default function BudgetScreen() {
               onPress={handleSubmitCustomItem}
               style={[
                 styles.submitButton,
+                { backgroundColor: colors.copper },
                 addCustomItem.isPending && styles.submitButtonDisabled,
               ]}
               disabled={addCustomItem.isPending}
             >
-              <Text style={styles.submitButtonText}>
+              <Text style={[styles.submitButtonText, { color: colors.textPrimary }]}>
                 {addCustomItem.isPending ? 'Adding...' : 'Add to Budget'}
               </Text>
             </Pressable>
@@ -610,7 +622,6 @@ export default function BudgetScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   header: {
     flexDirection: 'row',
@@ -622,13 +633,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   closeButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -644,19 +653,15 @@ const styles = StyleSheet.create({
   tabContainer: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'rgba(32,28,24,0.8)',
     borderRadius: 10,
     padding: 4,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.06)',
   },
   addCustomButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(196,112,63,0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(196,112,63,0.2)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -669,16 +674,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     gap: 6,
   },
-  tabActive: {
-    backgroundColor: 'rgba(196,112,63,0.15)',
-  },
   tabText: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#7a6f62',
-  },
-  tabTextActive: {
-    color: '#c4703f',
   },
 
   // Timeline bar
@@ -695,22 +693,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 9,
     borderRadius: 20,
-    backgroundColor: 'rgba(42,38,34,0.9)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.2)',
-  },
-  timelinePillActive: {
-    backgroundColor: 'rgba(196,112,63,0.2)',
-    borderColor: '#c4703f',
   },
   timelinePillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#ede6dc',
     lineHeight: 18,
-  },
-  timelinePillTextActive: {
-    color: '#c4703f',
   },
 
   // Priority filter bar
@@ -727,22 +715,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 16,
-    backgroundColor: 'rgba(42,38,34,0.9)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.2)',
-  },
-  priorityPillActive: {
-    backgroundColor: 'rgba(212,168,83,0.2)',
-    borderColor: '#d4a853',
   },
   priorityPillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#ede6dc',
     lineHeight: 18,
-  },
-  priorityPillTextActive: {
-    color: '#d4a853',
   },
 
   // List
@@ -771,16 +749,10 @@ const styles = StyleSheet.create({
   budgetItemName: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 15,
-    color: '#ede6dc',
-  },
-  budgetItemNamePurchased: {
-    textDecorationLine: 'line-through',
-    color: '#7a6f62',
   },
   budgetItemCategory: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginTop: 2,
   },
   budgetItemPriceCol: {
@@ -789,12 +761,10 @@ const styles = StyleSheet.create({
   budgetItemPrice: {
     fontFamily: 'Jost-Medium',
     fontSize: 15,
-    color: '#d4a853',
   },
   budgetItemDesc: {
     fontFamily: 'Jost-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     marginTop: 8,
     lineHeight: 18,
   },
@@ -807,7 +777,6 @@ const styles = StyleSheet.create({
   budgetItemPeriod: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#4a4239',
   },
 
   // Brand recommendations
@@ -823,13 +792,11 @@ const styles = StyleSheet.create({
   brandPremiumText: {
     fontFamily: 'Karla-Medium',
     fontSize: 12,
-    color: '#d4a853',
     flex: 1,
   },
   brandValueText: {
     fontFamily: 'Karla-Medium',
     fontSize: 12,
-    color: '#6b8f71',
     flex: 1,
   },
 
@@ -839,12 +806,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 8,
-    backgroundColor: 'rgba(196,112,63,0.12)',
   },
   mustHaveText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 10,
-    color: '#c4703f',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -857,14 +822,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
-    backgroundColor: 'rgba(196,112,63,0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(196,112,63,0.2)',
   },
   addButtonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#c4703f',
   },
 
   // Added badge
@@ -878,7 +840,6 @@ const styles = StyleSheet.create({
   addedText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#6b8f71',
   },
 
   // My budget
@@ -893,13 +854,8 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: '#4a4239',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  checkboxChecked: {
-    backgroundColor: '#6b8f71',
-    borderColor: '#6b8f71',
   },
 
   // Summary card
@@ -918,12 +874,10 @@ const styles = StyleSheet.create({
   summaryDivider: {
     width: 1,
     height: 32,
-    backgroundColor: 'rgba(237,230,220,0.08)',
   },
   summaryLabel: {
     fontFamily: 'Karla-Regular',
     fontSize: 11,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 4,
@@ -931,10 +885,6 @@ const styles = StyleSheet.create({
   summaryValue: {
     fontFamily: 'Jost-Medium',
     fontSize: 16,
-    color: '#ede6dc',
-  },
-  summaryValueGreen: {
-    color: '#6b8f71',
   },
 
   // Loading / Empty
@@ -953,19 +903,16 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
     textAlign: 'center',
   },
   emptySubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
   },
   disclaimerText: {
     fontFamily: 'Karla-Regular',
     fontSize: 11,
-    color: '#4a4239',
     textAlign: 'center',
     marginTop: 16,
     paddingHorizontal: 20,
@@ -977,16 +924,13 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.6)',
   },
   modalSheet: {
-    backgroundColor: '#201c18',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 24,
     paddingBottom: 40,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.08)',
   },
   modalHeader: {
     flexDirection: 'row',
@@ -997,35 +941,29 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 18,
-    color: '#faf6f0',
   },
   modalClose: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   inputLabel: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 12,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 0.8,
     marginBottom: 8,
     marginTop: 16,
   },
   textInput: {
-    backgroundColor: 'rgba(237,230,220,0.05)',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.10)',
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#faf6f0',
   },
   categoryPills: {
     gap: 8,
@@ -1035,25 +973,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 16,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
-  },
-  categoryPillSelected: {
-    backgroundColor: 'rgba(196,112,63,0.15)',
-    borderColor: '#c4703f',
   },
   categoryPillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#7a6f62',
-  },
-  categoryPillTextSelected: {
-    color: '#c4703f',
   },
   submitButton: {
     marginTop: 24,
-    backgroundColor: '#c4703f',
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',
@@ -1064,6 +991,5 @@ const styles = StyleSheet.create({
   submitButtonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
 })

@@ -1,4 +1,5 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native'
+import Animated, { FadeOutRight, useReducedMotion } from 'react-native-reanimated'
 import { useRouter } from 'expo-router'
 import {
   Circle,
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react-native'
 import { SwipeAction } from '@/components/animations'
 import { GlassCard } from '@/components/glass'
+import { useColors, type ColorTokens } from '@/hooks/use-colors'
 import type { FamilyTask } from '@tdc/shared/types'
 import { format, isToday, isTomorrow, isPast } from 'date-fns'
 
@@ -46,16 +48,16 @@ function getCategoryIcon(category: string) {
   }
 }
 
-function getAssigneeColor(assignee: string): string {
+function getAssigneeColor(assignee: string, colors: ColorTokens): string {
   switch (assignee) {
     case 'dad':
-      return '#5b9bd5'
+      return colors.sky
     case 'mom':
-      return '#c47a8f'
+      return colors.rose
     case 'both':
-      return '#d4a853'
+      return colors.gold
     default:
-      return '#7a6f62'
+      return colors.textMuted
   }
 }
 
@@ -67,68 +69,80 @@ function getDueLabel(dueDate: string): string {
   return format(date, 'MMM d')
 }
 
-function getDueLabelColor(dueDate: string): string {
+function getDueLabelColor(dueDate: string, colors: ColorTokens): string {
   const date = new Date(dueDate)
-  if (isPast(date) && !isToday(date)) return '#d4a853' // Yellow, not red
-  if (isToday(date)) return '#c4703f'
-  return '#7a6f62'
+  if (isPast(date) && !isToday(date)) return colors.gold // Yellow, not red
+  if (isToday(date)) return colors.copper
+  return colors.textMuted
 }
 
 export function TaskItem({ task, onComplete, onSnooze }: TaskItemProps) {
   const router = useRouter()
+  const colors = useColors()
+  const reducedMotion = useReducedMotion()
   const CategoryIcon = getCategoryIcon(task.category)
   const isCompleted = task.status === 'completed'
-  const assigneeColor = getAssigneeColor(task.assigned_to)
+  const assigneeColor = getAssigneeColor(task.assigned_to, colors)
+
+  const exitAnimation = reducedMotion
+    ? undefined
+    : FadeOutRight.springify().damping(15)
 
   return (
-    <SwipeAction
-      onComplete={() => onComplete(task.id)}
-      onSnooze={() => onSnooze(task.id)}
-    >
-      <Pressable
-        onPress={() => router.push(`/(tabs)/tasks/${task.id}`)}
-        style={({ pressed }) => [pressed && { opacity: 0.8 }]}
+    <Animated.View exiting={isCompleted ? exitAnimation : undefined}>
+      <SwipeAction
+        onComplete={() => onComplete(task.id)}
+        onSnooze={() => onSnooze(task.id)}
       >
-        <GlassCard style={styles.card}>
-          <View style={styles.row}>
-            {isCompleted ? (
-              <CheckCircle2 size={20} color="#6b8f71" />
-            ) : (
-              <Circle size={20} color="#4a4239" />
-            )}
-            <View style={styles.content}>
-              <Text
-                style={[styles.title, isCompleted && styles.titleCompleted]}
-                numberOfLines={1}
-              >
-                {task.title}
-              </Text>
-              <View style={styles.metaRow}>
-                <CategoryIcon size={12} color="#7a6f62" />
-                <View
-                  style={[
-                    styles.assigneeBadge,
-                    { backgroundColor: assigneeColor + '20' },
-                  ]}
-                >
-                  <Text style={[styles.assigneeText, { color: assigneeColor }]}>
-                    {task.assigned_to}
-                  </Text>
-                </View>
+        <Pressable
+          onPress={() => router.push(`/(tabs)/tasks/${task.id}`)}
+          style={({ pressed }) => [pressed && { opacity: 0.8 }]}
+        >
+          <GlassCard style={styles.card}>
+            <View style={styles.row}>
+              {isCompleted ? (
+                <CheckCircle2 size={20} color={colors.sage} />
+              ) : (
+                <Circle size={20} color={colors.textDim} />
+              )}
+              <View style={styles.content}>
                 <Text
                   style={[
-                    styles.dueLabel,
-                    { color: getDueLabelColor(task.due_date) },
+                    styles.title,
+                    { color: colors.textSecondary },
+                    isCompleted && { color: colors.textDim, textDecorationLine: 'line-through' as const },
                   ]}
+                  numberOfLines={1}
                 >
-                  {getDueLabel(task.due_date)}
+                  {task.title}
                 </Text>
+                <View style={styles.metaRow}>
+                  <CategoryIcon size={12} color={colors.textMuted} />
+                  <View
+                    style={[
+                      styles.assigneeBadge,
+                      { backgroundColor: assigneeColor + '20' },
+                    ]}
+                  >
+                    <Text style={[styles.assigneeText, { color: assigneeColor }]}>
+                      {task.assigned_to}
+                    </Text>
+                  </View>
+                  <Text
+                    style={[
+                      styles.dueLabel,
+                      { color: getDueLabelColor(task.due_date, colors) },
+                    ]}
+                  >
+                    {getDueLabel(task.due_date)}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-        </GlassCard>
-      </Pressable>
-    </SwipeAction>
+          </GlassCard>
+        </Pressable>
+      </SwipeAction>
+    </Animated.View>
   )
 }
 
@@ -147,12 +161,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#ede6dc',
     marginBottom: 4,
-  },
-  titleCompleted: {
-    color: '#4a4239',
-    textDecorationLine: 'line-through',
   },
   metaRow: {
     flexDirection: 'row',

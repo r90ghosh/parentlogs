@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import {
   X,
   Bell,
@@ -30,6 +29,7 @@ import {
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { useColors } from '@/hooks/use-colors'
 import { supabase } from '@/lib/supabase'
 import * as Haptics from 'expo-haptics'
 
@@ -50,13 +50,14 @@ function NotificationToggle({
   onToggle,
   disabled,
 }: NotificationToggleProps) {
+  const colors = useColors()
   return (
-    <View style={[styles.toggleRow, disabled && styles.toggleRowDisabled]}>
+    <View style={[styles.toggleRow, { borderBottomColor: colors.border }, disabled && styles.toggleRowDisabled]}>
       <View style={styles.toggleLeft}>
         {icon}
         <View style={styles.toggleInfo}>
-          <Text style={styles.toggleLabel}>{label}</Text>
-          <Text style={styles.toggleDesc}>{description}</Text>
+          <Text style={[styles.toggleLabel, { color: colors.textSecondary }]}>{label}</Text>
+          <Text style={[styles.toggleDesc, { color: colors.textMuted }]}>{description}</Text>
         </View>
       </View>
       <Switch
@@ -65,9 +66,9 @@ function NotificationToggle({
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
           onToggle(v)
         }}
-        trackColor={{ false: '#4a4239', true: 'rgba(196,112,63,0.5)' }}
-        thumbColor={value ? '#c4703f' : '#7a6f62'}
-        ios_backgroundColor="#4a4239"
+        trackColor={{ false: colors.textDim, true: 'rgba(196,112,63,0.5)' }}
+        thumbColor={value ? colors.copper : colors.textMuted}
+        ios_backgroundColor={colors.textDim}
         disabled={disabled}
       />
     </View>
@@ -115,6 +116,7 @@ export default function NotificationsScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { user, profile } = useAuth()
+  const colors = useColors()
   const [prefs, setPrefs] = useState<Preferences>(DEFAULT_PREFS)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -135,7 +137,7 @@ export default function NotificationsScreen() {
           .maybeSingle()
 
         if (data) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- email prefs stored as JSON in extras column
+           
           const extras = (data as any).extras as Record<string, boolean> | null ?? {}
           setPrefs({
             push_enabled: data.push_enabled ?? true,
@@ -214,12 +216,12 @@ export default function NotificationsScreen() {
             .select('extras')
             .eq('user_id', user.id)
             .maybeSingle()
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           
           const currentExtras = ((existing as any)?.extras as Record<string, boolean>) ?? {}
           await supabase.from('notification_preferences').upsert(
             {
               user_id: user.id,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+               
               extras: { ...currentExtras, [key]: value } as any,
               updated_at: new Date().toISOString(),
             },
@@ -248,45 +250,37 @@ export default function NotificationsScreen() {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <LinearGradient
-          colors={['#12100e', '#1a1714', '#12100e']}
-          style={StyleSheet.absoluteFill}
-        />
+      <View style={[styles.container, { backgroundColor: 'transparent' }]}>
         <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-          <Text style={styles.headerTitle}>Notifications</Text>
-          <Pressable onPress={() => router.back()} style={styles.closeButton}>
-            <X size={20} color="#7a6f62" />
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Notifications</Text>
+          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
+            <X size={20} color={colors.textMuted} />
           </Pressable>
         </View>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color="#c4703f" size="large" />
+          <ActivityIndicator color={colors.copper} size="large" />
         </View>
       </View>
     )
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
         <View style={styles.headerLeft}>
-          <Text style={styles.headerTitle}>Notifications</Text>
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Notifications</Text>
           {saving && (
             <ActivityIndicator
               size="small"
-              color="#c4703f"
+              color={colors.copper}
               style={styles.savingIndicator}
             />
           )}
         </View>
-        <Pressable onPress={() => router.back()} style={styles.closeButton}>
-          <X size={20} color="#7a6f62" />
+        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
+          <X size={20} color={colors.textMuted} />
         </Pressable>
       </View>
 
@@ -300,10 +294,10 @@ export default function NotificationsScreen() {
       >
         {/* Master toggle */}
         <CardEntrance delay={0}>
-          <Text style={styles.sectionTitle}>General</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>General</Text>
           <GlassCard style={styles.section}>
             <NotificationToggle
-              icon={<Bell size={18} color="#c4703f" />}
+              icon={<Bell size={18} color={colors.copper} />}
               label="Push Notifications"
               description="Enable or disable all push notifications"
               value={prefs.push_enabled}
@@ -317,10 +311,10 @@ export default function NotificationsScreen() {
           <CardEntrance delay={60}>
             <Pressable
               onPress={() => router.push('/(screens)/upgrade')}
-              style={styles.premiumNotice}
+              style={[styles.premiumNotice, { backgroundColor: colors.goldDim, borderColor: 'rgba(212,168,83,0.15)' }]}
             >
-              <Crown size={16} color="#d4a853" />
-              <Text style={styles.premiumNoticeText}>
+              <Crown size={16} color={colors.gold} />
+              <Text style={[styles.premiumNoticeText, { color: colors.gold }]}>
                 Free users get push notifications for 30 days. Upgrade for
                 unlimited notifications.
               </Text>
@@ -330,10 +324,10 @@ export default function NotificationsScreen() {
 
         {/* Task reminders */}
         <CardEntrance delay={120}>
-          <Text style={styles.sectionTitle}>Task Reminders</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Task Reminders</Text>
           <GlassCard style={styles.section}>
             <NotificationToggle
-              icon={<CheckSquare size={18} color="#6b8f71" />}
+              icon={<CheckSquare size={18} color={colors.sage} />}
               label="Task Reminders"
               description="Get notified when tasks are coming due"
               value={
@@ -353,10 +347,10 @@ export default function NotificationsScreen() {
 
         {/* Weekly briefing */}
         <CardEntrance delay={200}>
-          <Text style={styles.sectionTitle}>Briefings</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Briefings</Text>
           <GlassCard style={styles.section}>
             <NotificationToggle
-              icon={<BookOpen size={18} color="#5b9bd5" />}
+              icon={<BookOpen size={18} color={colors.sky} />}
               label="Weekly Briefing"
               description="Receive your weekly dad briefing notification"
               value={prefs.weekly_briefing}
@@ -368,10 +362,10 @@ export default function NotificationsScreen() {
 
         {/* Partner activity */}
         <CardEntrance delay={280}>
-          <Text style={styles.sectionTitle}>Family</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Family</Text>
           <GlassCard style={styles.section}>
             <NotificationToggle
-              icon={<Users size={18} color="#c47a8f" />}
+              icon={<Users size={18} color={colors.rose} />}
               label="Partner Activity"
               description="Get notified when your partner completes tasks or checks in"
               value={prefs.partner_activity}
@@ -383,10 +377,10 @@ export default function NotificationsScreen() {
 
         {/* Milestones */}
         <CardEntrance delay={340}>
-          <Text style={styles.sectionTitle}>Milestones</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Milestones</Text>
           <GlassCard style={styles.section}>
             <NotificationToggle
-              icon={<Star size={18} color="#d4a853" />}
+              icon={<Star size={18} color={colors.gold} />}
               label="Milestone Notifications"
               description="Get notified about baby milestones and development markers"
               value={prefs.milestone_notifications}
@@ -398,10 +392,10 @@ export default function NotificationsScreen() {
 
         {/* Quiet Hours */}
         <CardEntrance delay={400}>
-          <Text style={styles.sectionTitle}>Quiet Hours</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Quiet Hours</Text>
           <GlassCard style={styles.section}>
             <NotificationToggle
-              icon={<Moon size={18} color="#c47a8f" />}
+              icon={<Moon size={18} color={colors.rose} />}
               label="Quiet Hours"
               description={
                 prefs.quiet_hours_enabled
@@ -413,15 +407,15 @@ export default function NotificationsScreen() {
               disabled={!prefs.push_enabled}
             />
             {prefs.quiet_hours_enabled && prefs.push_enabled && (
-              <View style={styles.quietHoursRow}>
+              <View style={[styles.quietHoursRow, { borderTopColor: colors.border }]}>
                 <View style={styles.quietTimeBlock}>
-                  <Text style={styles.quietTimeLabel}>Start</Text>
-                  <Text style={styles.quietTimeValue}>{prefs.quiet_hours_start}</Text>
+                  <Text style={[styles.quietTimeLabel, { color: colors.textMuted }]}>Start</Text>
+                  <Text style={[styles.quietTimeValue, { color: colors.textSecondary }]}>{prefs.quiet_hours_start}</Text>
                 </View>
-                <Text style={styles.quietTimeSeparator}>to</Text>
+                <Text style={[styles.quietTimeSeparator, { color: colors.textDim }]}>to</Text>
                 <View style={styles.quietTimeBlock}>
-                  <Text style={styles.quietTimeLabel}>End</Text>
-                  <Text style={styles.quietTimeValue}>{prefs.quiet_hours_end}</Text>
+                  <Text style={[styles.quietTimeLabel, { color: colors.textMuted }]}>End</Text>
+                  <Text style={[styles.quietTimeValue, { color: colors.textSecondary }]}>{prefs.quiet_hours_end}</Text>
                 </View>
               </View>
             )}
@@ -430,38 +424,38 @@ export default function NotificationsScreen() {
 
         {/* Email Notifications */}
         <CardEntrance delay={460}>
-          <Text style={styles.sectionTitle}>Email Notifications</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Email Notifications</Text>
           <GlassCard style={styles.section}>
             <NotificationToggle
-              icon={<BookOpen size={18} color="#5b9bd5" />}
+              icon={<BookOpen size={18} color={colors.sky} />}
               label="Weekly Briefing"
               description="Receive your weekly briefing by email"
               value={prefs.email_weekly_briefing}
               onToggle={(v) => updatePref('email_weekly_briefing', v)}
             />
             <NotificationToggle
-              icon={<CheckSquare size={18} color="#d4836b" />}
+              icon={<CheckSquare size={18} color={colors.coral} />}
               label="Overdue Task Digest"
               description="Email digest of tasks that need attention"
               value={prefs.email_task_digest}
               onToggle={(v) => updatePref('email_task_digest', v)}
             />
             <NotificationToggle
-              icon={<CalendarCheck size={18} color="#d4a853" />}
+              icon={<CalendarCheck size={18} color={colors.gold} />}
               label="Milestone Alerts"
               description="Email alerts for baby milestones"
               value={prefs.email_milestones}
               onToggle={(v) => updatePref('email_milestones', v)}
             />
             <NotificationToggle
-              icon={<Activity size={18} color="#6b8f71" />}
+              icon={<Activity size={18} color={colors.sage} />}
               label="Lifecycle Updates"
               description="Important app updates and new features"
               value={prefs.email_lifecycle}
               onToggle={(v) => updatePref('email_lifecycle', v)}
             />
             <NotificationToggle
-              icon={<Repeat size={18} color="#7a6f62" />}
+              icon={<Repeat size={18} color={colors.textMuted} />}
               label="Re-engagement"
               description="Gentle reminders when you haven't checked in"
               value={prefs.re_engagement_emails}
@@ -472,7 +466,7 @@ export default function NotificationsScreen() {
 
         {/* Info text */}
         <CardEntrance delay={360}>
-          <Text style={styles.infoText}>
+          <Text style={[styles.infoText, { color: colors.textDim }]}>
             Notification preferences are synced across all your devices. You can
             also manage notifications in your device settings.
           </Text>
@@ -485,7 +479,6 @@ export default function NotificationsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   flex: {
     flex: 1,
@@ -505,7 +498,6 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   savingIndicator: {
     marginLeft: 4,
@@ -514,7 +506,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -527,7 +518,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
     marginBottom: 12,
@@ -547,7 +537,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   toggleRowDisabled: {
     opacity: 0.4,
@@ -565,12 +554,10 @@ const styles = StyleSheet.create({
   toggleLabel: {
     fontFamily: 'Karla-Medium',
     fontSize: 15,
-    color: '#ede6dc',
   },
   toggleDesc: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginTop: 2,
   },
 
@@ -581,16 +568,13 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    backgroundColor: 'rgba(212,168,83,0.08)',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'rgba(212,168,83,0.15)',
     marginBottom: 16,
   },
   premiumNoticeText: {
     fontFamily: 'Karla-Regular',
     fontSize: 13,
-    color: '#d4a853',
     flex: 1,
     lineHeight: 18,
   },
@@ -604,7 +588,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.06)',
   },
   quietTimeBlock: {
     alignItems: 'center',
@@ -613,24 +596,20 @@ const styles = StyleSheet.create({
   quietTimeLabel: {
     fontFamily: 'Karla-Regular',
     fontSize: 11,
-    color: '#7a6f62',
   },
   quietTimeValue: {
     fontFamily: 'Jost-Medium',
     fontSize: 18,
-    color: '#ede6dc',
   },
   quietTimeSeparator: {
     fontFamily: 'Karla-Regular',
     fontSize: 14,
-    color: '#4a4239',
   },
 
   // Info text
   infoText: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#4a4239',
     textAlign: 'center',
     lineHeight: 18,
     paddingHorizontal: 20,

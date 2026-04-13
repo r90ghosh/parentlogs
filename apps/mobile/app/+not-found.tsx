@@ -1,15 +1,17 @@
 import { Link, Stack } from 'expo-router'
 import { View, Text, Pressable, StyleSheet } from 'react-native'
+import { useColors } from '@/hooks/use-colors'
 
 export default function NotFoundScreen() {
+  const colors = useColors()
   return (
     <>
       <Stack.Screen options={{ title: 'Not Found' }} />
       <View style={styles.container}>
-        <Text style={styles.title}>Page not found</Text>
+        <Text style={[styles.title, { color: colors.textPrimary }]}>Page not found</Text>
         <Link href="/" asChild>
-          <Pressable style={styles.link}>
-            <Text style={styles.linkText}>Go home</Text>
+          <Pressable style={[styles.link, { backgroundColor: colors.copper }]}>
+            <Text style={[styles.linkText, { color: colors.textPrimary }]}>Go home</Text>
           </Pressable>
         </Link>
       </View>
@@ -20,7 +22,7 @@ export default function NotFoundScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
+    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
@@ -28,18 +30,15 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
   },
   link: {
     marginTop: 20,
     paddingVertical: 12,
     paddingHorizontal: 24,
-    backgroundColor: '#c4703f',
     borderRadius: 12,
   },
   linkText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#faf6f0',
   },
 })

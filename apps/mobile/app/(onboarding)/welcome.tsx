@@ -2,8 +2,8 @@ import { useState, useRef } from 'react'
 import { View, Text, Pressable, StyleSheet, Dimensions, FlatList } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { BookOpen, CheckSquare, BarChart3 } from 'lucide-react-native'
+import { useColors } from '@/hooks/use-colors'
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -32,6 +32,7 @@ const SLIDES = [
 ]
 
 export default function WelcomeScreen() {
+  const colors = useColors()
   const [currentIndex, setCurrentIndex] = useState(0)
   const flatListRef = useRef<FlatList>(null)
   const router = useRouter()
@@ -54,8 +55,8 @@ export default function WelcomeScreen() {
         <View style={[styles.iconCircle, { backgroundColor: `${item.color}26` }]}>
           <Icon size={36} color={item.color} />
         </View>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.description}>{item.description}</Text>
+        <Text style={[styles.title, { color: colors.textPrimary }]}>{item.title}</Text>
+        <Text style={[styles.description, { color: colors.textMuted }]}>{item.description}</Text>
       </View>
     )
   }
@@ -63,12 +64,7 @@ export default function WelcomeScreen() {
   const isLastSlide = currentIndex === SLIDES.length - 1
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <FlatList
         ref={flatListRef}
         data={SLIDES}
@@ -88,21 +84,26 @@ export default function WelcomeScreen() {
           {SLIDES.map((_, i) => (
             <View
               key={i}
-              style={[styles.dot, i === currentIndex ? styles.activeDot : styles.inactiveDot]}
+              style={[
+                styles.dot,
+                i === currentIndex
+                  ? [styles.activeDot, { backgroundColor: colors.copper }]
+                  : [styles.inactiveDot, { backgroundColor: colors.textDim }],
+              ]}
             />
           ))}
         </View>
 
         <Pressable
           onPress={isLastSlide ? goToRole : goToNext}
-          style={({ pressed }) => [styles.button, pressed && { opacity: 0.85 }]}
+          style={({ pressed }) => [styles.button, { backgroundColor: colors.copper }, pressed && { opacity: 0.85 }]}
         >
-          <Text style={styles.buttonText}>{isLastSlide ? 'Get Started' : 'Next'}</Text>
+          <Text style={[styles.buttonText, { color: colors.textPrimary }]}>{isLastSlide ? 'Get Started' : 'Next'}</Text>
         </Pressable>
 
         {!isLastSlide && (
           <Pressable onPress={goToRole}>
-            <Text style={styles.skipText}>Skip</Text>
+            <Text style={[styles.skipText, { color: colors.textMuted }]}>Skip</Text>
           </Pressable>
         )}
       </View>
@@ -113,7 +114,6 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   slide: {
     width: screenWidth,
@@ -131,14 +131,12 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 28,
-    color: '#faf6f0',
     textAlign: 'center',
     marginTop: 32,
   },
   description: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 24,
     paddingHorizontal: 40,
@@ -163,14 +161,11 @@ const styles = StyleSheet.create({
   },
   activeDot: {
     width: 20,
-    backgroundColor: '#c4703f',
   },
   inactiveDot: {
     width: 8,
-    backgroundColor: '#4a4239',
   },
   button: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -178,12 +173,10 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   skipText: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
     marginTop: 12,
   },

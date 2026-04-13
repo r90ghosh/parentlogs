@@ -10,12 +10,14 @@ import {
   TextInput,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
+import Animated, { FadeInUp, useReducedMotion } from 'react-native-reanimated'
+import { AnimatedPressable } from '@/components/ui'
 import { Plus, Search, CalendarDays, LayoutList } from 'lucide-react-native'
 import { TaskCalendar } from '@/components/tasks/TaskCalendar'
 import { useRouter } from 'expo-router'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/components/providers/AuthProvider'
+import { useColors } from '@/hooks/use-colors'
 import { useTasks, useCompleteTask, useSnoozeTask } from '@/hooks/use-tasks'
 import { CardEntrance, StaggerList } from '@/components/animations'
 import {
@@ -25,8 +27,7 @@ import {
   TaskSectionHeader,
 } from '@/components/tasks'
 import { WeekNavPills } from '@/components/briefing'
-import type { StatFilter } from '@/components/tasks'
-import type { TaskTab } from '@/components/tasks'
+import type { StatFilter , TaskTab } from '@/components/tasks'
 import {
   groupTasksByTimePeriod,
 } from '@tdc/shared/utils/task-timeline'
@@ -39,8 +40,54 @@ import {
   endOfWeek,
   addWeeks,
 } from 'date-fns'
+import type { ColorTokens } from '@/hooks/use-colors'
+
+function getSectionTitle(
+  tab: TaskTab,
+  statFilter: StatFilter | null,
+  selectedWeek: number | null
+): string {
+  if (statFilter === 'due-today') return 'Due Today'
+  if (statFilter === 'this-week') return 'This Week'
+
+  if (selectedWeek !== null) {
+    return `Week ${selectedWeek}`
+  }
+
+  switch (tab) {
+    case 'active':
+      return 'Active Tasks'
+    case 'my-tasks':
+      return 'My Tasks'
+    case 'partner':
+      return "Partner's Tasks"
+    case 'completed':
+      return 'Completed'
+    case 'catch-up':
+      return 'Catch-Up Queue'
+    default:
+      return 'Tasks'
+  }
+}
+
+function getSectionColor(tab: TaskTab, statFilter: StatFilter | null, colors: ColorTokens): string {
+  if (statFilter === 'due-today') return colors.copper
+  if (statFilter === 'this-week') return colors.sky
+
+  switch (tab) {
+    case 'completed':
+      return colors.sage
+    case 'catch-up':
+      return colors.gold
+    case 'partner':
+      return colors.rose
+    default:
+      return colors.textPrimary
+  }
+}
 
 export default function TasksScreen() {
+  const colors = useColors()
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -52,6 +99,7 @@ export default function TasksScreen() {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
 
+  const reducedMotion = useReducedMotion()
   const { data: tasks, isLoading, isRefetching } = useTasks()
   const completeTask = useCompleteTask()
   const snoozeTask = useSnoozeTask()
@@ -238,35 +286,30 @@ export default function TasksScreen() {
   )
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       {/* Sticky header area */}
-      <View style={[styles.headerArea, { paddingTop: 12 }]}>
-        <View style={styles.pageTitleRow}>
-          <Text style={styles.pageTitle}>Tasks</Text>
+      <View style={[styles.headerArea, { borderBottomColor: colors.subtleBg }]}>
+        <View style={[styles.pageTitleRow, { paddingTop: 12 }]}>
+          <Text style={[styles.pageTitle, { color: colors.textPrimary }]}>Tasks</Text>
           <Pressable
             onPress={() => setViewMode(viewMode === 'list' ? 'calendar' : 'list')}
-            style={styles.viewToggleButton}
+            style={[styles.viewToggleButton, { backgroundColor: colors.subtleBg }]}
           >
             {viewMode === 'list' ? (
-              <CalendarDays size={20} color="#7a6f62" />
+              <CalendarDays size={20} color={colors.textMuted} />
             ) : (
-              <LayoutList size={20} color="#c4703f" />
+              <LayoutList size={20} color={colors.copper} />
             )}
           </Pressable>
         </View>
 
         {/* Search */}
-        <View style={styles.searchContainer}>
-          <Search size={16} color="#7a6f62" style={styles.searchIcon} />
+        <View style={[styles.searchContainer, { backgroundColor: colors.subtleBg, borderColor: colors.border }]}>
+          <Search size={16} color={colors.textMuted} style={styles.searchIcon} />
           <TextInput
-            style={styles.searchInput}
+            style={[styles.searchInput, { color: colors.textSecondary }]}
             placeholder="Search tasks..."
-            placeholderTextColor="#4a4239"
+            placeholderTextColor={colors.textDim}
             value={searchTerm}
             onChangeText={setSearchTerm}
             returnKeyType="search"
@@ -306,7 +349,7 @@ export default function TasksScreen() {
       {/* Task content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#c4703f" />
+          <ActivityIndicator size="large" color={colors.copper} />
         </View>
       ) : viewMode === 'calendar' ? (
         <TaskCalendar
@@ -326,8 +369,8 @@ export default function TasksScreen() {
             <RefreshControl
               refreshing={isRefetching}
               onRefresh={onRefresh}
-              tintColor="#c4703f"
-              colors={['#c4703f']}
+              tintColor={colors.copper}
+              colors={[colors.copper]}
             />
           }
         >
@@ -347,7 +390,7 @@ export default function TasksScreen() {
                           isToday(new Date(t.due_date))
                         ).length
                       }
-                      accentColor="#c4703f"
+                      accentColor={colors.copper}
                     />
                     <StaggerList staggerMs={60}>
                       {groups.current
@@ -373,7 +416,7 @@ export default function TasksScreen() {
                     <TaskSectionHeader
                       title="Catch Up"
                       count={groups.previous.length}
-                      accentColor="#d4a853"
+                      accentColor={colors.gold}
                     />
                     <StaggerList staggerMs={60}>
                       {groups.previous.map((task) => (
@@ -428,7 +471,7 @@ export default function TasksScreen() {
                     <TaskSectionHeader
                       title="Coming Up"
                       count={comingUpTasks.length}
-                      accentColor="#7a6f62"
+                      accentColor={colors.textMuted}
                       dimmed
                     />
                     <StaggerList staggerMs={60}>
@@ -443,7 +486,7 @@ export default function TasksScreen() {
                       ))}
                     </StaggerList>
                     {groups.future.length > 5 && (
-                      <Text style={styles.moreText}>
+                      <Text style={[styles.moreText, { color: colors.textDim }]}>
                         +{groups.future.length - 5} more tasks ahead
                       </Text>
                     )}
@@ -457,14 +500,14 @@ export default function TasksScreen() {
               {filteredTasks.length > 0 ? (
                 <View style={styles.section}>
                   {debouncedSearch.trim() ? (
-                    <Text style={styles.searchResultCount}>
+                    <Text style={[styles.searchResultCount, { color: colors.textMuted }]}>
                       {`${filteredTasks.length} result${filteredTasks.length !== 1 ? 's' : ''} for '${debouncedSearch.trim()}'`}
                     </Text>
                   ) : (
                     <TaskSectionHeader
                       title={getSectionTitle(activeTab, statFilter, selectedWeek)}
                       count={filteredTasks.length}
-                      accentColor={getSectionColor(activeTab, statFilter)}
+                      accentColor={getSectionColor(activeTab, statFilter, colors)}
                     />
                   )}
                   <StaggerList staggerMs={50}>
@@ -490,12 +533,12 @@ export default function TasksScreen() {
                 <Text style={styles.emptyEmoji}>
                   {activeTab === 'completed' ? '🏆' : '🎉'}
                 </Text>
-                <Text style={styles.emptyTitle}>
+                <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>
                   {activeTab === 'completed'
                     ? 'No completed tasks yet'
                     : 'All caught up'}
                 </Text>
-                <Text style={styles.emptySubtitle}>
+                <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
                   {activeTab === 'completed'
                     ? 'Complete your first task to see it here.'
                     : selectedWeek !== null
@@ -515,8 +558,8 @@ export default function TasksScreen() {
               <CardEntrance delay={100}>
                 <View style={styles.emptyState}>
                   <Text style={styles.emptyEmoji}>🎉</Text>
-                  <Text style={styles.emptyTitle}>All caught up</Text>
-                  <Text style={styles.emptySubtitle}>
+                  <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>All caught up</Text>
+                  <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
                     No pending tasks right now. Check back soon.
                   </Text>
                 </View>
@@ -526,69 +569,29 @@ export default function TasksScreen() {
       )}
 
       {/* FAB - Create Task */}
-      <Pressable
-        onPress={() => router.push('/(screens)/create-task')}
-        style={[styles.fab, { bottom: insets.bottom + 100 }]}
+      <Animated.View
+        entering={reducedMotion ? undefined : FadeInUp.springify().damping(14).stiffness(200).delay(500)}
+        style={[styles.fab, { bottom: insets.bottom + 100, backgroundColor: colors.copper, shadowColor: colors.copper }]}
       >
-        <Plus size={24} color="#faf6f0" />
-      </Pressable>
+        <AnimatedPressable
+          onPress={() => router.push('/(screens)/create-task')}
+          scaleValue={0.9}
+          style={styles.fabInner}
+        >
+          <Plus size={24} color={colors.textPrimary} />
+        </AnimatedPressable>
+      </Animated.View>
     </View>
   )
-}
-
-function getSectionTitle(
-  tab: TaskTab,
-  statFilter: StatFilter | null,
-  selectedWeek: number | null
-): string {
-  if (statFilter === 'due-today') return 'Due Today'
-  if (statFilter === 'this-week') return 'This Week'
-
-  if (selectedWeek !== null) {
-    return `Week ${selectedWeek}`
-  }
-
-  switch (tab) {
-    case 'active':
-      return 'Active Tasks'
-    case 'my-tasks':
-      return 'My Tasks'
-    case 'partner':
-      return "Partner's Tasks"
-    case 'completed':
-      return 'Completed'
-    case 'catch-up':
-      return 'Catch-Up Queue'
-    default:
-      return 'Tasks'
-  }
-}
-
-function getSectionColor(tab: TaskTab, statFilter: StatFilter | null): string {
-  if (statFilter === 'due-today') return '#c4703f'
-  if (statFilter === 'this-week') return '#5b9bd5'
-
-  switch (tab) {
-    case 'completed':
-      return '#6b8f71'
-    case 'catch-up':
-      return '#d4a853'
-    case 'partner':
-      return '#c47a8f'
-    default:
-      return '#faf6f0'
-  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   headerArea: {
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   pageTitleRow: {
     flexDirection: 'row',
@@ -600,13 +603,11 @@ const styles = StyleSheet.create({
   pageTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 28,
-    color: '#faf6f0',
   },
   viewToggleButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -615,9 +616,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 40,
     borderRadius: 10,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
     paddingHorizontal: 14,
     marginHorizontal: 20,
     marginBottom: 16,
@@ -630,12 +629,10 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'Karla-Regular',
     fontSize: 14,
-    color: '#ede6dc',
   },
   searchResultCount: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#7a6f62',
     marginBottom: 12,
   },
   filterTabsWrap: {
@@ -663,7 +660,6 @@ const styles = StyleSheet.create({
   moreText: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#4a4239',
     textAlign: 'center',
     marginTop: 8,
   },
@@ -679,13 +675,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
     marginBottom: 8,
   },
   emptySubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -695,13 +689,16 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#c4703f',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#c4703f',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+  },
+  fabInner: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })

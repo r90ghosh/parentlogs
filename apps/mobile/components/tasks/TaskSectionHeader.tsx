@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native'
+import { useColors } from '@/hooks/use-colors'
 
 interface TaskSectionHeaderProps {
   title: string
@@ -10,19 +11,23 @@ interface TaskSectionHeaderProps {
 export function TaskSectionHeader({
   title,
   count,
-  accentColor = '#faf6f0',
+  accentColor,
   dimmed = false,
 }: TaskSectionHeaderProps) {
+  const colors = useColors()
+  const resolvedAccent = accentColor ?? colors.textPrimary
+  const isNeutral = !accentColor || resolvedAccent === colors.textPrimary || resolvedAccent === colors.textMuted
+
   return (
     <View style={styles.container}>
       <View style={styles.left}>
-        {accentColor !== '#faf6f0' && accentColor !== '#7a6f62' && (
-          <View style={[styles.dot, { backgroundColor: accentColor }]} />
+        {!isNeutral && (
+          <View style={[styles.dot, { backgroundColor: resolvedAccent }]} />
         )}
         <Text
           style={[
             styles.title,
-            { color: accentColor },
+            { color: resolvedAccent },
             dimmed && styles.titleDimmed,
           ]}
         >
@@ -32,17 +37,17 @@ export function TaskSectionHeader({
       <View
         style={[
           styles.countBadge,
-          accentColor !== '#faf6f0' && accentColor !== '#7a6f62'
-            ? { backgroundColor: accentColor + '18' }
-            : { backgroundColor: 'rgba(237,230,220,0.06)' },
+          !isNeutral
+            ? { backgroundColor: resolvedAccent + '18' }
+            : { backgroundColor: colors.subtleBg },
         ]}
       >
         <Text
           style={[
             styles.countText,
-            accentColor !== '#faf6f0' && accentColor !== '#7a6f62'
-              ? { color: accentColor }
-              : { color: '#4a4239' },
+            !isNeutral
+              ? { color: resolvedAccent }
+              : { color: colors.textDim },
           ]}
         >
           {count}

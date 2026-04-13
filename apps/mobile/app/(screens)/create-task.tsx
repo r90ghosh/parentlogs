@@ -12,10 +12,10 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { ArrowLeft, ClipboardList } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useCreateTask } from '@/hooks/use-tasks'
+import { useColors } from '@/hooks/use-colors'
 
 type TaskAssignee = 'mom' | 'dad' | 'both' | 'either'
 
@@ -48,10 +48,12 @@ function PillSelector({
   options,
   selected,
   onSelect,
+  colors,
 }: {
   options: { value: string; label: string }[]
   selected: string
   onSelect: (v: string) => void
+  colors: ReturnType<typeof useColors>
 }) {
   return (
     <View style={styles.pillRow}>
@@ -59,12 +61,17 @@ function PillSelector({
         <Pressable
           key={opt.value}
           onPress={() => onSelect(opt.value)}
-          style={[styles.pill, selected === opt.value && styles.pillSelected]}
+          style={[
+            styles.pill,
+            { backgroundColor: colors.subtleBg },
+            selected === opt.value && { backgroundColor: colors.copper },
+          ]}
         >
           <Text
             style={[
               styles.pillText,
-              selected === opt.value && styles.pillTextSelected,
+              { color: colors.textMuted },
+              selected === opt.value && { color: colors.textPrimary },
             ]}
           >
             {opt.label}
@@ -79,6 +86,7 @@ export default function CreateTaskScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { profile } = useAuth()
+  const colors = useColors()
   const createTask = useCreateTask()
 
   const [title, setTitle] = useState('')
@@ -140,17 +148,12 @@ export default function CreateTaskScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft size={20} color="#ede6dc" />
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+          <ArrowLeft size={20} color={colors.textSecondary} />
         </Pressable>
-        <Text style={styles.headerTitle}>New Task</Text>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>New Task</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -168,18 +171,18 @@ export default function CreateTaskScreen() {
         >
           {/* Icon */}
           <View style={styles.iconContainer}>
-            <View style={styles.iconCircle}>
-              <ClipboardList size={28} color="#c4703f" />
+            <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>
+              <ClipboardList size={28} color={colors.copper} />
             </View>
-            <Text style={styles.description}>
+            <Text style={[styles.description, { color: colors.textMuted }]}>
               Add a custom task for your family to track.
             </Text>
           </View>
 
           {/* Error */}
           {error && (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{error}</Text>
+            <View style={[styles.errorContainer, { backgroundColor: colors.coralDim, borderColor: 'rgba(212,131,107,0.2)' }]}>
+              <Text style={[styles.errorText, { color: colors.coral }]}>{error}</Text>
             </View>
           )}
 
@@ -187,26 +190,26 @@ export default function CreateTaskScreen() {
           <View style={styles.form}>
             {/* Title */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Title</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>Title</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                 value={title}
                 onChangeText={setTitle}
                 placeholder="What needs to get done?"
-                placeholderTextColor="#4a4239"
+                placeholderTextColor={colors.textDim}
                 autoCapitalize="sentences"
               />
             </View>
 
             {/* Description */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Description</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>Description</Text>
               <TextInput
-                style={[styles.input, styles.textArea]}
+                style={[styles.input, styles.textArea, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                 value={description}
                 onChangeText={setDescription}
                 placeholder="Add details..."
-                placeholderTextColor="#4a4239"
+                placeholderTextColor={colors.textDim}
                 multiline
                 numberOfLines={3}
                 textAlignVertical="top"
@@ -215,13 +218,13 @@ export default function CreateTaskScreen() {
 
             {/* Due Date */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Due Date</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>Due Date</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                 value={dueDate}
                 onChangeText={setDueDate}
                 placeholder="YYYY-MM-DD"
-                placeholderTextColor="#4a4239"
+                placeholderTextColor={colors.textDim}
                 keyboardType="numbers-and-punctuation"
                 autoCapitalize="none"
                 maxLength={10}
@@ -230,27 +233,29 @@ export default function CreateTaskScreen() {
 
             {/* Assigned To */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Assigned To</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>Assigned To</Text>
               <PillSelector
                 options={ASSIGNEE_OPTIONS}
                 selected={assignedTo}
                 onSelect={setAssignedTo}
+                colors={colors}
               />
             </View>
 
             {/* Priority */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Priority</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>Priority</Text>
               <PillSelector
                 options={PRIORITY_OPTIONS}
                 selected={priority}
                 onSelect={setPriority}
+                colors={colors}
               />
             </View>
 
             {/* Category */}
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Category</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>Category</Text>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
@@ -262,13 +267,15 @@ export default function CreateTaskScreen() {
                     onPress={() => setCategory(opt.value)}
                     style={[
                       styles.pill,
-                      category === opt.value && styles.pillSelected,
+                      { backgroundColor: colors.subtleBg },
+                      category === opt.value && { backgroundColor: colors.copper },
                     ]}
                   >
                     <Text
                       style={[
                         styles.pillText,
-                        category === opt.value && styles.pillTextSelected,
+                        { color: colors.textMuted },
+                        category === opt.value && { color: colors.textPrimary },
                       ]}
                     >
                       {opt.label}
@@ -284,14 +291,15 @@ export default function CreateTaskScreen() {
               disabled={isDisabled}
               style={({ pressed }) => [
                 styles.button,
+                { backgroundColor: colors.copper },
                 pressed && styles.buttonPressed,
                 isDisabled && styles.buttonDisabled,
               ]}
             >
               {isLoading ? (
-                <ActivityIndicator color="#faf6f0" />
+                <ActivityIndicator color={colors.textPrimary} />
               ) : (
-                <Text style={styles.buttonText}>Create Task</Text>
+                <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Create Task</Text>
               )}
             </Pressable>
           </View>
@@ -304,7 +312,7 @@ export default function CreateTaskScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
+    backgroundColor: 'transparent',
   },
   flex: {
     flex: 1,
@@ -320,14 +328,12 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   headerSpacer: {
     width: 36,
@@ -344,7 +350,6 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: 'rgba(196,112,63,0.15)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -352,16 +357,13 @@ const styles = StyleSheet.create({
   description: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 22,
     paddingHorizontal: 16,
   },
   errorContainer: {
-    backgroundColor: 'rgba(212,131,107,0.12)',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(212,131,107,0.2)',
     paddingHorizontal: 16,
     paddingVertical: 12,
     marginBottom: 20,
@@ -369,7 +371,6 @@ const styles = StyleSheet.create({
   errorText: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#d4836b',
   },
   form: {
     gap: 20,
@@ -380,18 +381,14 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#ede6dc',
   },
   input: {
-    backgroundColor: '#201c18',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#ede6dc',
   },
   textArea: {
     minHeight: 80,
@@ -406,25 +403,16 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     marginRight: 0,
-  },
-  pillSelected: {
-    backgroundColor: '#c4703f',
   },
   pillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#7a6f62',
-  },
-  pillTextSelected: {
-    color: '#faf6f0',
   },
   categoryScroll: {
     gap: 8,
   },
   button: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -440,6 +428,5 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
 })

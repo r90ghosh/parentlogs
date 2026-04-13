@@ -1,18 +1,19 @@
 import { useState } from 'react'
 import { View, Text, Pressable, StyleSheet, Alert, ActivityIndicator } from 'react-native'
 import { useRouter } from 'expo-router'
-import { LinearGradient } from 'expo-linear-gradient'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { supabase } from '@/lib/supabase'
 import * as Haptics from 'expo-haptics'
+import { useColors } from '@/hooks/use-colors'
 
 const roles = [
-  { key: 'dad', emoji: '👨', label: 'Dad', sublabel: 'Father / Father-to-be' },
-  { key: 'mom', emoji: '👩', label: 'Mom', sublabel: 'Mother / Mother-to-be' },
-  { key: 'other', emoji: '🤝', label: 'Other', sublabel: 'Caregiver / Support' },
+  { key: 'dad', emoji: '\u{1F468}', label: 'Dad', sublabel: 'Father / Father-to-be' },
+  { key: 'mom', emoji: '\u{1F469}', label: 'Mom', sublabel: 'Mother / Mother-to-be' },
+  { key: 'other', emoji: '\u{1F91D}', label: 'Other', sublabel: 'Caregiver / Support' },
 ] as const
 
 export default function RoleScreen() {
+  const colors = useColors()
   const [selectedRole, setSelectedRole] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -44,16 +45,12 @@ export default function RoleScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.step}>Step 1 of 4</Text>
-          <Text style={styles.title}>Who are you?</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.step, { color: colors.copper }]}>Step 1 of 4</Text>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>Who are you?</Text>
+          <Text style={[styles.subtitle, { color: colors.textMuted }]}>
             We'll personalize your experience based on your role
           </Text>
         </View>
@@ -65,7 +62,8 @@ export default function RoleScreen() {
               onPress={() => handleSelect(role.key)}
               style={[
                 styles.option,
-                selectedRole === role.key && styles.optionSelected,
+                { backgroundColor: colors.card, borderColor: colors.border },
+                selectedRole === role.key && { borderColor: colors.copper, backgroundColor: colors.copperDim },
               ]}
             >
               <Text style={styles.emoji}>{role.emoji}</Text>
@@ -73,12 +71,13 @@ export default function RoleScreen() {
                 <Text
                   style={[
                     styles.optionLabel,
-                    selectedRole === role.key && styles.optionLabelSelected,
+                    { color: colors.textSecondary },
+                    selectedRole === role.key && { color: colors.textPrimary },
                   ]}
                 >
                   {role.label}
                 </Text>
-                <Text style={styles.optionSublabel}>{role.sublabel}</Text>
+                <Text style={[styles.optionSublabel, { color: colors.textMuted }]}>{role.sublabel}</Text>
               </View>
             </Pressable>
           ))}
@@ -89,14 +88,15 @@ export default function RoleScreen() {
           disabled={!selectedRole || isLoading}
           style={({ pressed }) => [
             styles.button,
+            { backgroundColor: colors.copper },
             pressed && styles.buttonPressed,
             (!selectedRole || isLoading) && styles.buttonDisabled,
           ]}
         >
           {isLoading ? (
-            <ActivityIndicator color="#faf6f0" />
+            <ActivityIndicator color={colors.textPrimary} />
           ) : (
-            <Text style={styles.buttonText}>Continue</Text>
+            <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Continue</Text>
           )}
         </Pressable>
       </View>
@@ -107,7 +107,6 @@ export default function RoleScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   content: {
     flex: 1,
@@ -120,7 +119,6 @@ const styles = StyleSheet.create({
   step: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#c4703f',
     marginBottom: 12,
     textTransform: 'uppercase',
     letterSpacing: 1.5,
@@ -128,13 +126,11 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 28,
-    color: '#faf6f0',
     marginBottom: 8,
   },
   subtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#7a6f62',
   },
   options: {
     gap: 12,
@@ -143,16 +139,10 @@ const styles = StyleSheet.create({
   option: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#201c18',
     borderRadius: 16,
     borderWidth: 1.5,
-    borderColor: 'rgba(237,230,220,0.08)',
     padding: 20,
     gap: 16,
-  },
-  optionSelected: {
-    borderColor: '#c4703f',
-    backgroundColor: 'rgba(196,112,63,0.08)',
   },
   emoji: {
     fontSize: 32,
@@ -163,19 +153,13 @@ const styles = StyleSheet.create({
   optionLabel: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 18,
-    color: '#ede6dc',
     marginBottom: 2,
-  },
-  optionLabelSelected: {
-    color: '#faf6f0',
   },
   optionSublabel: {
     fontFamily: 'Karla-Regular',
     fontSize: 14,
-    color: '#7a6f62',
   },
   button: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -189,6 +173,5 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
 })

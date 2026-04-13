@@ -11,6 +11,7 @@ import {
 import { ChevronDown, Check } from 'lucide-react-native'
 import * as Haptics from 'expo-haptics'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useColors } from '@/hooks/use-colors'
 
 interface SelectOption {
   label: string
@@ -34,6 +35,7 @@ export function Select({
   label,
   style,
 }: SelectProps) {
+  const colors = useColors()
   const [isOpen, setIsOpen] = useState(false)
   const insets = useSafeAreaInsets()
 
@@ -47,7 +49,7 @@ export function Select({
 
   return (
     <View style={style}>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && <Text style={[styles.label, { color: colors.textSecondary }]}>{label}</Text>}
       <Pressable
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
@@ -55,13 +57,14 @@ export function Select({
         }}
         style={({ pressed }) => [
           styles.trigger,
-          pressed && styles.triggerPressed,
+          { backgroundColor: colors.card, borderColor: colors.border },
+          pressed && { backgroundColor: colors.cardHover },
         ]}
       >
-        <Text style={[styles.triggerText, !selectedOption && styles.triggerPlaceholder]}>
+        <Text style={[styles.triggerText, { color: colors.textSecondary }, !selectedOption && { color: colors.textDim }]}>
           {selectedOption?.label ?? placeholder}
         </Text>
-        <ChevronDown size={18} color="#7a6f62" />
+        <ChevronDown size={18} color={colors.textMuted} />
       </Pressable>
 
       <Modal
@@ -70,10 +73,10 @@ export function Select({
         animationType="slide"
         onRequestClose={() => setIsOpen(false)}
       >
-        <Pressable style={styles.overlay} onPress={() => setIsOpen(false)}>
-          <View style={[styles.sheet, { paddingBottom: insets.bottom + 16 }]}>
-            <View style={styles.handle} />
-            {label && <Text style={styles.sheetTitle}>{label}</Text>}
+        <Pressable style={[styles.overlay, { backgroundColor: colors.overlay }]} onPress={() => setIsOpen(false)}>
+          <View style={[styles.sheet, { backgroundColor: colors.card, borderTopColor: colors.border, paddingBottom: insets.bottom + 16 }]}>
+            <View style={[styles.handle, { backgroundColor: colors.borderHover }]} />
+            {label && <Text style={[styles.sheetTitle, { color: colors.textPrimary }]}>{label}</Text>}
             <FlatList
               data={options}
               keyExtractor={(item) => item.value}
@@ -82,12 +85,12 @@ export function Select({
                 return (
                   <Pressable
                     onPress={() => handleSelect(item.value)}
-                    style={[styles.option, isSelected && styles.optionSelected]}
+                    style={[styles.option, { borderBottomColor: colors.subtleBg }, isSelected && { backgroundColor: colors.copperDim }]}
                   >
-                    <Text style={[styles.optionText, isSelected && styles.optionTextSelected]}>
+                    <Text style={[styles.optionText, { color: colors.textSecondary }, isSelected && { color: colors.copper, fontFamily: 'Jost-Medium' }]}>
                       {item.label}
                     </Text>
-                    {isSelected && <Check size={18} color="#c4703f" />}
+                    {isSelected && <Check size={18} color={colors.copper} />}
                   </Pressable>
                 )
               }}
@@ -104,61 +107,46 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#ede6dc',
     marginBottom: 8,
   },
   trigger: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#201c18',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
     paddingHorizontal: 16,
     paddingVertical: 14,
-  },
-  triggerPressed: {
-    backgroundColor: '#282420',
   },
   triggerText: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#ede6dc',
     flex: 1,
-  },
-  triggerPlaceholder: {
-    color: '#4a4239',
   },
 
   // Modal
   overlay: {
     flex: 1,
     justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.6)',
   },
   sheet: {
-    backgroundColor: '#201c18',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 12,
     paddingHorizontal: 20,
     maxHeight: '60%',
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.08)',
   },
   handle: {
     width: 36,
     height: 4,
     borderRadius: 2,
-    backgroundColor: 'rgba(237,230,220,0.15)',
     alignSelf: 'center',
     marginBottom: 16,
   },
   sheetTitle: {
     fontFamily: 'Jost-SemiBold',
     fontSize: 18,
-    color: '#faf6f0',
     marginBottom: 16,
   },
   optionList: {
@@ -171,18 +159,9 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 4,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
-  },
-  optionSelected: {
-    backgroundColor: 'rgba(196,112,63,0.06)',
   },
   optionText: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#ede6dc',
-  },
-  optionTextSelected: {
-    color: '#c4703f',
-    fontFamily: 'Jost-Medium',
   },
 })

@@ -2,40 +2,45 @@ import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
 import { ClipboardPlus, BarChart3, CalendarPlus, Wallet } from 'lucide-react-native'
 import * as Haptics from 'expo-haptics'
+import { useColors, type ColorTokens } from '@/hooks/use-colors'
 
-const ACTIONS = [
-  {
-    label: 'Add Task',
-    icon: ClipboardPlus,
-    route: '/(screens)/create-task' as const,
-    color: '#6b8f71',
-  },
-  {
-    label: 'Log Data',
-    icon: BarChart3,
-    route: '/(tabs)/tracker/log' as const,
-    color: '#c4703f',
-  },
-  {
-    label: 'Add Event',
-    icon: CalendarPlus,
-    route: '/(screens)/create-task' as const,
-    color: '#5b9bd5',
-  },
-  {
-    label: 'Budget',
-    icon: Wallet,
-    route: '/(screens)/budget' as const,
-    color: '#d4a853',
-  },
-]
+function getActions(colors: ColorTokens) {
+  return [
+    {
+      label: 'Add Task',
+      icon: ClipboardPlus,
+      route: '/(screens)/create-task' as const,
+      color: colors.sage,
+    },
+    {
+      label: 'Log Data',
+      icon: BarChart3,
+      route: '/(tabs)/tracker/log' as const,
+      color: colors.copper,
+    },
+    {
+      label: 'Add Event',
+      icon: CalendarPlus,
+      route: '/(screens)/create-task' as const,
+      color: colors.sky,
+    },
+    {
+      label: 'Budget',
+      icon: Wallet,
+      route: '/(screens)/budget' as const,
+      color: colors.gold,
+    },
+  ]
+}
 
 export function QuickActionsBar() {
   const router = useRouter()
+  const colors = useColors()
+  const actions = getActions(colors)
 
   return (
     <View style={styles.container}>
-      {ACTIONS.map((action) => {
+      {actions.map((action) => {
         const Icon = action.icon
         return (
           <Pressable
@@ -49,12 +54,12 @@ export function QuickActionsBar() {
             <View
               style={[
                 styles.iconCircle,
-                { backgroundColor: action.color + '18' },
+                { backgroundColor: action.color + '18', borderColor: colors.border },
               ]}
             >
               <Icon size={20} color={action.color} />
             </View>
-            <Text style={styles.label}>{action.label}</Text>
+            <Text style={[styles.label, { color: colors.textSecondary }]}>{action.label}</Text>
           </Pressable>
         )
       })}
@@ -79,11 +84,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
   },
   label: {
     fontFamily: 'Karla-Medium',
     fontSize: 12,
-    color: '#ede6dc',
   },
 })

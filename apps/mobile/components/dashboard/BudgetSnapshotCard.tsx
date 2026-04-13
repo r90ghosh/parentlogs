@@ -2,22 +2,24 @@ import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
 import { Wallet, ChevronRight } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
+import { useColors } from '@/hooks/use-colors'
 
 export function BudgetSnapshotCard() {
   const router = useRouter()
+  const colors = useColors()
 
   return (
     <Pressable onPress={() => router.push('/(screens)/budget')}>
       <GlassCard style={styles.card}>
         <View style={styles.header}>
-          <View style={styles.iconBadge}>
-            <Wallet size={18} color="#d4a853" />
+          <View style={[styles.iconBadge, { backgroundColor: colors.goldDim }]}>
+            <Wallet size={18} color={colors.gold} />
           </View>
           <View style={styles.headerText}>
-            <Text style={styles.title}>Budget Planner</Text>
-            <Text style={styles.subtitle}>Track your baby expenses</Text>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>Budget Planner</Text>
+            <Text style={[styles.subtitle, { color: colors.textMuted }]}>Track your baby expenses</Text>
           </View>
-          <ChevronRight size={20} color="#7a6f62" />
+          <ChevronRight size={20} color={colors.textMuted} />
         </View>
       </GlassCard>
     </Pressable>
@@ -37,7 +39,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(212,168,83,0.12)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -47,12 +48,10 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 17,
-    color: '#faf6f0',
   },
   subtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     marginTop: 2,
   },
 })

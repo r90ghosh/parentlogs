@@ -2,27 +2,29 @@ import { StyleSheet, View } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FloatingParticles } from '@/components/animations/FloatingParticles'
 import { useTheme } from '@/components/providers/ThemeProvider'
+import { useColors } from '@/hooks/use-colors'
 
 export function AppBackground() {
   const { isDark } = useTheme()
+  const colors = useColors()
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
       {isDark ? (
         <>
           <LinearGradient
-            colors={['#12100e', '#1a1714', '#12100e']}
+            colors={[...colors.bgGradient]}
             style={StyleSheet.absoluteFill}
           />
           {/* Copper radial warmth — top-right corner glow */}
           <LinearGradient
-            colors={['rgba(196,112,63,0.06)', 'transparent']}
+            colors={[colors.copperDim, 'transparent']}
             start={{ x: 0.8, y: 0 }}
             end={{ x: 0.2, y: 0.6 }}
             style={StyleSheet.absoluteFill}
           />
           {/* Subtle noise-like tint overlay */}
-          <View style={styles.noiseOverlay} />
+          <View style={[styles.noiseOverlay, { backgroundColor: colors.copperDim }]} />
         </>
       ) : (
         <LinearGradient
@@ -40,6 +42,5 @@ export function AppBackground() {
 const styles = StyleSheet.create({
   noiseOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(196,112,63,0.03)',
   },
 })

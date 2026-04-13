@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import {
   X,
   Check,
@@ -37,6 +36,7 @@ import {
   useToggleChecklistItem,
   useResetChecklist,
 } from '@/hooks/use-checklists'
+import { useColors } from '@/hooks/use-colors'
 import type { ChecklistWithItems } from '@tdc/services'
 import * as Haptics from 'expo-haptics'
 
@@ -66,6 +66,7 @@ interface ChecklistCardProps {
 }
 
 function ChecklistCard({ checklist, isExpanded, onToggle }: ChecklistCardProps) {
+  const colors = useColors()
   const toggleItem = useToggleChecklistItem()
   const resetChecklist = useResetChecklist()
   const detailQuery = useChecklistById(isExpanded ? checklist.checklist_id : '')
@@ -103,23 +104,24 @@ function ChecklistCard({ checklist, isExpanded, onToggle }: ChecklistCardProps) 
         }}
         style={styles.checklistHeader}
       >
-        <View style={styles.checklistIconWrap}>
-          <Icon size={20} color={checklist.is_locked ? '#4a4239' : '#c4703f'} />
+        <View style={[styles.checklistIconWrap, { backgroundColor: colors.copperDim }]}>
+          <Icon size={20} color={checklist.is_locked ? colors.textDim : colors.copper} />
         </View>
         <View style={styles.checklistInfo}>
           <View style={styles.checklistTitleRow}>
             <Text
               style={[
                 styles.checklistName,
-                checklist.is_locked && styles.checklistNameLocked,
+                { color: colors.textSecondary },
+                checklist.is_locked && { color: colors.textDim },
               ]}
               numberOfLines={1}
             >
               {checklist.name}
             </Text>
-            {checklist.is_locked && <Lock size={14} color="#4a4239" />}
+            {checklist.is_locked && <Lock size={14} color={colors.textDim} />}
           </View>
-          <Text style={styles.checklistMeta}>
+          <Text style={[styles.checklistMeta, { color: colors.textMuted }]}>
             {checklist.progress.completed}/{checklist.progress.total} items
           </Text>
         </View>
@@ -132,36 +134,36 @@ function ChecklistCard({ checklist, isExpanded, onToggle }: ChecklistCardProps) 
                 handleReset()
               }}
               hitSlop={8}
-              style={styles.resetButton}
+              style={[styles.resetButton, { backgroundColor: colors.coralDim }]}
             >
-              <RotateCcw size={14} color="#d4836b" />
+              <RotateCcw size={14} color={colors.coral} />
             </Pressable>
           )}
           {/* Progress circle */}
-          <View style={styles.progressCircle}>
-            <Text style={styles.progressText}>
+          <View style={[styles.progressCircle, { backgroundColor: colors.copperDim }]}>
+            <Text style={[styles.progressText, { color: colors.copper }]}>
               {checklist.progress.percentage}%
             </Text>
           </View>
           {!checklist.is_locked && (
             isExpanded ? (
-              <ChevronUp size={18} color="#7a6f62" />
+              <ChevronUp size={18} color={colors.textMuted} />
             ) : (
-              <ChevronDown size={18} color="#7a6f62" />
+              <ChevronDown size={18} color={colors.textMuted} />
             )
           )}
         </View>
       </Pressable>
 
       {/* Progress bar */}
-      <View style={styles.progressBarOuter}>
+      <View style={[styles.progressBarOuter, { backgroundColor: colors.subtleBg }]}>
         <View
           style={[
             styles.progressBarInner,
             {
               width: `${checklist.progress.percentage}%`,
               backgroundColor:
-                checklist.progress.percentage === 100 ? '#6b8f71' : '#c4703f',
+                checklist.progress.percentage === 100 ? colors.sage : colors.copper,
             },
           ]}
         />
@@ -169,10 +171,10 @@ function ChecklistCard({ checklist, isExpanded, onToggle }: ChecklistCardProps) 
 
       {/* Expanded items */}
       {isExpanded && (
-        <View style={styles.checklistItems}>
+        <View style={[styles.checklistItems, { borderTopColor: colors.border }]}>
           {detailQuery.isLoading ? (
             <View style={styles.itemsLoading}>
-              <ActivityIndicator color="#c4703f" size="small" />
+              <ActivityIndicator color={colors.copper} size="small" />
             </View>
           ) : items.length > 0 ? (
             items.map((item: any) => (
@@ -186,40 +188,42 @@ function ChecklistCard({ checklist, isExpanded, onToggle }: ChecklistCardProps) 
                     completed: !item.completed,
                   })
                 }}
-                style={styles.checklistItem}
+                style={[styles.checklistItem, { borderBottomColor: colors.pressed }]}
               >
                 <View
                   style={[
                     styles.itemCheckbox,
-                    item.completed && styles.itemCheckboxChecked,
+                    { borderColor: colors.textDim },
+                    item.completed && { backgroundColor: colors.sage, borderColor: colors.sage },
                   ]}
                 >
-                  {item.completed && <Check size={10} color="#12100e" />}
+                  {item.completed && <Check size={10} color={colors.bg} />}
                 </View>
                 <View style={styles.itemContent}>
                   <Text
                     style={[
                       styles.itemName,
-                      item.completed && styles.itemNameChecked,
+                      { color: colors.textSecondary },
+                      item.completed && { textDecorationLine: 'line-through', color: colors.textMuted },
                     ]}
                   >
                     {item.item}
                   </Text>
                   {item.details ? (
-                    <Text style={styles.itemDetails} numberOfLines={2}>
+                    <Text style={[styles.itemDetails, { color: colors.textMuted }]} numberOfLines={2}>
                       {item.details}
                     </Text>
                   ) : null}
                 </View>
                 {item.required && (
-                  <View style={styles.requiredBadge}>
-                    <Text style={styles.requiredText}>Req</Text>
+                  <View style={[styles.requiredBadge, { backgroundColor: colors.coralDim }]}>
+                    <Text style={[styles.requiredText, { color: colors.coral }]}>Req</Text>
                   </View>
                 )}
               </Pressable>
             ))
           ) : (
-            <Text style={styles.noItemsText}>No items in this checklist</Text>
+            <Text style={[styles.noItemsText, { color: colors.textMuted }]}>No items in this checklist</Text>
           )}
         </View>
       )}
@@ -230,6 +234,7 @@ function ChecklistCard({ checklist, isExpanded, onToggle }: ChecklistCardProps) 
 export default function ChecklistsScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const colors = useColors()
   const checklistsQuery = useChecklists()
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
@@ -255,30 +260,26 @@ export default function ChecklistsScreen() {
   )
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={styles.headerTitle}>Checklists</Text>
-        <Pressable onPress={() => router.back()} style={styles.closeButton}>
-          <X size={20} color="#7a6f62" />
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Checklists</Text>
+        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
+          <X size={20} color={colors.textMuted} />
         </Pressable>
       </View>
 
       {/* Content */}
       {checklistsQuery.isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color="#c4703f" size="large" />
+          <ActivityIndicator color={colors.copper} size="large" />
         </View>
       ) : !checklistsQuery.data || checklistsQuery.data.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <ClipboardList size={40} color="#4a4239" />
-          <Text style={styles.emptyTitle}>No checklists available</Text>
-          <Text style={styles.emptySubtitle}>
+          <ClipboardList size={40} color={colors.textDim} />
+          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No checklists available</Text>
+          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
             Checklists will appear here once your family is set up
           </Text>
         </View>
@@ -297,11 +298,11 @@ export default function ChecklistsScreen() {
             <RefreshControl
               refreshing={checklistsQuery.isRefetching}
               onRefresh={handleRefresh}
-              tintColor="#c4703f"
+              tintColor={colors.copper}
             />
           }
           ListFooterComponent={
-            <Text style={styles.disclaimerText}>
+            <Text style={[styles.disclaimerText, { color: colors.textDim }]}>
               Medical guidance in checklists is general reference only. Confirm medication dosages and emergency procedures with your pediatrician.
             </Text>
           }
@@ -314,7 +315,6 @@ export default function ChecklistsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   header: {
     flexDirection: 'row',
@@ -326,13 +326,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   closeButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -362,7 +360,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: 'rgba(196,112,63,0.1)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -377,16 +374,11 @@ const styles = StyleSheet.create({
   checklistName: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 15,
-    color: '#ede6dc',
     flex: 1,
-  },
-  checklistNameLocked: {
-    color: '#4a4239',
   },
   checklistMeta: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginTop: 2,
   },
   checklistRight: {
@@ -397,7 +389,6 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'rgba(212,131,107,0.10)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -407,18 +398,15 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: 'rgba(196,112,63,0.1)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   progressText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 11,
-    color: '#c4703f',
   },
   progressBarOuter: {
     height: 3,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     marginHorizontal: 16,
   },
   progressBarInner: {
@@ -432,7 +420,6 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: 8,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.06)',
     marginTop: 8,
   },
   itemsLoading: {
@@ -445,21 +432,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     gap: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.04)',
   },
   itemCheckbox: {
     width: 20,
     height: 20,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: '#4a4239',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 2,
-  },
-  itemCheckboxChecked: {
-    backgroundColor: '#6b8f71',
-    borderColor: '#6b8f71',
   },
   itemContent: {
     flex: 1,
@@ -467,16 +448,10 @@ const styles = StyleSheet.create({
   itemName: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#ede6dc',
-  },
-  itemNameChecked: {
-    textDecorationLine: 'line-through',
-    color: '#7a6f62',
   },
   itemDetails: {
     fontFamily: 'Jost-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginTop: 3,
     lineHeight: 16,
   },
@@ -484,20 +459,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
-    backgroundColor: 'rgba(212,131,107,0.12)',
     marginTop: 2,
   },
   requiredText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 9,
-    color: '#d4836b',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   noItemsText: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
     paddingVertical: 16,
   },
@@ -506,7 +478,6 @@ const styles = StyleSheet.create({
   disclaimerText: {
     fontFamily: 'Karla-Regular',
     fontSize: 11,
-    color: '#4a4239',
     textAlign: 'center',
     marginTop: 16,
     paddingHorizontal: 20,
@@ -529,13 +500,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
     textAlign: 'center',
   },
   emptySubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
   },
 })

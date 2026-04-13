@@ -3,6 +3,7 @@ import { View, Text, ScrollView, StyleSheet } from 'react-native'
 import { Calendar } from 'react-native-calendars'
 import type { DateData } from 'react-native-calendars'
 import { CardEntrance } from '@/components/animations'
+import { useColors, type ColorTokens } from '@/hooks/use-colors'
 import { TaskItem } from './TaskItem'
 import type { FamilyTask } from '@tdc/shared/types'
 import { format } from 'date-fns'
@@ -16,22 +17,23 @@ interface TaskCalendarProps {
 type MarkedDates = Record<
   string,
   {
-    dots?: Array<{ key: string; color: string }>
+    dots?: { key: string; color: string }[]
     selected?: boolean
     selectedColor?: string
   }
 >
 
-function getTaskDotColor(task: FamilyTask): string {
-  if (task.status === 'completed') return '#6b8f71'
+function getTaskDotColor(task: FamilyTask, colors: ColorTokens): string {
+  if (task.status === 'completed') return colors.sage
   const dueDate = new Date(task.due_date)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  if (dueDate < today) return '#d4a853' // catch-up: gold, not red
-  return '#c4703f' // pending: copper
+  if (dueDate < today) return colors.gold // catch-up: gold, not red
+  return colors.copper // pending: copper
 }
 
 export function TaskCalendar({ tasks, onComplete, onSnooze }: TaskCalendarProps) {
+  const colors = useColors()
   const today = format(new Date(), 'yyyy-MM-dd')
   const [selectedDate, setSelectedDate] = useState<string>(today)
 
@@ -47,7 +49,7 @@ export function TaskCalendar({ tasks, onComplete, onSnooze }: TaskCalendarProps)
       const dots = marks[dateKey].dots ?? []
       // Limit to 3 dots per day to avoid clutter
       if (dots.length < 3) {
-        dots.push({ key: task.id, color: getTaskDotColor(task) })
+        dots.push({ key: task.id, color: getTaskDotColor(task, colors) })
         marks[dateKey] = { ...marks[dateKey], dots }
       }
     })
@@ -57,11 +59,11 @@ export function TaskCalendar({ tasks, onComplete, onSnooze }: TaskCalendarProps)
     marks[selectedDate] = {
       ...base,
       selected: true,
-      selectedColor: '#c4703f',
+      selectedColor: colors.copper,
     }
 
     return marks
-  }, [tasks, selectedDate])
+  }, [tasks, selectedDate, colors])
 
   // Get tasks for selected date
   const selectedDayTasks = useMemo(() => {
@@ -86,19 +88,19 @@ export function TaskCalendar({ tasks, onComplete, onSnooze }: TaskCalendarProps)
         markedDates={markedDates}
         markingType="multi-dot"
         theme={{
-          backgroundColor: '#12100e',
-          calendarBackground: '#12100e',
-          textSectionTitleColor: '#7a6f62',
-          selectedDayBackgroundColor: '#c4703f',
-          selectedDayTextColor: '#faf6f0',
-          todayTextColor: '#d4a853',
-          dayTextColor: '#ede6dc',
-          textDisabledColor: '#4a4239',
-          dotColor: '#c4703f',
-          selectedDotColor: '#faf6f0',
-          arrowColor: '#c4703f',
-          monthTextColor: '#faf6f0',
-          indicatorColor: '#c4703f',
+          backgroundColor: colors.bg,
+          calendarBackground: colors.bg,
+          textSectionTitleColor: colors.textMuted,
+          selectedDayBackgroundColor: colors.copper,
+          selectedDayTextColor: colors.textPrimary,
+          todayTextColor: colors.gold,
+          dayTextColor: colors.textSecondary,
+          textDisabledColor: colors.textDim,
+          dotColor: colors.copper,
+          selectedDotColor: colors.textPrimary,
+          arrowColor: colors.copper,
+          monthTextColor: colors.textPrimary,
+          indicatorColor: colors.copper,
           textDayFontFamily: 'Karla-Regular',
           textMonthFontFamily: 'PlayfairDisplay-Bold',
           textDayHeaderFontFamily: 'Karla-SemiBold',
@@ -106,15 +108,15 @@ export function TaskCalendar({ tasks, onComplete, onSnooze }: TaskCalendarProps)
           textMonthFontSize: 18,
           textDayHeaderFontSize: 12,
         }}
-        style={styles.calendar}
+        style={[styles.calendar, { backgroundColor: colors.bg }]}
       />
 
       {/* Divider */}
-      <View style={styles.divider} />
+      <View style={[styles.divider, { backgroundColor: colors.subtleBg }]} />
 
       {/* Tasks for selected day */}
       <View style={styles.tasksSection}>
-        <Text style={styles.dayLabel}>
+        <Text style={[styles.dayLabel, { color: colors.textPrimary }]}>
           {selectedDate === today
             ? 'Today'
             : format(new Date(selectedDate + 'T12:00:00'), 'MMMM d, yyyy')}
@@ -123,7 +125,7 @@ export function TaskCalendar({ tasks, onComplete, onSnooze }: TaskCalendarProps)
         {selectedDayTasks.length === 0 ? (
           <CardEntrance delay={0}>
             <View style={styles.emptyDay}>
-              <Text style={styles.emptyDayText}>No tasks on this day</Text>
+              <Text style={[styles.emptyDayText, { color: colors.textMuted }]}>No tasks on this day</Text>
             </View>
           </CardEntrance>
         ) : (
@@ -151,12 +153,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   calendar: {
-    backgroundColor: '#12100e',
     paddingBottom: 8,
   },
   divider: {
     height: 1,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     marginHorizontal: 20,
   },
   tasksSection: {
@@ -167,7 +167,6 @@ const styles = StyleSheet.create({
   dayLabel: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 18,
-    color: '#faf6f0',
     marginBottom: 16,
   },
   taskList: {
@@ -183,6 +182,5 @@ const styles = StyleSheet.create({
   emptyDayText: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
   },
 })

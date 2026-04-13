@@ -12,13 +12,14 @@ import {
   ActivityIndicator,
 } from 'react-native'
 import { useRouter } from 'expo-router'
-import { LinearGradient } from 'expo-linear-gradient'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { supabase } from '@/lib/supabase'
 import * as Haptics from 'expo-haptics'
+import { useColors } from '@/hooks/use-colors'
 
 export default function FamilyScreen() {
+  const colors = useColors()
   const [dueDate, setDueDate] = useState<Date | null>(null)
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [babyName, setBabyName] = useState('')
@@ -86,11 +87,7 @@ export default function FamilyScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
@@ -100,21 +97,21 @@ export default function FamilyScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.header}>
-            <Text style={styles.step}>Step 2 of 4</Text>
-            <Text style={styles.title}>Your family</Text>
-            <Text style={styles.subtitle}>
+            <Text style={[styles.step, { color: colors.copper }]}>Step 2 of 4</Text>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>Your family</Text>
+            <Text style={[styles.subtitle, { color: colors.textMuted }]}>
               When is the baby expected? This helps us personalize your timeline.
             </Text>
           </View>
 
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Due Date</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>Due Date</Text>
               <Pressable
                 onPress={() => setShowDatePicker(true)}
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border }]}
               >
-                <Text style={dueDate ? styles.inputText : styles.placeholderText}>
+                <Text style={dueDate ? [styles.inputText, { color: colors.textSecondary }] : [styles.placeholderText, { color: colors.textDim }]}>
                   {dueDate
                     ? dueDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
                     : 'Select your due date'}
@@ -136,19 +133,19 @@ export default function FamilyScreen() {
                   themeVariant="dark"
                 />
               )}
-              <Text style={styles.hint}>
+              <Text style={[styles.hint, { color: colors.textDim }]}>
                 Select the expected or actual due date
               </Text>
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Baby's Name (optional)</Text>
+              <Text style={[styles.label, { color: colors.textSecondary }]}>Baby's Name (optional)</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
                 value={babyName}
                 onChangeText={setBabyName}
                 placeholder="Baby's name or nickname"
-                placeholderTextColor="#4a4239"
+                placeholderTextColor={colors.textDim}
                 autoCapitalize="words"
               />
             </View>
@@ -159,14 +156,15 @@ export default function FamilyScreen() {
             disabled={isLoading}
             style={({ pressed }) => [
               styles.button,
+              { backgroundColor: colors.copper },
               pressed && styles.buttonPressed,
               isLoading && styles.buttonDisabled,
             ]}
           >
             {isLoading ? (
-              <ActivityIndicator color="#faf6f0" />
+              <ActivityIndicator color={colors.textPrimary} />
             ) : (
-              <Text style={styles.buttonText}>Continue</Text>
+              <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Continue</Text>
             )}
           </Pressable>
         </ScrollView>
@@ -178,7 +176,6 @@ export default function FamilyScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   flex: {
     flex: 1,
@@ -195,7 +192,6 @@ const styles = StyleSheet.create({
   step: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#c4703f',
     marginBottom: 12,
     textTransform: 'uppercase',
     letterSpacing: 1.5,
@@ -203,13 +199,11 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 28,
-    color: '#faf6f0',
     marginBottom: 8,
   },
   subtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#7a6f62',
   },
   form: {
     gap: 24,
@@ -221,36 +215,28 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#ede6dc',
   },
   input: {
-    backgroundColor: '#201c18',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#ede6dc',
   },
   inputText: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#ede6dc',
   },
   placeholderText: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    color: '#4a4239',
   },
   hint: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#4a4239',
   },
   button: {
-    backgroundColor: '#c4703f',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
@@ -264,6 +250,5 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
 })

@@ -9,7 +9,6 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import {
   ArrowLeft,
   BarChart3,
@@ -23,11 +22,13 @@ import { useTrackerSummary } from '@/hooks/use-tracker-summary'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import { format } from 'date-fns'
+import { useColors } from '@/hooks/use-colors'
 
 export default function TrackerSummaryScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { profile } = useAuth()
+  const colors = useColors()
   const [period, setPeriod] = useState<7 | 30>(7)
 
   const isPremium =
@@ -71,17 +72,12 @@ export default function TrackerSummaryScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft size={20} color="#ede6dc" />
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+          <ArrowLeft size={20} color={colors.textSecondary} />
         </Pressable>
-        <Text style={styles.headerTitle}>Tracker Summary</Text>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Tracker Summary</Text>
         <View style={styles.headerSpacer} />
       </View>
 
@@ -89,17 +85,17 @@ export default function TrackerSummaryScreen() {
         <View style={styles.upgradeContainer}>
           <CardEntrance delay={0}>
             <GlassCard style={styles.upgradeCard}>
-              <Crown size={32} color="#d4a853" />
-              <Text style={styles.upgradeTitle}>Premium Feature</Text>
-              <Text style={styles.upgradeDesc}>
+              <Crown size={32} color={colors.gold} />
+              <Text style={[styles.upgradeTitle, { color: colors.textPrimary }]}>Premium Feature</Text>
+              <Text style={[styles.upgradeDesc, { color: colors.textMuted }]}>
                 Tracker analytics require a Premium subscription. See trends,
                 averages, and insights about your baby's patterns.
               </Text>
               <Pressable
                 onPress={() => router.push('/(screens)/upgrade')}
-                style={styles.upgradeButton}
+                style={[styles.upgradeButton, { backgroundColor: colors.copper }]}
               >
-                <Text style={styles.upgradeButtonText}>
+                <Text style={[styles.upgradeButtonText, { color: colors.textPrimary }]}>
                   Upgrade to Premium
                 </Text>
               </Pressable>
@@ -121,13 +117,15 @@ export default function TrackerSummaryScreen() {
               onPress={() => setPeriod(7)}
               style={[
                 styles.periodPill,
-                period === 7 && styles.periodPillActive,
+                { backgroundColor: colors.subtleBg },
+                period === 7 && { backgroundColor: colors.copper },
               ]}
             >
               <Text
                 style={[
                   styles.periodPillText,
-                  period === 7 && styles.periodPillTextActive,
+                  { color: colors.textMuted },
+                  period === 7 && { color: colors.textPrimary },
                 ]}
               >
                 7 Days
@@ -137,13 +135,15 @@ export default function TrackerSummaryScreen() {
               onPress={() => setPeriod(30)}
               style={[
                 styles.periodPill,
-                period === 30 && styles.periodPillActive,
+                { backgroundColor: colors.subtleBg },
+                period === 30 && { backgroundColor: colors.copper },
               ]}
             >
               <Text
                 style={[
                   styles.periodPillText,
-                  period === 30 && styles.periodPillTextActive,
+                  { color: colors.textMuted },
+                  period === 30 && { color: colors.textPrimary },
                 ]}
               >
                 30 Days
@@ -153,13 +153,13 @@ export default function TrackerSummaryScreen() {
 
           {isLoading ? (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator color="#c4703f" size="large" />
+              <ActivityIndicator color={colors.copper} size="large" />
             </View>
           ) : !stats ? (
             <View style={styles.emptyContainer}>
-              <BarChart3 size={40} color="#4a4239" />
-              <Text style={styles.emptyTitle}>No tracking data</Text>
-              <Text style={styles.emptySubtitle}>
+              <BarChart3 size={40} color={colors.textDim} />
+              <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No tracking data</Text>
+              <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
                 No tracking data for this period
               </Text>
             </View>
@@ -172,14 +172,14 @@ export default function TrackerSummaryScreen() {
                     <View
                       style={[
                         styles.statIconCircle,
-                        { backgroundColor: 'rgba(91,155,213,0.15)' },
+                        { backgroundColor: colors.skyDim },
                       ]}
                     >
-                      <Milk size={22} color="#5b9bd5" />
+                      <Milk size={22} color={colors.sky} />
                     </View>
-                    <Text style={styles.statValue}>{stats.avgFeedings}</Text>
-                    <Text style={styles.statLabel}>Avg Feedings</Text>
-                    <Text style={styles.statSubtitle}>per day</Text>
+                    <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stats.avgFeedings}</Text>
+                    <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Avg Feedings</Text>
+                    <Text style={[styles.statSubtitle, { color: colors.textMuted }]}>per day</Text>
                   </GlassCard>
                 </CardEntrance>
 
@@ -188,14 +188,14 @@ export default function TrackerSummaryScreen() {
                     <View
                       style={[
                         styles.statIconCircle,
-                        { backgroundColor: 'rgba(212,168,83,0.15)' },
+                        { backgroundColor: colors.goldDim },
                       ]}
                     >
-                      <Baby size={22} color="#d4a853" />
+                      <Baby size={22} color={colors.gold} />
                     </View>
-                    <Text style={styles.statValue}>{stats.avgDiapers}</Text>
-                    <Text style={styles.statLabel}>Avg Diapers</Text>
-                    <Text style={styles.statSubtitle}>per day</Text>
+                    <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stats.avgDiapers}</Text>
+                    <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Avg Diapers</Text>
+                    <Text style={[styles.statSubtitle, { color: colors.textMuted }]}>per day</Text>
                   </GlassCard>
                 </CardEntrance>
 
@@ -204,37 +204,37 @@ export default function TrackerSummaryScreen() {
                     <View
                       style={[
                         styles.statIconCircle,
-                        { backgroundColor: 'rgba(196,122,143,0.15)' },
+                        { backgroundColor: colors.roseDim },
                       ]}
                     >
-                      <Moon size={22} color="#c47a8f" />
+                      <Moon size={22} color={colors.rose} />
                     </View>
-                    <Text style={styles.statValue}>{stats.avgSleepHrs}</Text>
-                    <Text style={styles.statLabel}>Avg Sleep</Text>
-                    <Text style={styles.statSubtitle}>hrs per day</Text>
+                    <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stats.avgSleepHrs}</Text>
+                    <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Avg Sleep</Text>
+                    <Text style={[styles.statSubtitle, { color: colors.textMuted }]}>hrs per day</Text>
                   </GlassCard>
                 </CardEntrance>
               </View>
 
               {/* Summary section */}
               <CardEntrance delay={300}>
-                <Text style={styles.sectionTitle}>Summary</Text>
+                <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Summary</Text>
                 <GlassCard style={styles.summaryCard}>
                   <View style={styles.summaryRow}>
-                    <Text style={styles.summaryLabel}>Total Logs</Text>
-                    <Text style={styles.summaryValue}>{stats.totalLogs}</Text>
+                    <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Total Logs</Text>
+                    <Text style={[styles.summaryValue, { color: colors.textSecondary }]}>{stats.totalLogs}</Text>
                   </View>
-                  <View style={styles.summaryDivider} />
+                  <View style={[styles.summaryDivider, { backgroundColor: colors.subtleBg }]} />
                   <View style={styles.summaryRow}>
-                    <Text style={styles.summaryLabel}>Days Tracked</Text>
-                    <Text style={styles.summaryValue}>
+                    <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Days Tracked</Text>
+                    <Text style={[styles.summaryValue, { color: colors.textSecondary }]}>
                       {stats.daysWithData}
                     </Text>
                   </View>
-                  <View style={styles.summaryDivider} />
+                  <View style={[styles.summaryDivider, { backgroundColor: colors.subtleBg }]} />
                   <View style={styles.summaryRow}>
-                    <Text style={styles.summaryLabel}>Period</Text>
-                    <Text style={styles.summaryValue}>
+                    <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Period</Text>
+                    <Text style={[styles.summaryValue, { color: colors.textSecondary }]}>
                       Last {period} days
                     </Text>
                   </View>
@@ -251,7 +251,7 @@ export default function TrackerSummaryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
+    backgroundColor: 'transparent',
   },
   header: {
     flexDirection: 'row',
@@ -264,14 +264,12 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   headerSpacer: {
     width: 36,
@@ -291,13 +289,11 @@ const styles = StyleSheet.create({
   upgradeTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 22,
-    color: '#faf6f0',
     marginTop: 4,
   },
   upgradeDesc: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 20,
   },
@@ -306,12 +302,10 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 32,
     borderRadius: 12,
-    backgroundColor: '#c4703f',
   },
   upgradeButtonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 15,
-    color: '#faf6f0',
   },
 
   // Scroll
@@ -332,18 +326,10 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 20,
-    backgroundColor: 'rgba(237,230,220,0.06)',
-  },
-  periodPillActive: {
-    backgroundColor: '#c4703f',
   },
   periodPillText: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#7a6f62',
-  },
-  periodPillTextActive: {
-    color: '#faf6f0',
   },
 
   // Loading / Empty
@@ -363,13 +349,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
     textAlign: 'center',
   },
   emptySubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
   },
 
@@ -394,19 +378,16 @@ const styles = StyleSheet.create({
   statValue: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 28,
-    color: '#faf6f0',
     marginTop: 12,
   },
   statLabel: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#ede6dc',
     marginTop: 8,
   },
   statSubtitle: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginTop: 2,
   },
 
@@ -414,7 +395,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 18,
-    color: '#faf6f0',
     marginBottom: 12,
   },
   summaryCard: {
@@ -428,16 +408,13 @@ const styles = StyleSheet.create({
   },
   summaryDivider: {
     height: 1,
-    backgroundColor: 'rgba(237,230,220,0.06)',
   },
   summaryLabel: {
     fontFamily: 'Karla-Regular',
     fontSize: 14,
-    color: '#7a6f62',
   },
   summaryValue: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#ede6dc',
   },
 })

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native'
 import { BlurView } from 'expo-blur'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -8,6 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
+import { useColors } from '@/hooks/use-colors'
 
 interface AnimatedTabBarProps {
   state: {
@@ -35,6 +36,7 @@ export function AnimatedTabBar({
   isDark,
 }: AnimatedTabBarProps) {
   const reducedMotion = useReducedMotion()
+  const colors = useColors()
   const insets = useSafeAreaInsets()
   const tabCount = state.routes.length
   const indicatorLeft = useSharedValue(0)
@@ -52,27 +54,35 @@ export function AnimatedTabBar({
     width: `${100 / tabCount}%` as `${number}%`,
   }))
 
+  const dynamicStyles = useMemo(() => ({
+    container: {
+      borderTopColor: colors.border,
+      backgroundColor: Platform.OS === 'ios' ? 'transparent' : isDark ? 'rgba(26,23,20,0.95)' : 'rgba(255,255,255,0.95)',
+    },
+    indicatorLine: {
+      backgroundColor: colors.copper,
+    },
+  }), [colors, isDark])
+
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
+    <View style={[styles.container, { paddingBottom: insets.bottom }, dynamicStyles.container]}>
       {Platform.OS === 'ios' && (
         <BlurView
-          tint={isDark ? 'dark' : 'light'}
-          intensity={isDark ? 80 : 60}
+          tint={colors.blurTint}
+          intensity={colors.headerBlurIntensity}
           style={StyleSheet.absoluteFill}
         />
       )}
 
       <Animated.View style={[styles.indicator, indicatorStyle]}>
-        <View style={styles.indicatorLine} />
+        <View style={[styles.indicatorLine, dynamicStyles.indicatorLine]} />
       </Animated.View>
 
       <View style={styles.tabs}>
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key]
           const isFocused = state.index === index
-          const color = isFocused
-            ? '#c4703f'
-            : isDark ? '#7a6f62' : '#6b7280'
+          const color = isFocused ? colors.copper : colors.textMuted
 
           const onPress = () => {
             const event = navigation.emit({
@@ -127,8 +137,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.08)',
-    backgroundColor: Platform.OS === 'ios' ? 'transparent' : 'rgba(26,23,20,0.95)',
   },
   indicator: {
     position: 'absolute',
@@ -139,7 +147,6 @@ const styles = StyleSheet.create({
   indicatorLine: {
     width: '40%',
     height: 2,
-    backgroundColor: '#c4703f',
     borderRadius: 1,
   },
   tabs: {

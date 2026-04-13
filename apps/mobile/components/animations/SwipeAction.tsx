@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import * as Haptics from 'expo-haptics'
 import { Check, Clock } from 'lucide-react-native'
+import { useColors } from '@/hooks/use-colors'
 
 const SWIPE_THRESHOLD = 100
 
@@ -25,6 +26,7 @@ export function SwipeAction({
   children,
 }: SwipeActionProps) {
   const reducedMotion = useReducedMotion()
+  const colors = useColors()
   const translateX = useSharedValue(0)
 
   const triggerHaptic = () => {
@@ -61,18 +63,21 @@ export function SwipeAction({
     opacity: Math.min(-translateX.value / SWIPE_THRESHOLD, 1),
   }))
 
+  // Swipe action text is always white for contrast against sage/copper backgrounds
+  const actionTextColor = '#faf6f0'
+
   return (
     <View style={styles.container}>
       {/* Complete action (swipe right) */}
-      <Animated.View style={[styles.action, styles.completeAction, leftActionStyle]}>
-        <Check size={20} color="#faf6f0" />
-        <Text style={styles.actionText}>Done</Text>
+      <Animated.View style={[styles.action, styles.completeAction, { backgroundColor: colors.sage }, leftActionStyle]}>
+        <Check size={20} color={actionTextColor} />
+        <Text style={[styles.actionText, { color: actionTextColor }]}>Done</Text>
       </Animated.View>
 
       {/* Snooze action (swipe left) */}
-      <Animated.View style={[styles.action, styles.snoozeAction, rightActionStyle]}>
-        <Text style={styles.actionText}>Snooze</Text>
-        <Clock size={20} color="#faf6f0" />
+      <Animated.View style={[styles.action, styles.snoozeAction, { backgroundColor: colors.copper }, rightActionStyle]}>
+        <Text style={[styles.actionText, { color: actionTextColor }]}>Snooze</Text>
+        <Clock size={20} color={actionTextColor} />
       </Animated.View>
 
       <GestureDetector gesture={pan}>
@@ -96,16 +101,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   completeAction: {
-    backgroundColor: '#6b8f71',
     justifyContent: 'flex-start',
   },
   snoozeAction: {
-    backgroundColor: '#c4703f',
     justifyContent: 'flex-end',
   },
   actionText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#faf6f0',
   },
 })

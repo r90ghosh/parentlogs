@@ -9,7 +9,6 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { Baby, ChevronRight } from 'lucide-react-native'
 import { useBriefingsList } from '@/hooks/use-briefings'
 import { useAuth } from '@/components/providers/AuthProvider'
@@ -17,6 +16,7 @@ import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import type { BriefingTemplate } from '@tdc/shared/types'
 import { ScreenHeader } from '@/components/ui'
+import { useColors } from '@/hooks/use-colors'
 
 interface WeekSection {
   title: string
@@ -40,6 +40,7 @@ export default function PregnancyWeeksScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { family } = useAuth()
+  const colors = useColors()
   const { data: briefings, isLoading } = useBriefingsList()
 
   const currentWeek = family?.current_week ?? null
@@ -80,7 +81,7 @@ export default function PregnancyWeeksScreen() {
   }
 
   const renderSectionHeader = ({ section }: { section: WeekSection }) => (
-    <Text style={styles.sectionHeader}>{section.title}</Text>
+    <Text style={[styles.sectionHeader, { color: colors.copper }]}>{section.title}</Text>
   )
 
   const renderItem = ({ item, index }: { item: WeekItem; index: number }) => {
@@ -93,34 +94,36 @@ export default function PregnancyWeeksScreen() {
               <View
                 style={[
                   styles.weekBadge,
-                  isCurrentWeek && styles.weekBadgeCurrent,
+                  { backgroundColor: colors.copperDim },
+                  isCurrentWeek && { backgroundColor: colors.copper },
                 ]}
               >
                 <Text
                   style={[
                     styles.weekBadgeText,
-                    isCurrentWeek && styles.weekBadgeTextCurrent,
+                    { color: colors.copper },
+                    isCurrentWeek && { color: colors.textPrimary },
                   ]}
                 >
                   {item.week}
                 </Text>
               </View>
               <View style={styles.weekInfo}>
-                <Text style={styles.weekTitle} numberOfLines={2}>
+                <Text style={[styles.weekTitle, { color: colors.textSecondary }]} numberOfLines={2}>
                   {item.title}
                 </Text>
                 {item.babyUpdate ? (
-                  <Text style={styles.weekPreview} numberOfLines={1}>
+                  <Text style={[styles.weekPreview, { color: colors.textMuted }]} numberOfLines={1}>
                     {item.babyUpdate}
                   </Text>
                 ) : null}
                 {isCurrentWeek && (
-                  <View style={styles.currentBadge}>
-                    <Text style={styles.currentBadgeText}>CURRENT WEEK</Text>
+                  <View style={[styles.currentBadge, { backgroundColor: colors.copperDim }]}>
+                    <Text style={[styles.currentBadgeText, { color: colors.copper }]}>CURRENT WEEK</Text>
                   </View>
                 )}
               </View>
-              <ChevronRight size={18} color="#4a4239" />
+              <ChevronRight size={18} color={colors.textDim} />
             </View>
           </GlassCard>
         </Pressable>
@@ -130,22 +133,17 @@ export default function PregnancyWeeksScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
       <ScreenHeader title="Pregnancy Week Guide" />
 
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color="#c4703f" size="large" />
+          <ActivityIndicator color={colors.copper} size="large" />
         </View>
       ) : sections.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Baby size={40} color="#4a4239" />
-          <Text style={styles.emptyTitle}>No weeks available</Text>
-          <Text style={styles.emptySubtitle}>
+          <Baby size={40} color={colors.textDim} />
+          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No weeks available</Text>
+          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
             Pregnancy week briefings will appear here soon
           </Text>
         </View>
@@ -170,7 +168,7 @@ export default function PregnancyWeeksScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
+    backgroundColor: 'transparent',
   },
 
   // Section list
@@ -180,7 +178,6 @@ const styles = StyleSheet.create({
   sectionHeader: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#c4703f',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
     marginTop: 20,
@@ -200,20 +197,12 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 12,
-    backgroundColor: 'rgba(196,112,63,0.12)',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  weekBadgeCurrent: {
-    backgroundColor: '#c4703f',
   },
   weekBadgeText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#c4703f',
-  },
-  weekBadgeTextCurrent: {
-    color: '#faf6f0',
   },
   weekInfo: {
     flex: 1,
@@ -223,12 +212,10 @@ const styles = StyleSheet.create({
   weekTitle: {
     fontFamily: 'Karla-Medium',
     fontSize: 15,
-    color: '#ede6dc',
   },
   weekPreview: {
     fontFamily: 'Jost-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginTop: 2,
   },
   currentBadge: {
@@ -237,12 +224,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 8,
-    backgroundColor: 'rgba(196,112,63,0.15)',
   },
   currentBadgeText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 10,
-    color: '#c4703f',
   },
 
   // Loading / Empty
@@ -261,13 +246,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
     textAlign: 'center',
   },
   emptySubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
   },
 })

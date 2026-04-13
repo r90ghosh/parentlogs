@@ -13,7 +13,6 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import {
   X,
   ChevronRight,
@@ -38,6 +37,7 @@ import { useRevenueCat } from '@/components/providers/RevenueCatProvider'
 import { useSubscriptionStatus } from '@/hooks/use-subscription'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
+import { useColors } from '@/hooks/use-colors'
 import * as Haptics from 'expo-haptics'
 import * as WebBrowser from 'expo-web-browser'
 
@@ -58,6 +58,7 @@ function SettingsRow({
   color,
   danger,
 }: SettingsRowProps) {
+  const colors = useColors()
   return (
     <Pressable
       onPress={() => {
@@ -71,7 +72,8 @@ function SettingsRow({
       accessibilityRole={onPress ? 'button' : undefined}
       style={({ pressed }) => [
         styles.settingsRow,
-        pressed && onPress && styles.settingsRowPressed,
+        { borderBottomColor: colors.border },
+        pressed && onPress && { backgroundColor: colors.pressed },
       ]}
     >
       <View style={styles.settingsRowLeft}>
@@ -79,7 +81,8 @@ function SettingsRow({
         <Text
           style={[
             styles.settingsRowLabel,
-            danger && styles.dangerText,
+            { color: colors.textSecondary },
+            danger && { color: colors.coral },
             color ? { color } : null,
           ]}
         >
@@ -87,8 +90,8 @@ function SettingsRow({
         </Text>
       </View>
       <View style={styles.settingsRowRight}>
-        {value && <Text style={styles.settingsRowValue}>{value}</Text>}
-        {onPress && <ChevronRight size={16} color="#4a4239" />}
+        {value && <Text style={[styles.settingsRowValue, { color: colors.textMuted }]}>{value}</Text>}
+        {onPress && <ChevronRight size={16} color={colors.textDim} />}
       </View>
     </Pressable>
   )
@@ -100,6 +103,7 @@ export default function SettingsScreen() {
   const { signOut, profile, family, user } = useAuth()
   const { isPro, customerInfo } = useRevenueCat()
   const { data: subStatus } = useSubscriptionStatus()
+  const colors = useColors()
   const [deletingAccount, setDeletingAccount] = useState(false)
   const appVersion = Constants.expoConfig?.version ?? '1.0.0'
   const isPastDue = subStatus?.status === 'past_due'
@@ -187,17 +191,13 @@ export default function SettingsScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={styles.headerTitle}>Settings</Text>
-        <Pressable onPress={() => router.back()} style={styles.closeButton} accessibilityLabel="Close settings" accessibilityRole="button">
-          <X size={20} color="#7a6f62" />
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Settings</Text>
+        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]} accessibilityLabel="Close settings" accessibilityRole="button">
+          <X size={20} color={colors.textMuted} />
         </Pressable>
       </View>
 
@@ -211,16 +211,16 @@ export default function SettingsScreen() {
       >
         {/* Profile Section */}
         <CardEntrance delay={0}>
-          <Text style={styles.sectionTitle}>Profile</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Profile</Text>
           <GlassCard style={styles.section}>
             <SettingsRow
-              icon={<User size={18} color="#ede6dc" />}
+              icon={<User size={18} color={colors.textSecondary} />}
               label="Name"
               value={profile?.full_name || 'Not set'}
               onPress={() => router.push('/(screens)/edit-profile')}
             />
             <SettingsRow
-              icon={<User size={18} color="#7a6f62" />}
+              icon={<User size={18} color={colors.textMuted} />}
               label="Role"
               value={
                 profile?.role === 'dad'
@@ -236,21 +236,21 @@ export default function SettingsScreen() {
 
         {/* Family Section */}
         <CardEntrance delay={80}>
-          <Text style={styles.sectionTitle}>Family</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Family</Text>
           <GlassCard style={styles.section}>
             <SettingsRow
-              icon={<Users size={18} color="#c47a8f" />}
+              icon={<Users size={18} color={colors.rose} />}
               label="Family Members"
               onPress={() => router.push('/(screens)/family')}
             />
             {family?.invite_code && (
               <>
-                <View style={styles.inviteCodeRow}>
+                <View style={[styles.inviteCodeRow, { borderBottomColor: colors.border }]}>
                   <View style={styles.settingsRowLeft}>
-                    <UserPlus size={18} color="#6b8f71" />
+                    <UserPlus size={18} color={colors.sage} />
                     <View>
-                      <Text style={styles.settingsRowLabel}>Invite Code</Text>
-                      <Text style={styles.inviteCode}>
+                      <Text style={[styles.settingsRowLabel, { color: colors.textSecondary }]}>Invite Code</Text>
+                      <Text style={[styles.inviteCode, { color: colors.sage }]}>
                         {family.invite_code}
                       </Text>
                     </View>
@@ -258,19 +258,19 @@ export default function SettingsScreen() {
                   <View style={styles.inviteActions}>
                     <Pressable
                       onPress={handleCopyInviteCode}
-                      style={styles.inviteActionButton}
+                      style={[styles.inviteActionButton, { backgroundColor: colors.sageDim }]}
                       accessibilityLabel="Copy invite code"
                       accessibilityRole="button"
                     >
-                      <Copy size={16} color="#6b8f71" />
+                      <Copy size={16} color={colors.sage} />
                     </Pressable>
                     <Pressable
                       onPress={handleShareInviteCode}
-                      style={styles.inviteActionButton}
+                      style={[styles.inviteActionButton, { backgroundColor: colors.sageDim }]}
                       accessibilityLabel="Share invite code"
                       accessibilityRole="button"
                     >
-                      <Share2 size={16} color="#6b8f71" />
+                      <Share2 size={16} color={colors.sage} />
                     </Pressable>
                   </View>
                 </View>
@@ -281,10 +281,10 @@ export default function SettingsScreen() {
 
         {/* Notifications */}
         <CardEntrance delay={160}>
-          <Text style={styles.sectionTitle}>Notifications</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Notifications</Text>
           <GlassCard style={styles.section}>
             <SettingsRow
-              icon={<Bell size={18} color="#5b9bd5" />}
+              icon={<Bell size={18} color={colors.sky} />}
               label="Notification Preferences"
               onPress={() => router.push('/(screens)/notifications')}
             />
@@ -293,10 +293,10 @@ export default function SettingsScreen() {
 
         {/* Security */}
         <CardEntrance delay={200}>
-          <Text style={styles.sectionTitle}>Security</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Security</Text>
           <GlassCard style={styles.section}>
             <SettingsRow
-              icon={<KeyRound size={18} color="#c4703f" />}
+              icon={<KeyRound size={18} color={colors.copper} />}
               label={
                 user?.identities?.some((i) => i.provider === 'email')
                   ? 'Change Password'
@@ -309,7 +309,7 @@ export default function SettingsScreen() {
 
         {/* Subscription */}
         <CardEntrance delay={280}>
-          <Text style={styles.sectionTitle}>Subscription</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Subscription</Text>
           <GlassCard style={styles.section}>
             {/* Payment Failed Alert */}
             {isPastDue && (
@@ -320,52 +320,53 @@ export default function SettingsScreen() {
                     : 'https://play.google.com/store/account/subscriptions'
                   Linking.openURL(url)
                 }}
-                style={styles.pastDueBanner}
+                style={[styles.pastDueBanner, { backgroundColor: colors.coralDim, borderBottomColor: 'rgba(212,131,107,0.15)' }]}
               >
-                <AlertTriangle size={16} color="#d4836b" />
+                <AlertTriangle size={16} color={colors.coral} />
                 <View style={styles.pastDueBannerText}>
-                  <Text style={styles.pastDueTitle}>Payment failed</Text>
-                  <Text style={styles.pastDueDescription}>
+                  <Text style={[styles.pastDueTitle, { color: colors.coral }]}>Payment failed</Text>
+                  <Text style={[styles.pastDueDescription, { color: 'rgba(212,131,107,0.7)' }]}>
                     Your last payment didn't go through. Tap to update your payment method.
                   </Text>
                 </View>
-                <ChevronRight size={14} color="#d4836b" />
+                <ChevronRight size={14} color={colors.coral} />
               </Pressable>
             )}
 
-            <View style={styles.subscriptionRow}>
+            <View style={[styles.subscriptionRow, { borderBottomColor: colors.border }]}>
               <View style={styles.settingsRowLeft}>
-                <CreditCard size={18} color="#d4a853" />
+                <CreditCard size={18} color={colors.gold} />
                 <View>
-                  <Text style={styles.settingsRowLabel}>Current Plan</Text>
+                  <Text style={[styles.settingsRowLabel, { color: colors.textSecondary }]}>Current Plan</Text>
                   <View style={styles.tierBadgeRow}>
                     {(profile?.subscription_tier === 'premium' ||
                       profile?.subscription_tier === 'lifetime') && (
-                      <Crown size={12} color="#d4a853" />
+                      <Crown size={12} color={colors.gold} />
                     )}
                     <Text
                       style={[
                         styles.tierBadgeText,
+                        { color: colors.textMuted },
                         (profile?.subscription_tier === 'premium' ||
                           profile?.subscription_tier === 'lifetime') &&
-                          styles.tierBadgeTextPremium,
-                        isPastDue && styles.pastDueBadgeText,
+                          { color: colors.gold },
+                        isPastDue && { color: colors.coral },
                       ]}
                     >
                       {isPastDue ? 'Past Due' : tierLabel}
                     </Text>
                   </View>
                   {profile?.subscription_tier === 'lifetime' && (
-                    <Text style={styles.subscriptionDetail}>Never expires</Text>
+                    <Text style={[styles.subscriptionDetail, { color: colors.textMuted }]}>Never expires</Text>
                   )}
                   {profile?.subscription_tier === 'premium' && !isCanceling && customerInfo?.entitlements?.active?.['The Dad Center Pro']?.expirationDate && (
-                    <Text style={styles.subscriptionDetail}>
+                    <Text style={[styles.subscriptionDetail, { color: colors.textMuted }]}>
                       Renews {new Date(customerInfo.entitlements.active['The Dad Center Pro'].expirationDate!).toLocaleDateString()}
                     </Text>
                   )}
                   {/* Grace period messaging */}
                   {isCanceling && subStatus?.current_period_end && (
-                    <Text style={styles.subscriptionDetail}>
+                    <Text style={[styles.subscriptionDetail, { color: colors.textMuted }]}>
                       Access until {new Date(subStatus.current_period_end).toLocaleDateString()} + 7-day grace period
                     </Text>
                   )}
@@ -375,8 +376,8 @@ export default function SettingsScreen() {
 
             {/* Grace period explanation */}
             {isCanceling && (
-              <View style={styles.gracePeriodBanner}>
-                <Text style={styles.gracePeriodText}>
+              <View style={[styles.gracePeriodBanner, { backgroundColor: colors.goldDim, borderBottomColor: 'rgba(212,168,83,0.15)' }]}>
+                <Text style={[styles.gracePeriodText, { color: 'rgba(212,168,83,0.8)' }]}>
                   Your premium access continues until the end of your billing period, plus a 7-day grace period before switching to the free plan. Your data will be preserved.
                 </Text>
               </View>
@@ -385,7 +386,7 @@ export default function SettingsScreen() {
             {isPro || profile?.subscription_tier === 'premium' || profile?.subscription_tier === 'lifetime' ? (
               <>
                 <SettingsRow
-                  icon={<ExternalLink size={18} color="#d4a853" />}
+                  icon={<ExternalLink size={18} color={colors.gold} />}
                   label="Manage Subscription"
                   onPress={() => {
                     Alert.alert(
@@ -409,7 +410,7 @@ export default function SettingsScreen() {
                 {/* Contact support */}
                 {profile?.subscription_tier !== 'lifetime' && (
                   <SettingsRow
-                    icon={<Mail size={18} color="#7a6f62" />}
+                    icon={<Mail size={18} color={colors.textMuted} />}
                     label="Contact Support"
                     onPress={() => {
                       Alert.alert(
@@ -431,10 +432,10 @@ export default function SettingsScreen() {
               </>
             ) : (
               <SettingsRow
-                icon={<Crown size={18} color="#d4a853" />}
+                icon={<Crown size={18} color={colors.gold} />}
                 label="Upgrade to Premium"
                 onPress={() => router.push('/(screens)/upgrade')}
-                color="#d4a853"
+                color={colors.gold}
               />
             )}
           </GlassCard>
@@ -442,15 +443,15 @@ export default function SettingsScreen() {
 
         {/* Legal */}
         <CardEntrance delay={360}>
-          <Text style={styles.sectionTitle}>Legal</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Legal</Text>
           <GlassCard style={styles.section}>
             <SettingsRow
-              icon={<ExternalLink size={18} color="#7a6f62" />}
+              icon={<ExternalLink size={18} color={colors.textMuted} />}
               label="Privacy Policy"
               onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')}
             />
             <SettingsRow
-              icon={<ExternalLink size={18} color="#7a6f62" />}
+              icon={<ExternalLink size={18} color={colors.textMuted} />}
               label="Terms of Service"
               onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/terms')}
             />
@@ -459,23 +460,23 @@ export default function SettingsScreen() {
 
         {/* About */}
         <CardEntrance delay={400}>
-          <Text style={styles.sectionTitle}>About</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>About</Text>
           <GlassCard style={styles.section}>
             <View style={styles.disclaimerContainer}>
-              <Text style={styles.disclaimerText}>
+              <Text style={[styles.disclaimerText, { color: colors.textMuted }]}>
                 The Dad Center provides general pregnancy and parenting information for educational purposes only. It is not intended as medical advice. Always consult your healthcare provider for medical decisions.
               </Text>
             </View>
           </GlassCard>
         </CardEntrance>
 
-        <Text style={styles.versionText}>Version {appVersion}</Text>
+        <Text style={[styles.versionText, { color: colors.textDim }]}>Version {appVersion}</Text>
 
         {/* Sign Out */}
         <CardEntrance delay={440}>
           <GlassCard style={styles.section}>
             <SettingsRow
-              icon={<LogOut size={18} color="#d4836b" />}
+              icon={<LogOut size={18} color={colors.coral} />}
               label="Sign Out"
               onPress={handleSignOut}
               danger
@@ -485,8 +486,8 @@ export default function SettingsScreen() {
 
         {/* Danger Zone */}
         <CardEntrance delay={480}>
-          <Text style={styles.dangerSectionTitle}>Danger Zone</Text>
-          <GlassCard style={styles.dangerSection}>
+          <Text style={[styles.dangerSectionTitle, { color: colors.coral }]}>Danger Zone</Text>
+          <GlassCard style={[styles.dangerSection, { borderColor: 'rgba(212,131,107,0.15)' }]}>
             <Pressable
               onPress={handleDeleteAccount}
               disabled={deletingAccount}
@@ -494,20 +495,21 @@ export default function SettingsScreen() {
               accessibilityRole="button"
               style={({ pressed }) => [
                 styles.settingsRow,
-                pressed && styles.settingsRowPressed,
+                { borderBottomColor: colors.border },
+                pressed && { backgroundColor: colors.pressed },
               ]}
             >
               <View style={styles.settingsRowLeft}>
-                <Trash2 size={18} color="#d4836b" />
-                <Text style={[styles.settingsRowLabel, styles.dangerText]}>
+                <Trash2 size={18} color={colors.coral} />
+                <Text style={[styles.settingsRowLabel, { color: colors.coral }]}>
                   Delete Account
                 </Text>
               </View>
               {deletingAccount && (
-                <ActivityIndicator size="small" color="#d4836b" />
+                <ActivityIndicator size="small" color={colors.coral} />
               )}
             </Pressable>
-            <Text style={styles.dangerDescription}>
+            <Text style={[styles.dangerDescription, { color: colors.textDim }]}>
               Permanently delete your account, family data, and all associated
               information. This cannot be undone.
             </Text>
@@ -521,7 +523,6 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   flex: {
     flex: 1,
@@ -536,13 +537,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   closeButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(237,230,220,0.06)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -555,7 +554,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
     marginBottom: 12,
@@ -575,10 +573,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
-  },
-  settingsRowPressed: {
-    backgroundColor: 'rgba(237,230,220,0.04)',
   },
   settingsRowLeft: {
     flexDirection: 'row',
@@ -594,12 +588,10 @@ const styles = StyleSheet.create({
   settingsRowLabel: {
     fontFamily: 'Karla-Medium',
     fontSize: 15,
-    color: '#ede6dc',
   },
   settingsRowValue: {
     fontFamily: 'Karla-Regular',
     fontSize: 14,
-    color: '#7a6f62',
   },
 
   // Invite code
@@ -610,12 +602,10 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   inviteCode: {
     fontFamily: 'Jost-Medium',
     fontSize: 18,
-    color: '#6b8f71',
     letterSpacing: 2,
     marginTop: 4,
   },
@@ -627,7 +617,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(107,143,113,0.12)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -640,7 +629,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(237,230,220,0.06)',
   },
   tierBadgeRow: {
     flexDirection: 'row',
@@ -651,19 +639,11 @@ const styles = StyleSheet.create({
   tierBadgeText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#7a6f62',
-  },
-  tierBadgeTextPremium: {
-    color: '#d4a853',
   },
   subscriptionDetail: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginTop: 2,
-  },
-  pastDueBadgeText: {
-    color: '#d4836b',
   },
   pastDueBanner: {
     flexDirection: 'row',
@@ -671,9 +651,7 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: 'rgba(212,131,107,0.08)',
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(212,131,107,0.15)',
   },
   pastDueBannerText: {
     flex: 1,
@@ -681,25 +659,20 @@ const styles = StyleSheet.create({
   pastDueTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#d4836b',
   },
   pastDueDescription: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: 'rgba(212,131,107,0.7)',
     marginTop: 2,
   },
   gracePeriodBanner: {
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: 'rgba(212,168,83,0.08)',
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(212,168,83,0.15)',
   },
   gracePeriodText: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: 'rgba(212,168,83,0.8)',
     lineHeight: 18,
   },
 
@@ -707,7 +680,6 @@ const styles = StyleSheet.create({
   dangerSectionTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#d4836b',
     textTransform: 'uppercase',
     letterSpacing: 1.2,
     marginBottom: 12,
@@ -717,15 +689,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 24,
     padding: 0,
-    borderColor: 'rgba(212,131,107,0.15)',
-  },
-  dangerText: {
-    color: '#d4836b',
   },
   dangerDescription: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#4a4239',
     lineHeight: 18,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -738,13 +705,11 @@ const styles = StyleSheet.create({
   disclaimerText: {
     fontFamily: 'Karla-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     lineHeight: 20,
   },
   versionText: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#4a4239',
     textAlign: 'center',
     marginTop: 8,
     marginBottom: 8,

@@ -2,10 +2,12 @@ import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
 import { ClipboardList, ChevronRight } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
+import { useColors } from '@/hooks/use-colors'
 import { useChecklists } from '@/hooks/use-checklists'
 
 export function ChecklistProgressCard() {
   const router = useRouter()
+  const colors = useColors()
   const { data: checklists } = useChecklists()
 
   if (!checklists || checklists.length === 0) return null
@@ -16,31 +18,31 @@ export function ChecklistProgressCard() {
   return (
     <GlassCard style={styles.card}>
       <View style={styles.header}>
-        <View style={styles.iconBadge}>
-          <ClipboardList size={18} color="#c4703f" />
+        <View style={[styles.iconBadge, { backgroundColor: colors.copperDim }]}>
+          <ClipboardList size={18} color={colors.copper} />
         </View>
-        <Text style={styles.title}>Checklists</Text>
+        <Text style={[styles.title, { color: colors.textPrimary }]}>Checklists</Text>
       </View>
 
       <View style={styles.list}>
         {preview.map((checklist) => (
           <View key={checklist.checklist_id} style={styles.row}>
             <View style={styles.rowInfo}>
-              <Text style={styles.rowName} numberOfLines={1}>
+              <Text style={[styles.rowName, { color: colors.textSecondary }]} numberOfLines={1}>
                 {checklist.name}
               </Text>
-              <Text style={styles.rowMeta}>
+              <Text style={[styles.rowMeta, { color: colors.textMuted }]}>
                 {checklist.progress.completed} of {checklist.progress.total} items
               </Text>
             </View>
-            <View style={styles.progressBar}>
+            <View style={[styles.progressBar, { backgroundColor: colors.textDim }]}>
               <View
                 style={[
                   styles.progressFill,
                   {
                     width: `${checklist.progress.percentage}%` as `${number}%`,
                     backgroundColor:
-                      checklist.progress.percentage === 100 ? '#6b8f71' : '#c4703f',
+                      checklist.progress.percentage === 100 ? colors.sage : colors.copper,
                   },
                 ]}
               />
@@ -53,8 +55,8 @@ export function ChecklistProgressCard() {
         onPress={() => router.push('/(screens)/checklists')}
         style={styles.viewAll}
       >
-        <Text style={styles.viewAllText}>View All</Text>
-        <ChevronRight size={14} color="#c4703f" />
+        <Text style={[styles.viewAllText, { color: colors.copper }]}>View All</Text>
+        <ChevronRight size={14} color={colors.copper} />
       </Pressable>
     </GlassCard>
   )
@@ -74,14 +76,12 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(196,112,63,0.12)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 17,
-    color: '#faf6f0',
   },
   list: {
     gap: 14,
@@ -99,19 +99,16 @@ const styles = StyleSheet.create({
   rowName: {
     fontFamily: 'Karla-Medium',
     fontSize: 14,
-    color: '#ede6dc',
     flex: 1,
     marginRight: 8,
   },
   rowMeta: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
   },
   progressBar: {
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#4a4239',
     overflow: 'hidden',
   },
   progressFill: {
@@ -127,6 +124,5 @@ const styles = StyleSheet.create({
   viewAllText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#c4703f',
   },
 })

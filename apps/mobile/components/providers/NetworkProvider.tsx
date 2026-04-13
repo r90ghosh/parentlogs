@@ -3,9 +3,11 @@ import { View, Text, StyleSheet } from 'react-native'
 import NetInfo from '@react-native-community/netinfo'
 import Animated, { FadeInUp, FadeOutUp, useReducedMotion } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useColors } from '@/hooks/use-colors'
 
 export function NetworkProvider({ children }: { children: React.ReactNode }) {
   const reducedMotion = useReducedMotion()
+  const colors = useColors()
   const [isConnected, setIsConnected] = useState(true)
   const insets = useSafeAreaInsets()
 
@@ -22,9 +24,9 @@ export function NetworkProvider({ children }: { children: React.ReactNode }) {
         <Animated.View
           entering={reducedMotion ? undefined : FadeInUp.duration(300)}
           exiting={reducedMotion ? undefined : FadeOutUp.duration(300)}
-          style={[styles.banner, { paddingTop: insets.top + 4 }]}
+          style={[styles.banner, { backgroundColor: colors.coral, paddingTop: insets.top + 4 }]}
         >
-          <Text style={styles.bannerText}>No internet connection</Text>
+          <Text style={[styles.bannerText, { color: colors.textPrimary }]}>No internet connection</Text>
         </Animated.View>
       )}
       <View style={styles.content}>{children}</View>
@@ -40,7 +42,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   banner: {
-    backgroundColor: '#d4836b',
     paddingBottom: 8,
     paddingHorizontal: 16,
     alignItems: 'center',
@@ -49,6 +50,5 @@ const styles = StyleSheet.create({
   bannerText: {
     fontFamily: 'Karla-Medium',
     fontSize: 13,
-    color: '#faf6f0',
   },
 })

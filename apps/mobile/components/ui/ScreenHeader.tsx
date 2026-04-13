@@ -1,7 +1,9 @@
-import { View, Text, Pressable, StyleSheet, type ViewStyle } from 'react-native'
+import { View, Text, Pressable, Platform, StyleSheet, type ViewStyle } from 'react-native'
+import { BlurView } from 'expo-blur'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ChevronLeft, X } from 'lucide-react-native'
+import { useColors } from '@/hooks/use-colors'
 
 interface ScreenHeaderProps {
   title: string
@@ -24,6 +26,7 @@ export function ScreenHeader({
 }: ScreenHeaderProps) {
   const router = useRouter()
   const insets = useSafeAreaInsets()
+  const colors = useColors()
 
   const handleLeftPress = onLeftPress ?? (() => router.back())
 
@@ -32,11 +35,11 @@ export function ScreenHeader({
       return (
         <Pressable
           onPress={handleLeftPress}
-          style={styles.actionCircle}
+          style={[styles.actionCircle, { backgroundColor: colors.border }]}
           accessibilityLabel="Go back"
           accessibilityRole="button"
         >
-          <ChevronLeft size={20} color="#ede6dc" />
+          <ChevronLeft size={20} color={colors.textSecondary} />
         </Pressable>
       )
     }
@@ -44,33 +47,26 @@ export function ScreenHeader({
       return (
         <Pressable
           onPress={handleLeftPress}
-          style={styles.actionCircle}
+          style={[styles.actionCircle, { backgroundColor: colors.border }]}
           accessibilityLabel="Close"
           accessibilityRole="button"
         >
-          <X size={20} color="#ede6dc" />
+          <X size={20} color={colors.textSecondary} />
         </Pressable>
       )
     }
     return <View style={styles.actionSlot}>{leftAction}</View>
   }
 
-  return (
-    <View
-      style={[
-        styles.container,
-        { paddingTop: insets.top + 12 },
-        !transparent && styles.withBackground,
-        style,
-      ]}
-    >
+  const content = (
+    <>
       <View style={styles.leftSlot}>{renderLeftAction()}</View>
       <View style={styles.titleContainer}>
-        <Text style={styles.title} numberOfLines={1}>
+        <Text style={[styles.title, { color: colors.textPrimary }]} numberOfLines={1}>
           {title}
         </Text>
         {subtitle ? (
-          <Text style={styles.subtitle} numberOfLines={1}>
+          <Text style={[styles.subtitle, { color: colors.textMuted }]} numberOfLines={1}>
             {subtitle}
           </Text>
         ) : null}
@@ -78,6 +74,35 @@ export function ScreenHeader({
       <View style={styles.rightSlot}>
         {rightAction ?? <View style={styles.spacer} />}
       </View>
+    </>
+  )
+
+  const containerStyle = [
+    styles.container,
+    { paddingTop: insets.top + 12, borderBottomColor: colors.subtleBg },
+    style,
+  ]
+
+  if (Platform.OS === 'ios' && !transparent) {
+    return (
+      <BlurView
+        tint={colors.blurTint}
+        intensity={colors.headerBlurIntensity}
+        style={containerStyle}
+      >
+        {content}
+      </BlurView>
+    )
+  }
+
+  return (
+    <View
+      style={[
+        containerStyle,
+        !transparent && { backgroundColor: colors.surface },
+      ]}
+    >
+      {content}
     </View>
   )
 }
@@ -88,9 +113,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
     paddingHorizontal: 20,
-  },
-  withBackground: {
-    backgroundColor: 'transparent',
+    borderBottomWidth: 1,
   },
   leftSlot: {
     width: 40,
@@ -110,7 +133,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(237,230,220,0.08)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -122,13 +144,11 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Jost-SemiBold',
     fontSize: 18,
-    color: '#faf6f0',
     textAlign: 'center',
   },
   subtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     textAlign: 'center',
     marginTop: 2,
   },

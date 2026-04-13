@@ -26,6 +26,7 @@ import {
 import * as WebBrowser from 'expo-web-browser'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance, StaggerList } from '@/components/animations'
+import { useColors } from '@/hooks/use-colors'
 
 // --- Data ---
 
@@ -84,7 +85,7 @@ const APP_HIGHLIGHTS = [
     icon: CheckSquare,
   },
   {
-    week: '0–3 Months',
+    week: '0\u20133 Months',
     title: 'The Fourth Trimester',
     quote: 'Set up feeding station. Learn swaddle technique. Track feeds and diapers. Split night shifts fairly. — From day one, you know what to do.',
     icon: Activity,
@@ -119,6 +120,7 @@ const PLANS = [
 // --- Component ---
 
 export default function LandingScreen() {
+  const colors = useColors()
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { enterGuestMode } = useAuth()
@@ -129,16 +131,11 @@ export default function LandingScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#12100e', '#1a1714', '#12100e']}
-        style={StyleSheet.absoluteFill}
-      />
-
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       {/* Decorative orbs */}
       <View style={styles.orbContainer} pointerEvents="none">
-        <View style={styles.orbCopper} />
-        <View style={styles.orbGold} />
+        <View style={[styles.orbCopper, { backgroundColor: colors.copperDim }]} />
+        <View style={[styles.orbGold, { backgroundColor: colors.goldDim }]} />
       </View>
 
       <ScrollView
@@ -157,16 +154,16 @@ export default function LandingScreen() {
           entering={FadeIn.duration(600)}
           style={styles.heroSection}
         >
-          <Text style={styles.preLabel}>FOR MODERN DADS</Text>
+          <Text style={[styles.preLabel, { color: colors.copper }]}>FOR MODERN DADS</Text>
 
           <BrandLogoIcon size={56} />
-          <Text style={styles.heroTitle}>The Dad Center</Text>
+          <Text style={[styles.heroTitle, { color: colors.textPrimary }]}>The Dad Center</Text>
 
-          <Text style={styles.heroSubtitle}>
+          <Text style={[styles.heroSubtitle, { color: colors.copper }]}>
             The operating system for modern fatherhood
           </Text>
 
-          <Text style={styles.heroDescription}>
+          <Text style={[styles.heroDescription, { color: colors.textMuted }]}>
             Week-by-week guidance, actionable tasks, and zero fluff. Finally, a
             parenting app that respects your intelligence.
           </Text>
@@ -180,30 +177,30 @@ export default function LandingScreen() {
               ]}
             >
               <LinearGradient
-                colors={['#c4703f', '#d4a853']}
+                colors={colors.ctaGradient as unknown as [string, string]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={styles.ctaGradient}
               >
-                <Text style={styles.ctaText}>Get Started</Text>
-                <ArrowRight size={18} color="#12100e" />
+                <Text style={[styles.ctaText, { color: colors.bg }]}>Get Started</Text>
+                <ArrowRight size={18} color={colors.bg} />
               </LinearGradient>
             </Pressable>
           </Link>
 
           {/* Sign In Link */}
           <View style={styles.signInRow}>
-            <Text style={styles.signInLabel}>Already have an account? </Text>
+            <Text style={[styles.signInLabel, { color: colors.textMuted }]}>Already have an account? </Text>
             <Link href="/(auth)/login" asChild>
               <Pressable>
-                <Text style={styles.signInLink}>Sign In</Text>
+                <Text style={[styles.signInLink, { color: colors.copper }]}>Sign In</Text>
               </Pressable>
             </Link>
           </View>
 
           {/* Browse as Guest */}
           <Pressable onPress={handleBrowseAsGuest} style={styles.guestRow}>
-            <Text style={styles.guestText}>Browse as Guest</Text>
+            <Text style={[styles.guestText, { color: colors.textMuted }]}>Browse as Guest</Text>
           </Pressable>
 
           {/* Trust stats */}
@@ -214,8 +211,8 @@ export default function LandingScreen() {
               { value: 'Evidence', label: 'Based' },
             ].map((stat) => (
               <View key={stat.label} style={styles.statItem}>
-                <Text style={styles.statValue}>{stat.value}</Text>
-                <Text style={styles.statLabel}>{stat.label}</Text>
+                <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stat.value}</Text>
+                <Text style={[styles.statLabel, { color: colors.textMuted }]}>{stat.label}</Text>
               </View>
             ))}
           </View>
@@ -224,8 +221,8 @@ export default function LandingScreen() {
         {/* ====== FEATURES SECTION ====== */}
         <View style={styles.section}>
           <CardEntrance delay={100}>
-            <Text style={styles.sectionPreLabel}>FEATURES</Text>
-            <Text style={styles.sectionTitle}>
+            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>FEATURES</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
               Everything you need,{'\n'}nothing you don't
             </Text>
           </CardEntrance>
@@ -234,11 +231,11 @@ export default function LandingScreen() {
             {FEATURES.map((feature, index) => (
               <CardEntrance key={feature.title} delay={200 + index * 120}>
                 <GlassCard style={styles.featureCard}>
-                  <View style={styles.featureIconContainer}>
-                    <feature.icon size={22} color="#c4703f" strokeWidth={1.5} />
+                  <View style={[styles.featureIconContainer, { backgroundColor: colors.copperDim, borderColor: colors.copperGlow }]}>
+                    <feature.icon size={22} color={colors.copper} strokeWidth={1.5} />
                   </View>
-                  <Text style={styles.featureTitle}>{feature.title}</Text>
-                  <Text style={styles.featureDescription}>
+                  <Text style={[styles.featureTitle, { color: colors.textPrimary }]}>{feature.title}</Text>
+                  <Text style={[styles.featureDescription, { color: colors.textMuted }]}>
                     {feature.description}
                   </Text>
                 </GlassCard>
@@ -250,8 +247,8 @@ export default function LandingScreen() {
         {/* ====== HOW IT WORKS SECTION ====== */}
         <View style={styles.section}>
           <CardEntrance delay={100}>
-            <Text style={styles.sectionPreLabel}>HOW IT WORKS</Text>
-            <Text style={styles.sectionTitle}>Up and running{'\n'}in 2 minutes</Text>
+            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>HOW IT WORKS</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Up and running{'\n'}in 2 minutes</Text>
           </CardEntrance>
 
           <StaggerList staggerMs={100}>
@@ -259,16 +256,16 @@ export default function LandingScreen() {
               <View key={step.number} style={styles.stepRow}>
                 <View style={styles.stepNumberContainer}>
                   <LinearGradient
-                    colors={['#c4703f', '#d4a853']}
+                    colors={colors.ctaGradient as unknown as [string, string]}
                     style={styles.stepNumberGradient}
                   >
-                    <Text style={styles.stepNumber}>{step.number}</Text>
+                    <Text style={[styles.stepNumber, { color: colors.bg }]}>{step.number}</Text>
                   </LinearGradient>
-                  {step.number !== '3' && <View style={styles.stepLine} />}
+                  {step.number !== '3' && <View style={[styles.stepLine, { backgroundColor: colors.copperGlow }]} />}
                 </View>
                 <View style={styles.stepContent}>
-                  <Text style={styles.stepTitle}>{step.title}</Text>
-                  <Text style={styles.stepDescription}>
+                  <Text style={[styles.stepTitle, { color: colors.textPrimary }]}>{step.title}</Text>
+                  <Text style={[styles.stepDescription, { color: colors.textMuted }]}>
                     {step.description}
                   </Text>
                 </View>
@@ -280,8 +277,8 @@ export default function LandingScreen() {
         {/* ====== INSIDE THE APP SECTION ====== */}
         <View style={styles.section}>
           <CardEntrance delay={100}>
-            <Text style={styles.sectionPreLabel}>INSIDE THE APP</Text>
-            <Text style={styles.sectionTitle}>
+            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>INSIDE THE APP</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
               Your Roadmap{'\n'}at Every Stage
             </Text>
           </CardEntrance>
@@ -292,23 +289,23 @@ export default function LandingScreen() {
                 {/* Week badge + icon */}
                 <View style={styles.attributionRow}>
                   <LinearGradient
-                    colors={['#c4703f', '#d4a853']}
+                    colors={colors.ctaGradient as unknown as [string, string]}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                     style={styles.avatarCircle}
                   >
-                    <highlight.icon size={16} color="#faf6f0" />
+                    <highlight.icon size={16} color={colors.textPrimary} />
                   </LinearGradient>
                   <View>
-                    <Text style={styles.authorName}>{highlight.week}</Text>
-                    <Text style={styles.authorContext}>
+                    <Text style={[styles.authorName, { color: colors.textPrimary }]}>{highlight.week}</Text>
+                    <Text style={[styles.authorContext, { color: colors.textMuted }]}>
                       {highlight.title}
                     </Text>
                   </View>
                 </View>
 
                 {/* Quote text */}
-                <Text style={[styles.quoteText, { marginTop: 12 }]}>
+                <Text style={[styles.quoteText, { marginTop: 12, color: colors.textSecondary }]}>
                   {highlight.quote}
                 </Text>
               </GlassCard>
@@ -319,8 +316,8 @@ export default function LandingScreen() {
         {/* ====== PRICING SECTION ====== */}
         <View style={styles.section}>
           <CardEntrance delay={100}>
-            <Text style={styles.sectionPreLabel}>PRICING</Text>
-            <Text style={styles.sectionTitle}>
+            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>PRICING</Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
               One price.{'\n'}Whole family.
             </Text>
           </CardEntrance>
@@ -331,30 +328,31 @@ export default function LandingScreen() {
                 <GlassCard
                   style={[
                     styles.planCard,
-                    plan.highlight && styles.planCardHighlight,
+                    { borderColor: colors.border },
+                    plan.highlight && { borderColor: colors.goldGlow, backgroundColor: colors.goldDim },
                   ]}
                 >
                   {plan.badge && (
-                    <View style={styles.planBadge}>
-                      <Sparkles size={10} color="#12100e" />
-                      <Text style={styles.planBadgeText}>{plan.badge}</Text>
+                    <View style={[styles.planBadge, { backgroundColor: colors.gold }]}>
+                      <Sparkles size={10} color={colors.bg} />
+                      <Text style={[styles.planBadgeText, { color: colors.bg }]}>{plan.badge}</Text>
                     </View>
                   )}
 
                   <View style={styles.planHeader}>
                     {plan.name === 'Lifetime' && (
-                      <Crown size={16} color="#d4a853" style={{ marginRight: 6 }} />
+                      <Crown size={16} color={colors.gold} style={{ marginRight: 6 }} />
                     )}
-                    <Text style={styles.planName}>{plan.name}</Text>
+                    <Text style={[styles.planName, { color: colors.textPrimary }]}>{plan.name}</Text>
                   </View>
 
                   <View style={styles.planPriceRow}>
-                    <Text style={styles.planPrice}>{plan.price}</Text>
+                    <Text style={[styles.planPrice, { color: colors.textPrimary }]}>{plan.price}</Text>
                     {plan.period ? (
-                      <Text style={styles.planPeriod}>{plan.period}</Text>
+                      <Text style={[styles.planPeriod, { color: colors.textMuted }]}>{plan.period}</Text>
                     ) : null}
                   </View>
-                  <Text style={styles.planSubtitle}>{plan.subtitle}</Text>
+                  <Text style={[styles.planSubtitle, { color: colors.textMuted }]}>{plan.subtitle}</Text>
 
                   {/* Feature checks */}
                   <View style={styles.planFeatures}>
@@ -364,8 +362,8 @@ export default function LandingScreen() {
                       'Partner sync',
                     ].map((feat) => (
                       <View key={feat} style={styles.planFeatureRow}>
-                        <Check size={14} color="#6b8f71" />
-                        <Text style={styles.planFeatureText}>{feat}</Text>
+                        <Check size={14} color={colors.sage} />
+                        <Text style={[styles.planFeatureText, { color: colors.textSecondary }]}>{feat}</Text>
                       </View>
                     ))}
                   </View>
@@ -384,17 +382,17 @@ export default function LandingScreen() {
                 ]}
               >
                 <LinearGradient
-                  colors={['#c4703f', '#d4a853']}
+                  colors={colors.ctaGradient as unknown as [string, string]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
                   style={styles.ctaGradient}
                 >
-                  <Text style={styles.ctaText}>Start Free</Text>
-                  <ArrowRight size={18} color="#12100e" />
+                  <Text style={[styles.ctaText, { color: colors.bg }]}>Start Free</Text>
+                  <ArrowRight size={18} color={colors.bg} />
                 </LinearGradient>
               </Pressable>
             </Link>
-            <Text style={styles.noCreditCard}>
+            <Text style={[styles.noCreditCard, { color: colors.textMuted }]}>
               No credit card required. Cancel anytime.
             </Text>
           </CardEntrance>
@@ -403,10 +401,10 @@ export default function LandingScreen() {
         {/* ====== FINAL CTA SECTION ====== */}
         <View style={[styles.section, styles.finalCtaSection]}>
           <CardEntrance delay={100}>
-            <Text style={styles.finalCtaTitle}>
+            <Text style={[styles.finalCtaTitle, { color: colors.textPrimary }]}>
               Ready to stop{'\n'}winging it?
             </Text>
-            <Text style={styles.finalCtaSubtitle}>
+            <Text style={[styles.finalCtaSubtitle, { color: colors.textMuted }]}>
               Join thousands of prepared dads who refuse to leave fatherhood to
               chance.
             </Text>
@@ -419,24 +417,24 @@ export default function LandingScreen() {
                 ]}
               >
                 <LinearGradient
-                  colors={['#c4703f', '#d4a853']}
+                  colors={colors.ctaGradient as unknown as [string, string]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
                   style={styles.ctaGradient}
                 >
-                  <Text style={styles.ctaText}>Get Started Free</Text>
-                  <ArrowRight size={18} color="#12100e" />
+                  <Text style={[styles.ctaText, { color: colors.bg }]}>Get Started Free</Text>
+                  <ArrowRight size={18} color={colors.bg} />
                 </LinearGradient>
               </Pressable>
             </Link>
 
             <View style={styles.legalLinks}>
               <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')}>
-                <Text style={styles.legalLink}>Privacy Policy</Text>
+                <Text style={[styles.legalLink, { color: colors.textDim }]}>Privacy Policy</Text>
               </Pressable>
-              <Text style={styles.legalDot}>{'\u00B7'}</Text>
+              <Text style={[styles.legalDot, { color: colors.textDim }]}>{'\u00B7'}</Text>
               <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/terms')}>
-                <Text style={styles.legalLink}>Terms of Service</Text>
+                <Text style={[styles.legalLink, { color: colors.textDim }]}>Terms of Service</Text>
               </Pressable>
             </View>
           </CardEntrance>
@@ -450,6 +448,8 @@ export default function LandingScreen() {
 }
 
 function StickyBottomBar({ bottomInset }: { bottomInset: number }) {
+  const colors = useColors()
+
   const content = (
     <View
       style={[
@@ -465,13 +465,13 @@ function StickyBottomBar({ bottomInset }: { bottomInset: number }) {
           ]}
         >
           <LinearGradient
-            colors={['#c4703f', '#d4a853']}
+            colors={colors.ctaGradient as unknown as [string, string]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={styles.stickyGradient}
           >
-            <Text style={styles.stickyButtonText}>Get Started</Text>
-            <ArrowRight size={16} color="#12100e" />
+            <Text style={[styles.stickyButtonText, { color: colors.bg }]}>Get Started</Text>
+            <ArrowRight size={16} color={colors.bg} />
           </LinearGradient>
         </Pressable>
       </Link>
@@ -481,7 +481,7 @@ function StickyBottomBar({ bottomInset }: { bottomInset: number }) {
   if (Platform.OS === 'ios') {
     return (
       <Animated.View entering={FadeInDown.delay(800).springify()}>
-        <BlurView tint="dark" intensity={80} style={styles.stickyContainer}>
+        <BlurView tint={colors.blurTint} intensity={colors.blurIntensity} style={[styles.stickyContainer, { borderTopColor: colors.border }]}>
           {content}
         </BlurView>
       </Animated.View>
@@ -491,7 +491,7 @@ function StickyBottomBar({ bottomInset }: { bottomInset: number }) {
   return (
     <Animated.View
       entering={FadeInDown.delay(800).springify()}
-      style={[styles.stickyContainer, styles.stickyAndroid]}
+      style={[styles.stickyContainer, styles.stickyAndroid, { borderTopColor: colors.border, backgroundColor: colors.glassBg }]}
     >
       {content}
     </Animated.View>
@@ -503,7 +503,6 @@ function StickyBottomBar({ bottomInset }: { bottomInset: number }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#12100e',
   },
   scrollView: {
     flex: 1,
@@ -524,7 +523,6 @@ const styles = StyleSheet.create({
     top: '8%',
     right: -100,
     borderRadius: 150,
-    backgroundColor: 'rgba(196,112,63,0.06)',
   },
   orbGold: {
     position: 'absolute',
@@ -533,7 +531,6 @@ const styles = StyleSheet.create({
     top: '35%',
     left: -60,
     borderRadius: 100,
-    backgroundColor: 'rgba(212,168,83,0.04)',
   },
 
   // Hero
@@ -544,7 +541,6 @@ const styles = StyleSheet.create({
   preLabel: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 11,
-    color: '#c4703f',
     letterSpacing: 2,
     textTransform: 'uppercase',
     marginBottom: 16,
@@ -552,21 +548,18 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 36,
-    color: '#faf6f0',
     textAlign: 'center',
     marginBottom: 12,
   },
   heroSubtitle: {
     fontFamily: 'Jost-Medium',
     fontSize: 18,
-    color: '#c4703f',
     textAlign: 'center',
     marginBottom: 16,
   },
   heroDescription: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 24,
     maxWidth: 320,
@@ -600,7 +593,6 @@ const styles = StyleSheet.create({
   ctaText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#12100e',
     letterSpacing: 0.5,
   },
 
@@ -614,12 +606,10 @@ const styles = StyleSheet.create({
   signInLabel: {
     fontFamily: 'Karla-Regular',
     fontSize: 14,
-    color: '#7a6f62',
   },
   signInLink: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#c4703f',
   },
 
   // Guest
@@ -629,7 +619,6 @@ const styles = StyleSheet.create({
   guestText: {
     fontFamily: 'Karla-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     textAlign: 'center',
   },
 
@@ -645,13 +634,11 @@ const styles = StyleSheet.create({
   statValue: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 20,
-    color: '#faf6f0',
     marginBottom: 2,
   },
   statLabel: {
     fontFamily: 'Karla-Regular',
     fontSize: 11,
-    color: '#7a6f62',
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
@@ -663,7 +650,6 @@ const styles = StyleSheet.create({
   sectionPreLabel: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 11,
-    color: '#c4703f',
     letterSpacing: 2,
     textTransform: 'uppercase',
     textAlign: 'center',
@@ -672,7 +658,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 28,
-    color: '#faf6f0',
     textAlign: 'center',
     lineHeight: 36,
     marginBottom: 28,
@@ -689,9 +674,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(196,112,63,0.1)',
     borderWidth: 1,
-    borderColor: 'rgba(196,112,63,0.2)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 14,
@@ -699,13 +682,11 @@ const styles = StyleSheet.create({
   featureTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
     marginBottom: 6,
   },
   featureDescription: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     lineHeight: 21,
   },
 
@@ -729,12 +710,10 @@ const styles = StyleSheet.create({
   stepNumber: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#12100e',
   },
   stepLine: {
     width: 2,
     flex: 1,
-    backgroundColor: 'rgba(196,112,63,0.2)',
     marginTop: 8,
     borderRadius: 1,
   },
@@ -745,13 +724,11 @@ const styles = StyleSheet.create({
   stepTitle: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
     marginBottom: 4,
   },
   stepDescription: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     lineHeight: 21,
   },
 
@@ -763,7 +740,6 @@ const styles = StyleSheet.create({
   quoteText: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#ede6dc',
     lineHeight: 24,
     fontStyle: 'italic',
     marginBottom: 16,
@@ -781,20 +757,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
   },
-  avatarLetter: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 14,
-    color: '#12100e',
-  },
   authorName: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#faf6f0',
   },
   authorContext: {
     fontFamily: 'Karla-Regular',
     fontSize: 11,
-    color: '#7a6f62',
     marginTop: 1,
   },
 
@@ -806,11 +775,6 @@ const styles = StyleSheet.create({
   planCard: {
     padding: 20,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
-  },
-  planCardHighlight: {
-    borderColor: 'rgba(212,168,83,0.4)',
-    backgroundColor: 'rgba(212,168,83,0.06)',
   },
   planBadge: {
     position: 'absolute',
@@ -819,7 +783,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#d4a853',
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderRadius: 10,
@@ -827,7 +790,6 @@ const styles = StyleSheet.create({
   planBadgeText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 10,
-    color: '#12100e',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
@@ -839,7 +801,6 @@ const styles = StyleSheet.create({
   planName: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 16,
-    color: '#faf6f0',
   },
   planPriceRow: {
     flexDirection: 'row',
@@ -849,18 +810,15 @@ const styles = StyleSheet.create({
   planPrice: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 28,
-    color: '#faf6f0',
   },
   planPeriod: {
     fontFamily: 'Jost-Regular',
     fontSize: 14,
-    color: '#7a6f62',
     marginLeft: 2,
   },
   planSubtitle: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#7a6f62',
     marginBottom: 14,
   },
   planFeatures: {
@@ -874,12 +832,10 @@ const styles = StyleSheet.create({
   planFeatureText: {
     fontFamily: 'Karla-Regular',
     fontSize: 13,
-    color: '#ede6dc',
   },
   noCreditCard: {
     fontFamily: 'Karla-Regular',
     fontSize: 13,
-    color: '#7a6f62',
     textAlign: 'center',
     marginTop: 12,
   },
@@ -893,7 +849,6 @@ const styles = StyleSheet.create({
   finalCtaTitle: {
     fontFamily: 'PlayfairDisplay-Bold',
     fontSize: 30,
-    color: '#faf6f0',
     textAlign: 'center',
     lineHeight: 40,
     marginBottom: 12,
@@ -901,7 +856,6 @@ const styles = StyleSheet.create({
   finalCtaSubtitle: {
     fontFamily: 'Jost-Regular',
     fontSize: 15,
-    color: '#7a6f62',
     textAlign: 'center',
     lineHeight: 24,
     maxWidth: 300,
@@ -913,21 +867,14 @@ const styles = StyleSheet.create({
     gap: 8,
     marginTop: 24,
   },
-  legalText: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 12,
-    color: '#4a4239',
-  },
   legalLink: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#4a4239',
     textDecorationLine: 'underline',
   },
   legalDot: {
     fontFamily: 'Karla-Regular',
     fontSize: 12,
-    color: '#4a4239',
   },
 
   // Sticky bottom bar
@@ -937,11 +884,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(237,230,220,0.08)',
   },
-  stickyAndroid: {
-    backgroundColor: 'rgba(26,23,20,0.97)',
-  },
+  stickyAndroid: {},
   stickyInner: {
     paddingHorizontal: 20,
     paddingTop: 12,
@@ -966,7 +910,6 @@ const styles = StyleSheet.create({
   stickyButtonText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 15,
-    color: '#12100e',
     letterSpacing: 0.5,
   },
 })
