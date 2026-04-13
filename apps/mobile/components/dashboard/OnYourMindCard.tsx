@@ -38,7 +38,7 @@ export function OnYourMindCard() {
         {tiles.map((item) => (
           <Pressable
             key={item.id}
-            onPress={() => router.push('/(screens)/journey')}
+            onPress={() => router.push('/(tabs)/more/journey')}
             style={[styles.tile, { backgroundColor: colors.pressed, borderColor: colors.border }]}
           >
             <Text style={styles.tileEmoji}>

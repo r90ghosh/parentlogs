@@ -156,7 +156,7 @@ export default function TrackerScreen() {
             {!isPreview && (
               <View style={styles.headerButtons}>
                 <Pressable
-                  onPress={() => router.push('/(screens)/tracker-summary')}
+                  onPress={() => router.push('/(tabs)/more/tracker-summary')}
                   style={[styles.historyButton, { borderColor: colors.border, backgroundColor: colors.pressed }]}
                 >
                   <BarChart3 size={16} color={colors.copper} />

@@ -30,7 +30,7 @@ const NotificationBell = React.memo(function NotificationBell() {
     <Pressable
       onPress={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-        router.push('/(screens)/notification-inbox')
+        router.push('/(tabs)/more/notification-inbox')
       }}
       style={styles.bellButton}
       accessibilityLabel={count > 0 ? `Notifications, ${count} unread` : 'Notifications'}

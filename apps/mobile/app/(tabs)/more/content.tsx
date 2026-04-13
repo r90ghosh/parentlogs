@@ -54,7 +54,7 @@ export default function ContentScreen() {
         )
         return
       }
-      router.push({ pathname: '/(screens)/article', params: { id: article.id } })
+      router.push({ pathname: '/(tabs)/more/article', params: { id: article.id } })
     },
     [isPremium, router]
   )

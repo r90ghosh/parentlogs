@@ -26,7 +26,7 @@ export function WelcomeCatchUpCard() {
         </View>
       </View>
       <Pressable
-        onPress={() => router.push('/(screens)/triage')}
+        onPress={() => router.push('/(tabs)/more/triage')}
         style={[styles.cta, { backgroundColor: colors.goldDim, borderColor: colors.goldGlow }]}
       >
         <Text style={[styles.ctaText, { color: colors.gold }]}>Review Tasks</Text>

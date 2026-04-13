@@ -217,7 +217,7 @@ export default function SettingsScreen() {
               icon={<User size={18} color={colors.textSecondary} />}
               label="Name"
               value={profile?.full_name || 'Not set'}
-              onPress={() => router.push('/(screens)/edit-profile')}
+              onPress={() => router.push('/(tabs)/more/edit-profile')}
             />
             <SettingsRow
               icon={<User size={18} color={colors.textMuted} />}
@@ -229,7 +229,7 @@ export default function SettingsScreen() {
                     ? 'Mom'
                     : profile?.role || 'Not set'
               }
-              onPress={() => router.push('/(screens)/edit-profile')}
+              onPress={() => router.push('/(tabs)/more/edit-profile')}
             />
           </GlassCard>
         </CardEntrance>
@@ -241,7 +241,7 @@ export default function SettingsScreen() {
             <SettingsRow
               icon={<Users size={18} color={colors.rose} />}
               label="Family Members"
-              onPress={() => router.push('/(screens)/family')}
+              onPress={() => router.push('/(tabs)/more/family')}
             />
             {family?.invite_code && (
               <>
@@ -286,7 +286,7 @@ export default function SettingsScreen() {
             <SettingsRow
               icon={<Bell size={18} color={colors.sky} />}
               label="Notification Preferences"
-              onPress={() => router.push('/(screens)/notifications')}
+              onPress={() => router.push('/(tabs)/more/notifications')}
             />
           </GlassCard>
         </CardEntrance>
@@ -302,7 +302,7 @@ export default function SettingsScreen() {
                   ? 'Change Password'
                   : 'Set Password'
               }
-              onPress={() => router.push('/(screens)/change-password')}
+              onPress={() => router.push('/(tabs)/more/change-password')}
             />
           </GlassCard>
         </CardEntrance>

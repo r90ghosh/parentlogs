@@ -90,7 +90,7 @@ export default function BriefingScreen() {
           <View style={styles.headerRow}>
             <Text style={[styles.pageTitle, { color: colors.textPrimary }]}>Briefing</Text>
             <Pressable
-              onPress={() => router.push('/(screens)/briefing-archive')}
+              onPress={() => router.push('/(tabs)/more/briefing-archive')}
               style={[styles.archiveButton, { borderColor: colors.border, backgroundColor: colors.pressed }]}
             >
               <Archive size={16} color={colors.copper} />

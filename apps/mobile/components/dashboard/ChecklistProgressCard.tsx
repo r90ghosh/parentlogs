@@ -52,7 +52,7 @@ export function ChecklistProgressCard() {
       </View>
 
       <Pressable
-        onPress={() => router.push('/(screens)/checklists')}
+        onPress={() => router.push('/(tabs)/more/checklists')}
         style={styles.viewAll}
       >
         <Text style={[styles.viewAllText, { color: colors.copper }]}>View All</Text>

@@ -9,7 +9,7 @@ export function BudgetSnapshotCard() {
   const colors = useColors()
 
   return (
-    <Pressable onPress={() => router.push('/(screens)/budget')}>
+    <Pressable onPress={() => router.push('/(tabs)/more/budget')}>
       <GlassCard style={styles.card}>
         <View style={styles.header}>
           <View style={[styles.iconBadge, { backgroundColor: colors.goldDim }]}>

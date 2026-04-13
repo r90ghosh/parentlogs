@@ -121,7 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // Handle password recovery deep-link — navigate to change password screen
         if (event === 'PASSWORD_RECOVERY') {
-          router.push('/(screens)/change-password?recovery=1')
+          router.push('/(tabs)/more/change-password?recovery=1')
         }
       } else {
         setProfile(null)

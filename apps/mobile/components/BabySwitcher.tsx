@@ -55,7 +55,7 @@ export function BabySwitcher() {
 
   function handleAddBaby() {
     setSheetOpen(false)
-    router.push('/(screens)/family')
+    router.push('/(tabs)/more/family')
   }
 
   function renderBabyList() {

@@ -27,7 +27,7 @@ function getActions(colors: ColorTokens) {
     {
       label: 'Budget',
       icon: Wallet,
-      route: '/(screens)/budget' as const,
+      route: '/(tabs)/more/budget' as const,
       color: colors.gold,
     },
   ]

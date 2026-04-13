@@ -113,37 +113,37 @@ export default function MoreScreen() {
             <MenuItem
               icon={<DollarSign size={20} color={colors.gold} />}
               label="Budget Planner"
-              onPress={() => router.push('/(screens)/budget')}
+              onPress={() => router.push('/(tabs)/more/budget')}
             />
             <MenuItem
               icon={<ClipboardList size={20} color={colors.sage} />}
               label="Checklists"
-              onPress={() => router.push('/(screens)/checklists')}
+              onPress={() => router.push('/(tabs)/more/checklists')}
             />
             <MenuItem
               icon={<Compass size={20} color={colors.sky} />}
               label="Dad Journey"
-              onPress={() => router.push('/(screens)/journey')}
+              onPress={() => router.push('/(tabs)/more/journey')}
             />
             <MenuItem
               icon={<Newspaper size={20} color={colors.sky} />}
               label="Blog"
-              onPress={() => router.push('/(screens)/content')}
+              onPress={() => router.push('/(tabs)/more/content')}
             />
             <MenuItem
               icon={<Baby size={20} color={colors.rose} />}
               label="Pregnancy Weeks"
-              onPress={() => router.push('/(screens)/pregnancy-weeks')}
+              onPress={() => router.push('/(tabs)/more/pregnancy-weeks')}
             />
             <MenuItem
               icon={<Video size={20} color={colors.copper} />}
               label="Video Library"
-              onPress={() => router.push('/(screens)/videos')}
+              onPress={() => router.push('/(tabs)/more/videos')}
             />
             <MenuItem
               icon={<BookOpen size={20} color={colors.sky} />}
               label="Dad Tips"
-              onPress={() => router.push('/(screens)/content')}
+              onPress={() => router.push('/(tabs)/more/content')}
             />
           </GlassCard>
         </CardEntrance>
@@ -155,12 +155,12 @@ export default function MoreScreen() {
             <MenuItem
               icon={<Users size={20} color={colors.rose} />}
               label="Family Members"
-              onPress={() => router.push('/(screens)/family')}
+              onPress={() => router.push('/(tabs)/more/family')}
             />
             <MenuItem
               icon={<UserPlus size={20} color={colors.sage} />}
               label="Invite Partner"
-              onPress={() => router.push('/(screens)/family')}
+              onPress={() => router.push('/(tabs)/more/family')}
             />
           </GlassCard>
         </CardEntrance>
@@ -172,7 +172,7 @@ export default function MoreScreen() {
             <MenuItem
               icon={<User size={20} color={colors.textSecondary} />}
               label="Profile"
-              onPress={() => router.push('/(screens)/settings')}
+              onPress={() => router.push('/(tabs)/more/settings')}
             />
             <MenuItem
               icon={<Palette size={20} color={colors.copper} />}
@@ -182,7 +182,7 @@ export default function MoreScreen() {
             <MenuItem
               icon={<Bell size={20} color={colors.sky} />}
               label="Notifications"
-              onPress={() => router.push('/(screens)/notifications')}
+              onPress={() => router.push('/(tabs)/more/notifications')}
             />
             <MenuItem
               icon={<CreditCard size={20} color={colors.gold} />}
@@ -192,12 +192,12 @@ export default function MoreScreen() {
             <MenuItem
               icon={<HelpCircle size={20} color={colors.sage} />}
               label="Help & Support"
-              onPress={() => router.push('/(screens)/help')}
+              onPress={() => router.push('/(tabs)/more/help')}
             />
             <MenuItem
               icon={<MessageSquarePlus size={20} color={colors.copper} />}
               label="Send Feedback"
-              onPress={() => router.push('/(screens)/feedback')}
+              onPress={() => router.push('/(tabs)/more/feedback')}
             />
           </GlassCard>
         </CardEntrance>
@@ -209,12 +209,12 @@ export default function MoreScreen() {
             <MenuItem
               icon={<Info size={20} color={colors.copper} />}
               label="About The Dad Center"
-              onPress={() => router.push('/(screens)/about')}
+              onPress={() => router.push('/(tabs)/more/about')}
             />
             <MenuItem
               icon={<MessageCircleQuestion size={20} color={colors.sky} />}
               label="FAQ"
-              onPress={() => router.push('/(screens)/faq')}
+              onPress={() => router.push('/(tabs)/more/faq')}
             />
           </GlassCard>
         </CardEntrance>

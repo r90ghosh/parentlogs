@@ -35,7 +35,7 @@ export function PersonalizeCard() {
         </View>
       </View>
       <Pressable
-        onPress={() => router.push('/(screens)/personalize' as never)}
+        onPress={() => router.push('/(tabs)/more/personalize' as never)}
         style={[styles.cta, { backgroundColor: colors.copper }]}
       >
         <Text style={[styles.ctaText, { color: colors.textPrimary }]}>Get Started</Text>
