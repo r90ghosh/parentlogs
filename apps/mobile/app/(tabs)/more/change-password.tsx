@@ -107,17 +107,6 @@ export default function ChangePasswordScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-          <ArrowLeft size={20} color={colors.textSecondary} />
-        </Pressable>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
-          {isRecovery ? 'Reset Password' : hasEmailIdentity ? 'Change Password' : 'Set Password'}
-        </Text>
-        <View style={styles.headerSpacer} />
-      </View>
-
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
@@ -130,6 +119,16 @@ export default function ChangePasswordScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
+          {/* Header */}
+          <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+            <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+              <ArrowLeft size={20} color={colors.textSecondary} />
+            </Pressable>
+            <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
+              {isRecovery ? 'Reset Password' : hasEmailIdentity ? 'Change Password' : 'Set Password'}
+            </Text>
+            <View style={styles.headerSpacer} />
+          </View>
           {/* Icon */}
           <View style={styles.iconContainer}>
             <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>

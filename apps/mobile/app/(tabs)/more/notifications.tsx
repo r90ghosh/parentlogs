@@ -267,23 +267,6 @@ export default function NotificationsScreen() {
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <View style={styles.headerLeft}>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Notifications</Text>
-          {saving && (
-            <ActivityIndicator
-              size="small"
-              color={colors.copper}
-              style={styles.savingIndicator}
-            />
-          )}
-        </View>
-        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
-          <X size={20} color={colors.textMuted} />
-        </Pressable>
-      </View>
-
       <ScrollView
         style={styles.flex}
         contentContainerStyle={[
@@ -292,6 +275,22 @@ export default function NotificationsScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
+        {/* Header */}
+        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+          <View style={styles.headerLeft}>
+            <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Notifications</Text>
+            {saving && (
+              <ActivityIndicator
+                size="small"
+                color={colors.copper}
+                style={styles.savingIndicator}
+              />
+            )}
+          </View>
+          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
+            <X size={20} color={colors.textMuted} />
+          </Pressable>
+        </View>
         {/* Master toggle */}
         <CardEntrance delay={0}>
           <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>General</Text>

@@ -131,14 +131,6 @@ export default function HelpScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Help & Support</Text>
-        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
-          <X size={20} color={colors.textMuted} />
-        </Pressable>
-      </View>
-
       <ScrollView
         style={styles.flex}
         contentContainerStyle={[
@@ -147,6 +139,13 @@ export default function HelpScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
+        {/* Header */}
+        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Help & Support</Text>
+          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
+            <X size={20} color={colors.textMuted} />
+          </Pressable>
+        </View>
         {/* FAQ Section */}
         <CardEntrance delay={0}>
           <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Frequently Asked Questions</Text>

@@ -168,14 +168,6 @@ export default function FamilyScreen() {
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Family</Text>
-        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
-          <X size={20} color={colors.textMuted} />
-        </Pressable>
-      </View>
-
       <ScrollView
         style={styles.flex}
         contentContainerStyle={[
@@ -184,6 +176,13 @@ export default function FamilyScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
+        {/* Header */}
+        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Family</Text>
+          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
+            <X size={20} color={colors.textMuted} />
+          </Pressable>
+        </View>
         {/* Section 1: Family Details */}
         <CardEntrance delay={0}>
           <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Family Details</Text>

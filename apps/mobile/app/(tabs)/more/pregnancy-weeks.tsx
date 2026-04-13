@@ -131,21 +131,29 @@ export default function PregnancyWeeksScreen() {
     )
   }
 
+  const weeksHeader = (
+    <ScreenHeader title="Pregnancy Week Guide" />
+  )
+
   return (
     <View style={styles.container}>
-      <ScreenHeader title="Pregnancy Week Guide" />
-
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color={colors.copper} size="large" />
+          {weeksHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator color={colors.copper} size="large" />
+          </View>
         </View>
       ) : sections.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Baby size={40} color={colors.textDim} />
-          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No weeks available</Text>
-          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-            Pregnancy week briefings will appear here soon
-          </Text>
+          {weeksHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40, gap: 12 }}>
+            <Baby size={40} color={colors.textDim} />
+            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No weeks available</Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
+              Pregnancy week briefings will appear here soon
+            </Text>
+          </View>
         </View>
       ) : (
         <SectionList
@@ -153,6 +161,7 @@ export default function PregnancyWeeksScreen() {
           keyExtractor={(item) => String(item.week)}
           renderItem={renderItem}
           renderSectionHeader={renderSectionHeader}
+          ListHeaderComponent={weeksHeader}
           contentContainerStyle={[
             styles.listContent,
             { paddingBottom: insets.bottom + 24 },

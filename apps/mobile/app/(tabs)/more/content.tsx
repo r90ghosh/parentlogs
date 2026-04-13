@@ -94,10 +94,9 @@ export default function ContentScreen() {
     [handleArticlePress, colors]
   )
 
-  return (
-    <View style={styles.container}>
+  const listHeader = (
+    <>
       <ScreenHeader title="Blog" />
-
       {/* Stage filter pills */}
       <View style={styles.filterBar}>
         <ScrollView
@@ -130,25 +129,36 @@ export default function ContentScreen() {
           })}
         </ScrollView>
       </View>
+    </>
+  )
 
+  return (
+    <View style={styles.container}>
       {/* Content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color={colors.copper} size="large" />
+          {listHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator color={colors.copper} size="large" />
+          </View>
         </View>
       ) : !articles || articles.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Newspaper size={40} color={colors.textDim} />
-          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No articles available</Text>
-          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-            Check back soon for new content
-          </Text>
+          {listHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40, gap: 12 }}>
+            <Newspaper size={40} color={colors.textDim} />
+            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No articles available</Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
+              Check back soon for new content
+            </Text>
+          </View>
         </View>
       ) : (
         <FlatList
           data={articles}
           keyExtractor={(item) => item.id}
           renderItem={renderArticle}
+          ListHeaderComponent={listHeader}
           contentContainerStyle={[
             styles.listContent,
             { paddingBottom: insets.bottom + 100 },

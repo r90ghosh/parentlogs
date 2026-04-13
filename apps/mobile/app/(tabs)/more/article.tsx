@@ -107,8 +107,6 @@ export default function ArticleScreen() {
 
   return (
     <View style={styles.container}>
-      <ScreenHeader title="Article" />
-
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -116,6 +114,7 @@ export default function ArticleScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
+        <ScreenHeader title="Article" />
         <CardEntrance delay={0}>
           {/* Title */}
           <Text style={[styles.title, { color: colors.textPrimary }]}>{article.title}</Text>

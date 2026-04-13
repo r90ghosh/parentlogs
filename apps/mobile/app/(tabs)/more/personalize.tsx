@@ -232,15 +232,6 @@ export default function PersonalizeScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-          <ArrowLeft size={20} color={colors.textSecondary} />
-        </Pressable>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Personalize</Text>
-        <View style={styles.headerSpacer} />
-      </View>
-
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -248,6 +239,14 @@ export default function PersonalizeScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
+        {/* Header */}
+        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+          <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+            <ArrowLeft size={20} color={colors.textSecondary} />
+          </Pressable>
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Personalize</Text>
+          <View style={styles.headerSpacer} />
+        </View>
         {/* Icon */}
         <View style={styles.iconContainer}>
           <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>

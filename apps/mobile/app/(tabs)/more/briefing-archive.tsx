@@ -116,29 +116,36 @@ export default function BriefingArchiveScreen() {
     )
   }
 
+  const archiveHeader = (
+    <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+      <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+        <ArrowLeft size={20} color={colors.textSecondary} />
+      </Pressable>
+      <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Briefing Archive</Text>
+      <View style={styles.headerSpacer} />
+    </View>
+  )
+
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-          <ArrowLeft size={20} color={colors.textSecondary} />
-        </Pressable>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Briefing Archive</Text>
-        <View style={styles.headerSpacer} />
-      </View>
-
       {/* Content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color={colors.copper} size="large" />
+          {archiveHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator color={colors.copper} size="large" />
+          </View>
         </View>
       ) : sections.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <BookOpen size={40} color={colors.textDim} />
-          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No briefings available yet</Text>
-          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-            Briefings will appear here as your journey progresses
-          </Text>
+          {archiveHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40, gap: 12 }}>
+            <BookOpen size={40} color={colors.textDim} />
+            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No briefings available yet</Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
+              Briefings will appear here as your journey progresses
+            </Text>
+          </View>
         </View>
       ) : (
         <SectionList
@@ -146,6 +153,7 @@ export default function BriefingArchiveScreen() {
           keyExtractor={(item) => item.briefing_id}
           renderItem={renderItem}
           renderSectionHeader={renderSectionHeader}
+          ListHeaderComponent={archiveHeader}
           contentContainerStyle={[
             styles.listContent,
             { paddingBottom: insets.bottom + 24 },

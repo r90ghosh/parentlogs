@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { Tabs, useRouter } from 'expo-router'
+import { Tabs, useRouter, useSegments } from 'expo-router'
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native'
 import { BlurView } from 'expo-blur'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -51,6 +51,16 @@ const NotificationBell = React.memo(function NotificationBell() {
 function TabHeader() {
   const insets = useSafeAreaInsets()
   const colors = useColors()
+  const segments = useSegments()
+
+  // Hide TabHeader when on a More sub-screen (not the More index)
+  const isMoreSubScreen =
+    segments.length >= 3 &&
+    segments[1] === 'more' &&
+    segments[2] !== undefined &&
+    (segments[2] as string) !== 'index'
+
+  if (isMoreSubScreen) return null
 
   const headerStyle = [
     styles.header,

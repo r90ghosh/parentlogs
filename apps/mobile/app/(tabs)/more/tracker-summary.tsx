@@ -70,37 +70,41 @@ export default function TrackerSummaryScreen() {
     }
   }, [data, period])
 
+  const trackerHeader = (
+    <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+      <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+        <ArrowLeft size={20} color={colors.textSecondary} />
+      </Pressable>
+      <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Tracker Summary</Text>
+      <View style={styles.headerSpacer} />
+    </View>
+  )
+
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-          <ArrowLeft size={20} color={colors.textSecondary} />
-        </Pressable>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Tracker Summary</Text>
-        <View style={styles.headerSpacer} />
-      </View>
-
       {!isPremium ? (
         <View style={styles.upgradeContainer}>
-          <CardEntrance delay={0}>
-            <GlassCard style={styles.upgradeCard}>
-              <Crown size={32} color={colors.gold} />
-              <Text style={[styles.upgradeTitle, { color: colors.textPrimary }]}>Premium Feature</Text>
-              <Text style={[styles.upgradeDesc, { color: colors.textMuted }]}>
-                Tracker analytics require a Premium subscription. See trends,
-                averages, and insights about your baby's patterns.
-              </Text>
-              <Pressable
-                onPress={() => router.push('/(screens)/upgrade')}
-                style={[styles.upgradeButton, { backgroundColor: colors.copper }]}
-              >
-                <Text style={[styles.upgradeButtonText, { color: colors.textPrimary }]}>
-                  Upgrade to Premium
+          {trackerHeader}
+          <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 20 }}>
+            <CardEntrance delay={0}>
+              <GlassCard style={styles.upgradeCard}>
+                <Crown size={32} color={colors.gold} />
+                <Text style={[styles.upgradeTitle, { color: colors.textPrimary }]}>Premium Feature</Text>
+                <Text style={[styles.upgradeDesc, { color: colors.textMuted }]}>
+                  Tracker analytics require a Premium subscription. See trends,
+                  averages, and insights about your baby's patterns.
                 </Text>
-              </Pressable>
-            </GlassCard>
-          </CardEntrance>
+                <Pressable
+                  onPress={() => router.push('/(screens)/upgrade')}
+                  style={[styles.upgradeButton, { backgroundColor: colors.copper }]}
+                >
+                  <Text style={[styles.upgradeButtonText, { color: colors.textPrimary }]}>
+                    Upgrade to Premium
+                  </Text>
+                </Pressable>
+              </GlassCard>
+            </CardEntrance>
+          </View>
         </View>
       ) : (
         <ScrollView
@@ -111,6 +115,7 @@ export default function TrackerSummaryScreen() {
           ]}
           showsVerticalScrollIndicator={false}
         >
+          {trackerHeader}
           {/* Period toggle */}
           <View style={styles.periodRow}>
             <Pressable

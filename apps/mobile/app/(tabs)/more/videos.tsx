@@ -108,10 +108,9 @@ export default function VideosScreen() {
     [handleVideoPress, colors]
   )
 
-  return (
-    <View style={styles.container}>
+  const videoListHeader = (
+    <>
       <ScreenHeader title="Video Library" />
-
       {/* Stage filter pills */}
       <View style={styles.filterBar}>
         <ScrollView
@@ -144,25 +143,36 @@ export default function VideosScreen() {
           })}
         </ScrollView>
       </View>
+    </>
+  )
 
+  return (
+    <View style={styles.container}>
       {/* Content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color={colors.copper} size="large" />
+          {videoListHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator color={colors.copper} size="large" />
+          </View>
         </View>
       ) : !videos || videos.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Video size={40} color={colors.textDim} />
-          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No videos available</Text>
-          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-            Check back soon for new video content
-          </Text>
+          {videoListHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40, gap: 12 }}>
+            <Video size={40} color={colors.textDim} />
+            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No videos available</Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
+              Check back soon for new video content
+            </Text>
+          </View>
         </View>
       ) : (
         <FlatList
           data={videos}
           keyExtractor={(item) => item.id}
           renderItem={renderVideo}
+          ListHeaderComponent={videoListHeader}
           contentContainerStyle={[
             styles.listContent,
             { paddingBottom: insets.bottom + 100 },

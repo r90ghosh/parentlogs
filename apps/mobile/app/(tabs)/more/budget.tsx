@@ -286,207 +286,215 @@ export default function BudgetScreen() {
   const currentData =
     activeTab === 'browse' ? browseItems : myBudgetItems
 
-  const ListHeaderComponent = useMemo(
+  const budgetListHeader = useMemo(
     () => (
       <View>
+        {/* Header */}
+        <ScreenHeader title="Budget Planner" leftAction="close" transparent />
+
+        {/* Tab toggle */}
+        <View style={styles.tabRow}>
+          <View style={[styles.tabContainer, { backgroundColor: colors.glassBg, borderColor: colors.border }]}>
+            <Pressable
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                setActiveTab('browse')
+              }}
+              style={[styles.tab, activeTab === 'browse' && { backgroundColor: colors.copperDim }]}
+            >
+              <ShoppingCart
+                size={14}
+                color={activeTab === 'browse' ? colors.copper : colors.textMuted}
+              />
+              <Text
+                style={[
+                  styles.tabText,
+                  { color: colors.textMuted },
+                  activeTab === 'browse' && { color: colors.copper },
+                ]}
+              >
+                Browse
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                setActiveTab('my-budget')
+              }}
+              style={[styles.tab, activeTab === 'my-budget' && { backgroundColor: colors.copperDim }]}
+            >
+              <DollarSign
+                size={14}
+                color={activeTab === 'my-budget' ? colors.copper : colors.textMuted}
+              />
+              <Text
+                style={[
+                  styles.tabText,
+                  { color: colors.textMuted },
+                  activeTab === 'my-budget' && { color: colors.copper },
+                ]}
+              >
+                My Budget
+              </Text>
+            </Pressable>
+          </View>
+          {activeTab === 'my-budget' && (
+            <Pressable
+              onPress={() => setShowCustomModal(true)}
+              style={[styles.addCustomButton, { backgroundColor: colors.copperDim, borderColor: colors.copperGlow }]}
+              accessibilityLabel="Add custom item"
+            >
+              <Plus size={16} color={colors.copper} />
+            </Pressable>
+          )}
+        </View>
+
+        {/* Timeline bar (browse mode only) */}
+        {activeTab === 'browse' && (
+          <>
+            <View style={styles.timelineBar}>
+              <ScrollView
+                horizontal
+                nestedScrollEnabled
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.timelineContent}
+              >
+                {BUDGET_TIMELINE_CATEGORIES.map((item) => {
+                  const isActive = selectedPeriod === item.id
+                  return (
+                    <Pressable
+                      key={item.id}
+                      onPress={() => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                        setSelectedPeriod(isActive ? null : item.id)
+                      }}
+                      style={[
+                        styles.timelinePill,
+                        { backgroundColor: colors.pillBg, borderColor: colors.borderHover },
+                        isActive && { backgroundColor: colors.copperGlow, borderColor: colors.copper },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.timelinePillText,
+                          { color: colors.textSecondary },
+                          isActive && { color: colors.copper },
+                        ]}
+                      >
+                        {item.label}
+                      </Text>
+                    </Pressable>
+                  )
+                })}
+              </ScrollView>
+            </View>
+
+            {/* Priority filter pills */}
+            <View style={styles.priorityBar}>
+              <ScrollView
+                horizontal
+                nestedScrollEnabled
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.priorityContent}
+              >
+                {PRIORITY_FILTERS.map((filter) => {
+                  const isActive = selectedPriority === filter.id
+                  return (
+                    <Pressable
+                      key={filter.id}
+                      onPress={() => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                        setSelectedPriority(isActive ? 'all' : filter.id)
+                      }}
+                      style={[
+                        styles.priorityPill,
+                        { backgroundColor: colors.pillBg, borderColor: colors.borderHover },
+                        isActive && { backgroundColor: colors.goldGlow, borderColor: colors.gold },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.priorityPillText,
+                          { color: colors.textSecondary },
+                          isActive && { color: colors.gold },
+                        ]}
+                      >
+                        {filter.label}
+                      </Text>
+                    </Pressable>
+                  )
+                })}
+              </ScrollView>
+            </View>
+          </>
+        )}
+
         {/* Summary stats for My Budget */}
         {activeTab === 'my-budget' && summaryQuery.data && (
           <CardEntrance delay={0}>
-            <GlassCard style={styles.summaryCard}>
-              <View style={styles.summaryRow}>
-                <View style={styles.summaryItem}>
-                  <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Total Budget</Text>
-                  <Text style={[styles.summaryValue, { color: colors.textSecondary }]}>
-                    {formatRange(
-                      summaryQuery.data.grandTotalMin,
-                      summaryQuery.data.grandTotalMax
-                    )}
-                  </Text>
+            <View style={{ paddingHorizontal: 20 }}>
+              <GlassCard style={styles.summaryCard}>
+                <View style={styles.summaryRow}>
+                  <View style={styles.summaryItem}>
+                    <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Total Budget</Text>
+                    <Text style={[styles.summaryValue, { color: colors.textSecondary }]}>
+                      {formatRange(
+                        summaryQuery.data.grandTotalMin,
+                        summaryQuery.data.grandTotalMax
+                      )}
+                    </Text>
+                  </View>
+                  <View style={[styles.summaryDivider, { backgroundColor: colors.border }]} />
+                  <View style={styles.summaryItem}>
+                    <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Purchased</Text>
+                    <Text style={[styles.summaryValue, { color: colors.sage }]}>
+                      {formatPrice(summaryQuery.data.purchasedTotal)}
+                    </Text>
+                  </View>
+                  <View style={[styles.summaryDivider, { backgroundColor: colors.border }]} />
+                  <View style={styles.summaryItem}>
+                    <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Remaining</Text>
+                    <Text style={[styles.summaryValue, { color: colors.textSecondary }]}>
+                      {formatPrice(summaryQuery.data.remainingTotal)}
+                    </Text>
+                  </View>
                 </View>
-                <View style={[styles.summaryDivider, { backgroundColor: colors.border }]} />
-                <View style={styles.summaryItem}>
-                  <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Purchased</Text>
-                  <Text style={[styles.summaryValue, { color: colors.sage }]}>
-                    {formatPrice(summaryQuery.data.purchasedTotal)}
-                  </Text>
-                </View>
-                <View style={[styles.summaryDivider, { backgroundColor: colors.border }]} />
-                <View style={styles.summaryItem}>
-                  <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Remaining</Text>
-                  <Text style={[styles.summaryValue, { color: colors.textSecondary }]}>
-                    {formatPrice(summaryQuery.data.remainingTotal)}
-                  </Text>
-                </View>
-              </View>
-            </GlassCard>
+              </GlassCard>
+            </View>
           </CardEntrance>
         )}
       </View>
     ),
-    [activeTab, summaryQuery.data, colors]
+    [activeTab, summaryQuery.data, colors, selectedPeriod, selectedPriority]
   )
 
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
-      {/* Header */}
-      <ScreenHeader title="Budget Planner" leftAction="close" transparent />
-
-      {/* Tab toggle */}
-      <View style={styles.tabRow}>
-        <View style={[styles.tabContainer, { backgroundColor: colors.glassBg, borderColor: colors.border }]}>
-          <Pressable
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-              setActiveTab('browse')
-            }}
-            style={[styles.tab, activeTab === 'browse' && { backgroundColor: colors.copperDim }]}
-          >
-            <ShoppingCart
-              size={14}
-              color={activeTab === 'browse' ? colors.copper : colors.textMuted}
-            />
-            <Text
-              style={[
-                styles.tabText,
-                { color: colors.textMuted },
-                activeTab === 'browse' && { color: colors.copper },
-              ]}
-            >
-              Browse
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-              setActiveTab('my-budget')
-            }}
-            style={[styles.tab, activeTab === 'my-budget' && { backgroundColor: colors.copperDim }]}
-          >
-            <DollarSign
-              size={14}
-              color={activeTab === 'my-budget' ? colors.copper : colors.textMuted}
-            />
-            <Text
-              style={[
-                styles.tabText,
-                { color: colors.textMuted },
-                activeTab === 'my-budget' && { color: colors.copper },
-              ]}
-            >
-              My Budget
-            </Text>
-          </Pressable>
-        </View>
-        {activeTab === 'my-budget' && (
-          <Pressable
-            onPress={() => setShowCustomModal(true)}
-            style={[styles.addCustomButton, { backgroundColor: colors.copperDim, borderColor: colors.copperGlow }]}
-            accessibilityLabel="Add custom item"
-          >
-            <Plus size={16} color={colors.copper} />
-          </Pressable>
-        )}
-      </View>
-
-      {/* Timeline bar (browse mode only) */}
-      {activeTab === 'browse' && (
-        <>
-          <View style={styles.timelineBar}>
-            <ScrollView
-              horizontal
-              nestedScrollEnabled
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.timelineContent}
-            >
-              {BUDGET_TIMELINE_CATEGORIES.map((item) => {
-                const isActive = selectedPeriod === item.id
-                return (
-                  <Pressable
-                    key={item.id}
-                    onPress={() => {
-                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                      setSelectedPeriod(isActive ? null : item.id)
-                    }}
-                    style={[
-                      styles.timelinePill,
-                      { backgroundColor: colors.pillBg, borderColor: colors.borderHover },
-                      isActive && { backgroundColor: colors.copperGlow, borderColor: colors.copper },
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.timelinePillText,
-                        { color: colors.textSecondary },
-                        isActive && { color: colors.copper },
-                      ]}
-                    >
-                      {item.label}
-                    </Text>
-                  </Pressable>
-                )
-              })}
-            </ScrollView>
-          </View>
-
-          {/* Priority filter pills */}
-          <View style={styles.priorityBar}>
-            <ScrollView
-              horizontal
-              nestedScrollEnabled
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.priorityContent}
-            >
-              {PRIORITY_FILTERS.map((filter) => {
-                const isActive = selectedPriority === filter.id
-                return (
-                  <Pressable
-                    key={filter.id}
-                    onPress={() => {
-                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                      setSelectedPriority(isActive ? 'all' : filter.id)
-                    }}
-                    style={[
-                      styles.priorityPill,
-                      { backgroundColor: colors.pillBg, borderColor: colors.borderHover },
-                      isActive && { backgroundColor: colors.goldGlow, borderColor: colors.gold },
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.priorityPillText,
-                        { color: colors.textSecondary },
-                        isActive && { color: colors.gold },
-                      ]}
-                    >
-                      {filter.label}
-                    </Text>
-                  </Pressable>
-                )
-              })}
-            </ScrollView>
-          </View>
-        </>
-      )}
-
       {/* Content */}
       {isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color={colors.copper} size="large" />
+          {budgetListHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator color={colors.copper} size="large" />
+          </View>
         </View>
       ) : currentData.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <DollarSign size={40} color={colors.textDim} />
-          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>
-            {activeTab === 'browse'
-              ? 'No items found'
-              : 'Your budget is empty'}
-          </Text>
-          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-            {activeTab === 'browse'
-              ? 'Try selecting a different period or filter'
-              : 'Browse items and add them to your budget'}
-          </Text>
+          {budgetListHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40, gap: 12 }}>
+            <DollarSign size={40} color={colors.textDim} />
+            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>
+              {activeTab === 'browse'
+                ? 'No items found'
+                : 'Your budget is empty'}
+            </Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
+              {activeTab === 'browse'
+                ? 'Try selecting a different period or filter'
+                : 'Browse items and add them to your budget'}
+            </Text>
+          </View>
         </View>
       ) : (
         <FlatList
@@ -506,7 +514,7 @@ export default function BudgetScreen() {
             { paddingBottom: insets.bottom + 24 },
           ]}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={ListHeaderComponent}
+          ListHeaderComponent={budgetListHeader}
           ListFooterComponent={
             <Text style={[styles.disclaimerText, { color: colors.textDim }]}>
               For planning purposes only. Not financial or medical advice. Consult your pediatrician before administering any medication.

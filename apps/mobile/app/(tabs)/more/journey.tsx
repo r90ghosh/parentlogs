@@ -162,23 +162,30 @@ export default function JourneyScreen() {
     .replace(/-/g, ' ')
     .replace(/\b\w/g, (c) => c.toUpperCase())
 
+  const journeyHeader = (
+    <ScreenHeader title="Dad Journey" leftAction="close" transparent />
+  )
+
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
-      {/* Header */}
-      <ScreenHeader title="Dad Journey" leftAction="close" transparent />
-
       {contentQuery.isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color={colors.copper} size="large" />
+          {journeyHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator color={colors.copper} size="large" />
+          </View>
         </View>
       ) : sortedContent.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Compass size={40} color={colors.textDim} />
-          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No challenges yet</Text>
-          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-            Challenge content for your current phase will appear here
-          </Text>
+          {journeyHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40, gap: 12 }}>
+            <Compass size={40} color={colors.textDim} />
+            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No challenges yet</Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
+              Challenge content for your current phase will appear here
+            </Text>
+          </View>
         </View>
       ) : (
         <ScrollView
@@ -196,6 +203,7 @@ export default function JourneyScreen() {
             />
           }
         >
+          {journeyHeader}
           {/* Phase header */}
           <CardEntrance delay={0}>
             <View style={styles.phaseHeader}>

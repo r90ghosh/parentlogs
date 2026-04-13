@@ -193,14 +193,6 @@ export default function SettingsScreen() {
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Settings</Text>
-        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]} accessibilityLabel="Close settings" accessibilityRole="button">
-          <X size={20} color={colors.textMuted} />
-        </Pressable>
-      </View>
-
       <ScrollView
         style={styles.flex}
         contentContainerStyle={[
@@ -209,6 +201,13 @@ export default function SettingsScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
+        {/* Header */}
+        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Settings</Text>
+          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]} accessibilityLabel="Close settings" accessibilityRole="button">
+            <X size={20} color={colors.textMuted} />
+          </Pressable>
+        </View>
         {/* Profile Section */}
         <CardEntrance delay={0}>
           <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Profile</Text>

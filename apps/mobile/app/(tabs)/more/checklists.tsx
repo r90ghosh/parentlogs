@@ -257,24 +257,31 @@ export default function ChecklistsScreen() {
     [expandedId]
   )
 
+  const checklistHeader = (
+    <ScreenHeader title="Checklists" leftAction="close" transparent />
+  )
+
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-
-      {/* Header */}
-      <ScreenHeader title="Checklists" leftAction="close" transparent />
 
       {/* Content */}
       {checklistsQuery.isLoading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color={colors.copper} size="large" />
+          {checklistHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <ActivityIndicator color={colors.copper} size="large" />
+          </View>
         </View>
       ) : !checklistsQuery.data || checklistsQuery.data.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <ClipboardList size={40} color={colors.textDim} />
-          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No checklists available</Text>
-          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-            Checklists will appear here once your family is set up
-          </Text>
+          {checklistHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40, gap: 12 }}>
+            <ClipboardList size={40} color={colors.textDim} />
+            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No checklists available</Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
+              Checklists will appear here once your family is set up
+            </Text>
+          </View>
         </View>
       ) : (
         <FlatList
@@ -282,6 +289,7 @@ export default function ChecklistsScreen() {
           keyExtractor={(item) => item.checklist_id}
           renderItem={renderChecklist}
           numColumns={1}
+          ListHeaderComponent={checklistHeader}
           contentContainerStyle={[
             styles.listContent,
             { paddingBottom: insets.bottom + 24 },

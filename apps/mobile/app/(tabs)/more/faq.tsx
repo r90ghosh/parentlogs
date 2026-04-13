@@ -140,14 +140,6 @@ export default function FaqScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>FAQ</Text>
-        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
-          <X size={20} color={colors.textMuted} />
-        </Pressable>
-      </View>
-
       <ScrollView
         style={styles.flex}
         contentContainerStyle={[
@@ -156,6 +148,13 @@ export default function FaqScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
+        {/* Header */}
+        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>FAQ</Text>
+          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
+            <X size={20} color={colors.textMuted} />
+          </Pressable>
+        </View>
         {FAQ_CATEGORIES.map((category, catIndex) => (
           <CardEntrance key={category.title} delay={catIndex * 100}>
             <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>{category.title}</Text>

@@ -55,24 +55,28 @@ export default function FeedbackScreen() {
     )
   }
 
+  const feedbackHeader = (
+    <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+      <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
+        <ArrowLeft size={20} color={colors.textSecondary} />
+      </Pressable>
+      <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Send Feedback</Text>
+      <View style={styles.headerSpacer} />
+    </View>
+  )
+
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-          <ArrowLeft size={20} color={colors.textSecondary} />
-        </Pressable>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Send Feedback</Text>
-        <View style={styles.headerSpacer} />
-      </View>
-
       {succeeded ? (
         <View style={styles.successContainer}>
-          <CheckCircle size={56} color={colors.sage} />
-          <Text style={[styles.successTitle, { color: colors.textPrimary }]}>Thanks for your feedback!</Text>
-          <Text style={[styles.successSubtitle, { color: colors.textMuted }]}>
-            We read every message and use it to make the app better.
-          </Text>
+          {feedbackHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40, gap: 16 }}>
+            <CheckCircle size={56} color={colors.sage} />
+            <Text style={[styles.successTitle, { color: colors.textPrimary }]}>Thanks for your feedback!</Text>
+            <Text style={[styles.successSubtitle, { color: colors.textMuted }]}>
+              We read every message and use it to make the app better.
+            </Text>
+          </View>
         </View>
       ) : (
         <KeyboardAvoidingView
@@ -87,6 +91,7 @@ export default function FeedbackScreen() {
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
+            {feedbackHeader}
             {/* Icon */}
             <View style={styles.iconContainer}>
               <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>

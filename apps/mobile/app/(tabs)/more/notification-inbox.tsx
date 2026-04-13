@@ -358,57 +358,61 @@ export default function NotificationInboxScreen() {
     )
   }
 
-  return (
-    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Notifications</Text>
-        <View style={styles.headerRight}>
-          {hasRead && (
-            <Pressable
-              onPress={handleClearRead}
-              style={[styles.clearReadButton, { backgroundColor: colors.subtleBg }]}
-              disabled={deleteReadNotifications.isPending}
-              accessibilityLabel="Clear read notifications"
-              accessibilityRole="button"
-            >
-              <Trash2 size={14} color={colors.textMuted} />
-              <Text style={[styles.clearReadText, { color: colors.textMuted }]}>Clear read</Text>
-            </Pressable>
-          )}
-          {hasUnread && (
-            <Pressable
-              onPress={handleMarkAllRead}
-              style={[styles.markAllButton, { backgroundColor: colors.copperDim }]}
-              disabled={markAllRead.isPending}
-              accessibilityLabel="Mark all as read"
-              accessibilityRole="button"
-            >
-              <Text style={[styles.markAllText, { color: colors.copper }]}>Mark all as read</Text>
-            </Pressable>
-          )}
+  const inboxHeader = (
+    <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+      <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Notifications</Text>
+      <View style={styles.headerRight}>
+        {hasRead && (
           <Pressable
-            onPress={() => router.back()}
-            style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}
-            accessibilityLabel="Close"
+            onPress={handleClearRead}
+            style={[styles.clearReadButton, { backgroundColor: colors.subtleBg }]}
+            disabled={deleteReadNotifications.isPending}
+            accessibilityLabel="Clear read notifications"
             accessibilityRole="button"
           >
-            <X size={20} color={colors.textMuted} />
+            <Trash2 size={14} color={colors.textMuted} />
+            <Text style={[styles.clearReadText, { color: colors.textMuted }]}>Clear read</Text>
           </Pressable>
-        </View>
+        )}
+        {hasUnread && (
+          <Pressable
+            onPress={handleMarkAllRead}
+            style={[styles.markAllButton, { backgroundColor: colors.copperDim }]}
+            disabled={markAllRead.isPending}
+            accessibilityLabel="Mark all as read"
+            accessibilityRole="button"
+          >
+            <Text style={[styles.markAllText, { color: colors.copper }]}>Mark all as read</Text>
+          </Pressable>
+        )}
+        <Pressable
+          onPress={() => router.back()}
+          style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}
+          accessibilityLabel="Close"
+          accessibilityRole="button"
+        >
+          <X size={20} color={colors.textMuted} />
+        </Pressable>
       </View>
+    </View>
+  )
+
+  return (
+    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Content */}
       {groups.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <View style={[styles.emptyIcon, { backgroundColor: 'rgba(74,66,57,0.2)' }]}>
-            <Bell size={32} color={colors.textDim} />
+          {inboxHeader}
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40 }}>
+            <View style={[styles.emptyIcon, { backgroundColor: 'rgba(74,66,57,0.2)' }]}>
+              <Bell size={32} color={colors.textDim} />
+            </View>
+            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No notifications yet</Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
+              When you receive notifications, they will appear here.
+            </Text>
           </View>
-          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No notifications yet</Text>
-          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-            When you receive notifications, they will appear here.
-          </Text>
         </View>
       ) : (
         <Animated.ScrollView
@@ -426,6 +430,7 @@ export default function NotificationInboxScreen() {
             />
           }
         >
+          {inboxHeader}
           {groups.map((group, groupIndex) => (
             <Animated.View
               key={group.label}
