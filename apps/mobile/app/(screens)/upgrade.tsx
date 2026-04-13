@@ -246,43 +246,45 @@ export default function UpgradeScreen() {
           {plans.map((plan, index) => (
             <CardEntrance key={plan.key} delay={240 + index * 100}>
               <Pressable onPress={() => setSelectedPlan(plan.key)} accessibilityLabel={`Select ${plan.title} plan, ${plan.price}`} accessibilityRole="radio" accessibilityState={{ selected: selectedPlan === plan.key }}>
-                <GlassCard
-                  style={[
-                    styles.planCard,
-                    selectedPlan === plan.key && styles.planCardSelected,
-                    plan.highlight && selectedPlan === plan.key && styles.planCardHighlight,
-                  ]}
-                >
+                <View style={{ marginTop: plan.badge ? 10 : 0 }}>
                   {plan.badge && (
                     <View style={styles.planBadge}>
                       <Text style={styles.planBadgeText}>{plan.badge}</Text>
                     </View>
                   )}
-                  <View style={styles.planRadio}>
-                    <View
-                      style={[
-                        styles.radioOuter,
-                        selectedPlan === plan.key && styles.radioOuterActive,
-                      ]}
-                    >
-                      {selectedPlan === plan.key && (
-                        <View style={styles.radioInner} />
-                      )}
-                    </View>
-                  </View>
-                  <View style={styles.planInfo}>
-                    <Text style={styles.planTitle}>{plan.title}</Text>
-                    <Text style={styles.planSubtitle}>{plan.subtitle}</Text>
-                  </View>
-                  <Text
+                  <View
                     style={[
-                      styles.planPrice,
-                      selectedPlan === plan.key && styles.planPriceActive,
+                      styles.planCard,
+                      selectedPlan === plan.key && styles.planCardSelected,
+                      plan.highlight && selectedPlan === plan.key && styles.planCardHighlight,
                     ]}
                   >
-                    {plan.price}
-                  </Text>
-                </GlassCard>
+                    <View style={styles.planRadio}>
+                      <View
+                        style={[
+                          styles.radioOuter,
+                          selectedPlan === plan.key && styles.radioOuterActive,
+                        ]}
+                      >
+                        {selectedPlan === plan.key && (
+                          <View style={styles.radioInner} />
+                        )}
+                      </View>
+                    </View>
+                    <View style={styles.planInfo}>
+                      <Text style={styles.planTitle}>{plan.title}</Text>
+                      <Text style={styles.planSubtitle}>{plan.subtitle}</Text>
+                    </View>
+                    <Text
+                      style={[
+                        styles.planPrice,
+                        selectedPlan === plan.key && styles.planPriceActive,
+                      ]}
+                    >
+                      {plan.price}
+                    </Text>
+                  </View>
+                </View>
               </Pressable>
             </CardEntrance>
           ))}
@@ -500,21 +502,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
+    borderColor: 'rgba(237,230,220,0.1)',
+    borderRadius: 12,
+    backgroundColor: '#201c18',
   },
   planCardSelected: {
-    borderColor: 'rgba(196,112,63,0.4)',
+    borderColor: 'rgba(196,112,63,0.5)',
   },
   planCardHighlight: {
     borderColor: 'rgba(212,168,83,0.5)',
-    backgroundColor: 'rgba(212,168,83,0.06)',
+    backgroundColor: 'rgba(212,168,83,0.08)',
   },
   planBadge: {
-    position: 'absolute',
-    top: -10,
-    right: 16,
+    alignSelf: 'flex-end',
     backgroundColor: '#d4a853',
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
+    marginBottom: -6,
+    marginRight: 16,
+    zIndex: 1,
     paddingVertical: 3,
     borderRadius: 10,
   },
