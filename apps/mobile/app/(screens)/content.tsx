@@ -194,7 +194,6 @@ const styles = StyleSheet.create({
 
   // Filter pills
   filterBar: {
-    maxHeight: 44,
     marginBottom: 12,
   },
   filterContent: {

@@ -392,37 +392,40 @@ export default function BudgetScreen() {
       {/* Timeline bar (browse mode only) */}
       {activeTab === 'browse' && (
         <>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.timelineContent}
-            style={styles.timelineBar}
-          >
-            {BUDGET_TIMELINE_CATEGORIES.map((item) => (
-              <Pressable
-                key={item.id}
-                onPress={() => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                  setSelectedPeriod(
-                    selectedPeriod === item.id ? null : item.id
-                  )
-                }}
-                style={[
-                  styles.timelinePill,
-                  selectedPeriod === item.id && styles.timelinePillActive,
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.timelinePillText,
-                    selectedPeriod === item.id && styles.timelinePillTextActive,
-                  ]}
-                >
-                  {item.label}
-                </Text>
-              </Pressable>
-            ))}
-          </ScrollView>
+          <View style={styles.timelineBar}>
+            <ScrollView
+              horizontal
+              nestedScrollEnabled
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.timelineContent}
+            >
+              {BUDGET_TIMELINE_CATEGORIES.map((item) => {
+                const isActive = selectedPeriod === item.id
+                return (
+                  <Pressable
+                    key={item.id}
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                      setSelectedPeriod(isActive ? null : item.id)
+                    }}
+                    style={[
+                      styles.timelinePill,
+                      isActive && styles.timelinePillActive,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.timelinePillText,
+                        isActive && styles.timelinePillTextActive,
+                      ]}
+                    >
+                      {item.label}
+                    </Text>
+                  </Pressable>
+                )
+              })}
+            </ScrollView>
+          </View>
 
           {/* Priority filter pills */}
           <ScrollView
@@ -678,6 +681,7 @@ const styles = StyleSheet.create({
   // Timeline bar
   timelineBar: {
     marginBottom: 10,
+    minHeight: 42,
   },
   timelineContent: {
     paddingHorizontal: 20,
