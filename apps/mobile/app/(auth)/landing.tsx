@@ -121,7 +121,6 @@ const PLANS = [
 
 export default function LandingScreen() {
   const colors = useColors()
-  const isDark = colors.bg === '#12100e'
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { enterGuestMode } = useAuth()
@@ -133,14 +132,6 @@ export default function LandingScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-      {/* Decorative orbs — dark mode only (they clash with the light gradient) */}
-      {isDark && (
-        <View style={styles.orbContainer} pointerEvents="none">
-          <View style={[styles.orbCopper, { backgroundColor: colors.copperDim }]} />
-          <View style={[styles.orbGold, { backgroundColor: colors.goldDim }]} />
-        </View>
-      )}
-
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
@@ -516,28 +507,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 24,
-  },
-
-  // Decorative orbs
-  orbContainer: {
-    ...StyleSheet.absoluteFillObject,
-    overflow: 'hidden',
-  },
-  orbCopper: {
-    position: 'absolute',
-    width: 300,
-    height: 300,
-    top: '8%',
-    right: -100,
-    borderRadius: 150,
-  },
-  orbGold: {
-    position: 'absolute',
-    width: 200,
-    height: 200,
-    top: '35%',
-    left: -60,
-    borderRadius: 100,
   },
 
   // Hero

@@ -85,18 +85,10 @@ const APP_HIGHLIGHTS = [
 
 export default function GuestHome() {
   const colors = useColors()
-  const isDark = colors.bg === '#12100e'
   const insets = useSafeAreaInsets()
 
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-      {isDark && (
-        <View style={styles.orbContainer} pointerEvents="none">
-          <View style={[styles.orbCopper, { backgroundColor: colors.copperDim }]} />
-          <View style={[styles.orbGold, { backgroundColor: colors.goldDim }]} />
-        </View>
-      )}
-
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
@@ -265,10 +257,6 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   scrollView: { flex: 1 },
   scrollContent: { paddingHorizontal: 24 },
-
-  orbContainer: { ...StyleSheet.absoluteFillObject, overflow: 'hidden' },
-  orbCopper: { position: 'absolute', width: 300, height: 300, top: '8%', right: -100, borderRadius: 150 },
-  orbGold: { position: 'absolute', width: 200, height: 200, top: '35%', left: -60, borderRadius: 100 },
 
   heroSection: { alignItems: 'center', marginBottom: 56 },
   preLabel: { fontFamily: 'Karla-SemiBold', fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 16 },
