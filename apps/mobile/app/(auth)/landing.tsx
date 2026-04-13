@@ -22,11 +22,15 @@ import {
   Crown,
   Sparkles,
   ArrowRight,
+  Sun,
+  Moon,
 } from 'lucide-react-native'
+import * as Haptics from 'expo-haptics'
 import * as WebBrowser from 'expo-web-browser'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance, StaggerList } from '@/components/animations'
 import { useColors } from '@/hooks/use-colors'
+import { useTheme } from '@/components/providers/ThemeProvider'
 
 // --- Data ---
 
@@ -121,6 +125,7 @@ const PLANS = [
 
 export default function LandingScreen() {
   const colors = useColors()
+  const { isDark, setTheme } = useTheme()
   const insets = useSafeAreaInsets()
   const router = useRouter()
   const { enterGuestMode } = useAuth()
@@ -130,8 +135,27 @@ export default function LandingScreen() {
     router.replace('/(guest)')
   }
 
+  const toggleTheme = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+    setTheme(isDark ? 'light' : 'dark')
+  }
+
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
+      {/* Theme toggle */}
+      <Pressable
+        onPress={toggleTheme}
+        style={[styles.themeToggle, { top: insets.top + 12, backgroundColor: colors.subtleBg }]}
+        accessibilityLabel={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        accessibilityRole="button"
+      >
+        {isDark ? (
+          <Sun size={18} color={colors.gold} />
+        ) : (
+          <Moon size={18} color={colors.copper} />
+        )}
+      </Pressable>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
@@ -501,6 +525,16 @@ function StickyBottomBar({ bottomInset }: { bottomInset: number }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  themeToggle: {
+    position: 'absolute',
+    right: 20,
+    zIndex: 10,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   scrollView: {
     flex: 1,
