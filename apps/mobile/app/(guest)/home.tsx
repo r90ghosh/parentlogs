@@ -85,14 +85,17 @@ const APP_HIGHLIGHTS = [
 
 export default function GuestHome() {
   const colors = useColors()
+  const isDark = colors.bg === '#12100e'
   const insets = useSafeAreaInsets()
 
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-      <View style={styles.orbContainer} pointerEvents="none">
-        <View style={[styles.orbCopper, { backgroundColor: colors.copperDim }]} />
-        <View style={[styles.orbGold, { backgroundColor: colors.goldDim }]} />
-      </View>
+      {isDark && (
+        <View style={styles.orbContainer} pointerEvents="none">
+          <View style={[styles.orbCopper, { backgroundColor: colors.copperDim }]} />
+          <View style={[styles.orbGold, { backgroundColor: colors.goldDim }]} />
+        </View>
+      )}
 
       <ScrollView
         style={styles.scrollView}
