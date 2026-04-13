@@ -407,24 +407,16 @@ export default function BudgetScreen() {
                     selectedPeriod === item.id ? null : item.id
                   )
                 }}
-                style={{
-                  paddingHorizontal: 16,
-                  paddingVertical: 9,
-                  borderRadius: 20,
-                  backgroundColor: selectedPeriod === item.id ? 'rgba(196,112,63,0.2)' : 'rgba(42,38,34,0.9)',
-                  borderWidth: 1,
-                  borderColor: selectedPeriod === item.id ? '#c4703f' : 'rgba(237,230,220,0.2)',
-                }}
+                style={[
+                  styles.timelinePill,
+                  selectedPeriod === item.id && styles.timelinePillActive,
+                ]}
               >
                 <Text
-                  className=""
-                  style={{
-                    fontFamily: 'Karla-SemiBold',
-                    fontSize: 14,
-                    color: selectedPeriod === item.id ? '#c4703f' : '#faf6f0',
-                    textDecorationLine: 'none',
-                    opacity: 1,
-                  }}
+                  style={[
+                    styles.timelinePillText,
+                    selectedPeriod === item.id && styles.timelinePillTextActive,
+                  ]}
                 >
                   {item.label}
                 </Text>
@@ -448,21 +440,16 @@ export default function BudgetScreen() {
                     selectedPriority === filter.id ? 'all' : filter.id
                   )
                 }}
-                style={{
-                  paddingHorizontal: 14,
-                  paddingVertical: 7,
-                  borderRadius: 16,
-                  backgroundColor: selectedPriority === filter.id ? 'rgba(212,168,83,0.2)' : 'rgba(42,38,34,0.9)',
-                  borderWidth: 1,
-                  borderColor: selectedPriority === filter.id ? '#d4a853' : 'rgba(237,230,220,0.2)',
-                }}
+                style={[
+                  styles.priorityPill,
+                  selectedPriority === filter.id && styles.priorityPillActive,
+                ]}
               >
                 <Text
-                  style={{
-                    fontFamily: 'Karla-SemiBold',
-                    fontSize: 13,
-                    color: selectedPriority === filter.id ? '#d4a853' : '#faf6f0',
-                  }}
+                  style={[
+                    styles.priorityPillText,
+                    selectedPriority === filter.id && styles.priorityPillTextActive,
+                  ]}
                 >
                   {filter.label}
                 </Text>
@@ -690,12 +677,12 @@ const styles = StyleSheet.create({
 
   // Timeline bar
   timelineBar: {
-    maxHeight: 44,
-    marginBottom: 8,
+    marginBottom: 10,
   },
   timelineContent: {
     paddingHorizontal: 20,
     gap: 8,
+    paddingVertical: 4,
   },
   timelinePill: {
     paddingHorizontal: 16,
@@ -703,7 +690,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: 'rgba(42,38,34,0.9)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.15)',
+    borderColor: 'rgba(237,230,220,0.2)',
   },
   timelinePillActive: {
     backgroundColor: 'rgba(196,112,63,0.2)',
@@ -712,7 +699,7 @@ const styles = StyleSheet.create({
   timelinePillText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 14,
-    color: '#ede6dc',
+    color: '#faf6f0',
   },
   timelinePillTextActive: {
     color: '#c4703f',
@@ -720,12 +707,12 @@ const styles = StyleSheet.create({
 
   // Priority filter bar
   priorityBar: {
-    maxHeight: 40,
     marginBottom: 12,
   },
   priorityContent: {
     paddingHorizontal: 20,
-    gap: 6,
+    gap: 8,
+    paddingVertical: 4,
   },
   priorityPill: {
     paddingHorizontal: 14,
@@ -733,7 +720,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: 'rgba(42,38,34,0.9)',
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.15)',
+    borderColor: 'rgba(237,230,220,0.2)',
   },
   priorityPillActive: {
     backgroundColor: 'rgba(212,168,83,0.2)',
@@ -742,7 +729,7 @@ const styles = StyleSheet.create({
   priorityPillText: {
     fontFamily: 'Karla-SemiBold',
     fontSize: 13,
-    color: '#ede6dc',
+    color: '#faf6f0',
   },
   priorityPillTextActive: {
     color: '#d4a853',

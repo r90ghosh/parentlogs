@@ -77,7 +77,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 18,
-    fontFamily: 'System',
   },
   title: {
     fontFamily: 'PlayfairDisplay-Bold',

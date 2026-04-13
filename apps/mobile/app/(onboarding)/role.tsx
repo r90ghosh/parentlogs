@@ -156,7 +156,6 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: 32,
-    fontFamily: 'System',
   },
   optionText: {
     flex: 1,

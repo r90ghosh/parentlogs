@@ -104,7 +104,7 @@ export default function ContentScreen() {
         <Pressable onPress={() => router.back()} style={styles.backButton}>
           <ArrowLeft size={20} color="#faf6f0" />
         </Pressable>
-        <Text style={styles.headerTitle}>Articles</Text>
+        <Text style={styles.headerTitle}>Blog</Text>
         <View style={styles.headerSpacer} />
       </View>
 

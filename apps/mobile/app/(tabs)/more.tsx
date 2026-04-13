@@ -20,7 +20,6 @@ import {
   MessageCircleQuestion,
   Palette,
   BookOpen,
-  Receipt,
   MessageSquarePlus,
   Baby,
   Video,
@@ -128,7 +127,7 @@ export default function MoreScreen() {
             />
             <MenuItem
               icon={<Newspaper size={20} color="#5b9bd5" />}
-              label="Articles"
+              label="Blog"
               onPress={() => router.push('/(screens)/content')}
             />
             <MenuItem
@@ -145,11 +144,6 @@ export default function MoreScreen() {
               icon={<BookOpen size={20} color="#5b9bd5" />}
               label="Dad Tips"
               onPress={() => router.push('/(screens)/content')}
-            />
-            <MenuItem
-              icon={<Receipt size={20} color="#d4a853" />}
-              label="Budget Guide"
-              onPress={() => router.push('/(screens)/budget')}
             />
           </GlassCard>
         </CardEntrance>

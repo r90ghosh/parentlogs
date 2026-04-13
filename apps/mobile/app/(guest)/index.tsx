@@ -25,7 +25,7 @@ const CONTENT_SECTIONS = [
     accentBorder: 'rgba(196,112,63,0.2)',
   },
   {
-    title: 'Articles',
+    title: 'Blog',
     description: 'Evidence-based guides on pregnancy, birth, and early parenting.',
     icon: Newspaper,
     route: '/(screens)/content' as const,

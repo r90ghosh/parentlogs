@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: 28,
-    fontFamily: 'System',
   },
   label: {
     fontFamily: 'Karla-Regular',

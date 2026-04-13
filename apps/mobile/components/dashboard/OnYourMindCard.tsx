@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
   },
   tileEmoji: {
     fontSize: 22,
-    fontFamily: 'System',
   },
   tileContent: {
     flex: 1,
