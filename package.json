@@ -23,5 +23,8 @@
       "react": "19.2.0",
       "@tanstack/react-query": "5.91.2"
     }
+  },
+  "dependencies": {
+    "@ungap/structured-clone": "^1.3.0"
   }
 }
