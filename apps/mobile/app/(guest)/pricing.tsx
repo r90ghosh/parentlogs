@@ -78,38 +78,39 @@ export default function GuestPricingScreen() {
         <View style={styles.plansContainer}>
           {PLANS.map((plan, index) => (
             <CardEntrance key={plan.name} delay={200 + index * 120}>
-              <GlassCard
-                style={[
-                  styles.planCard,
-                  plan.highlight && styles.planCardHighlight,
-                ]}
-              >
+              <View style={{ marginTop: plan.badge ? 10 : 0 }}>
                 {plan.badge && (
                   <View style={styles.planBadge}>
                     <Sparkles size={10} color="#12100e" />
                     <Text style={styles.planBadgeText}>{plan.badge}</Text>
                   </View>
                 )}
+                <View
+                  style={[
+                    styles.planCard,
+                    plan.highlight && styles.planCardHighlight,
+                  ]}
+                >
+                  <View style={styles.planHeader}>
+                    {plan.name === 'Lifetime' && (
+                      <Crown
+                        size={16}
+                        color="#d4a853"
+                        style={{ marginRight: 6 }}
+                      />
+                    )}
+                    <Text style={styles.planName}>{plan.name}</Text>
+                  </View>
 
-                <View style={styles.planHeader}>
-                  {plan.name === 'Lifetime' && (
-                    <Crown
-                      size={16}
-                      color="#d4a853"
-                      style={{ marginRight: 6 }}
-                    />
-                  )}
-                  <Text style={styles.planName}>{plan.name}</Text>
+                  <View style={styles.planPriceRow}>
+                    <Text style={styles.planPrice}>{plan.price}</Text>
+                    {plan.period ? (
+                      <Text style={styles.planPeriod}>{plan.period}</Text>
+                    ) : null}
+                  </View>
+                  <Text style={styles.planSubtitle}>{plan.subtitle}</Text>
                 </View>
-
-                <View style={styles.planPriceRow}>
-                  <Text style={styles.planPrice}>{plan.price}</Text>
-                  {plan.period ? (
-                    <Text style={styles.planPeriod}>{plan.period}</Text>
-                  ) : null}
-                </View>
-                <Text style={styles.planSubtitle}>{plan.subtitle}</Text>
-              </GlassCard>
+              </View>
             </CardEntrance>
           ))}
         </View>
@@ -204,23 +205,26 @@ const styles = StyleSheet.create({
   planCard: {
     padding: 20,
     borderWidth: 1,
-    borderColor: 'rgba(237,230,220,0.08)',
+    borderColor: 'rgba(237,230,220,0.1)',
+    borderRadius: 12,
+    backgroundColor: '#201c18',
   },
   planCardHighlight: {
-    borderColor: 'rgba(212,168,83,0.4)',
-    backgroundColor: 'rgba(212,168,83,0.06)',
+    borderColor: 'rgba(212,168,83,0.5)',
+    backgroundColor: 'rgba(212,168,83,0.08)',
   },
   planBadge: {
-    position: 'absolute',
-    top: -10,
-    right: 16,
+    alignSelf: 'flex-end',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
     backgroundColor: '#d4a853',
-    paddingHorizontal: 10,
-    paddingVertical: 3,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
     borderRadius: 10,
+    marginBottom: -6,
+    marginRight: 16,
+    zIndex: 1,
   },
   planBadgeText: {
     fontFamily: 'Karla-SemiBold',
