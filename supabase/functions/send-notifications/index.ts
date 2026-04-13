@@ -128,6 +128,9 @@ Deno.serve(async (req: Request) => {
       case "re_engagement":
         await sendReEngagementNotifications();
         break;
+      case "celebration":
+        await sendCelebrationNotifications();
+        break;
       case "push_window_warning":
         await sendPushWindowWarnings();
         break;
@@ -137,12 +140,34 @@ Deno.serve(async (req: Request) => {
       // 'direct' type only sends push — callers persist the in-app notification themselves.
       case "direct": {
         const { user_id, title, body: messageBody, url, notification_type: directType } = body;
-        if (!user_id || !title || !messageBody) {
-          return new Response(JSON.stringify({ error: "Missing user_id, title, or body" }), {
+
+        // Validate user_id is a valid UUID
+        const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!user_id || typeof user_id !== "string" || !UUID_RE.test(user_id)) {
+          return new Response(JSON.stringify({ error: "Invalid or missing user_id — must be a valid UUID" }), {
             status: 400,
             headers: { "Content-Type": "application/json" },
           });
         }
+
+        // Validate title and body are non-empty strings
+        if (!title || typeof title !== "string" || !title.trim()) {
+          return new Response(JSON.stringify({ error: "title is required and must be a non-empty string" }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+        if (!messageBody || typeof messageBody !== "string" || !messageBody.trim()) {
+          return new Response(JSON.stringify({ error: "body is required and must be a non-empty string" }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        // Audit log
+        const callerIp = req.headers.get("x-forwarded-for") || req.headers.get("cf-connecting-ip") || "unknown";
+        console.log(`[direct-push] user_id=${user_id} type=${directType || "partner_activity"} caller_ip=${callerIp}`);
+
         await sendPushNotification(user_id, { title, body: messageBody, url }, directType || "partner_activity");
         break;
       }
@@ -170,7 +195,7 @@ Deno.serve(async (req: Request) => {
 async function sendDailyDigest() {
   const { data: prefsWithProfiles } = await supabase
     .from("notification_preferences")
-    .select("user_id, quiet_hours_start, quiet_hours_end, timezone, profiles!inner(family_id)")
+    .select("user_id, quiet_hours_start, quiet_hours_end, profiles!inner(family_id, timezone)")
     .or("task_reminders_7_day.eq.true,task_reminders_3_day.eq.true,task_reminders_1_day.eq.true");
 
   if (!prefsWithProfiles?.length) return;
@@ -200,9 +225,10 @@ async function sendDailyDigest() {
   }, {} as Record<string, typeof allTasks>);
 
   for (const pref of prefsWithProfiles) {
-    const familyId = (pref.profiles as unknown as { family_id: string | null }).family_id;
+    const profileData = pref.profiles as unknown as { family_id: string | null; timezone: string | null };
+    const familyId = profileData.family_id;
     if (!familyId) continue;
-    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
+    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, profileData.timezone || "UTC")) continue;
 
     const familyTasks = tasksByFamily[familyId];
     if (!familyTasks?.length) continue;
@@ -256,7 +282,7 @@ async function sendTaskReminders() {
   const memberIds = allMembers.map((m) => m.id);
   const { data: allPrefs } = await supabase
     .from("notification_preferences")
-    .select("user_id, task_reminders_1_day, quiet_hours_start, quiet_hours_end, timezone")
+    .select("user_id, task_reminders_1_day, quiet_hours_start, quiet_hours_end, profiles!inner(timezone)")
     .in("user_id", memberIds);
 
   const prefsMap = new Map((allPrefs || []).map((p) => [p.user_id, p]));
@@ -264,7 +290,8 @@ async function sendTaskReminders() {
   for (const member of allMembers) {
     const pref = prefsMap.get(member.id);
     if (!pref?.task_reminders_1_day) continue;
-    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
+    const tz = (pref.profiles as unknown as { timezone: string | null })?.timezone || "UTC";
+    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, tz)) continue;
 
     const familyTasks = tasksByFamily[member.family_id];
     if (!familyTasks?.length) continue;
@@ -311,7 +338,7 @@ async function sendOverdueAlerts() {
   const memberIds = allMembers.map((m) => m.id);
   const { data: allPrefs } = await supabase
     .from("notification_preferences")
-    .select("user_id, task_reminders_1_day, quiet_hours_start, quiet_hours_end, timezone")
+    .select("user_id, task_reminders_1_day, quiet_hours_start, quiet_hours_end, profiles!inner(timezone)")
     .in("user_id", memberIds);
 
   const prefsMap = new Map((allPrefs || []).map((p) => [p.user_id, p]));
@@ -319,7 +346,8 @@ async function sendOverdueAlerts() {
   for (const member of allMembers) {
     const pref = prefsMap.get(member.id);
     if (!pref?.task_reminders_1_day) continue;
-    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
+    const tz = (pref.profiles as unknown as { timezone: string | null })?.timezone || "UTC";
+    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, tz)) continue;
 
     const familyTasks = tasksByFamily[member.family_id];
     if (!familyTasks?.length) continue;
@@ -357,7 +385,7 @@ async function sendWeeklyBriefingAlerts() {
   const memberIds = allMembers.map((m) => m.id);
   const { data: allPrefs } = await supabase
     .from("notification_preferences")
-    .select("user_id, weekly_briefing, quiet_hours_start, quiet_hours_end, timezone")
+    .select("user_id, weekly_briefing, quiet_hours_start, quiet_hours_end, profiles!inner(timezone)")
     .in("user_id", memberIds)
     .eq("weekly_briefing", true);
 
@@ -366,7 +394,8 @@ async function sendWeeklyBriefingAlerts() {
   for (const member of allMembers) {
     const pref = prefsMap.get(member.id);
     if (!pref) continue;
-    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
+    const tz = (pref.profiles as unknown as { timezone: string | null })?.timezone || "UTC";
+    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, tz)) continue;
 
     const currentWeek = familyWeekMap.get(member.family_id);
 
@@ -423,7 +452,7 @@ async function sendMilestoneNotifications() {
 
   const { data: allPrefs } = await supabase
     .from("notification_preferences")
-    .select("user_id, milestone_notifications, quiet_hours_start, quiet_hours_end, timezone")
+    .select("user_id, milestone_notifications, quiet_hours_start, quiet_hours_end, profiles!inner(timezone)")
     .in("user_id", allMemberIds);
 
   const prefsMap = new Map((allPrefs || []).map((p) => [p.user_id, p]));
@@ -452,7 +481,10 @@ async function sendMilestoneNotifications() {
     for (const member of members) {
       const pref = prefsMap.get(member.id);
       if (pref?.milestone_notifications === false) continue;
-      if (pref && checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
+      if (pref) {
+        const tz = (pref.profiles as unknown as { timezone: string | null })?.timezone || "UTC";
+        if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, tz)) continue;
+      }
 
       const expectedTitle = `Week ${family.current_week}: ${milestone.title}`;
       if (milestoneSet.has(`${member.id}:${expectedTitle}`)) continue;
@@ -475,7 +507,7 @@ async function sendMilestoneNotifications() {
 async function sendOnboardingNudges() {
   const now = new Date();
 
-  // Find users who haven't completed onboarding milestones
+  // Find users who completed onboarding but haven't engaged with features yet
   const { data: profiles } = await supabase
     .from("profiles")
     .select("id, created_at, first_briefing_viewed_at, first_task_completed_at, partner_invited_at, first_mood_checkin_at")
@@ -488,7 +520,7 @@ async function sendOnboardingNudges() {
   const profileIds = profiles.map((p) => p.id);
   const { data: prefs } = await supabase
     .from("notification_preferences")
-    .select("user_id, onboarding_nudges, quiet_hours_start, quiet_hours_end, timezone")
+    .select("user_id, onboarding_nudges, quiet_hours_start, quiet_hours_end, profiles!inner(timezone)")
     .in("user_id", profileIds);
 
   const prefsMap = new Map((prefs || []).map((p) => [p.user_id, p]));
@@ -496,7 +528,10 @@ async function sendOnboardingNudges() {
   for (const profile of profiles) {
     const pref = prefsMap.get(profile.id);
     if (pref?.onboarding_nudges === false) continue;
-    if (pref && checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
+    if (pref) {
+      const tz = (pref.profiles as unknown as { timezone: string | null })?.timezone || "UTC";
+      if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, tz)) continue;
+    }
 
     const signupDate = new Date(profile.created_at);
     const hoursSinceSignup = (now.getTime() - signupDate.getTime()) / (1000 * 60 * 60);
@@ -555,14 +590,15 @@ async function sendMoodReminders() {
   // Get all users with mood reminders enabled
   const { data: prefs } = await supabase
     .from("notification_preferences")
-    .select("user_id, mood_reminders, quiet_hours_start, quiet_hours_end, timezone")
+    .select("user_id, mood_reminders, quiet_hours_start, quiet_hours_end, profiles!inner(timezone)")
     .neq("mood_reminders", false);
 
   if (!prefs?.length) return;
 
   for (const pref of prefs) {
     if (checkedInUserIds.has(pref.user_id)) continue;
-    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, pref.timezone || "UTC")) continue;
+    const tz = (pref.profiles as unknown as { timezone: string | null })?.timezone || "UTC";
+    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, tz)) continue;
 
     // Dedup: only one mood reminder per day
     const { count } = await supabase
@@ -582,6 +618,73 @@ async function sendMoodReminders() {
     };
     await persistNotification(pref.user_id, "mood_reminder", payload);
     await sendPushNotification(pref.user_id, payload, "mood_reminder");
+  }
+}
+
+// --- Celebration Notifications ---
+
+async function sendCelebrationNotifications() {
+  const today = new Date().toISOString().split("T")[0];
+
+  // Find users who hit milestones today
+  const { data: firstTaskUsers } = await supabase
+    .from("profiles")
+    .select("id")
+    .gte("first_task_completed_at", `${today}T00:00:00Z`)
+    .lt("first_task_completed_at", `${today}T23:59:59.999Z`);
+
+  const { data: firstMoodUsers } = await supabase
+    .from("profiles")
+    .select("id")
+    .gte("first_mood_checkin_at", `${today}T00:00:00Z`)
+    .lt("first_mood_checkin_at", `${today}T23:59:59.999Z`);
+
+  const celebrations: Array<{ userId: string; milestone: string; title: string; body: string }> = [];
+
+  for (const user of firstTaskUsers || []) {
+    celebrations.push({
+      userId: user.id,
+      milestone: "first_task_completed",
+      title: "First Task Done!",
+      body: "You're officially in the game. Keep the momentum going.",
+    });
+  }
+
+  for (const user of firstMoodUsers || []) {
+    celebrations.push({
+      userId: user.id,
+      milestone: "first_mood_checkin",
+      title: "First Check-In!",
+      body: "Tracking your wellbeing is a power move. Keep it up.",
+    });
+  }
+
+  if (!celebrations.length) return;
+
+  // Dedup: check existing celebration notifications sent today
+  const userIds = [...new Set(celebrations.map((c) => c.userId))];
+  const { data: existingCelebrations } = await supabase
+    .from("notifications")
+    .select("user_id, title")
+    .in("user_id", userIds)
+    .eq("type", "celebration")
+    .gte("created_at", `${today}T00:00:00Z`);
+
+  const celebrationSet = new Set(
+    (existingCelebrations || []).map((c) => `${c.user_id}:${c.title}`)
+  );
+
+  for (const c of celebrations) {
+    if (celebrationSet.has(`${c.userId}:${c.title}`)) continue;
+
+    const payload: NotificationPayload = {
+      title: c.title,
+      body: c.body,
+      url: "/dashboard",
+      tag: "celebration",
+    };
+    await persistNotification(c.userId, "celebration", payload);
+    await sendPushNotification(c.userId, payload, "celebration");
   }
 }
 
