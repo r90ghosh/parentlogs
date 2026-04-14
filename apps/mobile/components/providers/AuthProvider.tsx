@@ -65,48 +65,52 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single()
+      // Single-round-trip bootstrap: profile + family + babies in one call.
+      // See supabase migration `create_get_initial_app_state_rpc`.
+      const { data: rpcData, error } = await supabase.rpc('get_initial_app_state', {
+        p_user_id: userId,
+      })
 
-      if (error && error.code !== 'PGRST116') {
-        Sentry.captureException(error, { extra: { context: 'fetch_profile' } })
+      if (error) {
+        Sentry.captureException(error, { extra: { context: 'fetch_initial_app_state' } })
         Alert.alert('Error', 'Failed to load profile. Please try again.', [
           { text: 'Retry', onPress: () => fetchProfile(userId) },
         ])
         return
       }
 
+      const payload = rpcData as {
+        profile: Profile | null
+        family: Family | null
+        babies: Array<{ id: string; family_id: string; [key: string]: unknown }>
+      } | null
+
+      const profileData = payload?.profile ?? null
+      const familyData = payload?.family ?? null
+      const babies = payload?.babies ?? []
+
       // Normalize tier: if subscription expired past grace period, treat as free
-      if (data && data.subscription_tier === 'premium' && data.subscription_expires_at) {
-        const expired = new Date(data.subscription_expires_at) < new Date()
-        const inGrace = isInGracePeriod(data.subscription_expires_at)
+      if (profileData && profileData.subscription_tier === 'premium' && profileData.subscription_expires_at) {
+        const expired = new Date(profileData.subscription_expires_at) < new Date()
+        const inGrace = isInGracePeriod(profileData.subscription_expires_at)
         if (expired && !inGrace) {
-          data.subscription_tier = 'free'
+          profileData.subscription_tier = 'free'
         }
       }
 
-      setProfile(data)
+      setProfile(profileData)
+      setFamily(familyData)
 
-      if (data?.family_id) {
-        const { data: familyData, error: familyError } = await supabase
-          .from('families')
-          .select('*')
-          .eq('id', data.family_id)
-          .single()
-        if (familyError && familyError.code !== 'PGRST116') {
-          Sentry.captureException(familyError, { extra: { context: 'fetch_family' } })
+      // Seed the babies cache from the RPC payload so useBabies() on the
+      // dashboard finds it warm without an extra round-trip.
+      if (familyData?.id) {
+        queryClient.setQueryData(queryKeys.babies.list(familyData.id), babies)
+
+        // Prefetch the remaining dashboard queries. Must run AFTER family is
+        // known so keys include family.id.
+        if (profileData) {
+          prefetchTabData(userId, familyData, profileData).catch(() => {})
         }
-        setFamily(familyData)
-        // Prefetch dashboard queries with keys that match the consuming hooks.
-        // Must run AFTER family is known so keys include family.id.
-        if (data && familyData) {
-          prefetchTabData(userId, familyData, data).catch(() => {})
-        }
-      } else {
-        setFamily(null)
       }
     } finally {
       setProfileLoaded(true)
