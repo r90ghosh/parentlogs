@@ -25,6 +25,7 @@ export function useDashboardData() {
     queryKey: ['tasks-due', family?.id],
     queryFn: () => taskService.getTasks({ status: 'pending', limit: 5 }, ctx),
     enabled: !!family?.id,
+    staleTime: 1000 * 60 * 2,
   })
 
   const briefingQuery = useQuery({

@@ -11,6 +11,7 @@ export function useBacklogTasks() {
     queryKey: ['backlog-tasks', family?.id],
     queryFn: () => taskService.getBacklogTasks(ctx),
     enabled: !!family?.id,
+    staleTime: 1000 * 60 * 2,
   })
 }
 
@@ -21,6 +22,7 @@ export function useBacklogCount() {
     queryKey: ['backlog-count', family?.id],
     queryFn: () => taskService.getBacklogCount(ctx),
     enabled: !!family?.id,
+    staleTime: 1000 * 60 * 2,
   })
 }
 

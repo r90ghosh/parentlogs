@@ -20,6 +20,7 @@ export function useFamilyMembers() {
     queryKey: ['family-members', family?.id],
     queryFn: () => familyService.getFamilyMembers(ctx),
     enabled: !!family?.id,
+    staleTime: 1000 * 60 * 5,
   })
 }
 

@@ -15,6 +15,7 @@ export function useArticle(id: string) {
     queryKey: ['article', id],
     queryFn: () => articlesService.getArticleById(id),
     enabled: !!id,
+    staleTime: 1000 * 60 * 30,
   })
 }
 
