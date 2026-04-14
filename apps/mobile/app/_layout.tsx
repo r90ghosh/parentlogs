@@ -10,6 +10,7 @@ import { RevenueCatProvider } from '@/components/providers/RevenueCatProvider'
 import { NetworkProvider } from '@/components/providers/NetworkProvider'
 import { ThemeProvider, useTheme } from '@/components/providers/ThemeProvider'
 import { AppBackground } from '@/components/shared/AppBackground'
+import { NotificationListener } from '@/components/providers/NotificationListener'
 import { initSentry, Sentry } from '@/lib/sentry'
 import { initAnalytics } from '@/lib/analytics'
 import { ScreenEngagementTracker } from '@/hooks/use-screen-engagement'
@@ -79,6 +80,7 @@ function RootContent() {
       <AppBackground />
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenEngagementTracker />
+      <NotificationListener />
       <Stack screenOptions={{
         headerShown: false,
         contentStyle: { backgroundColor: 'transparent' },
