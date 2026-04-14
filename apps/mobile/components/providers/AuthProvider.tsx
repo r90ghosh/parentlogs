@@ -8,6 +8,7 @@ import { queryClient } from './QueryProvider'
 import { isInGracePeriod } from '@tdc/shared/utils/subscription-utils'
 import { queryKeys } from '@tdc/shared/constants'
 import { taskService, briefingService, babyService } from '@/lib/services'
+import { markAuthReady, resetAuthReady } from '@/lib/notification-intent'
 import { Sentry, setSentryUser, clearSentryUser } from '@/lib/sentry'
 import { identifyUser, resetUser } from '@/lib/analytics'
 import type { Session, User } from '@supabase/supabase-js'
@@ -271,6 +272,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } else if (session && profileLoaded && inApp && profile && !profile.onboarding_completed) {
       router.replace('/(onboarding)/role')
     }
+
+    // Signal to the notification intent queue that the route is now safe to
+    // push to. Any pending deep-link from a cold-start notification will
+    // drain now instead of racing this redirect logic.
+    if (session && profileLoaded && profile?.onboarding_completed) {
+      markAuthReady()
+    }
   }, [session, profile, profileLoaded, isLoading, segments, isGuest])
 
   const signOut = async () => {
@@ -280,6 +288,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await pushNotificationService.unregister(session.user.id, token).catch(() => {})
     }
     resetUser()
+    resetAuthReady()
     await supabase.auth.signOut()
     setProfile(null)
     setFamily(null)

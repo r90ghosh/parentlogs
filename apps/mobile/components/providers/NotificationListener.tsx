@@ -1,13 +1,16 @@
 import { useEffect, useRef } from 'react'
 import * as Notifications from 'expo-notifications'
 import { useRouter } from 'expo-router'
+import { setPendingRoute, setRouter } from '@/lib/notification-intent'
+import { Sentry } from '@/lib/sentry'
 
 /**
  * Maps web-style URLs from notification payloads to mobile route paths.
- * Notifications come from the shared send-notifications edge function which
- * uses web paths. We translate them to expo-router paths here.
+ * Returns null for unknown paths so the caller can log them before falling
+ * back — we want visibility into notifications that silently redirect to
+ * the dashboard.
  */
-function mapUrlToRoute(url: string | undefined | null): string {
+function mapUrlToRoute(url: string | undefined | null): string | null {
   if (!url) return '/(tabs)'
 
   // Normalize: strip trailing slash, lowercase
@@ -43,8 +46,20 @@ function mapUrlToRoute(url: string | undefined | null): string {
   if (path === '/create-task') return '/(screens)/create-task'
   if (path === '/appearance') return '/(screens)/appearance'
 
-  // Unknown path — go to dashboard
-  return '/(tabs)'
+  // Unknown path — caller decides fallback
+  return null
+}
+
+function resolveRoute(url: string | undefined | null): string {
+  const route = mapUrlToRoute(url)
+  if (route === null) {
+    Sentry.captureMessage('Unknown notification URL', {
+      level: 'warning',
+      extra: { url },
+    })
+    return '/(tabs)'
+  }
+  return route
 }
 
 export function NotificationListener() {
@@ -52,6 +67,8 @@ export function NotificationListener() {
   const handledRef = useRef<Set<string>>(new Set())
 
   useEffect(() => {
+    setRouter(router)
+
     // Handle notification tapped while app is running (foreground/background)
     const responseSub = Notifications.addNotificationResponseReceivedListener((response) => {
       const id = response.notification.request.identifier
@@ -59,15 +76,12 @@ export function NotificationListener() {
       handledRef.current.add(id)
 
       const data = response.notification.request.content.data as { url?: string } | undefined
-      const route = mapUrlToRoute(data?.url)
-      try {
-        router.push(route as never)
-      } catch {
-        router.push('/(tabs)')
-      }
+      setPendingRoute(resolveRoute(data?.url))
     })
 
-    // Handle notification tap that launched the app from killed state
+    // Handle notification tap that launched the app from killed state.
+    // No setTimeout — the intent queue drains when AuthProvider marks
+    // auth ready, which is deterministic (not a race with a 500ms guess).
     Notifications.getLastNotificationResponseAsync().then((response) => {
       if (!response) return
       const id = response.notification.request.identifier
@@ -75,19 +89,12 @@ export function NotificationListener() {
       handledRef.current.add(id)
 
       const data = response.notification.request.content.data as { url?: string } | undefined
-      const route = mapUrlToRoute(data?.url)
-      // Small delay to let router be ready after cold start
-      setTimeout(() => {
-        try {
-          router.push(route as never)
-        } catch {
-          router.push('/(tabs)')
-        }
-      }, 500)
+      setPendingRoute(resolveRoute(data?.url))
     })
 
     return () => {
       responseSub.remove()
+      setRouter(null)
     }
   }, [router])
 
