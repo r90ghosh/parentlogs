@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week Navigation — 5 Mockup Options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Jost:wght@300;400;500;600&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #12100e;
+      --surface: #1a1714;
+      --card: #201c18;
+      --card-hover: #282420;
+      --white: #faf6f0;
+      --cream: #ede6dc;
+      --muted: #7a6f62;
+      --dim: #4a4239;
+      --copper: #c4703f;
+      --copper-dim: rgba(196, 112, 63, 0.15);
+      --copper-glow: rgba(196, 112, 63, 0.25);
+      --gold: #d4a853;
+      --gold-dim: rgba(212, 168, 83, 0.15);
+      --sage: #6b8f71;
+      --coral: #d4836b;
+      --sky: #5b9bd5;
+      --rose: #c47a8f;
+      --border: rgba(237, 230, 220, 0.08);
+      --border-hover: rgba(237, 230, 220, 0.15);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Jost', 'Segoe UI', sans-serif;
+      --font-ui: 'Karla', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      padding: 40px 16px 80px;
+    }
+
+    .page-wrap {
+      max-width: 430px;
+      margin: 0 auto;
+    }
+
+    h1.page-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 48px;
+      line-height: 1.5;
+    }
+
+    .page-subtitle span {
+      color: var(--copper);
+      font-weight: 500;
+    }
+
+    /* ---- Section wrapper ---- */
+    .mockup-section {
+      margin-bottom: 56px;
+    }
+
+    .mockup-section .section-label {
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 6px;
+    }
+
+    .mockup-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .mockup-section .description {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+      line-height: 1.55;
+    }
+
+    .mockup-phone {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mockup-phone::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--dim);
+      border-radius: 0 0 4px 4px;
+    }
+
+    /* ---- Shared pill styles ---- */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 600;
+      min-width: 36px;
+      height: 32px;
+      padding: 0 8px;
+      border-radius: 16px;
+      background: var(--card);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .pill:hover {
+      background: var(--card-hover);
+      border-color: var(--border-hover);
+      color: var(--cream);
+    }
+
+    .pill.active {
+      background: var(--copper);
+      color: var(--white);
+      border-color: var(--copper);
+      box-shadow: 0 0 12px var(--copper-glow);
+    }
+
+    .pill.active:hover {
+      background: #d4804f;
+    }
+
+    .pill .badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 8px;
+      background: var(--gold);
+      color: var(--bg);
+      font-family: var(--font-ui);
+      font-size: 0.55rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    .pill.active .badge {
+      background: var(--white);
+      color: var(--copper);
+    }
+
+    /* Arrow button shared */
+    .arrow-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--card);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .arrow-btn:hover {
+      background: var(--card-hover);
+      border-color: var(--border-hover);
+      color: var(--cream);
+    }
+
+    .arrow-btn:active {
+      transform: scale(0.92);
+    }
+
+    .arrow-btn.disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* Week context label shared */
+    .week-context {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .week-context .label {
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .week-context .value {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .week-context .value span {
+      color: var(--copper);
+    }
+
+    /* Divider between options */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--copper-dim), transparent);
+      margin: 56px 0;
+    }
+
+    /* ============================================
+       OPTION 1: Compact Slider with Arrows Inline
+       ============================================ */
+    .opt1-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .opt1-pills {
+      display: flex;
+      gap: 6px;
+      overflow: hidden;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .opt1-pills .pill {
+      transition: transform 0.25s ease, opacity 0.25s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    /* ============================================
+       OPTION 2: Horizontal Scrollable Strip
+       ============================================ */
+    .opt2-phases {
+      display: flex;
+      gap: 0;
+      margin-bottom: 10px;
+      font-family: var(--font-ui);
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    .opt2-phases .phase-label {
+      flex: 1;
+      text-align: center;
+      padding: 4px 0;
+      border-bottom: 2px solid var(--border);
+      transition: all 0.2s ease;
+    }
+
+    .opt2-phases .phase-label.active-phase {
+      color: var(--copper);
+      border-bottom-color: var(--copper);
+    }
+
+    .opt2-strip-wrap {
+      position: relative;
+    }
+
+    .opt2-strip {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      padding: 6px 2px 8px;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .opt2-strip::-webkit-scrollbar { display: none; }
+
+    .opt2-strip .pill {
+      scroll-snap-align: center;
+    }
+
+    .opt2-fade-left,
+    .opt2-fade-right {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 32px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .opt2-fade-left {
+      left: 0;
+      background: linear-gradient(90deg, var(--surface), transparent);
+    }
+
+    .opt2-fade-right {
+      right: 0;
+      background: linear-gradient(270deg, var(--surface), transparent);
+    }
+
+    /* ============================================
+       OPTION 3: Phase Groups with Expandable Weeks
+       ============================================ */
+    .opt3-phases {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .opt3-phase-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .opt3-phase-btn:hover {
+      background: var(--card-hover);
+      border-color: var(--border-hover);
+    }
+
+    .opt3-phase-btn.expanded {
+      border-color: var(--copper-dim);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom-color: transparent;
+    }
+
+    .opt3-phase-btn .phase-name {
+      font-family: var(--font-ui);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--cream);
+    }
+
+    .opt3-phase-btn .phase-weeks {
+      font-family: var(--font-ui);
+      font-size: 0.6rem;
+      color: var(--muted);
+      margin-left: 8px;
+    }
+
+    .opt3-phase-btn .phase-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .opt3-phase-btn .phase-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .opt3-phase-btn .task-count {
+      font-family: var(--font-ui);
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--gold);
+      background: var(--gold-dim);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .opt3-phase-btn .chevron {
+      color: var(--muted);
+      font-size: 0.7rem;
+      transition: transform 0.25s ease;
+    }
+
+    .opt3-phase-btn.expanded .chevron {
+      transform: rotate(180deg);
+    }
+
+    .opt3-phase-btn.has-current .phase-name {
+      color: var(--copper);
+    }
+
+    .opt3-weeks-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      background: var(--card);
+      border: 1px solid var(--copper-dim);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      padding: 0 12px;
+    }
+
+    .opt3-weeks-panel.open {
+      max-height: 200px;
+      padding: 12px;
+    }
+
+    .opt3-weeks-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    /* ============================================
+       OPTION 4: Draggable Range Slider
+       ============================================ */
+    .opt4-display {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .opt4-display .big-week {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--copper);
+      line-height: 1;
+    }
+
+    .opt4-display .big-label {
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .opt4-display .phase-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-family: var(--font-ui);
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: var(--copper);
+      background: var(--copper-dim);
+      padding: 3px 10px;
+      border-radius: 10px;
+    }
+
+    .opt4-slider-area {
+      position: relative;
+      padding: 20px 8px 0;
+    }
+
+    .opt4-track {
+      position: relative;
+      height: 4px;
+      background: var(--card);
+      border-radius: 2px;
+      margin: 0 4px;
+    }
+
+    .opt4-track-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--copper), var(--gold));
+      border-radius: 2px;
+      transition: width 0.15s ease;
+    }
+
+    .opt4-task-dots {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .opt4-task-dot {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.6;
+    }
+
+    .opt4-task-dot.before-current {
+      background: var(--gold);
+      opacity: 0.9;
+    }
+
+    input.opt4-range {
+      -webkit-appearance: none;
+      appearance: none;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      width: 100%;
+      height: 24px;
+      background: transparent;
+      cursor: pointer;
+      z-index: 3;
+      margin: 0;
+      padding: 0 4px;
+    }
+
+    input.opt4-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--copper);
+      border: 3px solid var(--surface);
+      box-shadow: 0 0 10px var(--copper-glow), 0 2px 6px rgba(0,0,0,0.4);
+      cursor: grab;
+      transition: transform 0.15s ease;
+    }
+
+    input.opt4-range::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    input.opt4-range::-webkit-slider-thumb:active {
+      cursor: grabbing;
+      transform: scale(1.25);
+    }
+
+    input.opt4-range::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--copper);
+      border: 3px solid var(--surface);
+      box-shadow: 0 0 10px var(--copper-glow), 0 2px 6px rgba(0,0,0,0.4);
+      cursor: grab;
+    }
+
+    input.opt4-range::-moz-range-track {
+      background: transparent;
+      border: none;
+      height: 4px;
+    }
+
+    .opt4-phases-row {
+      display: flex;
+      margin-top: 14px;
+      font-family: var(--font-ui);
+      font-size: 0.55rem;
+      font-weight: 600;
+      color: var(--dim);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .opt4-phases-row .p-seg {
+      text-align: center;
+      border-top: 1px solid var(--border);
+      padding-top: 6px;
+      transition: color 0.2s ease;
+    }
+
+    .opt4-phases-row .p-seg.active-seg {
+      color: var(--copper);
+      border-top-color: var(--copper-dim);
+    }
+
+    .opt4-ticks {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 4px 0;
+      font-family: var(--font-ui);
+      font-size: 0.5rem;
+      color: var(--dim);
+    }
+
+    /* ============================================
+       OPTION 5: Compact Dropdown + Quick Jump
+       ============================================ */
+    .opt5-inline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .opt5-current {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--copper);
+      color: var(--white);
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 8px 18px;
+      border-radius: 20px;
+      box-shadow: 0 0 16px var(--copper-glow);
+      user-select: none;
+    }
+
+    .opt5-current .task-indicator {
+      font-size: 0.6rem;
+      font-weight: 600;
+      background: rgba(255,255,255,0.2);
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+
+    .opt5-jump-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .opt5-jump-btn:hover {
+      color: var(--cream);
+      border-color: var(--border-hover);
+      background: var(--card-hover);
+    }
+
+    .opt5-jump-btn .icon {
+      font-size: 0.7rem;
+      transition: transform 0.25s ease;
+    }
+
+    .opt5-jump-btn.open .icon {
+      transform: rotate(180deg);
+    }
+
+    .opt5-dropdown {
+      margin-top: 14px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+      border-radius: 14px;
+    }
+
+    .opt5-dropdown.open {
+      max-height: 500px;
+    }
+
+    .opt5-dropdown-inner {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .opt5-grid-group {
+      margin-bottom: 12px;
+    }
+
+    .opt5-grid-group:last-child { margin-bottom: 0; }
+
+    .opt5-grid-label {
+      font-family: var(--font-ui);
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .opt5-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .opt5-grid .g-pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      font-weight: 600;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .opt5-grid .g-pill:hover {
+      background: var(--card-hover);
+      color: var(--cream);
+      border-color: var(--border-hover);
+    }
+
+    .opt5-grid .g-pill.active {
+      background: var(--copper);
+      color: var(--white);
+      border-color: var(--copper);
+    }
+
+    .opt5-grid .g-pill.has-tasks::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .opt5-grid .g-pill.active.has-tasks::after {
+      background: var(--white);
+    }
+
+    .opt5-controls-row {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <h1 class="page-title">Week Navigation</h1>
+    <p class="page-subtitle">5 mockup options for The Dad Center<br>Current week: <span>22 of 40</span> &middot; Trimester 2</p>
+
+    <!-- ============================================
+         OPTION 1: Compact Slider with Arrows Inline
+         ============================================ -->
+    <div class="mockup-section" id="option1">
+      <div class="section-label">Option 1</div>
+      <h2>Compact Slider with Arrows Inline</h2>
+      <p class="description">Arrows sit right next to the pills instead of the far edges. Shows ~7 weeks at a time, shifts by 3 on arrow click. Fixes the "arrows too far apart" problem directly.</p>
+      <div class="mockup-phone">
+        <div class="week-context">
+          <div class="label">Pregnancy Week</div>
+          <div class="value">Week <span id="opt1-display">22</span> of 40</div>
+        </div>
+        <div class="opt1-row">
+          <button class="arrow-btn" id="opt1-prev" title="Previous weeks">&lsaquo;</button>
+          <div class="opt1-pills" id="opt1-pills"></div>
+          <button class="arrow-btn" id="opt1-next" title="Next weeks">&rsaquo;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ============================================
+         OPTION 2: Horizontal Scrollable Strip
+         ============================================ -->
+    <div class="mockup-section" id="option2">
+      <div class="section-label">Option 2</div>
+      <h2>Horizontal Scrollable Strip</h2>
+      <p class="description">All week pills in a scrollable row with CSS snap. Auto-centers on current week. Swipe to navigate freely. Phase labels above show where you are.</p>
+      <div class="mockup-phone">
+        <div class="week-context">
+          <div class="label">Pregnancy Week</div>
+          <div class="value">Week <span id="opt2-display">22</span> of 40</div>
+        </div>
+        <div class="opt2-phases" id="opt2-phases">
+          <div class="phase-label" data-phase="t1">T1</div>
+          <div class="phase-label active-phase" data-phase="t2">T2</div>
+          <div class="phase-label" data-phase="t3">T3</div>
+          <div class="phase-label" data-phase="post">Post-birth</div>
+        </div>
+        <div class="opt2-strip-wrap">
+          <div class="opt2-fade-left"></div>
+          <div class="opt2-strip" id="opt2-strip"></div>
+          <div class="opt2-fade-right"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ============================================
+         OPTION 3: Phase Groups with Expandable Weeks
+         ============================================ -->
+    <div class="mockup-section" id="option3">
+      <div class="section-label">Option 3</div>
+      <h2>Phase Groups with Expandable Weeks</h2>
+      <p class="description">Navigate by phase first, then drill into individual weeks. Current phase is auto-expanded. Each phase shows its total pending task count.</p>
+      <div class="mockup-phone">
+        <div class="week-context">
+          <div class="label">Pregnancy Week</div>
+          <div class="value">Week <span id="opt3-display">22</span> of 40</div>
+        </div>
+        <div class="opt3-phases" id="opt3-phases"></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ============================================
+         OPTION 4: Draggable Range Slider
+         ============================================ -->
+    <div class="mockup-section" id="option4">
+      <div class="section-label">Option 4</div>
+      <h2>Draggable Range Slider</h2>
+      <p class="description">Drag the copper handle to jump to any week instantly. Task dots on the track show which weeks have pending items. Phase labels below for orientation.</p>
+      <div class="mockup-phone">
+        <div class="opt4-display">
+          <div class="big-week" id="opt4-big">22</div>
+          <div class="big-label">Week</div>
+          <div class="phase-tag" id="opt4-phase-tag">Trimester 2</div>
+        </div>
+        <div class="opt4-slider-area">
+          <div class="opt4-track">
+            <div class="opt4-track-fill" id="opt4-fill"></div>
+            <div class="opt4-task-dots" id="opt4-dots"></div>
+          </div>
+          <input type="range" class="opt4-range" id="opt4-range" min="1" max="40" value="22">
+        </div>
+        <div class="opt4-ticks">
+          <span>1</span><span>5</span><span>10</span><span>15</span><span>20</span><span>25</span><span>30</span><span>35</span><span>40</span>
+        </div>
+        <div class="opt4-phases-row" id="opt4-phases"></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ============================================
+         OPTION 5: Compact Dropdown + Quick Jump
+         ============================================ -->
+    <div class="mockup-section" id="option5">
+      <div class="section-label">Option 5</div>
+      <h2>Compact Dropdown + Quick Jump</h2>
+      <p class="description">Minimal footprint: current week pill with +/- arrows for quick sequential navigation, plus a dropdown grid for jumping to any week. Best of both worlds.</p>
+      <div class="mockup-phone">
+        <div class="opt5-inline">
+          <button class="arrow-btn" id="opt5-prev">&lsaquo;</button>
+          <div class="opt5-current" id="opt5-current">
+            <span>Week <span id="opt5-num">22</span></span>
+            <span class="task-indicator" id="opt5-tasks">3 tasks</span>
+          </div>
+          <button class="arrow-btn" id="opt5-next">&rsaquo;</button>
+        </div>
+        <div class="opt5-controls-row">
+          <button class="opt5-jump-btn" id="opt5-jump-btn">
+            Jump to week <span class="icon">&#9662;</span>
+          </button>
+        </div>
+        <div class="opt5-dropdown" id="opt5-dropdown">
+          <div class="opt5-dropdown-inner" id="opt5-grid-container"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ---- Shared data ----
+    const TOTAL_WEEKS = 40;
+    const CURRENT_WEEK = 22;
+    const TASK_WEEKS = { 8: 2, 10: 1, 12: 3, 16: 2, 18: 4, 20: 1, 22: 3, 24: 2, 28: 5, 32: 1, 36: 3 };
+
+    const PHASES = [
+      { id: 't1', name: 'Trimester 1', short: 'T1', weeks: [1, 13] },
+      { id: 't2', name: 'Trimester 2', short: 'T2', weeks: [14, 27] },
+      { id: 't3', name: 'Trimester 3', short: 'T3', weeks: [28, 40] },
+    ];
+
+    function getPhase(w) {
+      for (const p of PHASES) {
+        if (w >= p.weeks[0] && w <= p.weeks[1]) return p;
+      }
+      return PHASES[2];
+    }
+
+    function makePill(week, isActive, container, onClick) {
+      const el = document.createElement('div');
+      el.className = 'pill' + (isActive ? ' active' : '');
+      el.textContent = week;
+      if (TASK_WEEKS[week]) {
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+        badge.textContent = TASK_WEEKS[week];
+        el.appendChild(badge);
+      }
+      if (onClick) el.addEventListener('click', () => onClick(week));
+      container.appendChild(el);
+      return el;
+    }
+
+    // ============================================
+    // OPTION 1
+    // ============================================
+    (function initOpt1() {
+      const VISIBLE = 7;
+      const SHIFT = 3;
+      let selected = CURRENT_WEEK;
+      let offset = Math.max(0, Math.min(selected - Math.floor(VISIBLE / 2) - 1, TOTAL_WEEKS - VISIBLE));
+
+      const pillsEl = document.getElementById('opt1-pills');
+      const prevBtn = document.getElementById('opt1-prev');
+      const nextBtn = document.getElementById('opt1-next');
+      const displayEl = document.getElementById('opt1-display');
+
+      function render() {
+        pillsEl.innerHTML = '';
+        const start = offset + 1;
+        const end = Math.min(offset + VISIBLE, TOTAL_WEEKS);
+        for (let w = start; w <= end; w++) {
+          makePill(w, w === selected, pillsEl, (week) => {
+            selected = week;
+            displayEl.textContent = week;
+            render();
+          });
+        }
+        prevBtn.classList.toggle('disabled', offset <= 0);
+        nextBtn.classList.toggle('disabled', offset + VISIBLE >= TOTAL_WEEKS);
+      }
+
+      prevBtn.addEventListener('click', () => {
+        offset = Math.max(0, offset - SHIFT);
+        render();
+      });
+      nextBtn.addEventListener('click', () => {
+        offset = Math.min(TOTAL_WEEKS - VISIBLE, offset + SHIFT);
+        render();
+      });
+
+      render();
+    })();
+
+    // ============================================
+    // OPTION 2
+    // ============================================
+    (function initOpt2() {
+      const strip = document.getElementById('opt2-strip');
+      const displayEl = document.getElementById('opt2-display');
+      const phasesEl = document.getElementById('opt2-phases');
+      let selected = CURRENT_WEEK;
+
+      function updatePhaseLabels(week) {
+        const phase = getPhase(week);
+        phasesEl.querySelectorAll('.phase-label').forEach(el => {
+          el.classList.toggle('active-phase', el.dataset.phase === phase.id);
+        });
+      }
+
+      // Build all pills
+      for (let w = 1; w <= TOTAL_WEEKS; w++) {
+        makePill(w, w === selected, strip, (week) => {
+          selected = week;
+          displayEl.textContent = week;
+          updatePhaseLabels(week);
+          strip.querySelectorAll('.pill').forEach((p, i) => {
+            p.classList.toggle('active', (i + 1) === week);
+          });
+        });
+      }
+
+      // Auto-scroll to current week
+      requestAnimationFrame(() => {
+        const activePill = strip.querySelector('.pill.active');
+        if (activePill) {
+          const scrollLeft = activePill.offsetLeft - strip.offsetWidth / 2 + activePill.offsetWidth / 2;
+          strip.scrollLeft = scrollLeft;
+        }
+      });
+    })();
+
+    // ============================================
+    // OPTION 3
+    // ============================================
+    (function initOpt3() {
+      const container = document.getElementById('opt3-phases');
+      const displayEl = document.getElementById('opt3-display');
+      let selected = CURRENT_WEEK;
+
+      const groups = [
+        { name: 'Trimester 1', range: [1, 13] },
+        { name: 'Trimester 2', range: [14, 27] },
+        { name: 'Trimester 3', range: [28, 40] },
+      ];
+
+      groups.forEach((group, gi) => {
+        const hasCurrent = selected >= group.range[0] && selected <= group.range[1];
+        let taskTotal = 0;
+        for (let w = group.range[0]; w <= group.range[1]; w++) {
+          if (TASK_WEEKS[w]) taskTotal += TASK_WEEKS[w];
+        }
+
+        // Phase button
+        const btn = document.createElement('div');
+        btn.className = 'opt3-phase-btn' + (hasCurrent ? ' has-current expanded' : '');
+        btn.innerHTML = `
+          <div class="phase-left">
+            <span class="phase-name">${group.name}</span>
+            <span class="phase-weeks">Wk ${group.range[0]}–${group.range[1]}</span>
+          </div>
+          <div class="phase-right">
+            ${taskTotal > 0 ? `<span class="task-count">${taskTotal} tasks</span>` : ''}
+            <span class="chevron">&#9662;</span>
+          </div>
+        `;
+
+        // Weeks panel
+        const panel = document.createElement('div');
+        panel.className = 'opt3-weeks-panel' + (hasCurrent ? ' open' : '');
+        const grid = document.createElement('div');
+        grid.className = 'opt3-weeks-grid';
+        for (let w = group.range[0]; w <= group.range[1]; w++) {
+          makePill(w, w === selected, grid, (week) => {
+            selected = week;
+            displayEl.textContent = week;
+            // Update all pills across all panels
+            container.querySelectorAll('.pill').forEach(p => {
+              p.classList.toggle('active', parseInt(p.textContent) === week);
+            });
+            // Update has-current on phase buttons
+            container.querySelectorAll('.opt3-phase-btn').forEach((b, bi) => {
+              const g = groups[bi];
+              b.classList.toggle('has-current', week >= g.range[0] && week <= g.range[1]);
+            });
+          });
+        }
+        panel.appendChild(grid);
+
+        btn.addEventListener('click', () => {
+          const isExpanded = btn.classList.contains('expanded');
+          btn.classList.toggle('expanded', !isExpanded);
+          panel.classList.toggle('open', !isExpanded);
+        });
+
+        container.appendChild(btn);
+        container.appendChild(panel);
+      });
+    })();
+
+    // ============================================
+    // OPTION 4
+    // ============================================
+    (function initOpt4() {
+      const range = document.getElementById('opt4-range');
+      const bigEl = document.getElementById('opt4-big');
+      const fillEl = document.getElementById('opt4-fill');
+      const dotsEl = document.getElementById('opt4-dots');
+      const phaseTagEl = document.getElementById('opt4-phase-tag');
+      const phasesRow = document.getElementById('opt4-phases');
+
+      // Build task dots
+      Object.keys(TASK_WEEKS).forEach(w => {
+        const week = parseInt(w);
+        const pct = ((week - 1) / (TOTAL_WEEKS - 1)) * 100;
+        const dot = document.createElement('div');
+        dot.className = 'opt4-task-dot';
+        dot.style.left = pct + '%';
+        dotsEl.appendChild(dot);
+      });
+
+      // Build phase segments
+      PHASES.forEach(p => {
+        const seg = document.createElement('div');
+        seg.className = 'p-seg';
+        seg.dataset.phase = p.id;
+        const span = (p.weeks[1] - p.weeks[0] + 1) / TOTAL_WEEKS * 100;
+        seg.style.flex = `0 0 ${span}%`;
+        seg.textContent = p.name;
+        phasesRow.appendChild(seg);
+      });
+
+      function update(val) {
+        const week = parseInt(val);
+        bigEl.textContent = week;
+        const pct = ((week - 1) / (TOTAL_WEEKS - 1)) * 100;
+        fillEl.style.width = pct + '%';
+
+        const phase = getPhase(week);
+        phaseTagEl.textContent = phase.name;
+
+        phasesRow.querySelectorAll('.p-seg').forEach(s => {
+          s.classList.toggle('active-seg', s.dataset.phase === phase.id);
+        });
+
+        // Update task dot colors
+        dotsEl.querySelectorAll('.opt4-task-dot').forEach(dot => {
+          const dotPct = parseFloat(dot.style.left);
+          dot.classList.toggle('before-current', dotPct <= pct);
+        });
+      }
+
+      range.addEventListener('input', (e) => update(e.target.value));
+      update(range.value);
+    })();
+
+    // ============================================
+    // OPTION 5
+    // ============================================
+    (function initOpt5() {
+      let selected = CURRENT_WEEK;
+      const numEl = document.getElementById('opt5-num');
+      const tasksEl = document.getElementById('opt5-tasks');
+      const prevBtn = document.getElementById('opt5-prev');
+      const nextBtn = document.getElementById('opt5-next');
+      const jumpBtn = document.getElementById('opt5-jump-btn');
+      const dropdown = document.getElementById('opt5-dropdown');
+      const gridContainer = document.getElementById('opt5-grid-container');
+
+      const groups = [
+        { name: 'Trimester 1', range: [1, 13] },
+        { name: 'Trimester 2', range: [14, 27] },
+        { name: 'Trimester 3', range: [28, 40] },
+      ];
+
+      function updateDisplay() {
+        numEl.textContent = selected;
+        const tc = TASK_WEEKS[selected];
+        tasksEl.textContent = tc ? tc + ' task' + (tc > 1 ? 's' : '') : 'no tasks';
+        tasksEl.style.display = tc ? '' : 'none';
+        prevBtn.classList.toggle('disabled', selected <= 1);
+        nextBtn.classList.toggle('disabled', selected >= TOTAL_WEEKS);
+
+        // Update grid active
+        gridContainer.querySelectorAll('.g-pill').forEach(p => {
+          p.classList.toggle('active', parseInt(p.dataset.week) === selected);
+        });
+      }
+
+      // Build grid
+      groups.forEach(group => {
+        const groupEl = document.createElement('div');
+        groupEl.className = 'opt5-grid-group';
+
+        const label = document.createElement('div');
+        label.className = 'opt5-grid-label';
+        label.textContent = group.name;
+        groupEl.appendChild(label);
+
+        const grid = document.createElement('div');
+        grid.className = 'opt5-grid';
+
+        for (let w = group.range[0]; w <= group.range[1]; w++) {
+          const cell = document.createElement('div');
+          cell.className = 'g-pill' + (w === selected ? ' active' : '') + (TASK_WEEKS[w] ? ' has-tasks' : '');
+          cell.dataset.week = w;
+          cell.textContent = w;
+          cell.addEventListener('click', () => {
+            selected = w;
+            updateDisplay();
+            dropdown.classList.remove('open');
+            jumpBtn.classList.remove('open');
+          });
+          grid.appendChild(cell);
+        }
+
+        groupEl.appendChild(grid);
+        gridContainer.appendChild(groupEl);
+      });
+
+      prevBtn.addEventListener('click', () => {
+        if (selected > 1) { selected--; updateDisplay(); }
+      });
+      nextBtn.addEventListener('click', () => {
+        if (selected < TOTAL_WEEKS) { selected++; updateDisplay(); }
+      });
+
+      jumpBtn.addEventListener('click', () => {
+        dropdown.classList.toggle('open');
+        jumpBtn.classList.toggle('open');
+      });
+
+      updateDisplay();
+    })();
+  </script>
+</body>
+</html>

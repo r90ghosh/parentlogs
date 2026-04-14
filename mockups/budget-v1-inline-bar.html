@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V1 — Compact Inline Bar</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Jost:wght@300;400;500;600&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #12100e; --surface: #1a1714; --card: #201c18; --card-hover: #282420;
+    --white: #faf6f0; --cream: #ede6dc; --muted: #7a6f62; --dim: #4a4239;
+    --copper: #c4703f; --copper-dim: rgba(196,112,63,0.15); --copper-glow: rgba(196,112,63,0.25);
+    --gold: #d4a853; --gold-dim: rgba(212,168,83,0.15);
+    --sage: #6b8f71; --sage-dim: rgba(107,143,113,0.15);
+    --sky: #5b9bd5; --sky-dim: rgba(91,155,213,0.15);
+    --border: rgba(237,230,220,0.08); --border-hover: rgba(237,230,220,0.15);
+    --shadow-card: 0 2px 8px rgba(0,0,0,0.3);
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Jost', sans-serif;
+    --font-ui: 'Karla', sans-serif;
+  }
+  .light-mode {
+    --bg: #f0eee8; --surface: rgba(255,255,255,0.65); --card: rgba(255,255,255,0.55);
+    --card-hover: rgba(255,255,255,0.75); --white: #1a1714; --cream: #2a2520;
+    --muted: #7a6f62; --dim: #b0a89e; --border: rgba(0,0,0,0.08); --border-hover: rgba(0,0,0,0.15);
+    --shadow-card: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .light-mode .page-bg {
+    background: linear-gradient(135deg, #dbeafe 0%, #fce7f3 50%, #e0e7ff 100%);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--cream); font-family: var(--font-body); }
+  .page-bg { position: fixed; inset: 0; z-index: -1; background: var(--bg); transition: background 0.5s; }
+
+  .page { max-width: 480px; margin: 0 auto; padding: 16px; }
+
+  /* Header */
+  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .page-title { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--white); }
+  .page-subtitle { font-family: var(--font-body); font-size: 13px; color: var(--muted); }
+  .header-actions { display: flex; gap: 8px; }
+  .btn-sm {
+    font-family: var(--font-ui); font-size: 12px; font-weight: 600;
+    padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--cream); cursor: pointer;
+  }
+  .btn-primary { background: var(--copper); color: #fff; border-color: var(--copper); }
+
+  /* Timeline pills */
+  .timeline-row { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 4px; padding-bottom: 4px; scrollbar-width: none; }
+  .timeline-row::-webkit-scrollbar { display: none; }
+  .pill {
+    font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+    padding: 6px 12px; border-radius: 20px; white-space: nowrap;
+    border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer;
+  }
+  .pill.active { background: var(--copper); color: #fff; border-color: var(--copper); }
+
+  /* V1: Inline bar */
+  .v1-bar {
+    display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .v1-stat { flex: 1; text-align: center; position: relative; padding: 0 8px; }
+  .v1-stat:not(:last-child)::after {
+    content: ''; position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    width: 1px; height: 26px; background: var(--border-hover);
+  }
+  .v1-label {
+    font-family: var(--font-ui); font-size: 9px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); margin-bottom: 2px;
+  }
+  .v1-value {
+    font-family: var(--font-ui); font-size: 15px; font-weight: 700;
+    color: var(--white); font-variant-numeric: tabular-nums;
+  }
+  .v1-value.copper { color: var(--copper); }
+  .v1-value.sage { color: var(--sage); }
+  .v1-value.sky { color: var(--sky); }
+  .v1-value.gold { color: var(--gold); }
+
+  /* Tabs */
+  .tab-row { display: flex; gap: 0; margin: 12px 0; }
+  .tab-btn {
+    font-family: var(--font-ui); font-size: 12px; font-weight: 600;
+    padding: 8px 18px; border: 1px solid var(--border);
+    background: transparent; color: var(--muted); cursor: pointer;
+  }
+  .tab-btn:first-child { border-radius: 8px 0 0 8px; }
+  .tab-btn:last-child { border-radius: 0 8px 8px 0; }
+  .tab-btn.active { background: var(--card); color: var(--cream); border-color: var(--border-hover); }
+
+  /* Placeholder content */
+  .placeholder-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px; margin-bottom: 8px;
+  }
+  .placeholder-line { height: 10px; background: rgba(237,230,220,0.06); border-radius: 4px; margin-bottom: 6px; }
+  .placeholder-line.w60 { width: 60%; }
+  .placeholder-line.w40 { width: 40%; }
+  .placeholder-line.w80 { width: 80%; }
+
+  /* Mode toggle */
+  .mode-toggle-fixed {
+    position: fixed; top: 12px; right: 12px; z-index: 100;
+    font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+    padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--cream); cursor: pointer;
+  }
+
+  @media (max-width: 380px) {
+    .v1-value { font-size: 13px; }
+    .v1-label { font-size: 8px; }
+    .v1-stat { padding: 0 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="page-bg"></div>
+<button class="mode-toggle-fixed" onclick="document.body.classList.toggle('light-mode'); this.textContent = document.body.classList.contains('light-mode') ? 'Dark' : 'Light'">Light</button>
+
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Budget Planner</div>
+      <div class="page-subtitle">Plan and track your baby expenses</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-sm btn-primary">+ Custom</button>
+    </div>
+  </div>
+
+  <div class="timeline-row">
+    <button class="pill">1st Tri</button>
+    <button class="pill active">2nd Tri</button>
+    <button class="pill">3rd Tri</button>
+    <button class="pill">Delivery</button>
+    <button class="pill">0-3mo</button>
+    <button class="pill">3-6mo</button>
+    <button class="pill">6-12mo</button>
+    <button class="pill">12-18mo</button>
+    <button class="pill">18+mo</button>
+  </div>
+
+  <!-- V1: The compact inline bar -->
+  <div class="v1-bar">
+    <div class="v1-stat">
+      <div class="v1-label">Estimate</div>
+      <div class="v1-value copper">$33,818</div>
+    </div>
+    <div class="v1-stat">
+      <div class="v1-label">Purchased</div>
+      <div class="v1-value sage">$0</div>
+    </div>
+    <div class="v1-stat">
+      <div class="v1-label">Remaining</div>
+      <div class="v1-value sky">$333</div>
+    </div>
+    <div class="v1-stat">
+      <div class="v1-label">Recurring</div>
+      <div class="v1-value gold">$2,636/mo</div>
+    </div>
+  </div>
+
+  <div class="tab-row">
+    <button class="tab-btn">My Budget (5)</button>
+    <button class="tab-btn active">Browse Items</button>
+  </div>
+
+  <!-- Simulated browse content -->
+  <div class="placeholder-card">
+    <div class="placeholder-line w80"></div>
+    <div class="placeholder-line w60"></div>
+    <div class="placeholder-line w40"></div>
+  </div>
+  <div class="placeholder-card">
+    <div class="placeholder-line w60"></div>
+    <div class="placeholder-line w80"></div>
+    <div class="placeholder-line w40"></div>
+  </div>
+  <div class="placeholder-card">
+    <div class="placeholder-line w40"></div>
+    <div class="placeholder-line w60"></div>
+  </div>
+  <div class="placeholder-card">
+    <div class="placeholder-line w80"></div>
+    <div class="placeholder-line w40"></div>
+    <div class="placeholder-line w60"></div>
+  </div>
+</div>
+</body>
+</html>

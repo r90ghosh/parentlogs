@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Dad Center — iOS App Store Submission Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Jost:wght@300;400;500;600&family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #12100e; --surface: #1a1714; --card: #201c18; --card-hover: #282420;
+    --white: #faf6f0; --cream: #ede6dc; --muted: #7a6f62; --dim: #4a4239;
+    --copper: #c4703f; --gold: #d4a853; --sage: #6b8f71; --coral: #d4836b; --sky: #5b9bd5;
+    --border: rgba(237,230,220,0.08); --border-hover: rgba(237,230,220,0.15);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Jost', sans-serif; background: var(--bg); color: var(--cream); min-height: 100vh; line-height: 1.7; }
+
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 24px 40px; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(20px); }
+  .header-inner { max-width: 900px; margin: 0 auto; }
+  .header h1 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--white); }
+  .header h1 span { color: var(--copper); }
+  .header-meta { font-family: 'Karla', sans-serif; font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  .content { max-width: 900px; margin: 0 auto; padding: 32px 40px 120px; }
+
+  /* Progress tracker */
+  .progress-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; position: sticky; top: 80px; z-index: 50; backdrop-filter: blur(20px); }
+  .progress-label { font-family: 'Karla', sans-serif; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .progress-track { height: 6px; background: rgba(237,230,220,0.08); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--copper), var(--gold)); border-radius: 3px; transition: width 0.5s ease; }
+  .progress-text { font-family: 'Karla', sans-serif; font-size: 13px; color: var(--cream); margin-top: 8px; display: flex; justify-content: space-between; }
+
+  /* Phase sections */
+  .phase { margin-bottom: 48px; }
+  .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .phase-number { font-family: 'Karla', sans-serif; font-size: 11px; font-weight: 700; color: var(--bg); background: var(--copper); width: 28px; height: 28px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .phase-number.done { background: var(--sage); }
+  .phase-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--white); }
+  .phase-description { font-family: 'Jost', sans-serif; font-size: 14px; color: var(--muted); margin-bottom: 16px; padding-left: 40px; }
+
+  /* Steps */
+  .step { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 8px; margin-left: 40px; transition: all 0.3s; cursor: pointer; }
+  .step:hover { border-color: var(--border-hover); background: var(--card-hover); }
+  .step.completed { border-color: rgba(107,143,113,0.3); }
+  .step-top { display: flex; align-items: flex-start; gap: 12px; }
+  .step-checkbox { appearance: none; width: 22px; height: 22px; border: 2px solid var(--dim); border-radius: 6px; cursor: pointer; transition: all 0.2s; position: relative; flex-shrink: 0; margin-top: 2px; }
+  .step-checkbox:checked { background: var(--sage); border-color: var(--sage); }
+  .step-checkbox:checked::after { content: ''; position: absolute; left: 6px; top: 2px; width: 6px; height: 11px; border: solid var(--white); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  .step-content { flex: 1; }
+  .step-title { font-family: 'Karla', sans-serif; font-size: 15px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+  .step.completed .step-title { color: var(--sage); text-decoration: line-through; text-decoration-color: rgba(107,143,113,0.4); }
+  .step-detail { font-family: 'Jost', sans-serif; font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .step-detail a { color: var(--copper); text-decoration: underline; text-decoration-color: rgba(196,112,63,0.4); }
+
+  /* Code blocks */
+  code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--surface); padding: 2px 8px; border-radius: 4px; color: var(--copper); border: 1px solid var(--border); }
+  pre { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: var(--surface); padding: 16px; border-radius: 8px; border: 1px solid var(--border); overflow-x: auto; margin: 8px 0; color: var(--cream); line-height: 1.6; }
+
+  /* Badges */
+  .badge { font-family: 'Karla', sans-serif; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-left: 8px; }
+  .badge.manual { background: rgba(212,168,83,0.15); color: var(--gold); }
+  .badge.command { background: rgba(91,155,213,0.12); color: var(--sky); }
+  .badge.apple { background: rgba(196,112,63,0.15); color: var(--copper); }
+  .badge.critical { background: rgba(212,131,107,0.2); color: var(--coral); }
+
+  /* Warning/info boxes */
+  .callout { border-radius: 10px; padding: 16px 20px; margin: 12px 0; font-size: 13px; }
+  .callout.warning { background: rgba(212,168,83,0.08); border: 1px solid rgba(212,168,83,0.2); color: var(--gold); }
+  .callout.info { background: rgba(91,155,213,0.08); border: 1px solid rgba(91,155,213,0.2); color: var(--sky); }
+  .callout.danger { background: rgba(212,131,107,0.08); border: 1px solid rgba(212,131,107,0.2); color: var(--coral); }
+  .callout.success { background: rgba(107,143,113,0.08); border: 1px solid rgba(107,143,113,0.2); color: var(--sage); }
+  .callout strong { color: var(--white); }
+
+  /* Config table */
+  .config-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  .config-table th { font-family: 'Karla', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .config-table td { font-family: 'Jost', sans-serif; font-size: 13px; color: var(--cream); padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .config-table td:first-child { font-family: 'Karla', sans-serif; font-weight: 600; color: var(--white); white-space: nowrap; }
+  .config-table td code { font-size: 11px; }
+
+  /* Collapsible */
+  details { margin: 8px 0; }
+  details summary { font-family: 'Karla', sans-serif; font-size: 13px; font-weight: 600; color: var(--copper); cursor: pointer; padding: 8px 0; }
+  details summary:hover { color: var(--gold); }
+
+  @media (max-width: 768px) {
+    .header, .content { padding-left: 20px; padding-right: 20px; }
+    .step, .phase-description { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <h1>The Dad Center <span>iOS Submission Guide</span></h1>
+    <div class="header-meta">Version 1.0.0 &mdash; Bundle ID: com.thedadcenter.app &mdash; ASC App ID: 6760888897</div>
+  </div>
+</div>
+
+<div class="content">
+
+<div class="progress-bar" id="progress">
+  <div class="progress-label">Submission Progress</div>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width: 0%"></div></div>
+  <div class="progress-text"><span id="progress-count">0 / 32 steps complete</span><span id="progress-pct">0%</span></div>
+</div>
+
+<!-- ============ PHASE 1 ============ -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-number">1</div>
+    <div class="phase-title">Prerequisites</div>
+  </div>
+  <p class="phase-description">Make sure your environment and accounts are ready before building.</p>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Verify Apple Developer account is active <span class="badge apple">Apple</span></div>
+        <div class="step-detail">
+          Go to <a href="https://developer.apple.com/account" target="_blank">developer.apple.com/account</a>. Confirm your membership is active (not expired). Your Team ID is <code>JB3S3VJF94</code>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Verify App Store Connect app exists <span class="badge apple">Apple</span></div>
+        <div class="step-detail">
+          Go to <a href="https://appstoreconnect.apple.com/apps" target="_blank">appstoreconnect.apple.com/apps</a>. Find "The Dad Center" (ASC App ID: <code>6760888897</code>). If it doesn't exist, create a new app with:<br>
+          <table class="config-table">
+            <tr><td>Name</td><td>The Dad Center</td></tr>
+            <tr><td>Bundle ID</td><td><code>com.thedadcenter.app</code></td></tr>
+            <tr><td>SKU</td><td><code>thedadcenter-ios</code></td></tr>
+            <tr><td>Primary Language</td><td>English (U.S.)</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Verify EAS CLI is installed <span class="badge command">Command</span></div>
+        <div class="step-detail">
+          <pre>eas --version  # Should be >= 12.0.0
+# If not installed:
+npm install -g eas-cli</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Login to EAS <span class="badge command">Command</span></div>
+        <div class="step-detail">
+          <pre>eas login  # Use your Expo account credentials
+eas whoami  # Verify you're logged in</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Verify environment variables <span class="badge manual">Manual</span></div>
+        <div class="step-detail">
+          Check <code>apps/mobile/.env</code> has all required values:
+          <table class="config-table">
+            <tr><th>Variable</th><th>Description</th></tr>
+            <tr><td>EXPO_PUBLIC_SUPABASE_URL</td><td>Your Supabase project URL</td></tr>
+            <tr><td>EXPO_PUBLIC_SUPABASE_ANON_KEY</td><td>Supabase anon/public key</td></tr>
+            <tr><td>EXPO_PUBLIC_REVENUECAT_IOS_KEY</td><td>RevenueCat iOS API key</td></tr>
+            <tr><td>EXPO_PUBLIC_SENTRY_DSN</td><td>Sentry DSN for error tracking</td></tr>
+            <tr><td>EXPO_PUBLIC_API_URL</td><td><code>https://thedadcenter.com</code></td></tr>
+          </table>
+          <div class="callout warning"><strong>Important:</strong> EAS Build reads env vars from EAS Secrets, not your local .env. Set them via <code>eas secret:create</code> or in your Expo dashboard under Project > Secrets.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Set EAS secrets for production build <span class="badge command">Command</span></div>
+        <div class="step-detail">
+          <pre>cd apps/mobile
+
+# Set each secret (you'll be prompted for the value)
+eas secret:create --name EXPO_PUBLIC_SUPABASE_URL --scope project
+eas secret:create --name EXPO_PUBLIC_SUPABASE_ANON_KEY --scope project
+eas secret:create --name EXPO_PUBLIC_REVENUECAT_IOS_KEY --scope project
+eas secret:create --name EXPO_PUBLIC_SENTRY_DSN --scope project
+eas secret:create --name EXPO_PUBLIC_API_URL --scope project
+eas secret:create --name SENTRY_AUTH_TOKEN --scope project
+eas secret:create --name SENTRY_ORG --scope project
+eas secret:create --name SENTRY_PROJECT --scope project
+
+# Verify all secrets are set
+eas secret:list</pre>
+          <div class="callout info">Use the same values from your <code>.env</code> file. The Sentry secrets (<code>SENTRY_AUTH_TOKEN</code>, <code>SENTRY_ORG</code>, <code>SENTRY_PROJECT</code>) are needed so the production build can upload source maps.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PHASE 2 ============ -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-number">2</div>
+    <div class="phase-title">App Store Connect Setup</div>
+  </div>
+  <p class="phase-description">Configure your app listing, screenshots, and metadata in App Store Connect before submitting.</p>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Fill in App Information <span class="badge apple">Apple</span></div>
+        <div class="step-detail">
+          In App Store Connect > Your App > App Information:
+          <table class="config-table">
+            <tr><td>Subtitle</td><td>Your Week-by-Week Parenting Playbook</td></tr>
+            <tr><td>Primary Category</td><td>Health & Fitness</td></tr>
+            <tr><td>Secondary Category</td><td>Lifestyle</td></tr>
+            <tr><td>Content Rights</td><td>Does not contain third-party content</td></tr>
+            <tr><td>Age Rating</td><td>4+ (no objectionable content)</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Write App Description <span class="badge manual">Manual</span></div>
+        <div class="step-detail">
+          In App Store Connect > Your App > Version > Description. Suggested copy:<br><br>
+          <details>
+            <summary>Click to expand suggested description</summary>
+            <pre>The Dad Center is the operating system for modern fatherhood.
+
+Get week-by-week pregnancy guidance designed specifically for dads. From "just found out" to first birthday and beyond, every week brings a personalized briefing with exactly what you need to know and do.
+
+WEEKLY BRIEFINGS
+- 47 weeks of personalized content from pregnancy through 18+ months
+- What's happening with baby, what your partner is experiencing, and your role
+- Evidence-based guidance, zero condescension
+
+SMART TASK MANAGER
+- 200+ pre-loaded tasks timed to your due date
+- Assign to mom, dad, or both
+- Nothing falls through the cracks
+
+BABY TRACKER
+- Log feeds, diapers, sleep, and milestones in seconds
+- Track patterns and share data with your partner
+
+BUDGET PLANNER
+- 165+ baby items with real pricing
+- Premium vs value brand recommendations
+- Know the actual cost of parenthood before it arrives
+
+FAMILY SHARING
+One subscription covers both parents. Tasks, logs, and briefings sync in real-time.
+
+PRICING
+- Free: 30-day task window + 4 weeks of briefings
+- Premium: $4.99/mo or $39.99/yr ($3.33/mo)
+- Lifetime: $99.99 one-time
+
+Built by dads, for dads who refuse to wing it.</pre>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Add Keywords <span class="badge manual">Manual</span></div>
+        <div class="step-detail">
+          In the Keywords field (100 chars max, comma-separated):
+          <pre>dad,pregnancy,parenting,baby tracker,newborn,expecting,father,due date,weekly guide,budget</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Set Support and Marketing URLs <span class="badge apple">Apple</span></div>
+        <div class="step-detail">
+          <table class="config-table">
+            <tr><td>Support URL</td><td><code>https://thedadcenter.com/faq</code></td></tr>
+            <tr><td>Marketing URL</td><td><code>https://thedadcenter.com</code></td></tr>
+            <tr><td>Privacy Policy URL</td><td><code>https://thedadcenter.com/privacy</code></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Take & upload screenshots <span class="badge critical">Critical</span></div>
+        <div class="step-detail">
+          You need screenshots for these device sizes:
+          <table class="config-table">
+            <tr><th>Device</th><th>Size</th><th>Required</th></tr>
+            <tr><td>iPhone 6.7" (15 Pro Max)</td><td>1290 x 2796</td><td>Yes</td></tr>
+            <tr><td>iPhone 6.5" (11 Pro Max)</td><td>1242 x 2688</td><td>Yes</td></tr>
+            <tr><td>iPhone 5.5" (8 Plus)</td><td>1242 x 2208</td><td>Optional</td></tr>
+          </table>
+          <strong>Screens to capture (5-10 per size):</strong>
+          <ol style="margin-top: 8px; padding-left: 20px; color: var(--muted);">
+            <li>Landing page / Hero (guest home)</li>
+            <li>Dashboard (logged in)</li>
+            <li>Weekly Briefing</li>
+            <li>Task Manager with tasks</li>
+            <li>Baby Tracker</li>
+            <li>Budget Planner</li>
+            <li>Pregnancy Week Guide</li>
+          </ol>
+          <div class="callout warning"><strong>Tip:</strong> Use the iOS Simulator (Cmd+S to capture). Run at different device sizes. Consider adding text overlays in Figma/Canva for a polished look.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Set up App Privacy (Nutrition Labels) <span class="badge critical">Critical</span></div>
+        <div class="step-detail">
+          In App Store Connect > App Privacy, declare:<br><br>
+          <strong>Data Collected:</strong>
+          <table class="config-table">
+            <tr><th>Data Type</th><th>Purpose</th><th>Linked to Identity</th></tr>
+            <tr><td>Email Address</td><td>App Functionality, Account</td><td>Yes</td></tr>
+            <tr><td>Name</td><td>App Functionality</td><td>Yes</td></tr>
+            <tr><td>User ID</td><td>App Functionality</td><td>Yes</td></tr>
+            <tr><td>Product Interaction</td><td>Analytics</td><td>Yes</td></tr>
+            <tr><td>Health & Fitness (pregnancy data)</td><td>App Functionality</td><td>Yes</td></tr>
+            <tr><td>Purchases</td><td>App Functionality</td><td>Yes</td></tr>
+            <tr><td>Diagnostics (crash data)</td><td>App Functionality</td><td>No (Sentry)</td></tr>
+          </table>
+          <div class="callout info"><strong>Note:</strong> Since you use Sign in with Apple and track analytics via GA4/Sentry, you must declare these. Don't skip this — Apple rejects apps with incomplete privacy labels.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Set up In-App Purchases in App Store Connect <span class="badge critical">Critical</span></div>
+        <div class="step-detail">
+          Go to App Store Connect > Your App > In-App Purchases (or Subscriptions).<br><br>
+          Create a <strong>Subscription Group</strong> called "Premium Access", then add:
+          <table class="config-table">
+            <tr><th>Product ID</th><th>Type</th><th>Price</th></tr>
+            <tr><td><code>tdc_monthly_499</code></td><td>Auto-Renewable Sub</td><td>$4.99/mo</td></tr>
+            <tr><td><code>tdc_annual_3999</code></td><td>Auto-Renewable Sub</td><td>$39.99/yr</td></tr>
+            <tr><td><code>tdc_lifetime_9999</code></td><td>Non-Consumable</td><td>$99.99</td></tr>
+          </table>
+          <div class="callout warning"><strong>Important:</strong> These product IDs must match what's configured in RevenueCat. Check your RevenueCat dashboard > Products to confirm the IDs match.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Create a Review Account <span class="badge critical">Critical</span></div>
+        <div class="step-detail">
+          Apple reviewers need a test account to review your app. Create a demo account:
+          <ol style="margin-top: 8px; padding-left: 20px; color: var(--muted);">
+            <li>Go to your app and create a new account with a test email</li>
+            <li>Complete onboarding (role: dad, enter a due date)</li>
+            <li>Make sure the account has enough data to demo the app (some tasks, a briefing visible)</li>
+          </ol>
+          In App Store Connect > App Review Information:
+          <table class="config-table">
+            <tr><td>Sign-in Required</td><td>Yes</td></tr>
+            <tr><td>Username</td><td>Your test email</td></tr>
+            <tr><td>Password</td><td>Your test password</td></tr>
+            <tr><td>Contact Email</td><td>Your real email</td></tr>
+            <tr><td>Contact Phone</td><td>Your real phone</td></tr>
+          </table>
+          <div class="callout danger"><strong>Apple will reject</strong> your app if they can't log in and test it. Double-check the credentials work.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PHASE 3 ============ -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-number">3</div>
+    <div class="phase-title">Build & Submit</div>
+  </div>
+  <p class="phase-description">Build the production binary and submit it to App Store Connect.</p>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Run production build <span class="badge command">Command</span></div>
+        <div class="step-detail">
+          <pre>cd apps/mobile
+eas build --platform ios --profile production</pre>
+          This takes 15-30 minutes. EAS will:
+          <ul style="margin-top: 8px; padding-left: 20px; color: var(--muted);">
+            <li>Build the iOS binary in the cloud</li>
+            <li>Auto-increment the build number</li>
+            <li>Sign with your distribution certificate</li>
+            <li>Upload source maps to Sentry (if configured)</li>
+          </ul>
+          <div class="callout info">You can monitor the build at <a href="https://expo.dev" target="_blank">expo.dev</a> > Your Project > Builds.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Submit to App Store Connect <span class="badge command">Command</span></div>
+        <div class="step-detail">
+          After build completes:
+          <pre>eas submit --platform ios --profile production</pre>
+          Or combine build + submit in one command:
+          <pre>eas build --platform ios --profile production --auto-submit</pre>
+          EAS will upload the .ipa to App Store Connect. This takes ~5 minutes.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Verify build appears in App Store Connect <span class="badge apple">Apple</span></div>
+        <div class="step-detail">
+          Go to App Store Connect > Your App > TestFlight. The new build should appear within 5-15 minutes after submission. It will show as "Processing" initially, then "Ready to Test".<br><br>
+          <div class="callout warning"><strong>If build doesn't appear:</strong> Check your email for any "Missing Compliance" alerts. You may need to answer the export compliance question (select "No" for encryption since <code>usesNonExemptEncryption: false</code> is already set).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PHASE 4 ============ -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-number">4</div>
+    <div class="phase-title">TestFlight Testing</div>
+  </div>
+  <p class="phase-description">Test on real devices via TestFlight before submitting for review.</p>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Install via TestFlight on your device <span class="badge manual">Manual</span></div>
+        <div class="step-detail">
+          <ol style="padding-left: 20px; color: var(--muted);">
+            <li>Open TestFlight on your iPhone</li>
+            <li>The new build should appear automatically (you're the developer)</li>
+            <li>Tap "Install" on the latest build</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Test: Guest browsing flow <span class="badge manual">Manual</span></div>
+        <div class="step-detail">
+          <ul style="padding-left: 20px; color: var(--muted);">
+            <li>Open app fresh (not logged in)</li>
+            <li>Verify landing page loads with hero, features, pricing</li>
+            <li>Tap "Browse as Guest" &rarr; verify 3 tabs (Home, Explore, Pricing)</li>
+            <li>Tap each content card in Explore &rarr; verify screens load</li>
+            <li>Tap "Get Started" CTA &rarr; verify it goes to signup</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Test: Signup & onboarding <span class="badge manual">Manual</span></div>
+        <div class="step-detail">
+          <ul style="padding-left: 20px; color: var(--muted);">
+            <li>Sign up with email + password</li>
+            <li>Sign up with Apple (test Apple Sign In works)</li>
+            <li>Complete onboarding: role &rarr; family (due date) &rarr; invite partner &rarr; ready</li>
+            <li>Verify you land on the main dashboard</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Test: Core features <span class="badge manual">Manual</span></div>
+        <div class="step-detail">
+          <ul style="padding-left: 20px; color: var(--muted);">
+            <li><strong>Dashboard:</strong> Cards load, greeting shows, quick actions work</li>
+            <li><strong>Tasks:</strong> View tasks, complete a task, create a task</li>
+            <li><strong>Briefing:</strong> Current week loads, navigate to other weeks</li>
+            <li><strong>Tracker:</strong> Log a feed/diaper/sleep, view history</li>
+            <li><strong>More:</strong> All menu items navigate correctly</li>
+            <li><strong>Budget:</strong> Templates load, add item to budget</li>
+            <li><strong>Checklists:</strong> View checklists, toggle items</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Test: Subscriptions (sandbox) <span class="badge critical">Critical</span></div>
+        <div class="step-detail">
+          <ol style="padding-left: 20px; color: var(--muted);">
+            <li>Go to Settings > Upgrade (or the paywall)</li>
+            <li>Tap a subscription plan</li>
+            <li>Complete the sandbox purchase (use your Sandbox Apple ID)</li>
+            <li>Verify subscription tier updates in the app</li>
+            <li>Verify premium features unlock</li>
+          </ol>
+          <div class="callout warning"><strong>Sandbox Apple ID:</strong> Create one at App Store Connect > Users & Access > Sandbox Testers. Do NOT use your real Apple ID for sandbox purchases.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Test: Push notifications <span class="badge manual">Manual</span></div>
+        <div class="step-detail">
+          <ul style="padding-left: 20px; color: var(--muted);">
+            <li>Accept notification permission prompt</li>
+            <li>Trigger a notification (e.g., partner activity, or send test via Supabase edge function)</li>
+            <li>Verify notification appears on device</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Test: Edge cases <span class="badge manual">Manual</span></div>
+        <div class="step-detail">
+          <ul style="padding-left: 20px; color: var(--muted);">
+            <li>Kill app and reopen &rarr; session persists, no re-login</li>
+            <li>Toggle airplane mode &rarr; app doesn't crash, shows graceful errors</li>
+            <li>Rotate device &rarr; app stays portrait (orientation locked)</li>
+            <li>Sign out and sign back in &rarr; data loads correctly</li>
+            <li>Test on older device (iPhone SE if possible) &rarr; no layout issues</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PHASE 5 ============ -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-number">5</div>
+    <div class="phase-title">Submit for App Review</div>
+  </div>
+  <p class="phase-description">Final submission to Apple for review. Typical review time: 24-48 hours.</p>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Select build for review <span class="badge apple">Apple</span></div>
+        <div class="step-detail">
+          In App Store Connect > Your App > App Store tab > select your new version (1.0.0).<br>
+          Under "Build", click the + button and select the TestFlight build you just tested.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Write "What's New" text <span class="badge manual">Manual</span></div>
+        <div class="step-detail">
+          For version 1.0.0:
+          <pre>Initial release of The Dad Center - your week-by-week parenting companion.
+
+Features include:
+- 47 weeks of personalized briefings
+- 200+ pre-loaded tasks
+- Baby tracker for feeds, diapers, and sleep
+- Budget planner with 165+ items
+- Family sharing and partner sync</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Add Review Notes <span class="badge apple">Apple</span></div>
+        <div class="step-detail">
+          In "Notes for Review", add context for the reviewer:
+          <pre>This is a pregnancy and parenting companion app designed for fathers.
+
+The app offers free features (30-day task window, 4 weeks of briefings)
+and premium features via subscription.
+
+Test account credentials are provided in the App Review Information section.
+
+The app uses:
+- Supabase for backend (auth, database, realtime)
+- RevenueCat for in-app subscriptions
+- Sign in with Apple for authentication
+- Push notifications for task reminders and partner activity</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Final pre-submit checklist <span class="badge critical">Critical</span></div>
+        <div class="step-detail">
+          <ul style="padding-left: 20px; color: var(--muted);">
+            <li>Screenshots uploaded for all required sizes</li>
+            <li>Description, keywords, subtitle filled in</li>
+            <li>Privacy policy URL is live and accessible</li>
+            <li>App Privacy nutrition labels completed</li>
+            <li>Review account credentials work (test them now!)</li>
+            <li>In-app purchases are "Ready to Submit"</li>
+            <li>Support URL is live</li>
+            <li>Age rating questionnaire completed</li>
+            <li>Build is selected</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Submit for Review <span class="badge critical">Critical</span></div>
+        <div class="step-detail">
+          Click <strong>"Submit for Review"</strong> in App Store Connect.<br><br>
+          <div class="callout success"><strong>That's it!</strong> Apple typically reviews within 24-48 hours. You'll get an email when it's approved (or if they have questions). Common rejection reasons:<br>
+          - Can't log in with test credentials<br>
+          - Missing privacy policy<br>
+          - Incomplete app privacy labels<br>
+          - Subscription doesn't clearly show pricing/terms<br>
+          - App crashes during review</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PHASE 6 ============ -->
+<div class="phase">
+  <div class="phase-header">
+    <div class="phase-number">6</div>
+    <div class="phase-title">Post-Approval</div>
+  </div>
+  <p class="phase-description">After Apple approves your app.</p>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Choose release method <span class="badge apple">Apple</span></div>
+        <div class="step-detail">
+          When submitting, you chose one of:
+          <ul style="padding-left: 20px; color: var(--muted);">
+            <li><strong>Manually release</strong> — You click "Release" when ready (recommended for v1.0)</li>
+            <li><strong>Automatically release</strong> — Goes live immediately after approval</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Verify app is live on the App Store <span class="badge manual">Manual</span></div>
+        <div class="step-detail">
+          Search "The Dad Center" on the App Store. Verify:
+          <ul style="padding-left: 20px; color: var(--muted);">
+            <li>App icon displays correctly</li>
+            <li>Screenshots are in the right order</li>
+            <li>Description reads well</li>
+            <li>Download and test on a clean device</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Update website "Coming Soon" messaging <span class="badge manual">Manual</span></div>
+        <div class="step-detail">
+          The web app's Hero section says "Coming soon to iOS & Android". Update it to link to the App Store listing once live. Add the App Store badge/link.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step" onclick="toggleStep(this)">
+    <div class="step-top">
+      <input type="checkbox" class="step-checkbox" onclick="event.stopPropagation(); updateProgress()">
+      <div class="step-content">
+        <div class="step-title">Monitor Sentry for crashes <span class="badge manual">Manual</span></div>
+        <div class="step-detail">
+          Check <a href="https://sentry.io" target="_blank">sentry.io</a> for any crash reports from production users in the first 24-48 hours. Address any P0 crashes immediately with a hotfix build.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function toggleStep(el) {
+  // Don't toggle if clicking the checkbox itself
+  if (event.target.classList.contains('step-checkbox')) return
+  const cb = el.querySelector('.step-checkbox')
+  cb.checked = !cb.checked
+  updateProgress()
+}
+
+function updateProgress() {
+  const boxes = document.querySelectorAll('.step-checkbox')
+  const checked = document.querySelectorAll('.step-checkbox:checked')
+  const total = boxes.length
+  const done = checked.length
+  const pct = Math.round((done / total) * 100)
+
+  document.getElementById('progress-fill').style.width = pct + '%'
+  document.getElementById('progress-count').textContent = done + ' / ' + total + ' steps complete'
+  document.getElementById('progress-pct').textContent = pct + '%'
+
+  // Update step visual state
+  boxes.forEach(cb => {
+    const step = cb.closest('.step')
+    if (cb.checked) step.classList.add('completed')
+    else step.classList.remove('completed')
+  })
+
+  // Save to localStorage
+  const state = Array.from(boxes).map(cb => cb.checked)
+  localStorage.setItem('tdc-ios-submission', JSON.stringify(state))
+}
+
+// Restore state
+const saved = JSON.parse(localStorage.getItem('tdc-ios-submission') || '[]')
+if (saved.length) {
+  document.querySelectorAll('.step-checkbox').forEach((cb, i) => {
+    if (saved[i]) cb.checked = true
+  })
+  updateProgress()
+}
+</script>
+</body>
+</html>

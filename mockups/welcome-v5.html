@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome V5 — Subtle &amp; Warm</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Jost:wght@300;400;500;600&family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #12100e;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── Background glows ── */
+  .bg-glows {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% -10%, rgba(196,112,63,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 90% 60%, rgba(212,168,83,0.04) 0%, transparent 60%);
+  }
+
+  /* ── Ambient orbs ── */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .orb-1 {
+    width: 140px;
+    height: 140px;
+    background: rgba(196,112,63,0.08);
+    filter: blur(55px);
+    top: 12%;
+    left: 8%;
+    animation: orb-float-1 30s ease-in-out infinite;
+  }
+
+  .orb-2 {
+    width: 100px;
+    height: 100px;
+    background: rgba(212,168,83,0.06);
+    filter: blur(45px);
+    top: 65%;
+    right: 12%;
+    animation: orb-float-2 28s ease-in-out infinite;
+  }
+
+  .orb-3 {
+    width: 150px;
+    height: 150px;
+    background: rgba(250,246,240,0.04);
+    filter: blur(60px);
+    bottom: 15%;
+    left: 20%;
+    animation: orb-float-3 35s ease-in-out infinite;
+  }
+
+  .orb-4 {
+    width: 80px;
+    height: 80px;
+    background: rgba(196,112,63,0.08);
+    filter: blur(40px);
+    top: 30%;
+    right: 25%;
+    animation: orb-float-4 26s ease-in-out infinite;
+  }
+
+  .orb-5 {
+    width: 120px;
+    height: 120px;
+    background: rgba(212,168,83,0.06);
+    filter: blur(50px);
+    top: 8%;
+    right: 35%;
+    animation: orb-float-5 32s ease-in-out infinite;
+  }
+
+  .orb-6 {
+    width: 90px;
+    height: 90px;
+    background: rgba(250,246,240,0.04);
+    filter: blur(45px);
+    bottom: 30%;
+    right: 8%;
+    animation: orb-float-6 29s ease-in-out infinite;
+  }
+
+  @keyframes orb-float-1 {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(20px, -15px); }
+    66% { transform: translate(-10px, 10px); }
+  }
+
+  @keyframes orb-float-2 {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(-15px, 12px); }
+    66% { transform: translate(12px, -18px); }
+  }
+
+  @keyframes orb-float-3 {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(18px, 10px); }
+    66% { transform: translate(-14px, -12px); }
+  }
+
+  @keyframes orb-float-4 {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(-12px, -20px); }
+    66% { transform: translate(16px, 8px); }
+  }
+
+  @keyframes orb-float-5 {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(10px, 14px); }
+    66% { transform: translate(-18px, -6px); }
+  }
+
+  @keyframes orb-float-6 {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(-8px, 16px); }
+    66% { transform: translate(14px, -10px); }
+  }
+
+  /* ── Welcome card ── */
+  .welcome-card {
+    position: relative;
+    max-width: 460px;
+    width: calc(100% - 32px);
+    padding: 44px 36px;
+    border-radius: 20px;
+    background: rgba(32, 28, 24, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(237, 230, 220, 0.12);
+    box-shadow:
+      0 8px 32px rgba(0,0,0,0.4),
+      0 0 60px rgba(196,112,63,0.05);
+    text-align: center;
+    z-index: 10;
+
+    /* Entrance animation */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: card-entrance 600ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
+
+    /* Border glow breathing */
+    animation:
+      card-entrance 600ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards,
+      border-glow 3s ease-in-out infinite 800ms;
+  }
+
+  @keyframes card-entrance {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes border-glow {
+    0%, 100% {
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.4),
+        0 0 60px rgba(196,112,63,0.05);
+    }
+    50% {
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.4),
+        0 0 60px rgba(196,112,63,0.15);
+    }
+  }
+
+  /* ── Dismiss transition ── */
+  .welcome-card.dismissing {
+    animation: card-dismiss 400ms ease-in forwards;
+  }
+
+  @keyframes card-dismiss {
+    0% {
+      opacity: 1;
+      transform: scale(1.02);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.02);
+    }
+  }
+
+  /* ── Sparkle cluster ── */
+  .sparkle-cluster {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .sparkle {
+    font-size: 12px;
+    color: #d4a853;
+    animation: twinkle 2s ease-in-out infinite;
+  }
+
+  .sparkle:nth-child(1) { animation-delay: 0s; }
+  .sparkle:nth-child(2) { animation-delay: 0.4s; }
+  .sparkle:nth-child(3) { animation-delay: 0.8s; }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* ── Content ── */
+  .headline {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 30px;
+    color: #faf6f0;
+    line-height: 1.3;
+  }
+
+  .separator {
+    width: 40px;
+    height: 1px;
+    background: rgba(196,112,63,0.4);
+    margin: 20px auto;
+  }
+
+  .body-text {
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: #7a6f62;
+    line-height: 1.8;
+  }
+
+  .secondary-text {
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: #4a4239;
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+
+  /* ── CTA Button ── */
+  .cta-btn {
+    display: inline-block;
+    margin-top: 28px;
+    font-family: 'Karla', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #c4703f;
+    background: transparent;
+    border: 1px solid rgba(196,112,63,0.5);
+    padding: 11px 28px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 200ms ease, border-color 200ms ease;
+  }
+
+  .cta-btn:hover {
+    background: rgba(196,112,63,0.1);
+    border-color: #c4703f;
+  }
+
+  .cta-btn:active {
+    transform: scale(0.98);
+  }
+
+  /* ── Fade-out overlay for full-page dismissal ── */
+  .overlay-fade {
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 400ms ease;
+    z-index: 100;
+    background: #12100e;
+  }
+
+  .overlay-fade.active {
+    opacity: 1;
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 480px) {
+    .welcome-card {
+      padding: 36px 24px;
+    }
+
+    .headline {
+      font-size: 26px;
+    }
+
+    .body-text {
+      font-size: 14px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glows"></div>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="orb orb-4"></div>
+<div class="orb orb-5"></div>
+<div class="orb orb-6"></div>
+
+<div class="welcome-card" id="welcomeCard">
+  <div class="sparkle-cluster">
+    <span class="sparkle">&#10022;</span>
+    <span class="sparkle">&#10022;</span>
+    <span class="sparkle">&#10022;</span>
+  </div>
+
+  <h1 class="headline">A New Chapter Begins</h1>
+
+  <div class="separator"></div>
+
+  <p class="body-text">
+    You just took the first step most dads never take&hairsp;&mdash;&hairsp;showing up early.
+    Over the next months, we'll walk beside you with weekly briefings, practical tasks,
+    and the kind of honest guidance that actually helps.
+    No fluff. Just what you need, when you need it.
+  </p>
+
+  <p class="secondary-text">
+    Everything is ready. Your first briefing is waiting.
+  </p>
+
+  <button class="cta-btn" id="ctaBtn">View My Dashboard</button>
+</div>
+
+<div class="overlay-fade" id="overlayFade"></div>
+
+<script>
+  document.getElementById('ctaBtn').addEventListener('click', function () {
+    var card = document.getElementById('welcomeCard');
+    var overlay = document.getElementById('overlayFade');
+
+    // Scale pop then fade card
+    card.style.transform = 'scale(1.02)';
+    setTimeout(function () {
+      card.classList.add('dismissing');
+    }, 100);
+
+    // Full page fade to background
+    setTimeout(function () {
+      overlay.classList.add('active');
+    }, 200);
+  });
+</script>
+
+</body>
+</html>

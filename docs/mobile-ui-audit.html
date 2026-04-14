@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Dad Center - Mobile iOS UI Audit</title>
+<style>
+  :root {
+    --bg: #0e0c0a;
+    --surface: #161311;
+    --card: #1e1a16;
+    --card-hover: #262220;
+    --white: #faf6f0;
+    --cream: #ede6dc;
+    --muted: #7a6f62;
+    --dim: #4a4239;
+    --copper: #c4703f;
+    --copper-dim: rgba(196,112,63,0.15);
+    --copper-glow: rgba(196,112,63,0.25);
+    --gold: #d4a853;
+    --gold-dim: rgba(212,168,83,0.15);
+    --sage: #6b8f71;
+    --sage-dim: rgba(107,143,113,0.15);
+    --coral: #d4836b;
+    --coral-dim: rgba(212,131,107,0.15);
+    --sky: #5b9bd5;
+    --sky-dim: rgba(91,155,213,0.15);
+    --rose: #c47a8f;
+    --rose-dim: rgba(196,122,143,0.15);
+    --border: rgba(237,230,220,0.08);
+    --red: #e05252;
+    --red-dim: rgba(224,82,82,0.12);
+    --amber: #d4a853;
+    --amber-dim: rgba(212,168,83,0.12);
+    --green: #6b8f71;
+    --green-dim: rgba(107,143,113,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+    background: var(--bg);
+    color: var(--cream);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Scroll progress bar */
+  .scroll-progress {
+    position: fixed; top: 0; left: 0; height: 3px; z-index: 1000;
+    background: linear-gradient(90deg, var(--copper), var(--gold));
+    transition: width 50ms linear;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 3px; left: 0; right: 0; z-index: 999;
+    background: rgba(14,12,10,0.85);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  nav .logo { font-weight: 700; font-size: 14px; color: var(--copper); letter-spacing: 1px; text-transform: uppercase; }
+  nav .nav-links { display: flex; gap: 20px; }
+  nav .nav-links a {
+    font-size: 13px; color: var(--muted); text-decoration: none;
+    transition: color 0.2s;
+  }
+  nav .nav-links a:hover { color: var(--copper); }
+
+  /* Hero */
+  .hero {
+    padding: 120px 24px 60px;
+    max-width: 1000px; margin: 0 auto;
+    text-align: center;
+  }
+  .hero .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--copper-dim); border: 1px solid rgba(196,112,63,0.3);
+    border-radius: 20px; padding: 6px 16px;
+    font-size: 12px; color: var(--copper); font-weight: 600;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 48px; font-weight: 700; color: var(--white);
+    line-height: 1.15; margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--white), var(--copper));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero .subtitle {
+    font-size: 18px; color: var(--muted); max-width: 600px;
+    margin: 0 auto 40px; line-height: 1.6;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: flex; justify-content: center; gap: 40px;
+    flex-wrap: wrap; margin-bottom: 40px;
+  }
+  .stat-box {
+    text-align: center; padding: 20px 28px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; min-width: 140px;
+  }
+  .stat-box .value { font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+  .stat-box .label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .stat-red .value { color: var(--red); }
+  .stat-amber .value { color: var(--amber); }
+  .stat-copper .value { color: var(--copper); }
+  .stat-green .value { color: var(--green); }
+
+  /* Sections */
+  section {
+    max-width: 1000px; margin: 0 auto;
+    padding: 60px 24px;
+  }
+  section + section { border-top: 1px solid var(--border); }
+  .section-label {
+    font-size: 11px; font-weight: 700; color: var(--copper);
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;
+  }
+  section h2 {
+    font-size: 32px; font-weight: 700; color: var(--white);
+    margin-bottom: 8px; line-height: 1.2;
+  }
+  section .section-desc {
+    font-size: 15px; color: var(--muted); margin-bottom: 32px;
+    max-width: 700px;
+  }
+
+  /* Severity indicators */
+  .severity { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .severity-critical { background: var(--red-dim); color: var(--red); }
+  .severity-high { background: var(--coral-dim); color: var(--coral); }
+  .severity-medium { background: var(--amber-dim); color: var(--amber); }
+  .severity-low { background: var(--sky-dim); color: var(--sky); }
+  .severity-good { background: var(--green-dim); color: var(--green); }
+
+  /* Cards */
+  .card-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media(min-width: 640px) { .card-grid-2 { grid-template-columns: 1fr 1fr; } }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .card:hover { border-color: rgba(237,230,220,0.15); transform: translateY(-2px); }
+  .card h3 { font-size: 16px; color: var(--white); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+  .card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+  .card .file-ref { font-family: 'SF Mono', monospace; font-size: 11px; color: var(--dim); margin-top: 8px; }
+
+  .card-accent-top { border-top: 2px solid; padding-top: 22px; }
+  .card-accent-copper { border-top-color: var(--copper); }
+  .card-accent-red { border-top-color: var(--red); }
+  .card-accent-amber { border-top-color: var(--amber); }
+  .card-accent-green { border-top-color: var(--green); }
+  .card-accent-sky { border-top-color: var(--sky); }
+
+  /* Issue card */
+  .issue-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px 24px;
+    margin-bottom: 12px;
+  }
+  .issue-card .issue-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 12px; margin-bottom: 10px;
+  }
+  .issue-card h4 { font-size: 15px; color: var(--white); font-weight: 600; }
+  .issue-card .issue-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .issue-card .issue-body strong { color: var(--cream); }
+  .issue-card .issue-body code {
+    font-family: 'SF Mono', monospace; font-size: 12px;
+    background: rgba(237,230,220,0.06); padding: 2px 6px; border-radius: 4px;
+    color: var(--copper);
+  }
+  .issue-card .recommendation {
+    margin-top: 12px; padding: 12px 16px;
+    background: var(--green-dim); border-radius: 8px;
+    font-size: 13px; color: var(--sage); line-height: 1.5;
+  }
+  .issue-card .recommendation strong { color: #8ab490; }
+
+  /* Color palette display */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+  .color-swatch {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 10px;
+    background: var(--card); border: 1px solid var(--border);
+  }
+  .color-swatch .swatch {
+    width: 28px; height: 28px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;
+  }
+  .color-swatch .color-info { flex: 1; min-width: 0; }
+  .color-swatch .color-name { font-size: 12px; font-weight: 600; color: var(--white); }
+  .color-swatch .color-hex { font-family: 'SF Mono', monospace; font-size: 11px; color: var(--dim); }
+  .color-swatch .color-count { font-size: 11px; color: var(--muted); }
+
+  /* Screen audit table */
+  .screen-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  .screen-table th {
+    text-align: left; font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.8px;
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+  }
+  .screen-table td {
+    padding: 12px 14px; border-bottom: 1px solid var(--border);
+    font-size: 13px; color: var(--cream); vertical-align: top;
+  }
+  .screen-table tr:hover td { background: rgba(237,230,220,0.02); }
+  .screen-table .screen-name { font-weight: 600; color: var(--white); }
+  .screen-table .file-path { font-family: 'SF Mono', monospace; font-size: 11px; color: var(--dim); }
+
+  /* Progress bars */
+  .progress-bar {
+    height: 6px; border-radius: 3px;
+    background: rgba(237,230,220,0.06);
+    overflow: hidden; margin-top: 8px;
+  }
+  .progress-bar .fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+
+  /* Comparison table */
+  .compare-table { width: 100%; border-collapse: collapse; }
+  .compare-table th {
+    text-align: left; font-size: 12px; color: var(--muted);
+    padding: 10px 16px; border-bottom: 1px solid var(--border);
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .compare-table td {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    font-size: 13px; vertical-align: top;
+  }
+  .compare-table .label-col { color: var(--white); font-weight: 500; width: 200px; }
+  .compare-table .current-col { color: var(--muted); }
+  .compare-table .recommended-col { color: var(--sage); }
+  .compare-table tr:hover td { background: rgba(237,230,220,0.02); }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--surface); border-radius: 10px; padding: 4px; }
+  .tab-btn {
+    flex: 1; padding: 10px 16px; border: none; border-radius: 8px;
+    background: transparent; color: var(--muted); font-size: 13px;
+    font-weight: 600; cursor: pointer; transition: all 0.2s;
+    font-family: inherit;
+  }
+  .tab-btn.active { background: var(--copper-dim); color: var(--copper); }
+  .tab-btn:hover:not(.active) { color: var(--cream); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Roadmap timeline */
+  .roadmap { position: relative; padding-left: 32px; }
+  .roadmap::before {
+    content: ''; position: absolute; left: 11px; top: 0; bottom: 0;
+    width: 2px; background: rgba(196,112,63,0.2); border-radius: 1px;
+  }
+  .roadmap-phase { position: relative; margin-bottom: 32px; }
+  .roadmap-phase .dot {
+    position: absolute; left: -28px; top: 4px;
+    width: 16px; height: 16px; border-radius: 8px;
+    border: 2px solid var(--copper);
+    background: var(--bg);
+  }
+  .roadmap-phase .phase-label {
+    font-size: 11px; font-weight: 700; color: var(--copper);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .roadmap-phase h4 { font-size: 16px; color: var(--white); margin-bottom: 6px; }
+  .roadmap-phase p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .roadmap-phase .tasks { margin-top: 10px; }
+  .roadmap-phase .task-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 13px; color: var(--cream); margin-bottom: 6px;
+  }
+  .roadmap-phase .task-item::before {
+    content: ''; width: 6px; height: 6px; border-radius: 3px;
+    background: var(--dim); margin-top: 7px; flex-shrink: 0;
+  }
+
+  /* File heat map */
+  .heatmap { display: grid; gap: 6px; }
+  .heatmap-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 14px; border-radius: 8px;
+    background: var(--card);
+  }
+  .heatmap-row .bar-container { flex: 1; height: 6px; background: rgba(237,230,220,0.06); border-radius: 3px; overflow: hidden; }
+  .heatmap-row .bar { height: 100%; border-radius: 3px; }
+  .heatmap-row .file-name { font-family: 'SF Mono', monospace; font-size: 11px; color: var(--cream); min-width: 220px; }
+  .heatmap-row .count { font-size: 12px; color: var(--muted); min-width: 40px; text-align: right; }
+
+  /* Footer */
+  footer {
+    text-align: center; padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--dim);
+  }
+
+  /* Scroll animations */
+  .reveal { opacity: 0; transform: translateY(20px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 32px; }
+    .stats-row { gap: 12px; }
+    .stat-box { min-width: 100px; padding: 14px 16px; }
+    .stat-box .value { font-size: 24px; }
+    nav .nav-links { display: none; }
+    .heatmap-row .file-name { min-width: 140px; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Scroll Progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Navigation -->
+<nav>
+  <div class="logo">TDC Mobile Audit</div>
+  <div class="nav-links">
+    <a href="#overview">Overview</a>
+    <a href="#colors">Colors</a>
+    <a href="#theme">Theme</a>
+    <a href="#glass">Glass</a>
+    <a href="#animations">Animations</a>
+    <a href="#screens">Screens</a>
+    <a href="#roadmap">Roadmap</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="badge">April 2026 Audit</div>
+  <h1>Mobile iOS UI Audit</h1>
+  <p class="subtitle">
+    Comprehensive review of The Dad Center mobile app covering hardcoded colors, theming,
+    glassmorphism, animations, and iOS-native patterns across all 28 screens and 150 source files.
+  </p>
+
+  <div class="stats-row">
+    <div class="stat-box stat-red">
+      <div class="value">1,494</div>
+      <div class="label">Hardcoded Colors</div>
+    </div>
+    <div class="stat-box stat-amber">
+      <div class="value">103</div>
+      <div class="label">Files Affected</div>
+    </div>
+    <div class="stat-box stat-copper">
+      <div class="value">33</div>
+      <div class="label">Unique Colors</div>
+    </div>
+    <div class="stat-box stat-green">
+      <div class="value">28</div>
+      <div class="label">Screens Reviewed</div>
+    </div>
+  </div>
+</div>
+
+<!-- Section 1: Executive Overview -->
+<section id="overview" class="reveal">
+  <div class="section-label">Executive Summary</div>
+  <h2>Audit Overview</h2>
+  <p class="section-desc">
+    The mobile app has a strong foundation &mdash; good component architecture, consistent brand identity, and working
+    theme infrastructure. However, there are systemic issues that prevent it from feeling like a polished iOS-native app.
+  </p>
+
+  <div class="card-grid card-grid-2" style="margin-bottom: 32px;">
+    <div class="card card-accent-top card-accent-red">
+      <h3><span class="severity severity-critical">Critical</span> No Centralized Color Tokens</h3>
+      <p>1,494 hardcoded color values scattered across 103 files. Changing a single brand color requires editing
+        every file manually. Light mode is broken in most screens because colors aren't responsive to theme.</p>
+    </div>
+    <div class="card card-accent-top card-accent-red">
+      <h3><span class="severity severity-critical">Critical</span> Light Mode is Non-Functional</h3>
+      <p>ThemeProvider exists and supports light/dark/system, but only ~6 of 103 files actually check <code>isDark</code>.
+        Switching to light mode shows white text on white backgrounds in most screens.</p>
+    </div>
+    <div class="card card-accent-top card-accent-amber">
+      <h3><span class="severity severity-high">High</span> Glassmorphism Underutilized</h3>
+      <p>GlassCard component exists but uses conservative blur (40-50 intensity). Not leveraging iOS-native
+        <code>UIBlurEffect</code> materials (<code>systemUltraThinMaterial</code>, <code>systemChromeMaterial</code>).
+        Tab bar and headers should use native blur, not opaque backgrounds.</p>
+    </div>
+    <div class="card card-accent-top card-accent-amber">
+      <h3><span class="severity severity-high">High</span> Animations are Basic</h3>
+      <p>Only FadeInDown + spring on mount. Missing: gesture-driven animations, shared element transitions,
+        scroll-based parallax, layout animations for list changes, micro-interactions on touch.</p>
+    </div>
+    <div class="card card-accent-top card-accent-sky">
+      <h3><span class="severity severity-medium">Medium</span> AppBackground Not Used</h3>
+      <p>A beautiful <code>AppBackground</code> component exists with gradient + copper glow + floating particles.
+        But every screen renders its own <code>LinearGradient</code> instead, duplicating 3 lines per screen and missing the particles.</p>
+    </div>
+    <div class="card card-accent-top card-accent-green">
+      <h3><span class="severity severity-good">Good</span> Strong Foundation</h3>
+      <p>Well-structured Expo Router navigation, React Query hooks, shared service layer, haptic feedback on interactions,
+        accessibility labels on key elements, and proper use of <code>useReducedMotion</code> in animations.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Section 2: Color Audit -->
+<section id="colors" class="reveal">
+  <div class="section-label">Color Audit</div>
+  <h2>1,494 Hardcoded Colors</h2>
+  <p class="section-desc">
+    Every color in the app is defined as a literal hex/rgba string inside <code>StyleSheet.create()</code>.
+    The Tailwind config defines tokens, but they're almost never used &mdash; screens use inline style objects instead.
+  </p>
+
+  <!-- Color Palette -->
+  <h3 style="font-size: 14px; color: var(--white); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px;">Design System Palette (33 unique colors)</h3>
+  <div class="color-grid" style="margin-bottom: 32px;">
+    <div class="color-swatch"><div class="swatch" style="background:#c4703f"></div><div class="color-info"><div class="color-name">Copper</div><div class="color-hex">#c4703f</div><div class="color-count">283 uses</div></div></div>
+    <div class="color-swatch"><div class="swatch" style="background:#7a6f62"></div><div class="color-info"><div class="color-name">Muted</div><div class="color-hex">#7a6f62</div><div class="color-count">276 uses</div></div></div>
+    <div class="color-swatch"><div class="swatch" style="background:#faf6f0"></div><div class="color-info"><div class="color-name">White</div><div class="color-hex">#faf6f0</div><div class="color-count">225 uses</div></div></div>
+    <div class="color-swatch"><div class="swatch" style="background:#12100e"></div><div class="color-info"><div class="color-name">Background</div><div class="color-hex">#12100e</div><div class="color-count">207 uses</div></div></div>
+    <div class="color-swatch"><div class="swatch" style="background:#ede6dc"></div><div class="color-info"><div class="color-name">Cream</div><div class="color-hex">#ede6dc</div><div class="color-count">126 uses</div></div></div>
+    <div class="color-swatch"><div class="swatch" style="background:#d4a853"></div><div class="color-info"><div class="color-name">Gold</div><div class="color-hex">#d4a853</div><div class="color-count">112 uses</div></div></div>
+    <div class="color-swatch"><div class="swatch" style="background:#4a4239"></div><div class="color-info"><div class="color-name">Dim</div><div class="color-hex">#4a4239</div><div class="color-count">112 uses</div></div></div>
+    <div class="color-swatch"><div class="swatch" style="background:#6b8f71"></div><div class="color-info"><div class="color-name">Sage</div><div class="color-hex">#6b8f71</div><div class="color-count">74 uses</div></div></div>
+    <div class="color-swatch"><div class="swatch" style="background:#1a1714"></div><div class="color-info"><div class="color-name">Surface</div><div class="color-hex">#1a1714</div><div class="color-count">61 uses</div></div></div>
+    <div class="color-swatch"><div class="swatch" style="background:#d4836b"></div><div class="color-info"><div class="color-name">Coral</div><div class="color-hex">#d4836b</div><div class="color-count">43 uses</div></div></div>
+    <div class="color-swatch"><div class="swatch" style="background:#5b9bd5"></div><div class="color-info"><div class="color-name">Sky</div><div class="color-hex">#5b9bd5</div><div class="color-count">38 uses</div></div></div>
+    <div class="color-swatch"><div class="swatch" style="background:#201c18"></div><div class="color-info"><div class="color-name">Card</div><div class="color-hex">#201c18</div><div class="color-count">30 uses</div></div></div>
+    <div class="color-swatch"><div class="swatch" style="background:#c47a8f"></div><div class="color-info"><div class="color-name">Rose</div><div class="color-hex">#c47a8f</div><div class="color-count">28 uses</div></div></div>
+  </div>
+
+  <!-- File Heatmap -->
+  <h3 style="font-size: 14px; color: var(--white); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px;">Top 15 Files by Hardcoded Color Count</h3>
+  <div class="heatmap">
+    <div class="heatmap-row"><span class="file-name">budget.tsx</span><div class="bar-container"><div class="bar" style="width:100%; background: linear-gradient(90deg, var(--red), var(--coral))"></div></div><span class="count">55</span></div>
+    <div class="heatmap-row"><span class="file-name">landing.tsx</span><div class="bar-container"><div class="bar" style="width:98%; background: linear-gradient(90deg, var(--red), var(--coral))"></div></div><span class="count">54</span></div>
+    <div class="heatmap-row"><span class="file-name">tracker/index.tsx</span><div class="bar-container"><div class="bar" style="width:73%; background: linear-gradient(90deg, var(--coral), var(--amber))"></div></div><span class="count">40</span></div>
+    <div class="heatmap-row"><span class="file-name">tasks/[id].tsx</span><div class="bar-container"><div class="bar" style="width:73%; background: linear-gradient(90deg, var(--coral), var(--amber))"></div></div><span class="count">40</span></div>
+    <div class="heatmap-row"><span class="file-name">settings.tsx</span><div class="bar-container"><div class="bar" style="width:73%; background: linear-gradient(90deg, var(--coral), var(--amber))"></div></div><span class="count">40</span></div>
+    <div class="heatmap-row"><span class="file-name">family.tsx</span><div class="bar-container"><div class="bar" style="width:64%; background: linear-gradient(90deg, var(--amber), var(--gold))"></div></div><span class="count">35</span></div>
+    <div class="heatmap-row"><span class="file-name">tracker/history.tsx</span><div class="bar-container"><div class="bar" style="width:62%; background: linear-gradient(90deg, var(--amber), var(--gold))"></div></div><span class="count">34</span></div>
+    <div class="heatmap-row"><span class="file-name">upgrade.tsx</span><div class="bar-container"><div class="bar" style="width:60%; background: var(--amber)"></div></div><span class="count">33</span></div>
+    <div class="heatmap-row"><span class="file-name">help.tsx</span><div class="bar-container"><div class="bar" style="width:60%; background: var(--amber)"></div></div><span class="count">33</span></div>
+    <div class="heatmap-row"><span class="file-name">briefing/[weekId].tsx</span><div class="bar-container"><div class="bar" style="width:58%; background: var(--amber)"></div></div><span class="count">32</span></div>
+    <div class="heatmap-row"><span class="file-name">guest/home.tsx</span><div class="bar-container"><div class="bar" style="width:58%; background: var(--amber)"></div></div><span class="count">32</span></div>
+    <div class="heatmap-row"><span class="file-name">more.tsx</span><div class="bar-container"><div class="bar" style="width:56%; background: var(--amber)"></div></div><span class="count">31</span></div>
+    <div class="heatmap-row"><span class="file-name">notifications.tsx</span><div class="bar-container"><div class="bar" style="width:56%; background: var(--amber)"></div></div><span class="count">31</span></div>
+    <div class="heatmap-row"><span class="file-name">journey.tsx</span><div class="bar-container"><div class="bar" style="width:56%; background: var(--amber)"></div></div><span class="count">31</span></div>
+    <div class="heatmap-row"><span class="file-name">checklists.tsx</span><div class="bar-container"><div class="bar" style="width:55%; background: var(--amber)"></div></div><span class="count">30</span></div>
+  </div>
+</section>
+
+<!-- Section 3: Theme System -->
+<section id="theme" class="reveal">
+  <div class="section-label">Theme System</div>
+  <h2>Light Mode is Broken</h2>
+  <p class="section-desc">
+    The app has a working ThemeProvider (system/dark/light + AsyncStorage persistence) and an Appearance screen.
+    But only 6 of 103 files respond to theme changes. Light mode shows cream/white text on white backgrounds.
+  </p>
+
+  <!-- Current vs Recommended -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(event, 'theme-current')">Current State</button>
+    <button class="tab-btn" onclick="switchTab(event, 'theme-recommended')">Recommended</button>
+    <button class="tab-btn" onclick="switchTab(event, 'theme-web')">Web App Comparison</button>
+  </div>
+
+  <div id="theme-current" class="tab-panel active">
+    <div class="issue-card">
+      <div class="issue-header">
+        <h4>ThemeProvider exists but is ignored</h4>
+        <span class="severity severity-critical">Critical</span>
+      </div>
+      <div class="issue-body">
+        <strong>ThemeProvider</strong> at <code>components/providers/ThemeProvider.tsx</code> correctly resolves
+        system/dark/light and exposes <code>useTheme()</code> with <code>isDark</code>.<br><br>
+        <strong>Only these files check isDark:</strong> AppBackground, GlassCard, AnimatedTabBar, TabLayout, Appearance, MedicalDisclaimer.<br><br>
+        <strong>Every other file</strong> uses hardcoded dark-mode hex values like <code>backgroundColor: '#12100e'</code>
+        and <code>color: '#faf6f0'</code>. In light mode, you get white text on a light background = unreadable.
+      </div>
+    </div>
+
+    <div class="issue-card">
+      <div class="issue-header">
+        <h4>Every screen duplicates its own background gradient</h4>
+        <span class="severity severity-high">High</span>
+      </div>
+      <div class="issue-body">
+        All 28 screens contain this identical pattern:
+        <code>&lt;LinearGradient colors={['#12100e', '#1a1714', '#12100e']} style={StyleSheet.absoluteFill} /&gt;</code><br><br>
+        <strong>AppBackground</strong> component at <code>components/shared/AppBackground.tsx</code> already handles dark/light gradients
+        + floating particles, but is used in <strong>only the root layout</strong> &mdash; not individual screens.
+      </div>
+      <div class="recommendation">
+        <strong>Fix:</strong> Remove all per-screen LinearGradients. Use AppBackground in the root layout only.
+        Make screens transparent so the root background shows through (already partially done in TabLayout with <code>sceneStyle: { backgroundColor: 'transparent' }</code>).
+      </div>
+    </div>
+
+    <div class="issue-card">
+      <div class="issue-header">
+        <h4>NativeWind/Tailwind classes not used in screens</h4>
+        <span class="severity severity-medium">Medium</span>
+      </div>
+      <div class="issue-body">
+        The Tailwind config defines all 13 semantic colors (bg, surface, card, copper, gold, sage, etc.)
+        and NativeWind is installed. But screens use <code>StyleSheet.create()</code> with hardcoded hex values
+        instead of <code>className="bg-bg text-white"</code>. The Tailwind tokens are effectively unused.
+      </div>
+    </div>
+  </div>
+
+  <div id="theme-recommended" class="tab-panel">
+    <div class="issue-card">
+      <div class="issue-header">
+        <h4>Create a centralized colors module</h4>
+        <span class="severity severity-good">Recommended</span>
+      </div>
+      <div class="issue-body">
+        Create <code>lib/colors.ts</code> that exports a function <code>getColors(isDark: boolean)</code> returning all semantic tokens.<br><br>
+        <strong>Dark palette:</strong> Current hex values (already polished).<br>
+        <strong>Light palette:</strong> Soft pastels matching the AppBackground gradient &mdash;
+        <code>bg: '#f5f7fa'</code>, <code>surface: '#ffffff'</code>, <code>card: 'rgba(255,255,255,0.7)'</code>,
+        <code>text: '#1a1714'</code>, <code>muted: '#6b7280'</code>.
+      </div>
+      <div class="recommendation">
+        <strong>Pattern:</strong> Create a <code>useColors()</code> hook that calls <code>useTheme()</code> internally.
+        Every component imports <code>useColors()</code> instead of hardcoding hex values.
+        This is a single abstraction that fixes all 1,494 hardcoded colors.
+      </div>
+    </div>
+
+    <div class="issue-card">
+      <div class="issue-header">
+        <h4>iOS-native semantic colors</h4>
+        <span class="severity severity-good">Recommended</span>
+      </div>
+      <div class="issue-body">
+        For light mode, use Apple's semantic system colors where appropriate:
+        <code>PlatformColor('systemBackground')</code>, <code>PlatformColor('label')</code>,
+        <code>PlatformColor('secondaryLabel')</code>. These automatically adapt to dark mode, dynamic type,
+        and accessibility settings.
+      </div>
+    </div>
+  </div>
+
+  <div id="theme-web" class="tab-panel">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Aspect</th>
+          <th>Web App</th>
+          <th>Mobile App (Current)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label-col">Theme System</td>
+          <td class="current-col">CSS custom properties in <code>globals.css</code>. <code>:root</code> defines all tokens. Classes reference <code>var(--copper)</code>, etc.</td>
+          <td class="current-col">Tailwind config defines colors but unused. All 1,494 colors are hardcoded hex in StyleSheet.create().</td>
+        </tr>
+        <tr>
+          <td class="label-col">Dark/Light Toggle</td>
+          <td class="current-col"><code>next-themes</code> + Tailwind <code>dark:</code> prefix. All components respond automatically.</td>
+          <td class="current-col">ThemeProvider exists but only 6/103 files check <code>isDark</code>. Light mode is broken.</td>
+        </tr>
+        <tr>
+          <td class="label-col">Color Architecture</td>
+          <td class="current-col">Single source of truth in CSS variables. Tailwind config extends from these. Zero hardcoded colors.</td>
+          <td class="current-col">Colors defined in 3 places: Tailwind config (unused), shadows.ts, and 103 screen files (duplicated).</td>
+        </tr>
+        <tr>
+          <td class="label-col">Glassmorphism</td>
+          <td class="current-col">CSS <code>backdrop-filter: blur()</code> with <code>bg-opacity</code>. Works everywhere including modals, cards, nav.</td>
+          <td class="current-col">GlassCard uses expo-blur but only on iOS. Android gets opaque fallback. Low intensity (40-50).</td>
+        </tr>
+        <tr>
+          <td class="label-col">Animations</td>
+          <td class="current-col">Framer Motion with 10 wrapper components (Card3DTilt, RevealOnScroll, MagneticButton, etc.).</td>
+          <td class="current-col">react-native-reanimated with 9 components. Mostly mount-only FadeInDown. No scroll/gesture animations.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Section 4: Glassmorphism -->
+<section id="glass" class="reveal">
+  <div class="section-label">Glassmorphism</div>
+  <h2>Below iOS Standards</h2>
+  <p class="section-desc">
+    Apple's native apps use vibrancy materials extensively (Control Center, Notification Center, Spotlight).
+    The app's GlassCard is a start but doesn't match the level of sophistication expected on iOS.
+  </p>
+
+  <div class="issue-card">
+    <div class="issue-header">
+      <h4>GlassCard uses conservative blur intensity</h4>
+      <span class="severity severity-high">High</span>
+    </div>
+    <div class="issue-body">
+      Current: <code>intensity={isDark ? 40 : 50}</code> with <code>tint="dark"</code>.<br><br>
+      iOS system sheets use intensity 80-100 with <code>systemUltraThinMaterial</code> or <code>systemChromeMaterial</code>.
+      The current settings produce a barely visible blur effect that feels more like a semi-transparent card than genuine glass.
+    </div>
+    <div class="recommendation">
+      <strong>Fix:</strong> Increase intensity to <strong>60-80</strong> for dark mode and <strong>70-90</strong> for light mode.
+      Use expo-blur's <code>tint="systemChromeMaterialDark"</code> for iOS 16+ to get native material appearance.
+      Add a subtle inner border glow: <code>borderColor: 'rgba(255,255,255,0.12)'</code>.
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-header">
+      <h4>Tab bar and header should use system blur materials</h4>
+      <span class="severity severity-high">High</span>
+    </div>
+    <div class="issue-body">
+      <strong>Tab bar (TabIndicator.tsx)</strong>: Uses <code>BlurView intensity={80}</code> &mdash; good, but the header
+      at the top uses <strong>opaque <code>#12100e</code></strong> background.<br><br>
+      <strong>Screen headers</strong>: All screen layouts use opaque dark backgrounds. Content scrolling behind the header
+      should be visible through a blur, matching Apple's native UINavigationBar behavior.
+    </div>
+    <div class="recommendation">
+      <strong>Fix:</strong> Replace opaque header backgrounds with <code>BlurView</code> using
+      <code>tint="systemChromeMaterialDark"</code>. Make the content extend behind the header
+      with <code>contentInsetAdjustmentBehavior</code>.
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-header">
+      <h4>Modal backgrounds use opaque overlays</h4>
+      <span class="severity severity-medium">Medium</span>
+    </div>
+    <div class="issue-body">
+      Budget screen's custom item modal uses <code>backgroundColor: 'rgba(0,0,0,0.6)'</code> for the overlay
+      and <code>#201c18</code> for the sheet. No blur effect on the background content.<br><br>
+      iOS system modals (Action Sheets, Share Sheets) use background blur to maintain context of what's behind.
+    </div>
+    <div class="recommendation">
+      <strong>Fix:</strong> Use <code>BlurView</code> as the modal backdrop. For the bottom sheet, use
+      <code>@gorhom/bottom-sheet</code> with <code>backdropComponent</code> using blur. This matches iOS system sheets
+      and keeps context visible.
+    </div>
+  </div>
+
+  <div class="issue-card">
+    <div class="issue-header">
+      <h4>Android glass fallback is just opaque</h4>
+      <span class="severity severity-low">Low</span>
+    </div>
+    <div class="issue-body">
+      GlassCard falls back to <code>backgroundColor: 'rgba(32,28,24,0.92)'</code> on Android.
+      This is functionally opaque. On modern Android (12+), blur effects are supported.
+    </div>
+    <div class="recommendation">
+      <strong>Consider:</strong> For Android 12+, use <code>react-native-blur</code> or custom RenderEffect.
+      For older Android, the current opaque fallback with elevated shadow is acceptable.
+    </div>
+  </div>
+</section>
+
+<!-- Section 5: Animations -->
+<section id="animations" class="reveal">
+  <div class="section-label">Animations & Motion</div>
+  <h2>Missing iOS-Native Sophistication</h2>
+  <p class="section-desc">
+    The app has 9 animation components using react-native-reanimated. The foundation is solid
+    (spring physics, reduced motion support), but the motion vocabulary is limited to mount-only fade-ins.
+  </p>
+
+  <!-- Current vs Missing -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(event, 'anim-current')">What Exists</button>
+    <button class="tab-btn" onclick="switchTab(event, 'anim-missing')">What's Missing</button>
+    <button class="tab-btn" onclick="switchTab(event, 'anim-inspo')">iOS Inspiration</button>
+  </div>
+
+  <div id="anim-current" class="tab-panel active">
+    <table class="compare-table">
+      <thead><tr><th>Component</th><th>Animation</th><th>Quality</th></tr></thead>
+      <tbody>
+        <tr><td class="label-col">CardEntrance</td><td>FadeInDown + spring (damping 15, stiffness 100)</td><td><span class="severity severity-good">Good</span></td></tr>
+        <tr><td class="label-col">StaggerList</td><td>FadeInDown with index-based delay</td><td><span class="severity severity-good">Good</span></td></tr>
+        <tr><td class="label-col">AnimatedTabBar</td><td>Indicator position with withTiming(250ms)</td><td><span class="severity severity-good">Good</span></td></tr>
+        <tr><td class="label-col">TypewriterGreeting</td><td>Character-by-character reveal</td><td><span class="severity severity-good">Good</span></td></tr>
+        <tr><td class="label-col">CopperDivider</td><td>Width animation with timing</td><td><span class="severity severity-good">Good</span></td></tr>
+        <tr><td class="label-col">MoodEmojiPop</td><td>Scale bounce on selection</td><td><span class="severity severity-good">Good</span></td></tr>
+        <tr><td class="label-col">SwipeAction</td><td>Horizontal pan gesture for delete/snooze</td><td><span class="severity severity-good">Good</span></td></tr>
+        <tr><td class="label-col">FloatingParticles</td><td>CSS-animated particles with random positions</td><td><span class="severity severity-medium">Okay</span></td></tr>
+        <tr><td class="label-col">RevealOnScroll</td><td>IntersectionObserver-style scroll reveal</td><td><span class="severity severity-medium">Okay</span></td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 16px; font-size: 13px; color: var(--muted);">
+      <strong>Positive:</strong> All animation components check <code>useReducedMotion()</code> and disable animations accordingly.
+      This is excellent accessibility practice.
+    </p>
+  </div>
+
+  <div id="anim-missing" class="tab-panel">
+    <div class="card-grid card-grid-2">
+      <div class="card card-accent-top card-accent-red">
+        <h3>Scroll-Based Parallax</h3>
+        <p>Dashboard header, briefing hero, landing page hero should have parallax effects as user scrolls.
+          Use <code>useAnimatedScrollHandler</code> from reanimated to drive opacity/scale/translation based on scroll offset.</p>
+      </div>
+      <div class="card card-accent-top card-accent-red">
+        <h3>Shared Element Transitions</h3>
+        <p>Navigation between list and detail screens (tasks, briefing weeks, articles) should have connected animations.
+          Use <code>react-native-shared-element</code> or Reanimated 3's shared transitions.</p>
+      </div>
+      <div class="card card-accent-top card-accent-amber">
+        <h3>Layout Animations</h3>
+        <p>When tasks are completed/snoozed, they should animate out of the list. When filters change, items should reflow.
+          Use <code>LayoutAnimation.configureNext()</code> or Reanimated's <code>Exiting</code> prop.</p>
+      </div>
+      <div class="card card-accent-top card-accent-amber">
+        <h3>Gesture-Driven Cards</h3>
+        <p>Dashboard cards should be draggable for reordering. Pull-down-to-refresh should have a custom copper-themed animation
+          instead of the default spinner. Briefing sections could collapse/expand with gesture.</p>
+      </div>
+      <div class="card card-accent-top card-accent-sky">
+        <h3>Interactive Press Feedback</h3>
+        <p>Cards should scale down slightly on press (<code>withSpring(0.97)</code>) like native iOS buttons.
+          Currently only landing page CTAs have <code>pressed && { transform: [{ scale: 0.97 }] }</code>.</p>
+      </div>
+      <div class="card card-accent-top card-accent-sky">
+        <h3>Skeleton Loading States</h3>
+        <p>A <code>Skeleton</code> component exists in <code>ui/Skeleton.tsx</code> but screens show a plain
+          <code>ActivityIndicator</code>. Shimmer skeletons that match the card layout would feel more polished.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="anim-inspo" class="tab-panel">
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <h3>Apple Health</h3>
+        <p>Scroll-based card stacking, rubber-band overscroll, fluid transitions between summary and detail views.
+          The tracker screen should feel this natural.</p>
+      </div>
+      <div class="card">
+        <h3>Things 3</h3>
+        <p>Buttery smooth task completion (checkmark fills, item slides out with spring).
+          Drag-to-reorder with haptic ticks. The Tasks screen should aspire to this level.</p>
+      </div>
+      <div class="card">
+        <h3>Apple Weather</h3>
+        <p>Background gradients that shift with time-of-day. Parallax layers.
+          The briefing hero section could use similar atmospheric depth.</p>
+      </div>
+      <div class="card">
+        <h3>iOS Notification Center</h3>
+        <p>Grouped notifications with spring-loaded expand/collapse.
+          The notification inbox screen should mirror this pattern.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 6: Screen-by-Screen Audit -->
+<section id="screens" class="reveal">
+  <div class="section-label">Screen-by-Screen Audit</div>
+  <h2>28 Screens Reviewed</h2>
+  <p class="section-desc">
+    Every core screen was audited for color hardcoding, theme support, animation quality,
+    glassmorphism usage, and iOS-native pattern adherence.
+  </p>
+
+  <div style="overflow-x: auto;">
+    <table class="screen-table">
+      <thead>
+        <tr>
+          <th>Screen</th>
+          <th>Colors</th>
+          <th>Theme</th>
+          <th>Glass</th>
+          <th>Animation</th>
+          <th>Key Issues</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="screen-name">Dashboard</span><br><span class="file-path">(tabs)/index.tsx</span></td>
+          <td><span class="severity severity-high">27</span></td>
+          <td><span class="severity severity-critical">None</span></td>
+          <td><span class="severity severity-critical">None</span></td>
+          <td><span class="severity severity-good">Good</span></td>
+          <td>Own LinearGradient instead of AppBackground. No glass cards. CardEntrance stagger is mechanical (linear delays).</td>
+        </tr>
+        <tr>
+          <td><span class="screen-name">Tasks</span><br><span class="file-path">(tabs)/tasks/index.tsx</span></td>
+          <td><span class="severity severity-high">27</span></td>
+          <td><span class="severity severity-critical">None</span></td>
+          <td><span class="severity severity-critical">None</span></td>
+          <td><span class="severity severity-good">Good</span></td>
+          <td>FAB has no press animation. Search bar hardcoded. No swipe-to-complete on task items. No exit animations when completing.</td>
+        </tr>
+        <tr>
+          <td><span class="screen-name">Briefing</span><br><span class="file-path">(tabs)/briefing/index.tsx</span></td>
+          <td><span class="severity severity-high">27</span></td>
+          <td><span class="severity severity-critical">None</span></td>
+          <td><span class="severity severity-medium">Partial</span></td>
+          <td><span class="severity severity-good">Good</span></td>
+          <td>GlassCard used for empty state only. Hero section is plain View. Baby size card lacks visual polish. No scroll-to-section nav.</td>
+        </tr>
+        <tr>
+          <td><span class="screen-name">Tracker</span><br><span class="file-path">(tabs)/tracker/index.tsx</span></td>
+          <td><span class="severity severity-critical">40</span></td>
+          <td><span class="severity severity-critical">None</span></td>
+          <td><span class="severity severity-good">Good</span></td>
+          <td><span class="severity severity-good">Good</span></td>
+          <td>GlassCard used well for shift briefing + log entries. Log type colors are a good pattern but still hardcoded hex. Dimensions.get() used for grid sizing instead of flexbox.</td>
+        </tr>
+        <tr>
+          <td><span class="screen-name">More</span><br><span class="file-path">(tabs)/more.tsx</span></td>
+          <td><span class="severity severity-high">31</span></td>
+          <td><span class="severity severity-critical">None</span></td>
+          <td><span class="severity severity-good">Good</span></td>
+          <td><span class="severity severity-good">Good</span></td>
+          <td>Best use of GlassCard for menu sections. Haptic feedback on all taps. Profile avatar could use image upload.</td>
+        </tr>
+        <tr>
+          <td><span class="screen-name">Budget</span><br><span class="file-path">(screens)/budget.tsx</span></td>
+          <td><span class="severity severity-critical">55</span></td>
+          <td><span class="severity severity-critical">None</span></td>
+          <td><span class="severity severity-good">Good</span></td>
+          <td><span class="severity severity-medium">Basic</span></td>
+          <td>Most color-heavy file. Modal uses opaque overlay (should use blur). Timeline + priority pills well-designed but all hardcoded.</td>
+        </tr>
+        <tr>
+          <td><span class="screen-name">Upgrade</span><br><span class="file-path">(screens)/upgrade.tsx</span></td>
+          <td><span class="severity severity-high">33</span></td>
+          <td><span class="severity severity-critical">None</span></td>
+          <td><span class="severity severity-medium">Partial</span></td>
+          <td><span class="severity severity-good">Good</span></td>
+          <td>Feature comparison table is nice. Plan cards use GlassCard. Purchase button gradient is polished. Radio buttons need animation.</td>
+        </tr>
+        <tr>
+          <td><span class="screen-name">Landing</span><br><span class="file-path">(auth)/landing.tsx</span></td>
+          <td><span class="severity severity-critical">54</span></td>
+          <td><span class="severity severity-critical">None</span></td>
+          <td><span class="severity severity-good">Good</span></td>
+          <td><span class="severity severity-good">Good</span></td>
+          <td>Most visually polished screen. Sticky bottom CTA with blur. Decorative orbs. But all colors hardcoded. No parallax on scroll.</td>
+        </tr>
+        <tr>
+          <td><span class="screen-name">Appearance</span><br><span class="file-path">(screens)/appearance.tsx</span></td>
+          <td><span class="severity severity-medium">15</span></td>
+          <td><span class="severity severity-good">Yes</span></td>
+          <td><span class="severity severity-good">Good</span></td>
+          <td><span class="severity severity-good">Good</span></td>
+          <td>One of few screens that checks isDark. Uses GlassCard. Radio selection has accent bar. Could add theme preview cards.</td>
+        </tr>
+        <tr>
+          <td><span class="screen-name">Onboarding (5 screens)</span><br><span class="file-path">(onboarding)/*.tsx</span></td>
+          <td><span class="severity severity-medium">~15 each</span></td>
+          <td><span class="severity severity-critical">None</span></td>
+          <td><span class="severity severity-medium">Partial</span></td>
+          <td><span class="severity severity-medium">Basic</span></td>
+          <td>First impression screens. Should have the most polish. Missing: page transitions, progress animations, celebration confetti on completion.</td>
+        </tr>
+        <tr>
+          <td><span class="screen-name">Auth (login/signup)</span><br><span class="file-path">(auth)/*.tsx</span></td>
+          <td><span class="severity severity-medium">~20 each</span></td>
+          <td><span class="severity severity-critical">None</span></td>
+          <td><span class="severity severity-medium">Partial</span></td>
+          <td><span class="severity severity-medium">Basic</span></td>
+          <td>Form inputs hardcoded. Social auth buttons (Apple, Google) need more native styling. No keyboard-avoiding animation.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Section 7: Implementation Roadmap -->
+<section id="roadmap" class="reveal">
+  <div class="section-label">Implementation Roadmap</div>
+  <h2>Recommended Fix Phases</h2>
+  <p class="section-desc">
+    Ordered by impact and dependency. Each phase is self-contained and shippable.
+  </p>
+
+  <div class="roadmap">
+    <div class="roadmap-phase">
+      <div class="dot"></div>
+      <div class="phase-label">Phase 1 &mdash; Foundation (Highest Impact)</div>
+      <h4>Centralized Color Tokens + useColors() Hook</h4>
+      <p>Create a single source of truth for all colors with dark/light variants.
+        Every subsequent phase depends on this.</p>
+      <div class="tasks">
+        <div class="task-item">Create <code>lib/colors.ts</code> with <code>darkColors</code> and <code>lightColors</code> objects (33 semantic tokens each)</div>
+        <div class="task-item">Create <code>hooks/use-colors.ts</code> that reads from ThemeProvider and returns the active palette</div>
+        <div class="task-item">Migrate top 15 files (55% of hardcoded colors) to use <code>useColors()</code></div>
+        <div class="task-item">Replace all per-screen LinearGradients with transparent backgrounds (AppBackground handles it)</div>
+        <div class="task-item">Design light mode palette: soft pastels matching AppBackground's light gradient</div>
+      </div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="dot"></div>
+      <div class="phase-label">Phase 2 &mdash; Light Mode Fix</div>
+      <h4>Make Light Mode Actually Work</h4>
+      <p>With tokens in place, systematically update all remaining files to be theme-aware.</p>
+      <div class="tasks">
+        <div class="task-item">Migrate remaining 88 files from hardcoded hex to <code>useColors()</code></div>
+        <div class="task-item">Update GlassCard with light mode border/shadow variants</div>
+        <div class="task-item">Update all icon colors to use theme tokens (currently hardcoded hex in JSX)</div>
+        <div class="task-item">Test all 28 screens in light mode; fix any remaining contrast issues</div>
+        <div class="task-item">Add theme-aware RefreshControl colors, ActivityIndicator colors</div>
+      </div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="dot"></div>
+      <div class="phase-label">Phase 3 &mdash; Native Glass</div>
+      <h4>iOS-Native Glassmorphism Upgrade</h4>
+      <p>Leverage Apple's native blur materials for a polished, premium feel.</p>
+      <div class="tasks">
+        <div class="task-item">Increase GlassCard blur intensity to 60-80 (dark) / 70-90 (light)</div>
+        <div class="task-item">Use <code>tint="systemChromeMaterialDark"</code> for iOS 16+ in GlassCard</div>
+        <div class="task-item">Add BlurView to main header (replace opaque <code>#12100e</code> background)</div>
+        <div class="task-item">Add blur backdrop to modal overlays (budget custom item, alerts)</div>
+        <div class="task-item">Add subtle inner border highlights to glass surfaces: <code>rgba(255,255,255,0.08-0.15)</code></div>
+        <div class="task-item">Add glass cards to Dashboard (currently plain Views)</div>
+      </div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="dot"></div>
+      <div class="phase-label">Phase 4 &mdash; Motion Design</div>
+      <h4>Sophisticated iOS Animations</h4>
+      <p>Upgrade from mount-only fade-ins to gesture-driven, scroll-aware motion.</p>
+      <div class="tasks">
+        <div class="task-item">Add interactive press feedback to all cards: <code>withSpring(0.97)</code> on press in</div>
+        <div class="task-item">Add exit animations to task completion: checkmark fill + slide out with spring</div>
+        <div class="task-item">Add scroll-based parallax to dashboard greeting + briefing hero</div>
+        <div class="task-item">Add LayoutAnimation for list reflows when filters change</div>
+        <div class="task-item">Implement shimmer skeleton loading states (replace ActivityIndicator)</div>
+        <div class="task-item">Add spring-loaded expand/collapse for grouped task sections</div>
+        <div class="task-item">Coordinate haptic ticks with animation keyframes (task complete, mood select)</div>
+      </div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="dot"></div>
+      <div class="phase-label">Phase 5 &mdash; Polish</div>
+      <h4>Premium Details & Micro-Interactions</h4>
+      <p>The finishing touches that separate a good app from a great one.</p>
+      <div class="tasks">
+        <div class="task-item">Custom pull-to-refresh animation (copper-themed instead of default spinner)</div>
+        <div class="task-item">Shared element transitions for screen navigation (task list &rarr; detail)</div>
+        <div class="task-item">Animated FAB button (scale + rotate on scroll direction change)</div>
+        <div class="task-item">Confetti/celebration animation on milestone completions</div>
+        <div class="task-item">Time-of-day background gradient shifts (dawn warmth, night deep)</div>
+        <div class="task-item">@gorhom/bottom-sheet for modals instead of RN Modal (native-feeling drag gesture)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 8: Quick Wins -->
+<section class="reveal">
+  <div class="section-label">Quick Wins</div>
+  <h2>Immediate Impact, Low Effort</h2>
+  <p class="section-desc">
+    Changes that can be made today with minimal risk and maximum visual improvement.
+  </p>
+
+  <div class="card-grid card-grid-2">
+    <div class="card card-accent-top card-accent-green">
+      <h3>1. Remove per-screen gradients</h3>
+      <p>Delete all 28 instances of <code>&lt;LinearGradient colors={['#12100e',...]}&gt;</code> from screens.
+        AppBackground already renders in root layout with particles. Screens just need <code>backgroundColor: 'transparent'</code>.</p>
+      <div class="file-ref">~28 files, ~3 lines each = 84 lines removed</div>
+    </div>
+    <div class="card card-accent-top card-accent-green">
+      <h3>2. Increase GlassCard blur intensity</h3>
+      <p>Change <code>intensity ?? (isDark ? 40 : 50)</code> to <code>intensity ?? (isDark ? 65 : 80)</code>
+        in GlassCard.tsx. One-line change, immediate visual upgrade across all glass-using screens.</p>
+      <div class="file-ref">1 file, 1 line change</div>
+    </div>
+    <div class="card card-accent-top card-accent-green">
+      <h3>3. Add press scale to all cards</h3>
+      <p>Wrap dashboard cards in <code>Pressable</code> with <code>pressed && { transform: [{ scale: 0.98 }] }</code>.
+        Instant native feel. Already done on landing page CTAs.</p>
+      <div class="file-ref">~10 components, ~5 lines each</div>
+    </div>
+    <div class="card card-accent-top card-accent-green">
+      <h3>4. Add blur to main header</h3>
+      <p>Replace <code>backgroundColor: '#12100e'</code> in tab layout header with <code>BlurView tint="dark" intensity={80}</code>.
+        Already done for tab bar. Consistent chrome throughout.</p>
+      <div class="file-ref">1 file: (tabs)/_layout.tsx</div>
+    </div>
+    <div class="card card-accent-top card-accent-green">
+      <h3>5. Add GlassCard to Dashboard cards</h3>
+      <p>Dashboard cards are currently plain Views. Wrap them in GlassCard for visual consistency with
+        Tracker, More, and Briefing screens that already use it.</p>
+      <div class="file-ref">~8 dashboard card components</div>
+    </div>
+    <div class="card card-accent-top card-accent-green">
+      <h3>6. Randomize CardEntrance stagger delays</h3>
+      <p>Current delays are linear (0, 80, 160, 240...) which feels mechanical.
+        Use slight randomization: <code>delay={index * 80 + Math.random() * 40}</code> for organic feel.</p>
+      <div class="file-ref">Per-screen, no component change needed</div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>The Dad Center Mobile iOS UI Audit &mdash; Generated April 12, 2026</p>
+  <p style="margin-top: 4px;">1,494 hardcoded colors &bull; 103 files audited &bull; 28 screens reviewed &bull; 5 implementation phases</p>
+</footer>
+
+<script>
+  // Scroll progress bar
+  window.addEventListener('scroll', () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    document.getElementById('scrollProgress').style.width = progress + '%';
+  });
+
+  // Scroll reveal
+  const revealElements = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  revealElements.forEach(el => revealObserver.observe(el));
+
+  // Tabs
+  function switchTab(event, panelId) {
+    const tabGroup = event.target.closest('.tabs');
+    const section = tabGroup.parentElement;
+
+    tabGroup.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    section.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+    document.getElementById(panelId).classList.add('active');
+  }
+</script>
+</body>
+</html>

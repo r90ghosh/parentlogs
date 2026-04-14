@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Dad Center — Notification System Audit</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Jost:wght@300;400;500;600&family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  :root { --bg:#12100e;--surface:#1a1714;--card:#201c18;--card-hover:#282420;--white:#faf6f0;--cream:#ede6dc;--muted:#7a6f62;--dim:#4a4239;--copper:#c4703f;--gold:#d4a853;--sage:#6b8f71;--coral:#d4836b;--sky:#5b9bd5;--rose:#c47a8f;--border:rgba(237,230,220,0.08);--border-hover:rgba(237,230,220,0.15); }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--cream);min-height:100vh;line-height:1.7}
+  .header{background:var(--surface);border-bottom:1px solid var(--border);padding:24px 40px;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px)}
+  .header-inner{max-width:1100px;margin:0 auto}
+  .header h1{font-family:'Playfair Display',serif;font-size:22px;color:var(--white)}
+  .header h1 span{color:var(--copper)}
+  .header-meta{font-family:'Karla',sans-serif;font-size:13px;color:var(--muted);margin-top:4px}
+  .content{max-width:1100px;margin:0 auto;padding:32px 40px 120px}
+  .tabs{display:flex;gap:4px;margin-bottom:28px;background:var(--surface);border-radius:12px;padding:4px;border:1px solid var(--border)}
+  .tab{font-family:'Karla',sans-serif;font-size:13px;font-weight:600;padding:10px 20px;border-radius:8px;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;flex:1;text-align:center}
+  .tab:hover{color:var(--cream);background:var(--card)}
+  .tab.active{background:var(--copper);color:var(--white)}
+  .panel{display:none}
+  .panel.active{display:block}
+  .section{margin-bottom:36px}
+  .section-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--white);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+  .section-title .dot{width:8px;height:8px;border-radius:50%}
+  .intro{font-size:14px;color:var(--muted);margin-bottom:24px;max-width:800px;line-height:1.7}
+  .intro strong{color:var(--cream)}
+  table{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:13px}
+  th{font-family:'Karla',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);white-space:nowrap}
+  td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+  tr:hover td{background:var(--card)}
+  code{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--surface);padding:2px 6px;border-radius:3px;color:var(--copper);border:1px solid var(--border)}
+  .badge{font-family:'Karla',sans-serif;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px;display:inline-block;white-space:nowrap}
+  .badge.active{background:rgba(107,143,113,.15);color:var(--sage)}
+  .badge.cron{background:rgba(91,155,213,.12);color:var(--sky)}
+  .badge.manual{background:rgba(212,168,83,.15);color:var(--gold)}
+  .badge.broken{background:rgba(212,131,107,.2);color:var(--coral)}
+  .badge.unused{background:rgba(74,66,57,.3);color:var(--dim)}
+  .badge.push{background:rgba(196,112,63,.15);color:var(--copper)}
+  .badge.email{background:rgba(196,127,143,.15);color:var(--rose)}
+  .badge.inapp{background:rgba(91,155,213,.12);color:var(--sky)}
+  .badge.bypass{background:rgba(212,131,107,.2);color:var(--coral)}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:12px;transition:all .3s}
+  .card:hover{border-color:var(--border-hover)}
+  .card h3{font-family:'Karla',sans-serif;font-size:15px;font-weight:600;color:var(--white);margin-bottom:6px}
+  .card p{font-size:13px;color:var(--muted);line-height:1.6}
+  .card.issue{border-left:3px solid var(--coral)}
+  .card.rec{border-left:3px solid var(--sage)}
+  .card.warn{border-left:3px solid var(--gold)}
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:28px}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+  .stat-num{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;line-height:1}
+  .stat-label{font-family:'Karla',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:4px}
+  .timeline{position:relative;padding-left:24px;margin-bottom:24px}
+  .timeline::before{content:'';position:absolute;left:8px;top:4px;bottom:4px;width:2px;background:var(--border)}
+  .tl-item{position:relative;margin-bottom:16px}
+  .tl-item::before{content:'';position:absolute;left:-20px;top:6px;width:10px;height:10px;border-radius:50%;border:2px solid var(--copper);background:var(--bg)}
+  .tl-item.done::before{background:var(--sage);border-color:var(--sage)}
+  .tl-item.warn::before{background:var(--gold);border-color:var(--gold)}
+  .tl-item.broken::before{background:var(--coral);border-color:var(--coral)}
+  .tl-time{font-family:'Karla',sans-serif;font-size:11px;color:var(--copper);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+  .tl-title{font-family:'Karla',sans-serif;font-size:14px;color:var(--white);font-weight:600;margin-top:2px}
+  .tl-desc{font-size:13px;color:var(--muted);margin-top:2px}
+  .channels{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+  @media(max-width:768px){.header,.content{padding-left:20px;padding-right:20px}table{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="header"><div class="header-inner">
+  <h1>Notification System <span>Audit Report</span></h1>
+  <div class="header-meta">The Dad Center — April 2026 — 11 notification types, 3 channels, 4 cron jobs</div>
+</div></div>
+
+<div class="content">
+
+<div class="stat-row">
+  <div class="stat"><div class="stat-num" style="color:var(--copper)">11</div><div class="stat-label">Notification Types</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--sky)">4</div><div class="stat-label">Active Cron Jobs</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--coral)">6</div><div class="stat-label">Not Scheduled</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--sage)">3</div><div class="stat-label">Channels</div></div>
+  <div class="stat"><div class="stat-num" style="color:var(--gold)">15</div><div class="stat-label">Issues Found</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('overview',this)">Overview</button>
+  <button class="tab" onclick="show('schedule',this)">Schedule</button>
+  <button class="tab" onclick="show('types',this)">All Types</button>
+  <button class="tab" onclick="show('emails',this)">Emails</button>
+  <button class="tab" onclick="show('issues',this)">Issues & Recs</button>
+</div>
+
+<!-- OVERVIEW -->
+<div class="panel active" id="p-overview">
+  <p class="intro">The notification system uses <strong>Supabase Edge Functions</strong> for delivery, <strong>pg_cron</strong> for scheduling, <strong>Expo Push</strong> for mobile, <strong>VAPID/Web Push</strong> for browser, and <strong>Resend</strong> for email. Frequency caps (1/hr, 3/day, 10/week) prevent notification fatigue. Partner activity bypasses all caps.</p>
+
+  <div class="section">
+    <div class="section-title"><div class="dot" style="background:var(--copper)"></div>Notification Flow</div>
+    <div class="card">
+      <p><strong>Trigger</strong> (cron job or API call) &rarr; <strong>Edge Function</strong> (send-notifications) &rarr; Check preferences + quiet hours &rarr; Check frequency caps &rarr; <strong>Persist</strong> in-app notification &rarr; <strong>Send</strong> push (web + mobile) &rarr; <strong>Send</strong> email (if applicable) &rarr; <strong>Log</strong> delivery status</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><div class="dot" style="background:var(--sky)"></div>Frequency Caps</div>
+    <table>
+      <tr><th>Window</th><th>Max Push</th><th>Notes</th></tr>
+      <tr><td>Per hour</td><td><strong>1</strong></td><td>Prevents rapid-fire notifications</td></tr>
+      <tr><td>Per day</td><td><strong>3</strong></td><td>Respects daily attention budget</td></tr>
+      <tr><td>Per week</td><td><strong>10</strong></td><td>Weekly ceiling across all types</td></tr>
+      <tr><td colspan="3" style="color:var(--coral)"><strong>Exception:</strong> <code>partner_activity</code> bypasses ALL caps (real-time, high priority)</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><div class="dot" style="background:var(--sage)"></div>Channels</div>
+    <table>
+      <tr><th>Channel</th><th>Provider</th><th>Token Storage</th></tr>
+      <tr><td><span class="badge push">Push (Mobile)</span></td><td>Expo Push API</td><td><code>device_tokens</code> table</td></tr>
+      <tr><td><span class="badge push">Push (Web)</span></td><td>VAPID / Web Push</td><td><code>push_subscriptions</code> table</td></tr>
+      <tr><td><span class="badge email">Email</span></td><td>Resend API</td><td>Profile email</td></tr>
+      <tr><td><span class="badge inapp">In-App</span></td><td>Supabase DB</td><td><code>notifications</code> table</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- SCHEDULE -->
+<div class="panel" id="p-schedule">
+  <p class="intro">A visual timeline of when notifications fire. <strong style="color:var(--sage)">Green</strong> = active cron job. <strong style="color:var(--gold)">Yellow</strong> = defined but not scheduled. <strong style="color:var(--coral)">Red</strong> = broken/not triggered.</p>
+
+  <div class="section">
+    <div class="section-title">Daily Schedule (UTC)</div>
+    <div class="timeline">
+      <div class="tl-item done"><div class="tl-time">Every Hour (0 * * * *)</div><div class="tl-title">Daily Digest</div><div class="tl-desc">Checks pending/overdue tasks for each user. Respects quiet hours.</div><div class="channels"><span class="badge cron">Cron Active</span><span class="badge push">Push</span><span class="badge inapp">In-App</span></div></div>
+      <div class="tl-item done"><div class="tl-time">3:00 AM UTC (0 3 * * *)</div><div class="tl-title">Refresh Pregnancy Weeks</div><div class="tl-desc">Updates current_week and stage for all babies based on due_date.</div><div class="channels"><span class="badge cron">Cron Active</span></div></div>
+      <div class="tl-item done"><div class="tl-time">9:00 AM UTC (0 9 * * *)</div><div class="tl-title">Task Reminders</div><div class="tl-desc">Must-do tasks due tomorrow. Push notification to assignees.</div><div class="channels"><span class="badge cron">Cron Active</span><span class="badge push">Push</span><span class="badge inapp">In-App</span></div></div>
+      <div class="tl-item done"><div class="tl-time">10:00 AM UTC (0 10 * * *)</div><div class="tl-title">Overdue Alerts</div><div class="tl-desc">Must-do tasks past due date. Also sends email digest.</div><div class="channels"><span class="badge cron">Cron Active</span><span class="badge push">Push</span><span class="badge email">Email</span><span class="badge inapp">In-App</span></div></div>
+      <div class="tl-item warn"><div class="tl-time">Not Scheduled</div><div class="tl-title">Mood Reminders</div><div class="tl-desc">Daily mood check-in prompt. Code exists but no cron job.</div><div class="channels"><span class="badge manual">Not Cron'd</span><span class="badge push">Push</span><span class="badge inapp">In-App</span></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Weekly Schedule</div>
+    <div class="timeline">
+      <div class="tl-item done"><div class="tl-time">Mondays 8:00 AM UTC (0 8 * * 1)</div><div class="tl-title">Weekly Briefing</div><div class="tl-desc">New week summary with tasks, updates, and partner sync. Includes email.</div><div class="channels"><span class="badge cron">Cron Active</span><span class="badge push">Push</span><span class="badge email">Email</span><span class="badge inapp">In-App</span></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Event-Triggered</div>
+    <div class="timeline">
+      <div class="tl-item broken"><div class="tl-time">On Task Complete / Baby Log</div><div class="tl-title">Partner Activity</div><div class="tl-desc">Real-time notification when partner completes a task or logs baby data. <strong style="color:var(--coral)">Edge function exists but is NEVER called from the app.</strong></div><div class="channels"><span class="badge broken">Not Triggered</span><span class="badge bypass">Bypasses Caps</span><span class="badge push">Push</span><span class="badge inapp">In-App</span></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Lifecycle (Not Scheduled)</div>
+    <div class="timeline">
+      <div class="tl-item warn"><div class="tl-time">24h / 48h / 72h / 120h after signup</div><div class="tl-title">Onboarding Nudges (4 stages)</div><div class="tl-desc">1) View briefing, 2) Complete first task, 3) Invite partner, 4) Mood check-in</div><div class="channels"><span class="badge manual">Not Cron'd</span><span class="badge push">Push</span><span class="badge inapp">In-App</span></div></div>
+      <div class="tl-item warn"><div class="tl-time">Day 1 / 3 / 5 / 7 after signup</div><div class="tl-title">Onboarding Drip Emails</div><div class="tl-desc">4-email sequence: briefing ready, tasks waiting, invite partner, first week recap</div><div class="channels"><span class="badge manual">Not Cron'd</span><span class="badge email">Email Only</span></div></div>
+      <div class="tl-item warn"><div class="tl-time">At pregnancy milestones</div><div class="tl-title">Milestone Notifications</div><div class="tl-desc">Week 12 (T1 done), 20 (halfway), 24 (viability), 28 (T3), 37 (full term), 40 (due date)</div><div class="channels"><span class="badge manual">Not Cron'd</span><span class="badge push">Push</span><span class="badge email">Email</span><span class="badge inapp">In-App</span></div></div>
+      <div class="tl-item warn"><div class="tl-time">7 / 21 / 45 days inactive</div><div class="tl-title">Re-engagement</div><div class="tl-desc">Tiered: 7d (push+email), 21d (email only), 45d (final email)</div><div class="channels"><span class="badge manual">Not Cron'd</span><span class="badge push">Push (7d)</span><span class="badge email">Email</span><span class="badge inapp">In-App</span></div></div>
+      <div class="tl-item warn"><div class="tl-time">Day 27 / 30 of free tier</div><div class="tl-title">Push Window Warnings</div><div class="tl-desc">Free users lose push after 30 days. Warns at day 27 and 30.</div><div class="channels"><span class="badge manual">Not Cron'd</span><span class="badge push">Push</span><span class="badge email">Email</span><span class="badge inapp">In-App</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ALL TYPES -->
+<div class="panel" id="p-types">
+  <table>
+    <tr><th>Type</th><th>Trigger</th><th>Schedule</th><th>Channels</th><th>Quiet Hrs</th><th>Freq Cap</th><th>Status</th></tr>
+    <tr><td><strong>daily_digest</strong></td><td>Cron</td><td>Hourly</td><td><span class="badge push">Push</span> <span class="badge inapp">In-App</span></td><td>Yes</td><td>Standard</td><td><span class="badge active">Active</span></td></tr>
+    <tr><td><strong>task_reminder</strong></td><td>Cron</td><td>9 AM UTC daily</td><td><span class="badge push">Push</span> <span class="badge inapp">In-App</span></td><td>Yes</td><td>Standard</td><td><span class="badge active">Active</span></td></tr>
+    <tr><td><strong>overdue_alert</strong></td><td>Cron</td><td>10 AM UTC daily</td><td><span class="badge push">Push</span> <span class="badge email">Email</span> <span class="badge inapp">In-App</span></td><td>Yes</td><td>Standard</td><td><span class="badge active">Active</span></td></tr>
+    <tr><td><strong>weekly_briefing</strong></td><td>Cron</td><td>Mon 8 AM UTC</td><td><span class="badge push">Push</span> <span class="badge email">Email</span> <span class="badge inapp">In-App</span></td><td>Yes</td><td>Standard</td><td><span class="badge active">Active</span></td></tr>
+    <tr><td><strong>partner_activity</strong></td><td>Event</td><td>Real-time</td><td><span class="badge push">Push</span> <span class="badge inapp">In-App</span></td><td>No</td><td><span class="badge bypass">Bypasses</span></td><td><span class="badge broken">Not Triggered</span></td></tr>
+    <tr><td><strong>milestone</strong></td><td>Manual</td><td>Wk 12/20/24/28/37/40</td><td><span class="badge push">Push</span> <span class="badge email">Email</span> <span class="badge inapp">In-App</span></td><td>Yes</td><td>Standard</td><td><span class="badge manual">Not Cron'd</span></td></tr>
+    <tr><td><strong>onboarding</strong></td><td>Manual</td><td>24h/48h/72h/120h</td><td><span class="badge push">Push</span> <span class="badge inapp">In-App</span></td><td>Yes</td><td>Standard</td><td><span class="badge manual">Not Cron'd</span></td></tr>
+    <tr><td><strong>mood_reminder</strong></td><td>Manual</td><td>Daily</td><td><span class="badge push">Push</span> <span class="badge inapp">In-App</span></td><td>Yes</td><td>Standard</td><td><span class="badge manual">Not Cron'd</span></td></tr>
+    <tr><td><strong>re_engagement</strong></td><td>Manual</td><td>7d/21d/45d inactive</td><td><span class="badge push">Push</span> <span class="badge email">Email</span> <span class="badge inapp">In-App</span></td><td>No</td><td>Std (7d only)</td><td><span class="badge manual">Not Cron'd</span></td></tr>
+    <tr><td><strong>system</strong></td><td>Manual</td><td>Day 27/30 free tier</td><td><span class="badge push">Push</span> <span class="badge email">Email</span> <span class="badge inapp">In-App</span></td><td>Yes</td><td>Standard</td><td><span class="badge manual">Not Cron'd</span></td></tr>
+    <tr><td><strong>onboarding_drip</strong></td><td>Manual</td><td>Day 1/3/5/7</td><td><span class="badge email">Email Only</span></td><td>N/A</td><td>1/day max</td><td><span class="badge manual">Not Cron'd</span></td></tr>
+    <tr><td style="color:var(--dim)"><strong>celebration</strong></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td><span class="badge unused">Unused</span></td></tr>
+  </table>
+</div>
+
+<!-- EMAILS -->
+<div class="panel" id="p-emails">
+  <div class="section">
+    <div class="section-title">Transactional Emails (always sent)</div>
+    <table>
+      <tr><th>Type</th><th>Subject</th><th>Trigger</th></tr>
+      <tr><td><strong>welcome</strong></td><td>Welcome to The Dad Center</td><td>On signup</td></tr>
+      <tr><td><strong>partner_invited</strong></td><td>{name} invited you to The Dad Center</td><td>On partner invite</td></tr>
+      <tr><td><strong>partner_joined</strong></td><td>{name} just joined your family</td><td>On partner join</td></tr>
+      <tr><td><strong>subscription_confirmed</strong></td><td>Full access unlocked</td><td>On purchase</td></tr>
+      <tr><td><strong>subscription_expiring</strong></td><td>Your access ends in {days} days</td><td>Day 27/30 free tier</td></tr>
+      <tr><td><strong>payment_failed</strong></td><td>Your payment didn't go through</td><td>On billing issue</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Marketing Emails (respect preferences)</div>
+    <table>
+      <tr><th>Type</th><th>Subject</th><th>Preference Gate</th><th>Status</th></tr>
+      <tr><td><strong>weekly_briefing</strong></td><td>Week {n} briefing ready</td><td><code>email_weekly_briefing</code></td><td><span class="badge active">Active (cron)</span></td></tr>
+      <tr><td><strong>overdue_digest</strong></td><td>{count} overdue task(s)</td><td><code>email_task_digest</code></td><td><span class="badge active">Active (cron)</span></td></tr>
+      <tr><td><strong>milestone</strong></td><td>Pregnancy milestone</td><td><code>email_milestones</code></td><td><span class="badge manual">Not Cron'd</span></td></tr>
+      <tr><td><strong>re_engagement</strong></td><td>Tasks need attention / Quick update / Still here</td><td><code>re_engagement_emails</code></td><td><span class="badge manual">Not Cron'd</span></td></tr>
+      <tr><td><strong>onboarding_drip</strong></td><td>Day 1/3/5/7 sequence</td><td><code>email_lifecycle</code></td><td><span class="badge manual">Not Cron'd</span></td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Onboarding Drip Sequence</div>
+    <div class="timeline">
+      <div class="tl-item warn"><div class="tl-time">Day 1</div><div class="tl-title">Your weekly briefing is ready</div><div class="tl-desc">Links to the briefing page</div></div>
+      <div class="tl-item warn"><div class="tl-time">Day 3</div><div class="tl-title">Tasks waiting for you</div><div class="tl-desc">Links to the task manager</div></div>
+      <div class="tl-item warn"><div class="tl-time">Day 5</div><div class="tl-title">Better together — invite your partner</div><div class="tl-desc">Partner invite CTA</div></div>
+      <div class="tl-item warn"><div class="tl-time">Day 7</div><div class="tl-title">Your first week: here's what happened</div><div class="tl-desc">Dashboard recap</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ISSUES -->
+<div class="panel" id="p-issues">
+  <p class="intro">15 issues found. Sorted by impact. <strong style="color:var(--coral)">Red</strong> = critical gaps. <strong style="color:var(--gold)">Yellow</strong> = should fix. <strong style="color:var(--sage)">Green</strong> = recommendations.</p>
+
+  <div class="section"><div class="section-title"><div class="dot" style="background:var(--coral)"></div>Critical Gaps</div>
+
+  <div class="card issue"><h3>1. Partner Activity Never Triggered</h3><p>The <code>partner-activity</code> edge function exists and is fully implemented, but <strong>nothing in the app calls it</strong>. No database trigger, no client-side hook, no API route. Partner notifications don't work at all.</p><p style="margin-top:8px;color:var(--sage)"><strong>Fix:</strong> Add HTTP POST to partner-activity function when tasks are completed or baby logs are created. Either via database trigger on <code>family_tasks</code>/<code>baby_logs</code> or from the client-side mutation hooks.</p></div>
+
+  <div class="card issue"><h3>2. Six Notification Types Not Scheduled</h3><p>These functions exist in send-notifications but have <strong>no cron job</strong>: milestones, onboarding nudges, mood reminders, re-engagement, push window warnings, onboarding drip emails. They only fire if manually called via API.</p><p style="margin-top:8px;color:var(--sage)"><strong>Fix:</strong> Add cron jobs: milestones (daily 8 AM), onboarding nudges (hourly), mood reminders (daily 6 PM), re-engagement (daily 11 AM), push window warnings (daily 9 AM), onboarding drip (daily 10 AM).</p></div>
+
+  <div class="card issue"><h3>3. Onboarding Nudge Query Bug</h3><p>The query filters <code>.is("onboarding_completed", true)</code> then tries to send nudges to users who haven't completed onboarding steps. This is contradictory — it should query users who <strong>have</strong> completed onboarding but <strong>haven't</strong> performed specific actions yet.</p><p style="margin-top:8px;color:var(--sage)"><strong>Fix:</strong> Review the logic — likely should be <code>.is("onboarding_completed", true)</code> (users who finished setup but haven't engaged with features yet).</p></div>
+  </div>
+
+  <div class="section"><div class="section-title"><div class="dot" style="background:var(--gold)"></div>Should Fix</div>
+
+  <div class="card warn"><h3>4. Timezone Not Used in Quiet Hours</h3><p><code>profiles.timezone</code> exists but <code>checkQuietHours()</code> defaults to UTC. A user in PST with quiet hours 10 PM - 7 AM will get notifications at wrong times.</p><p style="margin-top:8px;color:var(--sage)"><strong>Fix:</strong> Join profiles table when fetching preferences and pass timezone to checkQuietHours().</p></div>
+
+  <div class="card warn"><h3>5. "celebration" Type Defined But Unused</h3><p>Exists in the notification_type CHECK constraint but never implemented. Dead code in schema.</p><p style="margin-top:8px;color:var(--sage)"><strong>Fix:</strong> Implement (e.g. first task complete, first week done) or remove from schema.</p></div>
+
+  <div class="card warn"><h3>6. No Database Triggers for Real-Time Events</h3><p>Task completion and baby log creation depend on client-side code to call notification functions. If the client doesn't call, no notification fires.</p><p style="margin-top:8px;color:var(--sage)"><strong>Fix:</strong> Add PostgreSQL triggers on <code>family_tasks</code> (status = 'completed') and <code>baby_logs</code> (INSERT) that call <code>pg_net.http_post()</code> to the partner-activity function.</p></div>
+
+  <div class="card warn"><h3>7. No Notification Cleanup / Retention Policy</h3><p>The <code>notifications</code> table grows indefinitely. No archival, no TTL, no auto-delete of old read notifications.</p><p style="margin-top:8px;color:var(--sage)"><strong>Fix:</strong> Add a cron job that deletes read notifications older than 90 days, or add a retention policy.</p></div>
+
+  <div class="card warn"><h3>8. No Email Bounce/Open Tracking</h3><p>Resend integration only logs "sent" status. No tracking of bounces, opens, or clicks. <code>notification_delivery_log</code> has a 'bounced' status that's never populated.</p><p style="margin-top:8px;color:var(--sage)"><strong>Fix:</strong> Configure Resend webhooks to update delivery_log with bounce/open events.</p></div>
+
+  <div class="card warn"><h3>9. No Rate Limiting on Direct Notifications</h3><p>The <code>type='direct'</code> API endpoint can be called with any user_id and notification_type. No validation that the caller is authorized.</p><p style="margin-top:8px;color:var(--sage)"><strong>Fix:</strong> Validate that direct notifications are only sent by service-role callers from known sources.</p></div>
+
+  <div class="card warn"><h3>10. Vault Secrets May Not Be Set</h3><p>pg_cron jobs use <code>vault.create_secret()</code> for project URL and service role key. If these aren't set in your Supabase vault, cron jobs silently fail.</p><p style="margin-top:8px;color:var(--sage)"><strong>Fix:</strong> Verify vault secrets exist: <code>SELECT * FROM vault.decrypted_secrets WHERE name IN ('supabase_project_url', 'service_role_key');</code></p></div>
+  </div>
+
+  <div class="section"><div class="section-title"><div class="dot" style="background:var(--sage)"></div>Recommendations</div>
+
+  <div class="card rec"><h3>11. Add Monitoring Dashboard</h3><p>Track notification delivery success rates, frequency cap hits, and channel health via a Supabase SQL query or Grafana dashboard.</p></div>
+
+  <div class="card rec"><h3>12. Add Push Window Upgrade CTA</h3><p>When free users hit day 27, the push window warning should deep-link to the upgrade screen with context about losing notifications.</p></div>
+
+  <div class="card rec"><h3>13. Implement Celebration Notifications</h3><p>Use the existing "celebration" type for positive reinforcement: first task completed, first week of tracking, streak milestones (7-day mood streak).</p></div>
+
+  <div class="card rec"><h3>14. Add A/B Testing for Notification Copy</h3><p>Re-engagement and onboarding emails have fixed copy. Test different subject lines and CTAs to optimize open/click rates.</p></div>
+
+  <div class="card rec"><h3>15. Add Unsubscribe Token to Emails</h3><p>Emails include "Manage preferences" link but no one-click unsubscribe token. CAN-SPAM and Apple require easy opt-out.</p></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'))
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'))
+  document.getElementById('p-'+id).classList.add('active')
+  btn.classList.add('active')
+}
+</script>
+</body>
+</html>

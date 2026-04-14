@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome Animation — Grand Celebration</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Jost:wght@300;400;500;600&family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #12100e;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: 'Jost', sans-serif;
+  }
+
+  /* Warm radial glows */
+  .warm-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 30% 20%, rgba(196,112,63,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 70% 70%, rgba(212,168,83,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(196,112,63,0.04) 0%, transparent 80%),
+      #12100e;
+  }
+
+  /* Explosion canvas (behind content, above bg) */
+  #explosion-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Confetti canvas */
+  #confetti-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* ─── CSS Balloons ─────────────────────────────────────── */
+  .balloon-container {
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .balloon {
+    position: absolute;
+    bottom: -120px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    opacity: 0;
+    animation: balloonRise linear forwards;
+  }
+
+  .balloon::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 10px solid inherit;
+  }
+
+  .balloon::after {
+    content: '';
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    width: 1px;
+    height: 50px;
+    background: rgba(237,230,220,0.15);
+  }
+
+  /* Balloon highlight */
+  .balloon-shine {
+    position: absolute;
+    top: 15%;
+    left: 25%;
+    width: 30%;
+    height: 30%;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.25) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  @keyframes balloonRise {
+    0% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 0;
+    }
+    5% {
+      opacity: 0.85;
+    }
+    50% {
+      opacity: 0.85;
+    }
+    100% {
+      transform: translateY(calc(-100vh - 200px)) rotate(var(--balloon-rot, 8deg));
+      opacity: 0;
+    }
+  }
+
+  /* Individual balloon configs */
+  .balloon-1 {
+    left: 5%; width: 70px; height: 85px;
+    background: radial-gradient(ellipse at 40% 35%, #d4884f, #c4703f);
+    --balloon-rot: 10deg;
+    animation-duration: 8s; animation-delay: 0.3s;
+  }
+  .balloon-1::before { border-top-color: #c4703f; }
+
+  .balloon-2 {
+    left: 15%; width: 60px; height: 72px;
+    background: radial-gradient(ellipse at 40% 35%, #e0b86a, #d4a853);
+    --balloon-rot: -6deg;
+    animation-duration: 9s; animation-delay: 0.8s;
+  }
+  .balloon-2::before { border-top-color: #d4a853; }
+
+  .balloon-3 {
+    right: 8%; width: 80px; height: 96px;
+    background: radial-gradient(ellipse at 40% 35%, #d4884f, #b8623a);
+    --balloon-rot: 12deg;
+    animation-duration: 7.5s; animation-delay: 0.1s;
+  }
+  .balloon-3::before { border-top-color: #b8623a; }
+
+  .balloon-4 {
+    right: 20%; width: 65px; height: 78px;
+    background: radial-gradient(ellipse at 40% 35%, #deb567, #c99a45);
+    --balloon-rot: -9deg;
+    animation-duration: 8.5s; animation-delay: 1.2s;
+  }
+  .balloon-4::before { border-top-color: #c99a45; }
+
+  .balloon-5 {
+    left: 35%; width: 75px; height: 90px;
+    background: radial-gradient(ellipse at 40% 35%, #d4884f, #c4703f);
+    --balloon-rot: 7deg;
+    animation-duration: 9.5s; animation-delay: 0.5s;
+  }
+  .balloon-5::before { border-top-color: #c4703f; }
+
+  .balloon-6 {
+    right: 35%; width: 68px; height: 82px;
+    background: radial-gradient(ellipse at 40% 35%, #e0b86a, #d4a853);
+    --balloon-rot: -11deg;
+    animation-duration: 8.2s; animation-delay: 1.5s;
+  }
+  .balloon-6::before { border-top-color: #d4a853; }
+
+  .balloon-7 {
+    left: 50%; width: 72px; height: 86px;
+    background: radial-gradient(ellipse at 40% 35%, #cf7b48, #a85c33);
+    --balloon-rot: 5deg;
+    animation-duration: 10s; animation-delay: 2s;
+  }
+  .balloon-7::before { border-top-color: #a85c33; }
+
+  .balloon-8 {
+    left: 75%; width: 62px; height: 74px;
+    background: radial-gradient(ellipse at 40% 35%, #deb567, #d4a853);
+    --balloon-rot: -8deg;
+    animation-duration: 7.8s; animation-delay: 0.7s;
+  }
+  .balloon-8::before { border-top-color: #d4a853; }
+
+  /* ─── Floating Emoji ───────────────────────────────────── */
+  .emoji-container {
+    position: fixed;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .floating-emoji {
+    position: absolute;
+    bottom: -60px;
+    font-size: 32px;
+    opacity: 0;
+    animation: emojiFloat linear forwards;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  }
+
+  @keyframes emojiFloat {
+    0% {
+      transform: translateY(0) rotate(0deg) scale(0.8);
+      opacity: 0;
+    }
+    8% {
+      opacity: 0.9;
+      transform: translateY(-10vh) rotate(5deg) scale(1);
+    }
+    50% {
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(calc(-110vh)) rotate(var(--emoji-rot, 15deg)) scale(0.6);
+      opacity: 0;
+    }
+  }
+
+  .emoji-1  { left: 8%;  --emoji-rot: 20deg;  animation-duration: 7s;  animation-delay: 0.4s; }
+  .emoji-2  { left: 18%; --emoji-rot: -15deg; animation-duration: 8s;  animation-delay: 1.0s; }
+  .emoji-3  { left: 30%; --emoji-rot: 25deg;  animation-duration: 6.5s; animation-delay: 0.2s; }
+  .emoji-4  { left: 42%; --emoji-rot: -10deg; animation-duration: 9s;  animation-delay: 1.5s; }
+  .emoji-5  { left: 55%; --emoji-rot: 18deg;  animation-duration: 7.5s; animation-delay: 0.7s; }
+  .emoji-6  { left: 65%; --emoji-rot: -22deg; animation-duration: 8.5s; animation-delay: 1.2s; }
+  .emoji-7  { left: 78%; --emoji-rot: 12deg;  animation-duration: 6.8s; animation-delay: 0.9s; }
+  .emoji-8  { left: 88%; --emoji-rot: -18deg; animation-duration: 7.2s; animation-delay: 1.8s; }
+  .emoji-9  { left: 25%; --emoji-rot: 30deg;  animation-duration: 8.8s; animation-delay: 2.2s; }
+  .emoji-10 { left: 70%; --emoji-rot: -25deg; animation-duration: 7.8s; animation-delay: 2.5s; }
+
+  /* ─── Content overlay (full-screen, no card) ───────────── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+    transition: opacity 400ms ease-out;
+  }
+  .overlay.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Headline */
+  .welcome-headline {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 72px;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #c4703f, #d4a853);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0;
+    transform: perspective(600px) rotateX(10deg) scale(0.5);
+    transform-origin: center bottom;
+  }
+  .welcome-headline.enter {
+    animation: headlineEnter 800ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes headlineEnter {
+    from {
+      opacity: 0;
+      transform: perspective(600px) rotateX(10deg) scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: perspective(600px) rotateX(0deg) scale(1);
+    }
+  }
+
+  /* Body text */
+  .welcome-body {
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    color: #ede6dc;
+    line-height: 1.7;
+    max-width: 500px;
+    margin-bottom: 40px;
+    opacity: 0;
+  }
+  .welcome-body.enter {
+    animation: fadeIn 500ms ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* CTA Button */
+  .welcome-cta {
+    font-family: 'Karla', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #faf6f0;
+    background: #c4703f;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 48px;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(196,112,63,0.3);
+    transition: background 200ms ease, transform 100ms ease, box-shadow 200ms ease;
+    opacity: 0;
+  }
+  .welcome-cta.enter {
+    animation: fadeIn 500ms ease-out forwards;
+  }
+  .welcome-cta:hover {
+    background: #d47d4a;
+    box-shadow: 0 0 40px rgba(196,112,63,0.45);
+  }
+  .welcome-cta:active {
+    transform: scale(0.97);
+  }
+
+  /* ─── Mobile ───────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .welcome-headline {
+      font-size: 56px;
+    }
+    .welcome-body {
+      font-size: 16px;
+      padding: 0 8px;
+    }
+    .floating-emoji {
+      font-size: 26px;
+    }
+    .balloon-3 { width: 60px; height: 72px; }
+    .balloon-5 { width: 55px; height: 66px; }
+    .balloon-7 { display: none; }
+    .balloon-8 { display: none; }
+    .emoji-9 { display: none; }
+    .emoji-10 { display: none; }
+  }
+
+  @media (max-width: 400px) {
+    .welcome-headline {
+      font-size: 44px;
+    }
+    .welcome-body {
+      font-size: 15px;
+    }
+    .welcome-cta {
+      padding: 14px 36px;
+      font-size: 15px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="warm-bg"></div>
+
+<!-- Explosion canvas -->
+<canvas id="explosion-canvas"></canvas>
+
+<!-- Confetti canvas -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- CSS Balloons -->
+<div class="balloon-container" id="balloon-container">
+  <div class="balloon balloon-1"><div class="balloon-shine"></div></div>
+  <div class="balloon balloon-2"><div class="balloon-shine"></div></div>
+  <div class="balloon balloon-3"><div class="balloon-shine"></div></div>
+  <div class="balloon balloon-4"><div class="balloon-shine"></div></div>
+  <div class="balloon balloon-5"><div class="balloon-shine"></div></div>
+  <div class="balloon balloon-6"><div class="balloon-shine"></div></div>
+  <div class="balloon balloon-7"><div class="balloon-shine"></div></div>
+  <div class="balloon balloon-8"><div class="balloon-shine"></div></div>
+</div>
+
+<!-- Floating Emoji -->
+<div class="emoji-container" id="emoji-container">
+  <div class="floating-emoji emoji-1">&#x1F476;</div>
+  <div class="floating-emoji emoji-2">&#x1F37C;</div>
+  <div class="floating-emoji emoji-3">&#x2B50;</div>
+  <div class="floating-emoji emoji-4">&#x1F49B;</div>
+  <div class="floating-emoji emoji-5">&#x1F389;</div>
+  <div class="floating-emoji emoji-6">&#x1F476;</div>
+  <div class="floating-emoji emoji-7">&#x2B50;</div>
+  <div class="floating-emoji emoji-8">&#x1F37C;</div>
+  <div class="floating-emoji emoji-9">&#x1F389;</div>
+  <div class="floating-emoji emoji-10">&#x1F49B;</div>
+</div>
+
+<!-- Full-screen content (no card) -->
+<div class="overlay" id="overlay">
+  <h1 class="welcome-headline" id="headline">Welcome to<br>Fatherhood</h1>
+  <p class="welcome-body" id="body-text">
+    The greatest adventure of your life just started. We're here for every step,
+    every sleepless night, and every first smile.
+  </p>
+  <button class="welcome-cta" id="cta-btn">Let's Go</button>
+</div>
+
+<script>
+(function () {
+  // ─── Canvas setup ─────────────────────────────────────────
+  const explosionCanvas = document.getElementById('explosion-canvas');
+  const explosionCtx = explosionCanvas.getContext('2d');
+  const confettiCanvas = document.getElementById('confetti-canvas');
+  const confettiCtx = confettiCanvas.getContext('2d');
+  let W, H;
+
+  function resize() {
+    W = explosionCanvas.width = confettiCanvas.width = window.innerWidth;
+    H = explosionCanvas.height = confettiCanvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const COLORS = ['#c4703f', '#d4a853', '#ede6dc', '#c47a8f', '#6b8f71'];
+  const EXPLOSION_COLORS = ['#c4703f', '#d4a853', '#ede6dc'];
+  const isMobile = window.innerWidth < 600;
+
+  // ─── Particle Explosion ───────────────────────────────────
+  const EXPLOSION_COUNT = isMobile ? 120 : 200;
+  const explosionParticles = [];
+
+  class ExplosionParticle {
+    constructor() {
+      this.x = W / 2;
+      this.y = H / 2;
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 2 + Math.random() * 6;
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed;
+      this.color = EXPLOSION_COLORS[Math.floor(Math.random() * EXPLOSION_COLORS.length)];
+      this.radius = 2 + Math.random() * 3;
+      this.life = 1;
+      this.decay = 0.008 + Math.random() * 0.012; // fade over ~1-1.5s
+      this.gravity = 0.03;
+    }
+
+    update() {
+      this.vy += this.gravity;
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vx *= 0.99;
+      this.vy *= 0.99;
+      this.life -= this.decay;
+      return this.life > 0;
+    }
+
+    draw(ctx) {
+      if (this.life <= 0) return;
+      ctx.save();
+      ctx.globalAlpha = this.life;
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius * this.life, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // Initialize explosion
+  for (let i = 0; i < EXPLOSION_COUNT; i++) {
+    explosionParticles.push(new ExplosionParticle());
+  }
+
+  let explosionRunning = true;
+
+  function animateExplosion() {
+    if (!explosionRunning) return;
+    explosionCtx.clearRect(0, 0, W, H);
+
+    let alive = 0;
+    for (let i = explosionParticles.length - 1; i >= 0; i--) {
+      const p = explosionParticles[i];
+      if (p.update()) {
+        p.draw(explosionCtx);
+        alive++;
+      }
+    }
+
+    if (alive === 0) {
+      explosionRunning = false;
+      explosionCtx.clearRect(0, 0, W, H);
+      return;
+    }
+
+    requestAnimationFrame(animateExplosion);
+  }
+  requestAnimationFrame(animateExplosion);
+
+  // ─── Continuous Confetti ──────────────────────────────────
+  const CONFETTI_COUNT = isMobile ? 150 : 250;
+  const confettiParticles = [];
+
+  class ConfettiParticle {
+    constructor(randomY) {
+      this.reset(randomY);
+    }
+
+    reset(randomY) {
+      this.x = Math.random() * W;
+      this.y = randomY ? -20 + Math.random() * H : -(Math.random() * 100 + 20);
+      this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      this.rotation = Math.random() * Math.PI * 2;
+      this.rotationSpeed = (Math.random() - 0.5) * 0.08;
+
+      // Shape: 0 = rect, 1 = circle
+      this.shape = Math.random() < 0.5 ? 0 : 1;
+      this.w = 3 + Math.random() * 5;
+      this.h = this.shape === 0 ? this.w * (0.4 + Math.random() * 0.4) : this.w;
+
+      // Slow fall
+      this.vy = 0.4 + Math.random() * 1.2;
+      this.vx = (Math.random() - 0.5) * 0.5;
+      this.wobbleSpeed = 0.02 + Math.random() * 0.03;
+      this.wobbleAmp = 0.5 + Math.random() * 1;
+      this.wobbleOffset = Math.random() * Math.PI * 2;
+
+      this.opacity = 0.5 + Math.random() * 0.5;
+    }
+
+    update(time) {
+      this.y += this.vy;
+      this.x += this.vx + Math.sin(time * this.wobbleSpeed + this.wobbleOffset) * this.wobbleAmp * 0.3;
+      this.rotation += this.rotationSpeed;
+
+      if (this.y > H + 30) {
+        this.reset(false);
+      }
+    }
+
+    draw(ctx) {
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotation);
+      ctx.globalAlpha = this.opacity;
+      ctx.fillStyle = this.color;
+
+      if (this.shape === 0) {
+        ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+      } else {
+        ctx.beginPath();
+        ctx.arc(0, 0, this.w / 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+  }
+
+  for (let i = 0; i < CONFETTI_COUNT; i++) {
+    confettiParticles.push(new ConfettiParticle(true));
+  }
+
+  let confettiRunning = true;
+  const confettiStart = performance.now();
+
+  function animateConfetti(now) {
+    if (!confettiRunning) return;
+    confettiCtx.clearRect(0, 0, W, H);
+
+    const elapsed = now - confettiStart;
+
+    for (const p of confettiParticles) {
+      p.update(elapsed);
+      p.draw(confettiCtx);
+    }
+
+    requestAnimationFrame(animateConfetti);
+  }
+  requestAnimationFrame(animateConfetti);
+
+  // ─── Content animation sequence ──────────────────────────
+  const headline = document.getElementById('headline');
+  const bodyText = document.getElementById('body-text');
+  const ctaBtn = document.getElementById('cta-btn');
+
+  // 200ms → headline
+  setTimeout(function () {
+    headline.classList.add('enter');
+  }, 200);
+
+  // 600ms → body
+  setTimeout(function () {
+    bodyText.classList.add('enter');
+  }, 600);
+
+  // 1200ms → button
+  setTimeout(function () {
+    ctaBtn.classList.add('enter');
+  }, 1200);
+
+  // ─── Auto-fade after 5s ──────────────────────────────────
+  let dismissed = false;
+  const autoFadeTimer = setTimeout(function () {
+    if (!dismissed) dismiss();
+  }, 5000);
+
+  // ─── Dismiss function ────────────────────────────────────
+  function dismiss() {
+    if (dismissed) return;
+    dismissed = true;
+    clearTimeout(autoFadeTimer);
+
+    const overlay = document.getElementById('overlay');
+    overlay.classList.add('fade-out');
+
+    // Fade out all decorative layers
+    const balloons = document.getElementById('balloon-container');
+    const emojis = document.getElementById('emoji-container');
+    balloons.style.transition = 'opacity 400ms ease-out';
+    emojis.style.transition = 'opacity 400ms ease-out';
+    confettiCanvas.style.transition = 'opacity 400ms ease-out';
+    explosionCanvas.style.transition = 'opacity 400ms ease-out';
+
+    balloons.style.opacity = '0';
+    emojis.style.opacity = '0';
+    confettiCanvas.style.opacity = '0';
+    explosionCanvas.style.opacity = '0';
+
+    setTimeout(function () {
+      confettiRunning = false;
+      confettiCtx.clearRect(0, 0, W, H);
+      overlay.style.display = 'none';
+      balloons.style.display = 'none';
+      emojis.style.display = 'none';
+      confettiCanvas.style.display = 'none';
+      explosionCanvas.style.display = 'none';
+    }, 450);
+  }
+
+  ctaBtn.addEventListener('click', dismiss);
+})();
+</script>
+</body>
+</html>

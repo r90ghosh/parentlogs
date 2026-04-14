@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog Pill Styles — The Dad Center</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Jost:wght@400;500&family=Karla:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #12100e;
+    --surface: #1a1714;
+    --card: #201c18;
+    --card-hover: #282420;
+    --white: #faf6f0;
+    --cream: #ede6dc;
+    --muted: #7a6f62;
+    --dim: #4a4239;
+    --copper: #c4703f;
+    --copper-dim: rgba(196,112,63,0.15);
+    --gold: #d4a853;
+    --sage: #6b8f71;
+    --sky: #5b9bd5;
+    --rose: #c47a8f;
+    --border: rgba(237, 230, 220, 0.08);
+    --border-hover: rgba(237, 230, 220, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--cream); font-family: 'Jost', sans-serif; padding: 24px; }
+  .container { max-width: 900px; margin: 0 auto; }
+
+  .option-label {
+    font-family: 'Playfair Display', serif; font-size: 22px; color: var(--white);
+    margin: 48px 0 6px; padding-top: 48px; border-top: 1px solid var(--border);
+  }
+  .option-label:first-of-type { border-top: none; padding-top: 0; margin-top: 16px; }
+  .option-desc { font-size: 13px; color: var(--muted); margin-bottom: 20px; font-family: 'Karla', sans-serif; }
+
+  h1 { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--white); margin-bottom: 6px; }
+  .subtitle { color: var(--muted); margin-bottom: 40px; font-family: 'Karla', sans-serif; font-size: 13px; }
+
+  .filter-section { margin-bottom: 10px; }
+  .section-label { font-family: 'Karla', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); margin-bottom: 8px; }
+
+  .pill { font-family: 'Karla', sans-serif; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+
+  /* ============ OPTION 1: Budget-style — no border, tinted bg ============ */
+  .opt1-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .opt1 .pill {
+    padding: 7px 16px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap;
+    color: var(--muted); background: transparent;
+  }
+  .opt1 .pill:hover { background: var(--card); color: var(--cream); }
+  .opt1 .pill.active-cat { background: var(--copper); color: var(--white); }
+  .opt1 .pill.active-stage { background: var(--copper-dim); color: var(--copper); }
+
+  /* ============ OPTION 2: Bordered uniform — all pills have borders ============ */
+  .opt2-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .opt2 .pill {
+    padding: 6px 16px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap;
+    color: var(--muted); background: var(--surface); border: 1px solid var(--border);
+  }
+  .opt2 .pill:hover { border-color: var(--border-hover); color: var(--cream); }
+  .opt2 .pill.active-cat { background: var(--copper); color: var(--white); border-color: var(--copper); }
+  .opt2 .pill.active-stage { background: var(--copper-dim); color: var(--copper); border-color: rgba(196,112,63,0.3); }
+
+  /* ============ OPTION 3: Glass morphism — frosted bg, subtle glow ============ */
+  .opt3-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .opt3 .pill {
+    padding: 7px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; white-space: nowrap;
+    color: var(--muted); background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+  }
+  .opt3 .pill:hover { background: rgba(255,255,255,0.06); border-color: var(--border-hover); color: var(--cream); }
+  .opt3 .pill.active-cat {
+    background: linear-gradient(135deg, rgba(196,112,63,0.25), rgba(196,112,63,0.1));
+    color: var(--copper); border-color: rgba(196,112,63,0.4);
+    box-shadow: 0 0 12px rgba(196,112,63,0.15);
+  }
+  .opt3 .pill.active-stage {
+    background: linear-gradient(135deg, rgba(196,112,63,0.15), rgba(196,112,63,0.05));
+    color: var(--copper); border-color: rgba(196,112,63,0.25);
+  }
+
+  /* ============ OPTION 4: Underline chips — minimal, text-based ============ */
+  .opt4-row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  .opt4 .pill {
+    padding: 8px 12px; border-radius: 0; font-size: 12px; font-weight: 600; white-space: nowrap;
+    color: var(--muted); background: transparent; border-bottom: 2px solid transparent;
+  }
+  .opt4 .pill:hover { color: var(--cream); }
+  .opt4 .pill.active-cat { color: var(--copper); border-bottom-color: var(--copper); }
+  .opt4 .pill.active-stage { color: var(--copper); border-bottom-color: rgba(196,112,63,0.4); }
+
+  /* ============ OPTION 5: Color-coded categories — each category gets its own color ============ */
+  .opt5-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .opt5 .pill {
+    padding: 6px 16px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap;
+    color: var(--muted); background: transparent; border: 1px solid var(--border);
+  }
+  .opt5 .pill:hover { border-color: var(--border-hover); color: var(--cream); }
+  /* Category-specific active colors */
+  .opt5 .pill.active-all { background: var(--copper); color: var(--white); border-color: var(--copper); }
+  .opt5 .pill.active-budget { background: rgba(212,168,83,0.15); color: var(--gold); border-color: rgba(212,168,83,0.3); }
+  .opt5 .pill.active-guides { background: rgba(196,112,63,0.15); color: var(--copper); border-color: rgba(196,112,63,0.3); }
+  .opt5 .pill.active-lifestyle { background: rgba(107,143,113,0.15); color: var(--sage); border-color: rgba(107,143,113,0.3); }
+  /* Stage pills — uniform copper tint */
+  .opt5 .pill.active-stage { background: rgba(196,112,63,0.1); color: var(--copper); border-color: rgba(196,112,63,0.2); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Blog Pill Styles</h1>
+<p class="subtitle">5 visual approaches — same two-row layout, different pill aesthetics. All use uniform sizing (px-3/4 py-1.5, text-xs, font-ui).</p>
+
+<!-- ========== OPTION 1 ========== -->
+<h2 class="option-label">Option 1: Budget-Style (No Borders)</h2>
+<p class="option-desc">Matches the budget page exactly. No borders on inactive pills — just text. Active category is solid copper, active stage is copper tint. Clean and minimal.</p>
+<div class="opt1">
+  <div class="filter-section">
+    <div class="section-label">Topic</div>
+    <div class="opt1-row">
+      <span class="pill active-cat">All</span>
+      <span class="pill">Budget & Costs</span>
+      <span class="pill">Dad Guides</span>
+      <span class="pill">New Dad Life</span>
+    </div>
+  </div>
+  <div class="filter-section">
+    <div class="section-label">Stage</div>
+    <div class="opt1-row">
+      <span class="pill active-stage">All Stages</span>
+      <span class="pill">First Trimester</span>
+      <span class="pill">Second Trimester</span>
+      <span class="pill">Third Trimester</span>
+      <span class="pill">Delivery</span>
+      <span class="pill">Fourth Trimester</span>
+      <span class="pill">3-6 Months</span>
+      <span class="pill">6-12 Months</span>
+      <span class="pill">12-18 Months</span>
+      <span class="pill">18-24 Months</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========== OPTION 2 ========== -->
+<h2 class="option-label">Option 2: Bordered Uniform</h2>
+<p class="option-desc">Every pill has a subtle border and surface background. Active states use copper fill (category) or copper tint (stage). Feels more structured and button-like.</p>
+<div class="opt2">
+  <div class="filter-section">
+    <div class="section-label">Topic</div>
+    <div class="opt2-row">
+      <span class="pill active-cat">All</span>
+      <span class="pill">Budget & Costs</span>
+      <span class="pill">Dad Guides</span>
+      <span class="pill">New Dad Life</span>
+    </div>
+  </div>
+  <div class="filter-section">
+    <div class="section-label">Stage</div>
+    <div class="opt2-row">
+      <span class="pill active-stage">All Stages</span>
+      <span class="pill">First Trimester</span>
+      <span class="pill">Second Trimester</span>
+      <span class="pill">Third Trimester</span>
+      <span class="pill">Delivery</span>
+      <span class="pill">Fourth Trimester</span>
+      <span class="pill">3-6 Months</span>
+      <span class="pill">6-12 Months</span>
+      <span class="pill">12-18 Months</span>
+      <span class="pill">18-24 Months</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========== OPTION 3 ========== -->
+<h2 class="option-label">Option 3: Glass Morphism</h2>
+<p class="option-desc">Frosted glass effect with subtle glow on active pills. Rounded rectangles instead of full circles. Matches the "Warm Luxury" design language with a premium feel.</p>
+<div class="opt3">
+  <div class="filter-section">
+    <div class="section-label">Topic</div>
+    <div class="opt3-row">
+      <span class="pill active-cat">All</span>
+      <span class="pill">Budget & Costs</span>
+      <span class="pill">Dad Guides</span>
+      <span class="pill">New Dad Life</span>
+    </div>
+  </div>
+  <div class="filter-section">
+    <div class="section-label">Stage</div>
+    <div class="opt3-row">
+      <span class="pill active-stage">All Stages</span>
+      <span class="pill">First Trimester</span>
+      <span class="pill">Second Trimester</span>
+      <span class="pill">Third Trimester</span>
+      <span class="pill">Delivery</span>
+      <span class="pill">Fourth Trimester</span>
+      <span class="pill">3-6 Months</span>
+      <span class="pill">6-12 Months</span>
+      <span class="pill">12-18 Months</span>
+      <span class="pill">18-24 Months</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========== OPTION 4 ========== -->
+<h2 class="option-label">Option 4: Underline Chips</h2>
+<p class="option-desc">No background at all — just text with an underline on active state. Ultra-minimal. Lets the content breathe. Works great when the filter area shouldn't compete with the cards below.</p>
+<div class="opt4">
+  <div class="filter-section">
+    <div class="section-label">Topic</div>
+    <div class="opt4-row">
+      <span class="pill active-cat">All</span>
+      <span class="pill">Budget & Costs</span>
+      <span class="pill">Dad Guides</span>
+      <span class="pill">New Dad Life</span>
+    </div>
+  </div>
+  <div class="filter-section" style="margin-top: 4px;">
+    <div class="section-label">Stage</div>
+    <div class="opt4-row">
+      <span class="pill active-stage">All Stages</span>
+      <span class="pill">First Trimester</span>
+      <span class="pill">Second Trimester</span>
+      <span class="pill">Third Trimester</span>
+      <span class="pill">Delivery</span>
+      <span class="pill">Fourth Trimester</span>
+      <span class="pill">3-6 Months</span>
+      <span class="pill">6-12 Months</span>
+      <span class="pill">12-18 Months</span>
+      <span class="pill">18-24 Months</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========== OPTION 5 ========== -->
+<h2 class="option-label">Option 5: Color-Coded Categories</h2>
+<p class="option-desc">Each category gets its own accent color (gold for budget, copper for guides, sage for lifestyle). Stage pills use a uniform copper tint. Adds visual meaning to categories — you can scan by color.</p>
+<div class="opt5">
+  <div class="filter-section">
+    <div class="section-label">Topic</div>
+    <div class="opt5-row">
+      <span class="pill active-all">All</span>
+      <span class="pill active-budget">Budget & Costs</span>
+      <span class="pill">Dad Guides</span>
+      <span class="pill">New Dad Life</span>
+    </div>
+  </div>
+  <div class="filter-section" style="margin-top: 4px;">
+    <div class="section-label" style="margin-top: 4px;">— showing Budget & Costs active:</div>
+    <div class="opt5-row" style="margin-top: 8px;">
+      <span class="pill">All</span>
+      <span class="pill active-budget">Budget & Costs</span>
+      <span class="pill">Dad Guides</span>
+      <span class="pill">New Dad Life</span>
+    </div>
+  </div>
+  <div class="filter-section" style="margin-top: 4px;">
+    <div class="section-label" style="margin-top: 4px;">— showing Dad Guides active:</div>
+    <div class="opt5-row" style="margin-top: 8px;">
+      <span class="pill">All</span>
+      <span class="pill">Budget & Costs</span>
+      <span class="pill active-guides">Dad Guides</span>
+      <span class="pill">New Dad Life</span>
+    </div>
+  </div>
+  <div class="filter-section" style="margin-top: 4px;">
+    <div class="section-label" style="margin-top: 4px;">— showing New Dad Life active:</div>
+    <div class="opt5-row" style="margin-top: 8px;">
+      <span class="pill">All</span>
+      <span class="pill">Budget & Costs</span>
+      <span class="pill">Dad Guides</span>
+      <span class="pill active-lifestyle">New Dad Life</span>
+    </div>
+  </div>
+  <div class="filter-section" style="margin-top: 12px;">
+    <div class="section-label">Stage</div>
+    <div class="opt5-row">
+      <span class="pill active-stage">All Stages</span>
+      <span class="pill">First Trimester</span>
+      <span class="pill">Second Trimester</span>
+      <span class="pill">Third Trimester</span>
+      <span class="pill">Delivery</span>
+      <span class="pill">Fourth Trimester</span>
+      <span class="pill">3-6 Months</span>
+      <span class="pill">6-12 Months</span>
+      <span class="pill">12-18 Months</span>
+      <span class="pill">18-24 Months</span>
+    </div>
+  </div>
+</div>
+
+<div style="height: 80px;"></div>
+</div>
+</body>
+</html>

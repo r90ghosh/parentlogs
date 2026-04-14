@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome Animation — Classic Confetti Burst</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Jost:wght@300;400;500;600&family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #12100e;
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: 'Jost', sans-serif;
+  }
+
+  /* Warm radial glows behind everything */
+  .warm-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 30% 20%, rgba(196,112,63,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 70% 70%, rgba(212,168,83,0.05) 0%, transparent 70%),
+      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(196,112,63,0.03) 0%, transparent 80%),
+      #12100e;
+  }
+
+  /* Confetti canvas */
+  #confetti-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Overlay container */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 1;
+    transition: opacity 300ms ease-out;
+  }
+  .overlay.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Modal card */
+  .welcome-card {
+    position: relative;
+    background: #201c18;
+    border: 1px solid rgba(237,230,220,0.08);
+    border-radius: 16px;
+    max-width: 480px;
+    width: 100%;
+    padding: 40px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.28), 0 16px 48px rgba(0,0,0,0.36);
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.8);
+    overflow: hidden;
+  }
+  .welcome-card.enter {
+    animation: cardEnter 600ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  /* Top accent gradient bar */
+  .welcome-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #c4703f, #d4a853);
+    border-radius: 16px 16px 0 0;
+  }
+
+  @keyframes cardEnter {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Icon */
+  .welcome-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    display: inline-block;
+    animation: iconBounce 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 500ms both;
+  }
+  @keyframes iconBounce {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* Headline */
+  .welcome-headline {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 32px;
+    color: #faf6f0;
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: fadeUp 500ms ease-out 600ms forwards;
+  }
+
+  /* Subheadline */
+  .welcome-subheadline {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    color: #ede6dc;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 500ms ease-out 700ms forwards;
+  }
+
+  /* Body text */
+  .welcome-body {
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: #7a6f62;
+    line-height: 1.7;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 500ms ease-out 800ms forwards;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* CTA Button */
+  .welcome-cta {
+    font-family: 'Karla', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #faf6f0;
+    background: #c4703f;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 32px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(196,112,63,0.18);
+    transition: background 200ms ease, transform 100ms ease, box-shadow 200ms ease;
+    opacity: 0;
+    animation: fadeUp 500ms ease-out 950ms forwards;
+  }
+  .welcome-cta:hover {
+    background: #d47d4a;
+    box-shadow: 0 4px 28px rgba(196,112,63,0.3);
+  }
+  .welcome-cta:active {
+    transform: scale(0.97);
+  }
+
+  /* Fake dashboard behind (subtle, for context) */
+  .fake-dashboard {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    padding: 60px 24px 24px;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+  .fake-bar {
+    height: 48px;
+    background: #1a1714;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  .fake-card-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .fake-card-row > div {
+    flex: 1;
+    height: 100px;
+    background: #1a1714;
+    border-radius: 12px;
+  }
+  .fake-tall {
+    height: 160px;
+    background: #1a1714;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 520px) {
+    .welcome-card {
+      padding: 32px 24px;
+    }
+    .welcome-headline {
+      font-size: 28px;
+    }
+    .welcome-body {
+      font-size: 14px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="warm-bg"></div>
+
+<!-- Fake dashboard skeleton for depth -->
+<div class="fake-dashboard">
+  <div class="fake-bar"></div>
+  <div class="fake-card-row">
+    <div></div>
+    <div></div>
+  </div>
+  <div class="fake-tall"></div>
+  <div class="fake-bar"></div>
+  <div class="fake-card-row">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="overlay" id="overlay">
+  <div class="welcome-card" id="welcome-card">
+    <div class="welcome-icon">👣</div>
+    <h1 class="welcome-headline">Congratulations!</h1>
+    <p class="welcome-subheadline">Welcome to The Dad Center</p>
+    <p class="welcome-body">
+      A new chapter begins. From this moment forward, you'll never walk this
+      journey alone. We've prepared weekly briefings, curated tasks, and a
+      community of dads who've been exactly where you are right now. Your baby
+      is already counting on you — and you're already showing up.
+    </p>
+    <button class="welcome-cta" id="cta-btn">Let's Begin</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  // ─── Canvas setup ─────────────────────────────────────────
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // ─── Confetti colors ─────────────────────────────────────
+  const COLORS = [
+    '#c4703f', // copper
+    '#d4a853', // gold
+    '#ede6dc', // cream
+    '#c47a8f', // rose
+    '#6b8f71', // sage
+  ];
+
+  // ─── Particle class ──────────────────────────────────────
+  const PARTICLE_COUNT = 150;
+  const GRAVITY = 0.12;
+  const WIND = 0.3;
+  const DRAG = 0.98;
+  const CONFETTI_DURATION = 4000; // ms
+
+  class Particle {
+    constructor() {
+      this.reset(true);
+    }
+
+    reset(initial) {
+      // Burst from center-top area
+      this.x = W * 0.5 + (Math.random() - 0.5) * W * 0.3;
+      this.y = H * 0.35 + (Math.random() - 0.5) * H * 0.1;
+
+      // Explosive velocity
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 4 + Math.random() * 8;
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed - (initial ? 4 + Math.random() * 4 : 2);
+
+      this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      this.rotation = Math.random() * Math.PI * 2;
+      this.rotationSpeed = (Math.random() - 0.5) * 0.2;
+      this.opacity = 1;
+
+      // Shape: 0 = rectangle, 1 = circle, 2 = streamer
+      this.shape = Math.random() < 0.4 ? 0 : Math.random() < 0.7 ? 1 : 2;
+
+      // Size
+      this.w = 4 + Math.random() * 6;
+      this.h = this.shape === 2 ? this.w * 3 : this.w * 0.6;
+    }
+
+    update(fadeAlpha) {
+      this.vy += GRAVITY;
+      this.vx += (Math.random() - 0.5) * WIND * 0.1;
+      this.vx *= DRAG;
+      this.vy *= DRAG;
+
+      this.x += this.vx;
+      this.y += this.vy;
+      this.rotation += this.rotationSpeed;
+
+      this.opacity = fadeAlpha;
+
+      return this.y < H + 50;
+    }
+
+    draw() {
+      if (this.opacity <= 0) return;
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotation);
+      ctx.globalAlpha = this.opacity;
+      ctx.fillStyle = this.color;
+
+      if (this.shape === 0) {
+        // Rectangle
+        ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+      } else if (this.shape === 1) {
+        // Circle
+        ctx.beginPath();
+        ctx.arc(0, 0, this.w / 2, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        // Streamer (thin tall rectangle)
+        ctx.fillRect(-this.w * 0.3, -this.h / 2, this.w * 0.6, this.h);
+      }
+
+      ctx.restore();
+    }
+  }
+
+  // ─── Create particles ────────────────────────────────────
+  const particles = [];
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push(new Particle());
+  }
+
+  // ─── Animation loop ──────────────────────────────────────
+  const startTime = performance.now();
+  let running = true;
+
+  function animate(now) {
+    if (!running) return;
+
+    ctx.clearRect(0, 0, W, H);
+
+    const elapsed = now - startTime;
+
+    // Fade factor: full opacity for first 2.5s, then linear fade to 0 by 4s
+    let fadeAlpha = 1;
+    if (elapsed > 2500) {
+      fadeAlpha = Math.max(0, 1 - (elapsed - 2500) / 1500);
+    }
+
+    if (elapsed > CONFETTI_DURATION + 500) {
+      // Done — clear and stop
+      ctx.clearRect(0, 0, W, H);
+      running = false;
+      return;
+    }
+
+    for (const p of particles) {
+      p.update(fadeAlpha);
+      p.draw();
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
+
+  // ─── Card entrance (300ms delay) ─────────────────────────
+  setTimeout(function () {
+    document.getElementById('welcome-card').classList.add('enter');
+  }, 300);
+
+  // ─── CTA button → fade out ───────────────────────────────
+  document.getElementById('cta-btn').addEventListener('click', function () {
+    const overlay = document.getElementById('overlay');
+    overlay.classList.add('fade-out');
+
+    // Also fade the confetti canvas
+    canvas.style.transition = 'opacity 300ms ease-out';
+    canvas.style.opacity = '0';
+
+    // Clean up after transition
+    setTimeout(function () {
+      overlay.style.display = 'none';
+      canvas.style.display = 'none';
+    }, 350);
+  });
+})();
+</script>
+</body>
+</html>

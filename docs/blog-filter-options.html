@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog Filter Options — The Dad Center</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Jost:wght@400;500&family=Karla:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #12100e;
+    --surface: #1a1714;
+    --card: #201c18;
+    --white: #faf6f0;
+    --cream: #ede6dc;
+    --muted: #7a6f62;
+    --dim: #4a4239;
+    --copper: #c4703f;
+    --gold: #d4a853;
+    --sage: #6b8f71;
+    --border: rgba(237, 230, 220, 0.08);
+    --border-hover: rgba(237, 230, 220, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--cream); font-family: 'Jost', sans-serif; padding: 24px; }
+
+  .option-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: var(--white);
+    margin: 48px 0 8px;
+    padding-top: 48px;
+    border-top: 1px solid var(--border);
+  }
+  .option-label:first-of-type { border-top: none; padding-top: 0; margin-top: 16px; }
+  .option-desc { font-size: 14px; color: var(--muted); margin-bottom: 24px; font-family: 'Karla', sans-serif; }
+
+  .container { max-width: 900px; margin: 0 auto; }
+
+  /* Shared */
+  .filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+  .pill { font-family: 'Karla', sans-serif; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+  .pill:hover { opacity: 0.85; }
+
+  /* ============ OPTION 1: Current (two rows of pills) ============ */
+  .opt1 .cat-pill {
+    padding: 8px 16px; border-radius: 999px; font-size: 14px;
+    background: var(--surface); color: var(--muted); border: 1px solid var(--border);
+  }
+  .opt1 .cat-pill.active { background: var(--copper); color: white; border-color: var(--copper); }
+  .opt1 .stage-pill {
+    padding: 6px 12px; border-radius: 999px; font-size: 12px;
+    background: var(--surface); color: var(--muted); border: 1px solid var(--border);
+  }
+  .opt1 .stage-pill.active { background: rgba(196,112,63,0.1); color: var(--copper); border-color: rgba(196,112,63,0.3); }
+
+  /* ============ OPTION 2: Tabs + Dropdown ============ */
+  .opt2-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .opt2-tab {
+    font-family: 'Karla', sans-serif; font-weight: 600; font-size: 14px;
+    padding: 12px 20px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .opt2-tab.active { color: var(--copper); border-bottom-color: var(--copper); }
+  .opt2-tab:hover { color: var(--white); }
+  .opt2-select {
+    font-family: 'Karla', sans-serif; font-size: 13px; font-weight: 500;
+    padding: 8px 32px 8px 14px; border-radius: 10px;
+    background: var(--surface); color: var(--cream); border: 1px solid var(--border);
+    appearance: none; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%237a6f62' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center;
+  }
+  .opt2-row { display: flex; align-items: center; gap: 12px; }
+  .opt2-label { font-family: 'Karla', sans-serif; font-size: 12px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* ============ OPTION 3: Single row with separator ============ */
+  .opt3 .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .opt3 .pill-sm {
+    padding: 7px 14px; border-radius: 999px; font-size: 13px;
+    background: var(--surface); color: var(--muted); border: 1px solid var(--border);
+  }
+  .opt3 .pill-sm.active-cat { background: var(--copper); color: white; border-color: var(--copper); }
+  .opt3 .pill-sm.active-stage { background: transparent; color: var(--copper); border-color: var(--copper); }
+  .opt3 .separator {
+    width: 1px; height: 24px; background: var(--border); margin: 0 4px;
+  }
+
+  /* ============ OPTION 4: Segmented control + horizontal scroll ============ */
+  .opt4-segment {
+    display: inline-flex; background: var(--surface); border-radius: 12px; padding: 4px; border: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .opt4-seg-btn {
+    font-family: 'Karla', sans-serif; font-weight: 600; font-size: 13px;
+    padding: 8px 18px; border-radius: 9px; color: var(--muted); cursor: pointer; transition: all 0.2s;
+  }
+  .opt4-seg-btn.active { background: var(--copper); color: white; box-shadow: 0 2px 8px rgba(196,112,63,0.3); }
+  .opt4-scroll {
+    display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .opt4-scroll::-webkit-scrollbar { display: none; }
+  .opt4-chip {
+    font-family: 'Karla', sans-serif; font-weight: 500; font-size: 12px; white-space: nowrap;
+    padding: 6px 14px; border-radius: 8px;
+    background: var(--surface); color: var(--muted); border: 1px solid var(--border);
+  }
+  .opt4-chip.active { background: rgba(196,112,63,0.08); color: var(--copper); border-color: rgba(196,112,63,0.25); }
+
+  /* ============ OPTION 5: Sidebar-style facets (compact, stacked) ============ */
+  .opt5-wrapper { display: flex; gap: 24px; }
+  .opt5-sidebar { min-width: 200px; }
+  .opt5-group { margin-bottom: 20px; }
+  .opt5-group-title {
+    font-family: 'Karla', sans-serif; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); margin-bottom: 8px;
+  }
+  .opt5-item {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Karla', sans-serif; font-size: 13px; color: var(--muted);
+    padding: 6px 10px; border-radius: 8px; cursor: pointer; transition: all 0.15s;
+  }
+  .opt5-item:hover { color: var(--white); background: rgba(255,255,255,0.03); }
+  .opt5-item.active { color: var(--copper); background: rgba(196,112,63,0.08); }
+  .opt5-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
+  .opt5-item.active .opt5-dot { background: var(--copper); }
+  .opt5-count {
+    margin-left: auto; font-size: 11px; color: var(--dim);
+    background: var(--surface); padding: 2px 7px; border-radius: 6px;
+  }
+  .opt5-content { flex: 1; }
+  .opt5-placeholder {
+    height: 140px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; color: var(--dim); font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1 style="font-family: 'Playfair Display', serif; font-size: 32px; color: var(--white); margin-bottom: 8px;">Blog Filter Options</h1>
+<p style="color: var(--muted); margin-bottom: 32px; font-family: 'Karla', sans-serif; font-size: 14px;">5 approaches for filtering 53 posts by category (3) and stage (9). Pick one.</p>
+
+<!-- ========== OPTION 1 ========== -->
+<h2 class="option-label">Option 1: Two Rows of Pills (current)</h2>
+<p class="option-desc">Category pills on top (solid active), stage pills below (outline active). Simple but visually busy with 13+ pills.</p>
+<div class="opt1">
+  <div class="filter-row">
+    <span class="pill cat-pill active">All</span>
+    <span class="pill cat-pill">Budget & Costs</span>
+    <span class="pill cat-pill">Dad Guides</span>
+    <span class="pill cat-pill">New Dad Life</span>
+  </div>
+  <div class="filter-row">
+    <span class="pill stage-pill active">All Stages</span>
+    <span class="pill stage-pill">First Trimester</span>
+    <span class="pill stage-pill">Second Trimester</span>
+    <span class="pill stage-pill">Third Trimester</span>
+    <span class="pill stage-pill">Delivery</span>
+    <span class="pill stage-pill">Fourth Trimester</span>
+    <span class="pill stage-pill">3-6 Months</span>
+    <span class="pill stage-pill">6-12 Months</span>
+    <span class="pill stage-pill">12-18 Months</span>
+    <span class="pill stage-pill">18-24 Months</span>
+  </div>
+</div>
+
+<!-- ========== OPTION 2 ========== -->
+<h2 class="option-label">Option 2: Tabs + Dropdown</h2>
+<p class="option-desc">Categories as underline tabs. Stage as a compact dropdown select. Clean, minimal footprint. Great for mobile.</p>
+<div class="opt2">
+  <div class="opt2-tabs">
+    <span class="opt2-tab active">All</span>
+    <span class="opt2-tab">Budget & Costs</span>
+    <span class="opt2-tab">Dad Guides</span>
+    <span class="opt2-tab">New Dad Life</span>
+  </div>
+  <div class="opt2-row">
+    <span class="opt2-label">Stage</span>
+    <select class="opt2-select">
+      <option>All Stages</option>
+      <option>First Trimester</option>
+      <option>Second Trimester</option>
+      <option>Third Trimester</option>
+      <option>Delivery & Week 1</option>
+      <option>Fourth Trimester</option>
+      <option>3-6 Months</option>
+      <option>6-12 Months</option>
+      <option>12-18 Months</option>
+      <option>18-24 Months</option>
+    </select>
+  </div>
+</div>
+
+<!-- ========== OPTION 3 ========== -->
+<h2 class="option-label">Option 3: Single Row with Separator</h2>
+<p class="option-desc">Both filters in one row separated by a vertical line. Categories use solid pills, stages use outline. Compact but could wrap a lot on mobile.</p>
+<div class="opt3">
+  <div class="filter-row">
+    <span class="pill pill-sm active-cat">All</span>
+    <span class="pill pill-sm">Budget & Costs</span>
+    <span class="pill pill-sm">Dad Guides</span>
+    <span class="pill pill-sm">New Dad Life</span>
+    <div class="separator"></div>
+    <span class="pill pill-sm active-stage">All Stages</span>
+    <span class="pill pill-sm">T1</span>
+    <span class="pill pill-sm">T2</span>
+    <span class="pill pill-sm">T3</span>
+    <span class="pill pill-sm">Delivery</span>
+    <span class="pill pill-sm">4th Tri</span>
+    <span class="pill pill-sm">3-6m</span>
+    <span class="pill pill-sm">6-12m</span>
+    <span class="pill pill-sm">12-18m</span>
+    <span class="pill pill-sm">18-24m</span>
+  </div>
+</div>
+
+<!-- ========== OPTION 4 ========== -->
+<h2 class="option-label">Option 4: Segmented Control + Horizontal Scroll</h2>
+<p class="option-desc">Category as a segmented control (toggle group). Stages as horizontally scrollable chips below. Modern app-like feel. Mobile-friendly — stages scroll instead of wrap.</p>
+<div>
+  <div class="opt4-segment">
+    <span class="opt4-seg-btn active">All</span>
+    <span class="opt4-seg-btn">Budget & Costs</span>
+    <span class="opt4-seg-btn">Dad Guides</span>
+    <span class="opt4-seg-btn">New Dad Life</span>
+  </div>
+  <div class="opt4-scroll">
+    <span class="pill opt4-chip active">All Stages</span>
+    <span class="pill opt4-chip">First Trimester</span>
+    <span class="pill opt4-chip">Second Trimester</span>
+    <span class="pill opt4-chip">Third Trimester</span>
+    <span class="pill opt4-chip">Delivery & Week 1</span>
+    <span class="pill opt4-chip">Fourth Trimester</span>
+    <span class="pill opt4-chip">3-6 Months</span>
+    <span class="pill opt4-chip">6-12 Months</span>
+    <span class="pill opt4-chip">12-18 Months</span>
+    <span class="pill opt4-chip">18-24 Months</span>
+  </div>
+</div>
+
+<!-- ========== OPTION 5 ========== -->
+<h2 class="option-label">Option 5: Sidebar Facets</h2>
+<p class="option-desc">Filters as a left sidebar with grouped sections and counts. Content grid on the right. Best for desktop; collapses to dropdown/sheet on mobile. Most discoverable for large catalogs.</p>
+<div class="opt5-wrapper">
+  <div class="opt5-sidebar">
+    <div class="opt5-group">
+      <div class="opt5-group-title">Category</div>
+      <div class="opt5-item active"><span class="opt5-dot"></span> All <span class="opt5-count">53</span></div>
+      <div class="opt5-item"><span class="opt5-dot"></span> Budget & Costs <span class="opt5-count">1</span></div>
+      <div class="opt5-item"><span class="opt5-dot"></span> Dad Guides <span class="opt5-count">17</span></div>
+      <div class="opt5-item"><span class="opt5-dot"></span> New Dad Life <span class="opt5-count">35</span></div>
+    </div>
+    <div class="opt5-group">
+      <div class="opt5-group-title">Stage</div>
+      <div class="opt5-item active"><span class="opt5-dot"></span> All Stages</div>
+      <div class="opt5-item"><span class="opt5-dot"></span> First Trimester <span class="opt5-count">12</span></div>
+      <div class="opt5-item"><span class="opt5-dot"></span> Second Trimester <span class="opt5-count">8</span></div>
+      <div class="opt5-item"><span class="opt5-dot"></span> Third Trimester <span class="opt5-count">6</span></div>
+      <div class="opt5-item"><span class="opt5-dot"></span> Delivery <span class="opt5-count">4</span></div>
+      <div class="opt5-item"><span class="opt5-dot"></span> Fourth Trimester <span class="opt5-count">12</span></div>
+      <div class="opt5-item"><span class="opt5-dot"></span> 3-6 Months <span class="opt5-count">4</span></div>
+      <div class="opt5-item"><span class="opt5-dot"></span> 6-12 Months</div>
+      <div class="opt5-item"><span class="opt5-dot"></span> 12-18 Months</div>
+      <div class="opt5-item"><span class="opt5-dot"></span> 18-24 Months</div>
+    </div>
+  </div>
+  <div class="opt5-content">
+    <div class="opt5-placeholder">[ Blog post cards grid here ]</div>
+  </div>
+</div>
+
+<div style="height: 80px;"></div>
+</div>
+</body>
+</html>
