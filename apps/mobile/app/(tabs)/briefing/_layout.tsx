@@ -1,10 +1,9 @@
 import { Stack } from 'expo-router'
-import { useColors } from '@/hooks/use-colors'
 
 export default function BriefingLayout() {
-  const colors = useColors()
   return (
     <Stack
+      initialRouteName="index"
       screenOptions={{
         headerShown: false,
         contentStyle: { backgroundColor: 'transparent' },
