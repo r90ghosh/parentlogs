@@ -19,7 +19,7 @@ import { useWelcomeAnimation } from '@/hooks/use-welcome-animation'
 import { useDashboardData } from '@/hooks/use-dashboard'
 import { useSubscriptionStatus } from '@/hooks/use-subscription'
 import { useBabies } from '@/hooks/use-babies'
-import Animated, { LinearTransition, useReducedMotion } from 'react-native-reanimated'
+import { useReducedMotion } from 'react-native-reanimated'
 import { CardEntrance } from '@/components/animations'
 import {
   BriefingTeaserCard,
@@ -56,12 +56,22 @@ export default function DashboardScreen() {
   const { data: subStatus } = useSubscriptionStatus()
   const { data: babies } = useBabies()
   const { data: backlogCount } = useBacklogCount()
-  const reducedMotion = useReducedMotion()
+  useReducedMotion() // touch the hook for consistency with Reanimated reactive context
   const isPastDue = subStatus?.status === 'past_due'
 
   const isLoading = tasksQuery.isLoading && briefingQuery.isLoading
   const isRefreshing =
     tasksQuery.isRefetching || briefingQuery.isRefetching
+
+  // If the primary queries were already cached before this screen mounted,
+  // skip entrance animations — warm cache means "already here."
+  const tasksKey = family?.id ? ['tasks-due', family.id] : null
+  const briefingKey = family?.id ? ['current-briefing', family.id] : null
+  const warmOnMount =
+    !!tasksKey &&
+    !!briefingKey &&
+    queryClient.getQueryState(tasksKey)?.status === 'success' &&
+    queryClient.getQueryState(briefingKey)?.status === 'success'
 
   const onRefresh = useCallback(() => {
     queryClient.invalidateQueries({ queryKey: ['tasks-due'] })
@@ -100,7 +110,7 @@ export default function DashboardScreen() {
         }
       >
         {/* Greeting header */}
-        <CardEntrance delay={0}>
+        <CardEntrance delay={0} skipEnter={warmOnMount}>
           <View style={styles.greetingContainer}>
             <Text style={[styles.greeting, { color: colors.textPrimary }]}>
               {getGreeting()}, {getFirstName(profile?.full_name ?? null)}
@@ -110,7 +120,7 @@ export default function DashboardScreen() {
 
         {/* Payment Failed Banner */}
         {isPastDue && (
-          <CardEntrance delay={40}>
+          <CardEntrance delay={30} skipEnter={warmOnMount}>
             <Pressable
               onPress={() => {
                 const url = Platform.OS === 'ios'
@@ -137,12 +147,9 @@ export default function DashboardScreen() {
             <ActivityIndicator size="large" color={colors.copper} />
           </View>
         ) : (
-          <Animated.View
-            style={styles.cardsContainer}
-            layout={reducedMotion ? undefined : LinearTransition.springify().damping(16).stiffness(200)}
-          >
+          <View style={styles.cardsContainer}>
             {/* 1. Briefing Teaser */}
-            <CardEntrance delay={40}>
+            <CardEntrance delay={30} skipEnter={warmOnMount}>
               <BriefingTeaserCard
                 briefing={briefingQuery.data}
                 currentWeek={currentWeek}
@@ -151,44 +158,44 @@ export default function DashboardScreen() {
             </CardEntrance>
 
             {/* 2. Tasks Due */}
-            <CardEntrance delay={80}>
+            <CardEntrance delay={60} skipEnter={warmOnMount}>
               <TasksDueCard tasks={tasksQuery.data} />
             </CardEntrance>
 
             {/* 3. Welcome Catch-Up (if backlog > 0) */}
             {(backlogCount ?? 0) > 0 && (
-              <CardEntrance delay={120}>
+              <CardEntrance delay={90} skipEnter={warmOnMount}>
                 <WelcomeCatchUpCard />
               </CardEntrance>
             )}
 
             {/* 4. On Your Mind (dad only) */}
             {profile?.role === 'dad' && (
-              <CardEntrance delay={160}>
+              <CardEntrance delay={120} skipEnter={warmOnMount}>
                 <OnYourMindCard />
               </CardEntrance>
             )}
 
             {/* 5. Quick Actions */}
-            <CardEntrance delay={200}>
+            <CardEntrance delay={150} skipEnter={warmOnMount}>
               <QuickActionsBar />
             </CardEntrance>
 
             {/* 6. Budget Snapshot */}
-            <CardEntrance delay={280}>
+            <CardEntrance delay={180} skipEnter={warmOnMount}>
               <BudgetSnapshotCard />
             </CardEntrance>
 
             {/* 7. Checklist Progress */}
-            <CardEntrance delay={320}>
+            <CardEntrance delay={200} skipEnter={warmOnMount}>
               <ChecklistProgressCard />
             </CardEntrance>
 
             {/* 8. Upgrade Prompt (free tier only) */}
-            <CardEntrance delay={360}>
+            <CardEntrance delay={220} skipEnter={warmOnMount}>
               <UpgradePromptCard />
             </CardEntrance>
-          </Animated.View>
+          </View>
         )}
       </ScrollView>
 
