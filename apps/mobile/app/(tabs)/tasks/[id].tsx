@@ -114,6 +114,12 @@ const SNOOZE_OPTIONS: { label: string; days: number }[] = [
   { label: '7d', days: 7 },
 ]
 
+// AnimatedTabBar uses: paddingTop 8 + icon 24 + gap 2 + label ~14 + paddingBottom 4
+// The tab bar also adds insets.bottom for the home-indicator safe area, but
+// that's included in the tab bar's own paddingBottom — we only need its
+// content height here.
+const TAB_BAR_CONTENT_HEIGHT = 52
+
 export default function TaskDetailScreen() {
   const colors = useColors()
   const { id } = useLocalSearchParams<{ id: string }>()
@@ -247,7 +253,11 @@ export default function TaskDetailScreen() {
         style={styles.scrollView}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: isActionable ? insets.bottom + 120 : insets.bottom + 40 },
+          {
+            paddingBottom: isActionable
+              ? insets.bottom + TAB_BAR_CONTENT_HEIGHT + 200
+              : insets.bottom + TAB_BAR_CONTENT_HEIGHT + 24,
+          },
         ]}
         showsVerticalScrollIndicator={false}
       >
@@ -343,9 +353,19 @@ export default function TaskDetailScreen() {
         </CardEntrance>
       </ScrollView>
 
-      {/* Bottom action buttons */}
+      {/* Bottom action buttons — offset above the absolute tab bar */}
       {isActionable && (
-        <View style={[styles.bottomActions, { paddingBottom: insets.bottom + 16, backgroundColor: colors.overlay, borderTopColor: colors.border }]}>
+        <View
+          style={[
+            styles.bottomActions,
+            {
+              bottom: insets.bottom + TAB_BAR_CONTENT_HEIGHT,
+              paddingBottom: 16,
+              backgroundColor: colors.overlay,
+              borderTopColor: colors.border,
+            },
+          ]}
+        >
           <View style={styles.secondaryActions}>
             <Pressable onPress={handleSkip} style={styles.secondaryButton}>
               <SkipForward size={18} color={colors.textMuted} />
