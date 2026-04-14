@@ -6,6 +6,8 @@ import { pushNotificationService } from '@/services/push-notification-service'
 import { initRevenueCat } from './RevenueCatProvider'
 import { queryClient } from './QueryProvider'
 import { isInGracePeriod } from '@tdc/shared/utils/subscription-utils'
+import { queryKeys } from '@tdc/shared/constants'
+import { taskService, briefingService, babyService } from '@/lib/services'
 import { Sentry, setSentryUser, clearSentryUser } from '@/lib/sentry'
 import { identifyUser, resetUser } from '@/lib/analytics'
 import type { Session, User } from '@supabase/supabase-js'
@@ -97,6 +99,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           Sentry.captureException(familyError, { extra: { context: 'fetch_family' } })
         }
         setFamily(familyData)
+        // Prefetch dashboard queries with keys that match the consuming hooks.
+        // Must run AFTER family is known so keys include family.id.
+        if (data && familyData) {
+          prefetchTabData(userId, familyData, data).catch(() => {})
+        }
       } else {
         setFamily(null)
       }
@@ -118,10 +125,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         identifyUser(initialSession.user.id)
         setSentryUser(initialSession.user.id, initialSession.user.email)
         pushNotificationService.register(initialSession.user.id).catch(() => {})
-        // Fetch profile (awaited so route protection works)
+        // Fetch profile (awaited so route protection works).
+        // Prefetch happens inside fetchProfile once family.id is known.
         await fetchProfile(initialSession.user.id)
-        // Prefetch tab data in background (fire and forget)
-        prefetchTabData(initialSession.user.id).catch(() => {})
       }
       if (mounted) setIsLoading(false)
     }).catch(() => {
@@ -140,10 +146,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         identifyUser(newSession.user.id)
         setSentryUser(newSession.user.id, newSession.user.email)
         pushNotificationService.register(newSession.user.id).catch(() => {})
-        // Prefetch tab data after sign-in
-        if (event === 'SIGNED_IN') {
-          prefetchTabData(newSession.user.id).catch(() => {})
-        }
 
         // Handle password recovery deep-link — navigate to change password screen
         if (event === 'PASSWORD_RECOVERY') {
@@ -167,35 +169,75 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  // Prefetch tab data so switching tabs feels instant
-  async function prefetchTabData(userId: string) {
+  // Prefetch dashboard queries with keys that match the consuming hooks EXACTLY.
+  // Key mismatches = silent cache miss on every mount. If you add a new prefetch,
+  // verify the key is identical to the hook reading it.
+  async function prefetchTabData(
+    userId: string,
+    familyData: Family,
+    profileData: Profile,
+  ) {
+    if (!familyData.id) return
+
+    const ctx = {
+      userId,
+      familyId: familyData.id,
+      subscriptionTier: profileData.subscription_tier ?? undefined,
+      babyId: profileData.active_baby_id ?? undefined,
+    }
+
     const prefetches: Promise<unknown>[] = [
-      // Dashboard queries
+      // useDashboardData → use-dashboard.ts:25
       queryClient.prefetchQuery({
-        queryKey: ['tasks-due'],
+        queryKey: ['tasks-due', familyData.id],
+        queryFn: () => taskService.getTasks({ status: 'pending', limit: 5 }, ctx),
+        staleTime: 1000 * 60 * 2,
+      }),
+      // useBabies → use-babies.ts:19 (shared factory)
+      queryClient.prefetchQuery({
+        queryKey: queryKeys.babies.list(familyData.id),
+        queryFn: () => babyService.getBabies(ctx),
+        staleTime: 1000 * 60 * 5,
+      }),
+      // useSubscriptionStatus → use-subscription.ts:53
+      queryClient.prefetchQuery({
+        queryKey: ['subscription-status', userId],
         queryFn: async () => {
-          const { data } = await supabase.from('family_tasks').select('*').eq('status', 'pending').order('due_date').limit(10)
-          return data ?? []
+          const { data, error } = await supabase
+            .from('subscriptions')
+            .select('status, cancel_at_period_end, current_period_end')
+            .eq('user_id', userId)
+            .single()
+          if (error && error.code !== 'PGRST116') throw error
+          return data ?? null
         },
         staleTime: 1000 * 60 * 5,
       }),
+      // useBacklogCount → use-triage.ts:21
       queryClient.prefetchQuery({
-        queryKey: ['current-briefing'],
-        queryFn: async () => {
-          const { data } = await supabase.from('briefings').select('*').order('week').limit(1).maybeSingle()
-          return data
-        },
-        staleTime: 1000 * 60 * 30, // Briefings rarely change — 30 min
-      }),
-      queryClient.prefetchQuery({
-        queryKey: ['babies', userId],
-        queryFn: async () => {
-          const { data } = await supabase.from('babies').select('*')
-          return data ?? []
-        },
-        staleTime: 1000 * 60 * 10,
+        queryKey: ['backlog-count', familyData.id],
+        queryFn: () => taskService.getBacklogCount(ctx),
+        staleTime: 1000 * 60 * 2,
       }),
     ]
+
+    // Briefing needs stage + currentWeek; skip if family hasn't reached that stage
+    if (familyData.stage && familyData.current_week != null) {
+      const briefingCtx = {
+        ...ctx,
+        stage: familyData.stage,
+        currentWeek: familyData.current_week,
+      }
+      prefetches.push(
+        // useDashboardData → use-dashboard.ts:31
+        queryClient.prefetchQuery({
+          queryKey: ['current-briefing', familyData.id],
+          queryFn: () => briefingService.getCurrentBriefing(briefingCtx),
+          staleTime: 1000 * 60 * 10,
+        })
+      )
+    }
+
     await Promise.allSettled(prefetches)
   }
 
