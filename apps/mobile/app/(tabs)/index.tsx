@@ -28,7 +28,6 @@ import {
   BudgetSnapshotCard,
   ChecklistProgressCard,
   OnYourMindCard,
-  PersonalizeCard,
   UpgradePromptCard,
   WelcomeCatchUpCard,
 } from '@/components/dashboard'
@@ -175,24 +174,17 @@ export default function DashboardScreen() {
               <QuickActionsBar />
             </CardEntrance>
 
-            {/* 6. Personalize Card (dad only, if no profile) */}
-            {profile?.role === 'dad' && (
-              <CardEntrance delay={240}>
-                <PersonalizeCard />
-              </CardEntrance>
-            )}
-
-            {/* 7. Budget Snapshot */}
+            {/* 6. Budget Snapshot */}
             <CardEntrance delay={280}>
               <BudgetSnapshotCard />
             </CardEntrance>
 
-            {/* 8. Checklist Progress */}
+            {/* 7. Checklist Progress */}
             <CardEntrance delay={320}>
               <ChecklistProgressCard />
             </CardEntrance>
 
-            {/* 9. Upgrade Prompt (free tier only) */}
+            {/* 8. Upgrade Prompt (free tier only) */}
             <CardEntrance delay={360}>
               <UpgradePromptCard />
             </CardEntrance>

@@ -37,7 +37,6 @@ function mapUrlToRoute(url: string | undefined | null): string {
   if (path === '/content' || path === '/blog') return '/(tabs)/more/content'
   if (path === '/videos') return '/(tabs)/more/videos'
   if (path === '/triage') return '/(tabs)/more/triage'
-  if (path === '/personalize') return '/(tabs)/more/personalize'
 
   // Modal screens
   if (path === '/upgrade') return '/(screens)/upgrade'
