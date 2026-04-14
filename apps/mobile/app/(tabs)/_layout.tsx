@@ -119,6 +119,7 @@ export default function TabLayout() {
         screenOptions={{
           headerShown: false,
           sceneStyle: { backgroundColor: 'transparent' },
+          lazy: true,
         }}
         screenListeners={{
           tabPress: () => {
