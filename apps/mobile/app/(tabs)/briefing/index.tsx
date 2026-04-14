@@ -5,7 +5,6 @@ import {
   ScrollView,
   Pressable,
   RefreshControl,
-  ActivityIndicator,
   StyleSheet,
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -25,6 +24,7 @@ import {
   BriefingSection,
   FieldNotesCallout,
 } from '@/components/briefing'
+import { BriefingSkeleton } from '@/components/skeletons'
 import type { FamilyStage } from '@tdc/shared/types'
 
 export default function BriefingScreen() {
@@ -110,12 +110,7 @@ export default function BriefingScreen() {
         </CardEntrance>
 
         {/* Loading State */}
-        {isLoading && (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.copper} />
-            <Text style={[styles.loadingText, { color: colors.textMuted }]}>Loading briefing...</Text>
-          </View>
-        )}
+        {isLoading && <BriefingSkeleton />}
 
         {/* No Briefing Available */}
         {!isLoading && !briefing && (

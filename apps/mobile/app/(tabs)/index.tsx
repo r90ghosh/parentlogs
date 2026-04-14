@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   RefreshControl,
-  ActivityIndicator,
   StyleSheet,
   Pressable,
   Linking,
@@ -33,6 +32,7 @@ import {
 } from '@/components/dashboard'
 import { WelcomeCelebration } from '@/components/welcome/WelcomeCelebration'
 import { useBacklogCount } from '@/hooks/use-triage'
+import { DashboardSkeleton } from '@/components/skeletons'
 
 function getGreeting(): string {
   const hour = new Date().getHours()
@@ -142,10 +142,8 @@ export default function DashboardScreen() {
           </CardEntrance>
         )}
 
-        {isLoading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.copper} />
-          </View>
+        {isLoading && !warmOnMount ? (
+          <DashboardSkeleton />
         ) : (
           <View style={styles.cardsContainer}>
             {/* 1. Briefing Teaser */}

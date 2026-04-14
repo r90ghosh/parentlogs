@@ -5,7 +5,6 @@ import {
   ScrollView,
   RefreshControl,
   Pressable,
-  ActivityIndicator,
   StyleSheet,
   TextInput,
 } from 'react-native'
@@ -27,6 +26,7 @@ import {
   TaskSectionHeader,
 } from '@/components/tasks'
 import { WeekNavPills } from '@/components/briefing'
+import { TasksSkeleton } from '@/components/skeletons'
 import type { StatFilter , TaskTab } from '@/components/tasks'
 import {
   groupTasksByTimePeriod,
@@ -289,9 +289,7 @@ export default function TasksScreen() {
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       {/* Task content */}
       {isLoading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.copper} />
-        </View>
+        <TasksSkeleton />
       ) : viewMode === 'calendar' ? (
         <>
           {/* Title + view toggle for calendar mode */}
