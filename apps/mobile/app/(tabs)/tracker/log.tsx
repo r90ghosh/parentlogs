@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   View,
   Text,
@@ -15,12 +15,32 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { ChevronLeft } from 'lucide-react-native'
 import * as Haptics from 'expo-haptics'
+import DateTimePicker, {
+  type DateTimePickerEvent,
+} from '@react-native-community/datetimepicker'
+import { format, isToday, isYesterday } from 'date-fns'
 import { useCreateLog } from '@/hooks/use-tracker'
 import { useColors } from '@/hooks/use-colors'
+import { useTheme } from '@/components/providers/ThemeProvider'
 import { MedicalDisclaimer } from '@/components/shared/MedicalDisclaimer'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
 import type { LogType } from '@tdc/shared/types'
+
+function formatDateTimeLabel(d: Date): string {
+  const time = format(d, 'h:mm a')
+  if (isToday(d)) return `Today · ${time}`
+  if (isYesterday(d)) return `Yesterday · ${time}`
+  return `${format(d, 'MMM d')} · ${time}`
+}
+
+function formatDurationShort(totalMinutes: number): string {
+  const mins = Math.max(0, Math.round(totalMinutes))
+  if (mins < 60) return `${mins}m`
+  const h = Math.floor(mins / 60)
+  const m = mins % 60
+  return m === 0 ? `${h}h` : `${h}h ${m}m`
+}
 
 const LOG_TITLES: Record<LogType, string> = {
   feeding: 'Log Feeding',
@@ -74,6 +94,7 @@ function OptionPill({
 
 export default function LogScreen() {
   const colors = useColors()
+  const { isDark } = useTheme()
   const { type: typeParam } = useLocalSearchParams<{ type: string }>()
   const logType = (typeParam || 'feeding') as LogType
   const router = useRouter()
@@ -92,9 +113,20 @@ export default function LogScreen() {
   // Diaper
   const [diaperType, setDiaperType] = useState<'wet' | 'dirty' | 'both'>('wet')
 
-  // Sleep
-  const [sleepDuration, setSleepDuration] = useState('')
+  // Sleep — default start = 1h ago, end = now
+  const [sleepStartTime, setSleepStartTime] = useState<Date>(
+    () => new Date(Date.now() - 60 * 60 * 1000)
+  )
+  const [sleepEndTime, setSleepEndTime] = useState<Date>(() => new Date())
+  const [sleepOngoing, setSleepOngoing] = useState(false)
   const [sleepQuality, setSleepQuality] = useState<'good' | 'fair' | 'poor'>('good')
+  const [showSleepStartPicker, setShowSleepStartPicker] = useState(false)
+  const [showSleepEndPicker, setShowSleepEndPicker] = useState(false)
+
+  const sleepDurationMinutes = useMemo(() => {
+    if (sleepOngoing) return Math.max(0, Math.round((Date.now() - sleepStartTime.getTime()) / 60000))
+    return Math.max(0, Math.round((sleepEndTime.getTime() - sleepStartTime.getTime()) / 60000))
+  }, [sleepOngoing, sleepStartTime, sleepEndTime])
 
   // Temperature
   const [temperature, setTemperature] = useState('')
@@ -122,8 +154,16 @@ export default function LogScreen() {
   const [customType, setCustomType] = useState('')
 
   const handleSubmit = async () => {
-    setIsSubmitting(true)
+    // Cross-field validation (runs before we toggle submitting state)
+    if (logType === 'sleep' && !sleepOngoing && sleepEndTime.getTime() <= sleepStartTime.getTime()) {
+      Alert.alert('Invalid time range', 'End time must be after the start time.')
+      return
+    }
+
     const logData: Record<string, any> = {}
+    let loggedAtOverride: string | undefined
+
+    setIsSubmitting(true)
 
     switch (logType) {
       case 'feeding':
@@ -138,10 +178,21 @@ export default function LogScreen() {
       case 'diaper':
         logData.type = diaperType
         break
-      case 'sleep':
-        logData.duration_minutes = parseInt(sleepDuration) || 0
+      case 'sleep': {
+        logData.start_time = sleepStartTime.toISOString()
+        logData.is_ongoing = sleepOngoing
         logData.quality = sleepQuality
+        if (sleepOngoing) {
+          logData.end_time = null
+          logData.duration_minutes = null
+          loggedAtOverride = sleepStartTime.toISOString()
+        } else {
+          logData.end_time = sleepEndTime.toISOString()
+          logData.duration_minutes = sleepDurationMinutes
+          loggedAtOverride = sleepEndTime.toISOString()
+        }
         break
+      }
       case 'temperature':
         logData.value = parseFloat(temperature) || 0
         logData.unit = temperatureUnit
@@ -177,6 +228,7 @@ export default function LogScreen() {
         log_type: logType,
         log_data: logData,
         notes: notes || undefined,
+        logged_at: loggedAtOverride,
       })
 
       if (result.error) {
@@ -329,15 +381,115 @@ export default function LogScreen() {
               {/* Sleep */}
               {logType === 'sleep' && (
                 <>
-                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Duration (minutes)</Text>
-                  <TextInput
-                    style={[styles.input, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
-                    value={sleepDuration}
-                    onChangeText={setSleepDuration}
-                    placeholder="60"
-                    placeholderTextColor={colors.textDim}
-                    keyboardType="number-pad"
-                  />
+                  <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Start time</Text>
+                  <Pressable
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                      setShowSleepStartPicker((v) => !v)
+                      setShowSleepEndPicker(false)
+                    }}
+                    style={[styles.input, styles.pressableInput, { backgroundColor: colors.subtleBg, borderColor: colors.border }]}
+                  >
+                    <Text style={[styles.pressableInputText, { color: colors.textPrimary }]}>
+                      {formatDateTimeLabel(sleepStartTime)}
+                    </Text>
+                  </Pressable>
+                  {showSleepStartPicker && (
+                    <View style={styles.pickerWrap}>
+                      <DateTimePicker
+                        value={sleepStartTime}
+                        mode="datetime"
+                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                        maximumDate={new Date()}
+                        minimumDate={new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)}
+                        themeVariant={isDark ? 'dark' : 'light'}
+                        onChange={(event: DateTimePickerEvent, selectedDate?: Date) => {
+                          if (Platform.OS === 'android') setShowSleepStartPicker(false)
+                          if (event.type === 'dismissed') return
+                          if (selectedDate) {
+                            setSleepStartTime(selectedDate)
+                            if (!sleepOngoing && selectedDate.getTime() >= sleepEndTime.getTime()) {
+                              // Keep end after start — bump by 30 min
+                              setSleepEndTime(new Date(selectedDate.getTime() + 30 * 60 * 1000))
+                            }
+                          }
+                        }}
+                      />
+                    </View>
+                  )}
+
+                  {!sleepOngoing && (
+                    <>
+                      <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>End time</Text>
+                      <Pressable
+                        onPress={() => {
+                          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                          setShowSleepEndPicker((v) => !v)
+                          setShowSleepStartPicker(false)
+                        }}
+                        style={[styles.input, styles.pressableInput, { backgroundColor: colors.subtleBg, borderColor: colors.border }]}
+                      >
+                        <Text style={[styles.pressableInputText, { color: colors.textPrimary }]}>
+                          {formatDateTimeLabel(sleepEndTime)}
+                        </Text>
+                      </Pressable>
+                      {showSleepEndPicker && (
+                        <View style={styles.pickerWrap}>
+                          <DateTimePicker
+                            value={sleepEndTime}
+                            mode="datetime"
+                            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                            minimumDate={sleepStartTime}
+                            maximumDate={new Date(Date.now() + 60 * 1000)}
+                            themeVariant={isDark ? 'dark' : 'light'}
+                            onChange={(event: DateTimePickerEvent, selectedDate?: Date) => {
+                              if (Platform.OS === 'android') setShowSleepEndPicker(false)
+                              if (event.type === 'dismissed') return
+                              if (selectedDate) setSleepEndTime(selectedDate)
+                            }}
+                          />
+                        </View>
+                      )}
+                    </>
+                  )}
+
+                  <View style={styles.sleepMetaRow}>
+                    <Pressable
+                      onPress={() => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                        setSleepOngoing((prev) => {
+                          const next = !prev
+                          if (next) {
+                            setShowSleepEndPicker(false)
+                          } else {
+                            setSleepEndTime(new Date())
+                          }
+                          return next
+                        })
+                      }}
+                      style={[
+                        styles.optionPill,
+                        { backgroundColor: colors.subtleBg, borderColor: colors.border },
+                        sleepOngoing && { backgroundColor: colors.copper, borderColor: colors.copper },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.optionPillText,
+                          { color: colors.textMuted },
+                          sleepOngoing && { color: colors.textPrimary },
+                        ]}
+                      >
+                        {sleepOngoing ? '✓ Still sleeping' : 'Still sleeping'}
+                      </Text>
+                    </Pressable>
+                    <Text style={[styles.durationChip, { color: colors.textMuted }]}>
+                      {sleepOngoing
+                        ? `Ongoing · ${formatDurationShort(sleepDurationMinutes)} so far`
+                        : `Duration: ${formatDurationShort(sleepDurationMinutes)}`}
+                    </Text>
+                  </View>
+
                   <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Quality</Text>
                   <View style={styles.optionRow}>
                     <OptionPill
@@ -647,6 +799,28 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontFamily: 'Jost-Regular',
     fontSize: 15,
+  },
+  pressableInput: {
+    justifyContent: 'center',
+    minHeight: 48,
+  },
+  pressableInputText: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 15,
+  },
+  pickerWrap: {
+    marginTop: 8,
+  },
+  sleepMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+    marginTop: 16,
+  },
+  durationChip: {
+    fontFamily: 'Karla-Medium',
+    fontSize: 13,
   },
   inputFlex: {
     flex: 1,

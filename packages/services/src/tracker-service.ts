@@ -206,9 +206,18 @@ export function createTrackerService(supabase: AppSupabaseClient) {
         q6.gte('logged_at', todayStr),
       ])
 
+      const nowMs = Date.now()
       const totalSleepMinutes = (sleepLogsResult.data || []).reduce((total, log) => {
-        const duration = (log.log_data as Record<string, any>)?.duration_minutes || 0
-        return total + duration
+        const data = (log.log_data as Record<string, any>) || {}
+        // Ongoing sleeps haven't had duration_minutes committed yet — derive from start_time.
+        if (data.is_ongoing && data.start_time) {
+          const startMs = new Date(data.start_time).getTime()
+          if (Number.isFinite(startMs) && startMs <= nowMs) {
+            return total + Math.max(0, (nowMs - startMs) / 60000)
+          }
+          return total
+        }
+        return total + (data.duration_minutes || 0)
       }, 0)
 
       return {

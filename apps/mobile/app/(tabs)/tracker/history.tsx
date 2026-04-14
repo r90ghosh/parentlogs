@@ -77,8 +77,24 @@ function formatLogDetails(log: any): string {
       return `${data.amount_oz || 0}oz ${data.type || 'bottle'}`
     case 'diaper':
       return data.type || 'wet'
-    case 'sleep':
-      return `${data.duration_minutes || 0}min (${data.quality || 'good'})`
+    case 'sleep': {
+      const quality = data.quality || 'good'
+      if (data.start_time && data.is_ongoing) {
+        return `Started ${format(new Date(data.start_time), 'h:mm a')} · ongoing (${quality})`
+      }
+      if (data.start_time && data.end_time) {
+        const start = format(new Date(data.start_time), 'h:mm a')
+        const end = format(new Date(data.end_time), 'h:mm a')
+        const mins = data.duration_minutes ?? Math.round(
+          (new Date(data.end_time).getTime() - new Date(data.start_time).getTime()) / 60000
+        )
+        const h = Math.floor(mins / 60)
+        const m = mins % 60
+        const dur = h === 0 ? `${m}m` : m === 0 ? `${h}h` : `${h}h ${m}m`
+        return `${start} → ${end} · ${dur} (${quality})`
+      }
+      return `${data.duration_minutes || 0}min (${quality})`
+    }
     case 'temperature':
       return `${data.value || 0}°${data.unit || 'F'}`
     case 'medicine':
