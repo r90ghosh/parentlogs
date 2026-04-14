@@ -112,11 +112,14 @@ function Star({ particle, particleColors }: { particle: Particle; particleColors
   )
 }
 
-export function FloatingParticles({ count = 6 }: { count?: number }) {
+export function FloatingParticles({ count = 3 }: { count?: number }) {
   const reducedMotion = useReducedMotion()
   const colors = useColors()
   const particles = useMemo(() => generateParticles(count), [count])
-  const particleColors = useMemo(() => getParticleColors(colors), [colors])
+  // Depend on primitive (bg) not the whole colors object — colors is a fresh
+  // reference on every theme-related re-render; the object would otherwise
+  // regenerate particle colors constantly.
+  const particleColors = useMemo(() => getParticleColors(colors), [colors.bg])
 
   if (reducedMotion) return null
 
