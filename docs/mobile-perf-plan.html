@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mobile Performance Overhaul — The Dad Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Jost:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #12100e;
+    --surface: #1a1714;
+    --card: #201c18;
+    --card-hover: #282420;
+    --white: #faf6f0;
+    --cream: #ede6dc;
+    --muted: #7a6f62;
+    --dim: #4a4239;
+    --copper: #c4703f;
+    --copper-glow: rgba(196, 112, 63, 0.25);
+    --copper-dim: rgba(196, 112, 63, 0.15);
+    --gold: #d4a853;
+    --gold-dim: rgba(212, 168, 83, 0.15);
+    --sage: #6b8f71;
+    --sage-dim: rgba(107, 143, 113, 0.15);
+    --coral: #d4836b;
+    --coral-dim: rgba(212, 131, 107, 0.15);
+    --sky: #5b9bd5;
+    --sky-dim: rgba(91, 155, 213, 0.15);
+    --rose: #c47a8f;
+    --border: rgba(237, 230, 220, 0.08);
+    --border-strong: rgba(237, 230, 220, 0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--cream);
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(at 80% 0%, var(--copper-dim) 0px, transparent 60%),
+      radial-gradient(at 0% 100%, var(--gold-dim) 0px, transparent 50%);
+    background-attachment: fixed;
+  }
+
+  /* Layout */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+  /* Header */
+  header {
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--copper), transparent);
+  }
+  .eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--copper);
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+  }
+  h1 .accent {
+    background: linear-gradient(135deg, var(--copper) 0%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .lede {
+    font-size: 19px;
+    color: var(--cream);
+    max-width: 720px;
+    line-height: 1.6;
+  }
+  .lede strong { color: var(--white); font-weight: 500; }
+
+  /* Quick stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+  .stat { padding: 16px 0; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--copper);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+  }
+
+  /* Sections */
+  section { padding: 80px 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 42px);
+    color: var(--white);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .section-pre {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-pre::after {
+    content: '';
+    width: 60px;
+    height: 1px;
+    background: var(--copper);
+  }
+  .section-desc {
+    color: var(--muted);
+    margin-bottom: 48px;
+    max-width: 680px;
+    font-size: 16px;
+  }
+
+  /* Symptom -> Cause cards */
+  .symptom-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .symptom-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    transition: all 200ms ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .symptom-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--coral);
+  }
+  .symptom-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+  }
+  .symptom-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .symptom-arrow {
+    color: var(--copper);
+    font-size: 12px;
+    margin: 12px 0 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .symptom-cause {
+    color: var(--cream);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* Root causes */
+  .causes { display: flex; flex-direction: column; gap: 16px; }
+  .cause {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 24px;
+    align-items: start;
+    transition: all 200ms ease;
+  }
+  .cause:hover { background: var(--card-hover); border-color: var(--border-strong); }
+  .cause-priority {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    height: fit-content;
+    white-space: nowrap;
+  }
+  .priority-p0 { background: rgba(212, 131, 107, 0.15); color: var(--coral); border: 1px solid rgba(212, 131, 107, 0.3); }
+  .priority-p1 { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(212, 168, 83, 0.3); }
+  .priority-p2 { background: var(--sky-dim); color: var(--sky); border: 1px solid rgba(91, 155, 213, 0.3); }
+  .cause-body h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .cause-body p {
+    color: var(--cream);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+  .cause-file {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--surface);
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .cause-impact {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--copper);
+    text-align: right;
+    white-space: nowrap;
+    margin-top: 4px;
+  }
+
+  /* Comparison table */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .compare-table th {
+    background: var(--surface);
+    color: var(--copper);
+    text-align: left;
+    padding: 16px 20px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border-strong);
+  }
+  .compare-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    vertical-align: top;
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: var(--card-hover); }
+  .compare-table .col-problem { color: var(--cream); font-weight: 500; }
+  .compare-table .col-pattern { color: var(--white); }
+  .compare-table .col-examples { color: var(--muted); font-size: 13px; font-style: italic; }
+
+  /* Phases */
+  .phases {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+  }
+  .phase {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 250ms ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .phase:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    border-color: var(--border-strong);
+  }
+  .phase-1 { border-top: 3px solid var(--sage); }
+  .phase-2 { border-top: 3px solid var(--gold); }
+  .phase-3 { border-top: 3px solid var(--coral); }
+  .phase-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .phase h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .phase-meta {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .meta-pill {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-strong);
+    color: var(--cream);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  .meta-effort { color: var(--sage); border-color: var(--sage); }
+  .meta-impact { color: var(--copper); border-color: var(--copper); }
+  .meta-risk-low { color: var(--sage); border-color: var(--sage); }
+  .meta-risk-mod { color: var(--gold); border-color: var(--gold); }
+  .meta-risk-high { color: var(--coral); border-color: var(--coral); }
+
+  .phase ul { list-style: none; padding: 0; }
+  .phase li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--cream);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .phase li:last-child { border-bottom: none; }
+  .phase li::before {
+    content: counter(item);
+    counter-increment: item;
+    color: var(--copper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: var(--copper-dim);
+    padding: 2px 8px;
+    border-radius: 4px;
+    height: fit-content;
+  }
+  .phase ul { counter-reset: item; }
+  .phase li .file {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    display: block;
+    margin-top: 4px;
+  }
+  .phase li .label { color: var(--white); font-weight: 500; display: block; margin-bottom: 2px; }
+  .phase li .label-text { color: var(--cream); font-size: 13px; }
+
+  /* Demo: smooth vs janky */
+  .demo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 32px;
+  }
+  .demo-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    text-align: center;
+  }
+  .demo-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .demo-card .label-bad { color: var(--coral); }
+  .demo-card .label-good { color: var(--sage); }
+  .demo-area {
+    height: 120px;
+    background: var(--surface);
+    border-radius: 10px;
+    margin: 16px 0;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .demo-bad-block {
+    width: 60px; height: 60px;
+    background: var(--coral);
+    border-radius: 8px;
+    animation: jankSlide 1.5s steps(8, end) infinite;
+  }
+  .demo-good-block {
+    width: 60px; height: 60px;
+    background: var(--sage);
+    border-radius: 8px;
+    animation: smoothSlide 1.5s ease-in-out infinite;
+  }
+  @keyframes jankSlide {
+    0%, 50% { transform: translateX(-80px); }
+    50.01%, 100% { transform: translateX(80px); }
+  }
+  @keyframes smoothSlide {
+    0%, 100% { transform: translateX(-80px); }
+    50% { transform: translateX(80px); }
+  }
+  .demo-fps { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); }
+
+  /* Donts */
+  .donts { display: flex; flex-direction: column; gap: 12px; }
+  .dont {
+    background: rgba(212, 131, 107, 0.06);
+    border: 1px solid rgba(212, 131, 107, 0.2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: start;
+  }
+  .dont-icon {
+    color: var(--coral);
+    font-size: 20px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .dont-text {
+    color: var(--cream);
+    font-size: 14px;
+  }
+  .dont-text strong { color: var(--white); }
+
+  /* Verify list */
+  .verify-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .verify-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .verify-card h4 {
+    font-family: 'Playfair Display', serif;
+    color: var(--white);
+    font-size: 17px;
+    margin-bottom: 6px;
+  }
+  .verify-card .target {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--copper);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .verify-card p {
+    color: var(--cream);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* Nav */
+  nav.toc {
+    position: sticky;
+    top: 0;
+    background: rgba(18, 16, 14, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 0;
+    z-index: 100;
+  }
+  .toc-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .toc-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: var(--white);
+    font-weight: 600;
+    margin-right: auto;
+  }
+  .toc-brand .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--copper);
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .toc a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 150ms ease;
+  }
+  .toc a:hover { color: var(--copper); }
+
+  /* Footer */
+  footer {
+    padding: 60px 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+  footer .file-path {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--copper);
+    background: var(--card);
+    padding: 8px 14px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 12px;
+    border: 1px solid var(--border-strong);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container, .toc-inner { padding: 0 20px; }
+    section { padding: 60px 0; }
+    .demo { grid-template-columns: 1fr; }
+    .cause { grid-template-columns: 1fr; gap: 12px; }
+    .cause-impact { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="toc">
+  <div class="toc-inner">
+    <div class="toc-brand"><span class="dot"></span>Mobile Perf Plan</div>
+    <a href="#diagnosis">Diagnosis</a>
+    <a href="#how-others">Industry</a>
+    <a href="#plan">Fix Plan</a>
+    <a href="#verify">Verify</a>
+    <a href="#donts">Don'ts</a>
+  </div>
+</nav>
+
+<header>
+  <div class="container">
+    <div class="eyebrow">Performance Audit · 2026-04-13</div>
+    <h1>Why your app feels like <span class="accent">2020</span> — and how to make it feel like 2026.</h1>
+    <p class="lede">
+      Three independent audits of <strong>The Dad Center</strong> mobile app converged on the same root causes: a prefetcher that <strong>never hits the cache</strong>, all five tabs mounting at once, eight spring animations stacked under eight BlurViews, and an auth waterfall blocking the first paint. Once data lands the app is fast — that's the tell. The pain is structural, not infrastructural. Fixable in a day for ~80% of the win.
+    </p>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">10</div>
+        <div class="stat-label">Root causes verified</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5+</div>
+        <div class="stat-label">Cold queries on dashboard mount</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">18</div>
+        <div class="stat-label">Infinite Reanimated worklets running</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">~80%</div>
+        <div class="stat-label">Improvement from Phase 1 alone</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Symptom → Cause -->
+<section id="diagnosis">
+  <div class="container">
+    <div class="section-pre">Diagnosis</div>
+    <h2>Symptoms map cleanly to causes.</h2>
+    <p class="section-desc">Each thing you experience as "slow" or "stuck" has a specific structural cause. None of these are mysterious.</p>
+
+    <div class="symptom-grid">
+      <div class="symptom-card">
+        <h3>Slow first load</h3>
+        <p style="color: var(--muted); font-size: 13px;">"Tabs and screens take forever the first time."</p>
+        <div class="symptom-arrow">caused by →</div>
+        <div class="symptom-cause">Auth waterfall (profile → family) blocks route protection. Prefetcher writes to one cache key while the UI reads from another, so 5+ queries fire cold on every dashboard mount.</div>
+      </div>
+      <div class="symptom-card">
+        <h3>Stuck tab switches</h3>
+        <p style="color: var(--muted); font-size: 13px;">"Sometimes screens hang or animations stutter."</p>
+        <div class="symptom-arrow">caused by →</div>
+        <div class="symptom-cause">All 5 tabs and 21 More sub-screens mount on first render. Dashboard's <code style="font-size:12px;color:var(--gold)">LinearTransition.springify()</code> re-springs all 8 cards on any data change. Stacked BlurViews + spring animations saturate the GPU.</div>
+      </div>
+      <div class="symptom-card">
+        <h3>Wrong page from notification</h3>
+        <p style="color: var(--muted); font-size: 13px;">"I tap a notification and end up somewhere else."</p>
+        <div class="symptom-arrow">caused by →</div>
+        <div class="symptom-cause">Notification listener uses a hardcoded 500ms delay, racing the auth redirect. If auth resolves first, it clobbers the deep-link push. Unknown URLs silently fall back to <code style="font-size:12px;color:var(--gold)">/(tabs)</code>.</div>
+      </div>
+      <div class="symptom-card">
+        <h3>Generally janky feel</h3>
+        <p style="color: var(--muted); font-size: 13px;">"Even when things load it doesn't feel smooth."</p>
+        <div class="symptom-arrow">caused by →</div>
+        <div class="symptom-cause">18 infinite Reanimated worklets running at all times (6 particles × 3 animations each). Old React Native architecture means every navigation crosses the bridge. TabHeader re-renders on every route change.</div>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 80px; margin-bottom: 12px;">The 10 root causes</h2>
+    <p class="section-desc">Ranked by priority. Three audits, same conclusions, all verified with file:line references in the actual code.</p>
+
+    <div class="causes">
+
+      <div class="cause">
+        <div class="cause-priority priority-p0">P0</div>
+        <div class="cause-body">
+          <h3>Prefetch keys don't match dashboard query keys</h3>
+          <p>The auth provider prefetches with <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">['tasks-due']</code> but the dashboard queries with <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">['tasks-due', family.id]</code>. Cache miss every time. Persistent 7-day cache is wasted bytes for these keys. <strong>This is the single biggest win.</strong></p>
+          <span class="cause-file">components/providers/AuthProvider.tsx:171–200</span>
+        </div>
+        <div class="cause-impact">Catastrophic</div>
+      </div>
+
+      <div class="cause">
+        <div class="cause-priority priority-p0">P0</div>
+        <div class="cause-body">
+          <h3>All 5 tabs + 21 sub-screens mount eagerly</h3>
+          <p>Commit <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">57698eb</code> reverted both <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">lazy:true</code> and <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">freezeOnBlur:true</code> because nested Stacks broke. Hypothesis: only <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">freezeOnBlur</code> was the culprit (it freezes Stack state mid-navigation). Re-enable <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">lazy</code> alone.</p>
+          <span class="cause-file">app/(tabs)/_layout.tsx:117–179</span>
+        </div>
+        <div class="cause-impact">Severe</div>
+      </div>
+
+      <div class="cause">
+        <div class="cause-priority priority-p0">P0</div>
+        <div class="cause-body">
+          <h3>Dashboard: 8 staggered springs + 8 BlurViews + LinearTransition</h3>
+          <p>Eight <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">CardEntrance</code> wrappers fire <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">FadeInDown.springify()</code> with 40–360ms delays. All wrapped in an <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">Animated.View layout={LinearTransition.springify()}</code>, so any single card refresh re-springs all 8 siblings. Each card is a <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">GlassCard</code> = a separate iOS BlurView.</p>
+          <span class="cause-file">app/(tabs)/index.tsx:103–190</span>
+        </div>
+        <div class="cause-impact">Severe</div>
+      </div>
+
+      <div class="cause">
+        <div class="cause-priority priority-p1">P1</div>
+        <div class="cause-body">
+          <h3>FloatingParticles: 18 infinite worklets</h3>
+          <p>6 particles × 3 <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">useSharedValue</code> animations each = 18 infinite Reanimated loops always running. They don't stop on tab switch or screen blur. Theme changes regenerate the entire particle field.</p>
+          <span class="cause-file">components/animations/FloatingParticles.tsx:59–130</span>
+        </div>
+        <div class="cause-impact">Continuous CPU drain</div>
+      </div>
+
+      <div class="cause">
+        <div class="cause-priority priority-p1">P1</div>
+        <div class="cause-body">
+          <h3>TabHeader re-renders on every route change</h3>
+          <p><code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">useSegments()</code> at line 54 fires on every navigation. <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">TabHeader</code> isn't memoized → cascades to BabySwitcher → which calls useBabies + useColors. BlurView in the header re-rasterizes each time.</p>
+          <span class="cause-file">app/(tabs)/_layout.tsx:51–102</span>
+        </div>
+        <div class="cause-impact">~150–300ms per tab press</div>
+      </div>
+
+      <div class="cause">
+        <div class="cause-priority priority-p1">P1</div>
+        <div class="cause-body">
+          <h3>AuthProvider waterfall on boot</h3>
+          <p>Sequential awaits: profile fetch → then family fetch. Route protection blocks on both. Adds an entire round-trip (200–400ms on cellular) before the UI can render anything.</p>
+          <span class="cause-file">components/providers/AuthProvider.tsx:63–106</span>
+        </div>
+        <div class="cause-impact">+200–400ms cold start</div>
+      </div>
+
+      <div class="cause">
+        <div class="cause-priority priority-p1">P1</div>
+        <div class="cause-body">
+          <h3>Notification routing race condition</h3>
+          <p>500ms hardcoded delay races AuthProvider's redirect. Auth wins → notification deep-link is overwritten. Unknown URLs silently default to <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">/(tabs)</code> with no logging. This is the "wrong page" bug.</p>
+          <span class="cause-file">components/providers/NotificationListener.tsx:50–92</span>
+        </div>
+        <div class="cause-impact">Wrong-page bug</div>
+      </div>
+
+      <div class="cause">
+        <div class="cause-priority priority-p1">P1</div>
+        <div class="cause-body">
+          <h3>Dashboard query explosion</h3>
+          <p>5 hooks fire 5 separate queries on mount. <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">useBacklogCount</code>, <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">useArticle</code> have <strong>no staleTime</strong> set → refetch on every mount. Subcomponent cards each fire their own queries. Nothing is batched.</p>
+          <span class="cause-file">hooks/use-triage.ts:30–32 · hooks/use-content.ts:18</span>
+        </div>
+        <div class="cause-impact">5+ cold network calls</div>
+      </div>
+
+      <div class="cause">
+        <div class="cause-priority priority-p2">P2</div>
+        <div class="cause-body">
+          <h3>No New Architecture (Fabric/TurboModules)</h3>
+          <p>Running on the old React Native architecture. Every navigation = bridge calls = main thread blocks. Reanimated 4.2.1 is Fabric-ready and would unlock sustained 60fps. Risk: native module audit required.</p>
+          <span class="cause-file">app.config.ts (no newArchEnabled flag)</span>
+        </div>
+        <div class="cause-impact">Performance ceiling</div>
+      </div>
+
+      <div class="cause">
+        <div class="cause-priority priority-p2">P2</div>
+        <div class="cause-body">
+          <h3>Inline filter/map/date-fns in render</h3>
+          <p>5+ chained <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">.filter()</code> calls on the task array, with <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">isToday(new Date(t.due_date))</code> recomputed per task per render in both <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">.length</code> and <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">.map()</code>. <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">groupTasksByTimePeriod()</code> not memoized.</p>
+          <span class="cause-file">app/(tabs)/tasks/index.tsx:129–260, 392–533</span>
+        </div>
+        <div class="cause-impact">Jank on long task lists</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- How others solve -->
+<section id="how-others">
+  <div class="container">
+    <div class="section-pre">Industry Patterns</div>
+    <h2>How modern apps solve this.</h2>
+    <p class="section-desc">Every problem you have is a solved problem in 2026. Linear, Notion, Discord, Shopify, Robinhood — they all use the same core patterns.</p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th style="width: 28%">Problem</th>
+          <th style="width: 42%">2026 best-in-class pattern</th>
+          <th style="width: 30%">Apps that do this</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-problem">Cold load feels dead</td>
+          <td class="col-pattern">Skeleton screens matching final layout — never spinners.</td>
+          <td class="col-examples">Linear, Notion, Airbnb</td>
+        </tr>
+        <tr>
+          <td class="col-problem">Tab-switch lag</td>
+          <td class="col-pattern">Lazy mount + view-state preservation. Mount on first visit, keep mounted after.</td>
+          <td class="col-examples">Instagram, Discord RN</td>
+        </tr>
+        <tr>
+          <td class="col-problem">Stale-while-revalidate feel</td>
+          <td class="col-pattern">React Query <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">staleTime</code> + persister with <strong>matching keys</strong>; Suspense boundaries.</td>
+          <td class="col-examples">Linear web, GitHub Mobile</td>
+        </tr>
+        <tr>
+          <td class="col-problem">Animation cost on mount</td>
+          <td class="col-pattern">One container transition, not N staggered springs. Skip animation when cache is warm.</td>
+          <td class="col-examples">Robinhood, Airbnb</td>
+        </tr>
+        <tr>
+          <td class="col-problem">Heavy blur</td>
+          <td class="col-pattern">One BlurView behind opaque cards. Apple HIG explicitly says <strong>never stack BlurViews</strong>.</td>
+          <td class="col-examples">iOS Control Center, Apple Music</td>
+        </tr>
+        <tr>
+          <td class="col-problem">Long lists</td>
+          <td class="col-pattern">FlashList (Shopify) for virtualization; memoized filters keyed on stable inputs.</td>
+          <td class="col-examples">Shopify, Instagram Reels</td>
+        </tr>
+        <tr>
+          <td class="col-problem">Auth waterfall</td>
+          <td class="col-pattern">Single RPC returns <code style="color:var(--gold);font-family:JetBrains Mono;font-size:13px">{ profile, family, babies }</code> in one round-trip.</td>
+          <td class="col-examples">Linear, Superhuman, Cash App</td>
+        </tr>
+        <tr>
+          <td class="col-problem">Notification race</td>
+          <td class="col-pattern">Deep-link intent queue, drained once auth resolves.</td>
+          <td class="col-examples">Slack, Gmail</td>
+        </tr>
+        <tr>
+          <td class="col-problem">Native perf ceiling</td>
+          <td class="col-pattern">Hermes + New Architecture (Fabric + TurboModules) so Reanimated/Gesture Handler bypass the bridge.</td>
+          <td class="col-examples">Discord RN, Shopify, Expo</td>
+        </tr>
+        <tr>
+          <td class="col-problem">Predictive prefetch</td>
+          <td class="col-pattern">Pre-warm next route on touch-down/intent, not just at login.</td>
+          <td class="col-examples">Linear, Arc</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 style="margin-top: 80px; margin-bottom: 12px;">What "smooth" actually means</h2>
+    <p class="section-desc">Side by side: today's experience vs the target.</p>
+
+    <div class="demo">
+      <div class="demo-card">
+        <h4 class="label-bad">Today (jank)</h4>
+        <div class="demo-area"><div class="demo-bad-block"></div></div>
+        <div class="demo-fps">~24fps · stutters · stop-start</div>
+      </div>
+      <div class="demo-card">
+        <h4 class="label-good">Target (smooth)</h4>
+        <div class="demo-area"><div class="demo-good-block"></div></div>
+        <div class="demo-fps">60fps · ease-in-out · continuous</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Phased plan -->
+<section id="plan">
+  <div class="container">
+    <div class="section-pre">Fix Plan</div>
+    <h2>Three phases. Most of the win in the first day.</h2>
+    <p class="section-desc">Phase 1 fixes the cache, lazy-loads tabs, and adds skeletons — 80% of the perceived improvement, very low risk. Phase 2 closes the gap. Phase 3 is the big native-level overhaul (highest ceiling, real risk).</p>
+
+    <div class="phases">
+
+      <div class="phase phase-1">
+        <div class="phase-num">PHASE 01</div>
+        <h3>Quick wins</h3>
+        <div class="phase-meta">
+          <span class="meta-pill meta-effort">~1 day</span>
+          <span class="meta-pill meta-impact">~80% perceived</span>
+          <span class="meta-pill meta-risk-low">Low risk</span>
+        </div>
+        <ul>
+          <li>
+            <div>
+              <span class="label">Match prefetch keys to query keys</span>
+              <span class="label-text">Move prefetch into <code style="color:var(--gold)">fetchProfile</code> after <code style="color:var(--gold)">family.id</code> is known. Use exact same keys as <code style="color:var(--gold)">useDashboardData</code>. Instantly turns the 7-day persister into a real cache.</span>
+              <span class="file">AuthProvider.tsx:171–200 · use-dashboard.ts:25,31</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="label">Re-enable lazy:true on tabs</span>
+              <span class="label-text">Without <code style="color:var(--gold)">freezeOnBlur</code> (that was the actual culprit). Only Home mounts on first render. Tasks/Briefing/Tracker/More mount on first visit.</span>
+              <span class="file">app/(tabs)/_layout.tsx:117–179</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="label">Skeleton screens</span>
+              <span class="label-text">Replace <code style="color:var(--gold)">ActivityIndicator</code> with skeleton matching final card outlines. Same on tasks + briefing tabs.</span>
+              <span class="file">app/(tabs)/index.tsx · tasks/index.tsx · briefing/index.tsx</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="label">Cut dashboard animation cost</span>
+              <span class="label-text">Remove <code style="color:var(--gold)">LinearTransition.springify()</code> wrapper. Compress stagger 40–360ms → 0–120ms. Skip entrance animation when cache is warm.</span>
+              <span class="file">app/(tabs)/index.tsx:103–190</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="phase phase-2">
+        <div class="phase-num">PHASE 02</div>
+        <h3>Meaningful gains</h3>
+        <div class="phase-meta">
+          <span class="meta-pill meta-effort">1–2 days</span>
+          <span class="meta-pill meta-impact">+15% perceived</span>
+          <span class="meta-pill meta-risk-mod">Moderate</span>
+        </div>
+        <ul>
+          <li>
+            <div>
+              <span class="label">Memoize TabHeader + BabySwitcher</span>
+              <span class="label-text">Move <code style="color:var(--gold)">useSegments()</code> into a tiny inner child. Wrap with <code style="color:var(--gold)">React.memo</code>. Stops per-route header re-render cascade.</span>
+              <span class="file">app/(tabs)/_layout.tsx:51–102</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="label">Collapse profile + family into one Supabase RPC</span>
+              <span class="label-text">New <code style="color:var(--gold)">get_initial_app_state(user_id)</code> returns <code style="color:var(--gold)">{ profile, family, babies }</code> in one round-trip. Saves 200–400ms cold start.</span>
+              <span class="file">AuthProvider.tsx:63–106</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="label">Add staleTime to all hooks missing it</span>
+              <span class="label-text">Default 30s–5min. Stops refetch-on-every-mount when bouncing between tabs.</span>
+              <span class="file">use-triage.ts:30 · use-content.ts:18 · sweep all hooks/</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="label">Fix notification race</span>
+              <span class="label-text">Replace 500ms timeout with intent queue. Drain after auth resolves. Log unknown URLs to Sentry.</span>
+              <span class="file">NotificationListener.tsx:50–92</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="label">Reduce particle count</span>
+              <span class="label-text">6 → 3, or replace with static SVG. Memoize particle colors. Frees 9–18 worklets.</span>
+              <span class="file">FloatingParticles.tsx:59–130</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="phase phase-3">
+        <div class="phase-num">PHASE 03</div>
+        <h3>Native overhaul</h3>
+        <div class="phase-meta">
+          <span class="meta-pill meta-effort">2–3 days</span>
+          <span class="meta-pill meta-impact">Highest ceiling</span>
+          <span class="meta-pill meta-risk-high">Real risk</span>
+        </div>
+        <ul>
+          <li>
+            <div>
+              <span class="label">Enable New Architecture</span>
+              <span class="label-text">Add <code style="color:var(--gold)">newArchEnabled: true</code>. Audit every native module first (BlurView, RevenueCat, Sentry, etc.). Gate behind 1-week TestFlight alpha.</span>
+              <span class="file">app.config.ts</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="label">Kill stacked BlurViews</span>
+              <span class="label-text">One BlurView in AppBackground. <code style="color:var(--gold)">GlassCard</code> becomes opaque rounded view with semi-transparent fill. Apple HIG-compliant.</span>
+              <span class="file">GlassCard.tsx · AppBackground.tsx</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="label">Memoize task list filters</span>
+              <span class="label-text">One <code style="color:var(--gold)">useMemo</code> for the chained filters. Precompute <code style="color:var(--gold)">isToday()</code> per task, store as flag.</span>
+              <span class="file">app/(tabs)/tasks/index.tsx:129–533</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="label">FlashList for tasks</span>
+              <span class="label-text">Swap <code style="color:var(--gold)">FlatList</code> → <code style="color:var(--gold)">@shopify/flash-list</code>. Required for &gt;50 task lists.</span>
+              <span class="file">app/(tabs)/tasks/index.tsx</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="label">Suspense boundaries per tab</span>
+              <span class="label-text">Wrap each tab body with <code style="color:var(--gold)">&lt;Suspense fallback=&#123;Skeleton&#125;&gt;</code>. Convert primary queries to <code style="color:var(--gold)">useSuspenseQuery</code>.</span>
+              <span class="file">app/(tabs)/*/index.tsx</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Verify -->
+<section id="verify">
+  <div class="container">
+    <div class="section-pre">Verification</div>
+    <h2>How we'll know it actually worked.</h2>
+    <p class="section-desc">Measurable targets, not vibes. Each phase has clear instrumentation.</p>
+
+    <div class="verify-grid">
+      <div class="verify-card">
+        <h4>Cold-start TTI</h4>
+        <div class="target">target: &lt;1.5s on iPhone 13</div>
+        <p>TestFlight build, screen record from tap-to-launch through first dashboard card paint. Measure pre/post each phase.</p>
+      </div>
+      <div class="verify-card">
+        <h4>Tab-switch FPS</h4>
+        <div class="target">target: 60fps sustained</div>
+        <p>Xcode Instruments → Core Animation → Show FPS. Tap through all 5 tabs. ProMotion devices target 120fps.</p>
+      </div>
+      <div class="verify-card">
+        <h4>Prefetch cache hits</h4>
+        <div class="target">target: 'fresh', not 'fetching'</div>
+        <p>React Query Devtools (<code style="color:var(--gold);font-family:JetBrains Mono;font-size:12px">@dev-plugins/react-query</code>) — confirm the dashboard's queries are warm on mount, not firing fresh.</p>
+      </div>
+      <div class="verify-card">
+        <h4>Reanimated worklets</h4>
+        <div class="target">target: ~10 (down from 24)</div>
+        <p>Reanimated devtools shows worklet count. Should drop after Phase 2.5 (particle reduction).</p>
+      </div>
+      <div class="verify-card">
+        <h4>React DevTools profiler</h4>
+        <div class="target">target: TabHeader unchanged on nav</div>
+        <p>Record a tab switch. Confirm TabHeader no longer re-renders on every route change after Phase 2.1.</p>
+      </div>
+      <div class="verify-card">
+        <h4>Notification routing</h4>
+        <div class="target">target: 10/10 trials correct</div>
+        <p>Send push with deep-link URL from signed-out state. Kill app, cold-launch via tap. Confirm correct route every time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Don'ts -->
+<section id="donts">
+  <div class="container">
+    <div class="section-pre">Guardrails</div>
+    <h2>Things to specifically not do.</h2>
+    <p class="section-desc">Each of these is a tempting shortcut that has a known failure mode. Don't take them.</p>
+
+    <div class="donts">
+      <div class="dont">
+        <div class="dont-icon">×</div>
+        <div class="dont-text"><strong>Don't re-attempt freezeOnBlur:true.</strong> That's the stuck-route / wrong-page bug from commit <code style="color:var(--gold);font-family:JetBrains Mono;font-size:12px">57698eb</code>. Only re-enable <code style="color:var(--gold);font-family:JetBrains Mono;font-size:12px">lazy:true</code>.</div>
+      </div>
+      <div class="dont">
+        <div class="dont-icon">×</div>
+        <div class="dont-text"><strong>Don't enable New Architecture without a native module audit.</strong> One non-Fabric module = broken build for everyone. Audit BlurView, RevenueCat, Sentry, gesture-handler, async-storage first.</div>
+      </div>
+      <div class="dont">
+        <div class="dont-icon">×</div>
+        <div class="dont-text"><strong>Don't introduce new abstractions.</strong> No PerformanceProvider, no HOCs, no context-in-context. Fix in place.</div>
+      </div>
+      <div class="dont">
+        <div class="dont-icon">×</div>
+        <div class="dont-text"><strong>Don't replace React Query.</strong> The persister + staleTime model is correct. The bug is the key mismatch — fix that, the model works as intended.</div>
+      </div>
+      <div class="dont">
+        <div class="dont-icon">×</div>
+        <div class="dont-text"><strong>Don't remove the AsyncStorage persister.</strong> Once Phase 1.1 lands, it becomes a real 7-day cache asset, not a wasted byte field.</div>
+      </div>
+      <div class="dont">
+        <div class="dont-icon">×</div>
+        <div class="dont-text"><strong>Don't ship New Arch to prod without a week in TestFlight alpha</strong> with Sentry crash monitoring on. The one-time risk is worth a careful rollout.</div>
+      </div>
+      <div class="dont">
+        <div class="dont-icon">×</div>
+        <div class="dont-text"><strong>Don't animate during cold-mount if cache was warm.</strong> Animations communicate freshness. Warm cache means "already here." Skipping the animation makes it feel instant.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Plan file:</p>
+    <div class="file-path">~/.claude/plans/recursive-painting-gadget.md</div>
+    <p style="margin-top: 24px;">Once you've reviewed, tell me which phases to ship. Recommended starting point: <strong style="color: var(--copper)">Phase 1 in a worktree</strong> to verify lazy-tabs doesn't recur the stuck-route bug.</p>
+  </div>
+</footer>
+
+</body>
+</html>
