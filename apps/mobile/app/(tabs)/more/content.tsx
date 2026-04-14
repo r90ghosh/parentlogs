@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native'
-import { useRouter } from 'expo-router'
+import { useRouter, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Newspaper, Lock } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
@@ -32,9 +32,12 @@ const STAGE_FILTERS: { value: string | undefined; label: string }[] = [
 export default function ContentScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
+  const params = useLocalSearchParams<{ stage?: string; title?: string }>()
   const { profile } = useAuth()
   const colors = useColors()
-  const [selectedStage, setSelectedStage] = useState<string | undefined>(undefined)
+  const [selectedStage, setSelectedStage] = useState<string | undefined>(params.stage)
+
+  const screenTitle = params.title || 'Blog'
 
   const { data: articles, isLoading } = useArticles(selectedStage)
 
@@ -96,7 +99,7 @@ export default function ContentScreen() {
 
   const listHeader = (
     <>
-      <ScreenHeader title="Blog" />
+      <ScreenHeader title={screenTitle} />
       {/* Stage filter pills */}
       <View style={styles.filterBar}>
         <ScrollView

@@ -21,7 +21,6 @@ import {
   Palette,
   BookOpen,
   MessageSquarePlus,
-  Baby,
   Video,
 } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
@@ -131,11 +130,6 @@ export default function MoreScreen() {
               onPress={() => router.push('/(tabs)/more/content')}
             />
             <MenuItem
-              icon={<Baby size={20} color={colors.rose} />}
-              label="Pregnancy Weeks"
-              onPress={() => router.push('/(tabs)/more/pregnancy-weeks')}
-            />
-            <MenuItem
               icon={<Video size={20} color={colors.copper} />}
               label="Video Library"
               onPress={() => router.push('/(tabs)/more/videos')}
@@ -143,7 +137,14 @@ export default function MoreScreen() {
             <MenuItem
               icon={<BookOpen size={20} color={colors.sky} />}
               label="Dad Tips"
-              onPress={() => router.push('/(tabs)/more/content')}
+              onPress={() => {
+                const stage = (family as { stage?: string } | null)?.stage
+                router.push(
+                  stage
+                    ? `/(tabs)/more/content?stage=${encodeURIComponent(stage)}&title=Dad+Tips`
+                    : '/(tabs)/more/content?title=Dad+Tips'
+                )
+              }}
             />
           </GlassCard>
         </CardEntrance>

@@ -4,7 +4,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import Animated, { FadeIn } from 'react-native-reanimated'
 import {
-  Baby,
   Newspaper,
   Video,
   ChevronRight,
@@ -16,13 +15,6 @@ import { CardEntrance } from '@/components/animations'
 import { useColors } from '@/hooks/use-colors'
 
 const CONTENT_SECTIONS = [
-  {
-    title: 'Pregnancy Week Guide',
-    description: '40 weeks of development milestones, trimester by trimester.',
-    icon: Baby,
-    route: '/(tabs)/more/pregnancy-weeks' as const,
-    accentKey: 'copper' as const,
-  },
   {
     title: 'Blog',
     description: 'Evidence-based guides on pregnancy, birth, and early parenting.',
