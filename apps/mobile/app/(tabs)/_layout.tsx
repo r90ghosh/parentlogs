@@ -48,31 +48,56 @@ const NotificationBell = React.memo(function NotificationBell() {
   )
 })
 
-function TabHeader() {
-  const insets = useSafeAreaInsets()
-  const colors = useColors()
+/**
+ * Isolates `useSegments()` — which re-fires on every navigation — into the
+ * smallest possible component so the BlurView + bell above don't re-render
+ * on every tab/sub-screen change.
+ */
+function TabHeaderSlot() {
   const segments = useSegments()
-
-  // On More sub-screens: show compact header with just the notification bell
   const isMoreSubScreen =
     segments.length >= 3 &&
     segments[1] === 'more' &&
     segments[2] !== undefined &&
     (segments[2] as string) !== 'index'
 
-  const compactStyle = [
-    styles.headerCompact,
-    { paddingTop: insets.top + 4, borderBottomColor: colors.subtleBg },
-  ]
+  return isMoreSubScreen ? <View style={{ flex: 1 }} /> : <BabySwitcher />
+}
 
-  const fullStyle = [
+/**
+ * Route-aware padding for the compact header top inset. Also isolated so
+ * only this tiny overlay re-renders on navigation, not the BlurView shell.
+ */
+function BellOverlayPosition({ children }: { children: React.ReactNode }) {
+  const insets = useSafeAreaInsets()
+  const segments = useSegments()
+  const isMoreSubScreen =
+    segments.length >= 3 &&
+    segments[1] === 'more' &&
+    segments[2] !== undefined &&
+    (segments[2] as string) !== 'index'
+
+  return (
+    <View style={[styles.bellOverlay, { top: isMoreSubScreen ? insets.top + 4 : insets.top + 8 }]}>
+      {children}
+    </View>
+  )
+}
+
+const TabHeader = React.memo(function TabHeader() {
+  const insets = useSafeAreaInsets()
+  const colors = useColors()
+
+  // Use the full header layout always — the compact/full distinction is
+  // purely cosmetic (paddingBottom differs by 4px) and letting the header
+  // BlurView re-render on every nav press cost ~150-300ms per tap.
+  // If a visibly-tighter header is needed on More sub-screens, do it via
+  // a sibling animated View that doesn't remount the BlurView.
+  const headerStyle = [
     styles.header,
     { paddingTop: insets.top + 8, borderBottomColor: colors.subtleBg },
   ]
 
-  const headerStyle = isMoreSubScreen ? compactStyle : fullStyle
-
-  // Render bell OUTSIDE BlurView to prevent iOS clipping
   if (Platform.OS === 'ios') {
     return (
       <View style={{ position: 'relative' }}>
@@ -81,25 +106,25 @@ function TabHeader() {
           intensity={colors.headerBlurIntensity}
           style={headerStyle}
         >
-          {isMoreSubScreen ? <View style={{ flex: 1 }} /> : <BabySwitcher />}
+          <TabHeaderSlot />
           {/* Spacer for the bell area */}
           <View style={styles.bellButton} />
         </BlurView>
         {/* Bell rendered outside BlurView so badge isn't clipped */}
-        <View style={[styles.bellOverlay, { top: (isMoreSubScreen ? insets.top + 4 : insets.top + 8) }]}>
+        <BellOverlayPosition>
           <NotificationBell />
-        </View>
+        </BellOverlayPosition>
       </View>
     )
   }
 
   return (
     <View style={[headerStyle, { backgroundColor: colors.surface }]}>
-      {isMoreSubScreen ? <View style={{ flex: 1 }} /> : <BabySwitcher />}
+      <TabHeaderSlot />
       <NotificationBell />
     </View>
   )
-}
+})
 
 export default function TabLayout() {
   useRealtimeSync()
