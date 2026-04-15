@@ -137,6 +137,9 @@ Deno.serve(async (req: Request) => {
       case "onboarding_drip":
         await sendOnboardingDripEmails();
         break;
+      case "monthly_backlog_digest":
+        await sendMonthlyBacklogDigest();
+        break;
       // 'direct' type only sends push — callers persist the in-app notification themselves.
       case "direct": {
         const { user_id, title, body: messageBody, url, notification_type: directType } = body;
@@ -210,13 +213,21 @@ async function sendDailyDigest() {
 
   if (!familyIds.length) return;
 
-  const today = new Date().toISOString().split("T")[0];
+  // Scope the daily digest to the week ahead. Anything older than `today` is
+  // backlog — surfaced in the monthly digest, not the daily one.
+  const now = new Date();
+  const today = now.toISOString().split("T")[0];
+  const weekAheadDate = new Date(now);
+  weekAheadDate.setUTCDate(weekAheadDate.getUTCDate() + 7);
+  const weekAhead = weekAheadDate.toISOString().split("T")[0];
+
   const { data: allTasks } = await supabase
     .from("family_tasks")
     .select("*")
     .in("family_id", familyIds)
     .eq("status", "pending")
-    .lte("due_date", today);
+    .gte("due_date", today)
+    .lte("due_date", weekAhead);
 
   const tasksByFamily = (allTasks || []).reduce((acc, task) => {
     if (!acc[task.family_id]) acc[task.family_id] = [];
@@ -233,20 +244,87 @@ async function sendDailyDigest() {
     const familyTasks = tasksByFamily[familyId];
     if (!familyTasks?.length) continue;
 
+    const dueToday = familyTasks.filter((t) => t.due_date === today);
     const count = familyTasks.length;
     const mustDoCount = familyTasks.filter((t) => t.priority === "must-do").length;
 
+    const title = dueToday.length
+      ? `${dueToday.length} task${dueToday.length > 1 ? "s" : ""} today · ${count} this week`
+      : `${count} task${count > 1 ? "s" : ""} this week`;
+    const body = mustDoCount > 0
+      ? `${mustDoCount} must-do${mustDoCount > 1 ? "s" : ""}. Plan your week.`
+      : "Here's what's on deck.";
+
     const dailyPayload: NotificationPayload = {
-      title: `${count} task${count > 1 ? "s" : ""} on deck today`,
-      body:
-        mustDoCount > 0
-          ? `${mustDoCount} must-do${mustDoCount > 1 ? "s" : ""}. Review your list.`
-          : "Review and knock them out.",
+      title,
+      body,
       url: "/tasks",
       tag: "daily-digest",
     };
     await persistNotification(pref.user_id, "daily_digest", dailyPayload);
     await sendPushNotification(pref.user_id, dailyPayload, "daily_digest");
+  }
+}
+
+/**
+ * Monthly backlog digest — fires on the 1st of each month (see cron).
+ * Surfaces all still-pending tasks with due_date < today so users can triage.
+ * Daily digest stays focused on the week ahead; this is the catch-all nudge.
+ */
+async function sendMonthlyBacklogDigest() {
+  const { data: prefsWithProfiles } = await supabase
+    .from("notification_preferences")
+    .select("user_id, monthly_backlog_digest, quiet_hours_start, quiet_hours_end, profiles!inner(family_id, timezone)")
+    .eq("monthly_backlog_digest", true);
+
+  if (!prefsWithProfiles?.length) return;
+
+  const familyIds = [
+    ...new Set(
+      prefsWithProfiles
+        .map((p) => (p.profiles as unknown as { family_id: string | null }).family_id)
+        .filter(Boolean) as string[]
+    ),
+  ];
+
+  if (!familyIds.length) return;
+
+  const today = new Date().toISOString().split("T")[0];
+  const { data: backlogTasks } = await supabase
+    .from("family_tasks")
+    .select("family_id, priority")
+    .in("family_id", familyIds)
+    .eq("status", "pending")
+    .lt("due_date", today);
+
+  const tasksByFamily = (backlogTasks || []).reduce((acc, task) => {
+    if (!acc[task.family_id]) acc[task.family_id] = [];
+    acc[task.family_id].push(task);
+    return acc;
+  }, {} as Record<string, typeof backlogTasks>);
+
+  for (const pref of prefsWithProfiles) {
+    const profileData = pref.profiles as unknown as { family_id: string | null; timezone: string | null };
+    const familyId = profileData.family_id;
+    if (!familyId) continue;
+    if (checkQuietHours(pref.quiet_hours_start, pref.quiet_hours_end, profileData.timezone || "UTC")) continue;
+
+    const familyTasks = tasksByFamily[familyId];
+    if (!familyTasks?.length) continue;
+
+    const count = familyTasks.length;
+    const mustDoCount = familyTasks.filter((t) => t.priority === "must-do").length;
+
+    const backlogPayload: NotificationPayload = {
+      title: `${count} task${count > 1 ? "s" : ""} in your backlog`,
+      body: mustDoCount > 0
+        ? `${mustDoCount} must-do${mustDoCount > 1 ? "s" : ""}. Catch up or dismiss.`
+        : "Catch up or dismiss — your call.",
+      url: "/tasks",
+      tag: "backlog-digest",
+    };
+    await persistNotification(pref.user_id, "backlog_digest", backlogPayload);
+    await sendPushNotification(pref.user_id, backlogPayload, "backlog_digest");
   }
 }
 
