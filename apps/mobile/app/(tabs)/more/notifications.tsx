@@ -25,6 +25,7 @@ import {
   CalendarCheck,
   Activity,
   Repeat,
+  Inbox,
 } from 'lucide-react-native'
 import { GlassCard } from '@/components/glass'
 import { CardEntrance } from '@/components/animations'
@@ -83,6 +84,7 @@ interface Preferences {
   weekly_briefing: boolean
   partner_activity: boolean
   milestone_notifications: boolean
+  monthly_backlog_digest: boolean
   quiet_hours_enabled: boolean
   quiet_hours_start: string
   quiet_hours_end: string
@@ -102,6 +104,7 @@ const DEFAULT_PREFS: Preferences = {
   weekly_briefing: true,
   partner_activity: true,
   milestone_notifications: true,
+  monthly_backlog_digest: true,
   quiet_hours_enabled: false,
   quiet_hours_start: '22:00',
   quiet_hours_end: '07:00',
@@ -147,6 +150,8 @@ export default function NotificationsScreen() {
             weekly_briefing: data.weekly_briefing ?? true,
             partner_activity: data.partner_activity ?? true,
             milestone_notifications: data.milestone_notifications ?? true,
+
+            monthly_backlog_digest: (data as any).monthly_backlog_digest ?? true,
             quiet_hours_enabled: data.quiet_hours_enabled ?? false,
             quiet_hours_start: data.quiet_hours_start ?? '22:00',
             quiet_hours_end: data.quiet_hours_end ?? '07:00',
@@ -339,6 +344,14 @@ export default function NotificationsScreen() {
                 updatePref('task_reminders_3_day', v)
                 updatePref('task_reminders_1_day', v)
               }}
+              disabled={!prefs.push_enabled}
+            />
+            <NotificationToggle
+              icon={<Inbox size={18} color={colors.copper} />}
+              label="Monthly Backlog Digest"
+              description="Once a month, a heads-up about tasks that slipped through the cracks"
+              value={prefs.monthly_backlog_digest}
+              onToggle={(v) => updatePref('monthly_backlog_digest', v)}
               disabled={!prefs.push_enabled}
             />
           </GlassCard>
