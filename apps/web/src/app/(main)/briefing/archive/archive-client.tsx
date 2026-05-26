@@ -256,7 +256,7 @@ function BriefingCard({
       <Card
         className={cn(
           "h-full transition-all hover:border-[--border-hover]",
-          isCurrent && "border-copper bg-copper-dim",
+          isCurrent && "border-copper bg-copper-dim ring-2 ring-copper/30 shadow-copper",
           isLocked && "bg-[--surface]/50 border-[--border]"
         )}
       >

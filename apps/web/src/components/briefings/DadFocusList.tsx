@@ -39,7 +39,7 @@ function getIconForItem(text: string): string {
       return icon
     }
   }
-  return '✓' // Default icon
+  return '→' // Default icon — checkmark implies completion
 }
 
 // Try to split "Title: Description" format
@@ -84,7 +84,11 @@ export function DadFocusList({ items }: DadFocusListProps) {
             key={idx}
             className="flex items-start gap-3 py-3 border-b border-[--border] last:border-0"
           >
-            <div className="w-6 h-6 rounded-md bg-copper-dim flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+            <div
+              className={`w-6 h-6 rounded-md flex items-center justify-center text-xs flex-shrink-0 mt-0.5 ${
+                idx % 2 === 0 ? 'bg-copper-dim' : 'bg-[--gold-dim]'
+              }`}
+            >
               {icon}
             </div>
             <div className="flex-1">

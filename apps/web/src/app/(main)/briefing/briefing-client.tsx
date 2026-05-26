@@ -230,6 +230,8 @@ export default function BriefingClient() {
                   <BriefingLinkedTasks
                     weekNumber={weekToView}
                     familyId={familyId}
+                    stage={stage}
+                    babyId={activeBaby?.id}
                   />
                 </Card3DTilt>
               </Reveal>
@@ -238,12 +240,15 @@ export default function BriefingClient() {
             {/* Field Notes — real dad perspective interstitial */}
             {displayBriefing.field_notes && (
               <Reveal delay={320}>
-                <div className="rounded-xl border-l-4 border-copper bg-copper/[0.04] p-5 md:p-6">
+                <div className="rounded-xl border-l-4 border-copper bg-copper/[0.03] p-5 md:p-6">
                   <div className="flex items-start gap-3">
                     <span className="text-lg mt-0.5 shrink-0">📝</span>
                     <div>
                       <h3 className="font-ui text-xs font-semibold uppercase tracking-wider text-copper mb-2">From the Trenches</h3>
-                      <p className="font-body text-[15px] text-[--cream] leading-relaxed italic whitespace-pre-line">{displayBriefing.field_notes}</p>
+                      <div className="relative">
+                        <span className="text-6xl font-display text-copper/20 leading-none select-none absolute -left-1 -top-4">&ldquo;</span>
+                        <p className="font-body text-[15px] text-[--cream] leading-relaxed italic whitespace-pre-line pl-6">{displayBriefing.field_notes}</p>
+                      </div>
                     </div>
                   </div>
                 </div>

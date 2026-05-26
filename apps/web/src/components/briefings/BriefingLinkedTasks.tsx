@@ -13,39 +13,54 @@ const supabase = createClient()
 interface BriefingLinkedTasksProps {
   weekNumber: number
   familyId: string
+  stage?: string
+  babyId?: string
 }
 
-function useBriefingWeekTasks(familyId: string, weekNumber: number) {
+function useBriefingWeekTasks(familyId: string, weekNumber: number, stage?: string, babyId?: string) {
   return useQuery<FamilyTask[]>({
-    queryKey: ['briefing-tasks', familyId, weekNumber],
+    queryKey: ['briefing-tasks', familyId, weekNumber, stage, babyId],
     queryFn: async () => {
       // Use select('*') to avoid Supabase type inference issues with
       // extended columns (like week_due) that may not be in generated types
-      const { data, error } = await supabase
+      let query = supabase
         .from('family_tasks')
         .select('*')
         .eq('family_id', familyId)
         .order('created_at', { ascending: true })
 
+      if (babyId) {
+        query = query.eq('baby_id', babyId)
+      }
+
+      const { data, error } = await query
+
       if (error) throw error
 
       const allTasks = (data || []) as FamilyTask[]
+      const isPostBirth = stage === 'post-birth'
 
-      // Filter client-side by week_due
-      return allTasks.filter(task => task.week_due === weekNumber)
+      // Filter client-side by week_due and stage-appropriate template prefix
+      return allTasks.filter(task => {
+        if (task.week_due !== weekNumber) return false
+        const templateId = task.task_template_id || ''
+        if (isPostBirth && templateId.startsWith('PREG-')) return false
+        if (!isPostBirth && templateId.startsWith('POST-')) return false
+        return true
+      })
     },
     enabled: !!familyId && !!weekNumber,
     staleTime: 1000 * 30, // 30 seconds
   })
 }
 
-export function BriefingLinkedTasks({ weekNumber, familyId }: BriefingLinkedTasksProps) {
+export function BriefingLinkedTasks({ weekNumber, familyId, stage, babyId }: BriefingLinkedTasksProps) {
   const queryClient = useQueryClient()
-  const { data: tasks, isLoading } = useBriefingWeekTasks(familyId, weekNumber)
+  const { data: tasks, isLoading } = useBriefingWeekTasks(familyId, weekNumber, stage, babyId)
   const completeTask = useCompleteDashboardTask()
   const uncompleteTask = useUncompleteDashboardTask()
 
-  const queryKey = ['briefing-tasks', familyId, weekNumber]
+  const queryKey = ['briefing-tasks', familyId, weekNumber, stage, babyId]
 
   const handleToggle = useCallback((taskId: string, isCompleted: boolean) => {
     // Guard against double-clicks while a mutation is in-flight

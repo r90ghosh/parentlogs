@@ -2,7 +2,7 @@
 
 import { BriefingTemplate } from '@tdc/shared/types'
 import { cn } from '@/lib/utils'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Clock } from 'lucide-react'
 
 interface BriefingHeroProps {
   briefing: BriefingTemplate
@@ -33,6 +33,20 @@ export function BriefingHero({
   }
 
   const visibleWeeks = getVisibleWeeks()
+
+  // Estimate read time from briefing content
+  const getReadTimeMinutes = () => {
+    const texts = [
+      briefing.baby_update,
+      briefing.mom_update,
+      ...(briefing.dad_focus || []),
+      briefing.field_notes || '',
+      briefing.relationship_tip,
+      briefing.coming_up,
+    ]
+    const totalChars = texts.reduce((sum, t) => sum + (t?.length || 0), 0)
+    return Math.max(1, Math.ceil(totalChars / 1000))
+  }
 
   // Get stage label
   const getStageLabel = () => {
@@ -100,10 +114,16 @@ export function BriefingHero({
 
       {/* Hero Content */}
       <div className="relative z-10">
-        {/* Stage Badge */}
-        <div className="inline-flex items-center gap-2 bg-copper-dim text-copper px-3 py-1 rounded-full text-xs font-semibold font-ui mb-2">
-          <span>{isPregnancy ? '🤰' : '👶'}</span>
-          {getStageLabel()} &bull; Week {viewingWeek}
+        {/* Stage Badge + Read Time */}
+        <div className="flex items-center gap-2 mb-2">
+          <div className="inline-flex items-center gap-2 bg-copper-dim text-copper px-3 py-1 rounded-full text-xs font-semibold font-ui">
+            <span>{isPregnancy ? '🤰' : '👶'}</span>
+            {getStageLabel()} &bull; Week {viewingWeek}
+          </div>
+          <div className="inline-flex items-center gap-1.5 bg-[--card] text-[--muted] px-2.5 py-1 rounded-full text-xs font-ui">
+            <Clock className="h-3 w-3" />
+            ~{getReadTimeMinutes()} min read
+          </div>
         </div>
 
         {/* Title */}
