@@ -50,6 +50,7 @@ interface TasksPageClientProps {
   daysToGo: number
   initialView?: 'list' | 'calendar'
   isPremium?: boolean
+  stage: string
 }
 
 export function TasksPageClient({
@@ -58,6 +59,7 @@ export function TasksPageClient({
   daysToGo,
   initialView = 'list',
   isPremium = false,
+  stage,
 }: TasksPageClientProps) {
   const router = useRouter()
 
@@ -161,8 +163,7 @@ export function TasksPageClient({
 
   // Task count by week for the week pills timeline bar
   // Filters by family stage to avoid mixing PREG and POST tasks at the same week number
-  const familyStage = (family as { stage?: string })?.stage ?? ''
-  const isPostBirth = familyStage === 'post-birth'
+  const isPostBirth = stage === 'post-birth'
 
   const taskCountByWeek = useMemo(() => {
     const counts: Record<number, number> = {}
@@ -226,7 +227,14 @@ export function TasksPageClient({
       }
     }
 
-    let filtered = baseList.filter(t => t.status === 'pending' && !t.is_backlog)
+    let filtered = baseList.filter(t => {
+      if (t.status !== 'pending' || t.is_backlog) return false
+      // Filter out tasks from the wrong stage
+      const templateId = t.task_template_id || ''
+      if (isPostBirth && templateId.startsWith('PREG-')) return false
+      if (!isPostBirth && templateId.startsWith('POST-')) return false
+      return true
+    })
 
     // Apply 30-day free window filter for non-premium users
     if (freeWindowCutoff !== null) {
@@ -287,7 +295,7 @@ export function TasksPageClient({
       filteredTasks: filtered,
       phaseTasks: [],
     }
-  }, [tasks, allTasks, activeTab, activeCategory, searchQuery, currentWeek, selectedWeek, freeWindowCutoff, getEffectiveWeek, isPremium])
+  }, [tasks, allTasks, activeTab, activeCategory, searchQuery, currentWeek, selectedWeek, freeWindowCutoff, getEffectiveWeek, isPremium, isPostBirth])
 
   // Calculate triage progress
   const triageProgress = useMemo(() => {
@@ -335,7 +343,7 @@ export function TasksPageClient({
       {/* Header with view toggle */}
       <Reveal delay={0}>
         <div className="flex items-center justify-between mb-4">
-          <TasksHeader currentWeek={currentWeek} daysToGo={daysToGo} />
+          <TasksHeader currentWeek={currentWeek} daysToGo={daysToGo} stage={stage} />
           <div className="flex items-center gap-1 bg-[--surface] border border-[--border] rounded-xl p-1">
             <button
               onClick={() => handleViewChange('list')}
@@ -382,6 +390,7 @@ export function TasksPageClient({
                   selectedWeek={selectedWeek}
                   onWeekClick={setSelectedWeek}
                   taskCountByWeek={taskCountByWeek}
+                  stage={stage}
                 />
               </div>
             </Reveal>

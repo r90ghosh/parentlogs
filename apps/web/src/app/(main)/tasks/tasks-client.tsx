@@ -32,6 +32,9 @@ export default function TasksClient() {
 
   const isPremium = profile?.subscription_tier === 'premium' || profile?.subscription_tier === 'lifetime'
 
+  // Derive stage: prefer active baby's stage, fall back to family
+  const stage = activeBaby?.stage ?? family?.stage ?? 'pregnancy'
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[--bg]">
@@ -49,6 +52,7 @@ export default function TasksClient() {
           daysToGo={daysToGo}
           initialView={view}
           isPremium={isPremium}
+          stage={stage}
         />
       </div>
     </div>

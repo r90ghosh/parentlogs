@@ -11,6 +11,7 @@ interface TaskTimelineBarProps {
   onWeekClick: (week: number | null) => void
   taskCountByWeek: Record<number, number>
   maxWeek?: number
+  stage?: string
 }
 
 const PHASES = [
@@ -32,7 +33,9 @@ export function TaskTimelineBar({
   onWeekClick,
   taskCountByWeek,
   maxWeek = 104,
+  stage,
 }: TaskTimelineBarProps) {
+  const isPostBirth = stage === 'post-birth'
   const shouldReduceMotion = useReducedMotion()
   const [viewStart, setViewStart] = useState(() => Math.max(1, currentWeek - Math.floor(VISIBLE_COUNT / 2)))
 
@@ -49,8 +52,9 @@ export function TaskTimelineBar({
   const canGoPrev = visibleWeeks[0] > 1
   const canGoNext = visibleWeeks[visibleWeeks.length - 1] < maxWeek
 
-  const activePhaseIndex = getPhaseIndex(selectedWeek ?? currentWeek)
-  const viewPhaseIndex = getPhaseIndex(visibleWeeks[Math.floor(visibleWeeks.length / 2)])
+  // Force Post-birth phase (index 3) when stage is post-birth, regardless of currentWeek value
+  const activePhaseIndex = isPostBirth ? 3 : getPhaseIndex(selectedWeek ?? currentWeek)
+  const viewPhaseIndex = isPostBirth ? 3 : getPhaseIndex(visibleWeeks[Math.floor(visibleWeeks.length / 2)])
 
   // Click phase to jump view to start of that phase
   const handlePhaseClick = useCallback((phaseIndex: number) => {
@@ -75,13 +79,19 @@ export function TaskTimelineBar({
   // Compute progress ratio through phases (0 to PHASES.length - 1)
   const progressRatio = useMemo(() => {
     const week = selectedWeek ?? currentWeek
+    if (isPostBirth) {
+      // Post-birth: place progress at the Post-birth phase (index 3)
+      // Use currentWeek as weeks since birth to show some progression within the phase
+      const postBirthPhaseLength = Math.min(PHASES[3].end, maxWeek) - PHASES[3].start + 1
+      return 3 + Math.min(week / postBirthPhaseLength, 0.99)
+    }
     const idx = getPhaseIndex(week)
     if (idx < 0) return 0
     const phase = PHASES[idx]
     const phaseLength = Math.min(phase.end, maxWeek) - phase.start + 1
     const weekInPhase = week - phase.start
     return idx + weekInPhase / phaseLength
-  }, [selectedWeek, currentWeek, maxWeek])
+  }, [selectedWeek, currentWeek, maxWeek, isPostBirth])
 
   return (
     <div className="space-y-3">
