@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { isPast, isToday, differenceInDays, format } from 'date-fns'
 import { PriorityTask, DashboardTaskStats, UpcomingEvent, PartnerActivity, WeeklyBriefing, Achievement } from '@tdc/shared/types/dashboard'
+import type { FamilyStage } from '@tdc/shared/types'
 import { getAchievement } from '@tdc/shared/utils'
 import { taskService, briefingService, familyService } from '@/lib/services'
 
@@ -58,9 +59,9 @@ function mapCategory(category: string): PriorityTask['category'] {
   return categoryMap[category?.toLowerCase()] || 'planning'
 }
 
-export function useDashboardData(familyId: string | undefined, currentWeek: number, babyId?: string) {
+export function useDashboardData(familyId: string | undefined, currentWeek: number, babyId?: string, stage?: FamilyStage) {
   return useQuery<DashboardQueryResult>({
-    queryKey: ['dashboard', familyId, currentWeek, babyId],
+    queryKey: ['dashboard', familyId, currentWeek, babyId, stage],
     queryFn: async () => {
       if (!familyId) {
         return {
@@ -82,7 +83,7 @@ export function useDashboardData(familyId: string | undefined, currentWeek: numb
       ] = await Promise.all([
         taskService.getDashboardPriorityTasks(familyId, babyId, 5),
         taskService.getDashboardTaskStats(familyId, babyId),
-        briefingService.getBriefingTeaser('pregnancy', currentWeek),
+        briefingService.getBriefingTeaser(stage || 'pregnancy', currentWeek),
         familyService.getPartnerActivity(familyId),
       ])
 
@@ -148,7 +149,9 @@ export function useDashboardData(familyId: string | undefined, currentWeek: numb
           id: task.id,
           title: task.title,
           category: mapCategory(task.category || 'planning'),
-          timeEstimate: '~15 min', // Default estimate
+          timeEstimate: task.time_estimate_minutes
+            ? `~${task.time_estimate_minutes} min`
+            : null,
           dueLabel: getDueLabel(task.due_date, currentWeek),
           isUrgent: isDueToday || isOverdue,
           isOverdue,

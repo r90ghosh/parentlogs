@@ -11,18 +11,23 @@ export function ChecklistProgressCard() {
   const { data: checklists, isLoading } = useChecklists()
 
   if (isLoading) {
-    return <Skeleton className="h-28 w-full rounded-[20px]" />
+    return <Skeleton className="h-36 w-full rounded-[20px]" />
   }
 
-  // Show the first active checklist with partial progress
-  const activeChecklists = (checklists || []).filter(
-    c => c.progress.total > 0 && c.progress.completed < c.progress.total
-  )
-
-  const featured = activeChecklists[0]
-  const totalCompleted = (checklists || []).reduce((sum, c) => sum + c.progress.completed, 0)
-  const totalItems = (checklists || []).reduce((sum, c) => sum + c.progress.total, 0)
+  const allChecklists = checklists || []
+  const totalCompleted = allChecklists.reduce((sum, c) => sum + c.progress.completed, 0)
+  const totalItems = allChecklists.reduce((sum, c) => sum + c.progress.total, 0)
   const overallPercent = totalItems > 0 ? Math.round((totalCompleted / totalItems) * 100) : 0
+
+  // Show up to 2 checklists, preferring ones with partial progress
+  const withProgress = allChecklists.filter(
+    c => c.progress.completed > 0 && c.progress.completed < c.progress.total
+  )
+  const notStarted = allChecklists.filter(
+    c => c.progress.completed === 0 && c.progress.total > 0
+  )
+  const display = [...withProgress, ...notStarted].slice(0, 2)
+  const remaining = allChecklists.length - display.length
 
   return (
     <div
@@ -33,7 +38,7 @@ export function ChecklistProgressCard() {
         'shadow-card'
       )}
     >
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <ListChecks className="h-4 w-4 text-copper" />
           <span className="text-sm font-semibold font-ui text-[--cream]">Checklists</span>
@@ -46,41 +51,50 @@ export function ChecklistProgressCard() {
         </Link>
       </div>
 
-      {featured ? (
-        <>
-          <div className="text-xs font-body text-[--muted] mb-2 truncate">{featured.name}</div>
-          <div className="relative h-2 bg-[--dim] rounded-full overflow-hidden mb-2">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${featured.progress.percentage}%` }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="absolute inset-y-0 left-0 bg-copper rounded-full"
-            />
-          </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-body text-[--muted]">
-              {featured.progress.completed} of {featured.progress.total} items
-            </span>
-            <span className="text-copper font-medium font-ui">{featured.progress.percentage}%</span>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="relative h-2 bg-[--dim] rounded-full overflow-hidden mb-2">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${overallPercent}%` }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-              className="absolute inset-y-0 left-0 bg-copper rounded-full"
-            />
-          </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-body text-[--muted]">
-              {totalCompleted} of {totalItems} items complete
-            </span>
-            <span className="text-copper font-medium font-ui">{overallPercent}%</span>
-          </div>
-        </>
+      {/* Overall summary */}
+      <div className="flex items-center justify-between text-xs mb-3">
+        <span className="font-body text-[--muted]">
+          {totalCompleted} of {totalItems} items across {allChecklists.length} checklists
+        </span>
+        <span className="text-copper font-medium font-ui">{overallPercent}%</span>
+      </div>
+
+      {/* Individual checklists */}
+      {display.length > 0 && (
+        <div className="space-y-3">
+          {display.map((checklist, index) => (
+            <div key={checklist.checklist_id}>
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-body text-[--cream] truncate mr-2">
+                  {checklist.name}
+                </span>
+                <span className="text-xs text-copper font-medium font-ui shrink-0">
+                  {checklist.progress.percentage}%
+                </span>
+              </div>
+              <div className="relative h-1.5 bg-[--dim] rounded-full overflow-hidden mb-1">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${checklist.progress.percentage}%` }}
+                  transition={{ duration: 0.6, delay: index * 0.15, ease: 'easeOut' }}
+                  className="absolute inset-y-0 left-0 bg-copper rounded-full"
+                />
+              </div>
+              <span className="text-[11px] font-body text-[--muted]">
+                {checklist.progress.completed} of {checklist.progress.total} items
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {remaining > 0 && (
+        <Link
+          href="/checklists"
+          className="block mt-3 text-xs font-ui text-[--muted] hover:text-[--cream] transition-colors"
+        >
+          +{remaining} more {remaining === 1 ? 'checklist' : 'checklists'}
+        </Link>
       )}
     </div>
   )

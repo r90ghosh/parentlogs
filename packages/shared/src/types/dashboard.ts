@@ -25,7 +25,7 @@ export interface PriorityTask {
   id: string
   title: string
   category: 'medical' | 'planning' | 'shopping' | 'financial' | 'partner' | 'self_care'
-  timeEstimate: string        // "10 min", "1 hour"
+  timeEstimate: string | null  // "~10 min", "~1 hour", null if unknown
   dueLabel: string            // "Due today", "This week"
   isUrgent: boolean
   isOverdue: boolean

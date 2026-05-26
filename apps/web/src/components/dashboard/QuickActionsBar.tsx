@@ -11,7 +11,7 @@ interface QuickAction {
 const actions: QuickAction[] = [
   { icon: '📝', label: 'Add Task', href: '/tasks/new', color: 'teal' },
   { icon: '📊', label: 'Log Data', href: '/tracker/log', color: 'purple' },
-  { icon: '📅', label: 'Add Event', href: '/calendar', color: 'blue' },
+  { icon: '📅', label: 'Add Event', href: '/tasks?view=calendar', color: 'blue' },
   { icon: '💰', label: 'Log Expense', href: '/budget', color: 'amber' },
 ]
 

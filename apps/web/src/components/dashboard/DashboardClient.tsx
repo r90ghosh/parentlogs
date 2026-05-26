@@ -51,10 +51,10 @@ import Link from 'next/link'
 const FULL_WIDTH_CARDS = ['partner-activity', 'shift-briefing']
 
 // Left column card IDs
-const LEFT_COLUMN_CARDS = ['briefing-teaser', 'on-your-mind', 'upgrade-prompt', 'invite-partner', 'personalize']
+const LEFT_COLUMN_CARDS = ['briefing-teaser', 'on-your-mind', 'quick-actions', 'upgrade-prompt', 'invite-partner', 'personalize']
 
 // Right column card IDs
-const RIGHT_COLUMN_CARDS = ['tasks-due', 'quick-actions', 'budget-snapshot', 'checklist-progress']
+const RIGHT_COLUMN_CARDS = ['tasks-due', 'budget-snapshot', 'checklist-progress']
 
 export function DashboardClient() {
   const { isVisible: showWelcome, dismiss: dismissWelcome } = useWelcomeAnimation()
@@ -64,10 +64,12 @@ export function DashboardClient() {
   const { data: family } = useFamily()
   const cards = useDashboardCards()
   const currentWeek = activeBaby?.current_week ?? family?.current_week ?? 1
+  const stage = activeBaby?.stage ?? family?.stage
   const { data: dashboardData, isLoading } = useDashboardData(
     familyId,
     currentWeek,
-    activeBaby?.id
+    activeBaby?.id,
+    stage
   )
   const { data: subscription } = useSubscription()
   const { openPortal, isOpeningPortal } = useCheckout()
@@ -157,7 +159,7 @@ export function DashboardClient() {
       )}
 
       {/* Two-column desktop layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-4 sm:gap-6">
         {/* Left column */}
         <div className="space-y-6">
           {isLoading && leftCards.length === 0 ? (

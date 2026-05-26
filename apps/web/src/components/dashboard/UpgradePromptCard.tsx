@@ -29,8 +29,8 @@ export function UpgradePromptCard() {
     currentWeek
   )
 
-  const [usageDismissed, setUsageDismissed] = useState(true)
-  const [briefingDismissed, setBriefingDismissed] = useState(true)
+  const [usageDismissed, setUsageDismissed] = useState<boolean | null>(null)
+  const [briefingDismissed, setBriefingDismissed] = useState<boolean | null>(null)
 
   const isPremium = profile.subscription_tier === 'premium' || profile.subscription_tier === 'lifetime'
 
@@ -63,8 +63,8 @@ export function UpgradePromptCard() {
     setBriefingDismissed(true)
   }
 
-  // Don't show anything for premium users or during invisible phase
-  if (isPremium || phase === 'invisible') return null
+  // Don't show anything until we've checked localStorage, for premium users, or during invisible phase
+  if (isPremium || phase === 'invisible' || usageDismissed === null || briefingDismissed === null) return null
 
   const tasksCompleted = dashboardData?.taskStats?.completed || 0
 

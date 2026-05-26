@@ -239,12 +239,17 @@ export function createTaskService(supabase: AppSupabaseClient) {
     /**
      * Get top priority pending tasks for dashboard display
      */
-    async getDashboardPriorityTasks(familyId: string, babyId?: string, limit = 5): Promise<Pick<FamilyTask, 'id' | 'title' | 'category' | 'due_date' | 'priority'>[]> {
+    async getDashboardPriorityTasks(familyId: string, babyId?: string, limit = 5): Promise<Pick<FamilyTask, 'id' | 'title' | 'category' | 'due_date' | 'priority' | 'time_estimate_minutes'>[]> {
+      const sixtyDaysAgo = new Date()
+      sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60)
+      const cutoffDate = sixtyDaysAgo.toISOString().split('T')[0]
+
       let query = supabase
         .from('family_tasks')
-        .select('id, title, category, due_date, priority')
+        .select('id, title, category, due_date, priority, time_estimate_minutes')
         .eq('family_id', familyId)
         .eq('status', 'pending')
+        .gte('due_date', cutoffDate)
       if (babyId) query = query.eq('baby_id', babyId)
       query = query
         .order('priority', { ascending: false })
@@ -253,17 +258,22 @@ export function createTaskService(supabase: AppSupabaseClient) {
 
       const { data, error } = await query
       if (error) throw error
-      return data as Pick<FamilyTask, 'id' | 'title' | 'category' | 'due_date' | 'priority'>[]
+      return data as Pick<FamilyTask, 'id' | 'title' | 'category' | 'due_date' | 'priority' | 'time_estimate_minutes'>[]
     },
 
     /**
      * Get minimal task data for computing dashboard stats
      */
     async getDashboardTaskStats(familyId: string, babyId?: string): Promise<Pick<FamilyTask, 'id' | 'status' | 'due_date'>[]> {
+      const sixtyDaysAgo = new Date()
+      sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60)
+      const cutoffDate = sixtyDaysAgo.toISOString().split('T')[0]
+
       let query = supabase
         .from('family_tasks')
         .select('id, status, due_date')
         .eq('family_id', familyId)
+        .gte('due_date', cutoffDate)
       if (babyId) query = query.eq('baby_id', babyId)
 
       const { data, error } = await query
