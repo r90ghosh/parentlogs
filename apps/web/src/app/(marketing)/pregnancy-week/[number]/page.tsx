@@ -103,13 +103,13 @@ export default async function PregnancyWeekPage({ params }: PageProps) {
   const relatedChecklists: { id: string; name: string; description: string }[] =
     trimester === 'first-trimester'
       ? [
-          { id: 'CL-26', name: 'Choosing a Pediatrician', description: 'Start researching early so you have time to interview candidates.' },
-          { id: 'CL-16', name: 'Birth Plan Decisions', description: 'Key choices to discuss with your partner and provider.' },
+          { id: 'CL-04', name: 'First Pediatrician Visit', description: 'Start researching early so you have time to interview candidates.' },
+          { id: 'CL-15', name: 'Emergency Info Sheet', description: 'Key contacts and info to have ready before baby arrives.' },
         ]
       : trimester === 'second-trimester'
       ? [
-          { id: 'CL-17', name: 'Nursery Setup', description: 'Everything you need to get the nursery ready.' },
-          { id: 'CL-18', name: 'Car Seat Installation', description: 'Get it installed and inspected before the third trimester.' },
+          { id: 'CL-12', name: 'Babyproofing Home', description: 'Get your home ready while you still have the energy.' },
+          { id: 'CL-03', name: 'First Car Ride Home', description: 'Everything you need prepped for bringing baby home safe.' },
         ]
       : [
           { id: 'CL-01', name: 'Hospital Bag — Mom', description: 'Pack early so you are not scrambling at 3am.' },
