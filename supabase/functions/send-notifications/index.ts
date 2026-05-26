@@ -1,14 +1,27 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import webpush from "https://esm.sh/web-push@3.6.6";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const vapidPublicKey = Deno.env.get("VAPID_PUBLIC_KEY")!;
-const vapidPrivateKey = Deno.env.get("VAPID_PRIVATE_KEY")!;
-const vapidEmail = Deno.env.get("VAPID_EMAIL") || "mailto:info@thedadcenter.com";
 
-webpush.setVapidDetails(vapidEmail, vapidPublicKey, vapidPrivateKey);
+// deno-lint-ignore no-explicit-any
+let webpush: any = null;
+let webPushEnabled = false;
+try {
+  const mod = await import("https://esm.sh/web-push@3.6.6");
+  webpush = mod.default;
+  const vapidPublicKey = Deno.env.get("VAPID_PUBLIC_KEY");
+  const vapidPrivateKey = Deno.env.get("VAPID_PRIVATE_KEY");
+  if (vapidPublicKey && vapidPrivateKey) {
+    const vapidEmail = Deno.env.get("VAPID_EMAIL") || "mailto:info@thedadcenter.com";
+    webpush.setVapidDetails(vapidEmail, vapidPublicKey, vapidPrivateKey);
+    webPushEnabled = true;
+  } else {
+    console.warn("VAPID keys not set — web push disabled, Expo push still active");
+  }
+} catch (e) {
+  console.warn("web-push module unavailable — web push disabled:", e);
+}
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -92,7 +105,12 @@ async function logDelivery(
 
 Deno.serve(async (req: Request) => {
   const authHeader = req.headers.get("Authorization");
-  if (!supabaseServiceKey || authHeader !== `Bearer ${supabaseServiceKey}`) {
+  let authorized = supabaseServiceKey && authHeader === `Bearer ${supabaseServiceKey}`;
+  if (!authorized) {
+    const { data: cronSecret } = await supabase.rpc("get_cron_webhook_secret");
+    authorized = !!cronSecret && authHeader === `Bearer ${cronSecret}`;
+  }
+  if (!authorized) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { "Content-Type": "application/json" },
@@ -1055,36 +1073,38 @@ async function sendPushNotification(
     }
   }
 
-  // Web push via VAPID
-  const { data: subscription } = await supabase
-    .from("push_subscriptions")
-    .select("endpoint, p256dh, auth")
-    .eq("user_id", userId)
-    .single();
+  // Web push via VAPID (skip if not configured)
+  if (webPushEnabled) {
+    const { data: subscription } = await supabase
+      .from("push_subscriptions")
+      .select("endpoint, p256dh, auth")
+      .eq("user_id", userId)
+      .single();
 
-  if (subscription) {
-    const pushSubscription = {
-      endpoint: subscription.endpoint,
-      keys: {
-        p256dh: subscription.p256dh,
-        auth: subscription.auth,
-      },
-    };
+    if (subscription) {
+      const pushSubscription = {
+        endpoint: subscription.endpoint,
+        keys: {
+          p256dh: subscription.p256dh,
+          auth: subscription.auth,
+        },
+      };
 
-    try {
-      await webpush.sendNotification(pushSubscription, JSON.stringify(payload));
-      await logDelivery(userId, "web_push", "sent");
-    } catch (err: unknown) {
-      console.error(`Failed to send web push to user ${userId}:`, err);
-      const statusCode = err instanceof Error && "statusCode" in err
-        ? (err as Record<string, unknown>).statusCode
-        : undefined;
-      const message = err instanceof Error ? err.message : String(err);
-      if (statusCode === 404 || statusCode === 410) {
-        await supabase.from("push_subscriptions").delete().eq("user_id", userId);
-        await logDelivery(userId, "web_push", "invalid_token", `HTTP ${statusCode}`);
-      } else {
-        await logDelivery(userId, "web_push", "failed", message);
+      try {
+        await webpush.sendNotification(pushSubscription, JSON.stringify(payload));
+        await logDelivery(userId, "web_push", "sent");
+      } catch (err: unknown) {
+        console.error(`Failed to send web push to user ${userId}:`, err);
+        const statusCode = err instanceof Error && "statusCode" in err
+          ? (err as Record<string, unknown>).statusCode
+          : undefined;
+        const message = err instanceof Error ? err.message : String(err);
+        if (statusCode === 404 || statusCode === 410) {
+          await supabase.from("push_subscriptions").delete().eq("user_id", userId);
+          await logDelivery(userId, "web_push", "invalid_token", `HTTP ${statusCode}`);
+        } else {
+          await logDelivery(userId, "web_push", "failed", message);
+        }
       }
     }
   }
