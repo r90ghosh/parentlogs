@@ -12,9 +12,12 @@ export function TasksDueCard() {
   const { profile, activeBaby } = useUser()
   const { data: family } = useFamily()
   const currentWeek = activeBaby?.current_week ?? family?.current_week ?? 1
+  const stage = activeBaby?.stage ?? family?.stage
   const { data: dashboardData, isLoading } = useDashboardData(
     profile.family_id,
-    currentWeek
+    currentWeek,
+    activeBaby?.id,
+    stage
   )
   const completeTask = useCompleteDashboardTask()
   const snoozeTask = useSnoozeDashboardTask()

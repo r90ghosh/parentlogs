@@ -24,9 +24,12 @@ export function UpgradePromptCard() {
   const { profile, activeBaby } = useUser()
   const { data: family } = useFamily()
   const currentWeek = activeBaby?.current_week ?? family?.current_week ?? 1
+  const stage = activeBaby?.stage ?? family?.stage
   const { data: dashboardData } = useDashboardData(
     profile.family_id,
-    currentWeek
+    currentWeek,
+    activeBaby?.id,
+    stage
   )
 
   const [usageDismissed, setUsageDismissed] = useState<boolean | null>(null)
