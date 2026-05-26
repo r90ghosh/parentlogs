@@ -3,6 +3,13 @@
   command = "pnpm turbo run build --filter=@tdc/web"
   publish = "apps/web/.next"
 
+# Canonical host — redirect www to non-www (301)
+[[redirects]]
+  from = "https://www.thedadcenter.com/*"
+  to = "https://thedadcenter.com/:splat"
+  status = 301
+  force = true
+
 # Note: SECRETS_SCAN_OMIT_KEYS must be set in Netlify UI (Site settings > Environment variables)
 # because the secrets scanner runs before build-time environment variables are loaded.
 # Set this in Netlify UI:

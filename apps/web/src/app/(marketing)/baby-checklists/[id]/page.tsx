@@ -33,6 +33,11 @@ export async function generateMetadata({ params }: PageProps) {
       description: checklist.description,
       url: `/baby-checklists/${id}`,
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${checklist.name} Checklist | The Dad Center`,
+      description: checklist.description,
+    },
   }
 }
 

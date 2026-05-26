@@ -17,6 +17,12 @@ export const metadata: Metadata = {
     description: 'Plan your baby expenses with our comprehensive budget guide. Real price ranges from pregnancy through 12+ months.',
     url: '/budget-guide',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Baby Budget Guide — What You\'ll Actually Spend | The Dad Center',
+    description:
+      'A comprehensive, dad-friendly baby budget guide covering every expense from pregnancy through toddlerhood. See real price ranges and plan ahead.',
+  },
 }
 
 export default async function PublicBudgetPage() {

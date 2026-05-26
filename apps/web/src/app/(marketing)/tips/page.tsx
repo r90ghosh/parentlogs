@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CheckSquare, Baby, PenLine } from 'lucide-react'
 import { dadTips } from '@/data/dadTips'
 import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
 
@@ -197,6 +197,54 @@ export default function DadTipsPage() {
                 </div>
               </Link>
             ))}
+          </div>
+
+          {/* Related Resources */}
+          <div className="pb-8">
+            <h2 className="font-display text-xl font-bold text-[--white] mb-4">
+              More Resources for Dads
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Link
+                href="/baby-checklists"
+                className="group flex items-center gap-3 p-4 rounded-xl bg-[--surface] border border-[--border] hover:border-[--border-hover] transition-colors"
+              >
+                <CheckSquare className="h-5 w-5 text-sage shrink-0" />
+                <div className="min-w-0">
+                  <div className="font-display text-sm font-semibold text-[--white] group-hover:text-copper transition-colors">
+                    Baby Checklists
+                  </div>
+                  <p className="font-body text-xs text-[--muted]">15 curated preparation lists</p>
+                </div>
+                <ArrowRight className="h-4 w-4 text-[--dim] group-hover:text-copper transition-colors shrink-0 ml-auto" />
+              </Link>
+              <Link
+                href="/pregnancy-week"
+                className="group flex items-center gap-3 p-4 rounded-xl bg-[--surface] border border-[--border] hover:border-[--border-hover] transition-colors"
+              >
+                <Baby className="h-5 w-5 text-copper shrink-0" />
+                <div className="min-w-0">
+                  <div className="font-display text-sm font-semibold text-[--white] group-hover:text-copper transition-colors">
+                    Pregnancy Week Guide
+                  </div>
+                  <p className="font-body text-xs text-[--muted]">Weeks 4-40 walkthrough for dads</p>
+                </div>
+                <ArrowRight className="h-4 w-4 text-[--dim] group-hover:text-copper transition-colors shrink-0 ml-auto" />
+              </Link>
+              <Link
+                href="/blog"
+                className="group flex items-center gap-3 p-4 rounded-xl bg-[--surface] border border-[--border] hover:border-[--border-hover] transition-colors sm:col-span-2"
+              >
+                <PenLine className="h-5 w-5 text-copper shrink-0" />
+                <div className="min-w-0">
+                  <div className="font-display text-sm font-semibold text-[--white] group-hover:text-copper transition-colors">
+                    Blog — Guides, Tips & Real Numbers
+                  </div>
+                  <p className="font-body text-xs text-[--muted]">In-depth articles for expecting and new dads</p>
+                </div>
+                <ArrowRight className="h-4 w-4 text-[--dim] group-hover:text-copper transition-colors shrink-0 ml-auto" />
+              </Link>
+            </div>
           </div>
 
           {/* Sign up CTA */}

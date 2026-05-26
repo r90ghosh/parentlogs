@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight, Lock, Heart, Baby, Users, Target } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Lock, Heart, Baby, Users, Target, PenLine, CheckSquare, Lightbulb } from 'lucide-react'
 import {
   getPregnancyWeekBriefing,
   getPregnancyWeeksForStaticParams,
 } from '@/lib/pregnancy-week'
+import { getPublishedPosts } from '@/lib/blog'
 import { getBabySize, getTrimesterFromWeek, getTrimesterLabel } from '@tdc/shared/utils'
 import { Button } from '@/components/ui/button'
 import { EmailCapture } from '@/components/marketing/EmailCapture'
@@ -84,10 +85,48 @@ export default async function PregnancyWeekPage({ params }: PageProps) {
   const visibleDadFocus = briefing.dadFocus.slice(0, 2)
   const hiddenDadFocusCount = Math.max(0, briefing.dadFocus.length - visibleDadFocus.length)
 
-  const [prev, next] = await Promise.all([
+  // Map trimester to blog stage tag for related posts
+  const trimesterToStage: Record<string, string> = {
+    'first-trimester': 'first-trimester',
+    'second-trimester': 'second-trimester',
+    'third-trimester': 'third-trimester',
+  }
+  const blogStageTag = trimesterToStage[trimester] || 'first-trimester'
+
+  const [prev, next, relatedPosts] = await Promise.all([
     week > 1 ? getPregnancyWeekBriefing(week - 1) : Promise.resolve(null),
     week < 40 ? getPregnancyWeekBriefing(week + 1) : Promise.resolve(null),
+    getPublishedPosts(undefined, blogStageTag).then((posts) => posts.slice(0, 2)),
   ])
+
+  // Curate relevant checklists and tips based on trimester
+  const relatedChecklists: { id: string; name: string; description: string }[] =
+    trimester === 'first-trimester'
+      ? [
+          { id: 'CL-26', name: 'Choosing a Pediatrician', description: 'Start researching early so you have time to interview candidates.' },
+          { id: 'CL-16', name: 'Birth Plan Decisions', description: 'Key choices to discuss with your partner and provider.' },
+        ]
+      : trimester === 'second-trimester'
+      ? [
+          { id: 'CL-17', name: 'Nursery Setup', description: 'Everything you need to get the nursery ready.' },
+          { id: 'CL-18', name: 'Car Seat Installation', description: 'Get it installed and inspected before the third trimester.' },
+        ]
+      : [
+          { id: 'CL-01', name: 'Hospital Bag — Mom', description: 'Pack early so you are not scrambling at 3am.' },
+          { id: 'CL-02', name: 'Hospital Bag — Dad', description: 'Your bag matters too. Here is what to bring.' },
+        ]
+
+  const relatedTips =
+    trimester === 'third-trimester'
+      ? [
+          { id: 'baby-changing', name: 'Baby Changing', description: 'Practice before baby arrives. 5 clear steps.' },
+          { id: 'swaddling', name: 'Swaddling', description: 'Learn the technique now so it is second nature on day one.' },
+        ]
+      : trimester === 'second-trimester'
+      ? [
+          { id: 'car-seat', name: 'Car Seat Installation', description: 'Base installation and harness adjustment for a secure ride.' },
+        ]
+      : []
 
   const publishedDate = briefing.createdAt || new Date().toISOString()
   const wordCount = [
@@ -180,9 +219,12 @@ export default async function PregnancyWeekPage({ params }: PageProps) {
 
           {/* Trimester pill + week badge */}
           <div className="flex flex-wrap items-center gap-3 mb-6">
-            <span className="font-ui px-2.5 py-1 rounded-md text-xs font-medium bg-copper/10 text-copper">
+            <Link
+              href={`/pregnancy-week/${trimester}`}
+              className="font-ui px-2.5 py-1 rounded-md text-xs font-medium bg-copper/10 text-copper hover:bg-copper/20 transition-colors"
+            >
               {trimesterLabel}
-            </span>
+            </Link>
             <span className="font-ui text-sm text-[--dim]">Week {week} of 40</span>
           </div>
 
@@ -306,6 +348,99 @@ export default async function PregnancyWeekPage({ params }: PageProps) {
           <p className="font-body text-xs text-[--dim] italic">
             Source: {briefing.medicalSource}
           </p>
+        )}
+
+        {/* Related Resources */}
+        {(relatedPosts.length > 0 || relatedChecklists.length > 0 || relatedTips.length > 0) && (
+          <section className="pt-8 border-t border-[--border]">
+            <h2 className="font-display text-2xl font-bold text-[--white] mb-6">
+              Related Resources
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Blog posts */}
+              {relatedPosts.map((post) => (
+                <Link
+                  key={post.slug}
+                  href={`/blog/${post.slug}`}
+                  className="group flex gap-3 p-4 rounded-xl bg-[--surface]/50 border border-[--border] hover:border-copper/40 transition-colors"
+                >
+                  <div className="shrink-0 w-9 h-9 rounded-lg bg-copper/10 flex items-center justify-center mt-0.5">
+                    <PenLine className="h-4 w-4 text-copper" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-ui text-[10px] uppercase tracking-wider text-[--dim] mb-1">Blog</div>
+                    <div className="font-display text-sm font-semibold text-[--white] group-hover:text-copper transition-colors line-clamp-2">
+                      {post.title}
+                    </div>
+                    <p className="font-body text-xs text-[--muted] line-clamp-1 mt-1">{post.excerpt}</p>
+                  </div>
+                </Link>
+              ))}
+
+              {/* Checklists */}
+              {relatedChecklists.map((cl) => (
+                <Link
+                  key={cl.id}
+                  href={`/baby-checklists/${cl.id}`}
+                  className="group flex gap-3 p-4 rounded-xl bg-[--surface]/50 border border-[--border] hover:border-copper/40 transition-colors"
+                >
+                  <div className="shrink-0 w-9 h-9 rounded-lg bg-sage/10 flex items-center justify-center mt-0.5">
+                    <CheckSquare className="h-4 w-4 text-sage" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-ui text-[10px] uppercase tracking-wider text-[--dim] mb-1">Checklist</div>
+                    <div className="font-display text-sm font-semibold text-[--white] group-hover:text-copper transition-colors">
+                      {cl.name}
+                    </div>
+                    <p className="font-body text-xs text-[--muted] line-clamp-1 mt-1">{cl.description}</p>
+                  </div>
+                </Link>
+              ))}
+
+              {/* Tips */}
+              {relatedTips.map((tip) => (
+                <Link
+                  key={tip.id}
+                  href={`/tips/${tip.id}`}
+                  className="group flex gap-3 p-4 rounded-xl bg-[--surface]/50 border border-[--border] hover:border-copper/40 transition-colors"
+                >
+                  <div className="shrink-0 w-9 h-9 rounded-lg bg-gold/10 flex items-center justify-center mt-0.5">
+                    <Lightbulb className="h-4 w-4 text-gold" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-ui text-[10px] uppercase tracking-wider text-[--dim] mb-1">Dad Tip</div>
+                    <div className="font-display text-sm font-semibold text-[--white] group-hover:text-copper transition-colors">
+                      {tip.name}
+                    </div>
+                    <p className="font-body text-xs text-[--muted] line-clamp-1 mt-1">{tip.description}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Browse all links */}
+            <div className="flex flex-wrap gap-4 mt-4">
+              <Link
+                href="/blog"
+                className="font-ui text-xs font-medium text-copper hover:text-copper/80 transition-colors"
+              >
+                Browse all guides &rarr;
+              </Link>
+              <Link
+                href="/baby-checklists"
+                className="font-ui text-xs font-medium text-copper hover:text-copper/80 transition-colors"
+              >
+                Browse all checklists &rarr;
+              </Link>
+              <Link
+                href="/tips"
+                className="font-ui text-xs font-medium text-copper hover:text-copper/80 transition-colors"
+              >
+                Browse all tips &rarr;
+              </Link>
+            </div>
+          </section>
         )}
 
         {/* Prev / Next nav */}

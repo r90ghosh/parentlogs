@@ -71,6 +71,9 @@ export const metadata: Metadata = {
     description: 'Expert-curated tasks, weekly briefings, and partner sync for pregnancy through early parenthood. Built by dads, for dads who refuse to wing it.',
     images: ['/og-default.png'],
   },
+  alternates: {
+    canonical: 'https://thedadcenter.com',
+  },
 }
 
 export const viewport: Viewport = {

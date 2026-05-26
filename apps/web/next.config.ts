@@ -3,6 +3,7 @@ import withBundleAnalyzer from '@next/bundle-analyzer'
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  trailingSlash: false,
   reactCompiler: process.env.NODE_ENV === 'production',
   images: {
     remotePatterns: [

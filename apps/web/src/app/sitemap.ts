@@ -7,6 +7,9 @@ export const revalidate = 86400 // regenerate daily
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://thedadcenter.com'
 
+  // Fixed date for pages that rarely change — avoids every build looking like a fresh update
+  const fixedDate = new Date('2026-03-01')
+
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
@@ -46,31 +49,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/upgrade`,
-      lastModified: new Date(),
+      lastModified: fixedDate,
       changeFrequency: 'monthly',
       priority: 0.6,
     },
     {
       url: `${baseUrl}/about`,
-      lastModified: new Date(),
+      lastModified: fixedDate,
       changeFrequency: 'monthly',
-      priority: 0.7,
+      priority: 0.5,
     },
     {
       url: `${baseUrl}/faq`,
-      lastModified: new Date(),
+      lastModified: fixedDate,
       changeFrequency: 'monthly',
-      priority: 0.7,
+      priority: 0.5,
     },
     {
       url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
+      lastModified: fixedDate,
       changeFrequency: 'yearly',
       priority: 0.3,
     },
     {
       url: `${baseUrl}/terms`,
-      lastModified: new Date(),
+      lastModified: fixedDate,
       changeFrequency: 'yearly',
       priority: 0.3,
     },
@@ -79,18 +82,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Checklist detail pages
   const checklistPages: MetadataRoute.Sitemap = Array.from({ length: 15 }, (_, i) => ({
     url: `${baseUrl}/baby-checklists/CL-${String(i + 1).padStart(2, '0')}`,
-    lastModified: new Date(),
+    lastModified: fixedDate,
     changeFrequency: 'monthly' as const,
-    priority: 0.7,
+    priority: 0.6,
   }))
 
   // Tip detail pages
   const tipSlugs = ['baby-changing', 'bottle-prep', 'swaddling', 'bath-time', 'car-seat', 'burping']
   const tipPages: MetadataRoute.Sitemap = tipSlugs.map((slug) => ({
     url: `${baseUrl}/tips/${slug}`,
-    lastModified: new Date(),
+    lastModified: fixedDate,
     changeFrequency: 'monthly' as const,
-    priority: 0.8,
+    priority: 0.6,
   }))
 
   // Pregnancy week guide index + trimester pages
@@ -103,21 +106,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/pregnancy-week/first-trimester`,
-      lastModified: new Date(),
+      lastModified: fixedDate,
       changeFrequency: 'monthly',
-      priority: 0.85,
+      priority: 0.8,
     },
     {
       url: `${baseUrl}/pregnancy-week/second-trimester`,
-      lastModified: new Date(),
+      lastModified: fixedDate,
       changeFrequency: 'monthly',
-      priority: 0.85,
+      priority: 0.8,
     },
     {
       url: `${baseUrl}/pregnancy-week/third-trimester`,
-      lastModified: new Date(),
+      lastModified: fixedDate,
       changeFrequency: 'monthly',
-      priority: 0.85,
+      priority: 0.8,
     },
   ]
 
@@ -147,7 +150,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           url: `${baseUrl}/blog/${post.slug}`,
           lastModified,
           changeFrequency: 'monthly' as const,
-          priority: 0.8,
+          priority: 0.7,
         }
       })
     }
@@ -161,7 +164,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (weekData) {
       pregnancyWeekPages = weekData.map((row) => ({
         url: `${baseUrl}/pregnancy-week/${row.week}`,
-        lastModified: new Date(),
+        lastModified: fixedDate,
         changeFrequency: 'monthly' as const,
         priority: 0.8,
       }))

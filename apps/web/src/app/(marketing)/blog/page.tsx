@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { PenLine, Baby, ArrowRight } from 'lucide-react'
+import { PenLine, Baby, CheckSquare, Lightbulb, ArrowRight } from 'lucide-react'
 import { getPublishedPosts, blogCategories, blogStages, type BlogCategory } from '@/lib/blog'
 import { BlogCard } from '@/components/marketing/BlogCard'
 import { EmailCapture } from '@/components/marketing/EmailCapture'
@@ -107,8 +107,8 @@ export default async function BlogPage({ searchParams }: PageProps) {
         <MedicalDisclaimer />
       </div>
 
-      {/* Pregnancy week guide callout */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      {/* Cross-content callouts */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-3">
         <Link
           href="/pregnancy-week"
           className="group flex items-center gap-4 p-5 rounded-2xl bg-copper/5 border border-copper/20 hover:border-copper/40 hover:bg-copper/10 transition-colors"
@@ -126,6 +126,43 @@ export default async function BlogPage({ searchParams }: PageProps) {
           </div>
           <ArrowRight className="h-5 w-5 text-[--muted] group-hover:text-copper transition-colors shrink-0" />
         </Link>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Link
+            href="/baby-checklists"
+            className="group flex items-center gap-4 p-4 rounded-2xl bg-sage/5 border border-sage/20 hover:border-sage/40 hover:bg-sage/10 transition-colors"
+          >
+            <div className="shrink-0 w-10 h-10 rounded-lg bg-sage/15 flex items-center justify-center">
+              <CheckSquare className="h-5 w-5 text-sage" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="font-display text-base font-semibold text-[--white]">
+                Baby Checklists
+              </h3>
+              <p className="font-body text-xs text-[--muted]">
+                15 curated lists for hospital bag, nursery, first outings, and more.
+              </p>
+            </div>
+            <ArrowRight className="h-4 w-4 text-[--muted] group-hover:text-sage transition-colors shrink-0" />
+          </Link>
+          <Link
+            href="/tips"
+            className="group flex items-center gap-4 p-4 rounded-2xl bg-gold/5 border border-gold/20 hover:border-gold/40 hover:bg-gold/10 transition-colors"
+          >
+            <div className="shrink-0 w-10 h-10 rounded-lg bg-gold/15 flex items-center justify-center">
+              <Lightbulb className="h-5 w-5 text-gold" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="font-display text-base font-semibold text-[--white]">
+                Dad Tips
+              </h3>
+              <p className="font-body text-xs text-[--muted]">
+                Visual step-by-step guides for diaper changes, swaddling, bath time, and more.
+              </p>
+            </div>
+            <ArrowRight className="h-4 w-4 text-[--muted] group-hover:text-gold transition-colors shrink-0" />
+          </Link>
+        </div>
       </div>
 
       {/* Filters */}

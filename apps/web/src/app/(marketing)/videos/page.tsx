@@ -19,6 +19,12 @@ export const metadata: Metadata = {
     description: 'Expert-curated video guides covering pregnancy through toddlerhood. Bite-sized, dad-friendly videos from trusted sources.',
     url: '/videos',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Videos — Curated Parenting Videos | The Dad Center',
+    description:
+      'Expert-curated video guides covering pregnancy through toddlerhood. Bite-sized, dad-friendly videos from trusted sources.',
+  },
 }
 
 interface PageProps {

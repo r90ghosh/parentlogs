@@ -12,6 +12,12 @@ export const metadata: Metadata = {
       'Answers to common questions about The Dad Center — pricing, features, family subscriptions, privacy, and more.',
     url: '/faq',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'FAQ — The Dad Center',
+    description:
+      'Answers to common questions about The Dad Center — pricing, features, family subscriptions, privacy, and more.',
+  },
 }
 
 const faqSchema = {

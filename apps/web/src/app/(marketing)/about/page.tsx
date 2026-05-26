@@ -12,6 +12,12 @@ export const metadata: Metadata = {
       'Built by dads, for dads who refuse to wing it. Learn about our mission to make fatherhood less overwhelming and more intentional.',
     url: '/about',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About — The Dad Center',
+    description:
+      'Built by dads, for dads who refuse to wing it. Learn about our mission to make fatherhood less overwhelming and more intentional.',
+  },
 }
 
 const organizationSchema = {

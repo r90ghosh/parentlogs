@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { CheckSquare, ArrowRight, FileText, Crown } from 'lucide-react'
+import { CheckSquare, ArrowRight, FileText, Crown, Lightbulb, Baby, PenLine } from 'lucide-react'
 import { getPublicChecklists } from '@/lib/public-data'
 import { CHECKLIST_ICONS, CHECKLIST_COLORS } from '@/lib/checklist-constants'
 import { Button } from '@/components/ui/button'
@@ -20,6 +20,12 @@ export const metadata: Metadata = {
     title: 'Baby Preparation Checklists — 15 Essential Lists | The Dad Center',
     description: 'Get organized with 15 curated baby preparation checklists. From hospital bag to first year firsts.',
     url: '/baby-checklists',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Baby Preparation Checklists — 15 Essential Lists | The Dad Center',
+    description:
+      'Get organized with 15 curated baby preparation checklists covering hospital bag, nursery setup, baby essentials, and more. Made for dads.',
   },
 }
 
@@ -159,6 +165,54 @@ export default async function PublicChecklistsPage() {
               </Reveal>
             )
           })}
+        </div>
+      </div>
+
+      {/* Related Resources */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <h2 className="font-display text-2xl font-bold text-[--white] mb-6">
+          More Resources for Dads
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <Link
+            href="/tips"
+            className="group flex items-center gap-3 p-5 rounded-2xl bg-[--surface]/50 border border-[--border] hover:border-copper/40 hover:bg-[--surface] transition-colors"
+          >
+            <Lightbulb className="h-5 w-5 text-gold shrink-0" />
+            <div className="min-w-0">
+              <div className="font-display text-base font-semibold text-[--white] group-hover:text-copper transition-colors">
+                Dad Tips
+              </div>
+              <p className="font-body text-xs text-[--muted]">6 visual step-by-step guides</p>
+            </div>
+            <ArrowRight className="h-4 w-4 text-[--dim] group-hover:text-copper transition-colors shrink-0 ml-auto" />
+          </Link>
+          <Link
+            href="/pregnancy-week"
+            className="group flex items-center gap-3 p-5 rounded-2xl bg-[--surface]/50 border border-[--border] hover:border-copper/40 hover:bg-[--surface] transition-colors"
+          >
+            <Baby className="h-5 w-5 text-copper shrink-0" />
+            <div className="min-w-0">
+              <div className="font-display text-base font-semibold text-[--white] group-hover:text-copper transition-colors">
+                Pregnancy Week Guide
+              </div>
+              <p className="font-body text-xs text-[--muted]">Weeks 4-40 for dads</p>
+            </div>
+            <ArrowRight className="h-4 w-4 text-[--dim] group-hover:text-copper transition-colors shrink-0 ml-auto" />
+          </Link>
+          <Link
+            href="/blog"
+            className="group flex items-center gap-3 p-5 rounded-2xl bg-[--surface]/50 border border-[--border] hover:border-copper/40 hover:bg-[--surface] transition-colors"
+          >
+            <PenLine className="h-5 w-5 text-copper shrink-0" />
+            <div className="min-w-0">
+              <div className="font-display text-base font-semibold text-[--white] group-hover:text-copper transition-colors">
+                Blog
+              </div>
+              <p className="font-body text-xs text-[--muted]">Guides, tips & real numbers</p>
+            </div>
+            <ArrowRight className="h-4 w-4 text-[--dim] group-hover:text-copper transition-colors shrink-0 ml-auto" />
+          </Link>
         </div>
       </div>
 
