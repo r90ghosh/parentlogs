@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useBudgetSummary, useAddToBudget, useMarkAsPurchased, useRemoveBudgetItem, useAddCustomBudgetItem } from '@/hooks/use-budget'
 import { useUser } from '@/components/user-provider'
 import { useFamily } from '@/hooks/use-family'
@@ -92,6 +92,7 @@ export default function BudgetClient() {
   const [showAddCustomDialog, setShowAddCustomDialog] = useState(false)
   const [customItem, setCustomItem] = useState({ item: '', category: 'Other', price: '' })
   const [selectedTimelineCategory, setSelectedTimelineCategory] = useState<BudgetTimelineCategory | null>(null)
+  const [showAll, setShowAll] = useState(false)
   const [selectedBrandView, setSelectedBrandView] = useState<BudgetBrandView>('premium')
   const [selectedItemForDetails, setSelectedItemForDetails] = useState<BudgetTemplate | null>(null)
   const [recurringFilter, setRecurringFilter] = useState<RecurringFilter>('all')
@@ -115,6 +116,21 @@ export default function BudgetClient() {
     return getCurrentBudgetCategory(budgetSource)
   }, [budgetSource])
 
+  // Handle category clicks from the timeline bar:
+  // - null means user toggled off a pill or clicked "Show all" -> show all
+  // - a category means user selected that filter
+  const handleCategoryClick = useCallback((category: BudgetTimelineCategory | null) => {
+    if (category === null) {
+      setSelectedTimelineCategory(null)
+      setShowAll(true)
+    } else {
+      setSelectedTimelineCategory(category)
+      setShowAll(false)
+    }
+  }, [])
+
+  // Active filter: explicit selection > current phase > show all
+  const activeCategory = showAll ? null : (selectedTimelineCategory ?? currentBudgetCategory)
 
   const addedTemplateIds = new Set(
     summary?.familyItems
@@ -182,14 +198,14 @@ export default function BudgetClient() {
     }
   }
 
-  // Compute summary stats filtered by selected timeline category + brand view
+  // Compute summary stats filtered by active timeline category + brand view
   const filteredStats = useMemo(() => {
     if (!summary) return null
 
     const priceOf = (t: BudgetTemplate) => getBrandViewPrice(t, selectedBrandView)
 
     // No filter — use all templates
-    if (!selectedTimelineCategory) {
+    if (!activeCategory) {
       const nonTip = allTemplates.filter(t => t.priority !== 'tip')
       const grandTotal = nonTip.reduce((sum, t) => sum + priceOf(t), 0)
       const recurring = nonTip.filter(t => t.is_recurring && t.recurring_frequency === 'monthly')
@@ -205,9 +221,9 @@ export default function BudgetClient() {
       }
     }
 
-    // Filter templates by selected category
+    // Filter templates by active category
     const filtered = allTemplates.filter(
-      t => getBudgetTimelineCategory(t) === selectedTimelineCategory
+      t => getBudgetTimelineCategory(t) === activeCategory
     )
     const nonTip = filtered.filter(t => t.priority !== 'tip')
 
@@ -236,7 +252,7 @@ export default function BudgetClient() {
       familyItemCount: filteredFamilyItems.length,
       purchasedCount: purchased.length,
     }
-  }, [summary, allTemplates, selectedTimelineCategory, selectedBrandView])
+  }, [summary, allTemplates, activeCategory, selectedBrandView])
 
   // Filter categories for browse tab
   const filteredCategories = useMemo(() => {
@@ -245,9 +261,9 @@ export default function BudgetClient() {
     return summary.categories
       .map(category => {
         let items = category.items
-        // Filter by timeline category
-        if (selectedTimelineCategory) {
-          items = items.filter(item => getBudgetTimelineCategory(item) === selectedTimelineCategory)
+        // Filter by active timeline category
+        if (activeCategory) {
+          items = items.filter(item => getBudgetTimelineCategory(item) === activeCategory)
         }
         // Filter by recurring
         if (recurringFilter === 'one-time') {
@@ -260,7 +276,7 @@ export default function BudgetClient() {
       .filter(category => category.items.length > 0)
       // Filter by selected budget category
       .filter(category => !selectedBudgetCategory || category.name === selectedBudgetCategory)
-  }, [summary, selectedTimelineCategory, recurringFilter, selectedBudgetCategory])
+  }, [summary, activeCategory, recurringFilter, selectedBudgetCategory])
 
   // Available categories for chips (derived from all templates, not filtered)
   const availableCategories = useMemo(() => {
@@ -389,8 +405,8 @@ export default function BudgetClient() {
         <BudgetTimelineBar
           stats={budgetStats}
           currentCategory={currentBudgetCategory}
-          selectedCategory={selectedTimelineCategory}
-          onCategoryClick={setSelectedTimelineCategory}
+          selectedCategory={activeCategory}
+          onCategoryClick={handleCategoryClick}
         />
       )}
 
@@ -554,7 +570,7 @@ export default function BudgetClient() {
 
               <Accordion
                 type="multiple"
-                key={`accordion-${selectedTimelineCategory || 'all'}-${recurringFilter}-${selectedBudgetCategory || 'all'}`}
+                key={`accordion-${activeCategory || 'all'}-${recurringFilter}-${selectedBudgetCategory || 'all'}`}
                 defaultValue={filteredCategories?.map(c => c.name)}
                 className="space-y-2 mt-4"
               >
