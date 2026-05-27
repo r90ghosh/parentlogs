@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useChecklists } from '@/hooks/use-checklists'
 import { useUser } from '@/components/user-provider'
 import { Card, CardContent } from '@/components/ui/card'
@@ -26,6 +26,20 @@ export default function ChecklistsClient() {
   const { family, activeBaby } = useUser()
 
   const [selectedCategory, setSelectedCategory] = useState<TimelineCategory | null>(null)
+  const [showAll, setShowAll] = useState(false)
+
+  // Handle category clicks from the timeline bar:
+  // - null means user toggled off a pill or clicked "Show all" -> show all
+  // - a category means user selected that filter
+  const handleCategoryClick = useCallback((category: TimelineCategory | null) => {
+    if (category === null) {
+      setSelectedCategory(null)
+      setShowAll(true)
+    } else {
+      setSelectedCategory(category)
+      setShowAll(false)
+    }
+  }, [])
 
   const timelineSource = activeBaby || family || null
 
@@ -39,13 +53,30 @@ export default function ChecklistsClient() {
     return getChecklistStatsByCategory(checklists)
   }, [checklists])
 
+  // Active filter: explicit selection > current phase > show all
+  const activeCategory = showAll ? null : (selectedCategory ?? currentCategory)
+
   const filteredChecklists = useMemo(() => {
     if (!checklists) return []
-    if (!selectedCategory) return checklists
-    return checklists.filter(cl =>
-      checklistOverlapsCategory(cl.stage, cl.week_relevant, selectedCategory)
+    if (!activeCategory) return checklists
+
+    const filtered = checklists.filter(cl =>
+      checklistOverlapsCategory(cl.stage, cl.week_relevant, activeCategory)
     )
-  }, [checklists, selectedCategory])
+
+    // Sort by relevance: checklists overlapping current phase first
+    if (currentCategory) {
+      filtered.sort((a, b) => {
+        const aOverlaps = checklistOverlapsCategory(a.stage, a.week_relevant, currentCategory)
+        const bOverlaps = checklistOverlapsCategory(b.stage, b.week_relevant, currentCategory)
+        if (aOverlaps && !bOverlaps) return -1
+        if (!aOverlaps && bOverlaps) return 1
+        return 0
+      })
+    }
+
+    return filtered
+  }, [checklists, activeCategory, currentCategory])
 
   return (
     <div className="p-4 space-y-6 max-w-4xl">
@@ -67,8 +98,8 @@ export default function ChecklistsClient() {
           <ChecklistTimelineBar
             stats={checklistStats}
             currentCategory={currentCategory}
-            selectedCategory={selectedCategory}
-            onCategoryClick={setSelectedCategory}
+            selectedCategory={activeCategory}
+            onCategoryClick={handleCategoryClick}
           />
         </Reveal>
       )}
