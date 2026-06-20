@@ -1,33 +1,9 @@
-import { useState, useCallback, useMemo } from 'react'
-import {
-  View,
-  Text,
-  Pressable,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-  RefreshControl,
-  ScrollView,
-  Modal,
-  TextInput,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native'
-import { BlurView } from 'expo-blur'
+import { useState, useMemo, useCallback } from 'react'
+import { View, Text, Pressable, FlatList, Modal, TextInput, RefreshControl, Share, Alert, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import {
-  X,
-  Check,
-  Plus,
-  ShoppingCart,
-  DollarSign,
-  Crown,
-  Sparkles,
-} from 'lucide-react-native'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance } from '@/components/animations'
-import { ScreenHeader } from '@/components/ui/ScreenHeader'
+import { Upload, Plus, Check, X } from 'lucide-react-native'
+import * as Haptics from 'expo-haptics'
+import { useColors } from '@/hooks/use-colors'
 import {
   useBudgetTemplates,
   useBudgetSummary,
@@ -35,949 +11,357 @@ import {
   useTogglePurchased,
   useAddCustomBudgetItem,
 } from '@/hooks/use-budget'
-import { useAuth } from '@/components/providers/AuthProvider'
-import { useColors } from '@/hooks/use-colors'
-import type { BudgetPeriod, BudgetPriority, BudgetTemplate, FamilyBudgetItem } from '@tdc/shared/types'
-import { BUDGET_TIMELINE_CATEGORIES } from '@tdc/shared/utils/budget-timeline'
-import * as Haptics from 'expo-haptics'
+import { ScopeSwitch, PhaseChips } from '@/components/digest'
+import type { BudgetTemplate, FamilyBudgetItem } from '@tdc/shared/types'
 
-const BUDGET_CATEGORIES = [
-  'Nursery', 'Feeding', 'Clothing', 'Gear', 'Safety', 'Health',
-  'Registry', 'Hospital', 'Travel', 'Other',
-]
+type Tab = 'my' | 'browse'
+type Tier = 'value' | 'premium'
 
-type TabMode = 'browse' | 'my-budget'
-type PriorityFilter = 'all' | BudgetPriority
+const CUSTOM_CATEGORIES = ['Nursery', 'Feeding', 'Clothing', 'Gear', 'Safety', 'Health', 'Registry', 'Hospital', 'Travel', 'Other']
 
-const PRIORITY_FILTERS: { id: PriorityFilter; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'must-have', label: 'Must-have' },
-  { id: 'good-to-have', label: 'Nice-to-have' },
-  { id: 'tip', label: 'Tips' },
-  { id: 'doctor', label: 'Doctor' },
-]
+function formatPrice(cents: number): string {
+  if (!cents) return 'Free'
+  return `$${Math.round(cents / 100)}`
+}
 
 export default function BudgetScreen() {
-  const insets = useSafeAreaInsets()
-  const { profile } = useAuth()
   const colors = useColors()
-  const [selectedPeriod, setSelectedPeriod] = useState<BudgetPeriod | null>(null)
-  const [activeTab, setActiveTab] = useState<TabMode>('browse')
-  const [selectedPriority, setSelectedPriority] = useState<PriorityFilter>('all')
-  const [showCustomModal, setShowCustomModal] = useState(false)
-  const [customItemName, setCustomItemName] = useState('')
-  const [customCategory, setCustomCategory] = useState(BUDGET_CATEGORIES[0])
-  const [customPrice, setCustomPrice] = useState('')
+  const insets = useSafeAreaInsets()
 
-  const templatesQuery = useBudgetTemplates(selectedPeriod ?? undefined)
+  const [tab, setTab] = useState<Tab>('my')
+  const [tier, setTier] = useState<Tier>('value')
+  const [category, setCategory] = useState<string>('all')
+  const [showExport, setShowExport] = useState(false)
+  const [showCustom, setShowCustom] = useState(false)
+  const [customName, setCustomName] = useState('')
+  const [customPrice, setCustomPrice] = useState('')
+  const [customCat, setCustomCat] = useState(CUSTOM_CATEGORIES[0])
+
+  const templatesQuery = useBudgetTemplates(undefined)
   const summaryQuery = useBudgetSummary()
   const addToBudget = useAddToBudget()
   const togglePurchased = useTogglePurchased()
   const addCustomItem = useAddCustomBudgetItem()
 
-  const isRefreshing = templatesQuery.isRefetching || summaryQuery.isRefetching
+  const summary = summaryQuery.data
+  const myItems = useMemo(() => (summary?.familyItems ?? []) as FamilyBudgetItem[], [summary])
+  const allTemplates = useMemo(() => (templatesQuery.data ?? []) as BudgetTemplate[], [templatesQuery.data])
 
-  const handleRefresh = useCallback(() => {
-    templatesQuery.refetch()
-    summaryQuery.refetch()
-  }, [templatesQuery, summaryQuery])
-
-  // Filter templates by period and priority when browsing
-  const browseItems = useMemo(() => {
-    if (!templatesQuery.data) return []
-    if (selectedPriority === 'all') return templatesQuery.data
-    return templatesQuery.data.filter((t: BudgetTemplate) => t.priority === selectedPriority)
-  }, [templatesQuery.data, selectedPriority])
-
-  // Get family budget items
-  const myBudgetItems = useMemo(() => {
-    if (!summaryQuery.data?.familyItems) return []
-    return summaryQuery.data.familyItems
-  }, [summaryQuery.data])
-
-  // Build a set of template IDs already in the family budget
   const addedTemplateIds = useMemo(() => {
+    const s = new Set<string>()
+    myItems.forEach((i) => i.budget_template_id && s.add(i.budget_template_id))
+    return s
+  }, [myItems])
+
+  const categories = useMemo(() => {
     const set = new Set<string>()
-    myBudgetItems.forEach((item: FamilyBudgetItem) => {
-      if (item.budget_template_id) set.add(item.budget_template_id)
-    })
-    return set
-  }, [myBudgetItems])
+    allTemplates.forEach((t) => t.category && set.add(t.category))
+    return ['all', ...Array.from(set)]
+  }, [allTemplates])
 
-  function handleAddItem(templateId: string) {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-    addToBudget.mutate({ templateId })
+  const browseItems = useMemo(
+    () => (category === 'all' ? allTemplates : allTemplates.filter((t) => t.category === category)),
+    [allTemplates, category]
+  )
+
+  const planned = (tier === 'premium' ? summary?.grandTotalMax : summary?.grandTotalMin) ?? 0
+  const spent = summary?.purchasedTotal ?? 0
+  const left = Math.max(0, planned - spent)
+  const boughtCount = myItems.filter((i) => i.is_purchased).length
+  const pct = planned > 0 ? Math.min(100, (spent / planned) * 100) : 0
+
+  const onToggle = useCallback(
+    (itemId: string, purchased: boolean) => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+      togglePurchased.mutate({ itemId, isPurchased: !purchased })
+    },
+    [togglePurchased]
+  )
+  const onAdd = useCallback(
+    (templateId: string) => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+      addToBudget.mutate({ templateId })
+    },
+    [addToBudget]
+  )
+
+  const onExport = async () => {
+    const lines = ['The Dad Center — Budget', '']
+    myItems.forEach((i) =>
+      lines.push(`${i.is_purchased ? '[x]' : '[ ]'} ${i.item} — ${formatPrice(i.actual_price ?? i.estimated_price ?? 0)}${i.category ? ` (${i.category})` : ''}`)
+    )
+    lines.push('', `Planned: ${formatPrice(planned)}`, `Spent: ${formatPrice(spent)}`, `Left: ${formatPrice(left)}`)
+    setShowExport(false)
+    try {
+      await Share.share({ message: lines.join('\n') })
+    } catch {
+      /* user cancelled */
+    }
   }
 
-  function handleTogglePurchased(itemId: string, currentlyPurchased: boolean) {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-    togglePurchased.mutate({ itemId, isPurchased: !currentlyPurchased })
-  }
-
-  function handleSubmitCustomItem() {
-    const name = customItemName.trim()
-    const priceStr = customPrice.trim()
+  const submitCustom = () => {
+    const name = customName.trim()
     if (!name) {
       Alert.alert('Item name is required')
       return
     }
-    const price = priceStr ? Math.round(parseFloat(priceStr) * 100) : 0
-    if (priceStr && isNaN(price)) {
+    const cents = customPrice.trim() ? Math.round(parseFloat(customPrice) * 100) : 0
+    if (customPrice.trim() && isNaN(cents)) {
       Alert.alert('Enter a valid price')
       return
     }
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
     addCustomItem.mutate(
-      { item: name, category: customCategory, estimatedPrice: price },
+      { item: name, category: customCat, estimatedPrice: cents },
       {
         onSuccess: () => {
-          setShowCustomModal(false)
-          setCustomItemName('')
+          setShowCustom(false)
+          setCustomName('')
           setCustomPrice('')
-          setCustomCategory(BUDGET_CATEGORIES[0])
-          setActiveTab('my-budget')
+          setCustomCat(CUSTOM_CATEGORIES[0])
+          setTab('my')
         },
-        onError: () => {
-          Alert.alert('Error', 'Failed to add custom item. Please try again.')
-        },
+        onError: () => Alert.alert('Error', 'Failed to add item. Please try again.'),
       }
     )
   }
 
-  function formatPrice(cents: number): string {
-    if (cents === 0) return 'Free'
-    return `$${Math.round(cents / 100)}`
-  }
-
-  function formatRange(min: number, max: number): string {
-    if (min === max || max === 0) return formatPrice(min)
-    return `${formatPrice(min)} - ${formatPrice(max)}`
-  }
-
-  const renderBrowseItem = useCallback(
-    ({ item, index }: { item: BudgetTemplate; index: number }) => {
-      const isAdded = addedTemplateIds.has(item.budget_id)
-      const hasBrands = item.brand_premium || item.brand_value
-      return (
-        <CardEntrance delay={index * 60}>
-        <GlassCard style={styles.budgetItemCard}>
-          <View style={styles.budgetItemHeader}>
-            <View style={styles.budgetItemInfo}>
-              <Text style={[styles.budgetItemName, { color: colors.textSecondary }]}>{item.item}</Text>
-              <Text style={[styles.budgetItemCategory, { color: colors.textMuted }]}>{item.category}</Text>
-            </View>
-            <View style={styles.budgetItemPriceCol}>
-              <Text style={[styles.budgetItemPrice, { color: colors.gold }]}>
-                {formatRange(item.price_min, item.price_max)}
-              </Text>
-              {item.priority === 'must-have' && (
-                <View style={[styles.mustHaveBadge, { backgroundColor: colors.copperDim }]}>
-                  <Text style={[styles.mustHaveText, { color: colors.copper }]}>Must-have</Text>
-                </View>
-              )}
-            </View>
-          </View>
-          {item.description ? (
-            <Text style={[styles.budgetItemDesc, { color: colors.textMuted }]} numberOfLines={2}>
-              {item.description}
-            </Text>
-          ) : null}
-          {hasBrands && (
-            <View style={styles.brandsContainer}>
-              {item.brand_premium ? (
-                <View style={styles.brandRow}>
-                  <Crown size={12} color={colors.gold} />
-                  <Text style={[styles.brandPremiumText, { color: colors.gold }]} numberOfLines={1}>
-                    {item.brand_premium}
-                  </Text>
-                </View>
-              ) : null}
-              {item.brand_value ? (
-                <View style={styles.brandRow}>
-                  <Sparkles size={12} color={colors.sage} />
-                  <Text style={[styles.brandValueText, { color: colors.sage }]} numberOfLines={1}>
-                    {item.brand_value}
-                  </Text>
-                </View>
-              ) : null}
-            </View>
-          )}
-          <View style={styles.budgetItemFooter}>
-            <Text style={[styles.budgetItemPeriod, { color: colors.textDim }]}>{item.period}</Text>
-            {!isAdded ? (
-              <Pressable
-                onPress={() => handleAddItem(item.budget_id)}
-                style={[styles.addButton, { backgroundColor: colors.copperDim, borderColor: colors.copperGlow }]}
-                disabled={addToBudget.isPending}
-              >
-                <Plus size={14} color={colors.copper} />
-                <Text style={[styles.addButtonText, { color: colors.copper }]}>Add</Text>
-              </Pressable>
-            ) : (
-              <View style={styles.addedBadge}>
-                <Check size={12} color={colors.sage} />
-                <Text style={[styles.addedText, { color: colors.sage }]}>Added</Text>
-              </View>
-            )}
-          </View>
-        </GlassCard>
-        </CardEntrance>
-      )
-    },
-    [addedTemplateIds, addToBudget.isPending, colors]
+  const TierToggle = (
+    <ScopeSwitch
+      style={styles.tier}
+      value={tier}
+      onChange={(k) => setTier(k as Tier)}
+      options={[
+        { key: 'value', label: 'Best value' },
+        { key: 'premium', label: 'Premium' },
+      ]}
+    />
   )
 
-  const renderMyBudgetItem = useCallback(
-    ({ item, index }: { item: FamilyBudgetItem; index: number }) => (
-      <CardEntrance delay={index * 60}>
-      <Pressable
-        onPress={() => handleTogglePurchased(item.id, item.is_purchased)}
-      >
-        <GlassCard
-          style={[
-            styles.budgetItemCard,
-            item.is_purchased && styles.budgetItemPurchased,
-          ]}
-        >
-          <View style={styles.budgetItemHeader}>
-            <View style={styles.myBudgetLeft}>
-              <View
-                style={[
-                  styles.checkbox,
-                  { borderColor: colors.textDim },
-                  item.is_purchased && { backgroundColor: colors.sage, borderColor: colors.sage },
-                ]}
-              >
-                {item.is_purchased && (
-                  <Check size={12} color={colors.bg} />
-                )}
-              </View>
-              <View style={styles.budgetItemInfo}>
-                <Text
-                  style={[
-                    styles.budgetItemName,
-                    { color: colors.textSecondary },
-                    item.is_purchased && { textDecorationLine: 'line-through', color: colors.textMuted },
-                  ]}
-                >
-                  {item.item}
-                </Text>
-                <Text style={[styles.budgetItemCategory, { color: colors.textMuted }]}>
-                  {item.category}
-                </Text>
-              </View>
-            </View>
-            <Text style={[styles.budgetItemPrice, { color: colors.gold }]}>
-              {formatPrice(
-                item.actual_price || item.estimated_price || 0
-              )}
-            </Text>
-          </View>
-        </GlassCard>
-      </Pressable>
-      </CardEntrance>
-    ),
-    [togglePurchased, colors]
-  )
-
-  const isLoading =
-    activeTab === 'browse' ? templatesQuery.isLoading : summaryQuery.isLoading
-
-  const currentData =
-    activeTab === 'browse' ? browseItems : myBudgetItems
-
-  const budgetListHeader = useMemo(
-    () => (
-      <View>
-        {/* Header */}
-        <ScreenHeader title="Budget Planner" leftAction="close" transparent />
-
-        {/* Tab toggle */}
-        <View style={styles.tabRow}>
-          <View style={[styles.tabContainer, { backgroundColor: colors.glassBg, borderColor: colors.border }]}>
-            <Pressable
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                setActiveTab('browse')
-              }}
-              style={[styles.tab, activeTab === 'browse' && { backgroundColor: colors.copperDim }]}
-            >
-              <ShoppingCart
-                size={14}
-                color={activeTab === 'browse' ? colors.copper : colors.textMuted}
-              />
-              <Text
-                style={[
-                  styles.tabText,
-                  { color: colors.textMuted },
-                  activeTab === 'browse' && { color: colors.copper },
-                ]}
-              >
-                Browse
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                setActiveTab('my-budget')
-              }}
-              style={[styles.tab, activeTab === 'my-budget' && { backgroundColor: colors.copperDim }]}
-            >
-              <DollarSign
-                size={14}
-                color={activeTab === 'my-budget' ? colors.copper : colors.textMuted}
-              />
-              <Text
-                style={[
-                  styles.tabText,
-                  { color: colors.textMuted },
-                  activeTab === 'my-budget' && { color: colors.copper },
-                ]}
-              >
-                My Budget
-              </Text>
-            </Pressable>
-          </View>
-          {activeTab === 'my-budget' && (
-            <Pressable
-              onPress={() => setShowCustomModal(true)}
-              style={[styles.addCustomButton, { backgroundColor: colors.copperDim, borderColor: colors.copperGlow }]}
-              accessibilityLabel="Add custom item"
-            >
-              <Plus size={16} color={colors.copper} />
-            </Pressable>
-          )}
+  const myHeader = (
+    <View>
+      <View style={[styles.summary, { backgroundColor: colors.card, borderColor: colors.line }]}>
+        <View style={styles.sumRow}>
+          <SumStat label="Planned" value={formatPrice(planned)} colors={colors} />
+          <SumStat label="Spent" value={formatPrice(spent)} colors={colors} accent />
+          <SumStat label="Left" value={formatPrice(left)} colors={colors} />
         </View>
-
-        {/* Timeline bar (browse mode only) */}
-        {activeTab === 'browse' && (
-          <>
-            <View style={styles.timelineBar}>
-              <ScrollView
-                horizontal
-                nestedScrollEnabled
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.timelineContent}
-              >
-                {BUDGET_TIMELINE_CATEGORIES.map((item) => {
-                  const isActive = selectedPeriod === item.id
-                  return (
-                    <Pressable
-                      key={item.id}
-                      onPress={() => {
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                        setSelectedPeriod(isActive ? null : item.id)
-                      }}
-                      style={[
-                        styles.timelinePill,
-                        { backgroundColor: colors.pillBg, borderColor: colors.borderHover },
-                        isActive && { backgroundColor: colors.copperGlow, borderColor: colors.copper },
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.timelinePillText,
-                          { color: colors.textSecondary },
-                          isActive && { color: colors.copper },
-                        ]}
-                      >
-                        {item.label}
-                      </Text>
-                    </Pressable>
-                  )
-                })}
-              </ScrollView>
-            </View>
-
-            {/* Priority filter pills */}
-            <View style={styles.priorityBar}>
-              <ScrollView
-                horizontal
-                nestedScrollEnabled
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.priorityContent}
-              >
-                {PRIORITY_FILTERS.map((filter) => {
-                  const isActive = selectedPriority === filter.id
-                  return (
-                    <Pressable
-                      key={filter.id}
-                      onPress={() => {
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                        setSelectedPriority(isActive ? 'all' : filter.id)
-                      }}
-                      style={[
-                        styles.priorityPill,
-                        { backgroundColor: colors.pillBg, borderColor: colors.borderHover },
-                        isActive && { backgroundColor: colors.goldGlow, borderColor: colors.gold },
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.priorityPillText,
-                          { color: colors.textSecondary },
-                          isActive && { color: colors.gold },
-                        ]}
-                      >
-                        {filter.label}
-                      </Text>
-                    </Pressable>
-                  )
-                })}
-              </ScrollView>
-            </View>
-          </>
-        )}
-
-        {/* Summary stats for My Budget */}
-        {activeTab === 'my-budget' && summaryQuery.data && (
-          <CardEntrance delay={0}>
-            <View style={{ paddingHorizontal: 20 }}>
-              <GlassCard style={styles.summaryCard}>
-                <View style={styles.summaryRow}>
-                  <View style={styles.summaryItem}>
-                    <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Total Budget</Text>
-                    <Text style={[styles.summaryValue, { color: colors.textSecondary }]}>
-                      {formatRange(
-                        summaryQuery.data.grandTotalMin,
-                        summaryQuery.data.grandTotalMax
-                      )}
-                    </Text>
-                  </View>
-                  <View style={[styles.summaryDivider, { backgroundColor: colors.border }]} />
-                  <View style={styles.summaryItem}>
-                    <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Purchased</Text>
-                    <Text style={[styles.summaryValue, { color: colors.sage }]}>
-                      {formatPrice(summaryQuery.data.purchasedTotal)}
-                    </Text>
-                  </View>
-                  <View style={[styles.summaryDivider, { backgroundColor: colors.border }]} />
-                  <View style={styles.summaryItem}>
-                    <Text style={[styles.summaryLabel, { color: colors.textMuted }]}>Remaining</Text>
-                    <Text style={[styles.summaryValue, { color: colors.textSecondary }]}>
-                      {formatPrice(summaryQuery.data.remainingTotal)}
-                    </Text>
-                  </View>
-                </View>
-              </GlassCard>
-            </View>
-          </CardEntrance>
-        )}
+        <View style={[styles.progress, { backgroundColor: colors.line }]}>
+          <View style={[styles.progressFill, { width: `${pct}%`, backgroundColor: colors.sage }]} />
+        </View>
+        <Text style={[styles.sumMeta, { color: colors.muted }]}>{boughtCount} of {myItems.length} bought</Text>
       </View>
-    ),
-    [activeTab, summaryQuery.data, colors, selectedPeriod, selectedPriority]
+      {TierToggle}
+    </View>
+  )
+
+  const browseHeader = (
+    <View>
+      {TierToggle}
+      <PhaseChips chips={categories.map((c) => ({ key: c, label: c === 'all' ? 'All' : c }))} activeKey={category} onSelect={setCategory} />
+    </View>
   )
 
   return (
-    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={[styles.title, { color: colors.ink }]}>Budget</Text>
+        <Pressable onPress={() => setShowExport(true)} hitSlop={8} style={[styles.iconBtn, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <Upload size={18} color={colors.ink2} />
+        </Pressable>
+      </View>
+      <ScopeSwitch
+        style={styles.scope}
+        value={tab}
+        onChange={(k) => setTab(k as Tab)}
+        options={[
+          { key: 'my', label: 'My list' },
+          { key: 'browse', label: 'Browse' },
+        ]}
+      />
 
-      {/* Content */}
-      {isLoading ? (
-        <View style={styles.loadingContainer}>
-          {budgetListHeader}
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <ActivityIndicator color={colors.copper} size="large" />
-          </View>
-        </View>
-      ) : currentData.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          {budgetListHeader}
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40, gap: 12 }}>
-            <DollarSign size={40} color={colors.textDim} />
-            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>
-              {activeTab === 'browse'
-                ? 'No items found'
-                : 'Your budget is empty'}
-            </Text>
-            <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-              {activeTab === 'browse'
-                ? 'Try selecting a different period or filter'
-                : 'Browse items and add them to your budget'}
-            </Text>
-          </View>
-        </View>
+      {tab === 'my' ? (
+        <FlatList
+          data={myItems}
+          keyExtractor={(i) => i.id}
+          ListHeaderComponent={myHeader}
+          contentContainerStyle={{ paddingBottom: insets.bottom + 110 }}
+          showsVerticalScrollIndicator={false}
+          refreshControl={<RefreshControl refreshing={summaryQuery.isRefetching} onRefresh={() => summaryQuery.refetch()} tintColor={colors.accent} />}
+          ListEmptyComponent={
+            <View style={styles.empty}>
+              <Text style={[styles.emptyTitle, { color: colors.ink }]}>Start your budget</Text>
+              <Text style={[styles.emptySub, { color: colors.muted }]}>Browse the catalog to add items, or add your own.</Text>
+              <Pressable onPress={() => setTab('browse')} style={[styles.emptyBtn, { backgroundColor: colors.accent }]}>
+                <Text style={styles.emptyBtnText}>Browse items</Text>
+              </Pressable>
+            </View>
+          }
+          ListFooterComponent={
+            myItems.length > 0 ? (
+              <Pressable onPress={() => setShowCustom(true)} style={styles.addCustom}>
+                <Plus size={16} color={colors.accentInk} />
+                <Text style={[styles.addCustomText, { color: colors.accentInk }]}>Add custom item</Text>
+              </Pressable>
+            ) : null
+          }
+          renderItem={({ item }) => {
+            const price = item.actual_price ?? item.estimated_price ?? 0
+            return (
+              <Pressable
+                onPress={() => onToggle(item.id, item.is_purchased)}
+                style={({ pressed }) => [styles.row, { borderBottomColor: colors.line2, backgroundColor: pressed ? colors.cardHover : 'transparent' }]}
+              >
+                <View style={[styles.check, { borderColor: item.is_purchased ? colors.sage : colors.line, backgroundColor: item.is_purchased ? colors.sage : 'transparent' }]}>
+                  {item.is_purchased && <Check size={12} color="#fff" strokeWidth={3} />}
+                </View>
+                <View style={styles.rowBody}>
+                  <Text style={[styles.rowTitle, { color: item.is_purchased ? colors.muted : colors.ink, textDecorationLine: item.is_purchased ? 'line-through' : 'none' }]} numberOfLines={1}>
+                    {item.item}
+                  </Text>
+                  <View style={styles.tags}>
+                    <Text style={[styles.tag, { color: colors.muted }]}>{item.category}</Text>
+                    {item.is_recurring && <Text style={[styles.tagAccent, { color: colors.accentInk }]}>· Monthly</Text>}
+                    {item.is_custom && <Text style={[styles.tagAccent, { color: colors.accentInk }]}>· Custom</Text>}
+                  </View>
+                </View>
+                <Text style={[styles.price, { color: colors.ink }]}>{formatPrice(price)}</Text>
+              </Pressable>
+            )
+          }}
+        />
       ) : (
         <FlatList
-          data={currentData}
-          keyExtractor={(item: BudgetTemplate | FamilyBudgetItem) =>
-            activeTab === 'browse'
-              ? (item as BudgetTemplate).budget_id
-              : (item as FamilyBudgetItem).id
-          }
-          renderItem={
-            activeTab === 'browse'
-              ? (renderBrowseItem as any)
-              : (renderMyBudgetItem as any)
-          }
-          contentContainerStyle={[
-            styles.listContent,
-            { paddingBottom: insets.bottom + 24 },
-          ]}
+          data={browseItems}
+          keyExtractor={(t) => t.budget_id}
+          ListHeaderComponent={browseHeader}
+          contentContainerStyle={{ paddingBottom: insets.bottom + 110 }}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={budgetListHeader}
-          ListFooterComponent={
-            <Text style={[styles.disclaimerText, { color: colors.textDim }]}>
-              For planning purposes only. Not financial or medical advice. Consult your pediatrician before administering any medication.
-            </Text>
-          }
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefreshing}
-              onRefresh={handleRefresh}
-              tintColor={colors.copper}
-            />
-          }
+          renderItem={({ item }) => {
+            const added = addedTemplateIds.has(item.budget_id)
+            const price = tier === 'premium' ? item.price_max : item.price_min
+            const brand = tier === 'premium' ? item.brand_premium : item.brand_value
+            return (
+              <View style={[styles.row, { borderBottomColor: colors.line2 }]}>
+                <View style={styles.rowBody}>
+                  <Text style={[styles.rowTitle, { color: colors.ink }]} numberOfLines={1}>{item.item}</Text>
+                  <View style={styles.tags}>
+                    <Text style={[styles.tag, { color: colors.muted }]}>{formatPrice(price)}</Text>
+                    {!!brand && <Text style={[styles.tag, { color: colors.muted }]} numberOfLines={1}>· {brand}</Text>}
+                  </View>
+                </View>
+                <Pressable
+                  onPress={() => !added && onAdd(item.budget_id)}
+                  disabled={added}
+                  style={[styles.addBtn, { borderColor: added ? colors.line : colors.accent, backgroundColor: added ? 'transparent' : colors.accent }]}
+                >
+                  <Text style={[styles.addBtnText, { color: added ? colors.muted : '#fff' }]}>{added ? 'Added' : 'Add'}</Text>
+                </Pressable>
+              </View>
+            )
+          }}
         />
       )}
 
-      {/* Add Custom Item Modal */}
-      <Modal
-        visible={showCustomModal}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowCustomModal(false)}
-      >
-        <KeyboardAvoidingView
-          style={[styles.modalOverlay, Platform.OS !== 'ios' && { backgroundColor: colors.overlay }]}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
-          {Platform.OS === 'ios' && (
-            <BlurView tint={colors.blurTint} intensity={30} style={StyleSheet.absoluteFill} />
-          )}
-          <View style={[styles.modalSheet, { backgroundColor: colors.card, borderTopColor: colors.border }]}>
-            <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>Add Custom Item</Text>
-              <Pressable
-                onPress={() => setShowCustomModal(false)}
-                style={[styles.modalClose, { backgroundColor: colors.subtleBg }]}
-              >
-                <X size={20} color={colors.textMuted} />
-              </Pressable>
+      {tab === 'my' && (
+        <Pressable onPress={() => setTab('browse')} style={[styles.fab, { bottom: insets.bottom + 100, backgroundColor: colors.accent }]}>
+          <Plus size={24} color="#fff" strokeWidth={2.4} />
+        </Pressable>
+      )}
+
+      {/* Export sheet */}
+      <Modal visible={showExport} transparent animationType="slide" onRequestClose={() => setShowExport(false)}>
+        <Pressable style={[styles.backdrop, { backgroundColor: colors.overlay }]} onPress={() => setShowExport(false)}>
+          <Pressable style={[styles.sheet, { backgroundColor: colors.card, paddingBottom: insets.bottom + 16 }]} onPress={(e) => e.stopPropagation()}>
+            <Text style={[styles.sheetTitle, { color: colors.ink }]}>Export budget</Text>
+            <Pressable onPress={onExport} style={[styles.sheetBtn, { borderColor: colors.line }]}>
+              <Upload size={18} color={colors.ink2} />
+              <Text style={[styles.sheetBtnText, { color: colors.ink }]}>Share list</Text>
+            </Pressable>
+            <Text style={[styles.sheetNote, { color: colors.faint }]}>Your family budget is already shared in-app. (CSV / PDF export coming soon.)</Text>
+          </Pressable>
+        </Pressable>
+      </Modal>
+
+      {/* Custom item modal */}
+      <Modal visible={showCustom} transparent animationType="slide" onRequestClose={() => setShowCustom(false)}>
+        <Pressable style={[styles.backdrop, { backgroundColor: colors.overlay }]} onPress={() => setShowCustom(false)}>
+          <Pressable style={[styles.sheet, { backgroundColor: colors.card, paddingBottom: insets.bottom + 16 }]} onPress={(e) => e.stopPropagation()}>
+            <View style={styles.sheetHead}>
+              <Text style={[styles.sheetTitle, { color: colors.ink }]}>Add custom item</Text>
+              <Pressable onPress={() => setShowCustom(false)} hitSlop={10}><X size={20} color={colors.ink2} /></Pressable>
             </View>
-
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Item Name</Text>
-            <TextInput
-              style={[styles.textInput, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
-              value={customItemName}
-              onChangeText={setCustomItemName}
-              placeholder="e.g. Baby Monitor"
-              placeholderTextColor={colors.textDim}
-              maxLength={80}
-            />
-
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Category</Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.categoryPills}
-            >
-              {BUDGET_CATEGORIES.map((cat) => (
-                <Pressable
-                  key={cat}
-                  onPress={() => setCustomCategory(cat)}
-                  style={[
-                    styles.categoryPill,
-                    { backgroundColor: colors.subtleBg, borderColor: colors.border },
-                    customCategory === cat && { backgroundColor: colors.copperDim, borderColor: colors.copper },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.categoryPillText,
-                      { color: colors.textMuted },
-                      customCategory === cat && { color: colors.copper },
-                    ]}
-                  >
-                    {cat}
-                  </Text>
+            <TextInput style={[styles.input, { color: colors.ink, borderColor: colors.line, backgroundColor: colors.bg }]} placeholder="Item name" placeholderTextColor={colors.faint} value={customName} onChangeText={setCustomName} />
+            <TextInput style={[styles.input, { color: colors.ink, borderColor: colors.line, backgroundColor: colors.bg }]} placeholder="Price (optional)" placeholderTextColor={colors.faint} value={customPrice} onChangeText={setCustomPrice} keyboardType="decimal-pad" />
+            <View style={styles.catWrap}>
+              {CUSTOM_CATEGORIES.map((c) => (
+                <Pressable key={c} onPress={() => setCustomCat(c)} style={[styles.catChip, { borderColor: customCat === c ? colors.accent : colors.line, backgroundColor: customCat === c ? colors.accent : 'transparent' }]}>
+                  <Text style={[styles.catChipText, { color: customCat === c ? '#fff' : colors.ink2 }]}>{c}</Text>
                 </Pressable>
               ))}
-            </ScrollView>
-
-            <Text style={[styles.inputLabel, { color: colors.textMuted }]}>Estimated Price (optional)</Text>
-            <TextInput
-              style={[styles.textInput, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
-              value={customPrice}
-              onChangeText={setCustomPrice}
-              placeholder="e.g. 49.99"
-              placeholderTextColor={colors.textDim}
-              keyboardType="decimal-pad"
-              maxLength={10}
-            />
-
-            <Pressable
-              onPress={handleSubmitCustomItem}
-              style={[
-                styles.submitButton,
-                { backgroundColor: colors.copper },
-                addCustomItem.isPending && styles.submitButtonDisabled,
-              ]}
-              disabled={addCustomItem.isPending}
-            >
-              <Text style={[styles.submitButtonText, { color: colors.textPrimary }]}>
-                {addCustomItem.isPending ? 'Adding...' : 'Add to Budget'}
-              </Text>
+            </View>
+            <Pressable onPress={submitCustom} style={[styles.primaryBtn, { backgroundColor: colors.accent }]}>
+              <Text style={styles.primaryBtnText}>Add item</Text>
             </Pressable>
-          </View>
-        </KeyboardAvoidingView>
+          </Pressable>
+        </Pressable>
       </Modal>
     </View>
   )
 }
 
+function SumStat({ label, value, colors, accent }: { label: string; value: string; colors: ReturnType<typeof useColors>; accent?: boolean }) {
+  return (
+    <View style={styles.sumStat}>
+      <Text style={[styles.sumValue, { color: accent ? colors.accentInk : colors.ink }]}>{value}</Text>
+      <Text style={[styles.sumLabel, { color: colors.muted }]}>{label}</Text>
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-
-  // Tab toggle
-  tabRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 12,
-    gap: 8,
-  },
-  tabContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    borderRadius: 10,
-    padding: 4,
-    borderWidth: 1,
-  },
-  addCustomButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tab: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
-    borderRadius: 8,
-    gap: 6,
-  },
-  tabText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 14,
-  },
-
-  // Timeline bar
-  timelineBar: {
-    marginBottom: 10,
-    minHeight: 42,
-  },
-  timelineContent: {
-    paddingHorizontal: 20,
-    gap: 8,
-    paddingVertical: 4,
-  },
-  timelinePill: {
-    paddingHorizontal: 16,
-    paddingVertical: 9,
-    borderRadius: 20,
-    borderWidth: 1,
-  },
-  timelinePillText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 13,
-    lineHeight: 18,
-  },
-
-  // Priority filter bar
-  priorityBar: {
-    marginBottom: 12,
-    minHeight: 38,
-  },
-  priorityContent: {
-    paddingHorizontal: 20,
-    gap: 8,
-    paddingVertical: 4,
-  },
-  priorityPill: {
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 16,
-    borderWidth: 1,
-  },
-  priorityPillText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 13,
-    lineHeight: 18,
-  },
-
-  // List
-  listContent: {
-    paddingHorizontal: 20,
-    gap: 10,
-  },
-
-  // Budget item card
-  budgetItemCard: {
-    padding: 16,
-    marginBottom: 2,
-  },
-  budgetItemPurchased: {
-    opacity: 0.6,
-  },
-  budgetItemHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  budgetItemInfo: {
-    flex: 1,
-    marginRight: 12,
-  },
-  budgetItemName: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 15,
-  },
-  budgetItemCategory: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 12,
-    marginTop: 2,
-  },
-  budgetItemPriceCol: {
-    alignItems: 'flex-end',
-  },
-  budgetItemPrice: {
-    fontFamily: 'Jost-Medium',
-    fontSize: 15,
-  },
-  budgetItemDesc: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 13,
-    marginTop: 8,
-    lineHeight: 18,
-  },
-  budgetItemFooter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  budgetItemPeriod: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 12,
-  },
-
-  // Brand recommendations
-  brandsContainer: {
-    marginTop: 10,
-    gap: 6,
-  },
-  brandRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  brandPremiumText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 12,
-    flex: 1,
-  },
-  brandValueText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 12,
-    flex: 1,
-  },
-
-  // Must-have badge
-  mustHaveBadge: {
-    marginTop: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 8,
-  },
-  mustHaveText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 10,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-
-  // Add button
-  addButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  addButtonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 13,
-  },
-
-  // Added badge
-  addedBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-  },
-  addedText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 13,
-  },
-
-  // My budget
-  myBudgetLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    flex: 1,
-  },
-  checkbox: {
-    width: 22,
-    height: 22,
-    borderRadius: 6,
-    borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  // Summary card
-  summaryCard: {
-    padding: 16,
-    marginBottom: 16,
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  summaryItem: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  summaryDivider: {
-    width: 1,
-    height: 32,
-  },
-  summaryLabel: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 11,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 4,
-  },
-  summaryValue: {
-    fontFamily: 'Jost-Medium',
-    fontSize: 16,
-  },
-
-  // Loading / Empty
-  loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emptyContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 40,
-    gap: 12,
-  },
-  emptyTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  emptySubtitle: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  disclaimerText: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 11,
-    textAlign: 'center',
-    marginTop: 16,
-    paddingHorizontal: 20,
-    paddingBottom: 8,
-    lineHeight: 16,
-  },
-
-  // Custom item modal
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  modalSheet: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 24,
-    paddingBottom: 40,
-    borderTopWidth: 1,
-  },
-  modalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  modalTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 18,
-  },
-  modalClose: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputLabel: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 12,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-    marginBottom: 8,
-    marginTop: 16,
-  },
-  textInput: {
-    borderRadius: 10,
-    borderWidth: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontFamily: 'Jost-Regular',
-    fontSize: 15,
-  },
-  categoryPills: {
-    gap: 8,
-    paddingVertical: 4,
-  },
-  categoryPill: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 16,
-    borderWidth: 1,
-  },
-  categoryPillText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 13,
-  },
-  submitButton: {
-    marginTop: 24,
-    borderRadius: 10,
-    paddingVertical: 14,
-    alignItems: 'center',
-  },
-  submitButtonDisabled: {
-    opacity: 0.5,
-  },
-  submitButtonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
-  },
+  container: { flex: 1 },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 12, paddingBottom: 4 },
+  title: { fontFamily: 'Jakarta-ExtraBold', fontSize: 26, letterSpacing: -0.6 },
+  iconBtn: { width: 38, height: 38, borderRadius: 12, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  scope: { marginHorizontal: 22, marginTop: 10, marginBottom: 6 },
+  tier: { marginHorizontal: 22, marginTop: 8, marginBottom: 6 },
+  summary: { marginHorizontal: 20, marginTop: 8, padding: 18, borderRadius: 18, borderWidth: 1 },
+  sumRow: { flexDirection: 'row' },
+  sumStat: { flex: 1, alignItems: 'center', gap: 4 },
+  sumValue: { fontFamily: 'Jakarta-ExtraBold', fontSize: 22, letterSpacing: -0.5 },
+  sumLabel: { fontFamily: 'Jakarta-Medium', fontSize: 12 },
+  progress: { height: 6, borderRadius: 6, overflow: 'hidden', marginTop: 16 },
+  progressFill: { height: '100%', borderRadius: 6 },
+  sumMeta: { fontFamily: 'Jakarta-Medium', fontSize: 12.5, textAlign: 'center', marginTop: 10 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 13, paddingVertical: 14, paddingHorizontal: 22, borderBottomWidth: 1 },
+  check: { width: 22, height: 22, borderRadius: 11, borderWidth: 2, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  rowBody: { flex: 1, minWidth: 0 },
+  rowTitle: { fontFamily: 'Jakarta-SemiBold', fontSize: 15.5, letterSpacing: -0.1 },
+  tags: { flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 4 },
+  tag: { fontFamily: 'Jakarta-Medium', fontSize: 12, flexShrink: 1 },
+  tagAccent: { fontFamily: 'Jakarta-Bold', fontSize: 12 },
+  price: { fontFamily: 'Jakarta-Bold', fontSize: 14, marginLeft: 'auto', paddingLeft: 8 },
+  addBtn: { borderWidth: 1, borderRadius: 999, paddingVertical: 7, paddingHorizontal: 16, marginLeft: 8 },
+  addBtnText: { fontFamily: 'Jakarta-Bold', fontSize: 12.5 },
+  empty: { alignItems: 'center', paddingTop: 56, paddingHorizontal: 40 },
+  emptyTitle: { fontFamily: 'Jakarta-Bold', fontSize: 18 },
+  emptySub: { fontFamily: 'Jakarta-Medium', fontSize: 14, textAlign: 'center', lineHeight: 21, marginTop: 8 },
+  emptyBtn: { borderRadius: 12, paddingVertical: 12, paddingHorizontal: 24, marginTop: 18 },
+  emptyBtnText: { fontFamily: 'Jakarta-Bold', fontSize: 14, color: '#fff' },
+  addCustom: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7, paddingVertical: 20 },
+  addCustomText: { fontFamily: 'Jakarta-Bold', fontSize: 14 },
+  fab: { position: 'absolute', right: 20, width: 54, height: 54, borderRadius: 18, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10, elevation: 8 },
+  backdrop: { flex: 1, justifyContent: 'flex-end' },
+  sheet: { borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 22 },
+  sheetHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  sheetTitle: { fontFamily: 'Jakarta-Bold', fontSize: 17, marginBottom: 14 },
+  sheetBtn: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 14, padding: 16 },
+  sheetBtnText: { fontFamily: 'Jakarta-SemiBold', fontSize: 15 },
+  sheetNote: { fontFamily: 'Jakarta-Medium', fontSize: 12, marginTop: 12, lineHeight: 17 },
+  input: { fontFamily: 'Jakarta-Medium', fontSize: 15, borderWidth: 1, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, marginBottom: 10 },
+  catWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 2, marginBottom: 14 },
+  catChip: { borderWidth: 1, borderRadius: 999, paddingVertical: 7, paddingHorizontal: 13 },
+  catChipText: { fontFamily: 'Jakarta-SemiBold', fontSize: 12.5 },
+  primaryBtn: { borderRadius: 12, paddingVertical: 14, alignItems: 'center' },
+  primaryBtnText: { fontFamily: 'Jakarta-Bold', fontSize: 15, color: '#fff' },
 })
