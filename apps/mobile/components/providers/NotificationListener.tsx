@@ -28,7 +28,7 @@ function mapUrlToRoute(url: string | undefined | null): string | null {
   if (path === '/more') return '/(tabs)/more'
   if (path === '/budget') return '/(tabs)/more/budget'
   if (path === '/checklists') return '/(tabs)/more/checklists'
-  if (path === '/journey') return '/(tabs)/more/journey'
+  if (path === '/journey') return '/(tabs)/more/content' // journey deprecated → Library
   if (path === '/settings') return '/(tabs)/more/settings'
   if (path === '/family') return '/(tabs)/more/family'
   if (path === '/notifications') return '/(tabs)/more/notifications'
