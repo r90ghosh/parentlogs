@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings & Secondary Pages — Digest Theme · The Dad Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F5F2; --card:#FFFFFF; --card2:#FBFAF8;
+    --ink:#1E1C19; --ink2:#56524B; --muted:#928D84; --faint:#B6B1A8;
+    --line:#EAE7E1; --line2:#F2F0EB;
+    --accent:#C0673D; --accent-soft:#F4E8E0; --accent-ink:#A8542E;
+    --sage:#6F9079; --sage-s:#E9F1EC; --sky:#5E86A8; --sky-s:#E9F0F5; --gold:#9C8A56; --rose:#B07C93; --danger:#b3503a;
+    --f:'Plus Jakarta Sans',-apple-system,system-ui,sans-serif;
+    --shadow:0 1px 2px rgba(40,35,28,0.04),0 8px 24px rgba(40,35,28,0.05);
+    --shadow-sm:0 1px 2px rgba(40,35,28,0.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#E4E1DB;color:var(--ink);font-family:var(--f);-webkit-font-smoothing:antialiased}
+  body{padding:36px 28px 80px}
+
+  .page-head{max-width:1320px;margin:0 auto 32px}
+  .page-head .eyebrow{font-size:12px;letter-spacing:2.2px;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .page-head h1{font-size:30px;color:var(--ink);margin:8px 0 10px;font-weight:800;letter-spacing:-.5px}
+  .page-head p{color:var(--ink2);font-size:15px;max-width:760px;line-height:1.6}
+  .page-head p b{color:var(--ink);font-weight:700}
+
+  .stage{display:flex;gap:40px;justify-content:center;align-items:flex-start;flex-wrap:wrap;max-width:1340px;margin:0 auto}
+  .col{display:flex;flex-direction:column;align-items:center;width:390px}
+  .col-head{text-align:center;margin-bottom:16px;min-height:64px}
+  .col-head .n{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--faint);font-weight:700}
+  .col-head h2{font-size:22px;color:var(--ink);margin:6px 0 6px;font-weight:800;letter-spacing:-.3px}
+  .col-head .desc{color:var(--ink2);font-size:12.5px;line-height:1.5;padding:0 10px}
+
+  .phone{width:390px;height:812px;border-radius:52px;background:#dcd8d1;padding:13px;
+    box-shadow:0 0 0 2px #cfcabf, 0 30px 70px rgba(60,52,40,0.22);position:relative}
+  .island{position:absolute;top:24px;left:50%;transform:translateX(-50%);width:118px;height:33px;background:#111;border-radius:20px;z-index:50}
+  .screen{width:100%;height:100%;border-radius:40px;overflow-y:auto;overflow-x:hidden;position:relative;background:var(--bg);scrollbar-width:none}
+  .screen::-webkit-scrollbar{display:none}
+
+  .statusbar{position:sticky;top:0;z-index:40;display:flex;justify-content:space-between;align-items:flex-end;padding:16px 26px 6px;font-size:14px;font-weight:700;color:var(--ink);background:linear-gradient(var(--bg),var(--bg) 70%,transparent)}
+  .statusbar .ico{font-size:12px;letter-spacing:1px}
+
+  /* ===== shared settings kit ===== */
+  .navhead{position:relative;display:flex;align-items:center;padding:6px 16px 10px;min-height:34px}
+  .navhead .back{display:flex;align-items:center;gap:3px;font-size:15px;font-weight:700;color:var(--accent-ink);cursor:pointer}
+  .navhead .back svg{width:18px;height:18px;stroke:var(--accent-ink)}
+  .navhead .navtitle{position:absolute;left:50%;transform:translateX(-50%);font-size:16px;font-weight:800;color:var(--ink)}
+
+  .grouplabel{font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--faint);padding:16px 24px 8px}
+  .group{margin:0 16px 6px;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
+  .row{display:flex;align-items:center;gap:13px;padding:14px 16px;border-bottom:1px solid var(--line2);cursor:pointer}
+  .row:last-child{border-bottom:none}
+  .row .ic{width:32px;height:32px;border-radius:9px;background:var(--accent-soft);display:grid;place-items:center;flex:none}
+  .row .ic svg{width:16px;height:16px;stroke:var(--accent-ink)}
+  .row .ic.sky{background:var(--sky-s)} .row .ic.sky svg{stroke:var(--sky)}
+  .row .ic.sage{background:var(--sage-s)} .row .ic.sage svg{stroke:var(--sage)}
+  .row .main{flex:1;min-width:0}
+  .row .lbl{font-size:15px;font-weight:600;color:var(--ink)}
+  .row .sub2{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:2px}
+  .row .val{font-size:14px;color:var(--muted);font-weight:600;white-space:nowrap}
+  .row .chev{width:17px;height:17px;stroke:var(--faint);flex:none}
+  .row.danger .lbl{color:var(--danger)}
+
+  .toggle{width:46px;height:28px;border-radius:999px;background:var(--line);position:relative;flex:none;transition:.2s}
+  .toggle.on{background:var(--accent)}
+  .toggle::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:.2s}
+  .toggle.on::after{left:21px}
+
+  .field{padding:4px 16px 12px}
+  .field label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px}
+  .field input,.field textarea,.field .fakeinput{width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px;font-family:var(--f);font-size:15px;color:var(--ink);font-weight:600}
+  .field .fakeinput.ph{color:var(--faint);font-weight:500}
+  .field textarea{min-height:104px}
+
+  .btn{display:block;width:calc(100% - 32px);margin:14px 16px 0;text-align:center;border-radius:13px;padding:14px;font-family:var(--f);font-size:15px;font-weight:700;border:none;cursor:pointer}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+  .btn-danger{background:transparent;color:var(--danger);border:1px solid #e7cabb}
+
+  .segrow{display:flex;gap:10px;padding:4px 16px}
+  .segcard{flex:1;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 6px;cursor:pointer;box-shadow:var(--shadow-sm)}
+  .segcard.on{border-color:var(--accent);border-width:2px}
+  .segcard .sw{width:100%;height:34px;border-radius:8px;margin-bottom:10px;border:1px solid var(--line)}
+  .segcard .nm{font-size:13px;font-weight:700;color:var(--ink)}
+
+  .avatarwrap{display:flex;flex-direction:column;align-items:center;padding:14px 16px 4px;gap:10px}
+  .avatar{width:80px;height:80px;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center;font-size:30px;font-weight:800;color:var(--accent-ink)}
+  .avatar.lg{width:96px;height:96px;font-size:36px}
+  .avataredit{font-size:13px;font-weight:700;color:var(--accent-ink)}
+
+  .badge{font-size:10.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink)}
+  .badge.gold{background:#F3EFE2;color:var(--gold)}
+  .badge.sky{background:var(--sky-s);color:var(--sky)}
+  .badge.rose{background:#F5EBEF;color:var(--rose)}
+
+  .infotext{font-size:14px;color:var(--ink2);line-height:1.6;padding:8px 24px;font-weight:400}
+  .note{margin:8px 16px;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:13px 15px;font-size:12.5px;color:var(--ink2);line-height:1.5;font-weight:500}
+  .note b{color:var(--ink);font-weight:700}
+
+  .codebox{margin:10px 16px;background:var(--accent-soft);border:1px dashed var(--accent);border-radius:16px;padding:18px;text-align:center}
+  .codebox .cl{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent-ink);opacity:.8}
+  .codebox .code{font-size:30px;font-weight:800;letter-spacing:5px;color:var(--accent-ink);margin-top:8px;font-variant-numeric:tabular-nums}
+
+  .faqitem{border-bottom:1px solid var(--line2)}
+  .faqitem:last-child{border-bottom:none}
+  .faqitem .q{padding:15px 16px;font-size:14.5px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;gap:10px;align-items:center;cursor:pointer}
+  .faqitem .q svg{width:16px;height:16px;stroke:var(--faint);flex:none}
+  .faqitem .a{padding:0 16px 15px;font-size:13.5px;color:var(--ink2);line-height:1.55;font-weight:400}
+
+  .memberrow{display:flex;align-items:center;gap:13px;padding:14px 16px;border-bottom:1px solid var(--line2)}
+  .memberrow:last-child{border-bottom:none}
+  .memberrow .av{width:42px;height:42px;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center;font-size:16px;font-weight:800;color:var(--accent-ink);flex:none}
+  .memberrow .mi{flex:1}
+  .memberrow .mn{font-size:15px;font-weight:700;color:var(--ink)}
+  .memberrow .ms{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:2px}
+
+  .brandmark{text-align:center;padding:24px 16px 6px}
+  .brandmark .logo{font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-.5px}
+  .brandmark .logo b{color:var(--accent-ink)}
+  .brandmark .tag{font-size:13px;color:var(--muted);font-weight:600;margin-top:6px}
+  .brandmark .ver{font-size:11.5px;color:var(--faint);font-weight:600;margin-top:10px}
+
+  .scrollnote{text-align:center;color:#8c887f;font-size:12px;margin-top:18px}
+  @media(max-width:1340px){.stage{gap:26px}.col,.phone{width:356px}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="lg-parent" x1="0" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#D4A853"/><stop offset="50%" stop-color="#C0673D"/><stop offset="100%" stop-color="#A85A2A"/></linearGradient>
+  <linearGradient id="lg-child" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D4A853"/><stop offset="100%" stop-color="#C0673D"/></linearGradient>
+  <symbol id="brandmark" viewBox="0 0 512 512"><g transform="translate(256,230)"><circle cx="-28" cy="-100" r="52" fill="none" stroke="url(#lg-parent)" stroke-width="16"/><path d="M-76 -38 Q-100 80 -52 164 Q-4 240 88 228" fill="none" stroke="url(#lg-parent)" stroke-width="16" stroke-linecap="round"/><circle cx="52" cy="48" r="34" fill="none" stroke="url(#lg-child)" stroke-width="13" opacity="0.85"/><path d="M24 -52 Q76 -12 64 52" fill="none" stroke="url(#lg-parent)" stroke-width="10" stroke-linecap="round" opacity="0.45"/><circle cx="12" cy="-4" r="8" fill="#D4A853" opacity="0.55"/></g></symbol>
+</defs></svg>
+
+<div class="page-head">
+  <div class="eyebrow">The Dad Center · Mobile · Settings &amp; secondary</div>
+  <h1>Settings &amp; secondary pages — one consistent pass</h1>
+  <p>All the smaller pages (Profile, Family, Invite, Appearance, Notifications, Subscription, Help, Feedback, About, FAQ) in the <b>same warm-paper digest system</b> — shared rows, toggles, fields, and buttons. One option each; built to a single component kit so they feel like one app. Real data for the test account (Office, lifetime, partner Ashirbad, baby Jacobs).</p>
+</div>
+
+<div class="stage">
+
+  <!-- ================= PROFILE (template) ================= -->
+  <div class="col">
+    <div class="col-head"><div class="n">Account</div><h2>Profile</h2><div class="desc">Edit name, role, photo. Email read-only; security one tap away.</div></div>
+    <div class="phone">
+      <div class="island"></div>
+      <div class="screen">
+        <div class="statusbar"><span>9:41</span><span class="ico">5G ▦ 100%</span></div>
+        <div class="navhead"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>Settings</span><span class="navtitle">Profile</span></div>
+
+        <div class="avatarwrap">
+          <div class="avatar lg">O</div>
+          <div class="avataredit">Change photo</div>
+        </div>
+
+        <div class="grouplabel">Your details</div>
+        <div class="group">
+          <div class="field" style="padding-top:14px"><label>Full name</label><div class="fakeinput">Office Mu-Sigma</div></div>
+          <div class="field"><label>Email</label><div class="fakeinput ph">office.mu.sigma@gmail.com</div></div>
+        </div>
+
+        <div class="grouplabel">Your role</div>
+        <div class="segrow">
+          <div class="segcard on"><div class="nm">Dad</div></div>
+          <div class="segcard"><div class="nm">Mom</div></div>
+          <div class="segcard"><div class="nm">Other</div></div>
+        </div>
+
+        <div class="grouplabel">Security</div>
+        <div class="group">
+          <div class="row"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div><div class="main"><div class="lbl">Change password</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        </div>
+
+        <button class="btn btn-primary">Save changes</button>
+        <div style="height:24px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="col-head"><div class="n">Account</div><h2>Family Members</h2><div class="desc">One subscription covers the whole family — both partners share full access.</div></div>
+    <div class="phone">
+      <div class="island"></div>
+      <div class="screen">
+        <div class="statusbar"><span>9:41</span><span class="ico">5G &#9646; 100%</span></div>
+        <div class="navhead"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>Settings</span><span class="navtitle">Family</span></div>
+        <div class="grouplabel">Your family</div>
+        <div class="group">
+          <div class="memberrow"><div class="av">O</div><div class="mi"><div class="mn">Office Mu-Sigma</div><div class="ms">You · Dad</div></div></div>
+          <div class="memberrow"><div class="av">A</div><div class="mi"><div class="mn">Ashirbad Ghosh</div><div class="ms">Mom · joined Apr 5</div></div></div>
+        </div>
+        <div class="note">One subscription covers your whole family — <b>both partners share full access</b>. There's nothing extra to buy.</div>
+        <div class="grouplabel">Invite</div>
+        <div class="codebox"><div class="cl">Family invite code</div><div class="code">39702D13</div></div>
+        <button class="btn btn-primary">Share invite</button>
+        <div class="grouplabel">Manage</div>
+        <div class="group"><div class="row danger"><div class="main"><div class="lbl">Leave family</div></div></div></div>
+        <div style="height:24px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="col-head"><div class="n">Account</div><h2>Invite Partner</h2><div class="desc">Get your partner on the same page — one subscription covers you both.</div></div>
+    <div class="phone">
+      <div class="island"></div>
+      <div class="screen">
+        <div class="statusbar"><span>9:41</span><span class="ico">5G &#9646; 100%</span></div>
+        <div class="navhead"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>Settings</span><span class="navtitle">Invite Partner</span></div>
+        <div class="infotext">Get your partner on the same page. Share your code below and you'll both see the same tasks, briefings, and baby updates — one subscription covers you both.</div>
+        <div class="codebox"><div class="cl">Your invite code</div><div class="code">39702D13</div></div>
+        <button class="btn btn-primary">Share invite link</button>
+        <button class="btn btn-ghost">Copy code</button>
+        <div class="grouplabel">How it works</div>
+        <div class="group">
+          <div class="row"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></div><div class="main"><div class="lbl">Share your code with your partner</div></div></div>
+          <div class="row"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></div><div class="main"><div class="lbl">They sign up and enter it</div></div></div>
+          <div class="row"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg></div><div class="main"><div class="lbl">You're connected — instantly</div></div></div>
+        </div>
+        <div class="note">Only <b>one partner per family</b> — your subscription already covers both of you.</div>
+        <div style="height:24px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="col-head"><div class="n">Account</div><h2>Subscription</h2><div class="desc">You're on Lifetime — full access, forever. Free users would see plans here.</div></div>
+    <div class="phone"><div class="island"></div><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="ico">5G &#9646; 100%</span></div>
+      <div class="navhead"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>Settings</span><span class="navtitle">Subscription</span></div>
+      <div class="grouplabel">Your plan</div>
+      <div class="group"><div class="row"><div class="main"><div class="lbl">Lifetime</div><div class="sub2">Full access, forever</div></div><span class="badge gold">Active</span></div></div>
+      <div class="grouplabel">What's included</div>
+      <div class="group">
+        <div class="row"><div class="ic sage"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg></div><div class="main"><div class="lbl">All weekly briefings</div></div></div>
+        <div class="row"><div class="ic sage"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg></div><div class="main"><div class="lbl">Unlimited tasks &amp; tracking</div></div></div>
+        <div class="row"><div class="ic sage"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg></div><div class="main"><div class="lbl">Every checklist &amp; the full budget</div></div></div>
+        <div class="row"><div class="ic sage"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg></div><div class="main"><div class="lbl">Family sharing (both partners)</div></div></div>
+      </div>
+      <div class="grouplabel">Manage</div>
+      <div class="group">
+        <div class="row"><div class="main"><div class="lbl">Restore purchases</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="row"><div class="main"><div class="lbl">Billing &amp; receipts</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+      </div>
+      <div class="note">You're on <b>Lifetime</b> — nothing to renew. Thanks for being an early dad.</div>
+      <div style="height:24px"></div>
+    </div></div>
+  </div>
+
+  <div class="col">
+    <div class="col-head"><div class="n">Preferences</div><h2>Appearance</h2><div class="desc">Choose how The Dad Center looks. System matches your phone automatically.</div></div>
+    <div class="phone"><div class="island"></div><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="ico">5G &#9646; 100%</span></div>
+      <div class="navhead"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>Settings</span><span class="navtitle">Appearance</span></div>
+      <div class="grouplabel">Theme</div>
+      <div class="segrow">
+        <div class="segcard on"><div class="sw" style="background:linear-gradient(90deg,#F6F5F2 50%,#15130F 50%)"></div><div class="nm">System</div></div>
+        <div class="segcard"><div class="sw" style="background:#F6F5F2"></div><div class="nm">Light</div></div>
+        <div class="segcard"><div class="sw" style="background:#15130F"></div><div class="nm">Dark</div></div>
+      </div>
+      <div class="note">System follows your phone — warm paper by day, warm dark at night for the 3am feeds.</div>
+      <div style="height:24px"></div>
+    </div></div>
+  </div>
+
+  <div class="col">
+    <div class="col-head"><div class="n">Preferences</div><h2>Notifications</h2><div class="desc">Pick what reaches you and when. Quiet hours mute everything overnight.</div></div>
+    <div class="phone"><div class="island"></div><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="ico">5G &#9646; 100%</span></div>
+      <div class="navhead"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>Settings</span><span class="navtitle">Notifications</span></div>
+      <div class="grouplabel">Push notifications</div>
+      <div class="group"><div class="row"><div class="main"><div class="lbl">All notifications</div></div><span class="toggle on"></span></div></div>
+      <div class="grouplabel">What you'll get</div>
+      <div class="group">
+        <div class="row"><div class="main"><div class="lbl">Daily briefing</div></div><span class="toggle on"></span></div>
+        <div class="row"><div class="main"><div class="lbl">Task reminders</div></div><span class="toggle on"></span></div>
+        <div class="row"><div class="main"><div class="lbl">Partner activity</div><div class="sub2">When Ashirbad logs or completes something</div></div><span class="toggle on"></span></div>
+        <div class="row"><div class="main"><div class="lbl">Tracker reminders</div></div><span class="toggle"></span></div>
+        <div class="row"><div class="main"><div class="lbl">Weekly summary</div></div><span class="toggle on"></span></div>
+        <div class="row"><div class="main"><div class="lbl">Milestone alerts</div></div><span class="toggle on"></span></div>
+        <div class="row"><div class="main"><div class="lbl">New articles &amp; tips</div></div><span class="toggle"></span></div>
+      </div>
+      <div class="grouplabel">Quiet hours</div>
+      <div class="group"><div class="row"><div class="main"><div class="lbl">Quiet hours</div></div><div class="val">10pm – 7am</div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div></div>
+      <div style="height:24px"></div>
+    </div></div>
+  </div>
+
+  <div class="col">
+    <div class="col-head"><div class="n">Support</div><h2>Help &amp; Support</h2><div class="desc">Browse the FAQ, read help articles, or message a real dad on the team.</div></div>
+    <div class="phone"><div class="island"></div><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="ico">5G &#9646; 100%</span></div>
+      <div class="navhead"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>Settings</span><span class="navtitle">Help &amp; Support</span></div>
+      <div class="grouplabel">Get help</div>
+      <div class="group">
+        <div class="row"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 .9-1 1.7"/><path d="M12 17h.01"/></svg></div><div class="main"><div class="lbl">Browse the FAQ</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="row"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div><div class="main"><div class="lbl">Email support</div></div><span class="val">support@thedadcenter.com</span></div>
+        <div class="row"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 17h4"/></svg></div><div class="main"><div class="lbl">Help articles</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+      </div>
+      <div class="grouplabel">Message us</div>
+      <div class="field" style="padding-top:14px"><label>Subject</label><div class="fakeinput ph">What's going on?</div></div>
+      <div class="field"><label>Message</label><div class="fakeinput ph" style="min-height:104px">Tell us what's up…</div></div>
+      <button class="btn btn-primary">Send message</button>
+      <div class="note">We're a small team of dads — we usually reply within a day.</div>
+      <div style="height:24px"></div>
+    </div></div>
+  </div>
+
+  <div class="col">
+    <div class="col-head"><div class="n">Support</div><h2>Send Feedback</h2><div class="desc">Tell us what's working, what's broken, and what would make this better.</div></div>
+    <div class="phone"><div class="island"></div><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="ico">5G &#9646; 100%</span></div>
+      <div class="navhead"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>Settings</span><span class="navtitle">Send Feedback</span></div>
+      <div class="infotext">Built by dads, shaped by dads. Tell us what's working and what's missing.</div>
+      <div class="grouplabel">Type</div>
+      <div class="segrow"><div class="segcard on"><div class="nm">Idea</div></div><div class="segcard"><div class="nm">Bug</div></div><div class="segcard"><div class="nm">Other</div></div></div>
+      <div class="field" style="padding-top:14px"><label>Your feedback</label><div class="fakeinput ph" style="min-height:120px">What would make this better?</div></div>
+      <div class="group"><div class="row"><div class="main"><div class="lbl">Include my email for a reply</div></div><span class="toggle on"></span></div></div>
+      <button class="btn btn-primary">Send feedback</button>
+      <div style="height:24px"></div>
+    </div></div>
+  </div>
+
+  <div class="col">
+    <div class="col-head"><div class="n">Support</div><h2>FAQ</h2><div class="desc">Quick answers to the questions dads ask us most.</div></div>
+    <div class="phone"><div class="island"></div><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="ico">5G &#9646; 100%</span></div>
+      <div class="navhead"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>Settings</span><span class="navtitle">FAQ</span></div>
+      <div class="group" style="margin-top:8px">
+        <div class="faqitem"><div class="q">Does one subscription cover both parents?<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div><div class="a">Yes — one subscription per family. Invite your partner and you both get full access.</div></div>
+        <div class="faqitem"><div class="q">Can I keep using it after the baby's born?<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div><div class="a">Yes. Content continues through the newborn months and into toddlerhood (18+ months).</div></div>
+        <div class="faqitem"><div class="q">How do the weekly briefings work?<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div><div class="a">Each week you get a short, dad-focused briefing on the baby, your partner, and what to do.</div></div>
+        <div class="faqitem"><div class="q">How do I invite my partner?<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div><div class="a">Go to Family, share your invite code, and they enter it at signup.</div></div>
+        <div class="faqitem"><div class="q">Is my family's data private?<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div><div class="a">Yes. Your logs and tasks are private to your family and never sold.</div></div>
+        <div class="faqitem"><div class="q">How do I cancel?<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div><div class="a">Manage your plan in Subscription; cancel anytime, no questions asked.</div></div>
+      </div>
+      <div style="height:24px"></div>
+    </div></div>
+  </div>
+
+  <div class="col">
+    <div class="col-head"><div class="n">Support</div><h2>About</h2><div class="desc">Logo, mission, version, and the legal fine print.</div></div>
+    <div class="phone"><div class="island"></div><div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="ico">5G &#9646; 100%</span></div>
+      <div class="navhead"><span class="back"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>Settings</span><span class="navtitle">About</span></div>
+      <div class="brandmark">
+        <svg style="width:66px;height:66px;margin:0 auto 12px;display:block"><use href="#brandmark"/></svg>
+        <div class="logo" style="font-family:'Playfair Display',serif">The Dad Center</div>
+        <div class="tag">The operating system for modern fatherhood.</div>
+        <div class="ver">Version 2.0.0 (build 142)</div>
+      </div>
+      <div class="infotext">We built The Dad Center because winging it isn't a plan. It's the week-by-week playbook for the part of fatherhood nobody hands you a manual for — and one subscription covers your whole family.</div>
+      <div class="grouplabel">More</div>
+      <div class="group">
+        <div class="row"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></div><div class="main"><div class="lbl">Privacy Policy</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="row"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6"/><path d="M9 13h6"/></svg></div><div class="main"><div class="lbl">Terms of Service</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="row"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3l2.6 5.3 5.9.9-4.2 4.1 1 5.8L12 16.9 6.7 19.2l1-5.8L3.5 9.2l5.9-.9z"/></svg></div><div class="main"><div class="lbl">Rate The Dad Center</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="row"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 3.8 5.7 3.8 9S14.5 18.5 12 21c-2.5-2.5-3.8-5.7-3.8-9S9.5 5.5 12 3z"/></svg></div><div class="main"><div class="lbl">Visit thedadcenter.com</div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+      </div>
+      <div class="note">Made by dads, for dads · thedadcenter.com</div>
+      <div style="height:24px"></div>
+    </div></div>
+  </div>
+
+</div>
+
+<div class="scrollnote">One component kit · warm-paper digest theme · dark variant uses the same layout</div>
+</body>
+</html>

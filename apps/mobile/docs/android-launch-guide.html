@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Dad Center — Android Launch Guide</title>
+<style>
+  :root {
+    --bg: #12100e;
+    --surface: #1a1714;
+    --card: #201c18;
+    --card-hover: #282420;
+    --border: rgba(237, 230, 220, 0.10);
+    --border-strong: rgba(237, 230, 220, 0.18);
+    --white: #faf6f0;
+    --cream: #ede6dc;
+    --muted: #9a8f82;
+    --dim: #6a5f52;
+    --copper: #c4703f;
+    --copper-dim: rgba(196, 112, 63, 0.18);
+    --copper-glow: rgba(196, 112, 63, 0.30);
+    --gold: #d4a853;
+    --gold-dim: rgba(212, 168, 83, 0.18);
+    --sage: #6b8f71;
+    --sage-dim: rgba(107, 143, 113, 0.18);
+    --coral: #d4836b;
+    --coral-dim: rgba(212, 131, 107, 0.15);
+    --sky: #5b9bd5;
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 0 0 120px 0;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(196, 112, 63, 0.06), transparent 60%),
+      radial-gradient(ellipse 80% 50% at 80% 100%, rgba(212, 168, 83, 0.04), transparent 60%);
+  }
+  header.top {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(26, 23, 20, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 28px;
+  }
+  .top-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    color: var(--white);
+  }
+  .brand .accent {
+    color: var(--copper);
+    font-style: italic;
+  }
+  .progress-wrap {
+    flex: 1;
+    min-width: 220px;
+    max-width: 420px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--card);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--copper), var(--gold));
+    width: 0;
+    transition: width 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 12px var(--copper-glow);
+  }
+  .progress-num {
+    font-variant-numeric: tabular-nums;
+    color: var(--cream);
+    font-weight: 600;
+    min-width: 56px;
+    text-align: right;
+  }
+  .reset-btn {
+    font-size: 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 150ms;
+  }
+  .reset-btn:hover {
+    border-color: var(--coral);
+    color: var(--coral);
+  }
+
+  main { max-width: 980px; margin: 0 auto; padding: 32px 28px 0 28px; }
+
+  .hero {
+    margin-bottom: 40px;
+  }
+  .hero h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 42px;
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--white);
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+  .hero h1 .accent {
+    color: var(--copper);
+    font-style: italic;
+  }
+  .hero .subtitle {
+    color: var(--muted);
+    font-size: 17px;
+    max-width: 720px;
+    line-height: 1.5;
+  }
+  .hero .meta {
+    display: flex;
+    gap: 14px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-size: 12px;
+    color: var(--cream);
+    font-family: -apple-system, sans-serif;
+  }
+  .chip .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .chip.copper { border-color: var(--copper-dim); }
+  .chip.copper .dot { background: var(--copper); }
+  .chip.gold { border-color: var(--gold-dim); }
+  .chip.gold .dot { background: var(--gold); }
+  .chip.sage { border-color: var(--sage-dim); }
+  .chip.sage .dot { background: var(--sage); }
+
+  .summary-card {
+    background: linear-gradient(145deg, var(--card), var(--surface));
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 26px;
+    margin-bottom: 36px;
+    box-shadow: var(--shadow);
+  }
+  .summary-card h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--copper);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .summary-card ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px 28px;
+  }
+  .summary-card li {
+    padding-left: 22px;
+    position: relative;
+    font-size: 14px;
+    color: var(--cream);
+  }
+  .summary-card li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--sage);
+    font-weight: 700;
+  }
+
+  .phase {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 18px;
+    overflow: hidden;
+    transition: border-color 200ms;
+  }
+  .phase:hover { border-color: var(--border-strong); }
+  .phase.open { border-color: var(--copper-dim); }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 150ms;
+  }
+  .phase-header:hover { background: var(--card-hover); }
+  .phase-num {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--copper), #a85d30);
+    color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: 600;
+    flex-shrink: 0;
+    box-shadow: 0 2px 10px var(--copper-glow);
+  }
+  .phase-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .phase-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 19px;
+    color: var(--white);
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .phase-sub {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .phase-progress {
+    font-size: 12px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    padding: 4px 10px;
+    background: var(--surface);
+    border-radius: 12px;
+  }
+  .phase-progress.done {
+    color: var(--sage);
+    background: var(--sage-dim);
+  }
+  .caret {
+    font-size: 14px;
+    color: var(--muted);
+    transition: transform 250ms;
+    flex-shrink: 0;
+  }
+  .phase.open .caret { transform: rotate(180deg); }
+  .phase-body {
+    display: none;
+    padding: 8px 24px 28px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .phase.open .phase-body { display: block; }
+
+  .step {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px dashed rgba(237, 230, 220, 0.08);
+  }
+  .step:first-child {
+    margin-top: 18px;
+    padding-top: 0;
+    border-top: none;
+  }
+  .step-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .step-num {
+    font-family: Georgia, serif;
+    color: var(--gold);
+    font-size: 16px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+  .step-title {
+    color: var(--white);
+    font-weight: 500;
+    font-size: 16px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+    cursor: pointer;
+  }
+  .check-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 5px;
+    background: var(--surface);
+    cursor: pointer;
+    margin-top: 2px;
+    flex-shrink: 0;
+    transition: all 150ms;
+    position: relative;
+  }
+  .check-item input[type="checkbox"]:hover {
+    border-color: var(--copper);
+  }
+  .check-item input[type="checkbox"]:checked {
+    background: var(--copper);
+    border-color: var(--copper);
+  }
+  .check-item input[type="checkbox"]:checked::after {
+    content: "✓";
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 13px;
+  }
+  .check-item input[type="checkbox"]:checked ~ .check-label {
+    color: var(--dim);
+    text-decoration: line-through;
+    text-decoration-color: rgba(106, 95, 82, 0.5);
+  }
+  .check-label {
+    color: var(--cream);
+    font-size: 14.5px;
+    line-height: 1.55;
+    transition: color 200ms;
+  }
+  .check-label a {
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold-dim);
+    transition: all 150ms;
+  }
+  .check-label a:hover {
+    color: var(--copper);
+    border-bottom-color: var(--copper);
+  }
+  .check-label code {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1px 7px;
+    border-radius: 4px;
+    font-family: 'SF Mono', Menlo, monospace;
+    font-size: 13px;
+    color: var(--gold);
+  }
+
+  .code-block {
+    background: #0d0b09;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 12px 0 4px 32px;
+    position: relative;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: var(--cream);
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .code-block .lang {
+    position: absolute;
+    top: 8px;
+    right: 48px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--dim);
+    font-family: inherit;
+  }
+  .copy-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 150ms;
+  }
+  .copy-btn:hover { color: var(--copper); border-color: var(--copper); }
+  .copy-btn.copied { color: var(--sage); border-color: var(--sage); }
+
+  .callout {
+    margin: 14px 0 14px 32px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    border-left: 3px solid;
+    background: var(--surface);
+    line-height: 1.55;
+  }
+  .callout strong { display: block; margin-bottom: 3px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  .callout.warn { border-left-color: var(--coral); background: var(--coral-dim); color: var(--cream); }
+  .callout.warn strong { color: var(--coral); }
+  .callout.info { border-left-color: var(--sky); background: rgba(91, 155, 213, 0.08); color: var(--cream); }
+  .callout.info strong { color: var(--sky); }
+  .callout.tip { border-left-color: var(--gold); background: var(--gold-dim); color: var(--cream); }
+  .callout.tip strong { color: var(--gold); }
+
+  .need-handy {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+  }
+  .need-handy .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: var(--gold);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .need-handy ul {
+    list-style: none;
+    display: flex;
+    gap: 8px 14px;
+    flex-wrap: wrap;
+  }
+  .need-handy li {
+    font-size: 13px;
+    color: var(--cream);
+    padding: 2px 10px;
+    background: var(--card);
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  a.external-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 32px;
+    margin-top: 8px;
+    padding: 8px 14px;
+    background: var(--copper-dim);
+    border: 1px solid var(--copper);
+    color: var(--copper);
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 150ms;
+  }
+  a.external-btn:hover {
+    background: var(--copper);
+    color: var(--white);
+  }
+  a.external-btn::after { content: "↗"; font-size: 13px; }
+
+  .success-state {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    margin-top: 40px;
+    background: linear-gradient(145deg, var(--sage-dim), var(--card));
+    border: 1px solid var(--sage);
+    border-radius: var(--radius);
+  }
+  .success-state.show { display: block; }
+  .success-state h2 {
+    font-family: Georgia, serif;
+    font-size: 32px;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+  .success-state p {
+    color: var(--cream);
+    font-size: 16px;
+  }
+
+  footer {
+    max-width: 980px;
+    margin: 50px auto 0;
+    padding: 0 28px;
+    font-size: 12px;
+    color: var(--dim);
+    text-align: center;
+    line-height: 1.7;
+  }
+  footer code { color: var(--muted); }
+
+  @media (max-width: 640px) {
+    main { padding: 20px 16px 0 16px; }
+    .hero h1 { font-size: 30px; }
+    .phase-header { padding: 16px; gap: 12px; }
+    .phase-num { width: 38px; height: 38px; font-size: 17px; }
+    .phase-body { padding: 8px 16px 20px 16px; }
+    .code-block, .callout, a.external-btn { margin-left: 0; }
+    .summary-card ul { grid-template-columns: 1fr; }
+    .top-inner { padding: 0; }
+    header.top { padding: 10px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">The <span class="accent">Dad</span> Center — Android Launch</div>
+    <div class="progress-wrap">
+      <span class="progress-num" id="progressNum">0 / 0</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <button class="reset-btn" onclick="resetAll()">Reset</button>
+  </div>
+</header>
+
+<main>
+
+<section class="hero">
+  <h1>Ship to <span class="accent">Google Play</span> — step by step.</h1>
+  <p class="subtitle">Every manual step you need to do outside the codebase, in the order they need to happen. Check items off as you go — your progress saves automatically.</p>
+  <div class="meta">
+    <span class="chip copper"><span class="dot"></span>Package <code style="color:inherit;background:none">com.thedadcenter.app</code></span>
+    <span class="chip gold"><span class="dot"></span>Methodical pace • 2–3 weeks</span>
+    <span class="chip sage"><span class="dot"></span>Org account — no 12-tester gate</span>
+  </div>
+</section>
+
+<section class="summary-card">
+  <h3>Already done by Claude (no action needed)</h3>
+  <ul>
+    <li>Android block wired in <code>app.config.ts</code> (googleServicesFile ref, intent filters, POST_NOTIFICATIONS)</li>
+    <li>Secrets added to <code>.gitignore</code> (google-services.json, keys)</li>
+    <li>EAS build profiles: dev/preview as APK, prod as AAB with autoIncrement</li>
+    <li>Placeholder <code>assetlinks.json</code> created at <code>apps/web/public/.well-known/</code></li>
+    <li>RevenueCat already picks key by <code>Platform.OS</code> — only the <code>.env</code> value needs swapping</li>
+    <li>Device token & subscription rows already store <code>platform='android'</code></li>
+  </ul>
+</section>
+
+<!-- PHASE 1 -->
+<div class="phase" data-phase="1">
+  <div class="phase-header" onclick="togglePhase(1)">
+    <div class="phase-num">1</div>
+    <div class="phase-info">
+      <div class="phase-title">External accounts & service setup</div>
+      <div class="phase-sub">Firebase, Play Console, Google Cloud, RevenueCat, FCM — ~1 day real time, ~36h waiting for service-account validation</div>
+    </div>
+    <div class="phase-progress" data-progress-for="1">0 / 0</div>
+    <div class="caret">▼</div>
+  </div>
+  <div class="phase-body">
+
+    <div class="need-handy">
+      <div class="label">What you need handy</div>
+      <ul>
+        <li>Google account with Firebase access</li>
+        <li>Play Console org account login</li>
+        <li>RevenueCat dashboard login</li>
+        <li>Credit card (not needed if already set up)</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">1.1</span><span class="step-title">Firebase project + FCM push credentials</span></div>
+      <a class="external-btn" href="https://console.firebase.google.com" target="_blank" rel="noopener">Open Firebase Console</a>
+      <label class="check-item"><input type="checkbox" data-id="1-1-1"><span class="check-label">Create (or reuse) Firebase project named <code>The Dad Center</code></span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-1-2"><span class="check-label">Click <strong>Add app</strong> → Android icon. Enter package name exactly: <code>com.thedadcenter.app</code></span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-1-3"><span class="check-label">Leave SHA-1 blank for now (you'll add it in Phase 3 after EAS generates the keystore)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-1-4"><span class="check-label">Download <code>google-services.json</code> and save to <code>apps/mobile/google-services.json</code> (project root, not <code>android/app/</code> — CNG regenerates <code>/android</code>)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-1-5"><span class="check-label">Skip the "Add Firebase SDK" prose — Expo handles it via the <code>googleServicesFile</code> config</span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-1-6"><span class="check-label">Firebase → <strong>⚙ Project settings → Service accounts → Generate new private key</strong> — save JSON to <code>apps/mobile/fcm-service-account.json</code></span></label>
+      <div class="callout info"><strong>Why</strong>Android push routes through FCM (not APNs). Expo Push uses the FCM V1 API, which requires this service-account JSON. Without it, Android tokens generate but messages silently drop.</div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">1.2</span><span class="step-title">Google Play Console — register the app</span></div>
+      <a class="external-btn" href="https://play.google.com/console" target="_blank" rel="noopener">Open Play Console</a>
+      <label class="check-item"><input type="checkbox" data-id="1-2-1"><span class="check-label">Create app → Name: <code>The Dad Center</code>, Default language: English (US), App/Game: <strong>App</strong>, Free/Paid: <strong>Free</strong></span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-2-2"><span class="check-label">Accept declarations. Confirm application ID shows as <code>com.thedadcenter.app</code></span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-2-3"><span class="check-label">Fill minimum Store listing draft: short description, full description, app icon (512×512 PNG), feature graphic (1024×500 PNG), 2+ phone screenshots — doesn't need to be final. Saves the draft.</span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-2-4"><span class="check-label">Upload a <strong>placeholder AAB manually</strong> (Internal testing → Create release → upload). Any AAB works — this is the one-time manual upload that unlocks EAS Submit API access later</span></label>
+      <div class="callout tip"><strong>Shortcut</strong>If you don't have a hand-built AAB to upload, come back after Phase 3 — your first EAS development build can be converted to AAB and uploaded here manually the first time.</div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">1.3</span><span class="step-title">Google Cloud service account (used by EAS Submit, RevenueCat, Play Billing)</span></div>
+      <a class="external-btn" href="https://console.cloud.google.com/iam-admin/serviceaccounts" target="_blank" rel="noopener">Open Google Cloud → Service Accounts</a>
+      <label class="check-item"><input type="checkbox" data-id="1-3-1"><span class="check-label">Create service account named <code>thedadcenter-play-api</code>. Assign roles: <strong>Pub/Sub Editor</strong> + <strong>Monitoring Viewer</strong> (RevenueCat needs these for real-time developer notifications)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-3-2"><span class="check-label">On the service account → <strong>Keys → Add Key → Create new key → JSON</strong>. Save download as <code>apps/mobile/google-play-key.json</code> (the path <code>eas.json:31</code> already expects)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-3-3"><span class="check-label">Play Console → <strong>Users and permissions → Invite new user</strong> → paste the service account email</span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-3-4"><span class="check-label">Grant app-level access to The Dad Center with: <em>View app information</em>, <em>Manage production releases</em>, <em>Manage testing tracks</em>, <em>View financial data</em></span></label>
+      <div class="callout warn"><strong>⏱ 36-hour wait</strong>Google takes up to 36 hours to validate the service account. Start this early. RevenueCat will error until validation completes.</div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">1.4</span><span class="step-title">Create Android-specific subscription & one-time products</span></div>
+      <label class="check-item"><input type="checkbox" data-id="1-4-1"><span class="check-label">Play Console → your app → <strong>Monetize → Products → Subscriptions → Create subscription</strong></span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-4-2"><span class="check-label">Monthly: Product ID <code>dadcenter_pro_monthly</code>, Name "The Dad Center Pro (Monthly)", Base plan ID <code>monthly-auto</code>, period 1 month, price <strong>$4.99 USD</strong></span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-4-3"><span class="check-label">Annual: Product ID <code>dadcenter_pro_annual</code>, Base plan ID <code>annual-auto</code>, period 1 year, price <strong>$39.99 USD</strong></span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-4-4"><span class="check-label">Lifetime: <strong>Monetize → Products → In-app products → Create</strong> → Product ID <code>dadcenter_pro_lifetime</code>, Type <strong>Managed product (non-consumable)</strong>, price <strong>$99.99 USD</strong></span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-4-5"><span class="check-label">Activate all three products</span></label>
+      <div class="callout warn"><strong>⚠ Lifetime ≠ subscription on Android</strong>Google Play doesn't support "lifetime subscriptions." Lifetime must be a <em>managed in-app product</em>, not a subscription product. RevenueCat handles this via its Offerings/Packages layer — iOS lifetime SKU and Android managed product share the same RC package.</div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">1.5</span><span class="step-title">RevenueCat — add Android app + Offerings</span></div>
+      <a class="external-btn" href="https://app.revenuecat.com" target="_blank" rel="noopener">Open RevenueCat</a>
+      <label class="check-item"><input type="checkbox" data-id="1-5-1"><span class="check-label">RevenueCat → <strong>Project settings → Apps → + New → Google Play Store</strong></span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-5-2"><span class="check-label">Package name: <code>com.thedadcenter.app</code>. Upload <code>google-play-key.json</code> (same file from 1.3)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-5-3"><span class="check-label">Copy the new <strong>Android Public API key</strong> — starts with <code>goog_</code>. Keep it ready for 2.1 below</span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-5-4"><span class="check-label">Products tab → Import products from Play Store. All three SKUs should appear</span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-5-5"><span class="check-label">Attach all three products to the <code>"The Dad Center Pro"</code> entitlement (same entitlement iOS uses)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-5-6"><span class="check-label">Offerings → default → edit packages: attach Android <code>dadcenter_pro_monthly</code> to <code>$rc_monthly</code>, <code>dadcenter_pro_annual</code> to <code>$rc_annual</code>, <code>dadcenter_pro_lifetime</code> to the custom <code>lifetime</code> package (iOS SKUs should already be there)</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">1.6</span><span class="step-title">Update .env with production RevenueCat Android key</span></div>
+      <label class="check-item"><input type="checkbox" data-id="1-6-1"><span class="check-label">Open <code>apps/mobile/.env</code>. Find <code>EXPO_PUBLIC_REVENUECAT_ANDROID_KEY</code> (currently starts with <code>test_</code>)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-6-2"><span class="check-label">Replace with the <code>goog_…</code> key from 1.5 step 3. Save file (not committed — <code>.env</code> is gitignored)</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">1.7</span><span class="step-title">Upload FCM credentials to Expo</span></div>
+      <div class="code-block"><span class="lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button>cd apps/mobile
+npx eas credentials
+# → Android → production → Push Notifications: FCM V1
+# → Upload a new FCM V1 service account key
+# → select fcm-service-account.json</div>
+      <label class="check-item"><input type="checkbox" data-id="1-7-1"><span class="check-label">Run command above. Choose Android → production → FCM V1 → upload <code>fcm-service-account.json</code></span></label>
+      <label class="check-item"><input type="checkbox" data-id="1-7-2"><span class="check-label">Confirm "FCM V1 key uploaded" success message</span></label>
+    </div>
+
+  </div>
+</div>
+
+<!-- PHASE 2 -->
+<div class="phase" data-phase="2">
+  <div class="phase-header" onclick="togglePhase(2)">
+    <div class="phase-num">2</div>
+    <div class="phase-info">
+      <div class="phase-title">Code & config changes</div>
+      <div class="phase-sub">Already done by Claude — just verify</div>
+    </div>
+    <div class="phase-progress done" data-progress-for="2">✓ Auto-done</div>
+    <div class="caret">▼</div>
+  </div>
+  <div class="phase-body">
+    <div class="callout info"><strong>Status</strong>All code/config edits in this phase were completed automatically. This section lists what changed so you can verify before your first build.</div>
+    <div class="step">
+      <div class="step-head"><span class="step-num">2.1</span><span class="step-title">Verify file changes</span></div>
+      <label class="check-item"><input type="checkbox" data-id="2-1-1"><span class="check-label"><code>apps/mobile/app.config.ts</code> — android block has <code>googleServicesFile</code>, <code>POST_NOTIFICATIONS</code> permission, and <code>intentFilters</code> with <code>autoVerify: true</code> for <code>thedadcenter.com</code></span></label>
+      <label class="check-item"><input type="checkbox" data-id="2-1-2"><span class="check-label"><code>apps/mobile/.gitignore</code> — now ignores <code>google-services.json</code>, <code>google-play-key.json</code>, <code>fcm-service-account.json</code></span></label>
+      <label class="check-item"><input type="checkbox" data-id="2-1-3"><span class="check-label"><code>apps/mobile/eas.json</code> — dev and preview profiles have <code>android.buildType: "apk"</code>; production has <code>autoIncrement: true</code></span></label>
+      <label class="check-item"><input type="checkbox" data-id="2-1-4"><span class="check-label"><code>apps/web/public/.well-known/assetlinks.json</code> — created with placeholder SHA-256 (real one goes in during Phase 3)</span></label>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 3 -->
+<div class="phase" data-phase="3">
+  <div class="phase-header" onclick="togglePhase(3)">
+    <div class="phase-num">3</div>
+    <div class="phase-info">
+      <div class="phase-title">First dev build on your physical device</div>
+      <div class="phase-sub">USB debugging → EAS build → install → smoke test — ~45 min active + ~15 min build</div>
+    </div>
+    <div class="phase-progress" data-progress-for="3">0 / 0</div>
+    <div class="caret">▼</div>
+  </div>
+  <div class="phase-body">
+
+    <div class="need-handy">
+      <div class="label">What you need handy</div>
+      <ul>
+        <li>Physical Android device</li>
+        <li>USB-C cable</li>
+        <li>Mac terminal with <code>adb</code> (comes with Xcode Command Line Tools)</li>
+        <li>Expo account logged in via <code>eas login</code></li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">3.1</span><span class="step-title">Prep the Android device</span></div>
+      <label class="check-item"><input type="checkbox" data-id="3-1-1"><span class="check-label">Settings → About phone → tap <strong>Build number</strong> 7 times. Developer options now unlocked</span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-1-2"><span class="check-label">Settings → System → Developer options → enable <strong>USB debugging</strong></span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-1-3"><span class="check-label">Plug into Mac. When device prompts "Allow USB debugging from this computer?" — check <strong>Always allow</strong> and tap <strong>Allow</strong></span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-1-4"><span class="check-label">Verify from terminal: <code>adb devices</code> — device should be listed as <code>device</code> (not <code>unauthorized</code>)</span></label>
+      <div class="code-block"><span class="lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button>adb devices</div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">3.2</span><span class="step-title">Build the development APK</span></div>
+      <div class="code-block"><span class="lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button>cd apps/mobile
+eas build --platform android --profile development</div>
+      <label class="check-item"><input type="checkbox" data-id="3-2-1"><span class="check-label">First run will prompt: <strong>"Generate a new Android Keystore?"</strong> → answer <strong>Yes</strong> (EAS manages it on their servers)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-2-2"><span class="check-label">Wait ~15 minutes for build to finish. EAS emails you when ready</span></label>
+      <div class="callout warn"><strong>New Architecture check</strong>The app has <code>newArchEnabled: true</code>. If any native module doesn't support Fabric, this build will fail. Any failure here means a native-module incompatibility — don't ignore it.</div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">3.3</span><span class="step-title">Grab SHA fingerprints from EAS</span></div>
+      <div class="code-block"><span class="lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button>cd apps/mobile
+eas credentials
+# → Android → production → Keystore: View
+# Copy SHA-256 (for assetlinks.json)
+# Copy SHA-1 (for Firebase)</div>
+      <label class="check-item"><input type="checkbox" data-id="3-3-1"><span class="check-label">Copy the <strong>SHA-256</strong> fingerprint from <code>eas credentials</code> output</span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-3-2"><span class="check-label">Also copy the <strong>SHA-1</strong> fingerprint (needed for Firebase if using Google Sign-In)</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">3.4</span><span class="step-title">Complete assetlinks.json + Firebase SHA-1</span></div>
+      <label class="check-item"><input type="checkbox" data-id="3-4-1"><span class="check-label">Open <code>apps/web/public/.well-known/assetlinks.json</code>. Replace <code>REPLACE_WITH_SHA256_FROM_EAS_CREDENTIALS_AFTER_FIRST_BUILD</code> with the SHA-256 from 3.3</span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-4-2"><span class="check-label">Commit & deploy the web app so the file is live at <code>https://thedadcenter.com/.well-known/assetlinks.json</code></span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-4-3"><span class="check-label">Verify: <code>curl -I https://thedadcenter.com/.well-known/assetlinks.json</code> returns <code>Content-Type: application/json</code> and 200 OK</span></label>
+      <div class="code-block"><span class="lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button>curl -I https://thedadcenter.com/.well-known/assetlinks.json
+# Expect: HTTP/2 200 + Content-Type: application/json</div>
+      <label class="check-item"><input type="checkbox" data-id="3-4-4"><span class="check-label">Firebase Console → your Android app → <strong>Add fingerprint</strong> → paste SHA-1 from 3.3</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">3.5</span><span class="step-title">Install the build on your device</span></div>
+      <label class="check-item"><input type="checkbox" data-id="3-5-1"><span class="check-label">Option A — <strong>Expo Orbit</strong> (easiest): on the EAS build page, click "Open with Orbit" — auto-installs via ADB</span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-5-2"><span class="check-label">Option B — <strong>QR code</strong>: scan QR on EAS build page with device camera, download APK from browser, tap to install. May need "Install unknown apps" permission for Chrome</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">3.6</span><span class="step-title">Start Metro dev server</span></div>
+      <div class="code-block"><span class="lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button>npx expo start --dev-client</div>
+      <label class="check-item"><input type="checkbox" data-id="3-6-1"><span class="check-label">Scan QR code from the dev client app on the device. App launches with hot reload working</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">3.7</span><span class="step-title">Smoke test — run every flow</span></div>
+      <label class="check-item"><input type="checkbox" data-id="3-7-1"><span class="check-label">Cold launch → onboarding → sign up (email+password) — no crashes, tab bar renders</span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-7-2"><span class="check-label">Sign in with Google — redirect returns to <code>thedadcenter://auth/callback</code>, session is active</span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-7-3"><span class="check-label">Apple Sign-In button is <strong>NOT visible on Android</strong> (platform-gated correctly)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-7-4"><span class="check-label">Push notification permission prompt appears (Android 13+ requires POST_NOTIFICATIONS)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-7-5"><span class="check-label">Fire a test push from Expo Push Tool — arrives, tap opens the correct screen</span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-7-6"><span class="check-label">Verify token in Supabase <code>device_tokens</code> table has <code>platform='android'</code></span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-7-7"><span class="check-label">Tap <code>https://thedadcenter.com/tasks</code> from Gmail or Messages — opens inside the app (App Links verified)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-7-8"><span class="check-label">Subscription paywall shows all three Android-priced packages via RevenueCat</span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-7-9"><span class="check-label">Light/dark theme toggle works (all colors via <code>useColors()</code>)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="3-7-10"><span class="check-label">GlassCards render with solid fallback (BlurView is iOS-only)</span></label>
+
+      <div class="callout tip"><strong>App Links verification</strong>Check from terminal: <code>adb shell dumpsys package domain-preferred-apps | grep com.thedadcenter.app</code>. Status should show as verified. If not, re-check assetlinks.json is live + SHA-256 matches exactly.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- PHASE 4 -->
+<div class="phase" data-phase="4">
+  <div class="phase-header" onclick="togglePhase(4)">
+    <div class="phase-num">4</div>
+    <div class="phase-info">
+      <div class="phase-title">Closed testing track</div>
+      <div class="phase-sub">Production AAB → internal track → trusted testers — ~3–5 days to validate real billing + push on Play Store install path</div>
+    </div>
+    <div class="phase-progress" data-progress-for="4">0 / 0</div>
+    <div class="caret">▼</div>
+  </div>
+  <div class="phase-body">
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">4.1</span><span class="step-title">Build + submit production AAB to internal track</span></div>
+      <div class="code-block"><span class="lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button>cd apps/mobile
+eas build --platform android --profile production
+eas submit --platform android --latest --track internal</div>
+      <label class="check-item"><input type="checkbox" data-id="4-1-1"><span class="check-label">Build completes (~15 min). AAB uploaded via <code>google-play-key.json</code></span></label>
+      <label class="check-item"><input type="checkbox" data-id="4-1-2"><span class="check-label">Play Console confirms new release in Internal testing track</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">4.2</span><span class="step-title">Set up closed testing (the "external beta" equivalent)</span></div>
+      <label class="check-item"><input type="checkbox" data-id="4-2-1"><span class="check-label">Play Console → <strong>Testing → Closed testing → Create track</strong> → name <code>closed-alpha</code></span></label>
+      <label class="check-item"><input type="checkbox" data-id="4-2-2"><span class="check-label">Create release → promote or attach latest AAB → Review rollout → Start rollout</span></label>
+      <label class="check-item"><input type="checkbox" data-id="4-2-3"><span class="check-label">Testers tab → Create email list → add 3–10 trusted testers (your partner, 2–3 friends, your own secondary Google account)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="4-2-4"><span class="check-label">Share the opt-in URL Play Console generates → testers accept → install from Play Store</span></label>
+      <div class="callout tip"><strong>Org-account perk</strong>The 12-tester / 14-day gate is for new <em>personal</em> accounts only. Your org account skips it. Still do closed testing for quality — it exercises the real Play Store install path.</div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">4.3</span><span class="step-title">Set up test accounts for billing</span></div>
+      <a class="external-btn" href="https://play.google.com/console" target="_blank" rel="noopener">Play Console → Setup → License testing</a>
+      <label class="check-item"><input type="checkbox" data-id="4-3-1"><span class="check-label">Play Console → <strong>Setup → License testing</strong> → add tester Google accounts (these get sandbox purchases, no real money)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="4-3-2"><span class="check-label">On test device, sign into Play Store with a license-testing account</span></label>
+      <label class="check-item"><input type="checkbox" data-id="4-3-3"><span class="check-label">Run through the paywall → buy Monthly → RevenueCat dashboard shows the user as entitled</span></label>
+      <label class="check-item"><input type="checkbox" data-id="4-3-4"><span class="check-label">Check Supabase <code>subscriptions</code> table — new row with <code>platform='android'</code> and correct product_id</span></label>
+      <label class="check-item"><input type="checkbox" data-id="4-3-5"><span class="check-label">Cancel → RevenueCat reflects cancellation via Pub/Sub webhook → <code>subscriptions.status</code> updates</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">4.4</span><span class="step-title">Closed-test watch items</span></div>
+      <label class="check-item"><input type="checkbox" data-id="4-4-1"><span class="check-label">Ask testers to try Samsung / OnePlus / Xiaomi devices if available (device-maker skin issues are the most common Android surprise)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="4-4-2"><span class="check-label">Monitor Sentry for 48h — crash-free rate >99%</span></label>
+      <label class="check-item"><input type="checkbox" data-id="4-4-3"><span class="check-label">Validate FCM push delivery on each tester device</span></label>
+      <label class="check-item"><input type="checkbox" data-id="4-4-4"><span class="check-label">Confirm App Links open app (not browser) when tapping <code>thedadcenter.com/*</code> from Gmail/Messages</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">4.5</span><span class="step-title">Bug-fix iteration loop</span></div>
+      <div class="code-block"><span class="lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button># After any code change:
+eas build --platform android --profile production
+eas submit --platform android --latest --track internal
+# Testers auto-get the update via Play Store</div>
+      <label class="check-item"><input type="checkbox" data-id="4-5-1"><span class="check-label">Version code auto-increments thanks to <code>autoIncrement: true</code> on production profile</span></label>
+    </div>
+
+  </div>
+</div>
+
+<!-- PHASE 5 -->
+<div class="phase" data-phase="5">
+  <div class="phase-header" onclick="togglePhase(5)">
+    <div class="phase-num">5</div>
+    <div class="phase-info">
+      <div class="phase-title">Store listing & Play compliance</div>
+      <div class="phase-sub">Data Safety, Content Rating, App Access, screenshots — ~2–3 hours</div>
+    </div>
+    <div class="phase-progress" data-progress-for="5">0 / 0</div>
+    <div class="caret">▼</div>
+  </div>
+  <div class="phase-body">
+
+    <div class="callout warn"><strong>All required before production</strong>Play Console blocks production release if Data Safety, Content Rating, App Access, or Target Audience are incomplete. Do these before the final submit.</div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">5.1</span><span class="step-title">Data Safety form</span></div>
+      <label class="check-item"><input type="checkbox" data-id="5-1-1"><span class="check-label">Play Console → <strong>App content → Data safety → Start</strong></span></label>
+      <label class="check-item"><input type="checkbox" data-id="5-1-2"><span class="check-label">Declare: Name/Email (Supabase auth), User IDs (shared with RevenueCat/Sentry), Purchase history, App interactions, Health info (pregnancy/baby), Device IDs (push tokens)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="5-1-3"><span class="check-label">Security practices: ✓ Data encrypted in transit (TLS), ✓ Data encrypted at rest (Supabase), ✓ Users can request deletion (already built — <code>/api/account/delete</code>)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="5-1-4"><span class="check-label">Link Privacy Policy URL — must be live at <code>thedadcenter.com/privacy</code> before submitting</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">5.2</span><span class="step-title">Content rating (IARC)</span></div>
+      <label class="check-item"><input type="checkbox" data-id="5-2-1"><span class="check-label">Play Console → <strong>App content → Content rating → Start</strong></span></label>
+      <label class="check-item"><input type="checkbox" data-id="5-2-2"><span class="check-label">Category: <strong>Apps</strong> (not Games). Answer questionnaire honestly — expected rating: Everyone or Teen</span></label>
+      <div class="callout info"><strong>Honest answers only</strong>Dishonest IARC answers get listings flagged. If the app mentions reproductive health in any detail, say so — "Teen" rating is fine for a pregnancy/parenting app.</div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">5.3</span><span class="step-title">Target audience</span></div>
+      <label class="check-item"><input type="checkbox" data-id="5-3-1"><span class="check-label">Play Console → <strong>App content → Target audience and content</strong></span></label>
+      <label class="check-item"><input type="checkbox" data-id="5-3-2"><span class="check-label">Primary age group: <strong>18+</strong> (parenting app for expecting/new parents)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="5-3-3"><span class="check-label">Declare: app is NOT primarily child-directed</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">5.4</span><span class="step-title">App Access (login credentials for Google reviewers)</span></div>
+      <label class="check-item"><input type="checkbox" data-id="5-4-1"><span class="check-label">Create dedicated review account: <code>qa+android@thedadcenter.com</code> (or similar). Give it an active subscription</span></label>
+      <label class="check-item"><input type="checkbox" data-id="5-4-2"><span class="check-label">Play Console → <strong>App content → App access</strong> → provide email, password, and any login instructions</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">5.5</span><span class="step-title">Finalize Store listing assets</span></div>
+      <label class="check-item"><input type="checkbox" data-id="5-5-1"><span class="check-label">App icon 512×512 PNG — use source from <code>assets/images/icon.png</code> (upscale if needed)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="5-5-2"><span class="check-label">Feature graphic 1024×500 PNG — design in Figma/Photoshop</span></label>
+      <label class="check-item"><input type="checkbox" data-id="5-5-3"><span class="check-label">Phone screenshots: 2–8, at least 1080×1920 (capture on device with Power+Volume Down)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="5-5-4"><span class="check-label">Short description (80 char max), full description (4000 char max) — reuse App Store copy; strip "iPhone" and "iOS" mentions</span></label>
+    </div>
+
+  </div>
+</div>
+
+<!-- PHASE 6 -->
+<div class="phase" data-phase="6">
+  <div class="phase-header" onclick="togglePhase(6)">
+    <div class="phase-num">6</div>
+    <div class="phase-info">
+      <div class="phase-title">Production rollout</div>
+      <div class="phase-sub">Staged rollout → monitor → 100% — ~3–4 days including Google review</div>
+    </div>
+    <div class="phase-progress" data-progress-for="6">0 / 0</div>
+    <div class="caret">▼</div>
+  </div>
+  <div class="phase-body">
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">6.1</span><span class="step-title">Promote the last closed-testing build</span></div>
+      <label class="check-item"><input type="checkbox" data-id="6-1-1"><span class="check-label">Play Console → <strong>Production → Create new release → Promote from internal/closed</strong>. Don't upload a fresh build — reuse what testers validated</span></label>
+      <label class="check-item"><input type="checkbox" data-id="6-1-2"><span class="check-label">Release notes (English): <code>First Android release of The Dad Center.</code> (or something marketing-worthy)</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">6.2</span><span class="step-title">Staged rollout</span></div>
+      <label class="check-item"><input type="checkbox" data-id="6-2-1"><span class="check-label">Set rollout percentage: <strong>20%</strong> → Review rollout → Start</span></label>
+      <label class="check-item"><input type="checkbox" data-id="6-2-2"><span class="check-label">Wait 24h. Monitor Sentry crash rate (target <1%) + Play Console <strong>Android vitals</strong></span></label>
+      <label class="check-item"><input type="checkbox" data-id="6-2-3"><span class="check-label">If healthy → increase to 50% → wait 24h → 100%</span></label>
+      <label class="check-item"><input type="checkbox" data-id="6-2-4"><span class="check-label">If crash spike detected → <strong>Halt rollout</strong> in Play Console, fix, promote new build</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">6.3</span><span class="step-title">Google review</span></div>
+      <label class="check-item"><input type="checkbox" data-id="6-3-1"><span class="check-label">First review typically 24–72h. Subsequent updates usually faster</span></label>
+      <label class="check-item"><input type="checkbox" data-id="6-3-2"><span class="check-label">Watch email for "published" notification</span></label>
+      <label class="check-item"><input type="checkbox" data-id="6-3-3"><span class="check-label">If rejected, Google sends a policy violation notice. Common issues: missing Privacy Policy link, Data Safety mismatch, app access credentials don't work</span></label>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">6.4</span><span class="step-title">Post-launch monitoring (first 48h)</span></div>
+      <label class="check-item"><input type="checkbox" data-id="6-4-1"><span class="check-label">Sentry: crash-free users >99%</span></label>
+      <label class="check-item"><input type="checkbox" data-id="6-4-2"><span class="check-label">Play Console → <strong>Quality → Android vitals → ANR & crash rate</strong> — both <1% (the "good" threshold)</span></label>
+      <label class="check-item"><input type="checkbox" data-id="6-4-3"><span class="check-label">Supabase logs: no error spike in edge functions post-launch</span></label>
+      <label class="check-item"><input type="checkbox" data-id="6-4-4"><span class="check-label">RevenueCat: Android purchases landing, entitlements syncing to Supabase</span></label>
+    </div>
+
+  </div>
+</div>
+
+<div class="success-state" id="successState">
+  <h2>🎉 Android launch complete</h2>
+  <p>The Dad Center is live on Google Play. Take a breath.</p>
+</div>
+
+</main>
+
+<footer>
+  <p><strong>Equivalent of TestFlight on Android</strong></p>
+  <p>Google Play → Internal Testing (up to 100 testers, minutes to publish) ~ TestFlight internal group<br/>
+  Google Play → Closed Testing (controlled email lists, hours) ~ TestFlight external testers<br/>
+  Google Play → Open Testing (unlimited opt-in) ~ TestFlight public link + App Store beta</p>
+  <p style="margin-top:16px"><code>package: com.thedadcenter.app</code> &nbsp;•&nbsp; <code>EAS project: 4ae2d850-713c-45fb-9756-4d5cf606299d</code></p>
+  <p style="margin-top:8px;color:var(--dim)">Generated by Claude • progress auto-saves to localStorage</p>
+</footer>
+
+<script>
+  const STORAGE_KEY = 'tdc_android_launch_progress_v1';
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
+  }
+  function saveState(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+  let state = loadState();
+
+  // Hydrate checkboxes
+  document.querySelectorAll('input[type="checkbox"][data-id]').forEach(cb => {
+    const id = cb.dataset.id;
+    if (state[id]) cb.checked = true;
+    cb.addEventListener('change', () => {
+      state[id] = cb.checked;
+      saveState(state);
+      updateProgress();
+    });
+  });
+
+  // Toggle phases
+  function togglePhase(n) {
+    const el = document.querySelector(`.phase[data-phase="${n}"]`);
+    el.classList.toggle('open');
+  }
+  // Open first unfinished phase on load
+  window.addEventListener('DOMContentLoaded', () => {
+    updateProgress();
+    const phases = [1, 3, 4, 5, 6]; // skip 2 (auto-done)
+    for (const n of phases) {
+      const { done, total } = phaseStats(n);
+      if (done < total) {
+        document.querySelector(`.phase[data-phase="${n}"]`).classList.add('open');
+        break;
+      }
+    }
+  });
+
+  function phaseStats(n) {
+    const cbs = document.querySelectorAll(`.phase[data-phase="${n}"] input[type="checkbox"][data-id]`);
+    let done = 0;
+    cbs.forEach(cb => { if (cb.checked) done++; });
+    return { done, total: cbs.length };
+  }
+
+  function updateProgress() {
+    let totalDone = 0;
+    let totalAll = 0;
+    [1, 2, 3, 4, 5, 6].forEach(n => {
+      const { done, total } = phaseStats(n);
+      totalDone += done; totalAll += total;
+      const el = document.querySelector(`[data-progress-for="${n}"]`);
+      if (el && n !== 2) {
+        el.textContent = `${done} / ${total}`;
+        if (done === total && total > 0) el.classList.add('done');
+        else el.classList.remove('done');
+      }
+    });
+    document.getElementById('progressNum').textContent = `${totalDone} / ${totalAll}`;
+    const pct = totalAll === 0 ? 0 : (totalDone / totalAll) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('successState').classList.toggle('show', totalDone === totalAll && totalAll > 0);
+  }
+
+  function copyCode(btn) {
+    const block = btn.parentElement;
+    const text = Array.from(block.childNodes)
+      .filter(n => n.nodeType === Node.TEXT_NODE || (n.nodeType === 1 && !['BUTTON','SPAN'].includes(n.tagName)))
+      .map(n => n.textContent).join('').trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+    });
+  }
+
+  function resetAll() {
+    if (!confirm('Reset all progress? This clears every checkbox on every phase.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    state = {};
+    document.querySelectorAll('input[type="checkbox"][data-id]').forEach(cb => cb.checked = false);
+    updateProgress();
+  }
+</script>
+
+</body>
+</html>

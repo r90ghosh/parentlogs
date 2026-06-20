@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content / Library — Digest Theme Redesign · The Dad Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F5F2; --card:#FFFFFF; --card2:#FBFAF8;
+    --ink:#1E1C19; --ink2:#56524B; --muted:#928D84; --faint:#B6B1A8;
+    --line:#EAE7E1; --line2:#F2F0EB;
+    --accent:#C0673D; --accent-soft:#F4E8E0; --accent-ink:#A8542E;
+    --sky:#5E86A8; --sky-s:#E9F0F5; --gold:#9C8A56; --sage:#6F9079;
+    --f:'Plus Jakarta Sans',-apple-system,system-ui,sans-serif;
+    --shadow:0 1px 2px rgba(40,35,28,0.04),0 8px 24px rgba(40,35,28,0.05);
+    --shadow-sm:0 1px 2px rgba(40,35,28,0.05);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#E4E1DB;color:var(--ink);font-family:var(--f);-webkit-font-smoothing:antialiased}
+  body{padding:36px 28px 80px}
+
+  .page-head{max-width:1320px;margin:0 auto 32px}
+  .page-head .eyebrow{font-size:12px;letter-spacing:2.2px;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .page-head h1{font-size:30px;color:var(--ink);margin:8px 0 10px;font-weight:800;letter-spacing:-.5px}
+  .page-head p{color:var(--ink2);font-size:15px;max-width:740px;line-height:1.6}
+  .page-head p b{color:var(--ink);font-weight:700}
+  .killbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .killbar span{font-size:12px;color:var(--ink2);background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+  .killbar span b{color:var(--accent-ink)}
+
+  .stage{display:flex;gap:44px;justify-content:center;align-items:flex-start;flex-wrap:wrap;max-width:1320px;margin:0 auto}
+  .col{display:flex;flex-direction:column;align-items:center;width:390px}
+  .col-head{text-align:center;margin-bottom:18px;min-height:88px}
+  .col-head .n{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--faint);font-weight:700}
+  .col-head h2{font-size:23px;color:var(--ink);margin:6px 0 8px;font-weight:800;letter-spacing:-.3px}
+  .col-head .desc{color:var(--ink2);font-size:13px;line-height:1.5;padding:0 8px}
+
+  .phone{width:390px;height:812px;border-radius:52px;background:#dcd8d1;padding:13px;
+    box-shadow:0 0 0 2px #cfcabf, 0 30px 70px rgba(60,52,40,0.22);position:relative}
+  .island{position:absolute;top:24px;left:50%;transform:translateX(-50%);width:118px;height:33px;background:#111;border-radius:20px;z-index:50}
+  .screen{width:100%;height:100%;border-radius:40px;overflow-y:auto;overflow-x:hidden;position:relative;background:var(--bg);scrollbar-width:none}
+  .screen::-webkit-scrollbar{display:none}
+
+  .statusbar{position:sticky;top:0;z-index:40;display:flex;justify-content:space-between;align-items:flex-end;padding:16px 26px 8px;font-size:14px;font-weight:700;color:var(--ink);background:linear-gradient(var(--bg),var(--bg) 70%,transparent)}
+  .statusbar .ico{font-size:12px;letter-spacing:1px}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:6px 22px 2px}
+  .topbar .ttl{font-size:26px;font-weight:800;letter-spacing:-.6px;color:var(--ink)}
+  .iconbtn{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+  .iconbtn svg{width:18px;height:18px;stroke:var(--ink2)}
+
+  .seg{display:flex;background:var(--line2);border-radius:13px;padding:3px;margin:14px 22px 4px}
+  .seg button{flex:1;font-family:var(--f);font-size:13px;font-weight:700;padding:9px 6px;border-radius:10px;color:var(--muted);border:none;background:transparent;cursor:pointer;transition:.15s}
+  .seg button.on{background:var(--card);color:var(--ink);box-shadow:var(--shadow-sm)}
+
+  .chips{display:flex;gap:8px;overflow-x:auto;padding:12px 20px 2px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none;font-size:12.5px;font-weight:700;color:var(--ink2);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;box-shadow:var(--shadow-sm)}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  .seclabel{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 6px}
+  .seclabel .l{font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--faint)}
+  .seclabel .l.now{color:var(--accent)}
+  .seclabel .more{font-size:12.5px;font-weight:700;color:var(--muted)}
+
+  /* article row */
+  .arow{display:flex;gap:13px;align-items:flex-start;padding:14px 24px;border-bottom:1px solid var(--line2);cursor:pointer}
+  .abody{flex:1;min-width:0}
+  .atitle{font-size:15.5px;font-weight:700;color:var(--ink);line-height:1.35}
+  .ameta{display:flex;align-items:center;gap:8px;margin-top:6px}
+  .ameta .rt{font-size:12px;color:var(--muted);font-weight:600}
+  .tag{font-size:9.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;border-radius:999px}
+  .tag.free{background:var(--sage-s,#E9F1EC);color:var(--sage)}
+  .tag.prem{background:#F3EFE2;color:var(--gold)}
+  .arow .chev{width:17px;height:17px;stroke:var(--faint);flex:none;margin-top:8px}
+  .alock{width:16px;height:16px;stroke:var(--gold);flex:none;margin-top:8px}
+
+  /* resource (link) row */
+  .rrow{display:flex;gap:13px;align-items:center;padding:14px 24px;border-bottom:1px solid var(--line2);cursor:pointer}
+  .ric{width:36px;height:36px;border-radius:11px;background:var(--sky-s);display:grid;place-items:center;flex:none}
+  .ric svg{width:18px;height:18px;stroke:var(--sky)}
+  .rbody{flex:1;min-width:0}
+  .rtitle{font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.3}
+  .rsrc{font-size:11.5px;color:var(--muted);font-weight:600;margin-top:3px}
+  .rext{width:15px;height:15px;stroke:var(--faint);flex:none}
+
+  /* magazine */
+  .maghero{margin:14px 20px 4px;background:linear-gradient(135deg,var(--accent-soft),#FBF1EA);border:1px solid #EBD9CC;border-radius:20px;padding:20px;box-shadow:var(--shadow);cursor:pointer}
+  .maghero .k{font-size:10.5px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent-ink)}
+  .maghero h3{font-size:21px;font-weight:800;color:var(--ink);margin-top:9px;line-height:1.25;letter-spacing:-.3px}
+  .maghero p{font-size:13.5px;color:#6a554a;line-height:1.55;margin-top:9px;font-weight:500}
+  .maghero .meta{display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-size:13px;font-weight:700;color:var(--accent-ink)}
+  .acard{margin:0 20px 12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow-sm);cursor:pointer}
+  .acard .k{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)}
+  .acard h4{font-size:16px;font-weight:700;color:var(--ink);margin-top:6px;line-height:1.3}
+  .acard p{font-size:13px;color:var(--ink2);line-height:1.5;margin-top:7px;font-weight:400}
+  .acard .meta{margin-top:10px;font-size:12px;color:var(--muted);font-weight:600}
+  .shelf{display:flex;gap:12px;overflow-x:auto;padding:6px 20px 4px;scrollbar-width:none}
+  .shelf::-webkit-scrollbar{display:none}
+  .vcard{flex:none;width:210px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:var(--shadow-sm);cursor:pointer}
+  .vcard .ric{margin-bottom:11px}
+  .vcard h5{font-size:14px;font-weight:700;color:var(--ink);line-height:1.3}
+  .vcard .src{font-size:11px;color:var(--muted);font-weight:600;margin-top:5px;display:flex;align-items:center;gap:5px}
+  .vcard .src svg{width:12px;height:12px;stroke:var(--sky)}
+
+  .tabbar{position:sticky;bottom:0;display:flex;justify-content:space-around;align-items:center;padding:10px 8px 26px;background:rgba(246,245,242,0.9);backdrop-filter:blur(14px);border-top:1px solid var(--line);z-index:40}
+  .tabbar .t{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--faint);font-weight:600}
+  .tabbar .t.on{color:var(--accent)} .tabbar .t svg{width:22px;height:22px}
+  .scrollnote{text-align:center;color:#8c887f;font-size:12px;margin-top:18px}
+  @media(max-width:1300px){.stage{gap:28px}.col,.phone{width:360px}}
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div class="eyebrow">The Dad Center · Mobile · Content</div>
+  <h1>Content / Library — same digest theme, 3 layouts</h1>
+  <p>The mobile content is <b>articles</b> (in-app reads) + <b>resources</b> (curated links to Mayo/CDC/AAP). Today they're split across <b>three near-duplicate menu rows</b> — "Blog", "Dad Tips" (the same screen), and "Video Library". All three options below merge them into one <b>Library</b>, surface what's relevant to your stage, and keep read-times + source + premium locks clear. Real 0–3 month content.</p>
+  <div class="killbar">
+    <span><b>Merge</b> Blog + Dad Tips + Videos → one Library</span>
+    <span><b>Lead</b> with your stage</span>
+    <span><b>Clear</b> read-time · source · premium lock</span>
+  </div>
+</div>
+
+<div class="stage">
+
+  <!-- ============= OPTION 1: LIBRARY FEED ============= -->
+  <div class="col">
+    <div class="col-head">
+      <div class="n">Option 1</div>
+      <h2>Library feed</h2>
+      <div class="desc">One screen, Articles / Resources toggle, your stage first. Compact rows. Most digest-consistent.</div>
+    </div>
+    <div class="phone">
+      <div class="island"></div>
+      <div class="screen">
+        <div class="statusbar"><span>9:41</span><span class="ico">5G ▦ 100%</span></div>
+        <div class="topbar"><span class="ttl">Library</span><span class="iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></span></div>
+
+        <div class="seg"><button class="on">Articles</button><button>Resources</button></div>
+
+        <div class="chips">
+          <div class="chip on">0–3 Mo</div>
+          <div class="chip">All</div>
+          <div class="chip">3–6 Mo</div>
+          <div class="chip">6–12 Mo</div>
+          <div class="chip">Trimester 3</div>
+        </div>
+
+        <div class="seclabel"><span class="l now">For you now · Fourth trimester</span></div>
+        <div class="arow"><div class="abody"><div class="atitle">How to Split Night Feeds with Your Partner</div><div class="ameta"><span class="rt">5 min read</span><span class="tag free">Free</span></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="arow"><div class="abody"><div class="atitle">The EASY Routine: A Flexible Schedule for Newborns</div><div class="ameta"><span class="rt">7 min read</span><span class="tag free">Free</span></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="arow"><div class="abody"><div class="atitle">Tummy Time: Building Baby's Strength From Day One</div><div class="ameta"><span class="rt">6 min read</span><span class="tag free">Free</span></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="arow"><div class="abody"><div class="atitle">What Dads Need to Know About Breastfeeding</div><div class="ameta"><span class="rt">5 min read</span><span class="tag free">Free</span></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="arow"><div class="abody"><div class="atitle">How Fatherhood Actually Changes Your Life (Honestly)</div><div class="ameta"><span class="rt">5 min read</span><span class="tag prem">Premium</span></div></div><svg class="alock" viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+
+        <div class="seclabel"><span class="l">Keep going</span></div>
+        <div class="arow"><div class="abody"><div class="atitle">The 5 S's for Soothing a Crying Baby</div><div class="ameta"><span class="rt">4 min read</span><span class="tag free">Free</span></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+
+        <div style="height:16px"></div>
+        <div class="tabbar">
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8M4 12v7a1 1 0 0 0 1 1h14"/></svg>Tasks</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>Briefing</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Tracker</div>
+          <div class="t on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>More</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============= OPTION 2: MAGAZINE ============= -->
+  <div class="col">
+    <div class="col-head">
+      <div class="n">Option 2</div>
+      <h2>Magazine</h2>
+      <div class="desc">A featured read, then article cards with excerpts, plus a horizontal Resources shelf. Discovery-forward.</div>
+    </div>
+    <div class="phone">
+      <div class="island"></div>
+      <div class="screen">
+        <div class="statusbar"><span>9:41</span><span class="ico">5G ▦ 100%</span></div>
+        <div class="topbar"><span class="ttl">Library</span><span class="iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></span></div>
+
+        <div class="chips">
+          <div class="chip on">0–3 Mo</div>
+          <div class="chip">All</div>
+          <div class="chip">3–6 Mo</div>
+          <div class="chip">6–12 Mo</div>
+        </div>
+
+        <div class="seclabel"><span class="l now">Featured for you</span></div>
+        <div class="maghero">
+          <div class="k">Fourth trimester · Sleep</div>
+          <h3>How to Split Night Feeds with Your Partner</h3>
+          <p>Sleep deprivation destroys more new-parent relationships than any other factor. A structured system gives each parent a protected window.</p>
+          <div class="meta">Read · 5 min →</div>
+        </div>
+
+        <div class="seclabel"><span class="l">More reads</span></div>
+        <div class="acard"><div class="k">Routine</div><h4>The EASY Routine for Newborns</h4><p>Strict schedules don't work for newborns, but chaos isn't sustainable. A flexible pattern that creates predictability.</p><div class="meta">7 min read · Free</div></div>
+        <div class="acard"><div class="k">Development</div><h4>Tummy Time From Day One</h4><p>The foundation for every motor milestone. Most babies hate it at first — here's how to make it work.</p><div class="meta">6 min read · Free</div></div>
+
+        <div class="seclabel"><span class="l">Watch &amp; learn</span><span class="more">See all →</span></div>
+        <div class="shelf">
+          <div class="vcard"><div class="ric"><svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M12 8v8M8 12h8"/><circle cx="12" cy="12" r="9"/></svg></div><h5>Infant CPR Anytime</h5><div class="src"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg>AHA + AAP</div></div>
+          <div class="vcard"><div class="ric"><svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 2"/></svg></div><h5>Safe Sleep Resources</h5><div class="src"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg>AAP</div></div>
+          <div class="vcard"><div class="ric"><svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h5>Learn the Signs. Act Early.</h5><div class="src"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg>CDC</div></div>
+        </div>
+
+        <div style="height:16px"></div>
+        <div class="tabbar">
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8M4 12v7a1 1 0 0 0 1 1h14"/></svg>Tasks</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>Briefing</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Tracker</div>
+          <div class="t on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>More</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============= OPTION 3: STAGE TIMELINE ============= -->
+  <div class="col">
+    <div class="col-head">
+      <div class="n">Option 3</div>
+      <h2>By stage</h2>
+      <div class="desc">Content along the journey — for now, read ahead, or revisit earlier stages. A phase scrubber on top.</div>
+    </div>
+    <div class="phone">
+      <div class="island"></div>
+      <div class="screen">
+        <div class="statusbar"><span>9:41</span><span class="ico">5G ▦ 100%</span></div>
+        <div class="topbar"><span class="ttl">Library</span><span class="iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></span></div>
+
+        <div class="chips">
+          <div class="chip">Trimester 3</div>
+          <div class="chip">Delivery</div>
+          <div class="chip on">0–3 Mo</div>
+          <div class="chip">3–6 Mo</div>
+          <div class="chip">6–12 Mo</div>
+        </div>
+
+        <div class="seclabel"><span class="l now">For you now · 0–3 months</span></div>
+        <div class="arow"><div class="abody"><div class="atitle">How to Split Night Feeds with Your Partner</div><div class="ameta"><span class="rt">5 min read</span></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="arow"><div class="abody"><div class="atitle">The EASY Routine for Newborns</div><div class="ameta"><span class="rt">7 min read</span></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="arow"><div class="abody"><div class="atitle">Tummy Time From Day One</div><div class="ameta"><span class="rt">6 min read</span></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="rrow"><div class="ric"><svg viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><path d="M12 8v8M8 12h8"/><circle cx="12" cy="12" r="9"/></svg></div><div class="rbody"><div class="rtitle">Infant CPR Anytime</div><div class="rsrc">AHA + AAP · resource</div></div><svg class="rext" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
+
+        <div class="seclabel"><span class="l">Read ahead · 3–6 months</span></div>
+        <div class="arow"><div class="abody"><div class="atitle">Starting Solids: What You Need to Know</div><div class="ameta"><span class="rt">6 min read</span></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+        <div class="arow"><div class="abody"><div class="atitle">Sleep Regressions, Explained</div><div class="ameta"><span class="rt">5 min read</span></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+
+        <div class="seclabel"><span class="l">Revisit · Pregnancy</span></div>
+        <div class="arow"><div class="abody"><div class="atitle">Building the Birth Plan Together</div><div class="ameta"><span class="rt">8 min read</span></div></div><svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+
+        <div style="height:16px"></div>
+        <div class="tabbar">
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8M4 12v7a1 1 0 0 0 1 1h14"/></svg>Tasks</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>Briefing</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Tracker</div>
+          <div class="t on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>More</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="scrollnote">Same theme · real 0–3 month articles + curated resources · merges Blog / Dad Tips / Videos into one Library</div>
+</body>
+</html>

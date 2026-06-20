@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Briefing — Mobile Redesign · The Dad Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Jost:wght@300;400;500;600&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12100e; --surface:#1a1714; --card:#201c18; --card2:#282420;
+    --white:#faf6f0; --cream:#ede6dc; --muted:#9a8d7c; --dim:#6b6052;
+    --copper:#c4703f; --gold:#d4a853; --sage:#6b8f71; --coral:#d4836b;
+    --sky:#5b9bd5; --rose:#c47a8f; --purple:#9b7fd4;
+    --border:rgba(237,230,220,0.10); --border2:rgba(237,230,220,0.16);
+    --pressed:rgba(237,230,220,0.05); --subtle:rgba(237,230,220,0.06);
+    --serif:'Playfair Display',serif; --body:'Jost',sans-serif; --ui:'Karla',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#0c0b0a;color:var(--cream);font-family:var(--body);-webkit-font-smoothing:antialiased}
+  body{padding:36px 28px 80px}
+
+  /* ---------- page chrome ---------- */
+  .page-head{max-width:1320px;margin:0 auto 34px}
+  .page-head .eyebrow{font-family:var(--ui);font-size:12px;letter-spacing:2.4px;text-transform:uppercase;color:var(--copper);font-weight:700}
+  .page-head h1{font-family:var(--serif);font-size:34px;color:var(--white);margin:8px 0 10px;font-weight:700}
+  .page-head p{color:var(--muted);font-size:15px;max-width:760px;line-height:1.6}
+  .fixes{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .fixes span{font-family:var(--ui);font-size:12px;color:var(--cream);background:var(--subtle);border:1px solid var(--border);border-radius:999px;padding:6px 12px}
+  .fixes span b{color:var(--copper);font-weight:700}
+
+  .stage{display:flex;gap:40px;justify-content:center;align-items:flex-start;flex-wrap:wrap;max-width:1320px;margin:0 auto}
+  .col{display:flex;flex-direction:column;align-items:center;width:390px}
+  .col-head{text-align:center;margin-bottom:18px;min-height:96px}
+  .col-head .n{font-family:var(--ui);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);font-weight:700}
+  .col-head h2{font-family:var(--serif);font-size:24px;color:var(--white);margin:6px 0 8px}
+  .col-head .desc{color:var(--muted);font-size:13px;line-height:1.5;padding:0 6px}
+  .col-head .desc b{color:var(--gold);font-weight:600}
+
+  /* ---------- phone frame ---------- */
+  .phone{width:390px;height:812px;border-radius:52px;background:#000;
+    padding:13px;box-shadow:0 0 0 2px #2a2724, 0 30px 70px rgba(0,0,0,0.6);position:relative}
+  .island{position:absolute;top:24px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:20px;z-index:50}
+  .screen{width:100%;height:100%;border-radius:40px;overflow-y:auto;overflow-x:hidden;position:relative;
+    background:
+      radial-gradient(120% 80% at 0% 0%, rgba(196,112,63,0.10), transparent 50%),
+      radial-gradient(120% 80% at 100% 0%, rgba(212,168,83,0.07), transparent 45%),
+      var(--bg);
+    scrollbar-width:none}
+  .screen::-webkit-scrollbar{display:none}
+
+  .statusbar{position:sticky;top:0;z-index:40;display:flex;justify-content:space-between;align-items:flex-end;
+    padding:16px 28px 8px;font-family:var(--ui);font-size:14px;font-weight:700;color:var(--white);
+    backdrop-filter:blur(8px)}
+  .statusbar .ico{display:flex;gap:6px;align-items:center;font-size:13px}
+
+  .pad{padding:4px 20px 0}
+  .tabbar{position:sticky;bottom:0;display:flex;justify-content:space-around;align-items:center;
+    padding:10px 8px 26px;background:rgba(26,23,20,0.82);backdrop-filter:blur(14px);border-top:1px solid var(--border);z-index:40}
+  .tabbar .t{display:flex;flex-direction:column;align-items:center;gap:3px;font-family:var(--ui);font-size:10px;color:var(--dim);font-weight:600}
+  .tabbar .t.on{color:var(--copper)}
+  .tabbar .t svg{width:22px;height:22px}
+
+  /* generic */
+  .eyebrow{font-family:var(--ui);font-weight:700;text-transform:uppercase;letter-spacing:1.6px;font-size:11px}
+  .serif{font-family:var(--serif)}
+  .body{font-family:var(--body);color:var(--cream);line-height:1.62}
+  .icobtn{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:var(--pressed);border:1px solid var(--border)}
+  .icobtn svg{width:18px;height:18px;stroke:var(--copper)}
+
+  /* =========================================================
+     V1 — CALM EDITORIAL  (refined accordion + week stepper)
+     ========================================================= */
+  .v1 .toprow{display:flex;align-items:center;justify-content:space-between;padding:6px 20px 2px}
+  .v1 .toprow h1{font-family:var(--serif);font-size:28px;color:var(--white);font-weight:700}
+
+  .stepper{margin:14px 20px 6px;display:flex;align-items:center;justify-content:space-between;
+    background:var(--card);border:1px solid var(--border);border-radius:16px;padding:10px 12px}
+  .stepper .nav{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--subtle);border:1px solid var(--border)}
+  .stepper .nav svg{width:18px;height:18px;stroke:var(--copper)}
+  .stepper .mid{text-align:center;flex:1}
+  .stepper .mid .wk{font-family:var(--serif);font-size:18px;color:var(--white);font-weight:700;display:flex;gap:8px;justify-content:center;align-items:center}
+  .stepper .mid .wk .now{font-family:var(--ui);font-size:10px;font-weight:700;letter-spacing:1px;color:#1a1714;background:var(--gold);padding:3px 8px;border-radius:999px}
+  .stepper .mid .jump{font-family:var(--ui);font-size:12px;color:var(--muted);margin-top:2px}
+
+  .hero1{padding:18px 22px 6px}
+  .hero1 .eyebrow{color:var(--copper)}
+  .hero1 h2{font-family:var(--serif);font-size:27px;line-height:1.18;color:var(--white);margin-top:8px;font-weight:700}
+
+  .babycard{margin:14px 20px 8px;display:flex;align-items:center;gap:16px;
+    background:linear-gradient(135deg, rgba(212,168,83,0.10), rgba(196,112,63,0.05));
+    border:1px solid var(--border);border-radius:18px;padding:16px}
+  .babycard .emoji{font-size:46px;line-height:1}
+  .babycard .info .f{font-family:var(--body);font-weight:500;font-size:16px;color:var(--white)}
+  .babycard .info .d{font-family:var(--body);font-size:13px;color:var(--muted);margin-top:2px}
+  .babycard .bar{height:4px;background:var(--subtle);border-radius:4px;margin-top:10px;overflow:hidden}
+  .babycard .bar i{display:block;height:100%;width:60%;background:linear-gradient(90deg,var(--copper),var(--gold));border-radius:4px}
+  .babycard .info .prog{font-family:var(--ui);font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:.4px}
+
+  .acc{margin:0 20px 12px;background:var(--card);border:1px solid var(--border);border-radius:16px;border-left:3px solid var(--ac,var(--copper));overflow:hidden}
+  .acc-h{display:flex;align-items:center;justify-content:space-between;padding:16px 16px;cursor:pointer;user-select:none}
+  .acc-h .l{display:flex;align-items:center;gap:11px}
+  .acc-h .l .ic{font-size:18px}
+  .acc-h .l .tt{font-family:var(--serif);font-size:17px;color:var(--white);font-weight:600}
+  .acc-h .chev{width:20px;height:20px;stroke:var(--muted);transition:transform .25s}
+  .acc.open .acc-h .chev{transform:rotate(180deg)}
+  .acc-c{max-height:0;overflow:hidden;transition:max-height .3s ease}
+  .acc.open .acc-c{max-height:600px}
+  .acc-c .inner{padding:0 16px 18px}
+  .acc-c p{font-family:var(--body);font-size:16px;line-height:1.66;color:var(--cream)}
+  .focus li{display:flex;gap:11px;align-items:flex-start;margin-bottom:12px}
+  .focus li:last-child{margin-bottom:0}
+  .focus .dot{width:7px;height:7px;border-radius:50%;background:var(--copper);margin-top:9px;flex:none}
+  .focus li span{font-family:var(--body);font-size:15.5px;line-height:1.5;color:var(--cream)}
+  .focus .lead{font-family:var(--body);font-size:15px;color:var(--muted);margin-bottom:12px}
+
+  .trenches{margin:0 20px 12px;background:var(--pressed);border-left:4px solid var(--copper);border-radius:12px;padding:16px;display:flex;gap:12px}
+  .trenches .ic{font-size:18px}
+  .trenches .lbl{font-family:var(--ui);font-weight:700;font-size:11px;letter-spacing:1.4px;color:var(--copper);margin-bottom:7px}
+  .trenches .q{font-family:var(--body);font-style:italic;font-size:15px;line-height:1.55;color:var(--cream)}
+
+  .footln{margin:14px 20px 0;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px;
+    font-family:var(--ui);font-size:12px;color:var(--muted)}
+  .footln .ck{color:var(--sage)}
+  .footln .dotsep{opacity:.5}
+
+  /* =========================================================
+     V2 — CHAPTERS  (one focused section at a time)
+     ========================================================= */
+  .v2 .barrow{display:flex;align-items:center;justify-content:space-between;padding:6px 20px 0}
+  .v2 .barrow .label{font-family:var(--ui);font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .v2 .wkstep{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:999px;padding:5px 6px}
+  .v2 .wkstep .nav{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--subtle)}
+  .v2 .wkstep .nav svg{width:15px;height:15px;stroke:var(--copper)}
+  .v2 .wkstep .wk{font-family:var(--ui);font-weight:700;font-size:14px;color:var(--white)}
+
+  .v2 .hero{padding:16px 22px 4px}
+  .v2 .hero .eyebrow{color:var(--copper)}
+  .v2 .hero h2{font-family:var(--serif);font-size:25px;line-height:1.18;color:var(--white);margin-top:7px;font-weight:700}
+  .v2 .babychip{display:inline-flex;align-items:center;gap:9px;margin:12px 22px 0;background:var(--subtle);border:1px solid var(--border);border-radius:999px;padding:7px 14px 7px 9px}
+  .v2 .babychip .e{font-size:22px}
+  .v2 .babychip .tx{font-family:var(--body);font-size:13px;color:var(--cream)}
+  .v2 .babychip .tx b{color:var(--white);font-weight:500}
+
+  .chips{display:flex;gap:9px;overflow-x:auto;padding:18px 20px 6px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none;display:flex;align-items:center;gap:7px;font-family:var(--ui);font-weight:600;font-size:13px;
+    color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:9px 15px;cursor:pointer;transition:.18s}
+  .chip .e{font-size:14px}
+  .chip.on{background:var(--copper);border-color:var(--copper);color:#fff}
+  .dots{display:flex;gap:6px;align-items:center;padding:4px 22px 0}
+  .dots .d{width:7px;height:7px;border-radius:50%;background:var(--subtle)}
+  .dots .d.on{background:var(--copper);width:20px;border-radius:4px}
+  .dots .cnt{font-family:var(--ui);font-size:11px;color:var(--muted);margin-left:8px}
+
+  .panel{display:none;padding:18px 24px 8px;animation:fade .35s ease}
+  .panel.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .panel .pe{font-family:var(--ui);font-weight:700;letter-spacing:1.6px;text-transform:uppercase;font-size:12px;margin-bottom:14px}
+  .panel h3{font-family:var(--serif);font-size:22px;color:var(--white);margin-bottom:14px;font-weight:600;line-height:1.25}
+  .panel p{font-family:var(--body);font-size:17px;line-height:1.7;color:var(--cream)}
+  .panel .stat{display:inline-flex;gap:14px;margin-top:18px;background:var(--subtle);border:1px solid var(--border);border-radius:14px;padding:12px 18px}
+  .panel .stat div{text-align:center}
+  .panel .stat .v{font-family:var(--serif);font-size:20px;color:var(--white)}
+  .panel .stat .k{font-family:var(--ui);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:2px}
+  .panel ol{list-style:none;counter-reset:f;margin-top:6px}
+  .panel ol li{counter-increment:f;display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+  .panel ol li::before{content:counter(f);font-family:var(--serif);font-size:15px;color:var(--copper);background:var(--copperDim,rgba(196,112,63,0.15));width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:none;border:1px solid rgba(196,112,63,0.3)}
+  .panel ol li span{font-family:var(--body);font-size:16px;line-height:1.5;color:var(--cream);padding-top:3px}
+  .panel blockquote{position:relative;font-family:var(--serif);font-style:italic;font-size:19px;line-height:1.5;color:var(--white);padding:6px 0 0 4px}
+  .panel blockquote .mk{font-family:var(--serif);font-size:60px;color:var(--copper);opacity:.4;line-height:.4;display:block;height:26px}
+  .panel blockquote cite{display:block;font-family:var(--ui);font-style:normal;font-size:12px;color:var(--muted);margin-top:16px;letter-spacing:.5px}
+
+  .chapnav{display:flex;gap:12px;padding:10px 22px 16px}
+  .chapnav button{font-family:var(--ui);font-weight:700;font-size:14px;border:none;cursor:pointer;border-radius:14px;padding:14px 16px}
+  .chapnav .prev{background:var(--subtle);color:var(--cream);border:1px solid var(--border);flex:none;width:54px;display:grid;place-items:center}
+  .chapnav .prev svg{width:18px;height:18px;stroke:var(--cream)}
+  .chapnav .next{flex:1;background:linear-gradient(90deg,var(--copper),#b3633a);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px}
+  .chapnav .next svg{width:17px;height:17px;stroke:#fff}
+
+  /* =========================================================
+     V3 — MAGAZINE  (big type, airy, scannable)
+     ========================================================= */
+  .v3 .mhead{padding:10px 24px 0;display:flex;justify-content:space-between;align-items:center}
+  .v3 .mhead .k{font-family:var(--ui);font-size:11px;letter-spacing:2.4px;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .v3 .bignum{padding:14px 24px 0;display:flex;align-items:flex-end;gap:14px}
+  .v3 .bignum .num{font-family:var(--serif);font-size:88px;line-height:.82;color:var(--white);font-weight:800;letter-spacing:-2px}
+  .v3 .bignum .meta{padding-bottom:8px}
+  .v3 .bignum .meta .of{font-family:var(--body);font-size:14px;color:var(--muted)}
+  .v3 .bignum .meta .tri{font-family:var(--ui);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--copper);font-weight:700;margin-top:4px}
+  .v3 .mtitle{font-family:var(--serif);font-size:30px;line-height:1.14;color:var(--white);font-weight:700;padding:16px 24px 0}
+
+  .v3 .babystrip{margin:20px 24px 4px;padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px}
+  .v3 .babystrip .e{font-size:42px}
+  .v3 .babystrip .t{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--cream)}
+  .v3 .babystrip .m{font-family:var(--ui);font-size:12px;color:var(--muted);letter-spacing:.6px;margin-top:3px}
+
+  .v3 .index{margin:18px 24px 6px}
+  .v3 .index .lbl{font-family:var(--ui);font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);font-weight:700;margin-bottom:10px}
+  .v3 .index a{display:flex;align-items:center;justify-content:space-between;text-decoration:none;padding:7px 0;border-bottom:1px solid var(--border)}
+  .v3 .index a:last-child{border-bottom:none}
+  .v3 .index a .nm{font-family:var(--body);font-size:15px;color:var(--cream)}
+  .v3 .index a .ar{font-family:var(--ui);font-size:12px;color:var(--muted)}
+
+  .v3 article{padding:26px 24px 0}
+  .v3 article .sec-k{font-family:var(--ui);font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:12px;margin-bottom:12px}
+  .v3 article h4{font-family:var(--serif);font-size:23px;color:var(--white);font-weight:600;margin-bottom:12px;line-height:1.25}
+  .v3 article p{font-family:var(--body);font-size:17px;line-height:1.74;color:var(--cream)}
+  .v3 article .divider{height:1px;background:var(--border);margin:30px 0}
+  .v3 .mfocus{margin-top:8px}
+  .v3 .mfocus li{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px}
+  .v3 .mfocus li .num{font-family:var(--serif);font-size:18px;color:var(--copper);flex:none;width:22px}
+  .v3 .mfocus li span{font-family:var(--body);font-size:16.5px;line-height:1.5;color:var(--cream)}
+  .v3 .pullquote{margin:8px 0;padding:8px 0 0 22px;border-left:3px solid var(--copper)}
+  .v3 .pullquote .mk{font-family:var(--serif);font-size:54px;color:var(--copper);opacity:.35;height:22px;display:block;line-height:.5}
+  .v3 .pullquote q{font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.5;color:var(--white);quotes:none}
+  .v3 .pullquote cite{display:block;font-family:var(--ui);font-style:normal;font-size:12px;color:var(--muted);margin-top:14px}
+
+  .v3 .mfoot{padding:30px 24px 0;text-align:center}
+  .v3 .mfoot .src{display:inline-block;font-family:var(--ui);font-size:11px;letter-spacing:.6px;color:var(--sage);background:rgba(107,143,113,0.12);border-radius:999px;padding:5px 12px}
+  .v3 .mfoot .dis{font-family:var(--body);font-size:11px;color:var(--dim);margin-top:12px;line-height:1.5}
+
+  .v3 .stickywk{position:sticky;bottom:0;display:flex;align-items:center;justify-content:center;gap:18px;
+    padding:12px 0 28px;background:rgba(18,16,14,0.85);backdrop-filter:blur(14px);border-top:1px solid var(--border)}
+  .v3 .stickywk .nav{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--subtle);border:1px solid var(--border)}
+  .v3 .stickywk .nav svg{width:16px;height:16px;stroke:var(--copper)}
+  .v3 .stickywk .wk{font-family:var(--ui);font-weight:700;font-size:15px;color:var(--white)}
+  .v3 .stickywk .wk small{color:var(--muted);font-weight:500}
+
+  /* =========================================================
+     V4 — FIELD MANUAL  (clean & elegant for dads: minimal, no decoration)
+     ========================================================= */
+  .v4 .vhead{display:flex;align-items:center;justify-content:space-between;padding:8px 26px 0}
+  .v4 .vhead .k{font-family:var(--ui);font-size:11px;letter-spacing:2.6px;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .v4 .qstep{display:flex;align-items:center;gap:14px;font-family:var(--ui);font-size:13px;font-weight:600;color:var(--cream)}
+  .v4 .qstep svg{width:15px;height:15px;stroke:var(--muted)}
+  .v4 .vtitle{font-family:var(--serif);font-size:29px;line-height:1.16;color:var(--white);font-weight:700;padding:22px 26px 0}
+  .v4 .meta{padding:16px 26px 0;font-family:var(--ui);font-size:11.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);line-height:1.9}
+  .v4 .meta .now{color:var(--copper);font-weight:700}
+  .v4 .meta .sz{display:block;color:var(--dim);letter-spacing:.8px;margin-top:2px}
+  .v4 .rule{height:1px;background:var(--border);margin:22px 26px}
+  .v4 .sec{padding:0 26px}
+  .v4 .sec + .sec{margin-top:26px}
+  .v4 .sec .lbl{font-family:var(--ui);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:11px}
+  .v4 .sec p{font-family:var(--body);font-size:17px;line-height:1.75;color:var(--cream)}
+  .v4 .flist{list-style:none}
+  .v4 .flist li{display:flex;gap:14px;padding:11px 0;border-bottom:1px solid var(--border)}
+  .v4 .flist li:last-child{border-bottom:none}
+  .v4 .flist li .dash{color:var(--copper);font-family:var(--serif);font-size:16px;line-height:1.5;flex:none}
+  .v4 .flist li span{font-family:var(--body);font-size:16px;line-height:1.5;color:var(--cream)}
+  .v4 .note{margin:0 26px;padding:2px 0 2px 18px;border-left:2px solid var(--copper)}
+  .v4 .note .lbl{font-family:var(--ui);font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--copper);font-weight:700;margin-bottom:8px}
+  .v4 .note p{font-family:var(--body);font-style:italic;font-size:16px;line-height:1.6;color:var(--cream)}
+  .v4 .vfoot{padding:28px 26px 26px;font-family:var(--ui);font-size:11px;letter-spacing:.6px;color:var(--dim)}
+
+  .scrollnote{text-align:center;color:var(--dim);font-family:var(--ui);font-size:12px;margin-top:14px;letter-spacing:.5px}
+  @media(max-width:1300px){.stage{gap:28px}.col,.phone{width:360px}}
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div class="eyebrow">The Dad Center · Mobile</div>
+  <h1>Briefing screen — 3 redesign directions</h1>
+  <p>Same content and brand, four ways to fix the density. All of them strip the heavy stuff from the live app — <b style="color:var(--gold)">no floating particles, no 3D tilt, no blur-stacking, no animate-everything</b>. Each also kills the 104-week pill bar, stops dumping every section open at once, and gives the page a real type hierarchy with breathing room. <b style="color:var(--gold)">Direction 4 (“Field Manual”)</b> goes furthest on your “clean &amp; elegant for dads” note — no emoji, no colored boxes, one accent, zero motion. Sample week: Week 24. Tap accordions, chapter pills, and steppers to try them.</p>
+  <div class="fixes">
+    <span><b>Fix</b> 104 pills → week stepper + jump</span>
+    <span><b>Fix</b> all sections open → progressive disclosure</span>
+    <span><b>Fix</b> flat type → clear hierarchy</span>
+    <span><b>Fix</b> low contrast text lifted</span>
+    <span><b>Fix</b> primary content above the fold</span>
+  </div>
+</div>
+
+<div class="stage">
+
+  <!-- ============== V1 ============== -->
+  <div class="col">
+    <div class="col-head">
+      <div class="n">Direction 1</div>
+      <h2>Calm Editorial</h2>
+      <div class="desc">Refined version of today's layout. <b>Accordion</b> — only the 2 most important sections open. Safest, most brand-true.</div>
+    </div>
+    <div class="phone">
+      <div class="island"></div>
+      <div class="screen v1">
+        <div class="statusbar"><span>9:41</span><span class="ico">􀙇 􀋃 􀛨</span></div>
+
+        <div class="toprow">
+          <h1>Briefing</h1>
+          <div class="icobtn" title="Archive">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V8M10 12h4"/></svg>
+          </div>
+        </div>
+
+        <div class="stepper">
+          <div class="nav"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg></div>
+          <div class="mid">
+            <div class="wk">Week 24 <span class="now">THIS WEEK</span></div>
+            <div class="jump">Tap to jump to any week ▾</div>
+          </div>
+          <div class="nav"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+
+        <div class="hero1">
+          <div class="eyebrow">Second Trimester</div>
+          <h2>Baby Hits a Real Milestone</h2>
+        </div>
+
+        <div class="babycard">
+          <div class="emoji">🌽</div>
+          <div class="info" style="flex:1">
+            <div class="f">Size of an ear of corn</div>
+            <div class="d">≈ 12 in long · 1.3 lb</div>
+            <div class="bar"><i></i></div>
+            <div class="prog">Week 24 of 40</div>
+          </div>
+        </div>
+
+        <!-- open by default -->
+        <div class="acc open" style="--ac:var(--sky)">
+          <div class="acc-h" onclick="this.parentElement.classList.toggle('open')">
+            <div class="l"><span class="ic">👶</span><span class="tt">Baby Update</span></div>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="acc-c"><div class="inner"><p>Baby crosses the “viability” line this week — around 24 weeks, survival odds outside the womb jump sharply as the lungs develop. Baby is now about 12 inches and 1.3 pounds, with a fully formed face and taste buds coming online. The inner ear is finished, so baby can sense which way is up — and is starting to respond to your voice.</p></div></div>
+        </div>
+
+        <div class="acc" style="--ac:var(--rose)">
+          <div class="acc-h" onclick="this.parentElement.classList.toggle('open')">
+            <div class="l"><span class="ic">💝</span><span class="tt">What She's Experiencing</span></div>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="acc-c"><div class="inner"><p>Her bump is unmistakable now and her center of gravity is shifting — expect backaches and a clumsiness she won't mention. Braxton Hicks (practice contractions) may begin: tightening that comes and goes. She'll likely book the glucose screening soon. Heartburn and swollen ankles are common and normal.</p></div></div>
+        </div>
+
+        <!-- open by default: the dad-first section -->
+        <div class="acc open" style="--ac:var(--copper)">
+          <div class="acc-h" onclick="this.parentElement.classList.toggle('open')">
+            <div class="l"><span class="ic">🎯</span><span class="tt">Your Focus This Week</span></div>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="acc-c"><div class="inner">
+            <div class="focus">
+              <div class="lead">Four things worth doing this week:</div>
+              <ul style="list-style:none">
+                <li><span class="dot"></span><span>Start the nursery conversation — furniture lead times run 8–12 weeks.</span></li>
+                <li><span class="dot"></span><span>Go to the glucose screening if you can. It's a long one (1–2 hrs).</span></li>
+                <li><span class="dot"></span><span>Talk to baby out loud — hearing works now and it builds the bond early.</span></li>
+                <li><span class="dot"></span><span>Confirm the hospital and pediatrician are in-network.</span></li>
+              </ul>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="trenches">
+          <span class="ic">📝</span>
+          <div>
+            <div class="lbl">From the Trenches</div>
+            <div class="q">“I recorded myself reading the same short book every night at week 24. After birth, that book was the one thing that calmed her at 3 a.m. Start the ritual now.”</div>
+          </div>
+        </div>
+
+        <div class="acc" style="--ac:var(--purple)">
+          <div class="acc-h" onclick="this.parentElement.classList.toggle('open')">
+            <div class="l"><span class="ic">💜</span><span class="tt">Relationship Check-In</span></div>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="acc-c"><div class="inner"><p>Her body is doing something extraordinary and exhausting. This week, take one thing fully off her plate without being asked — and don't announce it. Just handle it.</p></div></div>
+        </div>
+
+        <div class="acc" style="--ac:var(--gold)">
+          <div class="acc-h" onclick="this.parentElement.classList.toggle('open')">
+            <div class="l"><span class="ic">📆</span><span class="tt">Coming Up</span></div>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="acc-c"><div class="inner"><p>Weeks 26–28 bring the third trimester and your glucose results. Now's the time to tour hospitals and start a registry before appointments ramp up.</p></div></div>
+        </div>
+
+        <div class="footln" style="margin-bottom:24px">
+          <span class="ck">✓</span> Source-referenced <span class="dotsep">·</span> Medical disclaimer
+        </div>
+
+        <div class="tabbar">
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8M4 12v7a1 1 0 0 0 1 1h14"/></svg>Tasks</div>
+          <div class="t on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z M8 8h8M8 12h8M8 16h5"/></svg>Briefing</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v8M8 12h8"/><circle cx="12" cy="12" r="9"/></svg>Tracker</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>More</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== V2 ============== -->
+  <div class="col">
+    <div class="col-head">
+      <div class="n">Direction 2</div>
+      <h2>Chapters</h2>
+      <div class="desc"><b>One section at a time.</b> Pick a chapter, read it focused, tap “Next.” Almost zero scroll — the boldest declutter.</div>
+    </div>
+    <div class="phone">
+      <div class="island"></div>
+      <div class="screen v2">
+        <div class="statusbar"><span>9:41</span><span class="ico">􀙇 􀋃 􀛨</span></div>
+
+        <div class="barrow">
+          <div class="label">Briefing</div>
+          <div class="wkstep">
+            <div class="nav"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg></div>
+            <div class="wk">Week 24</div>
+            <div class="nav"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+        </div>
+
+        <div class="hero">
+          <div class="eyebrow">This Week · Second Trimester</div>
+          <h2>Baby Hits a Real Milestone</h2>
+        </div>
+        <div class="babychip"><span class="e">🌽</span><span class="tx">Size of an ear of corn · <b>12 in · 1.3 lb</b></span></div>
+
+        <div class="chips" id="v2chips">
+          <div class="chip on" data-i="0"><span class="e">👶</span>Baby</div>
+          <div class="chip" data-i="1"><span class="e">💝</span>Her</div>
+          <div class="chip" data-i="2"><span class="e">🎯</span>Your Focus</div>
+          <div class="chip" data-i="3"><span class="e">📝</span>Notes</div>
+          <div class="chip" data-i="4"><span class="e">💜</span>Us</div>
+          <div class="chip" data-i="5"><span class="e">📆</span>Next</div>
+        </div>
+        <div class="dots" id="v2dots">
+          <span class="d on"></span><span class="d"></span><span class="d"></span><span class="d"></span><span class="d"></span><span class="d"></span>
+          <span class="cnt" id="v2cnt">1 of 6</span>
+        </div>
+
+        <div class="panel on" data-i="0">
+          <div class="pe" style="color:var(--sky)">Baby Update</div>
+          <p>Baby crosses the “viability” line this week — around 24 weeks, survival odds outside the womb jump sharply as the lungs develop. The face is fully formed, taste buds are coming online, and the inner ear is finished, so baby can sense up from down and respond to your voice.</p>
+          <div class="stat">
+            <div><div class="v">12 in</div><div class="k">Length</div></div>
+            <div><div class="v">1.3 lb</div><div class="k">Weight</div></div>
+            <div><div class="v">24/40</div><div class="k">Weeks</div></div>
+          </div>
+        </div>
+        <div class="panel" data-i="1">
+          <div class="pe" style="color:var(--rose)">What She's Experiencing</div>
+          <p>Her bump is unmistakable now and her center of gravity is shifting — expect backaches and a clumsiness she won't mention. Braxton Hicks (practice contractions) may begin: tightening that comes and goes. She'll likely book the glucose screening soon. Heartburn and swollen ankles are common and completely normal.</p>
+        </div>
+        <div class="panel" data-i="2">
+          <div class="pe" style="color:var(--copper)">Your Focus This Week</div>
+          <ol>
+            <li><span>Start the nursery conversation — furniture lead times run 8–12 weeks.</span></li>
+            <li><span>Go to the glucose screening if you can. It's a long one (1–2 hrs).</span></li>
+            <li><span>Talk to baby out loud — hearing works now and it builds the bond.</span></li>
+            <li><span>Confirm the hospital and pediatrician are in-network.</span></li>
+          </ol>
+        </div>
+        <div class="panel" data-i="3">
+          <div class="pe" style="color:var(--copper)">From the Trenches</div>
+          <blockquote><span class="mk">“</span>I recorded myself reading the same short book every night at week 24. After birth, that book was the one thing that calmed her at 3 a.m. Start the ritual now.<cite>— One dad, in his own words</cite></blockquote>
+        </div>
+        <div class="panel" data-i="4">
+          <div class="pe" style="color:var(--purple)">Relationship Check-In</div>
+          <p>Her body is doing something extraordinary and exhausting. This week, take one thing fully off her plate without being asked — and don't announce it. Just handle it.</p>
+        </div>
+        <div class="panel" data-i="5">
+          <div class="pe" style="color:var(--gold)">Coming Up</div>
+          <p>Weeks 26–28 bring the third trimester and your glucose results. Now's the time to tour hospitals and start a registry before appointments ramp up.</p>
+        </div>
+
+        <div class="chapnav">
+          <button class="prev" id="v2prev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="next" id="v2next">Next: Her Body <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+
+        <div class="tabbar">
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8M4 12v7a1 1 0 0 0 1 1h14"/></svg>Tasks</div>
+          <div class="t on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z M8 8h8M8 12h8M8 16h5"/></svg>Briefing</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v8M8 12h8"/><circle cx="12" cy="12" r="9"/></svg>Tracker</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>More</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== V3 ============== -->
+  <div class="col">
+    <div class="col-head">
+      <div class="n">Direction 3</div>
+      <h2>Magazine</h2>
+      <div class="desc"><b>Big type, lots of air.</b> No boxes — a beautifully typeset article with a jump-to index. Most premium, most “read.”</div>
+    </div>
+    <div class="phone">
+      <div class="island"></div>
+      <div class="screen v3" id="v3screen">
+        <div class="statusbar"><span>9:41</span><span class="ico">􀙇 􀋃 􀛨</span></div>
+
+        <div class="mhead">
+          <span class="k">The Weekly Briefing</span>
+          <div class="icobtn" title="Archive">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V8M10 12h4"/></svg>
+          </div>
+        </div>
+
+        <div class="bignum">
+          <div class="num">24</div>
+          <div class="meta"><div class="of">of 40 weeks</div><div class="tri">Second Trimester</div></div>
+        </div>
+        <div class="mtitle">Baby Hits a Real Milestone</div>
+
+        <div class="babystrip">
+          <span class="e">🌽</span>
+          <div><div class="t">An ear of corn</div><div class="m">12 IN LONG · 1.3 LB</div></div>
+        </div>
+
+        <div class="index">
+          <div class="lbl">In this briefing</div>
+          <a href="#s1"><span class="nm">👶 Baby update</span><span class="ar">↓</span></a>
+          <a href="#s2"><span class="nm">💝 What she's experiencing</span><span class="ar">↓</span></a>
+          <a href="#s3"><span class="nm">🎯 Your focus this week</span><span class="ar">↓</span></a>
+          <a href="#s4"><span class="nm">💜 Relationship check-in</span><span class="ar">↓</span></a>
+          <a href="#s5"><span class="nm">📆 Coming up</span><span class="ar">↓</span></a>
+        </div>
+
+        <article>
+          <div id="s1"><div class="sec-k" style="color:var(--sky)">Baby Update</div>
+          <p>Baby crosses the “viability” line this week — around 24 weeks, survival odds outside the womb jump sharply as the lungs develop. Baby is now about 12 inches and 1.3 pounds, with a fully formed face and taste buds coming online. The inner ear is finished, so baby can sense which way is up — and is starting to respond to the sound of your voice.</p></div>
+
+          <div class="divider"></div>
+
+          <div id="s2"><div class="sec-k" style="color:var(--rose)">What She's Experiencing</div>
+          <p>Her bump is unmistakable now and her center of gravity is shifting — expect backaches and a clumsiness she won't mention. Braxton Hicks practice contractions may begin: tightening that comes and goes. She'll likely book the glucose screening soon. Heartburn and swollen ankles are common, and normal.</p></div>
+
+          <div class="divider"></div>
+
+          <div id="s3"><div class="sec-k" style="color:var(--copper)">Your Focus This Week</div>
+          <ul class="mfocus">
+            <li><span class="num">1</span><span>Start the nursery conversation — furniture lead times run 8–12 weeks.</span></li>
+            <li><span class="num">2</span><span>Go to the glucose screening if you can. It's a long one (1–2 hrs).</span></li>
+            <li><span class="num">3</span><span>Talk to baby out loud — hearing works now and it builds the bond early.</span></li>
+            <li><span class="num">4</span><span>Confirm the hospital and pediatrician are in-network.</span></li>
+          </ul>
+          <div class="pullquote" style="margin-top:24px">
+            <span class="mk">“</span>
+            <q>I recorded myself reading the same book every night at week 24. After birth, it was the one thing that calmed her at 3 a.m.</q>
+            <cite>— From the trenches</cite>
+          </div></div>
+
+          <div class="divider"></div>
+
+          <div id="s4"><div class="sec-k" style="color:var(--purple)">Relationship Check-In</div>
+          <p>Her body is doing something extraordinary and exhausting. This week, take one thing fully off her plate without being asked — and don't announce it. Just handle it.</p></div>
+
+          <div class="divider"></div>
+
+          <div id="s5"><div class="sec-k" style="color:var(--gold)">Coming Up</div>
+          <p>Weeks 26–28 bring the third trimester and your glucose results. Now's the time to tour hospitals and start a registry before the appointments ramp up.</p></div>
+        </article>
+
+        <div class="mfoot">
+          <span class="src">✓ Source-referenced · ACOG, Mayo Clinic</span>
+          <div class="dis">Educational content, not medical advice. Always consult your provider.</div>
+        </div>
+
+        <div class="stickywk">
+          <div class="nav"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg></div>
+          <div class="wk">Week 24 <small>/ 40</small></div>
+          <div class="nav"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== V4 ============== -->
+  <div class="col">
+    <div class="col-head">
+      <div class="n">Direction 4 · new</div>
+      <h2>Field Manual</h2>
+      <div class="desc"><b>Clean &amp; elegant for dads.</b> No emoji, no colored boxes, one accent. Just calm typography &amp; whitespace. Zero motion.</div>
+    </div>
+    <div class="phone">
+      <div class="island"></div>
+      <div class="screen v4">
+        <div class="statusbar"><span>9:41</span><span class="ico">􀙇 􀋃 􀛨</span></div>
+
+        <div class="vhead">
+          <span class="k">Briefing</span>
+          <div class="qstep">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+            Week 24
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+        </div>
+
+        <div class="vtitle">Baby Hits a Real Milestone</div>
+        <div class="meta">
+          Week 24 / 40 · <span class="now">This Week</span> · Second Trimester
+          <span class="sz">Size of an ear of corn — 12 in · 1.3 lb</span>
+        </div>
+
+        <div class="rule"></div>
+
+        <div class="sec">
+          <div class="lbl">Baby</div>
+          <p>Baby crosses the “viability” line this week — around 24 weeks, survival odds outside the womb jump sharply as the lungs develop. Now about 12 inches and 1.3 pounds, with a fully formed face and taste buds online. The inner ear is finished, so baby can sense up from down and respond to your voice.</p>
+        </div>
+
+        <div class="sec">
+          <div class="lbl">What She's Experiencing</div>
+          <p>Her bump is unmistakable and her center of gravity is shifting — expect backaches and a clumsiness she won't mention. Braxton Hicks practice contractions may begin. She'll book the glucose screening soon. Heartburn and swollen ankles are common, and normal.</p>
+        </div>
+
+        <div class="sec">
+          <div class="lbl">Your Focus This Week</div>
+          <ul class="flist">
+            <li><span class="dash">—</span><span>Start the nursery conversation. Furniture lead times run 8–12 weeks.</span></li>
+            <li><span class="dash">—</span><span>Go to the glucose screening if you can. It's a long one (1–2 hrs).</span></li>
+            <li><span class="dash">—</span><span>Talk to baby out loud. Hearing works now; it builds the bond early.</span></li>
+            <li><span class="dash">—</span><span>Confirm the hospital and pediatrician are in-network.</span></li>
+          </ul>
+        </div>
+
+        <div class="rule"></div>
+
+        <div class="note">
+          <div class="lbl">Field Note</div>
+          <p>“I recorded myself reading the same short book every night at week 24. After birth, that book was the one thing that calmed her at 3 a.m. Start the ritual now.”</p>
+        </div>
+
+        <div class="rule"></div>
+
+        <div class="sec">
+          <div class="lbl">Relationship Check-In</div>
+          <p>Her body is doing something extraordinary and exhausting. This week, take one thing fully off her plate without being asked — and don't announce it. Just handle it.</p>
+        </div>
+
+        <div class="sec">
+          <div class="lbl">Coming Up</div>
+          <p>Weeks 26–28 bring the third trimester and your glucose results. Time to tour hospitals and start a registry before appointments ramp up.</p>
+        </div>
+
+        <div class="vfoot">Source-referenced · ACOG, Mayo Clinic · Not medical advice</div>
+
+        <div class="tabbar">
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8M4 12v7a1 1 0 0 0 1 1h14"/></svg>Tasks</div>
+          <div class="t on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z M8 8h8M8 12h8M8 16h5"/></svg>Briefing</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v8M8 12h8"/><circle cx="12" cy="12" r="9"/></svg>Tracker</div>
+          <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>More</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="scrollnote">Each phone scrolls independently · accordions, chapter pills &amp; steppers are clickable</div>
+
+<script>
+  // V2 chapter switching
+  (function(){
+    var chips=[].slice.call(document.querySelectorAll('#v2chips .chip'));
+    var panels=[].slice.call(document.querySelectorAll('.v2 .panel'));
+    var dots=[].slice.call(document.querySelectorAll('#v2dots .d'));
+    var cnt=document.getElementById('v2cnt');
+    var nextBtn=document.getElementById('v2next');
+    var prevBtn=document.getElementById('v2prev');
+    var names=['Baby Update','Her Body','Your Focus','Field Notes','Relationship','Coming Up'];
+    var cur=0;
+    function show(i){
+      cur=(i+6)%6;
+      chips.forEach(function(c,x){c.classList.toggle('on',x===cur)});
+      panels.forEach(function(p,x){p.classList.toggle('on',x===cur)});
+      dots.forEach(function(d,x){d.classList.toggle('on',x===cur)});
+      cnt.textContent=(cur+1)+' of 6';
+      var nx=(cur+1)%6;
+      nextBtn.innerHTML = (cur===5?'Back to start':'Next: '+names[nx])+' <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>';
+      chips[cur].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+    }
+    chips.forEach(function(c){c.addEventListener('click',function(){show(+c.dataset.i)})});
+    nextBtn.addEventListener('click',function(){show(cur+1)});
+    prevBtn.addEventListener('click',function(){show(cur-1)});
+  })();
+
+  // V3 smooth in-screen anchor scroll
+  (function(){
+    var sc=document.getElementById('v3screen');
+    document.querySelectorAll('.v3 .index a').forEach(function(a){
+      a.addEventListener('click',function(e){
+        e.preventDefault();
+        var t=sc.querySelector(a.getAttribute('href'));
+        if(t) sc.scrollTo({top:t.offsetTop-70,behavior:'smooth'});
+      });
+    });
+  })();
+</script>
+</body>
+</html>
