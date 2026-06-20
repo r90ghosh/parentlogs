@@ -49,6 +49,39 @@ Move the mobile app from the dark "Warm Luxury Editorial" look to a **light, cle
 
 ---
 
+## Build Roadmap (execute top to bottom)
+
+> Designed to run in one driving session and **survive context compaction**: git + this plan are the source of truth, not the session's memory. Re-read the cited section before each step.
+
+**Rules for every step (non-negotiable):**
+- Work on one branch: `git checkout main && git pull && git checkout -b feat/v2-clean-build`.
+- **Re-read the cited plan section + §1.2 tokens** at the start of each screen — don't rely on memory.
+- After each screen: `cd apps/mobile && npx tsc -p tsconfig.json --noEmit` must pass, then **commit**: `feat(v2): <screen>` (state lives in git, so compaction/interruption can't lose work).
+- Every screen must render in **both light and dark** (warm-paper + warm-dark).
+- Follow each section's **Definition of done**. Decision defaults: §B local AsyncStorage · §C derive one-liners now · §D drop calendar · §F file export.
+- **Mobile only.** Do NOT touch web/desktop (Part 4) or push to `main` (open a PR at the end).
+
+**Steps:**
+- [ ] **0. Branch** off main (above).
+- [ ] **1. Foundation** (§1.1 fonts → §1.2 colors light+dark → §1.3 `components/digest/` → confirm `BrandLogo`). Commit `feat(v2): foundation`.
+  - 🛑 **CHECKPOINT 1 (human):** run the app, toggle light/dark, confirm fonts + tokens look right. **Do not continue until the user confirms.**
+- [ ] **2. Briefing** (§2.1) — the reference screen; client-side one-liner fallback (no migration). Commit.
+  - 🛑 **CHECKPOINT 2 (human):** verify Briefing in both themes (stepper, expand/collapse, archive parity). This locks the patterns for the other 44 screens. **Wait for user confirm.**
+- [ ] **3. Tasks** (§2.2) → commit.   _(no DB)_
+- [ ] **4. Home** (§2.3) → commit.   _(no DB)_
+- [ ] **5. Tracker** (§2.4) → commit.   _(no DB)_
+- [ ] **6. Budget** (§2.5) → commit.   _(no DB)_
+- [ ] **7. Checklists** (§2.6) → commit.   _(no DB)_
+- [ ] **8. Content / Library** (§2.7) → commit.   _(no DB; `stage` fallback until PR #3 merges)_
+  - 👁 spot-check a few of steps 3–8 in the app as you go.
+- [ ] **9. Settings & secondary** (§2.8, 10 pages) — shared settings kit. **Agents OK** (parallel drafts), but integrate + `tsc` + commit. 
+- [ ] **10. Detail / modal / utility** (§2.9, 7 screens) — **agents OK**. Commit.
+- [ ] **11. Pre-auth** (Part 3 — auth/onboarding/guest, 12 screens) — **agents OK**. Commit.
+- [ ] **12. Cleanup** — delete deprecated journey/mood (Deprecations §); merge Family+Invite and Help+FAQ menu rows; remove dead components after verifying consumers. `tsc` + commit.
+- [ ] **13. Final QA** — both themes across all tabs; dad + mom; pregnancy + post-birth; empty/backlog/stale states. Then **open PR** `feat/v2-clean-build` → main. Merge **PR #3** (taxonomy) when ready.
+
+---
+
 ## Part 1 — Shared Design Foundation (build once, reused by every page)
 
 These land before/with the first page and are reused by all later screens. Mark done when merged.
