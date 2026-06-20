@@ -31,6 +31,7 @@ Move the mobile app from the dark "Warm Luxury Editorial" look to a **light, cle
 - Content/Library → `content-redesign.html` (**Option 2**)
 - Settings ×10 → `settings-redesign.html`
 - Detail/modal + all pre-auth (17) → `remaining-redesign.html`
+- **Desktop / web** (separate build — Part 4) → `desktop-{home,briefing,tasks,tracker,budget,checklists,library}.html`
 - *(superseded: `briefing-redesign.html` (dark v1), the non-chosen options in `tasks-redesign.html` / `tracker-redesign.html`)*
 
 **Recommended build order**
@@ -489,6 +490,34 @@ Mockup: `apps/mobile/docs/remaining-redesign.html` (Auth / Onboarding / Guest gr
 
 ---
 
+## Part 4 — Web / Desktop  *(mockups 2026-06-19 · separate build)*
+
+**Scope note:** desktop = the **web app** (`apps/web`, Next.js — a *different codebase* from mobile). This is a parallel effort, not part of the mobile migration (Parts 1–3). Same v2 digest design system, adapted to a desktop shell. The web app currently runs the dark "Warm Luxury Editorial" theme; this moves it to the digest light/dark.
+
+**Mockups** (in `apps/mobile/docs/`): `desktop-home.html` (template) · `desktop-briefing.html` · `desktop-tasks.html` · `desktop-tracker.html` · `desktop-budget.html` · `desktop-checklists.html` · `desktop-library.html`.
+
+**Desktop shell** (replaces mobile bottom tabs)
+- Left **sidebar**: BrandLogo (mark + Playfair wordmark), nav (Home · Tasks · Briefing · Tracker; **Tools**: Budget · Checklists · Library), account chip at bottom.
+- **Top bar**: page title / greeting + search · bell · avatar.
+- **Content**: centered max-width; multi-column where desktop space helps.
+
+**Per-page desktop layout**
+| Page | Layout |
+|---|---|
+| Home | main feed + right rail (progress, family) |
+| Briefing | reading column + rail (week stepper, "in this briefing" index, sources) |
+| Tasks | Now/Upcoming/Done segmented + list + rail (counts, filters) |
+| Tracker | log tiles + day timeline + "at a glance" rail |
+| Budget | table-style list + summary/export rail |
+| Checklists | switcher column + open-checklist column |
+| Library | featured + 3-column magazine grid + resources shelf |
+
+**Foundation reuse**: same warm-paper light/dark tokens (port into the web Tailwind theme), Plus Jakarta + Playfair wordmark, `BrandLogo`, and the digest components rebuilt as web/React (stack: Next.js + Tailwind + Radix/shadcn). Settings / auth / onboarding desktop variants derive from the mobile §2.8 / §2.9 / Part 3 specs dropped into this shell.
+
+**Not yet detailed** (do when the web build is scheduled): per-screen web file paths, the Tailwind token mapping, and the React component port.
+
+---
+
 ## Deprecations (remove in cleanup)
 
 - **Dad Journey + Mood check-in** — removed from mobile; content is now article-based (§2.7). Delete/retire: `app/(tabs)/more/journey.tsx`, the "Dad Journey" More-menu row (`more/index.tsx:124`), `components/dashboard/OnYourMindCard.tsx`, `components/dashboard/MoodCheckinCard.tsx`, `hooks/use-journey.ts`, and the dashboard "On Your Mind" usage (replaced by "Recommended read" in §2.3). Leave `dad_challenge_content` / `mood_checkins` tables in place (no destructive DB change) until confirmed unused by web.
@@ -538,3 +567,5 @@ No post-birth content needs building. The real issue found was **taxonomy incons
 - **2026-06-19** — Settings & secondary (10 pages): one-shot to a shared component kit (§2.8), agent-assisted. No DB work. Merges Family/Invite and de-dupes Help/FAQ.
 - **2026-06-19** — Coverage audit of all 46 screens: added §2.9 (7 detail/modal/utility screens incl. **task detail**, create-task, triage, notification inbox, More hub) and Part 3 (12 pre-auth screens).
 - **2026-06-19** — One-shot designed all 17 remaining screens (§2.9 + Part 3) via 5 parallel agents on a shared kit → `remaining-redesign.html`. **Every one of the 46 screens now has an approved direction.**
+- **2026-06-19** — Added logo: real `BrandLogo` (parent/child mark + Playfair wordmark) wired into all brand surfaces (auth/onboarding/guest/About); audited placement (§1.1). Fixed a dropped About page.
+- **2026-06-19** — Desktop/web mockups: 7 desktop pages (sidebar shell, multi-column) via per-page agents → `desktop-*.html`. Added **Part 4 — Web/Desktop** (separate build).
