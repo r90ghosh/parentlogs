@@ -61,6 +61,13 @@ Move the mobile app from the dark "Warm Luxury Editorial" look to a **light, cle
 - Follow each section's **Definition of done**. Decision defaults: §B local AsyncStorage · §C derive one-liners now · §D drop calendar · §F file export.
 - **Mobile only.** Do NOT touch web/desktop (Part 4) or push to `main` (open a PR at the end).
 
+**Claude Code setup (recommended for this build):**
+- Model **Opus 4.8**, effort **`xhigh`** (`/effort`). **Do NOT use ultracode** — it auto-orchestrates parallel workflows for everything, which fights this sequential, checkpoint-gated flow. Reserve subagents/workflows for the upfront audit, the leaf batches (steps 9–11), and parallel verification.
+- **Quality-gate hook (recommended):** a `PostToolUse` hook on `Edit|Write` that runs `tsc` so type errors surface before each commit — enforces the per-screen gate automatically. Put it in `apps/mobile/.claude/settings.json`.
+- **Permission allowlist** for `git` / `npm` / `expo` / `tsc` to cut approval prompts (or run the `/fewer-permission-prompts` skill once).
+- Use **plan mode** before a tricky screen; **`/rewind`** to undo a bad screen without touching the branch; **background Bash** for long `expo`/`eas` runs.
+- Verify exact hook schema / command names against `/help`, `/plugin`, and the code.claude.com changelog for your installed version (these move fast).
+
 **Steps:**
 - [ ] **0. Branch** off main (above).
 - [ ] **1. Foundation** (§1.1 fonts → §1.2 colors light+dark → §1.3 `components/digest/` → confirm `BrandLogo`). Commit `feat(v2): foundation`.
