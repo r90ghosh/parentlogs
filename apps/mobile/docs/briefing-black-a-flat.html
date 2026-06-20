@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Briefing · Black A — Pure Flat (OLED)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000000; --card:#0E0E10;
+    --ink:#F4F4F6; --ink2:#A0A0A6; --muted:#7C7C82; --faint:#56565B;
+    --line:rgba(255,255,255,0.07); --line2:rgba(255,255,255,0.045);
+    --accent:#D2814E; --accent-ink:#E2965F; --accent-soft:rgba(210,129,78,0.10);
+    --baby:#7FA8CC; --her:#C99BB0; --do:#D2814E; --tip:#BBA876; --next:#8DB199;
+    --f:'Plus Jakarta Sans',-apple-system,system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#2c2c2e;color:var(--ink);font-family:var(--f);-webkit-font-smoothing:antialiased}
+  body{padding:40px 20px 60px;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .title{color:#fff;font-weight:800;font-size:22px;letter-spacing:-.3px}
+  .desc{color:#b5b5ba;font-size:13.5px;max-width:380px;text-align:center;line-height:1.5;margin-bottom:18px}
+  .desc b{color:#fff}
+  .phone{width:390px;height:812px;border-radius:52px;background:#0a0a0a;
+    padding:11px;box-shadow:0 0 0 2px #2a2a2c, 0 30px 70px rgba(0,0,0,0.6);position:relative}
+  .island{position:absolute;top:22px;left:50%;transform:translateX(-50%);width:118px;height:33px;background:#000;border-radius:20px;z-index:50}
+  .screen{width:100%;height:100%;border-radius:42px;overflow-y:auto;overflow-x:hidden;position:relative;background:var(--bg);scrollbar-width:none}
+  .screen::-webkit-scrollbar{display:none}
+  .statusbar{position:sticky;top:0;z-index:40;display:flex;justify-content:space-between;align-items:flex-end;
+    padding:16px 26px 8px;font-size:14px;font-weight:700;color:var(--ink);background:var(--bg)}
+  .statusbar .ico{font-size:12px;letter-spacing:1px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:8px 22px 2px}
+  .topbar .ttl{font-size:13px;font-weight:700;letter-spacing:.4px;color:var(--muted);text-transform:uppercase}
+  .wkstep{display:flex;align-items:center;gap:12px;font-size:14px;font-weight:700;color:var(--ink)}
+  .wkstep .nav{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1px solid var(--line)}
+  .wkstep .nav svg{width:15px;height:15px;stroke:var(--ink2)}
+  .hero{padding:14px 22px 6px}
+  .hero .wkbig{font-size:34px;font-weight:800;letter-spacing:-1px;color:var(--ink);line-height:1}
+  .hero .sub{font-size:14px;color:var(--muted);font-weight:500;margin-top:7px}
+  .hero .prog{height:5px;background:rgba(255,255,255,0.08);border-radius:5px;margin:14px 0 0;overflow:hidden}
+  .hero .prog i{display:block;height:100%;width:60%;background:var(--accent);border-radius:5px}
+  .tldr{margin:16px 22px 4px;font-size:17px;line-height:1.45;font-weight:600;color:var(--ink);letter-spacing:-.2px}
+  .tldr b{color:var(--accent-ink)}
+  .seclabel{font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--faint);padding:22px 24px 4px}
+  .cat{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase}
+  .cat .dot{width:6px;height:6px;border-radius:50%}
+  .feed{padding:4px 0 0}
+  .row{display:flex;gap:14px;align-items:flex-start;padding:16px 24px;border-bottom:1px solid var(--line2)}
+  .check{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,0.18);flex:none;margin-top:1px;display:grid;place-items:center}
+  .check svg{width:12px;height:12px;stroke:#000;opacity:0}
+  .row.done .check{background:var(--accent);border-color:var(--accent)}
+  .row.done .check svg{opacity:1}
+  .row.done .line{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--faint)}
+  .bodywrap{flex:1}
+  .line{font-size:16px;line-height:1.45;font-weight:600;color:var(--ink);margin-top:7px;letter-spacing:-.1px}
+  .detail p{font-size:14.5px;line-height:1.55;color:var(--ink2);font-weight:400;padding-top:8px}
+  .chev{width:18px;height:18px;stroke:var(--faint);flex:none;margin-top:8px}
+  .note{margin:10px 24px;background:var(--accent-soft);border-radius:16px;padding:16px 18px}
+  .note .cat{color:var(--accent-ink)}
+  .note .q{font-size:15px;line-height:1.55;color:var(--ink2);font-weight:500;margin-top:9px;font-style:italic}
+  .ffull{margin:18px 22px 0;display:flex;align-items:center;justify-content:center;gap:8px;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;font-size:14px;font-weight:700;color:var(--accent-ink)}
+  .ffull svg{width:16px;height:16px;stroke:var(--accent-ink)}
+  .fsrc{text-align:center;font-size:11px;color:var(--faint);font-weight:500;padding:14px 24px 8px;letter-spacing:.3px}
+  .tabbar{position:sticky;bottom:0;display:flex;justify-content:space-around;align-items:center;
+    padding:10px 8px 26px;background:rgba(0,0,0,0.86);backdrop-filter:blur(14px);border-top:1px solid var(--line);z-index:40}
+  .tabbar .t{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--faint);font-weight:600}
+  .tabbar .t.on{color:var(--accent)}
+  .tabbar .t svg{width:22px;height:22px}
+</style>
+</head>
+<body>
+  <div class="title">Black A — Pure Flat (OLED)</div>
+  <div class="desc">True <b>#000000</b> canvas, no cards — rows sit on black with hairline dividers. Maximum "proper black screen," most content-first. <i>Apple Health / Things energy.</i></div>
+  <div class="phone">
+    <div class="island"></div>
+    <div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="ico">5G ▦ 100%</span></div>
+      <div class="topbar">
+        <span class="ttl">Briefing</span>
+        <div class="wkstep">
+          <span class="nav"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></span>
+          Week 24
+          <span class="nav"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg></span>
+        </div>
+      </div>
+      <div class="hero">
+        <div class="wkbig">Week 24</div>
+        <div class="sub">Second trimester · 16 weeks to go</div>
+        <div class="prog"><i></i></div>
+      </div>
+      <div class="tldr">Baby hits a real milestone — and it's <b>nursery season</b>.</div>
+      <div class="seclabel">This week</div>
+      <div class="feed">
+        <div class="row">
+          <div class="bodywrap">
+            <span class="cat" style="color:var(--baby)"><span class="dot" style="background:var(--baby)"></span>Baby</span>
+            <div class="line">Baby can hear your voice now — and is starting to respond.</div>
+            <div class="detail"><p>Around week 24 baby crosses the "viability" line as the lungs develop. The inner ear is finished and baby is ~12 in and 1.3 lb.</p></div>
+          </div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="row">
+          <div class="bodywrap">
+            <span class="cat" style="color:var(--her)"><span class="dot" style="background:var(--her)"></span>Her body</span>
+            <div class="line">Her center of gravity is shifting — backaches are normal.</div>
+          </div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="row done">
+          <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div>
+          <div class="bodywrap">
+            <span class="cat" style="color:var(--do)"><span class="dot" style="background:var(--do)"></span>Do this</span>
+            <div class="line">Start the nursery — furniture lead times run 8–12 weeks.</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></div>
+          <div class="bodywrap">
+            <span class="cat" style="color:var(--do)"><span class="dot" style="background:var(--do)"></span>Do this</span>
+            <div class="line">Go to the glucose screening with her (a 1–2 hr visit).</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="bodywrap">
+            <span class="cat" style="color:var(--tip)"><span class="dot" style="background:var(--tip)"></span>Tip</span>
+            <div class="line">Take one thing fully off her plate — without being asked.</div>
+          </div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="note">
+        <span class="cat"><span class="dot" style="background:var(--accent)"></span>Field note</span>
+        <div class="q">"I recorded myself reading the same short book every night at week 24. After birth, it was the one thing that calmed her at 3 a.m."</div>
+      </div>
+      <div class="feed">
+        <div class="row">
+          <div class="bodywrap">
+            <span class="cat" style="color:var(--next)"><span class="dot" style="background:var(--next)"></span>Coming up</span>
+            <div class="line">Third trimester starts in ~2 weeks. Tour hospitals soon.</div>
+          </div>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="ffull">Read the full briefing
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </div>
+      <div class="fsrc">Source-referenced · ACOG, Mayo Clinic · Not medical advice</div>
+      <div class="tabbar">
+        <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</div>
+        <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8M4 12v7a1 1 0 0 0 1 1h14"/></svg>Tasks</div>
+        <div class="t on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>Briefing</div>
+        <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Tracker</div>
+        <div class="t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>More</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

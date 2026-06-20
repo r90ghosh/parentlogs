@@ -73,19 +73,22 @@ export interface ColorTokens {
 }
 
 const dark: ColorTokens = {
-  bg: '#15130f',
-  surface: '#1a1714',
-  card: '#201c18',
-  cardHover: '#282420',
+  // Pure Flat OLED black (§A finalized 2026-06-20, "Black A" mockup): true #000
+  // canvas, flat rows + hairline dividers, neutral greys, single clay accent.
+  // Reference: docs/briefing-black-a-flat.html
+  bg: '#000000',
+  surface: '#0a0a0b',
+  card: '#101012',
+  cardHover: '#1a1a1c',
 
-  textPrimary: '#ede7dd',
-  textSecondary: '#b8b0a4',
-  textMuted: '#8a8378',
-  textDim: '#5e574d',
+  textPrimary: '#f4f4f6',
+  textSecondary: '#a0a0a6',
+  textMuted: '#7c7c82',
+  textDim: '#56565b',
 
-  copper: '#c77a4c',
-  copperDim: 'rgba(199,122,76,0.15)',
-  copperGlow: 'rgba(199,122,76,0.25)',
+  copper: '#d2814e',
+  copperDim: 'rgba(210,129,78,0.15)',
+  copperGlow: 'rgba(210,129,78,0.25)',
   gold: '#d4a853',
   goldDim: 'rgba(212,168,83,0.15)',
   goldGlow: 'rgba(212,168,83,0.25)',
@@ -100,18 +103,18 @@ const dark: ColorTokens = {
   purple: '#9b7fd4',
   purpleDim: 'rgba(155,127,212,0.15)',
 
-  border: 'rgba(237,230,220,0.10)',
-  borderHover: 'rgba(237,230,220,0.18)',
+  border: 'rgba(255,255,255,0.08)',
+  borderHover: 'rgba(255,255,255,0.16)',
 
-  glassBg: 'rgba(32,28,24,0.92)',
-  glassBorder: 'rgba(237,230,220,0.10)',
-  overlay: 'rgba(0,0,0,0.6)',
-  pressed: 'rgba(237,230,220,0.05)',
-  subtleBg: 'rgba(237,230,220,0.06)',
-  pillBg: 'rgba(42,38,34,0.9)',
+  glassBg: 'rgba(16,16,18,0.92)',
+  glassBorder: 'rgba(255,255,255,0.08)',
+  overlay: 'rgba(0,0,0,0.65)',
+  pressed: 'rgba(255,255,255,0.05)',
+  subtleBg: 'rgba(255,255,255,0.06)',
+  pillBg: 'rgba(26,26,28,0.9)',
 
-  bgGradient: ['#15130f', '#1a1714', '#15130f'],
-  ctaGradient: ['#c77a4c', '#d08a5e'],
+  bgGradient: ['#000000', '#000000', '#000000'],
+  ctaGradient: ['#d2814e', '#bf6f3c'],
 
   blurTint: 'systemChromeMaterialDark',
   blurIntensity: 50,
@@ -119,21 +122,21 @@ const dark: ColorTokens = {
 
   glassInnerBorder: 'rgba(255,255,255,0.08)',
 
-  // V2 Digest (warm dark)
-  ink: '#ede7dd',
-  ink2: '#b8b0a4',
-  muted: '#8a8378',
-  faint: '#5e574d',
-  line: 'rgba(237,230,220,0.10)',
-  line2: 'rgba(237,230,220,0.05)',
-  accent: '#c77a4c',
-  accentInk: '#d08a5e',
-  accentSoft: 'rgba(196,112,63,0.14)',
-  dotBaby: '#7ba3c4',
-  dotHer: '#c496ab',
-  dotDo: '#cc8056',
-  dotTip: '#b6a471',
-  dotNext: '#89ac94',
+  // V2 Digest — Pure Flat OLED black
+  ink: '#f4f4f6',
+  ink2: '#a0a0a6',
+  muted: '#7c7c82',
+  faint: '#56565b',
+  line: 'rgba(255,255,255,0.07)',
+  line2: 'rgba(255,255,255,0.045)',
+  accent: '#d2814e',
+  accentInk: '#e2965f',
+  accentSoft: 'rgba(210,129,78,0.10)',
+  dotBaby: '#7fa8cc',
+  dotHer: '#c99bb0',
+  dotDo: '#d2814e',
+  dotTip: '#bba876',
+  dotNext: '#8db199',
 }
 
 const light: ColorTokens = {
