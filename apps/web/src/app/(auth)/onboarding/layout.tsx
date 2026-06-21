@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import { redirect } from 'next/navigation'
 import { getServerAuth } from '@/lib/supabase/server-auth'
-import { Logo } from '@/components/ui/logo'
+import { BrandLogo } from '@/components/digest'
 
 /**
  * Onboarding Layout - Server Component
@@ -27,13 +27,11 @@ export default async function OnboardingLayout({ children }: { children: ReactNo
   }
 
   return (
-    <div className="min-h-screen bg-[--bg] flex flex-col">
-      <header className="p-6 flex justify-center">
-        <Logo size="md" variant="dark" />
+    <div className="digest-app flex min-h-screen flex-col">
+      <header className="flex justify-center p-6">
+        <BrandLogo size={30} />
       </header>
-      <main className="flex-1 flex items-center justify-center p-4">
-        {children}
-      </main>
+      <main className="flex flex-1 items-center justify-center p-4">{children}</main>
     </div>
   )
 }

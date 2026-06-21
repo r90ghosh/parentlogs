@@ -12,7 +12,7 @@ export default async function UpgradeLayout({ children }: { children: ReactNode 
 
   return (
     <UserProvider user={user} profile={profile} family={family} activeBaby={activeBaby}>
-      {children}
+      <div className="digest-app min-h-screen">{children}</div>
     </UserProvider>
   )
 }

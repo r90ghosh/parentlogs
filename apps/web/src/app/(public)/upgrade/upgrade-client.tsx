@@ -6,15 +6,10 @@ import { useRouter } from 'next/navigation'
 import { useCheckout, useIsPremium } from '@/hooks/use-subscription'
 import { subscriptionService } from '@/lib/services'
 import { PRICING, type PricingPlan } from '@/lib/stripe/checkout'
-import { Button } from '@/components/ui/button'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Check, Crown, Loader2, Sparkles, Zap, ArrowLeft, X } from 'lucide-react'
+import { Check, Crown, Loader2, ArrowLeft, X } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { Reveal } from '@/components/ui/animations/Reveal'
-import { MagneticButton } from '@/components/ui/animations/MagneticButton'
-import { WarmBackground } from '@/components/ui/animations/WarmBackground'
+import { Panel, Badge } from '@/components/digest'
 
 function UpgradeContent() {
   const router = useRouter()
@@ -29,42 +24,31 @@ function UpgradeContent() {
 
   if (tierLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[--bg]">
-        <Loader2 className="h-8 w-8 animate-spin text-copper" />
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-clay-ink" />
       </div>
     )
   }
 
   if (isPremium) {
     return (
-      <div className="min-h-screen bg-[--bg] p-4">
-        <div className="max-w-2xl mx-auto pt-16">
-          <div className="bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
-            <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper" />
-            <div className="p-10 text-center space-y-4">
-              <div className="mx-auto mb-2 h-16 w-16 rounded-full bg-gold/20 flex items-center justify-center">
-                <Crown className="h-8 w-8 text-gold" />
-              </div>
-              <h2 className="font-display text-2xl font-bold text-[--cream]">
-                You&apos;re Already Premium!
-              </h2>
-              <p className="font-body text-sm text-[--muted]">
-                {tier === 'lifetime'
-                  ? "You have lifetime access to all premium features."
-                  : "You have full access to all premium features."}
-              </p>
-              <Button
-                asChild
-                className="mt-4 bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper"
-              >
-                <Link href="/dashboard">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to Dashboard
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
+      <div className="mx-auto max-w-md px-4 py-16 text-center">
+        <span className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-full bg-[--gold]/15">
+          <Crown className="h-8 w-8 text-[--gold]" />
+        </span>
+        <h2 className="text-[26px] font-extrabold text-ink">You&apos;re already Premium</h2>
+        <p className="mt-2 text-[15px] text-ink2">
+          {tier === 'lifetime'
+            ? 'You have lifetime access to all premium features.'
+            : 'You have full access to all premium features.'}
+        </p>
+        <Link
+          href="/dashboard"
+          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-clay px-5 py-3 text-[15px] font-bold text-white hover:opacity-90"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Dashboard
+        </Link>
       </div>
     )
   }
@@ -74,278 +58,214 @@ function UpgradeContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[--bg]">
-      <WarmBackground />
+    <div className="mx-auto max-w-5xl px-4 py-10">
+      {/* Top bar */}
+      <div className="mb-8 flex items-center justify-between">
+        <Link
+          href="/dashboard"
+          className="inline-flex items-center gap-2 text-[14px] font-bold text-mute transition-colors hover:text-clay-ink"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back
+        </Link>
+        <span className="text-[12.5px] font-bold uppercase tracking-[0.8px] text-clay-ink">
+          The Dad Center Premium
+        </span>
+        <span className="w-12" />
+      </div>
 
-      {/* Sticky header */}
-      <div className="border-b border-[--border] bg-[--surface]/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/dashboard" className="text-[--muted] hover:text-[--cream] flex items-center gap-2 font-ui transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Link>
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-copper" />
-            <span className="font-display font-bold text-[--cream]">The Dad Center Premium</span>
+      {/* Alerts */}
+      {canceled && (
+        <Panel className="mb-6 flex items-center gap-3 p-4">
+          <X className="h-4 w-4 flex-none text-[--gold]" />
+          <p className="text-[14px] text-ink2">
+            Checkout was canceled. You can try again when you&apos;re ready.
+          </p>
+        </Panel>
+      )}
+
+      {checkoutError && (
+        <Panel className="mb-6 flex items-center gap-3 border-danger/40 p-4">
+          <X className="h-4 w-4 flex-none text-danger" />
+          <p className="text-[14px] text-ink2">{checkoutError}</p>
+        </Panel>
+      )}
+
+      {/* Hero */}
+      <div className="mb-10 text-center">
+        <h1 className="text-[30px] font-extrabold leading-tight text-ink">
+          Unlock your full parenting potential
+        </h1>
+        <p className="mx-auto mt-3 max-w-2xl text-[15px] text-ink2">
+          Get complete access to all features, unlimited history, and premium content to support your parenting journey.
+        </p>
+        <p className="mt-2 text-[13px] text-mute">
+          One subscription per family — both partners share access.
+        </p>
+      </div>
+
+      {/* Pricing Cards */}
+      <div className="mb-10 grid gap-5 md:grid-cols-3" role="radiogroup" aria-label="Select a pricing plan">
+        {/* Monthly */}
+        <div
+          role="radio"
+          aria-checked={selectedPlan === 'monthly'}
+          tabIndex={0}
+          className={cn(
+            'cursor-pointer rounded-[20px] border bg-card p-6 shadow-[var(--shadow)] transition-colors',
+            selectedPlan === 'monthly' ? 'border-clay' : 'border-line hover:border-faint'
+          )}
+          onClick={() => setSelectedPlan('monthly')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedPlan('monthly') } }}
+        >
+          <h3 className="text-[18px] font-extrabold text-ink">Monthly</h3>
+          <p className="mt-0.5 text-[13px] text-mute">Flexible month-to-month</p>
+          <div className="mt-4">
+            <span className="text-[32px] font-extrabold text-ink">$4.99</span>
+            <span className="text-[14px] text-mute">/mo</span>
           </div>
-          <div className="w-16" />
+          <ul className="mt-5 space-y-2.5">
+            <li className="flex items-center gap-2 text-[15px] text-ink2">
+              <Check className="h-4 w-4 flex-none text-[--sage]" />
+              All premium features
+            </li>
+            <li className="flex items-center gap-2 text-[15px] text-ink2">
+              <Check className="h-4 w-4 flex-none text-[--sage]" />
+              Cancel anytime
+            </li>
+          </ul>
+        </div>
+
+        {/* Yearly - Most popular */}
+        <div
+          role="radio"
+          aria-checked={selectedPlan === 'yearly'}
+          tabIndex={0}
+          className={cn(
+            'cursor-pointer rounded-[20px] border border-l-[3px] bg-card p-6 shadow-[var(--shadow)] transition-colors',
+            selectedPlan === 'yearly' ? 'border-clay border-l-clay' : 'border-line border-l-clay hover:border-faint'
+          )}
+          onClick={() => setSelectedPlan('yearly')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedPlan('yearly') } }}
+        >
+          <div className="mb-3 flex items-center justify-between">
+            <h3 className="text-[18px] font-extrabold text-ink">Yearly</h3>
+            <Badge tone="clay">Most popular</Badge>
+          </div>
+          <p className="-mt-2 mb-1 text-[13px] text-mute">Best for new parents</p>
+          <div className="mt-3">
+            <span className="text-[32px] font-extrabold text-ink">$39.99</span>
+            <span className="text-[14px] text-mute">/yr</span>
+          </div>
+          <p className="mt-2 text-[13px] font-bold text-clay-ink">Just $3.33/mo — Save 33%</p>
+          <ul className="mt-5 space-y-2.5">
+            <li className="flex items-center gap-2 text-[15px] text-ink2">
+              <Check className="h-4 w-4 flex-none text-[--sage]" />
+              All premium features
+            </li>
+            <li className="flex items-center gap-2 text-[15px] text-ink2">
+              <Check className="h-4 w-4 flex-none text-[--sage]" />
+              Priority support
+            </li>
+          </ul>
+        </div>
+
+        {/* Lifetime - Best value */}
+        <div
+          role="radio"
+          aria-checked={selectedPlan === 'lifetime'}
+          tabIndex={0}
+          className={cn(
+            'cursor-pointer rounded-[20px] border border-l-[3px] bg-card p-6 shadow-[var(--shadow)] transition-colors',
+            selectedPlan === 'lifetime' ? 'border-clay border-l-clay' : 'border-line border-l-clay hover:border-faint'
+          )}
+          onClick={() => setSelectedPlan('lifetime')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedPlan('lifetime') } }}
+        >
+          <div className="mb-3 flex items-center justify-between">
+            <h3 className="flex items-center gap-2 text-[18px] font-extrabold text-ink">
+              <Crown className="h-5 w-5 text-[--gold]" />
+              Lifetime
+            </h3>
+            <Badge tone="gold">Best value</Badge>
+          </div>
+          <p className="-mt-2 mb-1 text-[13px] text-mute">One-time payment</p>
+          <div className="mt-3">
+            <span className="text-[32px] font-extrabold text-ink">$99.99</span>
+            <span className="text-[14px] text-mute"> once</span>
+          </div>
+          <p className="mt-2 text-[13px] font-bold text-clay-ink">Never pay again</p>
+          <ul className="mt-5 space-y-2.5">
+            <li className="flex items-center gap-2 text-[15px] text-ink2">
+              <Check className="h-4 w-4 flex-none text-[--sage]" />
+              All premium features forever
+            </li>
+            <li className="flex items-center gap-2 text-[15px] text-ink2">
+              <Check className="h-4 w-4 flex-none text-[--sage]" />
+              All future updates included
+            </li>
+          </ul>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        {/* Alerts */}
-        {canceled && (
-          <Alert className="mb-8 bg-gold/10 border-gold/30">
-            <X className="h-4 w-4 text-gold" />
-            <AlertDescription className="text-[--cream] font-body">
-              Checkout was canceled. You can try again when you&apos;re ready.
-            </AlertDescription>
-          </Alert>
-        )}
+      {/* CTA Button */}
+      <div className="mb-12 text-center">
+        <button
+          onClick={handleCheckout}
+          disabled={isCheckingOut}
+          className="inline-flex items-center gap-2 rounded-xl bg-clay px-8 py-3.5 text-[15px] font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+        >
+          {isCheckingOut ? (
+            <>
+              <Loader2 className="h-5 w-5 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            <>Get {selectedPlan === 'lifetime' ? 'Lifetime' : 'Premium'} access</>
+          )}
+        </button>
+        <p className="mt-3 text-[13px] text-mute">Secure payment powered by Stripe</p>
+      </div>
 
-        {checkoutError && (
-          <Alert variant="destructive" className="mb-8">
-            <AlertDescription>{checkoutError}</AlertDescription>
-          </Alert>
-        )}
-
-        {/* Hero */}
-        <Reveal delay={0}>
-          <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-copper/15 border border-copper/30 mb-5">
-              <Sparkles className="h-3.5 w-3.5 text-copper" />
-              <span className="text-xs font-ui font-semibold text-copper tracking-wide uppercase">Limited Time Offer</span>
-            </div>
-            <h1 className="font-display text-4xl md:text-5xl font-bold text-[--cream] mb-4 leading-tight">
-              Unlock Your Full<br />Parenting Potential
-            </h1>
-            <p className="font-body text-lg text-[--muted] max-w-2xl mx-auto mb-3">
-              Get complete access to all features, unlimited history, and premium content to support your parenting journey.
-            </p>
-            <p className="text-sm text-[--dim] font-body">
-              One subscription per family — both partners share access.
-            </p>
-          </div>
-        </Reveal>
-
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12" role="radiogroup" aria-label="Select a pricing plan">
-          {/* Monthly */}
-          <Reveal variant="card" delay={100}>
-            <Card3DTilt maxTilt={4} gloss>
-              <div
-                role="radio"
-                aria-checked={selectedPlan === 'monthly'}
-                tabIndex={0}
-                className={cn(
-                  "bg-[--card] border-2 rounded-2xl cursor-pointer transition-all duration-200 overflow-hidden shadow-card hover:shadow-hover",
-                  selectedPlan === 'monthly'
-                    ? "border-copper shadow-copper"
-                    : "border-[--border] hover:border-[--border-hover]"
-                )}
-                onClick={() => setSelectedPlan('monthly')}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedPlan('monthly') } }}
-              >
-                <div className="p-6 space-y-4">
-                  <div>
-                    <h3 className="font-display text-lg font-bold text-[--cream]">Monthly</h3>
-                    <p className="font-body text-xs text-[--muted] mt-0.5">Flexible month-to-month</p>
-                  </div>
-                  <div>
-                    <span className="font-display text-4xl font-bold text-[--cream]">$4.99</span>
-                    <span className="text-[--muted] font-body text-sm">/month</span>
-                  </div>
-                  <ul className="space-y-2">
-                    <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
-                      <Check className="h-4 w-4 text-copper flex-shrink-0" />
-                      All premium features
-                    </li>
-                    <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
-                      <Check className="h-4 w-4 text-copper flex-shrink-0" />
-                      Cancel anytime
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </Card3DTilt>
-          </Reveal>
-
-          {/* Yearly - Popular */}
-          <Reveal variant="card" delay={200}>
-            <Card3DTilt maxTilt={4} gloss>
-              <div
-                role="radio"
-                aria-checked={selectedPlan === 'yearly'}
-                tabIndex={0}
-                className={cn(
-                  "bg-[--card] border-2 rounded-2xl cursor-pointer transition-all duration-200 relative overflow-hidden shadow-card hover:shadow-hover",
-                  selectedPlan === 'yearly'
-                    ? "border-copper shadow-copper"
-                    : "border-[--border] hover:border-[--border-hover]"
-                )}
-                onClick={() => setSelectedPlan('yearly')}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedPlan('yearly') } }}
-              >
-                {/* Most Popular badge */}
-                <div className="absolute top-0 left-0 right-0 h-7 bg-copper flex items-center justify-center">
-                  <span className="text-xs font-ui font-bold text-[--bg] tracking-wide uppercase">Most Popular</span>
-                </div>
-                <div className="p-6 pt-10 space-y-4">
-                  <div>
-                    <h3 className="font-display text-lg font-bold text-[--cream]">Yearly</h3>
-                    <p className="font-body text-xs text-[--muted] mt-0.5">Best for new parents</p>
-                  </div>
-                  <div>
-                    <span className="font-display text-4xl font-bold text-[--cream]">$39.99</span>
-                    <span className="text-[--muted] font-body text-sm">/year</span>
-                  </div>
-                  <div className="p-2.5 bg-copper/15 border border-copper/25 rounded-xl text-center">
-                    <span className="text-copper font-ui font-semibold text-sm">Just $3.33/mo — Save 33%</span>
-                  </div>
-                  <ul className="space-y-2">
-                    <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
-                      <Check className="h-4 w-4 text-copper flex-shrink-0" />
-                      All premium features
-                    </li>
-                    <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
-                      <Check className="h-4 w-4 text-copper flex-shrink-0" />
-                      Priority support
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </Card3DTilt>
-          </Reveal>
-
-          {/* Lifetime */}
-          <Reveal variant="card" delay={300}>
-            <Card3DTilt maxTilt={4} gloss>
-              <div
-                role="radio"
-                aria-checked={selectedPlan === 'lifetime'}
-                tabIndex={0}
-                className={cn(
-                  "bg-[--card] border-2 rounded-2xl cursor-pointer transition-all duration-200 relative overflow-hidden shadow-card hover:shadow-hover",
-                  selectedPlan === 'lifetime'
-                    ? "border-gold shadow-gold"
-                    : "border-[--border] hover:border-[--border-hover]"
-                )}
-                onClick={() => setSelectedPlan('lifetime')}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedPlan('lifetime') } }}
-              >
-                {/* Best Value badge */}
-                <div className="absolute top-0 left-0 right-0 h-7 bg-gold flex items-center justify-center">
-                  <span className="text-xs font-ui font-bold text-[--bg] tracking-wide uppercase">Best Value</span>
-                </div>
-                <div className="p-6 pt-10 space-y-4">
-                  <div>
-                    <h3 className="font-display text-lg font-bold text-[--cream] flex items-center gap-2">
-                      <Crown className="h-5 w-5 text-gold" />
-                      Lifetime
-                    </h3>
-                    <p className="font-body text-xs text-[--muted] mt-0.5">One-time payment</p>
-                  </div>
-                  <div>
-                    <span className="font-display text-4xl font-bold text-[--cream]">$99.99</span>
-                    <span className="text-[--muted] font-body text-sm"> once</span>
-                  </div>
-                  <div className="p-2.5 bg-gold/15 border border-gold/25 rounded-xl text-center">
-                    <span className="text-gold font-ui font-semibold text-sm">Never pay again</span>
-                  </div>
-                  <ul className="space-y-2">
-                    <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
-                      <Check className="h-4 w-4 text-gold flex-shrink-0" />
-                      All premium features forever
-                    </li>
-                    <li className="flex items-center gap-2 text-sm font-body text-[--cream]">
-                      <Check className="h-4 w-4 text-gold flex-shrink-0" />
-                      All future updates included
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </Card3DTilt>
-          </Reveal>
+      {/* Feature Comparison */}
+      <Panel className="overflow-hidden">
+        <div className="border-b border-line2 px-6 py-5">
+          <h2 className="text-center text-[18px] font-extrabold text-ink">Compare plans</h2>
         </div>
-
-        {/* CTA Button */}
-        <Reveal delay={200}>
-          <div className="text-center mb-14">
-            <MagneticButton>
-              <Button
-                size="lg"
-                className={cn(
-                  "px-12 py-6 text-lg font-ui font-semibold",
-                  selectedPlan === 'lifetime'
-                    ? "bg-gold hover:bg-gold-hover text-[--bg] shadow-gold"
-                    : "bg-copper hover:bg-copper-hover text-[--bg] shadow-copper"
-                )}
-                onClick={handleCheckout}
-                disabled={isCheckingOut}
-              >
-                {isCheckingOut ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <Zap className="mr-2 h-5 w-5" />
-                    Get {selectedPlan === 'lifetime' ? 'Lifetime' : 'Premium'} Access
-                  </>
-                )}
-              </Button>
-            </MagneticButton>
-            <p className="mt-4 text-sm text-[--dim] font-body">
-              Secure payment powered by Stripe
-            </p>
-          </div>
-        </Reveal>
-
-        {/* Feature Comparison */}
-        <Reveal delay={100}>
-        <div className="bg-[--card] border border-[--border] rounded-2xl shadow-card overflow-hidden">
-          <div className="p-6 border-b border-[--border]">
-            <h2 className="font-display text-xl font-bold text-[--cream] text-center">
-              Compare Plans
-            </h2>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-[--border]">
-                  <th className="text-left py-3 px-6 text-[--muted] font-ui font-medium text-sm">Feature</th>
-                  <th className="text-center py-3 px-4 text-[--muted] font-ui font-medium text-sm">Free</th>
-                  <th className="text-center py-3 px-4 text-copper font-ui font-semibold text-sm">Premium</th>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-line2">
+                <th className="px-6 py-3 text-left text-[12px] font-bold uppercase tracking-[0.8px] text-mute">Feature</th>
+                <th className="px-4 py-3 text-center text-[12px] font-bold uppercase tracking-[0.8px] text-mute">Free</th>
+                <th className="px-4 py-3 text-center text-[12px] font-bold uppercase tracking-[0.8px] text-clay-ink">Premium</th>
+              </tr>
+            </thead>
+            <tbody>
+              {features.map((feature, index) => (
+                <tr key={index} className="border-b border-line2 transition-colors last:border-b-0 hover:bg-card-hover">
+                  <td className="px-6 py-3 text-[15px] text-ink2">{feature.name}</td>
+                  <td className="px-4 py-3 text-center">
+                    {feature.free ? (
+                      <Check className="mx-auto h-4 w-4 text-[--sage]" />
+                    ) : (
+                      <X className="mx-auto h-4 w-4 text-faint" />
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <Check className="mx-auto h-4 w-4 text-[--sage]" />
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {features.map((feature, index) => (
-                  <tr key={index} className="border-b border-[--border]/50 hover:bg-[--card-hover] transition-colors">
-                    <td className="py-3 px-6 text-[--cream] font-body text-sm">{feature.name}</td>
-                    <td className="text-center py-3 px-4">
-                      {feature.free ? (
-                        <Check className="h-4 w-4 text-sage mx-auto" />
-                      ) : (
-                        <X className="h-4 w-4 text-[--dim] mx-auto" />
-                      )}
-                    </td>
-                    <td className="text-center py-3 px-4">
-                      <Check className="h-4 w-4 text-copper mx-auto" />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
-        </Reveal>
+      </Panel>
 
-        {/* Trust signals */}
-        <div className="mt-12 text-center space-y-2">
-          <p className="text-sm text-[--dim] font-body">Questions? Contact us at info@thedadcenter.com</p>
-          <p className="text-sm text-[--dim] font-body">Free for 30 days — no credit card needed</p>
-        </div>
+      {/* Trust signals */}
+      <div className="mt-10 space-y-1.5 text-center text-[13px] text-mute">
+        <p>Questions? Contact us at info@thedadcenter.com</p>
+        <p>Free for 30 days — no credit card needed</p>
       </div>
     </div>
   )
@@ -354,8 +274,8 @@ function UpgradeContent() {
 export function UpgradeClient() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-[--bg]">
-        <Loader2 className="h-8 w-8 animate-spin text-copper" />
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-clay-ink" />
       </div>
     }>
       <UpgradeContent />

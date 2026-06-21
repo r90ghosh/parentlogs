@@ -7,14 +7,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useAuth } from '@/lib/auth/auth-context'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, KeyRound, CheckCircle } from 'lucide-react'
-import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { Reveal } from '@/components/ui/animations/Reveal'
-import { MagneticButton } from '@/components/ui/animations/MagneticButton'
+import { Loader2 } from 'lucide-react'
+import { Panel } from '@/components/digest'
 
 const resetPasswordSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters'),
@@ -25,6 +19,10 @@ const resetPasswordSchema = z.object({
 })
 
 type ResetPasswordForm = z.infer<typeof resetPasswordSchema>
+
+const fieldLabel = 'mb-1.5 block text-[13px] font-bold text-ink2'
+const fieldInput =
+  'w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-[15px] text-ink outline-none placeholder:text-faint focus:border-clay'
 
 export default function ResetPasswordPage() {
   const router = useRouter()
@@ -57,149 +55,79 @@ export default function ResetPasswordPage() {
 
   if (success) {
     return (
-      <Reveal variant="card" delay={100}>
-        <Card3DTilt maxTilt={3} gloss>
-          <div className="w-full bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
-            <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
-            <div className="px-8 py-8 space-y-6 text-center">
-              <div
-                className="mx-auto h-14 w-14 rounded-full bg-copper/20 flex items-center justify-center animate-scale-in"
-              >
-                <CheckCircle className="h-7 w-7 text-copper" />
-              </div>
-              <div
-                className="animate-fade-in-up"
-                style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}
-              >
-                <h2 className="font-display text-2xl font-bold text-[--cream] mb-2">
-                  Password updated!
-                </h2>
-                <p className="font-body text-sm text-[--muted]">
-                  Your password has been successfully reset.
-                </p>
-              </div>
-              <div
-                className="animate-fade-in-up"
-                style={{ animationDelay: '400ms', animationFillMode: 'backwards' }}
-              >
-                <Alert className="bg-copper/10 border-copper/30 text-left">
-                  <AlertDescription className="text-[--cream] font-body text-sm">
-                    Redirecting you to login...
-                  </AlertDescription>
-                </Alert>
-              </div>
-            </div>
-          </div>
-        </Card3DTilt>
-      </Reveal>
+      <Panel className="p-6 text-center">
+        <h2 className="text-[24px] font-extrabold tracking-[-0.3px] text-ink">Password updated!</h2>
+        <p className="mt-2 text-[14px] text-mute">Your password has been successfully reset.</p>
+        <p className="mt-5 rounded-xl border border-line bg-card2 px-3.5 py-3 text-left text-[13.5px] text-ink2">
+          Redirecting you to login...
+        </p>
+      </Panel>
     )
   }
 
   return (
-    <Reveal variant="card" delay={100}>
-      <Card3DTilt maxTilt={3} gloss>
-        <div className="w-full bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
-          {/* Top accent bar */}
-          <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
+    <Panel className="p-6">
+      <div className="mb-6 text-center">
+        <h1 className="text-[24px] font-extrabold tracking-[-0.3px] text-ink">Reset your password</h1>
+        <p className="mt-1 text-[14px] text-mute">Enter your new password below</p>
+      </div>
 
-          <div className="px-8 py-8 space-y-6">
-            {/* Header */}
-            <div
-              className="text-center animate-fade-in-up"
-              style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}
-            >
-              <div className="mx-auto mb-4 h-14 w-14 rounded-full bg-copper/20 flex items-center justify-center">
-                <div
-                  className="animate-fade-in-up"
-                  style={{ animationDelay: '300ms', animationFillMode: 'backwards' }}
-                >
-                  <KeyRound className="h-7 w-7 text-copper" />
-                </div>
-              </div>
-              <h1 className="font-display text-2xl font-bold text-[--cream] mb-1">
-                Reset your password
-              </h1>
-              <p className="font-body text-sm text-[--muted]">
-                Enter your new password below
-              </p>
-            </div>
+      {error && (
+        <p className="mb-5 rounded-xl border border-line bg-card px-3.5 py-2.5 text-[13px] font-semibold text-danger">
+          {error}
+        </p>
+      )}
 
-            {error && (
-              <div className="animate-fade-in-up">
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              </div>
-            )}
-
-            {/* Password form */}
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="space-y-4 animate-fade-in-up"
-              style={{ animationDelay: '350ms', animationFillMode: 'backwards' }}
-            >
-              <div className="space-y-2">
-                <Label htmlFor="password" className="font-ui text-[--cream]">New Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  {...register('password')}
-                  className="bg-[--bg] border-[--border] text-[--cream] placeholder:text-[--dim] focus:border-copper focus:ring-copper/20 font-body"
-                />
-                {errors.password && (
-                  <p className="text-sm text-coral font-body">{errors.password.message}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="confirm_password" className="font-ui text-[--cream]">Confirm New Password</Label>
-                <Input
-                  id="confirm_password"
-                  type="password"
-                  {...register('confirm_password')}
-                  className="bg-[--bg] border-[--border] text-[--cream] placeholder:text-[--dim] focus:border-copper focus:ring-copper/20 font-body"
-                />
-                {errors.confirm_password && (
-                  <p className="text-sm text-coral font-body">{errors.confirm_password.message}</p>
-                )}
-              </div>
-
-              <MagneticButton className="w-full">
-                <Button
-                  type="submit"
-                  className="w-full bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Updating...
-                    </>
-                  ) : (
-                    <>
-                      <KeyRound className="mr-2 h-4 w-4" />
-                      Reset Password
-                    </>
-                  )}
-                </Button>
-              </MagneticButton>
-            </form>
-
-            {/* Footer link */}
-            <div
-              className="text-center animate-fade-in-up"
-              style={{ animationDelay: '500ms', animationFillMode: 'backwards' }}
-            >
-              <Link
-                href="/login"
-                className="text-sm text-copper hover:text-copper-hover font-ui transition-colors"
-              >
-                Back to login
-              </Link>
-            </div>
-          </div>
+      {/* Password form */}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div>
+          <label htmlFor="password" className={fieldLabel}>New Password</label>
+          <input
+            id="password"
+            type="password"
+            {...register('password')}
+            className={fieldInput}
+          />
+          {errors.password && (
+            <p className="mt-1.5 text-[13px] font-semibold text-danger">{errors.password.message}</p>
+          )}
         </div>
-      </Card3DTilt>
-    </Reveal>
+
+        <div>
+          <label htmlFor="confirm_password" className={fieldLabel}>Confirm New Password</label>
+          <input
+            id="confirm_password"
+            type="password"
+            {...register('confirm_password')}
+            className={fieldInput}
+          />
+          {errors.confirm_password && (
+            <p className="mt-1.5 text-[13px] font-semibold text-danger">{errors.confirm_password.message}</p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          className="flex w-full items-center justify-center rounded-xl bg-clay px-5 py-3 text-[15px] font-bold text-white hover:opacity-90 disabled:opacity-50"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Updating...
+            </>
+          ) : (
+            'Reset Password'
+          )}
+        </button>
+      </form>
+
+      {/* Footer link */}
+      <div className="mt-6 text-center">
+        <Link href="/login" className="text-[14px] font-bold text-clay-ink hover:opacity-80">
+          Back to login
+        </Link>
+      </div>
+    </Panel>
   )
 }
