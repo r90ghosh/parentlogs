@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Playfair_Display, Jost, Karla } from 'next/font/google'
+import { Playfair_Display, Jost, Karla, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
 import { Toaster } from '@/components/ui/sonner'
@@ -24,6 +24,13 @@ const karla = Karla({
   subsets: ['latin'],
   variable: '--font-ui',
   weight: ['400', '500', '600'],
+})
+
+// V2 Digest primary UI font (in-app shell). Playfair is kept for the wordmark only.
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-jakarta',
+  weight: ['400', '500', '600', '700', '800'],
 })
 
 export const metadata: Metadata = {
@@ -123,7 +130,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${playfair.variable} ${jost.variable} ${karla.variable} font-body antialiased`}>
+      <body className={`${playfair.variable} ${jost.variable} ${karla.variable} ${jakarta.variable} font-body antialiased`}>
         <GoogleTagManagerNoscript />
         <Providers>
           <GoogleTagManager />

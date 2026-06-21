@@ -76,7 +76,7 @@ export function Providers({ children }: { children: ReactNode }) {
   }))
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>

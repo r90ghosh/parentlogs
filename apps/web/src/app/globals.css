@@ -583,3 +583,117 @@ html.light .mobile-nav-menu {
     filter: blur(16px) !important;
   }
 }
+
+/* ============================================================
+   V2 "Digest" Design System — scoped to the in-app shell only
+   (.digest-app). Marketing / auth keep the global Warm-Luxury
+   tokens above. Default = OLED black (dark); .light overrides
+   to warm paper. Mirrors apps/mobile/lib/colors.ts (source of
+   truth) + apps/mobile/docs/desktop-*.html mockups.
+   ============================================================ */
+.digest-app {
+  /* Dark — Pure Flat OLED black (finalized 2026-06-20) */
+  --bg: #000000;
+  --surface: #0a0a0b;
+  --card: #101012;
+  --card2: #0a0a0b;
+  --card-hover: #1a1a1c;
+  --ink: #f4f4f6;
+  --ink2: #a0a0a6;
+  --muted: #7c7c82;
+  --faint: #56565b;
+  --line: rgba(255, 255, 255, 0.07);
+  --line2: rgba(255, 255, 255, 0.045);
+  --accent: #d2814e;
+  --accent-ink: #e2965f;
+  --accent-soft: rgba(210, 129, 78, 0.10);
+  --sage: #8db199;
+  --sky: #7fa8cc;
+  --gold: #bba876;
+  --rose: #c99bb0;
+  --amber: #caa15e;
+  --danger: #d4836b;
+  --dot-baby: #7fa8cc;
+  --dot-her: #c99bb0;
+  --dot-do: #d2814e;
+  --dot-tip: #bba876;
+  --dot-next: #8db199;
+  --shadow: none;
+  --shadow-sm: none;
+
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-jakarta), -apple-system, system-ui, sans-serif;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+html.light .digest-app {
+  /* Light — warm paper */
+  --bg: #f6f5f2;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --card2: #fbfaf8;
+  --card-hover: #f2f0eb;
+  --ink: #1e1c19;
+  --ink2: #56524b;
+  --muted: #928d84;
+  --faint: #b6b1a8;
+  --line: #eae7e1;
+  --line2: #f2f0eb;
+  --accent: #c0673d;
+  --accent-ink: #a8542e;
+  --accent-soft: #f4e8e0;
+  --sage: #6f9079;
+  --sky: #5e86a8;
+  --gold: #9c8a56;
+  --rose: #b07c93;
+  --amber: #b17f35;
+  --danger: #b3503a;
+  --dot-baby: #5e86a8;
+  --dot-her: #b07c93;
+  --dot-do: #c0673d;
+  --dot-tip: #9c8a56;
+  --dot-next: #6f9079;
+  --shadow: 0 1px 2px rgba(40, 35, 28, 0.04), 0 8px 24px rgba(40, 35, 28, 0.05);
+  --shadow-sm: 0 1px 2px rgba(40, 35, 28, 0.05);
+}
+
+/* Neutralize the global light-mode glassmorphism inside the digest shell —
+   the digest look is flat paper, not frosted glass. */
+html.light .digest-app [data-slot="card"] {
+  background: var(--card);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+html.light .digest-app [data-slot="card"]:hover {
+  background: var(--card);
+  border-color: var(--line);
+  box-shadow: var(--shadow);
+}
+html.light .digest-app header.sticky {
+  background: rgba(246, 245, 242, 0.85) !important;
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  border-bottom: 1px solid var(--line);
+  box-shadow: none;
+}
+html.light .digest-app nav[aria-label="Main navigation"] {
+  background: rgba(246, 245, 242, 0.92) !important;
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  border-top: 1px solid var(--line);
+  box-shadow: none;
+}
+
+/* Dark-mode topbar / bottom-nav: translucent over true black */
+.digest-app header.digest-topbar {
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+html.light .digest-app header.digest-topbar {
+  background: rgba(246, 245, 242, 0.85) !important;
+}
