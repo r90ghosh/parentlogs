@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     marginRight: 0,
   },
   text: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
   },
   disabled: {
     opacity: 0.5,

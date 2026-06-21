@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontFamily: 'PlayfairDisplay-Bold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 28,
   },
   cursor: {

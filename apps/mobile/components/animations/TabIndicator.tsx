@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   label: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 11,
   },
 })

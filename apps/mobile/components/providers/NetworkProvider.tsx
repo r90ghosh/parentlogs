@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   bannerText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 13,
   },
 })

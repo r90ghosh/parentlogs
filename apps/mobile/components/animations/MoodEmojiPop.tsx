@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
   },
   label: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
   },
 })

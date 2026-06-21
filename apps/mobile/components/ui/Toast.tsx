@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   toastText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 14,
     textAlign: 'center',
   },

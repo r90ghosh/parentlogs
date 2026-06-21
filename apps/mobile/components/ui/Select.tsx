@@ -87,7 +87,7 @@ export function Select({
                     onPress={() => handleSelect(item.value)}
                     style={[styles.option, { borderBottomColor: colors.subtleBg }, isSelected && { backgroundColor: colors.copperDim }]}
                   >
-                    <Text style={[styles.optionText, { color: colors.textSecondary }, isSelected && { color: colors.copper, fontFamily: 'Jost-Medium' }]}>
+                    <Text style={[styles.optionText, { color: colors.textSecondary }, isSelected && { color: colors.copper, fontFamily: 'Jakarta-Medium' }]}>
                       {item.label}
                     </Text>
                     {isSelected && <Check size={18} color={colors.copper} />}
@@ -105,7 +105,7 @@ export function Select({
 
 const styles = StyleSheet.create({
   label: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 14,
     marginBottom: 8,
   },
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   triggerText: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 16,
     flex: 1,
   },
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   sheetTitle: {
-    fontFamily: 'Jost-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 18,
     marginBottom: 16,
   },
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   optionText: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 16,
   },
 })

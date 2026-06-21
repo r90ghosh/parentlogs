@@ -88,12 +88,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 14,
     marginBottom: 2,
   },
   subtitle: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
     lineHeight: 16,
   },
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   ctaText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 14,
   },
 })

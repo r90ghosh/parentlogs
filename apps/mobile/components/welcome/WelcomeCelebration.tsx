@@ -523,14 +523,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   headline: {
-    fontFamily: 'PlayfairDisplay-Bold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 52,
     lineHeight: 58,
     textAlign: 'center',
     marginBottom: 24,
   },
   body: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 17,
     lineHeight: 28,
     textAlign: 'center',
@@ -551,7 +551,7 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.97 }],
   },
   ctaText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 16,
     letterSpacing: 1.5,
   },

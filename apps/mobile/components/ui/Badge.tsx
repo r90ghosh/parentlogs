@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   text: {
-    fontFamily: 'Karla-Bold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 11,
     textTransform: 'uppercase',
     letterSpacing: 0.5,

@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   title: {
-    fontFamily: 'PlayfairDisplay-Bold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 20,
     flex: 1,
     marginRight: 12,
@@ -213,13 +213,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   sectionLabel: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 12,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
   sectionContent: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     lineHeight: 20,
   },
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyText: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     textAlign: 'center',
   },

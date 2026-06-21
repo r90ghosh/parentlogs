@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   title: {
-    fontFamily: 'PlayfairDisplay-Bold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 16,
   },
   content: {
