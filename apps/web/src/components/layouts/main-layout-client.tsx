@@ -51,8 +51,7 @@ const mainNavItems = [
 const toolItems = [
   { href: '/budget', label: 'Budget', icon: DollarSign },
   { href: '/checklists', label: 'Checklists', icon: ListChecks },
-  // TODO(library-step): repoint to /library once the in-app magazine is built.
-  { href: '/blog', label: 'Library', icon: Library },
+  { href: '/library', label: 'Library', icon: Library },
 ]
 
 const familyItems = [{ href: '/settings/family', label: 'Family Settings', icon: Users }]
