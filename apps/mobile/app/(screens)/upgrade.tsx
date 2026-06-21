@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import {
   X,
   Check,
@@ -25,12 +24,11 @@ import {
 } from 'lucide-react-native'
 import type { PurchasesOffering, PurchasesPackage } from 'react-native-purchases'
 import * as WebBrowser from 'expo-web-browser'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance } from '@/components/animations'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useRevenueCat, ENTITLEMENT_ID } from '@/components/providers/RevenueCatProvider'
 import { subscriptionMobileService } from '@/services/subscription-mobile-service'
 import { useColors } from '@/hooks/use-colors'
+import { SectionLabel } from '@/components/digest'
 
 type PlanKey = 'monthly' | 'annual' | 'lifetime'
 
@@ -176,9 +174,9 @@ export default function UpgradeScreen() {
 
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Go Premium</Text>
-        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]} accessibilityLabel="Close" accessibilityRole="button">
-          <X size={20} color={colors.textMuted} />
+        <Text style={[styles.headerTitle, { color: colors.ink }]}>Go Premium</Text>
+        <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.accentSoft }]} accessibilityLabel="Close" accessibilityRole="button">
+          <X size={20} color={colors.muted} />
         </Pressable>
       </View>
 
@@ -191,173 +189,167 @@ export default function UpgradeScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Hero */}
-        <CardEntrance delay={0}>
-          <View style={styles.heroSection}>
-            <View style={[styles.crownBadge, { backgroundColor: colors.goldDim }]}>
-              <Crown size={28} color={colors.gold} />
-            </View>
-            <Text style={[styles.heroTitle, { color: colors.textPrimary }]}>Unlock Everything</Text>
-            <Text style={[styles.heroSubtitle, { color: colors.textMuted }]}>
-              One subscription covers your whole family.{'\n'}Both partners get
-              full access.
-            </Text>
+        <View style={styles.heroSection}>
+          <View style={[styles.crownBadge, { backgroundColor: colors.accentSoft }]}>
+            <Crown size={28} color={colors.accent} />
           </View>
-        </CardEntrance>
+          <Text style={[styles.heroTitle, { color: colors.ink }]}>Unlock Everything</Text>
+          <Text style={[styles.heroSubtitle, { color: colors.muted }]}>
+            One subscription covers your whole family.{'\n'}Both partners get
+            full access.
+          </Text>
+        </View>
 
         {/* Feature Comparison */}
-        <CardEntrance delay={120}>
-          <GlassCard style={styles.featureCard}>
-            <View style={[styles.featureHeader, { borderBottomColor: colors.border }]}>
-              <View style={styles.featureHeaderCol} />
-              <Text style={[styles.featureHeaderLabel, { color: colors.textMuted }]}>Free</Text>
-              <Text style={[styles.featureHeaderLabel, styles.premiumLabel, { color: colors.gold }]}>
-                Premium
-              </Text>
-            </View>
-            {FEATURES.map((feature, index) => {
-              const Icon = feature.icon
-              return (
-                <View
-                  key={feature.label}
-                  style={[
-                    styles.featureRow,
-                    index < FEATURES.length - 1 && [styles.featureRowBorder, { borderBottomColor: colors.pressed }],
-                  ]}
-                >
-                  <View style={styles.featureNameCol}>
-                    <Icon size={14} color={colors.textMuted} />
-                    <Text style={[styles.featureName, { color: colors.textSecondary }]}>{feature.label}</Text>
-                  </View>
-                  <Text style={[styles.freeValue, { color: colors.textDim }]}>{feature.free}</Text>
-                  <View style={styles.premiumValueCol}>
-                    <Check size={12} color={colors.sage} />
-                    <Text style={[styles.premiumValue, { color: colors.sage }]}>{feature.premium}</Text>
-                  </View>
+        <SectionLabel>What You Get</SectionLabel>
+        <View style={[styles.featureCard, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <View style={[styles.featureHeader, { borderBottomColor: colors.line2 }]}>
+            <View style={styles.featureHeaderCol} />
+            <Text style={[styles.featureHeaderLabel, { color: colors.muted }]}>Free</Text>
+            <Text style={[styles.featureHeaderLabel, styles.premiumLabel, { color: colors.accentInk }]}>
+              Premium
+            </Text>
+          </View>
+          {FEATURES.map((feature, index) => {
+            const Icon = feature.icon
+            return (
+              <View
+                key={feature.label}
+                style={[
+                  styles.featureRow,
+                  index < FEATURES.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.line2 },
+                ]}
+              >
+                <View style={styles.featureNameCol}>
+                  <Icon size={14} color={colors.muted} />
+                  <Text style={[styles.featureName, { color: colors.ink2 }]}>{feature.label}</Text>
                 </View>
-              )
-            })}
-          </GlassCard>
-        </CardEntrance>
+                <Text style={[styles.freeValue, { color: colors.faint }]}>{feature.free}</Text>
+                <View style={styles.premiumValueCol}>
+                  <Check size={12} color={colors.sage} />
+                  <Text style={[styles.premiumValue, { color: colors.sage }]}>{feature.premium}</Text>
+                </View>
+              </View>
+            )
+          })}
+        </View>
 
         {/* Plan Cards */}
+        <SectionLabel>Choose a Plan</SectionLabel>
         <View style={styles.plansSection}>
-          {plans.map((plan, index) => (
-            <CardEntrance key={plan.key} delay={240 + index * 100}>
-              <Pressable onPress={() => setSelectedPlan(plan.key)} accessibilityLabel={`Select ${plan.title} plan, ${plan.price}`} accessibilityRole="radio" accessibilityState={{ selected: selectedPlan === plan.key }}>
-                <View style={{ marginTop: plan.badge ? 10 : 0 }}>
-                  {plan.badge && (
-                    <View style={[styles.planBadge, { backgroundColor: colors.gold }]}>
-                      <Text style={[styles.planBadgeText, { color: colors.bg }]}>{plan.badge}</Text>
-                    </View>
-                  )}
-                  <View
-                    style={[
-                      styles.planCard,
-                      { borderColor: colors.border, backgroundColor: colors.card },
-                      selectedPlan === plan.key && { borderColor: 'rgba(196,112,63,0.5)' },
-                      plan.highlight && selectedPlan === plan.key && { borderColor: 'rgba(212,168,83,0.5)', backgroundColor: colors.goldDim },
-                    ]}
-                  >
-                    <View style={styles.planRadio}>
-                      <View
-                        style={[
-                          styles.radioOuter,
-                          { borderColor: colors.textDim },
-                          selectedPlan === plan.key && { borderColor: colors.copper },
-                        ]}
-                      >
-                        {selectedPlan === plan.key && (
-                          <View style={[styles.radioInner, { backgroundColor: colors.copper }]} />
-                        )}
-                      </View>
-                    </View>
-                    <View style={styles.planInfo}>
-                      <Text style={[styles.planTitle, { color: colors.textPrimary }]}>{plan.title}</Text>
-                      <Text style={[styles.planSubtitle, { color: colors.textMuted }]}>{plan.subtitle}</Text>
-                    </View>
-                    <Text
+          {plans.map((plan) => {
+            const isSelected = selectedPlan === plan.key
+            const isFeatured = plan.highlight && isSelected
+            return (
+              <View key={plan.key} style={{ marginTop: plan.badge ? 10 : 0 }}>
+                {plan.badge && (
+                  <View style={[styles.planBadge, { backgroundColor: colors.accent }]}>
+                    <Text style={styles.planBadgeText}>{plan.badge}</Text>
+                  </View>
+                )}
+                <Pressable
+                  onPress={() => setSelectedPlan(plan.key)}
+                  accessibilityLabel={`Select ${plan.title} plan, ${plan.price}`}
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected: isSelected }}
+                  style={[
+                    styles.planCard,
+                    {
+                      borderColor: isSelected ? colors.accent : colors.line,
+                      backgroundColor: isFeatured ? colors.accentSoft : colors.card,
+                    },
+                  ]}
+                >
+                  <View style={styles.planRadio}>
+                    <View
                       style={[
-                        styles.planPrice,
-                        { color: colors.textSecondary },
-                        selectedPlan === plan.key && { color: colors.copper },
+                        styles.radioOuter,
+                        { borderColor: isSelected ? colors.accent : colors.faint },
                       ]}
                     >
-                      {plan.price}
-                    </Text>
+                      {isSelected && (
+                        <View style={[styles.radioInner, { backgroundColor: colors.accent }]} />
+                      )}
+                    </View>
                   </View>
-                </View>
-              </Pressable>
-            </CardEntrance>
-          ))}
+                  <View style={styles.planInfo}>
+                    <Text style={[styles.planTitle, { color: colors.ink }]}>{plan.title}</Text>
+                    <Text style={[styles.planSubtitle, { color: colors.muted }]}>{plan.subtitle}</Text>
+                  </View>
+                  <Text
+                    style={[
+                      styles.planPrice,
+                      { color: isSelected ? colors.accentInk : colors.ink2 },
+                    ]}
+                  >
+                    {plan.price}
+                  </Text>
+                </Pressable>
+              </View>
+            )
+          })}
         </View>
 
         {/* Purchase Button */}
-        <CardEntrance delay={600}>
-          <Pressable
-            onPress={handlePurchase}
-            disabled={purchasing}
-            accessibilityLabel={purchasing ? 'Purchasing...' : `Subscribe ${selectedPlan === 'lifetime' ? 'one-time' : 'now'}`}
-            accessibilityRole="button"
-            style={[styles.purchaseButton, purchasing && styles.purchaseButtonDisabled]}
-          >
-            <LinearGradient
-              colors={colors.ctaGradient as unknown as [string, string]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.purchaseGradient}
-            >
-              {purchasing ? (
-                <ActivityIndicator color={colors.bg} />
-              ) : (
-                <Text style={[styles.purchaseText, { color: colors.bg }]}>
-                  Subscribe{' '}
-                  {selectedPlan === 'lifetime' ? '(One-Time)' : 'Now'}
-                </Text>
-              )}
-            </LinearGradient>
-          </Pressable>
-        </CardEntrance>
+        <Pressable
+          onPress={handlePurchase}
+          disabled={purchasing}
+          accessibilityLabel={purchasing ? 'Purchasing...' : `Subscribe ${selectedPlan === 'lifetime' ? 'one-time' : 'now'}`}
+          accessibilityRole="button"
+          style={[
+            styles.purchaseButton,
+            { backgroundColor: colors.accent },
+            purchasing && styles.purchaseButtonDisabled,
+          ]}
+        >
+          {purchasing ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.purchaseText}>
+              Subscribe{' '}
+              {selectedPlan === 'lifetime' ? '(One-Time)' : 'Now'}
+            </Text>
+          )}
+        </Pressable>
 
         {/* Restore + Legal */}
-        <CardEntrance delay={700}>
-          <Pressable
-            onPress={handleRestore}
-            disabled={restoring}
-            accessibilityLabel="Restore purchases"
-            accessibilityRole="button"
-            style={styles.restoreButton}
-          >
-            {restoring ? (
-              <ActivityIndicator size="small" color={colors.textMuted} />
-            ) : (
-              <>
-                <RotateCcw size={14} color={colors.textMuted} />
-                <Text style={[styles.restoreText, { color: colors.textMuted }]}>Restore Purchases</Text>
-              </>
-            )}
+        <Pressable
+          onPress={handleRestore}
+          disabled={restoring}
+          accessibilityLabel="Restore purchases"
+          accessibilityRole="button"
+          style={styles.restoreButton}
+        >
+          {restoring ? (
+            <ActivityIndicator size="small" color={colors.muted} />
+          ) : (
+            <>
+              <RotateCcw size={14} color={colors.muted} />
+              <Text style={[styles.restoreText, { color: colors.muted }]}>Restore Purchases</Text>
+            </>
+          )}
+        </Pressable>
+        <Text style={[styles.legalText, { color: colors.faint }]}>
+          Payment will be charged to your{' '}
+          {Platform.OS === 'ios' ? 'Apple ID' : 'Google Play account'} at
+          confirmation of purchase. Subscription automatically renews unless
+          canceled at least 24 hours before the end of the current period.
+          Your account will be charged for renewal within 24 hours prior to
+          the end of the current period at the cost of the chosen plan. You
+          can manage and cancel your subscriptions by going to your Account
+          Settings on the{' '}
+          {Platform.OS === 'ios' ? 'App Store' : 'Google Play Store'} after
+          purchase.
+        </Text>
+        <View style={styles.legalLinks}>
+          <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')} accessibilityLabel="Privacy Policy" accessibilityRole="link">
+            <Text style={[styles.legalLink, { color: colors.muted }]}>Privacy Policy</Text>
           </Pressable>
-          <Text style={[styles.legalText, { color: colors.textDim }]}>
-            Payment will be charged to your{' '}
-            {Platform.OS === 'ios' ? 'Apple ID' : 'Google Play account'} at
-            confirmation of purchase. Subscription automatically renews unless
-            canceled at least 24 hours before the end of the current period.
-            Your account will be charged for renewal within 24 hours prior to
-            the end of the current period at the cost of the chosen plan. You
-            can manage and cancel your subscriptions by going to your Account
-            Settings on the{' '}
-            {Platform.OS === 'ios' ? 'App Store' : 'Google Play Store'} after
-            purchase.
-          </Text>
-          <View style={styles.legalLinks}>
-            <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')} accessibilityLabel="Privacy Policy" accessibilityRole="link">
-              <Text style={[styles.legalLink, { color: colors.textMuted }]}>Privacy Policy</Text>
-            </Pressable>
-            <Text style={[styles.legalDot, { color: colors.textDim }]}>{'\u00B7'}</Text>
-            <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/terms')} accessibilityLabel="Terms of Service" accessibilityRole="link">
-              <Text style={[styles.legalLink, { color: colors.textMuted }]}>Terms of Service</Text>
-            </Pressable>
-          </View>
-        </CardEntrance>
+          <Text style={[styles.legalDot, { color: colors.faint }]}>{'·'}</Text>
+          <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/terms')} accessibilityLabel="Terms of Service" accessibilityRole="link">
+            <Text style={[styles.legalLink, { color: colors.muted }]}>Terms of Service</Text>
+          </Pressable>
+        </View>
       </ScrollView>
     </View>
   )
@@ -375,7 +367,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   headerTitle: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 16,
   },
   closeButton: {
@@ -396,7 +388,7 @@ const styles = StyleSheet.create({
   heroSection: {
     alignItems: 'center',
     paddingTop: 8,
-    paddingBottom: 24,
+    paddingBottom: 8,
   },
   crownBadge: {
     width: 56,
@@ -407,12 +399,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   heroTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 28,
+    fontFamily: 'Jakarta-ExtraBold',
+    fontSize: 26,
+    letterSpacing: -0.5,
     marginBottom: 8,
   },
   heroSubtitle: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 15,
     textAlign: 'center',
     lineHeight: 22,
@@ -420,21 +413,23 @@ const styles = StyleSheet.create({
 
   // Feature Comparison
   featureCard: {
-    padding: 16,
-    marginBottom: 24,
+    borderRadius: 16,
+    borderWidth: 1,
+    overflow: 'hidden',
+    marginBottom: 4,
   },
   featureHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingBottom: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     borderBottomWidth: 1,
-    marginBottom: 4,
   },
   featureHeaderCol: {
     flex: 1,
   },
   featureHeaderLabel: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 11,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
@@ -448,9 +443,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
-  },
-  featureRowBorder: {
-    borderBottomWidth: 1,
+    paddingHorizontal: 16,
   },
   featureNameCol: {
     flex: 1,
@@ -459,11 +452,11 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   featureName: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
   },
   freeValue: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 11,
     width: 72,
     textAlign: 'center',
@@ -476,21 +469,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   premiumValue: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 11,
   },
 
   // Plans
   plansSection: {
-    gap: 12,
-    marginBottom: 24,
+    gap: 10,
+    marginBottom: 4,
   },
   planCard: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
     borderWidth: 1,
-    borderRadius: 12,
+    borderRadius: 16,
   },
   planBadge: {
     alignSelf: 'flex-end',
@@ -502,10 +495,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   planBadgeText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 10,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
+    color: '#fff',
   },
   planRadio: {
     marginRight: 12,
@@ -527,37 +521,35 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   planTitle: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 15,
   },
   planSubtitle: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
     marginTop: 2,
   },
   planPrice: {
-    fontFamily: 'Jost-Medium',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
   },
 
   // Purchase
   purchaseButton: {
+    marginTop: 8,
     marginBottom: 16,
     borderRadius: 12,
-    overflow: 'hidden',
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   purchaseButtonDisabled: {
     opacity: 0.6,
   },
-  purchaseGradient: {
-    paddingVertical: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 12,
-  },
   purchaseText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
 
   // Restore + Legal
@@ -570,11 +562,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   restoreText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 13,
   },
   legalText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 11,
     textAlign: 'center',
     lineHeight: 16,
@@ -589,12 +581,12 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   legalLink: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 11,
     textDecorationLine: 'underline',
   },
   legalDot: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 11,
   },
 })

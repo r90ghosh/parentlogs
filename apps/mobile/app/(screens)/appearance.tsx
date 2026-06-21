@@ -1,12 +1,11 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
 import { ChevronLeft } from 'lucide-react-native'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance } from '@/components/animations'
 import { useColors } from '@/hooks/use-colors'
 import * as Haptics from 'expo-haptics'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from '@/components/providers/ThemeProvider'
+import { SectionLabel } from '@/components/digest'
 
 type ThemePreference = 'system' | 'dark' | 'light'
 
@@ -49,51 +48,49 @@ export default function AppearanceScreen() {
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
 
       {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + 12, borderBottomColor: colors.border }]}>
-        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-          <ChevronLeft size={20} color={colors.textSecondary} />
+      <View style={[styles.header, { paddingTop: insets.top + 12, borderBottomColor: colors.line }]}>
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.accentSoft }]}>
+          <ChevronLeft size={20} color={colors.ink2} />
         </Pressable>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Appearance</Text>
+        <Text style={[styles.headerTitle, { color: colors.ink }]}>Appearance</Text>
         <View style={styles.headerSpacer} />
       </View>
 
       <View style={styles.content}>
-        <CardEntrance delay={0}>
-          <Text style={[styles.sectionLabel, { color: colors.textMuted }]}>Theme</Text>
-          <GlassCard style={styles.optionsCard}>
-            {THEME_OPTIONS.map((option, index) => {
-              const isSelected = selected === option.id
-              const isLast = index === THEME_OPTIONS.length - 1
-              return (
-                <Pressable
-                  key={option.id}
-                  onPress={() => handleSelect(option.id)}
-                  style={({ pressed }) => [
-                    styles.optionRow,
-                    isSelected && { backgroundColor: colors.copperDim },
-                    !isLast && [styles.optionRowBorder, { borderBottomColor: colors.border }],
-                    pressed && { backgroundColor: colors.pressed },
-                  ]}
-                >
-                  {isSelected && <View style={[styles.selectedAccent, { backgroundColor: colors.copper }]} />}
+        <SectionLabel>Theme</SectionLabel>
+        <View style={[styles.optionsCard, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          {THEME_OPTIONS.map((option, index) => {
+            const isSelected = selected === option.id
+            const isLast = index === THEME_OPTIONS.length - 1
+            return (
+              <Pressable
+                key={option.id}
+                onPress={() => handleSelect(option.id)}
+                style={({ pressed }) => [
+                  styles.optionRow,
+                  isSelected && { backgroundColor: colors.accentSoft },
+                  !isLast && { borderBottomWidth: 1, borderBottomColor: colors.line2 },
+                  pressed && !isSelected && { backgroundColor: colors.cardHover },
+                ]}
+              >
+                {isSelected && <View style={[styles.selectedAccent, { backgroundColor: colors.accent }]} />}
 
-                  <View style={styles.optionContent}>
-                    <Text style={[styles.optionLabel, { color: colors.textPrimary }]}>
-                      {option.label}
-                    </Text>
-                    <Text style={[styles.optionDescription, { color: colors.textMuted }]}>
-                      {option.description}
-                    </Text>
-                  </View>
+                <View style={styles.optionContent}>
+                  <Text style={[styles.optionLabel, { color: colors.ink }]}>
+                    {option.label}
+                  </Text>
+                  <Text style={[styles.optionDescription, { color: colors.muted }]}>
+                    {option.description}
+                  </Text>
+                </View>
 
-                  <View style={[styles.radio, { borderColor: colors.textDim }, isSelected && { borderColor: colors.copper }]}>
-                    {isSelected && <View style={[styles.radioDot, { backgroundColor: colors.copper }]} />}
-                  </View>
-                </Pressable>
-              )
-            })}
-          </GlassCard>
-        </CardEntrance>
+                <View style={[styles.radio, { borderColor: colors.faint }, isSelected && { borderColor: colors.accent }]}>
+                  {isSelected && <View style={[styles.radioDot, { backgroundColor: colors.accent }]} />}
+                </View>
+              </Pressable>
+            )
+          })}
+        </View>
       </View>
     </View>
   )
@@ -119,7 +116,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     flex: 1,
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 16,
     textAlign: 'center',
   },
@@ -128,29 +125,19 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 20,
-    paddingTop: 28,
-  },
-  sectionLabel: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 13,
-    textTransform: 'uppercase',
-    letterSpacing: 1.2,
-    marginBottom: 12,
   },
   optionsCard: {
+    borderRadius: 16,
+    borderWidth: 1,
     overflow: 'hidden',
-    padding: 0,
     marginBottom: 20,
   },
   optionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 15,
     paddingHorizontal: 16,
     position: 'relative',
-  },
-  optionRowBorder: {
-    borderBottomWidth: 1,
   },
   selectedAccent: {
     position: 'absolute',
@@ -164,12 +151,12 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   optionLabel: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 15.5,
     marginBottom: 2,
   },
   optionDescription: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
   },
   radio: {

@@ -17,20 +17,19 @@ import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   X,
-  HelpCircle,
   ChevronDown,
   ChevronUp,
   Send,
   ExternalLink,
   Mail,
   CheckCircle,
+  ChevronRight,
 } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { contactService } from '@/lib/services'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance } from '@/components/animations'
 import * as WebBrowser from 'expo-web-browser'
 import { useColors } from '@/hooks/use-colors'
+import { SectionLabel } from '@/components/digest'
 
 if (
   Platform.OS === 'android' &&
@@ -141,218 +140,197 @@ export default function HelpScreen() {
       >
         {/* Header */}
         <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Help & Support</Text>
-          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
-            <X size={20} color={colors.textMuted} />
+          <Text style={[styles.headerTitle, { color: colors.ink }]}>Help & Support</Text>
+          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.accentSoft }]}>
+            <X size={20} color={colors.muted} />
           </Pressable>
         </View>
+
         {/* FAQ Section */}
-        <CardEntrance delay={0}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Frequently Asked Questions</Text>
-          <GlassCard style={styles.section}>
-            {FAQ_ITEMS.map((item, index) => (
+        <SectionLabel>Frequently Asked Questions</SectionLabel>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          {FAQ_ITEMS.map((item, index) => {
+            const isLast = index === FAQ_ITEMS.length - 1
+            return (
               <Pressable
                 key={index}
                 onPress={() => toggleFaq(index)}
-                style={[
+                style={({ pressed }) => [
                   styles.faqRow,
-                  index < FAQ_ITEMS.length - 1 && [styles.faqRowBorder, { borderBottomColor: colors.subtleBg }],
+                  !isLast && { borderBottomWidth: 1, borderBottomColor: colors.line2 },
+                  pressed && { backgroundColor: colors.cardHover },
                 ]}
               >
                 <View style={styles.faqHeader}>
-                  <Text style={[styles.faqQuestion, { color: colors.textSecondary }]}>{item.q}</Text>
+                  <Text style={[styles.faqQuestion, { color: colors.ink }]}>{item.q}</Text>
                   {expandedIdx === index ? (
-                    <ChevronUp size={16} color={colors.textMuted} />
+                    <ChevronUp size={16} color={colors.muted} />
                   ) : (
-                    <ChevronDown size={16} color={colors.textMuted} />
+                    <ChevronDown size={16} color={colors.muted} />
                   )}
                 </View>
                 {expandedIdx === index && (
-                  <Text style={[styles.faqAnswer, { color: colors.textMuted }]}>{item.a}</Text>
+                  <Text style={[styles.faqAnswer, { color: colors.muted }]}>{item.a}</Text>
                 )}
               </Pressable>
-            ))}
-          </GlassCard>
-        </CardEntrance>
+            )
+          })}
+        </View>
 
         {/* Contact Form Section */}
-        <CardEntrance delay={120}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Contact Us</Text>
-          {submitted ? (
-            <GlassCard style={styles.successCard}>
-              <CheckCircle size={40} color={colors.sage} />
-              <Text style={[styles.successTitle, { color: colors.textPrimary }]}>Message Sent!</Text>
-              <Text style={[styles.successDescription, { color: colors.textMuted }]}>
-                Thanks for reaching out. We typically respond within 24 hours.
-              </Text>
-            </GlassCard>
-          ) : (
-            <GlassCard style={styles.formCard}>
-              <View style={styles.fieldGroup}>
-                <Text style={[styles.fieldLabel, { color: colors.textMuted }]}>Name</Text>
-                <TextInput
-                  style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
-                  value={name}
-                  onChangeText={setName}
-                  placeholder="Your name"
-                  placeholderTextColor={colors.textDim}
-                  autoCapitalize="words"
-                />
-              </View>
-              <View style={styles.fieldGroup}>
-                <Text style={[styles.fieldLabel, { color: colors.textMuted }]}>Email</Text>
-                <TextInput
-                  style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
-                  value={email}
-                  onChangeText={setEmail}
-                  placeholder="your@email.com"
-                  placeholderTextColor={colors.textDim}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-              </View>
-              <View style={styles.fieldGroup}>
-                <Text style={[styles.fieldLabel, { color: colors.textMuted }]}>Category</Text>
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={styles.categoryPills}
-                >
-                  {CONTACT_CATEGORIES.map((cat) => (
-                    <Pressable
-                      key={cat}
-                      onPress={() => setCategory(cat)}
+        <SectionLabel>Contact Us</SectionLabel>
+        {submitted ? (
+          <View style={[styles.successCard, { backgroundColor: colors.card, borderColor: colors.line }]}>
+            <CheckCircle size={40} color={colors.sage} />
+            <Text style={[styles.successTitle, { color: colors.ink }]}>Message Sent!</Text>
+            <Text style={[styles.successDescription, { color: colors.muted }]}>
+              Thanks for reaching out. We typically respond within 24 hours.
+            </Text>
+          </View>
+        ) : (
+          <View style={[styles.formCard, { backgroundColor: colors.card, borderColor: colors.line }]}>
+            <View style={styles.fieldGroup}>
+              <Text style={[styles.fieldLabel, { color: colors.muted }]}>Name</Text>
+              <TextInput
+                style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
+                value={name}
+                onChangeText={setName}
+                placeholder="Your name"
+                placeholderTextColor={colors.faint}
+                autoCapitalize="words"
+              />
+            </View>
+            <View style={styles.fieldGroup}>
+              <Text style={[styles.fieldLabel, { color: colors.muted }]}>Email</Text>
+              <TextInput
+                style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
+                value={email}
+                onChangeText={setEmail}
+                placeholder="your@email.com"
+                placeholderTextColor={colors.faint}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+            <View style={styles.fieldGroup}>
+              <Text style={[styles.fieldLabel, { color: colors.muted }]}>Category</Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.categoryPills}
+              >
+                {CONTACT_CATEGORIES.map((cat) => (
+                  <Pressable
+                    key={cat}
+                    onPress={() => setCategory(cat)}
+                    style={[
+                      styles.categoryPill,
+                      { borderColor: colors.line },
+                      category === cat && { backgroundColor: colors.accent, borderColor: colors.accent },
+                    ]}
+                  >
+                    <Text
                       style={[
-                        styles.categoryPill,
-                        { backgroundColor: colors.subtleBg, borderColor: colors.border },
-                        category === cat && { backgroundColor: colors.copperDim, borderColor: colors.copper },
+                        styles.categoryPillText,
+                        { color: colors.muted },
+                        category === cat && { color: '#fff' },
                       ]}
                     >
-                      <Text
-                        style={[
-                          styles.categoryPillText,
-                          { color: colors.textMuted },
-                          category === cat && { color: colors.copper },
-                        ]}
-                      >
-                        {cat}
-                      </Text>
-                    </Pressable>
-                  ))}
-                </ScrollView>
-              </View>
-              <View style={styles.fieldGroup}>
-                <Text style={[styles.fieldLabel, { color: colors.textMuted }]}>Subject</Text>
-                <TextInput
-                  style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
-                  value={subject}
-                  onChangeText={setSubject}
-                  placeholder="What's this about?"
-                  placeholderTextColor={colors.textDim}
-                />
-              </View>
-              <View style={styles.fieldGroup}>
-                <Text style={[styles.fieldLabel, { color: colors.textMuted }]}>Message</Text>
-                <TextInput
-                  style={[styles.input, styles.textArea, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
-                  value={message}
-                  onChangeText={setMessage}
-                  placeholder="Tell us how we can help..."
-                  placeholderTextColor={colors.textDim}
-                  multiline
-                  numberOfLines={4}
-                  textAlignVertical="top"
-                />
-              </View>
-              <Pressable
-                onPress={handleSubmit}
-                disabled={isSubmitting}
-                style={[
-                  styles.submitButton,
-                  { backgroundColor: colors.copper },
-                  isSubmitting && styles.submitButtonDisabled,
-                ]}
-              >
-                {isSubmitting ? (
-                  <ActivityIndicator color={colors.textPrimary} />
-                ) : (
-                  <>
-                    <Send size={16} color={colors.textPrimary} />
-                    <Text style={[styles.submitButtonText, { color: colors.textPrimary }]}>Send Message</Text>
-                  </>
-                )}
-              </Pressable>
-            </GlassCard>
-          )}
-        </CardEntrance>
+                      {cat}
+                    </Text>
+                  </Pressable>
+                ))}
+              </ScrollView>
+            </View>
+            <View style={styles.fieldGroup}>
+              <Text style={[styles.fieldLabel, { color: colors.muted }]}>Subject</Text>
+              <TextInput
+                style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
+                value={subject}
+                onChangeText={setSubject}
+                placeholder="What's this about?"
+                placeholderTextColor={colors.faint}
+              />
+            </View>
+            <View style={styles.fieldGroup}>
+              <Text style={[styles.fieldLabel, { color: colors.muted }]}>Message</Text>
+              <TextInput
+                style={[styles.input, styles.textArea, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
+                value={message}
+                onChangeText={setMessage}
+                placeholder="Tell us how we can help..."
+                placeholderTextColor={colors.faint}
+                multiline
+                numberOfLines={4}
+                textAlignVertical="top"
+              />
+            </View>
+            <Pressable
+              onPress={handleSubmit}
+              disabled={isSubmitting}
+              style={[
+                styles.submitButton,
+                { backgroundColor: colors.accent },
+                isSubmitting && styles.submitButtonDisabled,
+              ]}
+            >
+              {isSubmitting ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <>
+                  <Send size={16} color="#fff" />
+                  <Text style={styles.submitButtonText}>Send Message</Text>
+                </>
+              )}
+            </Pressable>
+          </View>
+        )}
 
         {/* Quick Links Section */}
-        <CardEntrance delay={240}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Quick Links</Text>
-          <GlassCard style={styles.section}>
-            <Pressable
-              onPress={() =>
-                WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')
-              }
-              style={({ pressed }) => [
-                styles.linkRow,
-                styles.linkRowBorder,
-                { borderBottomColor: colors.subtleBg },
-                pressed && { backgroundColor: colors.pressed },
-              ]}
-            >
-              <View style={styles.linkRowLeft}>
-                <ExternalLink size={18} color={colors.textMuted} />
-                <Text style={[styles.linkRowLabel, { color: colors.textSecondary }]}>Privacy Policy</Text>
-              </View>
-              <ChevronDown
-                size={16}
-                color={colors.textDim}
-                style={{ transform: [{ rotate: '-90deg' }] }}
-              />
-            </Pressable>
-            <Pressable
-              onPress={() =>
-                WebBrowser.openBrowserAsync('https://thedadcenter.com/terms')
-              }
-              style={({ pressed }) => [
-                styles.linkRow,
-                styles.linkRowBorder,
-                { borderBottomColor: colors.subtleBg },
-                pressed && { backgroundColor: colors.pressed },
-              ]}
-            >
-              <View style={styles.linkRowLeft}>
-                <ExternalLink size={18} color={colors.textMuted} />
-                <Text style={[styles.linkRowLabel, { color: colors.textSecondary }]}>Terms of Service</Text>
-              </View>
-              <ChevronDown
-                size={16}
-                color={colors.textDim}
-                style={{ transform: [{ rotate: '-90deg' }] }}
-              />
-            </Pressable>
-            <Pressable
-              onPress={() =>
-                Linking.openURL('mailto:info@thedadcenter.com')
-              }
-              style={({ pressed }) => [
-                styles.linkRow,
-                pressed && { backgroundColor: colors.pressed },
-              ]}
-            >
-              <View style={styles.linkRowLeft}>
-                <Mail size={18} color={colors.textMuted} />
-                <Text style={[styles.linkRowLabel, { color: colors.textSecondary }]}>Email Support</Text>
-              </View>
-              <ChevronDown
-                size={16}
-                color={colors.textDim}
-                style={{ transform: [{ rotate: '-90deg' }] }}
-              />
-            </Pressable>
-          </GlassCard>
-        </CardEntrance>
+        <SectionLabel>Quick Links</SectionLabel>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <Pressable
+            onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')}
+            style={({ pressed }) => [
+              styles.linkRow,
+              { borderBottomWidth: 1, borderBottomColor: colors.line2 },
+              pressed && { backgroundColor: colors.cardHover },
+            ]}
+          >
+            <View style={styles.linkRowLeft}>
+              <ExternalLink size={18} color={colors.muted} />
+              <Text style={[styles.linkRowLabel, { color: colors.ink }]}>Privacy Policy</Text>
+            </View>
+            <ChevronRight size={16} color={colors.faint} />
+          </Pressable>
+          <Pressable
+            onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/terms')}
+            style={({ pressed }) => [
+              styles.linkRow,
+              { borderBottomWidth: 1, borderBottomColor: colors.line2 },
+              pressed && { backgroundColor: colors.cardHover },
+            ]}
+          >
+            <View style={styles.linkRowLeft}>
+              <ExternalLink size={18} color={colors.muted} />
+              <Text style={[styles.linkRowLabel, { color: colors.ink }]}>Terms of Service</Text>
+            </View>
+            <ChevronRight size={16} color={colors.faint} />
+          </Pressable>
+          <Pressable
+            onPress={() => Linking.openURL('mailto:info@thedadcenter.com')}
+            style={({ pressed }) => [
+              styles.linkRow,
+              pressed && { backgroundColor: colors.cardHover },
+            ]}
+          >
+            <View style={styles.linkRowLeft}>
+              <Mail size={18} color={colors.muted} />
+              <Text style={[styles.linkRowLabel, { color: colors.ink }]}>Email Support</Text>
+            </View>
+            <ChevronRight size={16} color={colors.faint} />
+          </Pressable>
+        </View>
       </ScrollView>
     </View>
   )
@@ -374,7 +352,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   headerTitle: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 16,
   },
   closeButton: {
@@ -389,28 +367,18 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
 
-  // Section
-  sectionTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 13,
-    textTransform: 'uppercase',
-    letterSpacing: 1.2,
-    marginBottom: 12,
-    marginTop: 8,
-  },
-  section: {
+  // Card
+  card: {
+    borderRadius: 16,
+    borderWidth: 1,
     overflow: 'hidden',
-    marginBottom: 24,
-    padding: 0,
+    marginBottom: 4,
   },
 
   // FAQ
   faqRow: {
-    paddingVertical: 16,
+    paddingVertical: 15,
     paddingHorizontal: 16,
-  },
-  faqRowBorder: {
-    borderBottomWidth: 1,
   },
   faqHeader: {
     flexDirection: 'row',
@@ -418,13 +386,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   faqQuestion: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 15,
     flex: 1,
     marginRight: 12,
   },
   faqAnswer: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     lineHeight: 22,
     marginTop: 10,
@@ -432,32 +400,35 @@ const styles = StyleSheet.create({
 
   // Contact Form
   formCard: {
+    borderRadius: 16,
+    borderWidth: 1,
+    overflow: 'hidden',
     padding: 16,
-    marginBottom: 24,
+    marginBottom: 4,
   },
   fieldGroup: {
     marginBottom: 16,
   },
   fieldLabel: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 13,
     marginBottom: 8,
   },
   input: {
     borderRadius: 12,
     borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 15,
   },
   textArea: {
     minHeight: 100,
-    paddingTop: 14,
+    paddingTop: 12,
   },
   submitButton: {
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -468,8 +439,9 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   submitButtonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
 
   // Category pills
@@ -484,23 +456,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   categoryPillText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 13,
   },
 
   // Success
   successCard: {
+    borderRadius: 16,
+    borderWidth: 1,
     padding: 32,
-    marginBottom: 24,
+    marginBottom: 4,
     alignItems: 'center',
     gap: 12,
   },
   successTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 22,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 20,
   },
   successDescription: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     textAlign: 'center',
     lineHeight: 22,
@@ -511,19 +485,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
+    paddingVertical: 15,
     paddingHorizontal: 16,
-  },
-  linkRowBorder: {
-    borderBottomWidth: 1,
   },
   linkRowLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
+    flex: 1,
   },
   linkRowLabel: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 15,
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 15.5,
   },
 })

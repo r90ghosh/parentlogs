@@ -17,20 +17,17 @@ import {
   CheckSquare,
   BookOpen,
   Users,
-  Newspaper,
   Crown,
   Star,
   Moon,
-  Mail,
   CalendarCheck,
   Activity,
   Repeat,
   Inbox,
 } from 'lucide-react-native'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance } from '@/components/animations'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useColors } from '@/hooks/use-colors'
+import { SectionLabel } from '@/components/digest'
 import { supabase } from '@/lib/supabase'
 import * as Haptics from 'expo-haptics'
 
@@ -41,6 +38,7 @@ interface NotificationToggleProps {
   value: boolean
   onToggle: (value: boolean) => void
   disabled?: boolean
+  last?: boolean
 }
 
 function NotificationToggle({
@@ -50,15 +48,20 @@ function NotificationToggle({
   value,
   onToggle,
   disabled,
+  last,
 }: NotificationToggleProps) {
   const colors = useColors()
   return (
-    <View style={[styles.toggleRow, { borderBottomColor: colors.border }, disabled && styles.toggleRowDisabled]}>
+    <View style={[
+      styles.toggleRow,
+      !last && { borderBottomWidth: 1, borderBottomColor: colors.line2 },
+      disabled && styles.toggleRowDisabled,
+    ]}>
       <View style={styles.toggleLeft}>
         {icon}
         <View style={styles.toggleInfo}>
-          <Text style={[styles.toggleLabel, { color: colors.textSecondary }]}>{label}</Text>
-          <Text style={[styles.toggleDesc, { color: colors.textMuted }]}>{description}</Text>
+          <Text style={[styles.toggleLabel, { color: colors.ink }]}>{label}</Text>
+          <Text style={[styles.toggleDesc, { color: colors.muted }]}>{description}</Text>
         </View>
       </View>
       <Switch
@@ -67,9 +70,9 @@ function NotificationToggle({
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
           onToggle(v)
         }}
-        trackColor={{ false: colors.textDim, true: 'rgba(196,112,63,0.5)' }}
-        thumbColor={value ? colors.copper : colors.textMuted}
-        ios_backgroundColor={colors.textDim}
+        trackColor={{ false: colors.line, true: colors.accent }}
+        thumbColor="#fff"
+        ios_backgroundColor={colors.line}
         disabled={disabled}
       />
     </View>
@@ -140,7 +143,7 @@ export default function NotificationsScreen() {
           .maybeSingle()
 
         if (data) {
-           
+
           const extras = (data as any).extras as Record<string, boolean> | null ?? {}
           setPrefs({
             push_enabled: data.push_enabled ?? true,
@@ -221,12 +224,12 @@ export default function NotificationsScreen() {
             .select('extras')
             .eq('user_id', user.id)
             .maybeSingle()
-           
+
           const currentExtras = ((existing as any)?.extras as Record<string, boolean>) ?? {}
           await supabase.from('notification_preferences').upsert(
             {
               user_id: user.id,
-               
+
               extras: { ...currentExtras, [key]: value } as any,
               updated_at: new Date().toISOString(),
             },
@@ -257,13 +260,13 @@ export default function NotificationsScreen() {
     return (
       <View style={[styles.container, { backgroundColor: 'transparent' }]}>
         <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Notifications</Text>
-          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
-            <X size={20} color={colors.textMuted} />
+          <Text style={[styles.headerTitle, { color: colors.ink }]}>Notifications</Text>
+          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.accentSoft }]}>
+            <X size={20} color={colors.muted} />
           </Pressable>
         </View>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color={colors.copper} size="large" />
+          <ActivityIndicator color={colors.accent} size="large" />
         </View>
       </View>
     )
@@ -271,7 +274,6 @@ export default function NotificationsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-
       <ScrollView
         style={styles.flex}
         contentContainerStyle={[
@@ -283,206 +285,196 @@ export default function NotificationsScreen() {
         {/* Header */}
         <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
           <View style={styles.headerLeft}>
-            <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Notifications</Text>
+            <Text style={[styles.headerTitle, { color: colors.ink }]}>Notifications</Text>
             {saving && (
               <ActivityIndicator
                 size="small"
-                color={colors.copper}
+                color={colors.accent}
                 style={styles.savingIndicator}
               />
             )}
           </View>
-          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
-            <X size={20} color={colors.textMuted} />
+          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.accentSoft }]}>
+            <X size={20} color={colors.muted} />
           </Pressable>
         </View>
+
         {/* Master toggle */}
-        <CardEntrance delay={0}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>General</Text>
-          <GlassCard style={styles.section}>
-            <NotificationToggle
-              icon={<Bell size={18} color={colors.copper} />}
-              label="Push Notifications"
-              description="Enable or disable all push notifications"
-              value={prefs.push_enabled}
-              onToggle={(v) => updatePref('push_enabled', v)}
-            />
-          </GlassCard>
-        </CardEntrance>
+        <SectionLabel>General</SectionLabel>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <NotificationToggle
+            icon={<Bell size={18} color={colors.accent} />}
+            label="Push Notifications"
+            description="Enable or disable all push notifications"
+            value={prefs.push_enabled}
+            onToggle={(v) => updatePref('push_enabled', v)}
+            last
+          />
+        </View>
 
         {/* Premium notice for free users */}
         {!isPremium && (
-          <CardEntrance delay={60}>
-            <Pressable
-              onPress={() => router.push('/(screens)/upgrade')}
-              style={[styles.premiumNotice, { backgroundColor: colors.goldDim, borderColor: 'rgba(212,168,83,0.15)' }]}
-            >
-              <Crown size={16} color={colors.gold} />
-              <Text style={[styles.premiumNoticeText, { color: colors.gold }]}>
-                Free users get push notifications for 30 days. Upgrade for
-                unlimited notifications.
-              </Text>
-            </Pressable>
-          </CardEntrance>
+          <Pressable
+            onPress={() => router.push('/(screens)/upgrade')}
+            style={[styles.premiumNotice, { backgroundColor: colors.accentSoft, borderColor: colors.line }]}
+          >
+            <Crown size={16} color={colors.accentInk} />
+            <Text style={[styles.premiumNoticeText, { color: colors.accentInk }]}>
+              Free users get push notifications for 30 days. Upgrade for
+              unlimited notifications.
+            </Text>
+          </Pressable>
         )}
 
         {/* Task reminders */}
-        <CardEntrance delay={120}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Task Reminders</Text>
-          <GlassCard style={styles.section}>
-            <NotificationToggle
-              icon={<CheckSquare size={18} color={colors.sage} />}
-              label="Task Reminders"
-              description="Get notified when tasks are coming due"
-              value={
-                prefs.task_reminders_7_day ||
-                prefs.task_reminders_3_day ||
-                prefs.task_reminders_1_day
-              }
-              onToggle={(v) => {
-                updatePref('task_reminders_7_day', v)
-                updatePref('task_reminders_3_day', v)
-                updatePref('task_reminders_1_day', v)
-              }}
-              disabled={!prefs.push_enabled}
-            />
-            <NotificationToggle
-              icon={<Inbox size={18} color={colors.copper} />}
-              label="Monthly Backlog Digest"
-              description="Once a month, a heads-up about tasks that slipped through the cracks"
-              value={prefs.monthly_backlog_digest}
-              onToggle={(v) => updatePref('monthly_backlog_digest', v)}
-              disabled={!prefs.push_enabled}
-            />
-          </GlassCard>
-        </CardEntrance>
+        <SectionLabel>Task Reminders</SectionLabel>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <NotificationToggle
+            icon={<CheckSquare size={18} color={colors.sage} />}
+            label="Task Reminders"
+            description="Get notified when tasks are coming due"
+            value={
+              prefs.task_reminders_7_day ||
+              prefs.task_reminders_3_day ||
+              prefs.task_reminders_1_day
+            }
+            onToggle={(v) => {
+              updatePref('task_reminders_7_day', v)
+              updatePref('task_reminders_3_day', v)
+              updatePref('task_reminders_1_day', v)
+            }}
+            disabled={!prefs.push_enabled}
+          />
+          <NotificationToggle
+            icon={<Inbox size={18} color={colors.accent} />}
+            label="Monthly Backlog Digest"
+            description="Once a month, a heads-up about tasks that slipped through the cracks"
+            value={prefs.monthly_backlog_digest}
+            onToggle={(v) => updatePref('monthly_backlog_digest', v)}
+            disabled={!prefs.push_enabled}
+            last
+          />
+        </View>
 
         {/* Weekly briefing */}
-        <CardEntrance delay={200}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Briefings</Text>
-          <GlassCard style={styles.section}>
-            <NotificationToggle
-              icon={<BookOpen size={18} color={colors.sky} />}
-              label="Weekly Briefing"
-              description="Receive your weekly dad briefing notification"
-              value={prefs.weekly_briefing}
-              onToggle={(v) => updatePref('weekly_briefing', v)}
-              disabled={!prefs.push_enabled}
-            />
-          </GlassCard>
-        </CardEntrance>
+        <SectionLabel>Briefings</SectionLabel>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <NotificationToggle
+            icon={<BookOpen size={18} color={colors.sky} />}
+            label="Weekly Briefing"
+            description="Receive your weekly dad briefing notification"
+            value={prefs.weekly_briefing}
+            onToggle={(v) => updatePref('weekly_briefing', v)}
+            disabled={!prefs.push_enabled}
+            last
+          />
+        </View>
 
         {/* Partner activity */}
-        <CardEntrance delay={280}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Family</Text>
-          <GlassCard style={styles.section}>
-            <NotificationToggle
-              icon={<Users size={18} color={colors.rose} />}
-              label="Partner Activity"
-              description="Get notified when your partner completes tasks or checks in"
-              value={prefs.partner_activity}
-              onToggle={(v) => updatePref('partner_activity', v)}
-              disabled={!prefs.push_enabled}
-            />
-          </GlassCard>
-        </CardEntrance>
+        <SectionLabel>Family</SectionLabel>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <NotificationToggle
+            icon={<Users size={18} color={colors.rose} />}
+            label="Partner Activity"
+            description="Get notified when your partner completes tasks or checks in"
+            value={prefs.partner_activity}
+            onToggle={(v) => updatePref('partner_activity', v)}
+            disabled={!prefs.push_enabled}
+            last
+          />
+        </View>
 
         {/* Milestones */}
-        <CardEntrance delay={340}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Milestones</Text>
-          <GlassCard style={styles.section}>
-            <NotificationToggle
-              icon={<Star size={18} color={colors.gold} />}
-              label="Milestone Notifications"
-              description="Get notified about baby milestones and development markers"
-              value={prefs.milestone_notifications}
-              onToggle={(v) => updatePref('milestone_notifications', v)}
-              disabled={!prefs.push_enabled}
-            />
-          </GlassCard>
-        </CardEntrance>
+        <SectionLabel>Milestones</SectionLabel>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <NotificationToggle
+            icon={<Star size={18} color={colors.gold} />}
+            label="Milestone Notifications"
+            description="Get notified about baby milestones and development markers"
+            value={prefs.milestone_notifications}
+            onToggle={(v) => updatePref('milestone_notifications', v)}
+            disabled={!prefs.push_enabled}
+            last
+          />
+        </View>
 
         {/* Quiet Hours */}
-        <CardEntrance delay={400}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Quiet Hours</Text>
-          <GlassCard style={styles.section}>
-            <NotificationToggle
-              icon={<Moon size={18} color={colors.rose} />}
-              label="Quiet Hours"
-              description={
-                prefs.quiet_hours_enabled
-                  ? `No notifications from ${prefs.quiet_hours_start} to ${prefs.quiet_hours_end}`
-                  : 'Silence notifications during sleeping hours'
-              }
-              value={prefs.quiet_hours_enabled}
-              onToggle={(v) => updatePref('quiet_hours_enabled', v)}
-              disabled={!prefs.push_enabled}
-            />
-            {prefs.quiet_hours_enabled && prefs.push_enabled && (
-              <View style={[styles.quietHoursRow, { borderTopColor: colors.border }]}>
-                <View style={styles.quietTimeBlock}>
-                  <Text style={[styles.quietTimeLabel, { color: colors.textMuted }]}>Start</Text>
-                  <Text style={[styles.quietTimeValue, { color: colors.textSecondary }]}>{prefs.quiet_hours_start}</Text>
-                </View>
-                <Text style={[styles.quietTimeSeparator, { color: colors.textDim }]}>to</Text>
-                <View style={styles.quietTimeBlock}>
-                  <Text style={[styles.quietTimeLabel, { color: colors.textMuted }]}>End</Text>
-                  <Text style={[styles.quietTimeValue, { color: colors.textSecondary }]}>{prefs.quiet_hours_end}</Text>
-                </View>
+        <SectionLabel>Quiet Hours</SectionLabel>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <NotificationToggle
+            icon={<Moon size={18} color={colors.rose} />}
+            label="Quiet Hours"
+            description={
+              prefs.quiet_hours_enabled
+                ? `No notifications from ${prefs.quiet_hours_start} to ${prefs.quiet_hours_end}`
+                : 'Silence notifications during sleeping hours'
+            }
+            value={prefs.quiet_hours_enabled}
+            onToggle={(v) => updatePref('quiet_hours_enabled', v)}
+            disabled={!prefs.push_enabled}
+            last={!prefs.quiet_hours_enabled || !prefs.push_enabled}
+          />
+          {prefs.quiet_hours_enabled && prefs.push_enabled && (
+            <View style={[styles.quietHoursRow, { borderTopColor: colors.line2 }]}>
+              <View style={styles.quietTimeBlock}>
+                <Text style={[styles.quietTimeLabel, { color: colors.muted }]}>Start</Text>
+                <Text style={[styles.quietTimeValue, { color: colors.ink }]}>{prefs.quiet_hours_start}</Text>
               </View>
-            )}
-          </GlassCard>
-        </CardEntrance>
+              <Text style={[styles.quietTimeSeparator, { color: colors.faint }]}>to</Text>
+              <View style={styles.quietTimeBlock}>
+                <Text style={[styles.quietTimeLabel, { color: colors.muted }]}>End</Text>
+                <Text style={[styles.quietTimeValue, { color: colors.ink }]}>{prefs.quiet_hours_end}</Text>
+              </View>
+            </View>
+          )}
+        </View>
 
         {/* Email Notifications */}
-        <CardEntrance delay={460}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Email Notifications</Text>
-          <GlassCard style={styles.section}>
-            <NotificationToggle
-              icon={<BookOpen size={18} color={colors.sky} />}
-              label="Weekly Briefing"
-              description="Receive your weekly briefing by email"
-              value={prefs.email_weekly_briefing}
-              onToggle={(v) => updatePref('email_weekly_briefing', v)}
-            />
-            <NotificationToggle
-              icon={<CheckSquare size={18} color={colors.coral} />}
-              label="Overdue Task Digest"
-              description="Email digest of tasks that need attention"
-              value={prefs.email_task_digest}
-              onToggle={(v) => updatePref('email_task_digest', v)}
-            />
-            <NotificationToggle
-              icon={<CalendarCheck size={18} color={colors.gold} />}
-              label="Milestone Alerts"
-              description="Email alerts for baby milestones"
-              value={prefs.email_milestones}
-              onToggle={(v) => updatePref('email_milestones', v)}
-            />
-            <NotificationToggle
-              icon={<Activity size={18} color={colors.sage} />}
-              label="Lifecycle Updates"
-              description="Important app updates and new features"
-              value={prefs.email_lifecycle}
-              onToggle={(v) => updatePref('email_lifecycle', v)}
-            />
-            <NotificationToggle
-              icon={<Repeat size={18} color={colors.textMuted} />}
-              label="Re-engagement"
-              description="Gentle reminders when you haven't checked in"
-              value={prefs.re_engagement_emails}
-              onToggle={(v) => updatePref('re_engagement_emails', v)}
-            />
-          </GlassCard>
-        </CardEntrance>
+        <SectionLabel>Email Notifications</SectionLabel>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <NotificationToggle
+            icon={<BookOpen size={18} color={colors.sky} />}
+            label="Weekly Briefing"
+            description="Receive your weekly briefing by email"
+            value={prefs.email_weekly_briefing}
+            onToggle={(v) => updatePref('email_weekly_briefing', v)}
+          />
+          <NotificationToggle
+            icon={<CheckSquare size={18} color={colors.coral} />}
+            label="Overdue Task Digest"
+            description="Email digest of tasks that need attention"
+            value={prefs.email_task_digest}
+            onToggle={(v) => updatePref('email_task_digest', v)}
+          />
+          <NotificationToggle
+            icon={<CalendarCheck size={18} color={colors.gold} />}
+            label="Milestone Alerts"
+            description="Email alerts for baby milestones"
+            value={prefs.email_milestones}
+            onToggle={(v) => updatePref('email_milestones', v)}
+          />
+          <NotificationToggle
+            icon={<Activity size={18} color={colors.sage} />}
+            label="Lifecycle Updates"
+            description="Important app updates and new features"
+            value={prefs.email_lifecycle}
+            onToggle={(v) => updatePref('email_lifecycle', v)}
+          />
+          <NotificationToggle
+            icon={<Repeat size={18} color={colors.muted} />}
+            label="Re-engagement"
+            description="Gentle reminders when you haven't checked in"
+            value={prefs.re_engagement_emails}
+            onToggle={(v) => updatePref('re_engagement_emails', v)}
+            last
+          />
+        </View>
 
         {/* Info text */}
-        <CardEntrance delay={360}>
-          <Text style={[styles.infoText, { color: colors.textDim }]}>
-            Notification preferences are synced across all your devices. You can
-            also manage notifications in your device settings.
-          </Text>
-        </CardEntrance>
+        <Text style={[styles.infoText, { color: colors.faint }]}>
+          Notification preferences are synced across all your devices. You can
+          also manage notifications in your device settings.
+        </Text>
       </ScrollView>
     </View>
   )
@@ -508,7 +500,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   headerTitle: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 16,
   },
   savingIndicator: {
@@ -526,19 +518,12 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
 
-  // Section
-  sectionTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 13,
-    textTransform: 'uppercase',
-    letterSpacing: 1.2,
-    marginBottom: 12,
-    marginTop: 8,
-  },
-  section: {
+  // Card
+  card: {
+    borderRadius: 16,
+    borderWidth: 1,
     overflow: 'hidden',
-    marginBottom: 24,
-    padding: 0,
+    marginBottom: 4,
   },
 
   // Toggle row
@@ -546,9 +531,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
+    paddingVertical: 15,
     paddingHorizontal: 16,
-    borderBottomWidth: 1,
   },
   toggleRowDisabled: {
     opacity: 0.4,
@@ -564,11 +548,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   toggleLabel: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 15,
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 15.5,
   },
   toggleDesc: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
     marginTop: 2,
   },
@@ -580,12 +564,13 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    borderRadius: 10,
+    borderRadius: 12,
     borderWidth: 1,
-    marginBottom: 16,
+    marginBottom: 4,
+    marginTop: 4,
   },
   premiumNoticeText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 13,
     flex: 1,
     lineHeight: 18,
@@ -606,26 +591,26 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   quietTimeLabel: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 11,
   },
   quietTimeValue: {
-    fontFamily: 'Jost-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 18,
   },
   quietTimeSeparator: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
   },
 
   // Info text
   infoText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
     textAlign: 'center',
     lineHeight: 18,
     paddingHorizontal: 20,
-    marginTop: 8,
+    marginTop: 12,
   },
 
   // Loading

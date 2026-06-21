@@ -1,7 +1,6 @@
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import {
   X,
   Zap,
@@ -10,10 +9,9 @@ import {
   Users,
   ArrowRight,
 } from 'lucide-react-native'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance } from '@/components/animations'
 import * as Haptics from 'expo-haptics'
 import { useColors } from '@/hooks/use-colors'
+import { SectionLabel } from '@/components/digest'
 
 const VALUES = [
   {
@@ -63,106 +61,91 @@ export default function AboutScreen() {
       >
         {/* Header */}
         <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>About</Text>
-          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
-            <X size={20} color={colors.textMuted} />
+          <Text style={[styles.headerTitle, { color: colors.ink }]}>About</Text>
+          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.accentSoft }]}>
+            <X size={20} color={colors.muted} />
           </Pressable>
         </View>
+
         {/* Hero */}
-        <CardEntrance delay={0}>
-          <View style={styles.heroSection}>
-            <Text style={[styles.heroLabel, { color: colors.copper }]}>OUR MISSION</Text>
-            <Text style={[styles.heroTitle, { color: colors.textPrimary }]}>
-              Built by dads, for dads who refuse to wing it
-            </Text>
-            <Text style={[styles.heroDescription, { color: colors.textMuted }]}>
-              Fatherhood shouldn't feel like improvisation. The Dad Center gives
-              you week-by-week guidance, actionable tasks, and partner sync — so
-              you show up prepared, not panicked.
-            </Text>
-          </View>
-        </CardEntrance>
+        <View style={styles.heroSection}>
+          <Text style={[styles.heroLabel, { color: colors.accent }]}>OUR MISSION</Text>
+          <Text style={[styles.heroTitle, { color: colors.ink }]}>
+            Built by dads, for dads who refuse to wing it
+          </Text>
+          <Text style={[styles.heroDescription, { color: colors.muted }]}>
+            Fatherhood shouldn't feel like improvisation. The Dad Center gives
+            you week-by-week guidance, actionable tasks, and partner sync — so
+            you show up prepared, not panicked.
+          </Text>
+        </View>
 
         {/* Values */}
-        <CardEntrance delay={120}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>What We Believe</Text>
-          {VALUES.map((value) => {
-            const iconColor = colors[value.colorKey]
-            const dimKey = `${value.colorKey}Dim` as keyof typeof colors
-            const bgColor = colors[dimKey] as string
-            return (
-              <GlassCard key={value.title} style={styles.valueCard}>
-                <View style={styles.valueContent}>
-                  <View
-                    style={[
-                      styles.valueIconCircle,
-                      { backgroundColor: bgColor },
-                    ]}
-                  >
-                    <value.icon size={20} color={iconColor} />
-                  </View>
-                  <View style={styles.valueText}>
-                    <Text style={[styles.valueTitle, { color: colors.textPrimary }]}>{value.title}</Text>
-                    <Text style={[styles.valueDescription, { color: colors.textMuted }]}>
-                      {value.description}
-                    </Text>
-                  </View>
+        <SectionLabel>What We Believe</SectionLabel>
+        {VALUES.map((value) => {
+          const iconColor = colors[value.colorKey]
+          const dimKey = `${value.colorKey}Dim` as keyof typeof colors
+          const bgColor = colors[dimKey] as string
+          return (
+            <View key={value.title} style={[styles.valueCard, { backgroundColor: colors.card, borderColor: colors.line }]}>
+              <View style={styles.valueContent}>
+                <View style={[styles.valueIconCircle, { backgroundColor: bgColor }]}>
+                  <value.icon size={20} color={iconColor} />
                 </View>
-              </GlassCard>
-            )
-          })}
-        </CardEntrance>
+                <View style={styles.valueText}>
+                  <Text style={[styles.valueTitle, { color: colors.ink }]}>{value.title}</Text>
+                  <Text style={[styles.valueDescription, { color: colors.muted }]}>
+                    {value.description}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )
+        })}
 
         {/* Story */}
-        <CardEntrance delay={240}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>The Story</Text>
-          <GlassCard style={styles.storyCard}>
-            <Text style={[styles.storyHeading, { color: colors.textPrimary }]}>
-              Why The Dad Center exists
-            </Text>
-            <Text style={[styles.storyParagraph, { color: colors.textMuted }]}>
-              When one dad found out he was going to be a father, he did what
-              any engineer would do — he went looking for a system. A
-              week-by-week playbook. Something that respected his intelligence.
-            </Text>
-            <Text style={[styles.storyParagraph, { color: colors.textMuted }]}>
-              He found baby trackers designed for moms, forums full of
-              conflicting advice, and apps that assumed dads were secondary
-              passengers.
-            </Text>
-            <Text style={[styles.storyHighlight, { color: colors.textSecondary }]}>
-              So he built The Dad Center — the operating system for modern
-              fatherhood. No fluff. No condescension. Just the tools to be
-              the dad you want to be.
-            </Text>
-          </GlassCard>
-        </CardEntrance>
+        <SectionLabel>The Story</SectionLabel>
+        <View style={[styles.storyCard, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <Text style={[styles.storyHeading, { color: colors.ink }]}>
+            Why The Dad Center exists
+          </Text>
+          <Text style={[styles.storyParagraph, { color: colors.muted }]}>
+            When one dad found out he was going to be a father, he did what
+            any engineer would do — he went looking for a system. A
+            week-by-week playbook. Something that respected his intelligence.
+          </Text>
+          <Text style={[styles.storyParagraph, { color: colors.muted }]}>
+            He found baby trackers designed for moms, forums full of
+            conflicting advice, and apps that assumed dads were secondary
+            passengers.
+          </Text>
+          <Text style={[styles.storyHighlight, { color: colors.ink2 }]}>
+            So he built The Dad Center — the operating system for modern
+            fatherhood. No fluff. No condescension. Just the tools to be
+            the dad you want to be.
+          </Text>
+        </View>
 
         {/* CTA */}
-        <CardEntrance delay={360}>
-          <Pressable
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-              router.push('/(screens)/upgrade')
-            }}
-            style={[styles.ctaCard, { borderColor: colors.copperDim }]}
-          >
-            <LinearGradient
-              colors={[colors.copperDim, colors.goldDim]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.ctaGradient}
-            >
-              <View style={styles.ctaContent}>
-                <Text style={[styles.ctaTitle, { color: colors.copper }]}>Ready to stop winging it?</Text>
-                <Text style={[styles.ctaSubtitle, { color: colors.textMuted }]}>
-                  Free to start — no credit card required
-                </Text>
-              </View>
-              <ArrowRight size={20} color={colors.copper} />
-            </LinearGradient>
-          </Pressable>
-        </CardEntrance>
+        <Pressable
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+            router.push('/(screens)/upgrade')
+          }}
+          style={({ pressed }) => [
+            styles.ctaCard,
+            { backgroundColor: colors.accentSoft, borderColor: colors.line },
+            pressed && { opacity: 0.85 },
+          ]}
+        >
+          <View style={styles.ctaContent}>
+            <Text style={[styles.ctaTitle, { color: colors.accentInk }]}>Ready to stop winging it?</Text>
+            <Text style={[styles.ctaSubtitle, { color: colors.muted }]}>
+              Free to start — no credit card required
+            </Text>
+          </View>
+          <ArrowRight size={20} color={colors.accentInk} />
+        </Pressable>
       </ScrollView>
     </View>
   )
@@ -184,7 +167,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   headerTitle: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 16,
   },
   closeButton: {
@@ -201,40 +184,33 @@ const styles = StyleSheet.create({
 
   // Hero
   heroSection: {
-    marginBottom: 32,
+    marginBottom: 8,
   },
   heroLabel: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 11,
     letterSpacing: 2,
     marginBottom: 12,
   },
   heroTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 26,
-    lineHeight: 34,
+    fontFamily: 'Jakarta-ExtraBold',
+    fontSize: 24,
+    lineHeight: 32,
     marginBottom: 14,
+    letterSpacing: -0.4,
   },
   heroDescription: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 15,
     lineHeight: 24,
   },
 
-  // Section
-  sectionTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 13,
-    textTransform: 'uppercase',
-    letterSpacing: 1.2,
-    marginBottom: 12,
-    marginTop: 8,
-  },
-
   // Values
   valueCard: {
+    borderRadius: 16,
+    borderWidth: 1,
     padding: 16,
-    marginBottom: 12,
+    marginBottom: 8,
   },
   valueContent: {
     flexDirection: 'row',
@@ -251,34 +227,36 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   valueTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15.5,
     marginBottom: 4,
   },
   valueDescription: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     lineHeight: 21,
   },
 
   // Story
   storyCard: {
+    borderRadius: 16,
+    borderWidth: 1,
     padding: 20,
-    marginBottom: 24,
+    marginBottom: 4,
   },
   storyHeading: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 20,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 18,
     marginBottom: 16,
   },
   storyParagraph: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     lineHeight: 22,
     marginBottom: 12,
   },
   storyHighlight: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 14,
     lineHeight: 22,
     marginTop: 4,
@@ -286,26 +264,24 @@ const styles = StyleSheet.create({
 
   // CTA
   ctaCard: {
-    borderRadius: 12,
-    overflow: 'hidden',
-    marginBottom: 24,
-    borderWidth: 1,
-  },
-  ctaGradient: {
     flexDirection: 'row',
     alignItems: 'center',
+    borderRadius: 16,
+    borderWidth: 1,
     paddingVertical: 18,
     paddingHorizontal: 20,
+    marginTop: 8,
+    marginBottom: 24,
   },
   ctaContent: {
     flex: 1,
   },
   ctaTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15.5,
   },
   ctaSubtitle: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
     marginTop: 2,
   },
