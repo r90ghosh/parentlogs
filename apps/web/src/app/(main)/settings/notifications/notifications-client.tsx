@@ -7,12 +7,7 @@ import {
   useUpdateNotificationPreferences,
   useLocalNotification,
 } from '@/hooks/use-notifications'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Switch } from '@/components/ui/switch'
-import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Panel } from '@/components/digest'
 import {
   Select,
   SelectContent,
@@ -23,6 +18,36 @@ import {
 import { ArrowLeft, Bell, BellOff, CheckCircle, AlertTriangle, Loader2, Mail } from 'lucide-react'
 import Link from 'next/link'
 import { useToast } from '@/hooks/use-toast'
+import { usePageHeader } from '@/components/layouts/topbar-context'
+import { cn } from '@/lib/utils'
+
+function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={() => onChange(!checked)}
+      className={cn('relative h-7 w-[46px] flex-none rounded-full transition-colors', checked ? 'bg-clay' : 'bg-line')}
+    >
+      <span
+        className={cn('absolute top-[3px] h-[22px] w-[22px] rounded-full bg-white shadow transition-[left]', checked ? 'left-[21px]' : 'left-[3px]')}
+      />
+    </button>
+  )
+}
+
+function PrefRow({ title, description, checked, onChange }: { title: string; description: string; checked: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <div className="flex items-center gap-4 border-b border-line2 px-[18px] py-4 last:border-b-0">
+      <div className="min-w-0 flex-1">
+        <p className="text-[15px] font-semibold text-ink">{title}</p>
+        <p className="text-[12.5px] text-mute">{description}</p>
+      </div>
+      <Toggle checked={checked} onChange={onChange} />
+    </div>
+  )
+}
 
 export default function NotificationsClient() {
   const { toast } = useToast()
@@ -31,6 +56,8 @@ export default function NotificationsClient() {
   const { data: preferences, isLoading: preferencesLoading } = useNotificationPreferences()
   const updatePreferences = useUpdateNotificationPreferences()
   const { show: showTestNotification } = useLocalNotification()
+
+  usePageHeader({ title: 'Notifications', subtitle: 'Push, email, and reminders' }, [])
 
   const handleEnableNotifications = async () => {
     const result = await requestPermission()
@@ -68,333 +95,240 @@ export default function NotificationsClient() {
 
   if (!isSupported) {
     return (
-      <div className="p-4 space-y-4 max-w-2xl">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/settings">
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-          </Button>
-          <h1 className="font-display text-xl font-bold text-[--white]">Notifications</h1>
-        </div>
+      <div className="mx-auto max-w-2xl">
+        <Link href="/settings" className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-clay-ink hover:opacity-80">
+          <ArrowLeft className="h-4 w-4" /> Settings
+        </Link>
 
-        <Alert variant="destructive">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription className="font-body">
+        <div className="flex items-start gap-2.5 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-[13.5px] text-danger">
+          <AlertTriangle className="mt-0.5 h-4 w-4 flex-none" />
+          <span>
             Your browser doesn&apos;t support push notifications. Try using a modern browser like Chrome, Firefox, or Edge.
-          </AlertDescription>
-        </Alert>
+          </span>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="p-4 space-y-6 max-w-2xl">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/settings">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-        <h1 className="font-display text-xl font-bold text-[--white]">Notifications</h1>
-      </div>
+    <div className="mx-auto max-w-2xl">
+      <Link href="/settings" className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-clay-ink hover:opacity-80">
+        <ArrowLeft className="h-4 w-4" /> Settings
+      </Link>
 
       {/* Permission Status */}
-      <Card className="bg-[--surface] border-[--border]">
-        <CardHeader>
-          <CardTitle className="font-display flex items-center gap-2">
-            {isGranted ? (
-              <Bell className="h-5 w-5 text-copper" />
-            ) : (
-              <BellOff className="h-5 w-5 text-[--dim]" />
-            )}
-            Push Notifications
-          </CardTitle>
-          <CardDescription className="font-body">
-            {isGranted
-              ? 'You will receive push notifications on this device'
-              : 'Enable push notifications to stay updated'}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <div className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">
+        {isGranted ? <Bell className="h-3.5 w-3.5 text-clay-ink" /> : <BellOff className="h-3.5 w-3.5" />}
+        Push Notifications
+      </div>
+      <Panel className="p-[18px]">
+        <p className="mb-4 text-[13px] text-mute">
+          {isGranted
+            ? 'You will receive push notifications on this device'
+            : 'Enable push notifications to stay updated'}
+        </p>
+        <div className="space-y-4">
           {isDenied ? (
-            <Alert>
-              <AlertTriangle className="h-4 w-4" />
-              <AlertDescription className="font-body">
+            <div className="flex items-start gap-2.5 rounded-xl border border-line bg-card2 px-4 py-3 text-[13.5px] text-ink2">
+              <AlertTriangle className="mt-0.5 h-4 w-4 flex-none text-mute" />
+              <span>
                 Notifications are blocked. Please enable them in your browser settings, then refresh this page.
-              </AlertDescription>
-            </Alert>
+              </span>
+            </div>
           ) : isGranted && isSubscribed ? (
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-copper">
+              <div className="flex items-center gap-2 text-clay-ink">
                 <CheckCircle className="h-4 w-4" />
-                <span className="font-body text-sm">Notifications enabled</span>
+                <span className="text-[14px] font-semibold">Notifications enabled</span>
               </div>
-              <Button
-                variant="outline"
+              <button
                 onClick={handleDisableNotifications}
                 disabled={subscriptionLoading}
-                className="font-ui font-semibold"
+                className="inline-flex items-center justify-center rounded-xl border border-line bg-card px-4 py-2.5 text-[14px] font-bold text-ink2 hover:bg-card-hover disabled:opacity-50"
               >
                 {subscriptionLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Disable'}
-              </Button>
+              </button>
             </div>
           ) : (
-            <Button
+            <button
               onClick={handleEnableNotifications}
               disabled={subscriptionLoading}
-              className="w-full font-ui font-semibold"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-clay px-4 py-2.5 text-[14px] font-bold text-white hover:opacity-90 disabled:opacity-50"
             >
               {subscriptionLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                <Bell className="h-4 w-4 mr-2" />
+                <Bell className="h-4 w-4" />
               )}
               Enable Notifications
-            </Button>
+            </button>
           )}
 
           {isGranted && isSubscribed && (
-            <Button
-              variant="outline"
-              size="sm"
+            <button
               onClick={handleTestNotification}
-              className="font-ui"
+              className="inline-flex items-center justify-center rounded-xl border border-line bg-card px-4 py-2.5 text-[14px] font-bold text-ink2 hover:bg-card-hover"
             >
               Send Test Notification
-            </Button>
+            </button>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </Panel>
 
       {/* Notification Preferences */}
       {preferencesLoading ? (
-        <Card className="bg-[--surface] border-[--border]">
-          <CardContent className="pt-6 space-y-4">
-            <Skeleton className="h-8 w-full" />
-            <Skeleton className="h-8 w-full" />
-            <Skeleton className="h-8 w-full" />
-          </CardContent>
-        </Card>
+        <Panel className="mt-7 space-y-4 p-[18px]">
+          <div className="h-8 w-full animate-pulse rounded-lg bg-card2" />
+          <div className="h-8 w-full animate-pulse rounded-lg bg-card2" />
+          <div className="h-8 w-full animate-pulse rounded-lg bg-card2" />
+        </Panel>
       ) : (
         <>
           {/* Task Notifications */}
-          <Card className="bg-[--surface] border-[--border]">
-            <CardHeader>
-              <CardTitle className="font-display text-lg">Task Reminders</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="font-ui font-medium">7-day reminder</Label>
-                  <p className="font-body text-xs text-[--muted]">Get a heads up a week before tasks are due</p>
-                </div>
-                <Switch
-                  checked={preferences?.task_reminders_7_day ?? true}
-                  onCheckedChange={(checked) => handleTogglePreference('task_reminders_7_day', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="font-ui font-medium">3-day reminder</Label>
-                  <p className="font-body text-xs text-[--muted]">Remind me 3 days before tasks are due</p>
-                </div>
-                <Switch
-                  checked={preferences?.task_reminders_3_day ?? true}
-                  onCheckedChange={(checked) => handleTogglePreference('task_reminders_3_day', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="font-ui font-medium">1-day reminder</Label>
-                  <p className="font-body text-xs text-[--muted]">Last chance reminder the day before</p>
-                </div>
-                <Switch
-                  checked={preferences?.task_reminders_1_day ?? true}
-                  onCheckedChange={(checked) => handleTogglePreference('task_reminders_1_day', checked)}
-                />
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">Task Reminders</div>
+          <Panel>
+            <PrefRow
+              title="7-day reminder"
+              description="Get a heads up a week before tasks are due"
+              checked={preferences?.task_reminders_7_day ?? true}
+              onChange={(checked) => handleTogglePreference('task_reminders_7_day', checked)}
+            />
+            <PrefRow
+              title="3-day reminder"
+              description="Remind me 3 days before tasks are due"
+              checked={preferences?.task_reminders_3_day ?? true}
+              onChange={(checked) => handleTogglePreference('task_reminders_3_day', checked)}
+            />
+            <PrefRow
+              title="1-day reminder"
+              description="Last chance reminder the day before"
+              checked={preferences?.task_reminders_1_day ?? true}
+              onChange={(checked) => handleTogglePreference('task_reminders_1_day', checked)}
+            />
+          </Panel>
 
           {/* Partner Notifications */}
-          <Card className="bg-[--surface] border-[--border]">
-            <CardHeader>
-              <CardTitle className="font-display text-lg">Partner Activity</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="font-ui font-medium">Partner activity</Label>
-                  <p className="font-body text-xs text-[--muted]">Notify when partner completes tasks or logs</p>
-                </div>
-                <Switch
-                  checked={preferences?.partner_activity ?? true}
-                  onCheckedChange={(checked) => handleTogglePreference('partner_activity', checked)}
-                />
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">Partner Activity</div>
+          <Panel>
+            <PrefRow
+              title="Partner activity"
+              description="Notify when partner completes tasks or logs"
+              checked={preferences?.partner_activity ?? true}
+              onChange={(checked) => handleTogglePreference('partner_activity', checked)}
+            />
+          </Panel>
 
           {/* Briefing Notifications */}
-          <Card className="bg-[--surface] border-[--border]">
-            <CardHeader>
-              <CardTitle className="font-display text-lg">Weekly Briefings</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="font-ui font-medium">New briefing alert</Label>
-                  <p className="font-body text-xs text-[--muted]">Notify when a new weekly briefing is available</p>
-                </div>
-                <Switch
-                  checked={preferences?.weekly_briefing ?? true}
-                  onCheckedChange={(checked) => handleTogglePreference('weekly_briefing', checked)}
-                />
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">Weekly Briefings</div>
+          <Panel>
+            <PrefRow
+              title="New briefing alert"
+              description="Notify when a new weekly briefing is available"
+              checked={preferences?.weekly_briefing ?? true}
+              onChange={(checked) => handleTogglePreference('weekly_briefing', checked)}
+            />
+          </Panel>
 
           {/* Email Notifications */}
-          <Card className="bg-[--surface] border-[--border]">
-            <CardHeader>
-              <CardTitle className="font-display text-lg flex items-center gap-2">
-                <Mail className="h-5 w-5 text-copper" />
-                Email Notifications
-              </CardTitle>
-              <CardDescription className="font-body">
-                Choose which emails you receive
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="font-ui font-medium">Weekly briefing email</Label>
-                  <p className="font-body text-xs text-[--muted]">Get your briefing summary delivered to your inbox</p>
-                </div>
-                <Switch
-                  checked={preferences?.email_weekly_briefing ?? true}
-                  onCheckedChange={(checked) => handleTogglePreference('email_weekly_briefing', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="font-ui font-medium">Overdue task digest</Label>
-                  <p className="font-body text-xs text-[--muted]">Email when must-do tasks are overdue</p>
-                </div>
-                <Switch
-                  checked={preferences?.email_task_digest ?? false}
-                  onCheckedChange={(checked) => handleTogglePreference('email_task_digest', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="font-ui font-medium">Milestone emails</Label>
-                  <p className="font-body text-xs text-[--muted]">Baby development milestones and celebrations</p>
-                </div>
-                <Switch
-                  checked={preferences?.email_milestones ?? true}
-                  onCheckedChange={(checked) => handleTogglePreference('email_milestones', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="font-ui font-medium">Lifecycle emails</Label>
-                  <p className="font-body text-xs text-[--muted]">Onboarding tips and getting-started guides</p>
-                </div>
-                <Switch
-                  checked={preferences?.email_lifecycle ?? true}
-                  onCheckedChange={(checked) => handleTogglePreference('email_lifecycle', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="font-ui font-medium">Re-engagement emails</Label>
-                  <p className="font-body text-xs text-[--muted]">Updates when you haven't logged in for a while</p>
-                </div>
-                <Switch
-                  checked={preferences?.re_engagement_emails ?? true}
-                  onCheckedChange={(checked) => handleTogglePreference('re_engagement_emails', checked)}
-                />
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-3 mt-7 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">
+            <Mail className="h-3.5 w-3.5 text-clay-ink" />
+            Email Notifications
+          </div>
+          <Panel>
+            <PrefRow
+              title="Weekly briefing email"
+              description="Get your briefing summary delivered to your inbox"
+              checked={preferences?.email_weekly_briefing ?? true}
+              onChange={(checked) => handleTogglePreference('email_weekly_briefing', checked)}
+            />
+            <PrefRow
+              title="Overdue task digest"
+              description="Email when must-do tasks are overdue"
+              checked={preferences?.email_task_digest ?? false}
+              onChange={(checked) => handleTogglePreference('email_task_digest', checked)}
+            />
+            <PrefRow
+              title="Milestone emails"
+              description="Baby development milestones and celebrations"
+              checked={preferences?.email_milestones ?? true}
+              onChange={(checked) => handleTogglePreference('email_milestones', checked)}
+            />
+            <PrefRow
+              title="Lifecycle emails"
+              description="Onboarding tips and getting-started guides"
+              checked={preferences?.email_lifecycle ?? true}
+              onChange={(checked) => handleTogglePreference('email_lifecycle', checked)}
+            />
+            <PrefRow
+              title="Re-engagement emails"
+              description="Updates when you haven't logged in for a while"
+              checked={preferences?.re_engagement_emails ?? true}
+              onChange={(checked) => handleTogglePreference('re_engagement_emails', checked)}
+            />
+          </Panel>
 
           {/* Quiet Hours */}
-          <Card className="bg-[--surface] border-[--border]">
-            <CardHeader>
-              <CardTitle className="font-display text-lg">Quiet Hours</CardTitle>
-              <CardDescription className="font-body">
-                Pause notifications during these hours
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label className="font-ui font-medium">Enable quiet hours</Label>
-                </div>
-                <Switch
-                  checked={!!preferences?.quiet_hours_start}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      handleQuietHoursChange('quiet_hours_start', '22:00')
-                      handleQuietHoursChange('quiet_hours_end', '07:00')
-                    } else {
-                      updatePreferences.mutateAsync({ quiet_hours_start: null as unknown as string, quiet_hours_end: null as unknown as string })
-                    }
-                  }}
-                />
-              </div>
+          <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">Quiet Hours</div>
+          <Panel className="p-[18px]">
+            <p className="mb-4 text-[13px] text-mute">
+              Pause notifications during these hours
+            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-[15px] font-semibold text-ink">Enable quiet hours</p>
+              <Toggle
+                checked={!!preferences?.quiet_hours_start}
+                onChange={(checked) => {
+                  if (checked) {
+                    handleQuietHoursChange('quiet_hours_start', '22:00')
+                    handleQuietHoursChange('quiet_hours_end', '07:00')
+                  } else {
+                    updatePreferences.mutateAsync({ quiet_hours_start: null as unknown as string, quiet_hours_end: null as unknown as string })
+                  }
+                }}
+              />
+            </div>
 
-              {!!preferences?.quiet_hours_start && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="font-ui font-medium">Start time</Label>
-                    <Select
-                      value={preferences?.quiet_hours_start || '22:00'}
-                      onValueChange={(value) => handleQuietHoursChange('quiet_hours_start', value)}
-                    >
-                      <SelectTrigger className="bg-[--card] border-[--border]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Array.from({ length: 24 }, (_, i) => (
-                          <SelectItem key={i} value={`${i.toString().padStart(2, '0')}:00`}>
-                            {i === 0 ? '12:00 AM' : i < 12 ? `${i}:00 AM` : i === 12 ? '12:00 PM' : `${i - 12}:00 PM`}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="font-ui font-medium">End time</Label>
-                    <Select
-                      value={preferences?.quiet_hours_end || '07:00'}
-                      onValueChange={(value) => handleQuietHoursChange('quiet_hours_end', value)}
-                    >
-                      <SelectTrigger className="bg-[--card] border-[--border]">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Array.from({ length: 24 }, (_, i) => (
-                          <SelectItem key={i} value={`${i.toString().padStart(2, '0')}:00`}>
-                            {i === 0 ? '12:00 AM' : i < 12 ? `${i}:00 AM` : i === 12 ? '12:00 PM' : `${i - 12}:00 PM`}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+            {!!preferences?.quiet_hours_start && (
+              <div className="mt-4 grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[13px] font-bold text-ink2">Start time</label>
+                  <Select
+                    value={preferences?.quiet_hours_start || '22:00'}
+                    onValueChange={(value) => handleQuietHoursChange('quiet_hours_start', value)}
+                  >
+                    <SelectTrigger className="rounded-xl border-line bg-card">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Array.from({ length: 24 }, (_, i) => (
+                        <SelectItem key={i} value={`${i.toString().padStart(2, '0')}:00`}>
+                          {i === 0 ? '12:00 AM' : i < 12 ? `${i}:00 AM` : i === 12 ? '12:00 PM' : `${i - 12}:00 PM`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+                <div className="space-y-1.5">
+                  <label className="text-[13px] font-bold text-ink2">End time</label>
+                  <Select
+                    value={preferences?.quiet_hours_end || '07:00'}
+                    onValueChange={(value) => handleQuietHoursChange('quiet_hours_end', value)}
+                  >
+                    <SelectTrigger className="rounded-xl border-line bg-card">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Array.from({ length: 24 }, (_, i) => (
+                        <SelectItem key={i} value={`${i.toString().padStart(2, '0')}:00`}>
+                          {i === 0 ? '12:00 AM' : i < 12 ? `${i}:00 AM` : i === 12 ? '12:00 PM' : `${i - 12}:00 PM`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            )}
+          </Panel>
         </>
       )}
     </div>
