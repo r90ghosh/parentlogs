@@ -1,153 +1,101 @@
 'use client'
 
+import Link from 'next/link'
+import { User, Users, Bell, Palette, CreditCard, ChevronRight, Crown, HelpCircle } from 'lucide-react'
 import { useUser } from '@/components/user-provider'
 import { useIsPremium } from '@/hooks/use-subscription'
-import { Card, CardContent } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
-import {
-  User,
-  Users,
-  Bell,
-  Palette,
-  CreditCard,
-  ChevronRight,
-  Crown,
-} from 'lucide-react'
-import Link from 'next/link'
-import { Reveal } from '@/components/ui/animations/Reveal'
+import { Panel, Badge } from '@/components/digest'
+import { usePageHeader } from '@/components/layouts/topbar-context'
 
-const settingsItems = [
+const groups = [
   {
-    href: '/settings/profile',
-    icon: User,
-    label: 'Profile',
-    description: 'Name, avatar, and role',
+    label: 'Account',
+    items: [
+      { href: '/settings/profile', icon: User, label: 'Profile', description: 'Name, avatar, and role' },
+      { href: '/settings/family', icon: Users, label: 'Family', description: 'Due date, baby name, partner' },
+      { href: '/settings/subscription', icon: CreditCard, label: 'Subscription', description: 'Plan and billing' },
+    ],
   },
   {
-    href: '/settings/family',
-    icon: Users,
-    label: 'Family',
-    description: 'Due date, baby name, partner',
+    label: 'Preferences',
+    items: [
+      { href: '/settings/notifications', icon: Bell, label: 'Notifications', description: 'Push, email, and reminders' },
+      { href: '/settings/appearance', icon: Palette, label: 'Appearance', description: 'Theme and display' },
+    ],
   },
   {
-    href: '/settings/notifications',
-    icon: Bell,
-    label: 'Notifications',
-    description: 'Push, email, and reminders',
-  },
-  {
-    href: '/settings/appearance',
-    icon: Palette,
-    label: 'Appearance',
-    description: 'Theme and display',
-  },
-  {
-    href: '/settings/subscription',
-    icon: CreditCard,
-    label: 'Subscription',
-    description: 'Plan and billing',
+    label: 'Support',
+    items: [{ href: '/help', icon: HelpCircle, label: 'Help & Support', description: 'FAQ and contact' }],
   },
 ]
 
 export default function SettingsClient() {
   const { profile } = useUser()
-  const { isPremium, tier, isLoading: premiumLoading } = useIsPremium()
+  const { isPremium, tier } = useIsPremium()
 
-  if (premiumLoading) {
-    return (
-      <div className="p-4 space-y-6 max-w-2xl">
-        <Skeleton className="h-24 w-full" />
-        <div className="space-y-2">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <Skeleton key={i} className="h-16 w-full" />
-          ))}
-        </div>
-      </div>
-    )
-  }
+  usePageHeader({ title: 'Settings', subtitle: 'Manage your account and preferences' }, [])
 
   return (
-    <div className="p-4 space-y-6 max-w-2xl">
-      {/* Header */}
-      <Reveal delay={0}>
-      <div>
-        <h1 className="font-display text-2xl font-bold text-[--white]">Settings</h1>
-        <p className="font-body text-[--muted]">Manage your account and preferences</p>
-      </div>
-      </Reveal>
-
-      {/* Profile Card */}
-      <Reveal variant="card" delay={80}>
-      <Card className="bg-[--surface] border-[--border]">
-        <CardContent className="pt-6">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
-              <AvatarImage src={profile.avatar_url} alt={profile.full_name || ''} />
-              <AvatarFallback className="text-xl font-display">
-                {profile.full_name?.charAt(0).toUpperCase() || 'U'}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <h2 className="font-display text-lg font-semibold text-[--white] truncate">
-                  {profile.full_name || 'User'}
-                </h2>
-                {isPremium && (
-                  <Badge className="bg-copper/20 text-copper border-copper/30">
-                    <Crown className="h-3 w-3 mr-1" />
-                    {tier === 'lifetime' ? 'Lifetime' : 'Premium'}
-                  </Badge>
-                )}
-              </div>
-              <p className="font-body text-sm text-[--muted] truncate">{profile.email}</p>
-              <p className="font-ui text-xs text-[--dim] capitalize">{profile.role || 'Parent'}</p>
-            </div>
+    <div className="mx-auto max-w-2xl">
+      {/* Profile summary */}
+      <Panel className="flex items-center gap-4 p-5">
+        <span className="grid h-16 w-16 flex-none place-items-center overflow-hidden rounded-full bg-clay-soft text-xl font-extrabold text-clay-ink">
+          {profile.avatar_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
+          ) : (
+            profile.full_name?.charAt(0).toUpperCase() || 'U'
+          )}
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <h2 className="truncate text-[18px] font-extrabold text-ink">{profile.full_name || 'User'}</h2>
+            {isPremium && (
+              <Badge tone="gold">
+                <Crown className="mr-1 h-3 w-3" />
+                {tier === 'lifetime' ? 'Lifetime' : 'Premium'}
+              </Badge>
+            )}
           </div>
-        </CardContent>
-      </Card>
-      </Reveal>
+          <p className="truncate text-[13.5px] text-mute">{profile.email}</p>
+          <p className="text-[12px] capitalize text-faint">{profile.role || 'Parent'}</p>
+        </div>
+      </Panel>
 
-      {/* Settings List */}
-      <Reveal delay={160}>
-      <div className="space-y-2">
-        {settingsItems.map((item, index) => (
-          <Reveal variant="card" key={item.href} delay={index * 80}>
-          <Link href={item.href}>
-            <Card className="bg-[--surface] border-[--border] hover:bg-[--card] transition-colors cursor-pointer">
-              <CardContent className="py-4">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-full bg-[--card] flex items-center justify-center">
-                    <item.icon className="h-5 w-5 text-[--cream]" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-body font-medium text-[--white]">{item.label}</p>
-                    <p className="font-body text-sm text-[--muted]">{item.description}</p>
-                  </div>
-                  <ChevronRight className="h-5 w-5 text-[--dim]" />
+      {groups.map((g) => (
+        <div key={g.label}>
+          <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">{g.label}</div>
+          <Panel>
+            {g.items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex items-center gap-4 border-b border-line2 px-[18px] py-4 transition-colors last:border-b-0 hover:bg-card-hover"
+              >
+                <span className="grid h-10 w-10 flex-none place-items-center rounded-full bg-card2">
+                  <item.icon className="h-5 w-5 text-ink2" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[15px] font-semibold text-ink">{item.label}</p>
+                  <p className="text-[12.5px] text-mute">{item.description}</p>
                 </div>
-              </CardContent>
-            </Card>
-          </Link>
-          </Reveal>
-        ))}
-      </div>
-      </Reveal>
+                <ChevronRight className="h-5 w-5 flex-none text-faint" />
+              </Link>
+            ))}
+          </Panel>
+        </div>
+      ))}
 
-      {/* App Info */}
-      <Reveal delay={240}>
-      <div className="text-center font-body text-sm text-[--dim] pt-4">
+      <div className="pt-8 text-center text-[12.5px] text-faint">
         <p>The Dad Center v1.0.0</p>
         <p className="mt-1">
-          <Link href="/terms" className="hover:text-[--cream]">Terms</Link>
+          <Link href="/terms" className="hover:text-clay-ink">Terms</Link>
           {' · '}
-          <Link href="/privacy" className="hover:text-[--cream]">Privacy</Link>
+          <Link href="/privacy" className="hover:text-clay-ink">Privacy</Link>
           {' · '}
-          <a href="mailto:info@thedadcenter.com" className="hover:text-[--cream]">Support</a>
+          <a href="mailto:info@thedadcenter.com" className="hover:text-clay-ink">Support</a>
         </p>
       </div>
-      </Reveal>
     </div>
   )
 }

@@ -68,7 +68,14 @@ const routeTitles: Record<string, string> = {
   '/budget': 'Budget',
   '/my-budget': 'Budget',
   '/checklists': 'Checklists',
+  '/library': 'Library',
   '/notifications': 'Notifications',
+  '/help': 'Help & Support',
+  '/settings/profile': 'Profile',
+  '/settings/family': 'Family',
+  '/settings/notifications': 'Notifications',
+  '/settings/appearance': 'Appearance',
+  '/settings/subscription': 'Subscription',
   '/settings': 'Settings',
   '/journey': 'Journey',
   '/calendar': 'Calendar',
@@ -189,7 +196,9 @@ function Topbar() {
   const initial = profile.full_name?.charAt(0).toUpperCase() || 'U'
 
   const fallbackTitle =
-    Object.entries(routeTitles).find(([href]) => isActive(pathname, href))?.[1] ?? 'The Dad Center'
+    Object.entries(routeTitles)
+      .filter(([href]) => isActive(pathname, href))
+      .sort((a, b) => b[0].length - a[0].length)[0]?.[1] ?? 'The Dad Center'
   const title = config.title ?? fallbackTitle
   const subtitle = config.subtitle
 

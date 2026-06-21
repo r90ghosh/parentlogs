@@ -2,209 +2,127 @@
 
 import { useState, useEffect } from 'react'
 import { useTheme } from 'next-themes'
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Switch } from '@/components/ui/switch'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { ArrowLeft, Moon, Sun, Monitor, Type } from 'lucide-react'
 import Link from 'next/link'
+import { ArrowLeft, Moon, Sun, Monitor } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import { Panel } from '@/components/digest'
+import { usePageHeader } from '@/components/layouts/topbar-context'
 import { cn } from '@/lib/utils'
 
 type FontSize = 'small' | 'medium' | 'large'
+
+function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={() => onChange(!checked)}
+      className={cn('relative h-7 w-[46px] flex-none rounded-full transition-colors', checked ? 'bg-clay' : 'bg-line')}
+    >
+      <span
+        className={cn('absolute top-[3px] h-[22px] w-[22px] rounded-full bg-white shadow transition-[left]', checked ? 'left-[21px]' : 'left-[3px]')}
+      />
+    </button>
+  )
+}
 
 export default function AppearanceClient() {
   const { toast } = useToast()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-
   const [fontSize, setFontSize] = useState<FontSize>('medium')
   const [reducedMotion, setReducedMotion] = useState(false)
-  const [compactMode, setCompactMode] = useState(false)
+
+  usePageHeader({ title: 'Appearance' }, [])
 
   useEffect(() => {
     setMounted(true)
-    const savedFontSize = localStorage.getItem('fontSize') as FontSize
-    const savedReducedMotion = localStorage.getItem('reducedMotion') === 'true'
-    const savedCompactMode = localStorage.getItem('compactMode') === 'true'
-
-    if (savedFontSize) setFontSize(savedFontSize)
-    setReducedMotion(savedReducedMotion)
-    setCompactMode(savedCompactMode)
+    const sf = localStorage.getItem('fontSize') as FontSize
+    if (sf) setFontSize(sf)
+    setReducedMotion(localStorage.getItem('reducedMotion') === 'true')
   }, [])
 
-  const handleThemeChange = (newTheme: string) => {
-    setTheme(newTheme)
+  const handleTheme = (t: string) => {
+    setTheme(t)
     toast({ title: 'Theme updated' })
   }
-
-  const handleFontSizeChange = (newSize: FontSize) => {
-    setFontSize(newSize)
-    localStorage.setItem('fontSize', newSize)
-
-    const root = document.documentElement
-    root.classList.remove('text-sm', 'text-base', 'text-lg')
-    if (newSize === 'small') root.style.fontSize = '14px'
-    else if (newSize === 'large') root.style.fontSize = '18px'
-    else root.style.fontSize = '16px'
-
+  const handleFont = (s: FontSize) => {
+    setFontSize(s)
+    localStorage.setItem('fontSize', s)
+    document.documentElement.style.fontSize = s === 'small' ? '15px' : s === 'large' ? '18px' : '17px'
     toast({ title: 'Font size updated' })
   }
-
-  const handleReducedMotionChange = (enabled: boolean) => {
-    setReducedMotion(enabled)
-    localStorage.setItem('reducedMotion', String(enabled))
-
-    const root = document.documentElement
-    root.classList.toggle('reduce-motion', enabled)
-
-    toast({ title: enabled ? 'Reduced motion enabled' : 'Animations enabled' })
+  const handleMotion = (v: boolean) => {
+    setReducedMotion(v)
+    localStorage.setItem('reducedMotion', String(v))
+    document.documentElement.classList.toggle('reduce-motion', v)
+    toast({ title: v ? 'Reduced motion enabled' : 'Animations enabled' })
   }
 
-  const handleCompactModeChange = (enabled: boolean) => {
-    setCompactMode(enabled)
-    localStorage.setItem('compactMode', String(enabled))
-    toast({ title: enabled ? 'Compact mode enabled' : 'Normal mode enabled' })
-  }
+  const current = mounted ? theme : 'system'
 
-  // Avoid hydration mismatch — don't render theme-dependent UI until mounted
-  const currentTheme = mounted ? theme : 'dark'
+  const themeOptions = [
+    { value: 'light', label: 'Light', icon: Sun, swatch: '#F6F5F2', dot: '#C0673D' },
+    { value: 'dark', label: 'Dark', icon: Moon, swatch: '#000000', dot: '#d2814e' },
+    { value: 'system', label: 'System', icon: Monitor, swatch: 'linear-gradient(135deg,#F6F5F2 50%,#000 50%)', dot: '#9C8A56' },
+  ]
 
   return (
-    <div className="p-4 space-y-6 max-w-2xl">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/settings">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-        <h1 className="font-display text-xl font-bold text-[--white]">Appearance</h1>
+    <div className="mx-auto max-w-2xl">
+      <Link href="/settings" className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-clay-ink hover:opacity-80">
+        <ArrowLeft className="h-4 w-4" /> Settings
+      </Link>
+
+      <div className="mb-3 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">Theme</div>
+      <div className="grid grid-cols-3 gap-3.5">
+        {themeOptions.map(({ value, label, icon: Icon, swatch, dot }) => (
+          <button
+            key={value}
+            onClick={() => handleTheme(value)}
+            className={cn(
+              'flex flex-col items-center gap-3 rounded-[18px] border-2 p-4 transition-colors',
+              current === value ? 'border-clay bg-clay-soft' : 'border-line hover:border-faint'
+            )}
+          >
+            <span className="relative h-12 w-full overflow-hidden rounded-lg border border-line" style={{ background: swatch }}>
+              <span className="absolute bottom-1.5 left-1.5 h-2.5 w-2.5 rounded-full" style={{ background: dot }} />
+            </span>
+            <span className="flex items-center gap-1.5 text-[13.5px] font-bold text-ink">
+              <Icon className="h-4 w-4" /> {label}
+            </span>
+          </button>
+        ))}
       </div>
 
-      {/* Theme */}
-      <Card className="bg-[--surface] border-[--border]">
-        <CardHeader>
-          <CardTitle className="font-display text-lg">Theme</CardTitle>
-          <CardDescription className="font-body">Choose your preferred color scheme</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-4">
-            {[
-              { value: 'dark', label: 'Dark', icon: Moon },
-              { value: 'light', label: 'Light', icon: Sun },
-              { value: 'system', label: 'System', icon: Monitor },
-            ].map(({ value, label, icon: Icon }) => (
-              <button
-                key={value}
-                onClick={() => handleThemeChange(value)}
-                className={cn(
-                  "flex flex-col items-center gap-2 p-4 rounded-lg border-2 cursor-pointer transition-colors",
-                  currentTheme === value
-                    ? "border-copper bg-copper/10"
-                    : "border-[--border-hover] hover:border-copper/40"
-                )}
-              >
-                <Icon className="h-6 w-6 text-[--cream]" />
-                <span className="font-body text-sm text-[--white]">{label}</span>
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Font Size */}
-      <Card className="bg-[--surface] border-[--border]">
-        <CardHeader>
-          <CardTitle className="font-display text-lg flex items-center gap-2">
-            <Type className="h-5 w-5" />
-            Font Size
-          </CardTitle>
-          <CardDescription className="font-body">Adjust text size for better readability</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Select value={fontSize} onValueChange={(v) => handleFontSizeChange(v as FontSize)}>
-            <SelectTrigger className="bg-[--card] border-[--border]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="small">Small</SelectItem>
-              <SelectItem value="medium">Medium (Default)</SelectItem>
-              <SelectItem value="large">Large</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {/* Preview */}
-          <div className="mt-4 p-4 bg-[--card]/50 rounded-lg">
-            <p className="font-ui text-[--muted] text-xs mb-2">Preview:</p>
-            <p
-              className="font-body text-[--white]"
-              style={{
-                fontSize: fontSize === 'small' ? '14px' : fontSize === 'large' ? '18px' : '16px'
-              }}
+      <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">Text size</div>
+      <Panel className="p-2">
+        <div className="grid grid-cols-3 gap-2">
+          {(['small', 'medium', 'large'] as FontSize[]).map((s) => (
+            <button
+              key={s}
+              onClick={() => handleFont(s)}
+              className={cn(
+                'rounded-xl px-3 py-2.5 text-[13.5px] font-bold capitalize transition-colors',
+                fontSize === s ? 'bg-clay text-white' : 'text-ink2 hover:bg-card-hover'
+              )}
             >
-              The quick brown fox jumps over the lazy dog.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+              {s}
+            </button>
+          ))}
+        </div>
+      </Panel>
 
-      {/* Accessibility */}
-      <Card className="bg-[--surface] border-[--border]">
-        <CardHeader>
-          <CardTitle className="font-display text-lg">Accessibility</CardTitle>
-          <CardDescription className="font-body">Make the app more comfortable to use</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="font-ui font-medium">Reduced Motion</Label>
-              <p className="font-body text-xs text-[--muted]">Minimize animations and transitions</p>
-            </div>
-            <Switch
-              checked={reducedMotion}
-              onCheckedChange={handleReducedMotionChange}
-            />
+      <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">Accessibility</div>
+      <Panel className="px-[18px]">
+        <div className="flex items-center justify-between py-4">
+          <div className="min-w-0">
+            <p className="text-[15px] font-semibold text-ink">Reduced motion</p>
+            <p className="text-[12.5px] text-mute">Minimize animations and transitions</p>
           </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label className="font-ui font-medium">Compact Mode</Label>
-              <p className="font-body text-xs text-[--muted]">Reduce spacing for more content on screen</p>
-            </div>
-            <Switch
-              checked={compactMode}
-              onCheckedChange={handleCompactModeChange}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Reset */}
-      <Card className="bg-[--surface] border-[--border]">
-        <CardContent className="pt-6">
-          <Button
-            variant="outline"
-            className="w-full font-ui font-semibold"
-            onClick={() => {
-              handleThemeChange('dark')
-              handleFontSizeChange('medium')
-              handleReducedMotionChange(false)
-              handleCompactModeChange(false)
-              toast({ title: 'Settings reset to defaults' })
-            }}
-          >
-            Reset to Defaults
-          </Button>
-        </CardContent>
-      </Card>
+          <Toggle checked={reducedMotion} onChange={handleMotion} />
+        </div>
+      </Panel>
     </div>
   )
 }
