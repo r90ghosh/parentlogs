@@ -19,7 +19,6 @@ import { useQueryClient } from '@tanstack/react-query'
 import {
   ChevronLeft,
   Trash2,
-  Pencil,
   Baby,
   Milk,
   Moon,
@@ -32,35 +31,33 @@ import {
   Star,
   Plus,
   X,
+  Check,
 } from 'lucide-react-native'
 import { format, isToday, isYesterday } from 'date-fns'
 import * as Haptics from 'expo-haptics'
 import { useTrackerLogs, useDeleteLog, useUpdateLog } from '@/hooks/use-tracker'
 import { useColors, type ColorTokens } from '@/hooks/use-colors'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance, StaggerList } from '@/components/animations'
 import type { LogType, BabyLog } from '@tdc/shared/types'
 
 interface LogTypeConfig {
   icon: typeof Milk
   color: string
-  bgColor: string
   label: string
 }
 
 function getLogTypeConfig(colors: ColorTokens): Record<LogType, LogTypeConfig> {
   return {
-    feeding: { icon: Milk, color: colors.sky, bgColor: colors.skyDim, label: 'Feeding' },
-    diaper: { icon: Baby, color: colors.gold, bgColor: colors.goldDim, label: 'Diaper' },
-    sleep: { icon: Moon, color: colors.rose, bgColor: colors.roseDim, label: 'Sleep' },
-    temperature: { icon: Thermometer, color: colors.coral, bgColor: colors.coralDim, label: 'Temperature' },
-    medicine: { icon: Pill, color: colors.sage, bgColor: colors.sageDim, label: 'Medicine' },
-    vitamin_d: { icon: Sun, color: colors.gold, bgColor: colors.goldDim, label: 'Vitamin D' },
-    mood: { icon: Smile, color: colors.rose, bgColor: colors.roseDim, label: 'Mood' },
-    weight: { icon: Scale, color: colors.sky, bgColor: colors.skyDim, label: 'Weight' },
-    height: { icon: Ruler, color: colors.sky, bgColor: colors.skyDim, label: 'Height' },
-    milestone: { icon: Star, color: colors.copper, bgColor: colors.copperDim, label: 'Milestone' },
-    custom: { icon: Plus, color: colors.textMuted, bgColor: colors.subtleBg, label: 'Custom' },
+    feeding: { icon: Milk, color: colors.accent, label: 'Feeding' },
+    diaper: { icon: Baby, color: colors.dotNext, label: 'Diaper' },
+    sleep: { icon: Moon, color: colors.dotBaby, label: 'Sleep' },
+    temperature: { icon: Thermometer, color: colors.dotTip, label: 'Temperature' },
+    medicine: { icon: Pill, color: colors.dotTip, label: 'Medicine' },
+    vitamin_d: { icon: Sun, color: colors.dotTip, label: 'Vitamin D' },
+    mood: { icon: Smile, color: colors.dotHer, label: 'Mood' },
+    weight: { icon: Scale, color: colors.dotTip, label: 'Weight' },
+    height: { icon: Ruler, color: colors.dotTip, label: 'Height' },
+    milestone: { icon: Star, color: colors.gold, label: 'Milestone' },
+    custom: { icon: Plus, color: colors.muted, label: 'Custom' },
   }
 }
 
@@ -196,7 +193,6 @@ export default function HistoryScreen() {
     )
   }
 
-  // Group logs by date
   const groupedLogs = (logs || []).reduce(
     (groups, log) => {
       const date = new Date(log.logged_at).toDateString()
@@ -210,197 +206,148 @@ export default function HistoryScreen() {
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: 8, backgroundColor: colors.overlay, borderBottomColor: colors.border }]}>
-        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-          <ChevronLeft size={22} color={colors.textPrimary} />
+      <View style={[styles.header, { paddingTop: 8, borderBottomColor: colors.line }]}>
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <ChevronLeft size={22} color={colors.ink2} />
         </Pressable>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Log History</Text>
+        <Text style={[styles.headerTitle, { color: colors.ink }]}>Log History</Text>
         <View style={styles.headerSpacer} />
       </View>
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={[
-          styles.scrollContent,
-          {
-            paddingTop: 60,
-            paddingBottom: insets.bottom + 90,
-          },
-        ]}
+        contentContainerStyle={[styles.scrollContent, { paddingTop: 60, paddingBottom: insets.bottom + 90 }]}
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={colors.copper}
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.accent} />
         }
         showsVerticalScrollIndicator={false}
       >
         {/* Filter Pills */}
-        <CardEntrance delay={0}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.filterRow}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filterRow}
+        >
+          <Pressable
+            onPress={() => setTypeFilter('all')}
+            style={[
+              styles.filterPill,
+              { borderColor: typeFilter === 'all' ? colors.accent : colors.line },
+              typeFilter === 'all' && { backgroundColor: colors.accent },
+            ]}
           >
-            <Pressable
-              onPress={() => setTypeFilter('all')}
-              style={[
-                styles.filterPill,
-                { backgroundColor: colors.subtleBg, borderColor: colors.border },
-                typeFilter === 'all' && { backgroundColor: colors.copper, borderColor: colors.copper },
-              ]}
-            >
-              <Text
+            <Text style={[styles.filterPillText, { color: typeFilter === 'all' ? '#fff' : colors.ink2 }]}>
+              All
+            </Text>
+          </Pressable>
+          {ALL_LOG_TYPES.map((type) => {
+            const config = LOG_TYPE_CONFIG[type]
+            return (
+              <Pressable
+                key={type}
+                onPress={() => setTypeFilter(type)}
                 style={[
-                  styles.filterPillText,
-                  { color: colors.textMuted },
-                  typeFilter === 'all' && { color: colors.textPrimary },
+                  styles.filterPill,
+                  { borderColor: typeFilter === type ? colors.accent : colors.line },
+                  typeFilter === type && { backgroundColor: colors.accent },
                 ]}
               >
-                All
-              </Text>
-            </Pressable>
-            {ALL_LOG_TYPES.map((type) => {
-              const config = LOG_TYPE_CONFIG[type]
-              return (
-                <Pressable
-                  key={type}
-                  onPress={() => setTypeFilter(type)}
-                  style={[
-                    styles.filterPill,
-                    { backgroundColor: colors.subtleBg, borderColor: colors.border },
-                    typeFilter === type && { backgroundColor: colors.copper, borderColor: colors.copper },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.filterPillText,
-                      { color: colors.textMuted },
-                      typeFilter === type && { color: colors.textPrimary },
-                    ]}
-                  >
-                    {config.label}
-                  </Text>
-                </Pressable>
-              )
-            })}
-          </ScrollView>
-        </CardEntrance>
+                <Text style={[styles.filterPillText, { color: typeFilter === type ? '#fff' : colors.ink2 }]}>
+                  {config.label}
+                </Text>
+              </Pressable>
+            )
+          })}
+        </ScrollView>
 
         {/* Loading */}
         {isLoading && (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.copper} />
+            <ActivityIndicator size="large" color={colors.accent} />
           </View>
         )}
 
         {/* Empty State */}
         {!isLoading && (!logs || logs.length === 0) && (
-          <CardEntrance delay={80}>
-            <GlassCard style={styles.emptyCard}>
-              <Text style={[styles.emptyText, { color: colors.textMuted }]}>No logs found</Text>
-            </GlassCard>
-          </CardEntrance>
+          <View style={[styles.emptyCard, { backgroundColor: colors.card, borderColor: colors.line }]}>
+            <Text style={[styles.emptyText, { color: colors.muted }]}>No logs found</Text>
+          </View>
         )}
 
         {/* Grouped Logs */}
         {!isLoading &&
           Object.entries(groupedLogs).map(([date, dateLogs]) => (
             <View key={date} style={styles.dateGroup}>
-              <Text style={[styles.dateHeader, { color: colors.textMuted }]}>{formatDateHeader(date)}</Text>
-              <StaggerList staggerMs={50}>
-                {(dateLogs || []).map((log) => {
-                  const config =
-                    LOG_TYPE_CONFIG[log.log_type as LogType] ||
-                    LOG_TYPE_CONFIG.custom
-                  const Icon = config.icon
-                  return (
-                    <Pressable
-                      key={log.id}
-                      onLongPress={() => handleLongPress(log as BabyLog)}
-                      delayLongPress={400}
-                    >
-                      <GlassCard style={styles.logEntry}>
-                        <View
-                          style={[
-                            styles.logEntryIcon,
-                            { backgroundColor: config.bgColor },
-                          ]}
-                        >
-                          <Icon size={16} color={config.color} />
-                        </View>
-                        <View style={styles.logEntryContent}>
-                          <View style={styles.logEntryTop}>
-                            <Text style={[styles.logEntryType, { color: colors.textPrimary }]}>
-                              {config.label}
-                            </Text>
-                            <Text style={[styles.logEntryTime, { color: colors.textDim }]}>
-                              {format(new Date(log.logged_at), 'h:mm a')}
-                            </Text>
-                          </View>
-                          <Text style={[styles.logEntryDetail, { color: colors.textMuted }]} numberOfLines={2}>
-                            {formatLogDetails(log)}
-                            {log.notes ? ` - ${log.notes}` : ''}
-                          </Text>
-                        </View>
-                        <Pressable
-                          onPress={() => handleDelete(log.id)}
-                          style={styles.deleteButton}
-                          hitSlop={8}
-                        >
-                          <Trash2 size={16} color={colors.coral} />
-                        </Pressable>
-                      </GlassCard>
+              <Text style={[styles.dateHeader, { color: colors.faint }]}>{formatDateHeader(date)}</Text>
+              {(dateLogs || []).map((log) => {
+                const config = LOG_TYPE_CONFIG[log.log_type as LogType] || LOG_TYPE_CONFIG.custom
+                const Icon = config.icon
+                return (
+                  <Pressable
+                    key={log.id}
+                    onLongPress={() => handleLongPress(log as BabyLog)}
+                    delayLongPress={400}
+                    style={[styles.logEntry, { borderBottomColor: colors.line2 }]}
+                  >
+                    <View style={[styles.logEntryDot, { backgroundColor: config.color }]} />
+                    <Icon size={16} color={config.color} style={{ flexShrink: 0 }} />
+                    <View style={styles.logEntryContent}>
+                      <View style={styles.logEntryTop}>
+                        <Text style={[styles.logEntryType, { color: colors.ink }]}>
+                          {config.label}
+                        </Text>
+                        <Text style={[styles.logEntryTime, { color: colors.muted }]}>
+                          {format(new Date(log.logged_at), 'h:mm a')}
+                        </Text>
+                      </View>
+                      <Text style={[styles.logEntryDetail, { color: colors.ink2 }]} numberOfLines={2}>
+                        {formatLogDetails(log)}
+                        {log.notes ? ` · ${log.notes}` : ''}
+                      </Text>
+                    </View>
+                    <Pressable onPress={() => handleDelete(log.id)} hitSlop={8}>
+                      <Trash2 size={15} color={colors.faint} />
                     </Pressable>
-                  )
-                })}
-              </StaggerList>
+                  </Pressable>
+                )
+              })}
             </View>
           ))}
       </ScrollView>
 
       {/* Edit Notes Modal */}
-      <Modal
-        visible={!!editingLog}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setEditingLog(null)}
-      >
+      <Modal visible={!!editingLog} transparent animationType="slide" onRequestClose={() => setEditingLog(null)}>
         <KeyboardAvoidingView
-          style={[historyEditStyles.overlay, { backgroundColor: colors.overlay }]}
+          style={[editStyles.overlay, { backgroundColor: colors.overlay }]}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-          <View style={[historyEditStyles.sheet, { backgroundColor: colors.card, borderTopColor: colors.border }]}>
-            <View style={historyEditStyles.sheetHeader}>
-              <Text style={[historyEditStyles.sheetTitle, { color: colors.textPrimary }]}>Edit Notes</Text>
+          <View style={[editStyles.sheet, { backgroundColor: colors.card, borderTopColor: colors.line }]}>
+            <View style={editStyles.sheetHeader}>
+              <Text style={[editStyles.sheetTitle, { color: colors.ink }]}>Edit Notes</Text>
               <Pressable
                 onPress={() => setEditingLog(null)}
-                style={[historyEditStyles.closeBtn, { backgroundColor: colors.subtleBg }]}
+                style={[editStyles.closeBtn, { backgroundColor: colors.cardHover }]}
               >
-                <X size={20} color={colors.textMuted} />
+                <X size={18} color={colors.ink2} />
               </Pressable>
             </View>
             <TextInput
-              style={[historyEditStyles.notesInput, { backgroundColor: colors.subtleBg, borderColor: colors.border, color: colors.textPrimary }]}
+              style={[editStyles.notesInput, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink, fontFamily: 'Jakarta-Medium', fontSize: 15 }]}
               value={editNotes}
               onChangeText={setEditNotes}
               placeholder="Add notes..."
-              placeholderTextColor={colors.textDim}
+              placeholderTextColor={colors.faint}
               multiline
               maxLength={500}
               textAlignVertical="top"
             />
             <Pressable
               onPress={handleSaveEdit}
-              style={[
-                historyEditStyles.saveBtn,
-                { backgroundColor: colors.copper },
-                updateLog.isPending && historyEditStyles.saveBtnDisabled,
-              ]}
+              style={[editStyles.saveBtn, { backgroundColor: colors.accent }, updateLog.isPending && editStyles.saveBtnDisabled]}
               disabled={updateLog.isPending}
             >
-              <Text style={[historyEditStyles.saveBtnText, { color: colors.textPrimary }]}>
+              <Check size={16} color="#fff" strokeWidth={2.5} />
+              <Text style={editStyles.saveBtnText}>
                 {updateLog.isPending ? 'Saving...' : 'Save'}
               </Text>
             </Pressable>
@@ -411,63 +358,46 @@ export default function HistoryScreen() {
   )
 }
 
-const historyEditStyles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
+const editStyles = StyleSheet.create({
+  overlay: { flex: 1, justifyContent: 'flex-end' },
   sheet: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     padding: 24,
     paddingBottom: 40,
     borderTopWidth: 1,
   },
-  sheetHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  sheetTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 18,
-  },
+  sheetHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 },
+  sheetTitle: { fontFamily: 'Jakarta-Bold', fontSize: 17 },
   closeBtn: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   notesInput: {
-    borderRadius: 10,
+    borderRadius: 12,
     borderWidth: 1,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    fontFamily: 'Jost-Regular',
-    fontSize: 15,
     minHeight: 100,
     marginBottom: 16,
   },
   saveBtn: {
-    borderRadius: 10,
-    paddingVertical: 14,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderRadius: 12,
+    paddingVertical: 14,
   },
-  saveBtnDisabled: {
-    opacity: 0.5,
-  },
-  saveBtnText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
-  },
+  saveBtnDisabled: { opacity: 0.5 },
+  saveBtnText: { fontFamily: 'Jakarta-Bold', fontSize: 15, color: '#fff' },
 })
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
   header: {
     position: 'absolute',
     top: 0,
@@ -482,99 +412,43 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headerTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 18,
-  },
-  headerSpacer: {
-    width: 36,
-  },
-  scroll: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 16,
-  },
-  filterRow: {
-    gap: 8,
-    paddingBottom: 16,
-  },
-  filterPill: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 16,
-    borderWidth: 1,
-  },
-  filterPillText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 12,
-  },
-  loadingContainer: {
-    paddingVertical: 60,
-    alignItems: 'center',
-  },
-  emptyCard: {
-    padding: 40,
-    alignItems: 'center',
-  },
-  emptyText: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 15,
-  },
-  dateGroup: {
-    marginBottom: 24,
-  },
+  headerTitle: { fontFamily: 'Jakarta-SemiBold', fontSize: 16 },
+  headerSpacer: { width: 38 },
+  scroll: { flex: 1 },
+  scrollContent: { paddingHorizontal: 16 },
+  filterRow: { gap: 8, paddingBottom: 16 },
+  filterPill: { paddingHorizontal: 13, paddingVertical: 8, borderRadius: 999, borderWidth: 1 },
+  filterPillText: { fontFamily: 'Jakarta-Medium', fontSize: 12 },
+  loadingContainer: { paddingVertical: 60, alignItems: 'center' },
+  emptyCard: { padding: 40, alignItems: 'center', borderRadius: 16, borderWidth: 1 },
+  emptyText: { fontFamily: 'Jakarta-Regular', fontSize: 15 },
+  dateGroup: { marginBottom: 20 },
   dateHeader: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 13,
-    marginBottom: 8,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 11,
+    letterSpacing: 1.4,
+    textTransform: 'uppercase',
+    marginBottom: 4,
+    paddingTop: 4,
   },
   logEntry: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    padding: 14,
-    marginBottom: 6,
+    paddingVertical: 13,
+    borderBottomWidth: 1,
   },
-  logEntryIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logEntryContent: {
-    flex: 1,
-  },
-  logEntryTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  logEntryType: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 14,
-  },
-  logEntryTime: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 11,
-  },
-  logEntryDetail: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 12,
-    marginTop: 2,
-  },
-  deleteButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  logEntryDot: { width: 6, height: 6, borderRadius: 3, flexShrink: 0 },
+  logEntryContent: { flex: 1, minWidth: 0 },
+  logEntryTop: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  logEntryType: { fontFamily: 'Jakarta-SemiBold', fontSize: 14 },
+  logEntryTime: { fontFamily: 'Jakarta-Medium', fontSize: 11 },
+  logEntryDetail: { fontFamily: 'Jakarta-Regular', fontSize: 12.5, marginTop: 2, lineHeight: 18 },
 })
