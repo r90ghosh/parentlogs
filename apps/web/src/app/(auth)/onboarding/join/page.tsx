@@ -4,13 +4,9 @@ import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/lib/auth/auth-context'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, Users, ArrowLeft, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
+import { Panel } from '@/components/digest'
 
 /**
  * Onboarding Join Page
@@ -103,59 +99,60 @@ function OnboardingJoinContent() {
   // Brief wait for client-side auth sync
   if (!isReady) {
     return (
-      <Card className="w-full max-w-md bg-[--surface] border-[--border]">
-        <CardContent className="py-8">
-          <div className="flex items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-copper" />
-          </div>
-        </CardContent>
-      </Card>
+      <Panel className="mx-auto flex w-full max-w-md items-center justify-center p-6 py-12 sm:p-8">
+        <Loader2 className="h-6 w-6 animate-spin text-clay-ink" />
+      </Panel>
     )
   }
 
   return (
-    <Card className="w-full max-w-md bg-[--surface] border-[--border]">
-      <CardHeader className="text-center">
-        <div className="mx-auto mb-4 h-12 w-12 rounded-full bg-primary-500/20 flex items-center justify-center">
-          <Users className="h-6 w-6 text-primary-500" />
+    <Panel className="mx-auto w-full max-w-md p-6 sm:p-8">
+      {/* Header */}
+      <div className="text-center">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-clay-soft">
+          <Users className="h-6 w-6 text-clay-ink" />
         </div>
-        <CardTitle className="text-2xl font-display text-[--cream]">Join your partner</CardTitle>
-        <CardDescription>
+        <h1 className="text-[24px] font-extrabold tracking-[-0.3px] text-ink">Join your partner</h1>
+        <p className="mt-2 text-[15px] leading-[1.6] text-mute">
           Enter the invite code shared by your partner
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </p>
+      </div>
+
+      <div className="mt-6 space-y-4">
         {error && (
-          <Alert variant="destructive">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
+          <div className="rounded-xl border border-danger/40 bg-danger/10 px-3.5 py-2.5 text-[13px] font-semibold text-danger">
+            {error}
+          </div>
         )}
 
-        <div className="space-y-2">
-          <Label htmlFor="inviteCode">Invite Code</Label>
-          <Input
+        <div>
+          <label htmlFor="inviteCode" className="mb-1.5 block text-[13px] font-bold text-ink2">
+            Invite Code
+          </label>
+          <input
             id="inviteCode"
             type="text"
             placeholder="Enter code"
             value={inviteCode}
             onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
             maxLength={12}
-            className="bg-[--card] border-[--border-hover] text-center text-xl font-mono tracking-wider uppercase"
+            className="w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-center font-mono text-xl uppercase tracking-wider text-ink outline-none placeholder:text-faint focus:border-clay"
           />
         </div>
 
         {familyInfo && (
-          <Alert className="bg-copper-dim border-copper/50">
-            <CheckCircle className="h-4 w-4 text-copper" />
-            <AlertDescription className="text-copper">
+          <div className="flex items-center gap-2 rounded-xl border border-clay/40 bg-clay-soft px-3.5 py-2.5 text-[13px] font-semibold text-clay-ink">
+            <CheckCircle className="h-4 w-4 flex-shrink-0" />
+            <span>
               Found family! Stage: {familyInfo.stage === 'pregnancy' ? 'Expecting' : 'Baby born'}
               {familyInfo.name && ` - ${familyInfo.name}`}
-            </AlertDescription>
-          </Alert>
+            </span>
+          </div>
         )}
 
-        <Button
-          className="w-full"
+        <button
+          type="button"
+          className="flex w-full items-center justify-center rounded-xl bg-clay px-5 py-3 text-[15px] font-bold text-white hover:opacity-90 disabled:opacity-50"
           onClick={handleJoin}
           disabled={!familyInfo || isLoading}
         >
@@ -167,32 +164,31 @@ function OnboardingJoinContent() {
           ) : (
             'Join Family'
           )}
-        </Button>
-      </CardContent>
-      <CardFooter className="justify-center">
+        </button>
+      </div>
+
+      <div className="mt-6 flex justify-center">
         <Link
           href="/onboarding"
-          className="text-sm text-[--muted] hover:text-[--cream] flex items-center gap-2"
+          className="inline-flex items-center gap-1.5 text-[13px] font-bold text-clay-ink hover:opacity-80"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to options
         </Link>
-      </CardFooter>
-    </Card>
+      </div>
+    </Panel>
   )
 }
 
 export default function OnboardingJoin() {
   return (
-    <Suspense fallback={
-      <Card className="w-full max-w-md bg-[--surface] border-[--border]">
-        <CardContent className="py-8">
-          <div className="flex items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-copper" />
-          </div>
-        </CardContent>
-      </Card>
-    }>
+    <Suspense
+      fallback={
+        <Panel className="mx-auto flex w-full max-w-md items-center justify-center p-6 py-12 sm:p-8">
+          <Loader2 className="h-6 w-6 animate-spin text-clay-ink" />
+        </Panel>
+      }
+    >
       <OnboardingJoinContent />
     </Suspense>
   )

@@ -5,16 +5,10 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth/auth-context'
 import { createClient } from '@/lib/supabase/client'
 import { trackEvent } from '@/lib/analytics'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { DateSelect } from '@/components/ui/date-select'
 import { cn } from '@/lib/utils'
 import { Loader2, Baby, Calendar } from 'lucide-react'
-import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { Reveal } from '@/components/ui/animations/Reveal'
-import { MagneticButton } from '@/components/ui/animations/MagneticButton'
+import { Panel } from '@/components/digest'
 
 /**
  * Onboarding Family Setup Page
@@ -125,184 +119,164 @@ export default function OnboardingFamily() {
   // Brief wait for client-side auth sync
   if (!isReady) {
     return (
-      <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
-        <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
-        <div className="py-12 flex items-center justify-center">
-          <Loader2 className="h-6 w-6 animate-spin text-copper" />
-        </div>
-      </div>
+      <Panel className="mx-auto flex w-full max-w-lg items-center justify-center p-6 py-12 sm:p-8">
+        <Loader2 className="h-6 w-6 animate-spin text-clay-ink" />
+      </Panel>
     )
   }
 
   if (isGenerating) {
     return (
-      <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
-        <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
-        <div className="px-8 py-10 text-center space-y-6">
-          <div className="mx-auto w-14 h-14 rounded-full bg-[--dim] flex items-center justify-center">
-            <Loader2 className="h-7 w-7 animate-spin text-copper" />
+      <Panel className="mx-auto w-full max-w-lg p-6 sm:p-8">
+        <div className="space-y-6 text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-clay-soft">
+            <Loader2 className="h-7 w-7 animate-spin text-clay-ink" />
           </div>
           <div>
-            <h2 className="font-display text-2xl font-bold text-[--cream] mb-1">
+            <h2 className="text-[24px] font-extrabold tracking-[-0.3px] text-ink">
               Setting up your timeline
             </h2>
-            <p className="font-body text-sm text-[--muted]">Generating personalized tasks...</p>
+            <p className="mt-1 text-[15px] leading-[1.6] text-mute">Generating personalized tasks...</p>
           </div>
           <div className="space-y-2">
-            {/* Custom progress bar with copper fill */}
-            <div className="h-2 w-full bg-[--dim] rounded-full overflow-hidden">
+            {/* Progress bar with clay fill */}
+            <div className="h-2 w-full overflow-hidden rounded-full bg-line">
               <div
-                className="h-full bg-gradient-to-r from-copper to-gold rounded-full transition-all duration-500"
+                className="h-full rounded-full bg-clay transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="text-xs text-center text-[--muted] font-ui">
+            <p className="text-center text-[13px] text-mute">
               {progress < 50 ? 'Creating your family...' :
                progress < 90 ? 'Generating tasks...' :
                'Almost done...'}
             </p>
           </div>
         </div>
-      </div>
+      </Panel>
     )
   }
 
+  const isDateValid = stage === 'pregnancy'
+    ? /^\d{4}-\d{2}-\d{2}$/.test(dueDate)
+    : /^\d{4}-\d{2}-\d{2}$/.test(birthDate)
+
   return (
-    <Reveal variant="card" delay={100}>
-      <Card3DTilt maxTilt={4} gloss>
-        <div className="w-full max-w-md bg-[--card] border border-[--border] rounded-2xl shadow-lift overflow-hidden">
-          {/* Top accent bar */}
-          <div className="h-1 w-full bg-gradient-to-r from-copper via-gold to-copper opacity-90" />
-
-          {/* Step indicator */}
-          <div className="px-8 pt-6 pb-0">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="flex gap-1.5">
-                <div className="h-1.5 w-6 rounded-full bg-copper" />
-                <div className="h-1.5 w-6 rounded-full bg-copper" />
-                <div className="h-1.5 w-6 rounded-full bg-[--dim]" />
-              </div>
-              <span className="text-xs text-[--muted] font-ui ml-1">Step 2 of 3</span>
-            </div>
-          </div>
-
-          <div className="px-8 pb-8 space-y-6">
-            {/* Header */}
-            <Reveal delay={0}>
-              <div className="text-center">
-                <h1 className="font-display text-2xl font-bold text-[--cream] mb-2">
-                  Tell us about your journey
-                </h1>
-                <p className="font-body text-sm text-[--muted]">
-                  We&apos;ll customize your timeline accordingly
-                </p>
-              </div>
-            </Reveal>
-
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
-            {/* Stage toggle */}
-            <Reveal delay={100}>
-              <div className="grid grid-cols-2 gap-1 rounded-xl bg-[--bg] border border-[--border] p-1">
-                <button
-                  type="button"
-                  onClick={() => setStage('pregnancy')}
-                  className={cn(
-                    'flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-ui font-medium transition-all duration-200',
-                    stage === 'pregnancy'
-                      ? 'bg-copper text-[--bg] shadow-copper'
-                      : 'text-[--muted] hover:text-[--cream]'
-                  )}
-                >
-                  <Calendar className="h-4 w-4" />
-                  Expecting
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setStage('post-birth')}
-                  className={cn(
-                    'flex items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-ui font-medium transition-all duration-200',
-                    stage === 'post-birth'
-                      ? 'bg-copper text-[--bg] shadow-copper'
-                      : 'text-[--muted] hover:text-[--cream]'
-                  )}
-                >
-                  <Baby className="h-4 w-4" />
-                  Baby Born
-                </button>
-              </div>
-            </Reveal>
-
-            {/* Date input -- only render the active one */}
-            <Reveal delay={200}>
-              {stage === 'pregnancy' ? (
-                <div className="space-y-2">
-                  <Label className="font-ui text-[--cream]">Due Date</Label>
-                  <DateSelect
-                    value={dueDate}
-                    onChange={setDueDate}
-                    mode="future"
-                  />
-                  <p className="text-xs text-[--muted] font-body">
-                    We&apos;ll calculate your current week and schedule tasks accordingly
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <Label className="font-ui text-[--cream]">Birth Date</Label>
-                  <DateSelect
-                    value={birthDate}
-                    onChange={setBirthDate}
-                    mode="past"
-                  />
-                  <p className="text-xs text-[--muted] font-body">
-                    Tasks will be scheduled based on your baby&apos;s age
-                  </p>
-                </div>
-              )}
-            </Reveal>
-
-            <Reveal delay={300}>
-              <div className="space-y-2">
-                <Label htmlFor="babyName" className="font-ui text-[--cream]">
-                  Baby&apos;s Name <span className="text-[--muted] font-normal">(optional)</span>
-                </Label>
-                <Input
-                  id="babyName"
-                  type="text"
-                  placeholder="Leave blank if not decided yet"
-                  value={babyName}
-                  onChange={(e) => setBabyName(e.target.value)}
-                  className="bg-[--bg] border-[--border] text-[--cream] placeholder:text-[--dim] focus:border-copper focus:ring-copper/20 font-body"
-                />
-              </div>
-            </Reveal>
-
-            <Reveal delay={400}>
-              <MagneticButton className="w-full">
-                <Button
-                  className="w-full bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper"
-                  onClick={handleCreateFamily}
-                  disabled={isLoading || !(stage === 'pregnancy' ? /^\d{4}-\d{2}-\d{2}$/.test(dueDate) : /^\d{4}-\d{2}-\d{2}$/.test(birthDate))}
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Creating...
-                    </>
-                  ) : (
-                    'Continue'
-                  )}
-                </Button>
-              </MagneticButton>
-            </Reveal>
-          </div>
+    <Panel className="mx-auto w-full max-w-lg p-6 sm:p-8">
+      {/* Step indicator */}
+      <div className="mb-6 flex items-center gap-2">
+        <div className="flex gap-1.5">
+          <div className="h-1.5 w-6 rounded-full bg-clay" />
+          <div className="h-1.5 w-6 rounded-full bg-clay" />
+          <div className="h-1.5 w-6 rounded-full bg-line" />
         </div>
-      </Card3DTilt>
-    </Reveal>
+        <span className="ml-1 text-[13px] text-mute">Step 2 of 3</span>
+      </div>
+
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="text-[24px] font-extrabold tracking-[-0.3px] text-ink">
+            Tell us about your journey
+          </h1>
+          <p className="mt-2 text-[15px] leading-[1.6] text-mute">
+            We&apos;ll customize your timeline accordingly
+          </p>
+        </div>
+
+        {error && (
+          <div className="rounded-xl border border-danger/40 bg-danger/10 px-3.5 py-2.5 text-[13px] font-semibold text-danger">
+            {error}
+          </div>
+        )}
+
+        {/* Stage toggle */}
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => setStage('pregnancy')}
+            className={cn(
+              'flex items-center justify-center gap-2 rounded-xl border-2 px-3 py-2.5 text-[14px] font-bold transition-colors',
+              stage === 'pregnancy'
+                ? 'border-clay bg-clay-soft text-clay-ink'
+                : 'border-line bg-card text-ink2 hover:border-faint'
+            )}
+          >
+            <Calendar className="h-4 w-4" />
+            Expecting
+          </button>
+          <button
+            type="button"
+            onClick={() => setStage('post-birth')}
+            className={cn(
+              'flex items-center justify-center gap-2 rounded-xl border-2 px-3 py-2.5 text-[14px] font-bold transition-colors',
+              stage === 'post-birth'
+                ? 'border-clay bg-clay-soft text-clay-ink'
+                : 'border-line bg-card text-ink2 hover:border-faint'
+            )}
+          >
+            <Baby className="h-4 w-4" />
+            Baby Born
+          </button>
+        </div>
+
+        {/* Date input -- only render the active one */}
+        {stage === 'pregnancy' ? (
+          <div>
+            <label className="mb-1.5 block text-[13px] font-bold text-ink2">Due Date</label>
+            <DateSelect
+              value={dueDate}
+              onChange={setDueDate}
+              mode="future"
+            />
+            <p className="mt-1.5 text-[13px] leading-[1.5] text-mute">
+              We&apos;ll calculate your current week and schedule tasks accordingly
+            </p>
+          </div>
+        ) : (
+          <div>
+            <label className="mb-1.5 block text-[13px] font-bold text-ink2">Birth Date</label>
+            <DateSelect
+              value={birthDate}
+              onChange={setBirthDate}
+              mode="past"
+            />
+            <p className="mt-1.5 text-[13px] leading-[1.5] text-mute">
+              Tasks will be scheduled based on your baby&apos;s age
+            </p>
+          </div>
+        )}
+
+        <div>
+          <label htmlFor="babyName" className="mb-1.5 block text-[13px] font-bold text-ink2">
+            Baby&apos;s Name <span className="font-normal text-mute">(optional)</span>
+          </label>
+          <input
+            id="babyName"
+            type="text"
+            placeholder="Leave blank if not decided yet"
+            value={babyName}
+            onChange={(e) => setBabyName(e.target.value)}
+            className="w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-[15px] text-ink outline-none placeholder:text-faint focus:border-clay"
+          />
+        </div>
+
+        <button
+          type="button"
+          className="flex w-full items-center justify-center rounded-xl bg-clay px-5 py-3 text-[15px] font-bold text-white hover:opacity-90 disabled:opacity-50"
+          onClick={handleCreateFamily}
+          disabled={isLoading || !isDateValid}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating...
+            </>
+          ) : (
+            'Continue'
+          )}
+        </button>
+      </div>
+    </Panel>
   )
 }

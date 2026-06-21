@@ -1,0 +1,12 @@
+// V2 "Digest" web component kit. Mirrors apps/mobile/components/digest/*.
+export { BrandLogo } from './brand-logo'
+export { SectionLabel } from './section-label'
+export { Panel } from './panel'
+export { Hero } from './hero'
+export { DigestRow, type DigestCategory } from './digest-row'
+export { ScopeSwitch, type ScopeOption } from './scope-switch'
+export { PhaseChips, type PhaseChip } from './phase-chips'
+export { FieldNoteCard } from './field-note-card'
+export { WeekStepper } from './week-stepper'
+export { Badge } from './badge'
+export { ProgressBar } from './progress-bar'

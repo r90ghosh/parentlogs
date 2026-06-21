@@ -6,21 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useCreateTask } from '@/hooks/use-tasks'
 import { useFamilyMembers } from '@/hooks/use-family'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Panel } from '@/components/digest'
+import { usePageHeader } from '@/components/layouts/topbar-context'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useToast } from '@/hooks/use-toast'
+import { cn } from '@/lib/utils'
 
 const taskSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200, 'Title is too long'),
@@ -44,6 +35,22 @@ const categories = [
   'Other',
 ]
 
+const assignees: { value: TaskFormData['assigned_to']; label: string }[] = [
+  { value: 'both', label: 'Both Partners' },
+  { value: 'dad', label: 'Dad' },
+  { value: 'mom', label: 'Mom' },
+]
+
+const priorities: { value: TaskFormData['priority']; label: string }[] = [
+  { value: 'must-do', label: 'Must-Do' },
+  { value: 'good-to-do', label: 'Good-to-Do' },
+]
+
+const fieldLabel = 'mb-1.5 block text-[12.5px] font-bold uppercase tracking-[0.5px] text-mute'
+const fieldInput =
+  'w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-[15px] text-ink outline-none placeholder:text-faint focus:border-clay'
+const chip = 'rounded-full px-[15px] py-2 text-[13px] font-bold transition-colors'
+
 export default function NewTaskClient() {
   const router = useRouter()
   const { toast } = useToast()
@@ -64,6 +71,8 @@ export default function NewTaskClient() {
       category: 'Other',
     },
   })
+
+  usePageHeader({ title: 'New task' }, [])
 
   const onSubmit = async (data: TaskFormData) => {
     const result = await createTask.mutateAsync({
@@ -88,133 +97,142 @@ export default function NewTaskClient() {
     }
   }
 
+  const assignedTo = watch('assigned_to')
+  const priority = watch('priority')
+  const category = watch('category')
+
   return (
-    <div className="p-4 space-y-4 max-w-2xl">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/tasks">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-        <h1 className="text-xl font-display font-bold text-[--cream]">New Task</h1>
-      </div>
+    <div className="mx-auto max-w-2xl">
+      <Link
+        href="/tasks"
+        className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-clay-ink hover:opacity-80"
+      >
+        <ArrowLeft className="h-4 w-4" /> Back
+      </Link>
 
-      <Card className="bg-[--surface] border-[--border]">
-        <CardContent className="pt-6">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Title */}
-            <div className="space-y-2">
-              <Label htmlFor="title" className="font-ui text-[--cream]">Title *</Label>
-              <Input
-                id="title"
-                {...register('title')}
-                placeholder="What needs to be done?"
-                className="bg-[--card] border-[--border] text-[--cream] placeholder:text-[--dim] font-body"
-              />
-              {errors.title && (
-                <p className="text-sm text-coral font-body">{errors.title.message}</p>
-              )}
+      <Panel className="p-[18px] sm:p-[22px]">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          {/* Title */}
+          <div>
+            <label htmlFor="title" className={fieldLabel}>
+              Title
+            </label>
+            <input
+              id="title"
+              {...register('title')}
+              placeholder="What needs to be done?"
+              className={fieldInput}
+            />
+            {errors.title && <p className="mt-1.5 text-[13px] font-semibold text-danger">{errors.title.message}</p>}
+          </div>
+
+          {/* Description */}
+          <div>
+            <label htmlFor="description" className={fieldLabel}>
+              Description
+            </label>
+            <textarea
+              id="description"
+              {...register('description')}
+              placeholder="Add more details..."
+              className={cn(fieldInput, 'min-h-[100px] resize-y')}
+            />
+          </div>
+
+          {/* Due Date */}
+          <div>
+            <label htmlFor="due_date" className={fieldLabel}>
+              Due date
+            </label>
+            <input id="due_date" type="date" {...register('due_date')} className={fieldInput} />
+            {errors.due_date && (
+              <p className="mt-1.5 text-[13px] font-semibold text-danger">{errors.due_date.message}</p>
+            )}
+          </div>
+
+          {/* Assigned To */}
+          <div>
+            <span className={fieldLabel}>Assigned to</span>
+            <div className="flex flex-wrap gap-2">
+              {assignees.map((a) => (
+                <button
+                  key={a.value}
+                  type="button"
+                  onClick={() => setValue('assigned_to', a.value)}
+                  className={cn(
+                    chip,
+                    assignedTo === a.value
+                      ? 'bg-clay text-white'
+                      : 'border border-line bg-card text-ink2 hover:border-faint'
+                  )}
+                >
+                  {a.label}
+                </button>
+              ))}
             </div>
+          </div>
 
-            {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description" className="font-ui text-[--cream]">Description</Label>
-              <Textarea
-                id="description"
-                {...register('description')}
-                placeholder="Add more details..."
-                className="bg-[--card] border-[--border] text-[--cream] placeholder:text-[--dim] font-body min-h-[100px]"
-              />
+          {/* Priority */}
+          <div>
+            <span className={fieldLabel}>Priority</span>
+            <div className="flex flex-wrap gap-2">
+              {priorities.map((p) => (
+                <button
+                  key={p.value}
+                  type="button"
+                  onClick={() => setValue('priority', p.value)}
+                  className={cn(
+                    chip,
+                    priority === p.value
+                      ? 'bg-clay text-white'
+                      : 'border border-line bg-card text-ink2 hover:border-faint'
+                  )}
+                >
+                  {p.label}
+                </button>
+              ))}
             </div>
+          </div>
 
-            {/* Due Date */}
-            <div className="space-y-2">
-              <Label htmlFor="due_date" className="font-ui text-[--cream]">Due Date *</Label>
-              <Input
-                id="due_date"
-                type="date"
-                {...register('due_date')}
-                className="bg-[--card] border-[--border] text-[--cream] font-body"
-              />
-              {errors.due_date && (
-                <p className="text-sm text-coral font-body">{errors.due_date.message}</p>
-              )}
+          {/* Category */}
+          <div>
+            <span className={fieldLabel}>Category</span>
+            <div className="flex flex-wrap gap-2">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setValue('category', cat)}
+                  className={cn(
+                    chip,
+                    category === cat
+                      ? 'bg-clay text-white'
+                      : 'border border-line bg-card text-ink2 hover:border-faint'
+                  )}
+                >
+                  {cat}
+                </button>
+              ))}
             </div>
+          </div>
 
-            {/* Assigned To */}
-            <div className="space-y-2">
-              <Label className="font-ui text-[--cream]">Assigned To</Label>
-              <Select
-                value={watch('assigned_to')}
-                onValueChange={(value) => setValue('assigned_to', value as any)}
-              >
-                <SelectTrigger className="bg-[--card] border-[--border] text-[--cream] font-body">
-                  <SelectValue placeholder="Who should do this?" />
-                </SelectTrigger>
-                <SelectContent className="bg-[--surface] border-[--border]">
-                  <SelectItem value="both" className="font-body">Both Partners</SelectItem>
-                  <SelectItem value="dad" className="font-body">Dad</SelectItem>
-                  <SelectItem value="mom" className="font-body">Mom</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Priority */}
-            <div className="space-y-2">
-              <Label className="font-ui text-[--cream]">Priority</Label>
-              <Select
-                value={watch('priority')}
-                onValueChange={(value) => setValue('priority', value as any)}
-              >
-                <SelectTrigger className="bg-[--card] border-[--border] text-[--cream] font-body">
-                  <SelectValue placeholder="How important is this?" />
-                </SelectTrigger>
-                <SelectContent className="bg-[--surface] border-[--border]">
-                  <SelectItem value="must-do" className="font-body">Must-Do</SelectItem>
-                  <SelectItem value="good-to-do" className="font-body">Good-to-Do</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Category */}
-            <div className="space-y-2">
-              <Label className="font-ui text-[--cream]">Category</Label>
-              <Select
-                value={watch('category')}
-                onValueChange={(value) => setValue('category', value)}
-              >
-                <SelectTrigger className="bg-[--card] border-[--border] text-[--cream] font-body">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent className="bg-[--surface] border-[--border]">
-                  {categories.map((cat) => (
-                    <SelectItem key={cat} value={cat} className="font-body">
-                      {cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Submit */}
-            <Button
-              type="submit"
-              className="w-full bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold"
-              disabled={isSubmitting || createTask.isPending}
-            >
-              {(isSubmitting || createTask.isPending) ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating...
-                </>
-              ) : (
-                'Create Task'
-              )}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+          {/* Submit */}
+          <button
+            type="submit"
+            className="flex w-full items-center justify-center rounded-xl bg-clay px-5 py-3 text-[15px] font-bold text-white hover:opacity-90 disabled:opacity-50"
+            disabled={isSubmitting || createTask.isPending}
+          >
+            {isSubmitting || createTask.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Creating...
+              </>
+            ) : (
+              'Create Task'
+            )}
+          </button>
+        </form>
+      </Panel>
     </div>
   )
 }

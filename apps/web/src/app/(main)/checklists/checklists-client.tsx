@@ -1,175 +1,164 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
-import { useChecklists } from '@/hooks/use-checklists'
+import { useMemo, useState } from 'react'
+import { Lock } from 'lucide-react'
+import { useChecklists, useChecklist, useToggleChecklistItem, useResetChecklist } from '@/hooks/use-checklists'
 import { useUser } from '@/components/user-provider'
-import { Card, CardContent } from '@/components/ui/card'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Progress } from '@/components/ui/progress'
-import Link from 'next/link'
-import { FileText, CheckCircle } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Reveal } from '@/components/ui/animations/Reveal'
-import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+import { useFamily } from '@/hooks/use-family'
+import { getCurrentTimelineCategory, checklistOverlapsCategory } from '@tdc/shared/utils'
+import { Panel } from '@/components/digest'
+import { OpenChecklist } from '@/components/checklists/open-checklist'
 import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
-import { CHECKLIST_ICONS, CHECKLIST_COLORS } from '@/lib/checklist-constants'
-import { ChecklistTimelineBar } from '@/components/shared/checklist-timeline-bar'
-import {
-  type TimelineCategory,
-  getCurrentTimelineCategory,
-  getChecklistStatsByCategory,
-  checklistOverlapsCategory,
-} from '@tdc/shared/utils'
+import { usePageHeader } from '@/components/layouts/topbar-context'
+import { cn } from '@/lib/utils'
 
 export default function ChecklistsClient() {
   const { data: checklists, isLoading } = useChecklists()
-  const { family, activeBaby } = useUser()
+  const { profile, family, activeBaby } = useUser()
+  useFamily()
 
-  const [selectedCategory, setSelectedCategory] = useState<TimelineCategory | null>(null)
-  const [showAll, setShowAll] = useState(false)
+  const currentWeek = activeBaby?.current_week ?? family?.current_week ?? 1
+  const isPremiumUser = profile.subscription_tier !== 'free'
+  const source = activeBaby || family || null
+  const currentCategory = source ? getCurrentTimelineCategory(source) : null
 
-  // Handle category clicks from the timeline bar:
-  // - null means user toggled off a pill or clicked "Show all" -> show all
-  // - a category means user selected that filter
-  const handleCategoryClick = useCallback((category: TimelineCategory | null) => {
-    if (category === null) {
-      setSelectedCategory(null)
-      setShowAll(true)
-    } else {
-      setSelectedCategory(category)
-      setShowAll(false)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+
+  const { relevant, comingUp, completed } = useMemo(() => {
+    const all = checklists ?? []
+    const relevant: typeof all = []
+    const comingUp: typeof all = []
+    const completed: typeof all = []
+    for (const cl of all) {
+      const locked = cl.is_premium && !isPremiumUser
+      if (cl.progress.percentage === 100) completed.push(cl)
+      else if (
+        !locked &&
+        currentCategory &&
+        checklistOverlapsCategory(cl.stage, cl.week_relevant, currentCategory)
+      )
+        relevant.push(cl)
+      else comingUp.push(cl)
     }
-  }, [])
+    return { relevant, comingUp, completed }
+  }, [checklists, currentCategory, isPremiumUser])
 
-  const timelineSource = activeBaby || family || null
+  const defaultId = relevant[0]?.checklist_id ?? completed[0]?.checklist_id ?? (checklists ?? [])[0]?.checklist_id ?? null
+  const effectiveId = selectedId ?? defaultId
 
-  const currentCategory = useMemo(() => {
-    if (!timelineSource) return 'third-trimester' as TimelineCategory
-    return getCurrentTimelineCategory(timelineSource)
-  }, [timelineSource])
+  const { data: detail } = useChecklist(effectiveId ?? '')
+  const toggleItem = useToggleChecklistItem()
+  const resetChecklist = useResetChecklist()
 
-  const checklistStats = useMemo(() => {
-    if (!checklists) return null
-    return getChecklistStatsByCategory(checklists)
-  }, [checklists])
+  const selectedMeta = (checklists ?? []).find((c) => c.checklist_id === effectiveId)
 
-  // Active filter: explicit selection > current phase > show all
-  const activeCategory = showAll ? null : (selectedCategory ?? currentCategory)
+  usePageHeader({ title: 'Checklists', subtitle: `Week ${currentWeek}` }, [currentWeek])
 
-  const filteredChecklists = useMemo(() => {
-    if (!checklists) return []
-    if (!activeCategory) return checklists
-
-    const filtered = checklists.filter(cl =>
-      checklistOverlapsCategory(cl.stage, cl.week_relevant, activeCategory)
+  const Row = ({
+    id,
+    name,
+    progressLabel,
+    locked,
+    done,
+  }: {
+    id: string
+    name: string
+    progressLabel?: string
+    locked?: boolean
+    done?: boolean
+  }) => {
+    const on = id === effectiveId
+    return (
+      <button
+        type="button"
+        onClick={() => !locked && setSelectedId(id)}
+        disabled={locked}
+        className={cn(
+          '-mx-1.5 flex w-[calc(100%+12px)] items-center gap-2.5 rounded-[11px] px-3 py-2.5 text-left transition-colors',
+          on ? 'bg-clay-soft' : 'hover:bg-card2',
+          locked && 'opacity-60'
+        )}
+      >
+        <span className={cn('min-w-0 flex-1 text-[13.5px] leading-[1.3]', on ? 'font-bold text-clay-ink' : 'font-semibold text-ink')}>
+          {name}
+        </span>
+        {locked ? (
+          <Lock className="h-3.5 w-3.5 flex-none text-mute" />
+        ) : (
+          <span className={cn('flex-none text-[11.5px] font-extrabold tracking-[0.2px]', done ? 'text-[--sage]' : 'text-clay-ink')}>
+            {progressLabel}
+          </span>
+        )}
+      </button>
     )
+  }
 
-    // Sort by relevance: checklists overlapping current phase first
-    if (currentCategory) {
-      filtered.sort((a, b) => {
-        const aOverlaps = checklistOverlapsCategory(a.stage, a.week_relevant, currentCategory)
-        const bOverlaps = checklistOverlapsCategory(b.stage, b.week_relevant, currentCategory)
-        if (aOverlaps && !bOverlaps) return -1
-        if (!aOverlaps && bOverlaps) return 1
-        return 0
-      })
-    }
-
-    return filtered
-  }, [checklists, activeCategory, currentCategory])
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 items-start gap-7 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <div className="h-80 animate-pulse rounded-[18px] bg-card2" />
+        <div className="h-96 animate-pulse rounded-[20px] bg-card2" />
+      </div>
+    )
+  }
 
   return (
-    <div className="p-4 space-y-6 max-w-4xl">
-      {/* Header */}
-      <Reveal delay={0}>
-      <div>
-        <h1 className="text-2xl font-display font-bold text-[--cream]">Checklists</h1>
-        <p className="text-[--muted] mt-1 font-body">
-          Stay organized with our curated preparation checklists
-        </p>
-      </div>
-      </Reveal>
+    <>
+      <MedicalDisclaimer className="mb-5" />
 
-      <MedicalDisclaimer className="mb-4" />
+      <div className="grid grid-cols-1 items-start gap-7 lg:grid-cols-[280px_minmax(0,1fr)]">
+        {/* Switcher */}
+        <Panel className="p-[18px]">
+          {relevant.length > 0 && (
+            <>
+              <div className="mb-2 text-[10.5px] font-bold uppercase tracking-[1.2px] text-clay-ink">For now · Week {currentWeek}</div>
+              {relevant.map((c) => (
+                <Row key={c.checklist_id} id={c.checklist_id} name={c.name} progressLabel={`${c.progress.completed}/${c.progress.total}`} />
+              ))}
+            </>
+          )}
+          {comingUp.length > 0 && (
+            <>
+              <div className="mb-2 mt-[18px] text-[10.5px] font-bold uppercase tracking-[1.2px] text-faint">Coming up</div>
+              {comingUp.map((c) => {
+                const locked = c.is_premium && !isPremiumUser
+                return (
+                  <Row
+                    key={c.checklist_id}
+                    id={c.checklist_id}
+                    name={c.name}
+                    locked={locked}
+                    progressLabel={`${c.progress.completed}/${c.progress.total}`}
+                  />
+                )
+              })}
+            </>
+          )}
+          {completed.length > 0 && (
+            <>
+              <div className="mb-2 mt-[18px] text-[10.5px] font-bold uppercase tracking-[1.2px] text-faint">Completed</div>
+              {completed.map((c) => (
+                <Row key={c.checklist_id} id={c.checklist_id} name={c.name} done progressLabel={`${c.progress.completed}/${c.progress.total}`} />
+              ))}
+            </>
+          )}
+        </Panel>
 
-      {/* Timeline Filter */}
-      {!isLoading && checklistStats && (
-        <Reveal delay={50}>
-          <ChecklistTimelineBar
-            stats={checklistStats}
-            currentCategory={currentCategory}
-            selectedCategory={activeCategory}
-            onCategoryClick={handleCategoryClick}
+        {/* Open checklist */}
+        {detail && effectiveId ? (
+          <OpenChecklist
+            checklist={{ ...detail, week_relevant: selectedMeta?.week_relevant }}
+            kicker={selectedMeta && relevant.some((r) => r.checklist_id === effectiveId) ? `For now · Week ${currentWeek}` : undefined}
+            busy={toggleItem.isPending}
+            onToggle={(itemId, completed) => toggleItem.mutate({ checklistId: effectiveId, itemId, completed })}
+            onReset={() => resetChecklist.mutate(effectiveId)}
           />
-        </Reveal>
-      )}
-
-      {/* Checklists Grid */}
-      {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[...Array(9)].map((_, i) => (
-            <Skeleton key={i} className="h-40" />
-          ))}
-        </div>
-      ) : filteredChecklists.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredChecklists.map((checklist, index) => {
-            const Icon = CHECKLIST_ICONS[checklist.checklist_id] || FileText
-            const colors = CHECKLIST_COLORS[checklist.checklist_id] || CHECKLIST_COLORS['CL-15']
-
-            return (
-              <Reveal variant="card" key={checklist.checklist_id} delay={index * 80} className="h-full">
-              <Card3DTilt maxTilt={3} gloss className="h-full">
-              <Link
-                href={`/checklists/${checklist.checklist_id}`}
-                className="block h-full"
-              >
-                <Card className="bg-[--surface] border-[--border] h-full transition-all hover:border-[--border-hover]">
-                  <CardContent className="pt-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className={cn("p-3 rounded-lg", colors.bg)}>
-                        <Icon className={cn("h-6 w-6", colors.text)} />
-                      </div>
-                      {checklist.progress.percentage === 100 && (
-                        <CheckCircle className="h-5 w-5 text-copper" />
-                      )}
-                    </div>
-
-                    <h3 className="font-medium text-[--cream] mb-1 font-body">{checklist.name}</h3>
-                    <p className="text-xs text-[--muted] mb-4 line-clamp-2 font-body">
-                      {checklist.description}
-                    </p>
-
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-xs font-ui">
-                        <span className="text-[--muted]">
-                          {checklist.progress.completed} of {checklist.progress.total} items
-                        </span>
-                        <span className={colors.text}>
-                          {checklist.progress.percentage}%
-                        </span>
-                      </div>
-                      <Progress
-                        value={checklist.progress.percentage}
-                        className="h-1.5 bg-[--card]"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-              </Card3DTilt>
-              </Reveal>
-            )
-          })}
-        </div>
-      ) : (
-        <Card className="bg-[--surface] border-[--border]">
-          <CardContent className="py-12 text-center">
-            <p className="text-[--muted] font-body">No checklists in this phase</p>
-          </CardContent>
-        </Card>
-      )}
-
-    </div>
+        ) : (
+          <Panel className="p-12 text-center">
+            <p className="text-[15px] text-mute">Select a checklist to get started.</p>
+          </Panel>
+        )}
+      </div>
+    </>
   )
 }

@@ -87,6 +87,24 @@ const config: Config = {
         },
         cream: "#ede6dc",
 
+        // ── V2 Digest tokens (scoped to .digest-app; see globals.css) ──
+        // Near-monochrome canvas + one clay accent. New in-app screens use these.
+        paper: "var(--bg)",
+        card2: "var(--card2)",
+        "card-hover": "var(--card-hover)",
+        ink: "var(--ink)",
+        ink2: "var(--ink2)",
+        mute: "var(--muted)",
+        faint: "var(--faint)",
+        line: "var(--line)",
+        line2: "var(--line2)",
+        clay: {
+          DEFAULT: "var(--accent)",
+          ink: "var(--accent-ink)",
+          soft: "var(--accent-soft)",
+        },
+        danger: "var(--danger)",
+
         // Surface scale — warm dark tones (backward compat for bg-surface-NNN)
         surface: {
           DEFAULT: "#1a1714",
@@ -118,6 +136,7 @@ const config: Config = {
         display: ['var(--font-display)', 'Georgia', 'serif'],
         body: ['var(--font-body)', 'system-ui', 'sans-serif'],
         ui: ['var(--font-ui)', 'system-ui', 'sans-serif'],
+        jakarta: ['var(--font-jakarta)', '-apple-system', 'system-ui', 'sans-serif'],
         sans: ['var(--font-body)', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },

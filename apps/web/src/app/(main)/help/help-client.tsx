@@ -7,11 +7,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useUser } from '@/components/user-provider'
 import { useSubmitContactMessage } from '@/hooks/use-contact'
 import { useToast } from '@/hooks/use-toast'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -25,8 +23,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { Reveal } from '@/components/ui/animations/Reveal'
-import { MagneticButton } from '@/components/ui/animations/MagneticButton'
+import { Panel } from '@/components/digest'
+import { usePageHeader } from '@/components/layouts/topbar-context'
 import {
   HelpCircle,
   MessageSquare,
@@ -116,6 +114,8 @@ export default function HelpClient() {
   const submitMessage = useSubmitContactMessage()
   const [submitted, setSubmitted] = useState(false)
 
+  usePageHeader({ title: 'Help & Support', subtitle: 'Find answers or get in touch with our team' }, [])
+
   const {
     register,
     handleSubmit,
@@ -162,223 +162,185 @@ export default function HelpClient() {
   }
 
   return (
-    <div className="p-4 md:px-8 py-6 space-y-6 max-w-4xl mx-auto">
-      {/* Header */}
-      <Reveal delay={0}>
-        <div>
-          <h1 className="font-display text-2xl font-bold text-[--white]">Help & Support</h1>
-          <p className="font-body text-[--muted]">
-            Find answers or get in touch with our team
-          </p>
-        </div>
-      </Reveal>
-
+    <div className="mx-auto max-w-2xl">
       {/* FAQ Section */}
-      <Reveal variant="card" delay={80}>
-        <Card className="bg-[--surface] border-[--border]">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-display text-lg text-[--cream] flex items-center gap-2">
-              <HelpCircle className="h-5 w-5 text-copper" />
-              Frequently Asked Questions
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <Accordion type="single" collapsible className="space-y-1">
-              {faqItems.map((item) => (
-                <AccordionItem
-                  key={item.id}
-                  value={item.id}
-                  className="border-[--border] last:border-b-0"
-                >
-                  <AccordionTrigger className="py-3 hover:no-underline hover:text-copper text-left">
-                    <span className="font-body text-sm text-[--cream]">
-                      {item.question}
-                    </span>
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-3">
-                    <p className="font-body text-sm text-[--muted] leading-relaxed">
-                      {item.answer}
-                    </p>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </CardContent>
-        </Card>
-      </Reveal>
+      <div className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">
+        <HelpCircle className="h-3.5 w-3.5" />
+        Frequently Asked Questions
+      </div>
+      <Panel className="px-[18px]">
+        <Accordion type="single" collapsible>
+          {faqItems.map((item) => (
+            <AccordionItem
+              key={item.id}
+              value={item.id}
+              className="border-line2 last:border-b-0"
+            >
+              <AccordionTrigger className="py-4 text-left hover:no-underline">
+                <span className="text-[15px] font-semibold text-ink">
+                  {item.question}
+                </span>
+              </AccordionTrigger>
+              <AccordionContent className="pb-4">
+                <p className="text-[14px] leading-relaxed text-mute">
+                  {item.answer}
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </Panel>
 
       {/* Contact Form */}
-      <Reveal variant="card" delay={160}>
-        <Card className="bg-[--surface] border-[--border]">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-display text-lg text-[--cream] flex items-center gap-2">
-              <MessageSquare className="h-5 w-5 text-copper" />
-              Contact Us
-            </CardTitle>
-            <p className="font-body text-sm text-[--muted]">
-              Can&apos;t find what you&apos;re looking for? Send us a message.
+      <div className="mb-3 mt-7 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">
+        <MessageSquare className="h-3.5 w-3.5" />
+        Contact Us
+      </div>
+      <Panel className="p-[18px]">
+        {submitted ? (
+          <div className="space-y-3 py-8 text-center">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[--sage]/15">
+              <CheckCircle2 className="h-6 w-6 text-[--sage]" />
+            </div>
+            <h3 className="text-[18px] font-extrabold text-ink">
+              Message Sent!
+            </h3>
+            <p className="text-[14px] text-mute">
+              We&apos;ll get back to you within 24-48 hours.
             </p>
-          </CardHeader>
-          <CardContent className="pt-0">
-            {submitted ? (
-              <div className="text-center py-8 space-y-3">
-                <div className="mx-auto h-12 w-12 rounded-full bg-sage/20 flex items-center justify-center">
-                  <CheckCircle2 className="h-6 w-6 text-sage" />
-                </div>
-                <h3 className="font-display text-lg font-semibold text-[--cream]">
-                  Message Sent!
-                </h3>
-                <p className="font-body text-sm text-[--muted]">
-                  We&apos;ll get back to you within 24-48 hours.
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mt-2 border-[--border] text-[--cream] hover:bg-[--card]"
-                  onClick={() => setSubmitted(false)}
-                >
-                  Send Another Message
-                </Button>
+            <button
+              type="button"
+              onClick={() => setSubmitted(false)}
+              className="mt-2 rounded-xl border border-line bg-card px-4 py-2.5 text-[14px] font-bold text-ink2 hover:bg-card-hover"
+            >
+              Send Another Message
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-[13px] font-semibold text-ink">
+                  Name
+                </Label>
+                <Input
+                  id="name"
+                  {...register('name')}
+                  className="w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-[15px] text-ink outline-none placeholder:text-faint focus:border-clay"
+                  placeholder="Your name"
+                />
+                {errors.name && (
+                  <p className="text-[12px] text-danger">{errors.name.message}</p>
+                )}
               </div>
-            ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="font-ui text-sm text-[--cream]">
-                      Name
-                    </Label>
-                    <Input
-                      id="name"
-                      {...register('name')}
-                      className="bg-[--card] border-[--border] text-[--cream] placeholder:text-[--dim]"
-                      placeholder="Your name"
-                    />
-                    {errors.name && (
-                      <p className="text-xs text-coral font-body">{errors.name.message}</p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="font-ui text-sm text-[--cream]">
-                      Email
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      {...register('email')}
-                      className="bg-[--card] border-[--border] text-[--cream] placeholder:text-[--dim]"
-                      placeholder="your@email.com"
-                    />
-                    {errors.email && (
-                      <p className="text-xs text-coral font-body">{errors.email.message}</p>
-                    )}
-                  </div>
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-[13px] font-semibold text-ink">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  {...register('email')}
+                  className="w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-[15px] text-ink outline-none placeholder:text-faint focus:border-clay"
+                  placeholder="your@email.com"
+                />
+                {errors.email && (
+                  <p className="text-[12px] text-danger">{errors.email.message}</p>
+                )}
+              </div>
+            </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="subject" className="font-ui text-sm text-[--cream]">
-                    Subject
-                  </Label>
-                  <Select onValueChange={(value) => setValue('subject', value)}>
-                    <SelectTrigger className="bg-[--card] border-[--border] text-[--cream]">
-                      <SelectValue placeholder="Select a topic" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[--card] border-[--border]">
-                      {subjectOptions.map((option) => (
-                        <SelectItem
-                          key={option}
-                          value={option}
-                          className="text-[--cream] focus:bg-[--card-hover] focus:text-[--cream]"
-                        >
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.subject && (
-                    <p className="text-xs text-coral font-body">{errors.subject.message}</p>
-                  )}
-                </div>
+            <div className="space-y-2">
+              <Label htmlFor="subject" className="text-[13px] font-semibold text-ink">
+                Subject
+              </Label>
+              <Select onValueChange={(value) => setValue('subject', value)}>
+                <SelectTrigger className="w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-[15px] text-ink focus:border-clay">
+                  <SelectValue placeholder="Select a topic" />
+                </SelectTrigger>
+                <SelectContent className="border-line bg-card">
+                  {subjectOptions.map((option) => (
+                    <SelectItem
+                      key={option}
+                      value={option}
+                      className="text-ink focus:bg-card-hover focus:text-ink"
+                    >
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.subject && (
+                <p className="text-[12px] text-danger">{errors.subject.message}</p>
+              )}
+            </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="message" className="font-ui text-sm text-[--cream]">
-                    Message
-                  </Label>
-                  <Textarea
-                    id="message"
-                    {...register('message')}
-                    className="bg-[--card] border-[--border] text-[--cream] placeholder:text-[--dim] min-h-[120px]"
-                    placeholder="How can we help?"
-                  />
-                  {errors.message && (
-                    <p className="text-xs text-coral font-body">{errors.message.message}</p>
-                  )}
-                </div>
+            <div className="space-y-2">
+              <Label htmlFor="message" className="text-[13px] font-semibold text-ink">
+                Message
+              </Label>
+              <Textarea
+                id="message"
+                {...register('message')}
+                className="min-h-[120px] w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-[15px] text-ink outline-none placeholder:text-faint focus:border-clay"
+                placeholder="How can we help?"
+              />
+              {errors.message && (
+                <p className="text-[12px] text-danger">{errors.message.message}</p>
+              )}
+            </div>
 
-                <MagneticButton>
-                  <Button
-                    type="submit"
-                    disabled={submitMessage.isPending}
-                    className="w-full bg-copper hover:bg-copper-hover text-[--bg] font-ui font-semibold shadow-copper"
-                  >
-                    {submitMessage.isPending ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="mr-2 h-4 w-4" />
-                        Send Message
-                      </>
-                    )}
-                  </Button>
-                </MagneticButton>
-              </form>
-            )}
-          </CardContent>
-        </Card>
-      </Reveal>
+            <button
+              type="submit"
+              disabled={submitMessage.isPending}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-clay px-4 py-2.5 text-[14px] font-bold text-white hover:opacity-90 disabled:opacity-50"
+            >
+              {submitMessage.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4" />
+                  Send Message
+                </>
+              )}
+            </button>
+          </form>
+        )}
+      </Panel>
 
       {/* Quick Links */}
-      <Reveal variant="card" delay={240}>
-        <Card className="bg-[--surface] border-[--border]">
-          <CardHeader className="pb-3">
-            <CardTitle className="font-display text-lg text-[--cream]">
-              Quick Links
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="space-y-2">
-              <Link
-                href="/privacy"
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-[--card] transition-colors group"
-              >
-                <Shield className="h-5 w-5 text-[--muted] group-hover:text-copper transition-colors" />
-                <span className="font-body text-sm text-[--cream] flex-1">Privacy Policy</span>
-                <ExternalLink className="h-4 w-4 text-[--dim]" />
-              </Link>
-              <Link
-                href="/terms"
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-[--card] transition-colors group"
-              >
-                <FileText className="h-5 w-5 text-[--muted] group-hover:text-copper transition-colors" />
-                <span className="font-body text-sm text-[--cream] flex-1">Terms of Service</span>
-                <ExternalLink className="h-4 w-4 text-[--dim]" />
-              </Link>
-              <a
-                href="mailto:info@thedadcenter.com"
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-[--card] transition-colors group"
-              >
-                <Mail className="h-5 w-5 text-[--muted] group-hover:text-copper transition-colors" />
-                <span className="font-body text-sm text-[--cream] flex-1">
-                  info@thedadcenter.com
-                </span>
-                <ExternalLink className="h-4 w-4 text-[--dim]" />
-              </a>
-            </div>
-          </CardContent>
-        </Card>
-      </Reveal>
+      <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">
+        Quick Links
+      </div>
+      <Panel>
+        <Link
+          href="/privacy"
+          className="group flex items-center gap-3.5 border-b border-line2 px-[18px] py-[15px] transition-colors last:border-b-0 hover:bg-card-hover"
+        >
+          <Shield className="h-5 w-5 flex-none text-mute transition-colors group-hover:text-clay-ink" />
+          <span className="flex-1 text-[15px] font-semibold text-ink">Privacy Policy</span>
+          <ExternalLink className="h-4 w-4 flex-none text-faint" />
+        </Link>
+        <Link
+          href="/terms"
+          className="group flex items-center gap-3.5 border-b border-line2 px-[18px] py-[15px] transition-colors last:border-b-0 hover:bg-card-hover"
+        >
+          <FileText className="h-5 w-5 flex-none text-mute transition-colors group-hover:text-clay-ink" />
+          <span className="flex-1 text-[15px] font-semibold text-ink">Terms of Service</span>
+          <ExternalLink className="h-4 w-4 flex-none text-faint" />
+        </Link>
+        <a
+          href="mailto:info@thedadcenter.com"
+          className="group flex items-center gap-3.5 border-b border-line2 px-[18px] py-[15px] transition-colors last:border-b-0 hover:bg-card-hover"
+        >
+          <Mail className="h-5 w-5 flex-none text-mute transition-colors group-hover:text-clay-ink" />
+          <span className="flex-1 text-[15px] font-semibold text-ink">info@thedadcenter.com</span>
+          <ExternalLink className="h-4 w-4 flex-none text-faint" />
+        </a>
+      </Panel>
     </div>
   )
 }

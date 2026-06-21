@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useTrackerLogs, useDeleteLog } from '@/hooks/use-tracker'
 import { useRequirePremium } from '@/hooks/use-subscription'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Select,
@@ -25,16 +24,14 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { PaywallOverlay } from '@/components/shared/paywall-overlay'
-import {
-  ArrowLeft,
-  Trash,
-  Filter,
-} from 'lucide-react'
+import { ArrowLeft, Trash, Filter } from 'lucide-react'
 import Link from 'next/link'
 import { format, isToday, isYesterday } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { BASIC_LOG_TYPES, PREMIUM_LOG_TYPES, type LogType } from '@tdc/services'
 import { LOG_TYPE_CONFIG } from '@/lib/tracker-constants'
+import { Panel } from '@/components/digest'
+import { usePageHeader } from '@/components/layouts/topbar-context'
 import { useToast } from '@/hooks/use-toast'
 
 export default function HistoryClient() {
@@ -48,6 +45,8 @@ export default function HistoryClient() {
     log_type: typeFilter === 'all' ? undefined : typeFilter,
     limit: 100,
   })
+
+  usePageHeader({ title: 'History' }, [])
 
   // Group logs by date
   const groupedLogs = logs?.reduce((groups, log) => {
@@ -101,15 +100,13 @@ export default function HistoryClient() {
 
   if (!isPremium) {
     return (
-      <div className="p-4 space-y-4 max-w-2xl">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/tracker">
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-          </Button>
-          <h1 className="text-xl font-bold font-display text-[--cream]">Log History</h1>
-        </div>
+      <div className="mx-auto max-w-2xl">
+        <Link
+          href="/tracker"
+          className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-clay-ink hover:opacity-80"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back
+        </Link>
         <PaywallOverlay
           feature="tracker_history"
           message="Upgrade to Premium to view your complete log history and track patterns over time."
@@ -119,22 +116,19 @@ export default function HistoryClient() {
   }
 
   return (
-    <div className="p-4 space-y-4 max-w-2xl">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/tracker">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-        <h1 className="text-xl font-bold font-display text-[--cream] flex-1">Log History</h1>
-      </div>
+    <div className="mx-auto max-w-2xl">
+      <Link
+        href="/tracker"
+        className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-clay-ink hover:opacity-80"
+      >
+        <ArrowLeft className="h-4 w-4" /> Back
+      </Link>
 
       {/* Filter */}
-      <div className="flex items-center gap-2">
-        <Filter className="h-4 w-4 text-[--muted]" />
+      <div className="mb-5 flex items-center gap-2">
+        <Filter className="h-4 w-4 text-mute" />
         <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v as any)}>
-          <SelectTrigger className="w-40 bg-[--card] border-[--border]">
+          <SelectTrigger className="w-40 border-line bg-card">
             <SelectValue placeholder="Filter by type" />
           </SelectTrigger>
           <SelectContent>
@@ -157,44 +151,44 @@ export default function HistoryClient() {
           <Skeleton className="h-16" />
         </div>
       ) : logs && logs.length > 0 ? (
-        <div className="space-y-6">
+        <div className="space-y-2">
           {Object.entries(groupedLogs).map(([date, dateLogs]) => (
             <div key={date}>
-              <h3 className="text-sm font-medium font-ui text-[--muted] mb-2">
+              <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint first:mt-0">
                 {formatDateHeader(date)}
-              </h3>
-              <div className="space-y-2">
+              </div>
+              <Panel>
                 {dateLogs.map((log) => {
                   const config = LOG_TYPE_CONFIG[log.log_type as LogType]
                   return (
                     <div
                       key={log.id}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-[--surface] border border-[--border]"
+                      className="flex items-center gap-3.5 border-b border-line2 px-[18px] py-[15px] last:border-b-0"
                     >
-                      <div className={cn("p-2 rounded-lg", config?.bgColor)}>
-                        {config && <config.icon className={cn("h-4 w-4", config.color)} />}
+                      <div className={cn('grid h-9 w-9 flex-none place-items-center rounded-full', config?.bgColor)}>
+                        {config && <config.icon className={cn('h-[18px] w-[18px]', config.color)} />}
                       </div>
-                      <div className="flex-1 min-w-0">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <p className="text-sm font-medium font-ui text-[--cream] capitalize">
+                          <p className="text-[15px] font-semibold capitalize text-ink">
                             {log.log_type.replace('_', ' ')}
                           </p>
-                          <span className="text-xs font-ui text-[--dim]">
+                          <span className="text-[12px] font-medium text-faint">
                             {format(new Date(log.logged_at), 'h:mm a')}
                           </span>
                         </div>
-                        <p className="text-xs font-body text-[--muted]">
+                        <p className="mt-0.5 text-[12.5px] font-medium text-mute">
                           {formatLogDetails(log)}
                           {log.notes && ` • ${log.notes}`}
                         </p>
                       </div>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="icon" className="text-[--dim] hover:text-coral">
+                          <Button variant="ghost" size="icon" className="flex-none text-faint hover:text-danger">
                             <Trash className="h-4 w-4" />
                           </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="bg-[--surface] border-[--border]">
+                        <AlertDialogContent className="border-line bg-card">
                           <AlertDialogHeader>
                             <AlertDialogTitle>Delete Log?</AlertDialogTitle>
                             <AlertDialogDescription>
@@ -203,10 +197,7 @@ export default function HistoryClient() {
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDelete(log.id)}
-                              className="bg-coral hover:bg-coral/80"
-                            >
+                            <AlertDialogAction onClick={() => handleDelete(log.id)} className="bg-danger hover:opacity-90">
                               Delete
                             </AlertDialogAction>
                           </AlertDialogFooter>
@@ -215,16 +206,14 @@ export default function HistoryClient() {
                     </div>
                   )
                 })}
-              </div>
+              </Panel>
             </div>
           ))}
         </div>
       ) : (
-        <Card className="bg-[--surface] border-[--border] shadow-card">
-          <CardContent className="py-12 text-center">
-            <p className="text-[--muted] font-body">No logs found</p>
-          </CardContent>
-        </Card>
+        <Panel className="p-12 text-center">
+          <p className="text-[15px] text-mute">No logs found</p>
+        </Panel>
       )}
     </div>
   )

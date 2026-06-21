@@ -5,12 +5,7 @@ import { useAuth } from '@/lib/auth/auth-context'
 import { useUser } from '@/components/user-provider'
 import { useUpdateProfile } from '@/hooks/use-profile'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Panel } from '@/components/digest'
 import {
   Select,
   SelectContent,
@@ -29,10 +24,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { ArrowLeft, Camera, Loader2, Save, Trash2, AlertTriangle, KeyRound, Eye, EyeOff } from 'lucide-react'
+import { ArrowLeft, Camera, Loader2, Save, Trash2, AlertTriangle, KeyRound, Eye, EyeOff, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/use-toast'
+import { usePageHeader } from '@/components/layouts/topbar-context'
 import { UserRole } from '@tdc/shared/types'
 
 export default function ProfileClient() {
@@ -60,6 +56,8 @@ export default function ProfileClient() {
   const [isSavingPassword, setIsSavingPassword] = useState(false)
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
   const [showNewPassword, setShowNewPassword] = useState(false)
+
+  usePageHeader({ title: 'Profile', subtitle: 'Name, avatar, and role' }, [])
 
   // Keep local state in sync with profile data
   useEffect(() => {
@@ -203,309 +201,290 @@ export default function ProfileClient() {
       await signOut()
       router.push('/login')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete account')
+      const message = err instanceof Error ? err.message : 'Failed to delete account'
+      setError(message)
+      toast({ title: 'Could not delete account', description: message, variant: 'destructive' })
     } finally {
       setIsDeleting(false)
     }
   }
 
   return (
-    <div className="p-4 space-y-6 max-w-2xl">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/settings">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-        <h1 className="font-display text-xl font-bold text-[--white]">Profile</h1>
-      </div>
+    <div className="mx-auto max-w-2xl">
+      <Link href="/settings" className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-clay-ink hover:opacity-80">
+        <ArrowLeft className="h-4 w-4" /> Settings
+      </Link>
 
       {error && (
-        <Alert variant="destructive">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
+        <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-[13.5px] text-danger">
+          <AlertTriangle className="mt-0.5 h-4 w-4 flex-none" />
+          <span>{error}</span>
+        </div>
       )}
 
-      {/* Avatar Section */}
-      <Card className="bg-[--surface] border-[--border]">
-        <CardHeader>
-          <CardTitle className="font-display text-lg">Profile Photo</CardTitle>
-          <CardDescription className="font-body">Click to upload a new avatar</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-6">
-            <div className="relative">
-              <Avatar className="h-24 w-24">
-                <AvatarImage src={profile.avatar_url} alt={profile.full_name || ''} />
-                <AvatarFallback className="font-display text-2xl">
-                  {profile.full_name?.charAt(0).toUpperCase() || 'U'}
-                </AvatarFallback>
-              </Avatar>
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={isUploading}
-                className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-copper flex items-center justify-center hover:bg-copper/80 transition-colors disabled:opacity-50"
-              >
-                {isUploading ? (
-                  <Loader2 className="h-4 w-4 animate-spin text-white" />
-                ) : (
-                  <Camera className="h-4 w-4 text-white" />
-                )}
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleAvatarChange}
-                className="hidden"
-              />
-            </div>
-            <div className="font-body text-sm text-[--muted]">
-              <p>Recommended: Square image</p>
-              <p>Max size: 5MB</p>
-            </div>
+      {/* Profile Photo */}
+      <div className="mb-3 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">Profile Photo</div>
+      <Panel className="p-[18px]">
+        <div className="flex items-center gap-6">
+          <div className="relative">
+            <span className="grid h-24 w-24 flex-none place-items-center overflow-hidden rounded-full bg-clay-soft text-2xl font-extrabold text-clay-ink">
+              {profile.avatar_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={profile.avatar_url} alt={profile.full_name || ''} className="h-full w-full object-cover" />
+              ) : (
+                profile.full_name?.charAt(0).toUpperCase() || 'U'
+              )}
+            </span>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploading}
+              className="absolute bottom-0 right-0 grid h-8 w-8 place-items-center rounded-full bg-clay transition-opacity hover:opacity-90 disabled:opacity-50"
+            >
+              {isUploading ? (
+                <Loader2 className="h-4 w-4 animate-spin text-white" />
+              ) : (
+                <Camera className="h-4 w-4 text-white" />
+              )}
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              className="hidden"
+            />
           </div>
-        </CardContent>
-      </Card>
+          <div className="text-[13px] text-mute">
+            <p>Click to upload a new avatar</p>
+            <p>Recommended: Square image</p>
+            <p>Max size: 5MB</p>
+          </div>
+        </div>
+      </Panel>
 
       {/* Profile Details */}
-      <Card className="bg-[--surface] border-[--border]">
-        <CardHeader>
-          <CardTitle className="font-display text-lg">Profile Details</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email" className="font-ui font-medium">Email</Label>
-            <Input
-              id="email"
-              value={profile.email}
-              disabled
-              className="bg-[--card] border-[--border] text-[--muted]"
-            />
-            <p className="font-body text-xs text-[--dim]">Email cannot be changed</p>
-          </div>
+      <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">Profile Details</div>
+      <Panel className="space-y-4 p-[18px]">
+        <div className="space-y-1.5">
+          <label htmlFor="email" className="text-[13px] font-bold text-ink2">Email</label>
+          <input
+            id="email"
+            value={profile.email}
+            disabled
+            className="w-full cursor-not-allowed rounded-xl border border-line bg-card2 px-3.5 py-2.5 text-[15px] text-mute outline-none"
+          />
+          <p className="text-[12px] text-faint">Email cannot be changed</p>
+        </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="fullName" className="font-ui font-medium">Full Name</Label>
-            <Input
-              id="fullName"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="Enter your name"
-              className="bg-[--card] border-[--border]"
-            />
-          </div>
+        <div className="space-y-1.5">
+          <label htmlFor="fullName" className="text-[13px] font-bold text-ink2">Full Name</label>
+          <input
+            id="fullName"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder="Enter your name"
+            className="w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-[15px] text-ink outline-none focus:border-clay"
+          />
+        </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="role" className="font-ui font-medium">Role</Label>
-            <Select value={role} onValueChange={(v) => setRole(v as UserRole)}>
-              <SelectTrigger className="bg-[--card] border-[--border]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="mom">Mom</SelectItem>
-                <SelectItem value="dad">Dad</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-            <p className="font-body text-xs text-[--dim]">
-              This helps personalize task assignments and content
-            </p>
-          </div>
+        <div className="space-y-1.5">
+          <label htmlFor="role" className="text-[13px] font-bold text-ink2">Role</label>
+          <Select value={role} onValueChange={(v) => setRole(v as UserRole)}>
+            <SelectTrigger className="rounded-xl border-line bg-card">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="mom">Mom</SelectItem>
+              <SelectItem value="dad">Dad</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
+            </SelectContent>
+          </Select>
+          <p className="text-[12px] text-faint">
+            This helps personalize task assignments and content
+          </p>
+        </div>
 
-          <Button
-            onClick={handleSave}
-            disabled={updateProfile.isPending}
-            className="w-full bg-copper hover:bg-copper/80 font-ui font-semibold"
-          >
-            {updateProfile.isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              <>
-                <Save className="mr-2 h-4 w-4" />
-                Save Changes
-              </>
-            )}
-          </Button>
-        </CardContent>
-      </Card>
+        <button
+          onClick={handleSave}
+          disabled={updateProfile.isPending}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-clay px-4 py-2.5 text-[14px] font-bold text-white hover:opacity-90 disabled:opacity-50"
+        >
+          {updateProfile.isPending ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save className="h-4 w-4" />
+              Save Changes
+            </>
+          )}
+        </button>
+      </Panel>
 
       {/* Password */}
-      <Card className="bg-[--surface] border-[--border]">
-        <CardHeader>
-          <CardTitle className="font-display text-lg flex items-center gap-2">
-            <KeyRound className="h-5 w-5 text-copper" />
-            {hasEmailIdentity ? 'Change Password' : 'Set a Password'}
-          </CardTitle>
-          <CardDescription className="font-body">
-            {hasEmailIdentity
-              ? 'Update your account password'
-              : 'Set a password so you can also sign in with email'}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={(e) => { e.preventDefault(); handlePasswordSubmit() }} className="space-y-4">
-            {passwordError && (
-              <Alert variant="destructive">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertDescription>{passwordError}</AlertDescription>
-              </Alert>
-            )}
-            {passwordSuccess && (
-              <Alert className="bg-sage/10 border-sage/30">
-                <AlertDescription className="text-sage font-body">
-                  {hasEmailIdentity ? 'Password changed successfully!' : 'Password set successfully!'}
-                </AlertDescription>
-              </Alert>
-            )}
+      <div className="mb-3 mt-7 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">
+        <KeyRound className="h-3.5 w-3.5 text-clay-ink" />
+        {hasEmailIdentity ? 'Change Password' : 'Set a Password'}
+      </div>
+      <Panel className="p-[18px]">
+        <p className="mb-4 text-[13px] text-mute">
+          {hasEmailIdentity
+            ? 'Update your account password'
+            : 'Set a password so you can also sign in with email'}
+        </p>
+        <form onSubmit={(e) => { e.preventDefault(); handlePasswordSubmit() }} className="space-y-4">
+          {passwordError && (
+            <div className="flex items-start gap-2.5 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-[13.5px] text-danger">
+              <AlertTriangle className="mt-0.5 h-4 w-4 flex-none" />
+              <span>{passwordError}</span>
+            </div>
+          )}
+          {passwordSuccess && (
+            <div className="flex items-start gap-2.5 rounded-xl border border-[--sage]/30 bg-[--sage]/10 px-4 py-3 text-[13.5px] text-[--sage]">
+              <CheckCircle className="mt-0.5 h-4 w-4 flex-none" />
+              <span>{hasEmailIdentity ? 'Password changed successfully!' : 'Password set successfully!'}</span>
+            </div>
+          )}
 
-            {hasEmailIdentity && (
-              <div className="space-y-2">
-                <Label htmlFor="currentPassword" className="font-ui font-medium">Current Password</Label>
-                <div className="relative">
-                  <Input
-                    id="currentPassword"
-                    type={showCurrentPassword ? 'text' : 'password'}
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    placeholder="Enter current password"
-                    autoComplete="current-password"
-                    className="bg-[--card] border-[--border] pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[--muted] hover:text-[--cream] transition-colors"
-                  >
-                    {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <div className="space-y-2">
-              <Label htmlFor="newPassword" className="font-ui font-medium">New Password</Label>
+          {hasEmailIdentity && (
+            <div className="space-y-1.5">
+              <label htmlFor="currentPassword" className="text-[13px] font-bold text-ink2">Current Password</label>
               <div className="relative">
-                <Input
-                  id="newPassword"
-                  type={showNewPassword ? 'text' : 'password'}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="At least 8 characters"
-                  autoComplete="new-password"
-                  className="bg-[--card] border-[--border] pr-10"
+                <input
+                  id="currentPassword"
+                  type={showCurrentPassword ? 'text' : 'password'}
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Enter current password"
+                  autoComplete="current-password"
+                  className="w-full rounded-xl border border-line bg-card px-3.5 py-2.5 pr-10 text-[15px] text-ink outline-none focus:border-clay"
                 />
                 <button
                   type="button"
-                  onClick={() => setShowNewPassword(!showNewPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[--muted] hover:text-[--cream] transition-colors"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-mute transition-colors hover:text-ink"
                 >
-                  {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              <p className="font-body text-xs text-[--dim]">Minimum 8 characters</p>
             </div>
+          )}
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="font-ui font-medium">Confirm New Password</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm new password"
+          <div className="space-y-1.5">
+            <label htmlFor="newPassword" className="text-[13px] font-bold text-ink2">New Password</label>
+            <div className="relative">
+              <input
+                id="newPassword"
+                type={showNewPassword ? 'text' : 'password'}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="At least 8 characters"
                 autoComplete="new-password"
-                className="bg-[--card] border-[--border]"
+                className="w-full rounded-xl border border-line bg-card px-3.5 py-2.5 pr-10 text-[15px] text-ink outline-none focus:border-clay"
               />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-mute transition-colors hover:text-ink"
+              >
+                {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
             </div>
+            <p className="text-[12px] text-faint">Minimum 8 characters</p>
+          </div>
 
-            <Button
-              type="submit"
-              disabled={isSavingPassword || !newPassword || !confirmPassword || (hasEmailIdentity && !currentPassword)}
-              className="w-full bg-copper hover:bg-copper/80 font-ui font-semibold"
-            >
-              {isSavingPassword ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {hasEmailIdentity ? 'Changing...' : 'Setting...'}
-                </>
-              ) : (
-                <>
-                  <KeyRound className="mr-2 h-4 w-4" />
-                  {hasEmailIdentity ? 'Change Password' : 'Set Password'}
-                </>
-              )}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+          <div className="space-y-1.5">
+            <label htmlFor="confirmPassword" className="text-[13px] font-bold text-ink2">Confirm New Password</label>
+            <input
+              id="confirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm new password"
+              autoComplete="new-password"
+              className="w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-[15px] text-ink outline-none focus:border-clay"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSavingPassword || !newPassword || !confirmPassword || (hasEmailIdentity && !currentPassword)}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-clay px-4 py-2.5 text-[14px] font-bold text-white hover:opacity-90 disabled:opacity-50"
+          >
+            {isSavingPassword ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {hasEmailIdentity ? 'Changing...' : 'Setting...'}
+              </>
+            ) : (
+              <>
+                <KeyRound className="h-4 w-4" />
+                {hasEmailIdentity ? 'Change Password' : 'Set Password'}
+              </>
+            )}
+          </button>
+        </form>
+      </Panel>
 
       {/* Danger Zone */}
-      <Card className="bg-[--surface] border-coral/30">
-        <CardHeader>
-          <CardTitle className="font-display text-lg text-coral">Danger Zone</CardTitle>
-          <CardDescription className="font-body">
-            Irreversible actions that affect your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive" className="w-full font-ui font-semibold">
-                <Trash2 className="mr-2 h-4 w-4" />
-                Delete Account
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="bg-[--surface] border-[--border]">
-              <AlertDialogHeader>
-                <AlertDialogTitle className="font-display text-[--white]">Delete Account?</AlertDialogTitle>
-                <AlertDialogDescription asChild>
-                  <div className="font-body text-[--muted]">
-                    <p>This action cannot be undone. This will permanently delete your account
-                    and remove all your data including:</p>
-                    <ul className="list-disc list-inside mt-2 space-y-1">
-                      <li>Your profile and settings</li>
-                      <li>All task history and progress</li>
-                      <li>Baby tracker logs</li>
-                      <li>Budget items and checklists</li>
-                    </ul>
-                    <p className="mt-2 font-medium text-coral">
-                      If you&apos;re the only member, your family will also be deleted.
-                    </p>
-                    <p className="mt-2 font-medium text-gold">
-                      If you have an active subscription, it will be automatically canceled.
-                    </p>
-                  </div>
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="bg-[--card] border-[--border] font-ui">
-                  Cancel
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleDeleteAccount}
-                  disabled={isDeleting}
-                  className="bg-coral hover:bg-coral/80 font-ui font-semibold"
-                >
-                  {isDeleting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Deleting...
-                    </>
-                  ) : (
-                    'Yes, delete my account'
-                  )}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </CardContent>
-      </Card>
+      <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-danger">Danger Zone</div>
+      <Panel className="p-[18px]">
+        <p className="mb-4 text-[13px] text-mute">
+          Irreversible actions that affect your account
+        </p>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <button className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-danger px-4 py-2.5 text-[14px] font-bold text-white hover:opacity-90">
+              <Trash2 className="h-4 w-4" />
+              Delete Account
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Account?</AlertDialogTitle>
+              <AlertDialogDescription asChild>
+                <div>
+                  <p>This action cannot be undone. This will permanently delete your account
+                  and remove all your data including:</p>
+                  <ul className="mt-2 list-inside list-disc space-y-1">
+                    <li>Your profile and settings</li>
+                    <li>All task history and progress</li>
+                    <li>Baby tracker logs</li>
+                    <li>Budget items and checklists</li>
+                  </ul>
+                  <p className="mt-2 font-medium text-danger">
+                    If you&apos;re the only member, your family will also be deleted.
+                  </p>
+                  <p className="mt-2 font-medium text-[--gold]">
+                    If you have an active subscription, it will be automatically canceled.
+                  </p>
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDeleteAccount}
+                disabled={isDeleting}
+                className="bg-danger text-white hover:opacity-90"
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  'Yes, delete my account'
+                )}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </Panel>
     </div>
   )
 }

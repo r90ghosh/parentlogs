@@ -3,23 +3,41 @@
 import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCreateLog } from '@/hooks/use-tracker'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent } from '@/components/ui/card'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Panel } from '@/components/digest'
+import { usePageHeader } from '@/components/layouts/topbar-context'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { useToast } from '@/hooks/use-toast'
 import type { LogType } from '@tdc/services'
+import { cn } from '@/lib/utils'
+
+const fieldLabel = 'mb-1.5 block text-[12.5px] font-bold uppercase tracking-[0.5px] text-mute'
+const fieldInput =
+  'w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-[15px] text-ink outline-none placeholder:text-faint focus:border-clay'
+const chip = 'rounded-full px-[15px] py-2 text-[13px] font-bold transition-colors'
+
+function Chip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean
+  onClick: () => void
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        chip,
+        active ? 'bg-clay text-white' : 'border border-line bg-card text-ink2 hover:border-faint'
+      )}
+    >
+      {children}
+    </button>
+  )
+}
 
 function LogEntryContent() {
   const router = useRouter()
@@ -61,6 +79,25 @@ function LogEntryContent() {
   const [milestoneName, setMilestoneName] = useState('')
 
   const [customType, setCustomType] = useState('')
+
+  const getTitle = () => {
+    const titles: Record<LogType, string> = {
+      feeding: 'Log Feeding',
+      diaper: 'Log Diaper',
+      sleep: 'Log Sleep',
+      temperature: 'Log Temperature',
+      medicine: 'Log Medicine',
+      vitamin_d: 'Log Vitamin D',
+      mood: 'Log Mood',
+      weight: 'Log Weight',
+      height: 'Log Height',
+      milestone: 'Log Milestone',
+      custom: 'Custom Log',
+    }
+    return titles[logType] || 'Log Entry'
+  }
+
+  usePageHeader({ title: getTitle() }, [logType])
 
   const handleSubmit = async () => {
     setIsSubmitting(true)
@@ -135,119 +172,94 @@ function LogEntryContent() {
     }
   }
 
-  const getTitle = () => {
-    const titles: Record<LogType, string> = {
-      feeding: 'Log Feeding',
-      diaper: 'Log Diaper',
-      sleep: 'Log Sleep',
-      temperature: 'Log Temperature',
-      medicine: 'Log Medicine',
-      vitamin_d: 'Log Vitamin D',
-      mood: 'Log Mood',
-      weight: 'Log Weight',
-      height: 'Log Height',
-      milestone: 'Log Milestone',
-      custom: 'Custom Log',
-    }
-    return titles[logType] || 'Log Entry'
-  }
-
   return (
-    <div className="p-4 space-y-4 max-w-lg">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/tracker">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-        <h1 className="text-xl font-bold font-display text-[--cream]">{getTitle()}</h1>
-      </div>
+    <div className="mx-auto max-w-2xl">
+      <Link
+        href="/tracker"
+        className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-clay-ink hover:opacity-80"
+      >
+        <ArrowLeft className="h-4 w-4" /> Back
+      </Link>
 
-      <Card className="bg-[--surface] border-[--border] shadow-card">
-        <CardContent className="pt-6 space-y-4">
+      <Panel className="p-[18px] sm:p-[22px]">
+        <div className="space-y-5">
           {/* Time */}
-          <div className="space-y-2">
-            <Label>Time</Label>
-            <Input
+          <div>
+            <label htmlFor="loggedAt" className={fieldLabel}>
+              Time
+            </label>
+            <input
+              id="loggedAt"
               type="datetime-local"
               value={loggedAt}
               onChange={(e) => setLoggedAt(e.target.value)}
-              className="bg-[--card] border-[--border]"
+              className={fieldInput}
             />
           </div>
 
           {/* Type-specific fields */}
           {logType === 'feeding' && (
             <>
-              <div className="space-y-2">
-                <Label>Type</Label>
-                <RadioGroup
-                  value={feedingType}
-                  onValueChange={(v) => setFeedingType(v as any)}
-                  className="flex gap-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="breast" id="breast" />
-                    <Label htmlFor="breast">Breast</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="bottle" id="bottle" />
-                    <Label htmlFor="bottle">Bottle</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="solid" id="solid" />
-                    <Label htmlFor="solid">Solid</Label>
-                  </div>
-                </RadioGroup>
+              <div>
+                <span className={fieldLabel}>Type</span>
+                <div className="flex flex-wrap gap-2">
+                  <Chip active={feedingType === 'breast'} onClick={() => setFeedingType('breast')}>
+                    Breast
+                  </Chip>
+                  <Chip active={feedingType === 'bottle'} onClick={() => setFeedingType('bottle')}>
+                    Bottle
+                  </Chip>
+                  <Chip active={feedingType === 'solid'} onClick={() => setFeedingType('solid')}>
+                    Solid
+                  </Chip>
+                </div>
               </div>
 
               {feedingType === 'breast' && (
                 <>
-                  <div className="space-y-2">
-                    <Label>Side</Label>
-                    <RadioGroup
-                      value={feedingSide}
-                      onValueChange={(v) => setFeedingSide(v as any)}
-                      className="flex gap-4"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="left" id="left" />
-                        <Label htmlFor="left">Left</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="right" id="right" />
-                        <Label htmlFor="right">Right</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="both" id="both" />
-                        <Label htmlFor="both">Both</Label>
-                      </div>
-                    </RadioGroup>
+                  <div>
+                    <span className={fieldLabel}>Side</span>
+                    <div className="flex flex-wrap gap-2">
+                      <Chip active={feedingSide === 'left'} onClick={() => setFeedingSide('left')}>
+                        Left
+                      </Chip>
+                      <Chip active={feedingSide === 'right'} onClick={() => setFeedingSide('right')}>
+                        Right
+                      </Chip>
+                      <Chip active={feedingSide === 'both'} onClick={() => setFeedingSide('both')}>
+                        Both
+                      </Chip>
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label>Duration (minutes)</Label>
-                    <Input
+                  <div>
+                    <label htmlFor="feedingDuration" className={fieldLabel}>
+                      Duration (minutes)
+                    </label>
+                    <input
+                      id="feedingDuration"
                       type="number"
                       value={feedingDuration}
                       onChange={(e) => setFeedingDuration(e.target.value)}
                       placeholder="15"
-                      className="bg-[--card] border-[--border]"
+                      className={fieldInput}
                     />
                   </div>
                 </>
               )}
 
               {(feedingType === 'bottle' || feedingType === 'solid') && (
-                <div className="space-y-2">
-                  <Label>Amount (oz)</Label>
-                  <Input
+                <div>
+                  <label htmlFor="feedingAmount" className={fieldLabel}>
+                    Amount (oz)
+                  </label>
+                  <input
+                    id="feedingAmount"
                     type="number"
                     step="0.5"
                     value={feedingAmount}
                     onChange={(e) => setFeedingAmount(e.target.value)}
                     placeholder="4"
-                    className="bg-[--card] border-[--border]"
+                    className={fieldInput}
                   />
                 </div>
               )}
@@ -255,53 +267,50 @@ function LogEntryContent() {
           )}
 
           {logType === 'diaper' && (
-            <div className="space-y-2">
-              <Label>Type</Label>
-              <RadioGroup
-                value={diaperType}
-                onValueChange={(v) => setDiaperType(v as any)}
-                className="flex gap-4"
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="wet" id="wet" />
-                  <Label htmlFor="wet">Wet</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="dirty" id="dirty" />
-                  <Label htmlFor="dirty">Dirty</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="both" id="diaper-both" />
-                  <Label htmlFor="diaper-both">Both</Label>
-                </div>
-              </RadioGroup>
+            <div>
+              <span className={fieldLabel}>Type</span>
+              <div className="flex flex-wrap gap-2">
+                <Chip active={diaperType === 'wet'} onClick={() => setDiaperType('wet')}>
+                  Wet
+                </Chip>
+                <Chip active={diaperType === 'dirty'} onClick={() => setDiaperType('dirty')}>
+                  Dirty
+                </Chip>
+                <Chip active={diaperType === 'both'} onClick={() => setDiaperType('both')}>
+                  Both
+                </Chip>
+              </div>
             </div>
           )}
 
           {logType === 'sleep' && (
             <>
-              <div className="space-y-2">
-                <Label>Duration (minutes)</Label>
-                <Input
+              <div>
+                <label htmlFor="sleepDuration" className={fieldLabel}>
+                  Duration (minutes)
+                </label>
+                <input
+                  id="sleepDuration"
                   type="number"
                   value={sleepDuration}
                   onChange={(e) => setSleepDuration(e.target.value)}
                   placeholder="60"
-                  className="bg-[--card] border-[--border]"
+                  className={fieldInput}
                 />
               </div>
-              <div className="space-y-2">
-                <Label>Quality</Label>
-                <Select value={sleepQuality} onValueChange={(v) => setSleepQuality(v as any)}>
-                  <SelectTrigger className="bg-[--card] border-[--border]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="good">Good</SelectItem>
-                    <SelectItem value="fair">Fair</SelectItem>
-                    <SelectItem value="poor">Poor</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div>
+                <span className={fieldLabel}>Quality</span>
+                <div className="flex flex-wrap gap-2">
+                  <Chip active={sleepQuality === 'good'} onClick={() => setSleepQuality('good')}>
+                    Good
+                  </Chip>
+                  <Chip active={sleepQuality === 'fair'} onClick={() => setSleepQuality('fair')}>
+                    Fair
+                  </Chip>
+                  <Chip active={sleepQuality === 'poor'} onClick={() => setSleepQuality('poor')}>
+                    Poor
+                  </Chip>
+                </div>
               </div>
             </>
           )}
@@ -309,31 +318,33 @@ function LogEntryContent() {
           {logType === 'temperature' && (
             <>
               <div className="flex gap-2">
-                <div className="flex-1 space-y-2">
-                  <Label>Temperature</Label>
-                  <Input
+                <div className="flex-1">
+                  <label htmlFor="temperature" className={fieldLabel}>
+                    Temperature
+                  </label>
+                  <input
+                    id="temperature"
                     type="number"
                     step="0.1"
                     value={temperature}
                     onChange={(e) => setTemperature(e.target.value)}
                     placeholder="98.6"
-                    className="bg-[--card] border-[--border]"
+                    className={fieldInput}
                   />
                 </div>
-                <div className="w-20 space-y-2">
-                  <Label>Unit</Label>
-                  <Select value={temperatureUnit} onValueChange={(v) => setTemperatureUnit(v as any)}>
-                    <SelectTrigger className="bg-[--card] border-[--border]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="F">°F</SelectItem>
-                      <SelectItem value="C">°C</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="w-28">
+                  <span className={fieldLabel}>Unit</span>
+                  <div className="flex gap-2">
+                    <Chip active={temperatureUnit === 'F'} onClick={() => setTemperatureUnit('F')}>
+                      °F
+                    </Chip>
+                    <Chip active={temperatureUnit === 'C'} onClick={() => setTemperatureUnit('C')}>
+                      °C
+                    </Chip>
+                  </div>
                 </div>
               </div>
-              <p className="font-ui text-[10px] text-[--dim] leading-relaxed">
+              <p className="text-[12px] leading-relaxed text-faint">
                 This tracker is for personal record-keeping only and is not a diagnostic tool. For concerns about your baby&apos;s temperature, contact your pediatrician.
               </p>
             </>
@@ -341,43 +352,49 @@ function LogEntryContent() {
 
           {logType === 'medicine' && (
             <>
-              <div className="space-y-2">
-                <Label>Medicine Name</Label>
-                <Input
+              <div>
+                <label htmlFor="medicineName" className={fieldLabel}>
+                  Medicine Name
+                </label>
+                <input
+                  id="medicineName"
                   value={medicineName}
                   onChange={(e) => setMedicineName(e.target.value)}
                   placeholder="Tylenol"
-                  className="bg-[--card] border-[--border]"
+                  className={fieldInput}
                 />
               </div>
-              <div className="space-y-2">
-                <Label>Dosage</Label>
-                <Input
+              <div>
+                <label htmlFor="medicineDosage" className={fieldLabel}>
+                  Dosage
+                </label>
+                <input
+                  id="medicineDosage"
                   value={medicineDosage}
                   onChange={(e) => setMedicineDosage(e.target.value)}
                   placeholder="2.5ml"
-                  className="bg-[--card] border-[--border]"
+                  className={fieldInput}
                 />
               </div>
-              <p className="font-ui text-[10px] text-[--dim] leading-relaxed">
+              <p className="text-[12px] leading-relaxed text-faint">
                 Always verify medication dosages with your pediatrician.
               </p>
             </>
           )}
 
           {logType === 'mood' && (
-            <div className="space-y-2">
-              <Label>Mood Level</Label>
-              <div className="flex gap-2 justify-center">
+            <div>
+              <span className={fieldLabel}>Mood Level</span>
+              <div className="flex justify-center gap-2">
                 {[1, 2, 3, 4, 5].map((level) => (
                   <button
                     key={level}
+                    type="button"
                     onClick={() => setMoodLevel(level as any)}
-                    className={`w-12 h-12 rounded-full text-2xl transition-all ${
-                      moodLevel === level
-                        ? 'bg-copper scale-110'
-                        : 'bg-[--card] hover:bg-[--card-hover]'
-                    }`}
+                    className={cn(
+                      'h-12 w-12 rounded-full text-2xl transition-all',
+                      moodLevel === level ? 'scale-110 bg-clay' : 'bg-card2 hover:bg-card-hover'
+                    )}
                   >
                     {level === 1 ? '😢' : level === 2 ? '😕' : level === 3 ? '😐' : level === 4 ? '😊' : '😄'}
                   </button>
@@ -388,99 +405,113 @@ function LogEntryContent() {
 
           {logType === 'weight' && (
             <div className="flex gap-2">
-              <div className="flex-1 space-y-2">
-                <Label>Weight</Label>
-                <Input
+              <div className="flex-1">
+                <label htmlFor="weight" className={fieldLabel}>
+                  Weight
+                </label>
+                <input
+                  id="weight"
                   type="number"
                   step="0.1"
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
                   placeholder="12.5"
-                  className="bg-[--card] border-[--border]"
+                  className={fieldInput}
                 />
               </div>
-              <div className="w-20 space-y-2">
-                <Label>Unit</Label>
-                <Select value={weightUnit} onValueChange={(v) => setWeightUnit(v as any)}>
-                  <SelectTrigger className="bg-[--card] border-[--border]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="lbs">lbs</SelectItem>
-                    <SelectItem value="kg">kg</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="w-28">
+                <span className={fieldLabel}>Unit</span>
+                <div className="flex gap-2">
+                  <Chip active={weightUnit === 'lbs'} onClick={() => setWeightUnit('lbs')}>
+                    lbs
+                  </Chip>
+                  <Chip active={weightUnit === 'kg'} onClick={() => setWeightUnit('kg')}>
+                    kg
+                  </Chip>
+                </div>
               </div>
             </div>
           )}
 
           {logType === 'height' && (
             <div className="flex gap-2">
-              <div className="flex-1 space-y-2">
-                <Label>Height</Label>
-                <Input
+              <div className="flex-1">
+                <label htmlFor="height" className={fieldLabel}>
+                  Height
+                </label>
+                <input
+                  id="height"
                   type="number"
                   step="0.1"
                   value={height}
                   onChange={(e) => setHeight(e.target.value)}
                   placeholder="24"
-                  className="bg-[--card] border-[--border]"
+                  className={fieldInput}
                 />
               </div>
-              <div className="w-20 space-y-2">
-                <Label>Unit</Label>
-                <Select value={heightUnit} onValueChange={(v) => setHeightUnit(v as any)}>
-                  <SelectTrigger className="bg-[--card] border-[--border]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="in">in</SelectItem>
-                    <SelectItem value="cm">cm</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="w-28">
+                <span className={fieldLabel}>Unit</span>
+                <div className="flex gap-2">
+                  <Chip active={heightUnit === 'in'} onClick={() => setHeightUnit('in')}>
+                    in
+                  </Chip>
+                  <Chip active={heightUnit === 'cm'} onClick={() => setHeightUnit('cm')}>
+                    cm
+                  </Chip>
+                </div>
               </div>
             </div>
           )}
 
           {logType === 'milestone' && (
-            <div className="space-y-2">
-              <Label>Milestone</Label>
-              <Input
+            <div>
+              <label htmlFor="milestoneName" className={fieldLabel}>
+                Milestone
+              </label>
+              <input
+                id="milestoneName"
                 value={milestoneName}
                 onChange={(e) => setMilestoneName(e.target.value)}
                 placeholder="First smile"
-                className="bg-[--card] border-[--border]"
+                className={fieldInput}
               />
             </div>
           )}
 
           {logType === 'custom' && (
-            <div className="space-y-2">
-              <Label>Log Type</Label>
-              <Input
+            <div>
+              <label htmlFor="customType" className={fieldLabel}>
+                Log Type
+              </label>
+              <input
+                id="customType"
                 value={customType}
                 onChange={(e) => setCustomType(e.target.value)}
                 placeholder="Bath time"
-                className="bg-[--card] border-[--border]"
+                className={fieldInput}
               />
             </div>
           )}
 
           {/* Notes */}
-          <div className="space-y-2">
-            <Label>Notes (optional)</Label>
-            <Textarea
+          <div>
+            <label htmlFor="notes" className={fieldLabel}>
+              Notes (optional)
+            </label>
+            <textarea
+              id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add any notes..."
-              className="bg-[--card] border-[--border]"
+              className={cn(fieldInput, 'min-h-[80px] resize-y')}
             />
           </div>
 
           {/* Submit */}
-          <Button
+          <button
+            type="button"
             onClick={handleSubmit}
-            className="w-full"
+            className="flex w-full items-center justify-center rounded-xl bg-clay px-5 py-3 text-[15px] font-bold text-white hover:opacity-90 disabled:opacity-50"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -491,20 +522,22 @@ function LogEntryContent() {
             ) : (
               'Save Log'
             )}
-          </Button>
-        </CardContent>
-      </Card>
+          </button>
+        </div>
+      </Panel>
     </div>
   )
 }
 
 export default function LogClient() {
   return (
-    <Suspense fallback={
-      <div className="p-4 flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-copper" />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center p-4">
+          <Loader2 className="h-6 w-6 animate-spin text-clay-ink" />
+        </div>
+      }
+    >
       <LogEntryContent />
     </Suspense>
   )

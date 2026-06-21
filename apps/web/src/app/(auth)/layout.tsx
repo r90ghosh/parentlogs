@@ -1,18 +1,17 @@
 import { ReactNode } from 'react'
-import { Logo } from '@/components/ui/logo'
-import { WarmBackground } from '@/components/ui/animations/WarmBackground'
+import Link from 'next/link'
+import { BrandLogo } from '@/components/digest'
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-[--bg] relative">
-      <WarmBackground />
-      <header className="p-6 relative z-10">
-        <Logo size="md" variant="dark" />
+    <div className="digest-app flex min-h-screen flex-col">
+      <header className="p-6 md:px-10">
+        <Link href="/">
+          <BrandLogo size={30} />
+        </Link>
       </header>
-      <main className="flex-1 flex items-center justify-center p-4 relative z-10">
-        <div className="w-full max-w-md">
-          {children}
-        </div>
+      <main className="flex flex-1 items-center justify-center p-4">
+        <div className="w-full max-w-md">{children}</div>
       </main>
     </div>
   )

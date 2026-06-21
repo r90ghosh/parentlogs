@@ -3,10 +3,7 @@
 import { useState } from 'react'
 import { useTrackerLogs } from '@/hooks/use-tracker'
 import { useRequirePremium } from '@/hooks/use-subscription'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { PaywallOverlay } from '@/components/shared/paywall-overlay'
 import { type LucideIcon } from 'lucide-react'
 import {
@@ -21,6 +18,8 @@ import {
 import Link from 'next/link'
 import { format, subDays, eachDayOfInterval } from 'date-fns'
 import { cn } from '@/lib/utils'
+import { Panel, ScopeSwitch } from '@/components/digest'
+import { usePageHeader } from '@/components/layouts/topbar-context'
 
 export default function SummaryClient() {
   const { isPremium } = useRequirePremium()
@@ -34,17 +33,17 @@ export default function SummaryClient() {
     limit: 1000,
   })
 
+  usePageHeader({ title: 'Summary' }, [])
+
   if (!isPremium) {
     return (
-      <div className="p-4 space-y-4 max-w-2xl">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/tracker">
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-          </Button>
-          <h1 className="text-xl font-bold font-display text-[--cream]">Summary & Insights</h1>
-        </div>
+      <div className="mx-auto max-w-3xl">
+        <Link
+          href="/tracker"
+          className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-clay-ink hover:opacity-80"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back
+        </Link>
         <PaywallOverlay
           feature="tracker_summary"
           message="Upgrade to Premium to see detailed charts, trends, and insights about your baby's patterns."
@@ -102,35 +101,34 @@ export default function SummaryClient() {
   const maxSleep = Math.max(...dailyStats.map(d => d.sleepMinutes), 1)
 
   return (
-    <div className="p-4 space-y-6 max-w-2xl">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/tracker">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-        <h1 className="text-xl font-bold font-display text-[--cream] flex-1">Summary & Insights</h1>
-      </div>
+    <div className="mx-auto max-w-3xl">
+      <Link
+        href="/tracker"
+        className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-clay-ink hover:opacity-80"
+      >
+        <ArrowLeft className="h-4 w-4" /> Back
+      </Link>
 
       {/* Period Selector */}
-      <Tabs value={period} onValueChange={(v) => setPeriod(v as any)}>
-        <TabsList className="bg-[--surface]">
-          <TabsTrigger value="7d">Last 7 Days</TabsTrigger>
-          <TabsTrigger value="30d">Last 30 Days</TabsTrigger>
-        </TabsList>
-      </Tabs>
+      <ScopeSwitch
+        options={[
+          { key: '7d', label: 'Last 7 Days' },
+          { key: '30d', label: 'Last 30 Days' },
+        ]}
+        value={period}
+        onChange={(k) => setPeriod(k as '7d' | '30d')}
+      />
 
       {isLoading ? (
-        <div className="space-y-4">
+        <div className="mt-7 space-y-4">
           <Skeleton className="h-32" />
           <Skeleton className="h-48" />
           <Skeleton className="h-48" />
         </div>
       ) : (
         <>
-          {/* Summary Cards */}
-          <div className="grid grid-cols-3 gap-3">
+          {/* Summary stat tiles */}
+          <div className="mt-7 grid grid-cols-3 gap-3">
             <SummaryCard
               icon={Milk}
               iconColor="text-sky"
@@ -161,79 +159,58 @@ export default function SummaryClient() {
           </div>
 
           {/* Feeding Chart */}
-          <Card className="bg-[--surface] border-[--border] shadow-card">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-display flex items-center gap-2 text-[--cream]">
-                <Milk className="h-5 w-5 text-sky" />
-                Feedings
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-end gap-1 h-32">
-                {dailyStats.map((day, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                    <div
-                      className="w-full bg-sky-dim rounded-t transition-all border-t-2 border-sky/50"
-                      style={{ height: `${(day.feedings / maxFeedings) * 100}%` }}
-                    />
-                    <span className="text-[10px] font-ui text-[--dim]">
-                      {format(day.date, period === '7d' ? 'EEE' : 'd')}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">Feedings</div>
+          <Panel className="p-[22px]">
+            <div className="flex h-32 items-end gap-1">
+              {dailyStats.map((day, i) => (
+                <div key={i} className="flex flex-1 flex-col items-center gap-1">
+                  <div
+                    className="w-full rounded-t border-t-2 border-sky/50 bg-sky-dim transition-all"
+                    style={{ height: `${(day.feedings / maxFeedings) * 100}%` }}
+                  />
+                  <span className="text-[10px] font-semibold text-faint">
+                    {format(day.date, period === '7d' ? 'EEE' : 'd')}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Panel>
 
           {/* Diaper Chart */}
-          <Card className="bg-[--surface] border-[--border] shadow-card">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-display flex items-center gap-2 text-[--cream]">
-                <Baby className="h-5 w-5 text-gold" />
-                Diapers
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-end gap-1 h-32">
-                {dailyStats.map((day, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                    <div
-                      className="w-full bg-gold-dim rounded-t transition-all border-t-2 border-gold/50"
-                      style={{ height: `${(day.diapers / maxDiapers) * 100}%` }}
-                    />
-                    <span className="text-[10px] font-ui text-[--dim]">
-                      {format(day.date, period === '7d' ? 'EEE' : 'd')}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">Diapers</div>
+          <Panel className="p-[22px]">
+            <div className="flex h-32 items-end gap-1">
+              {dailyStats.map((day, i) => (
+                <div key={i} className="flex flex-1 flex-col items-center gap-1">
+                  <div
+                    className="w-full rounded-t border-t-2 border-gold/50 bg-gold-dim transition-all"
+                    style={{ height: `${(day.diapers / maxDiapers) * 100}%` }}
+                  />
+                  <span className="text-[10px] font-semibold text-faint">
+                    {format(day.date, period === '7d' ? 'EEE' : 'd')}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Panel>
 
           {/* Sleep Chart */}
-          <Card className="bg-[--surface] border-[--border] shadow-card">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-display flex items-center gap-2 text-[--cream]">
-                <Moon className="h-5 w-5 text-rose" />
-                Sleep (hours)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-end gap-1 h-32">
-                {dailyStats.map((day, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                    <div
-                      className="w-full bg-rose-dim rounded-t transition-all border-t-2 border-rose/50"
-                      style={{ height: `${(day.sleepMinutes / maxSleep) * 100}%` }}
-                    />
-                    <span className="text-[10px] font-ui text-[--dim]">
-                      {format(day.date, period === '7d' ? 'EEE' : 'd')}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">Sleep (hours)</div>
+          <Panel className="p-[22px]">
+            <div className="flex h-32 items-end gap-1">
+              {dailyStats.map((day, i) => (
+                <div key={i} className="flex flex-1 flex-col items-center gap-1">
+                  <div
+                    className="w-full rounded-t border-t-2 border-rose/50 bg-rose-dim transition-all"
+                    style={{ height: `${(day.sleepMinutes / maxSleep) * 100}%` }}
+                  />
+                  <span className="text-[10px] font-semibold text-faint">
+                    {format(day.date, period === '7d' ? 'EEE' : 'd')}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Panel>
         </>
       )}
     </div>
@@ -258,26 +235,22 @@ function SummaryCard({
   trend: number
 }) {
   const TrendIcon = trend > 0.1 ? TrendingUp : trend < -0.1 ? TrendingDown : Minus
-  const trendColor = trend > 0.1 ? 'text-sage' : trend < -0.1 ? 'text-coral' : 'text-[--dim]'
+  const trendColor = trend > 0.1 ? 'text-[--sage]' : trend < -0.1 ? 'text-danger' : 'text-faint'
 
   return (
-    <Card className="bg-[--surface] border-[--border] shadow-card">
-      <CardContent className="pt-4 pb-3 px-3 text-center">
-        <div className={cn("w-10 h-10 rounded-lg mx-auto flex items-center justify-center mb-2", bgColor)}>
-          <Icon className={cn("h-5 w-5", iconColor)} />
-        </div>
-        <p className="text-xs font-ui text-[--muted] mb-1">{label}</p>
-        <p className="text-xl font-bold font-display text-[--cream]">
-          {value}
-          <span className="text-sm font-normal font-body text-[--muted]">{unit}</span>
-        </p>
-        <div className={cn("flex items-center justify-center gap-1 mt-1", trendColor)}>
-          <TrendIcon className="h-3 w-3" />
-          <span className="text-xs font-ui">
-            {Math.abs(trend).toFixed(1)}
-          </span>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="rounded-[18px] border border-line bg-card p-5 text-center">
+      <div className={cn('mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-lg', bgColor)}>
+        <Icon className={cn('h-5 w-5', iconColor)} />
+      </div>
+      <p className="mb-1 text-[12px] font-semibold text-mute">{label}</p>
+      <p className="text-[24px] font-extrabold text-ink">
+        {value}
+        <span className="text-[13px] font-medium text-mute">{unit}</span>
+      </p>
+      <div className={cn('mt-1 flex items-center justify-center gap-1', trendColor)}>
+        <TrendIcon className="h-3 w-3" />
+        <span className="text-[12px] font-semibold">{Math.abs(trend).toFixed(1)}</span>
+      </div>
+    </div>
   )
 }

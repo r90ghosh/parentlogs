@@ -9,14 +9,7 @@ import { trackActivity } from '@/lib/track-activity'
 import { AddBabyDialog } from '@/components/settings/add-baby-dialog'
 import { isPregnancyStage } from '@tdc/shared/utils'
 import type { Baby as BabyType } from '@tdc/shared/types'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Panel, Badge } from '@/components/digest'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -45,6 +38,7 @@ import {
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/use-toast'
+import { usePageHeader } from '@/components/layouts/topbar-context'
 import { format } from 'date-fns'
 import { useQueryClient } from '@tanstack/react-query'
 
@@ -66,6 +60,8 @@ export default function FamilyClient() {
   const [isLeaving, setIsLeaving] = useState(false)
   const [copied, setCopied] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  usePageHeader({ title: 'Family', subtitle: 'Due date, baby name, partner' }, [])
 
   const isLoading = familyLoading || membersLoading
   const isOwner = family && members?.some(m => m.id === profile?.id && m.is_owner)
@@ -147,297 +143,273 @@ export default function FamilyClient() {
 
   if (isLoading) {
     return (
-      <div className="p-4 space-y-6 max-w-2xl">
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-10 w-10" />
-          <Skeleton className="h-8 w-32" />
-        </div>
-        <Skeleton className="h-48 w-full" />
-        <Skeleton className="h-48 w-full" />
+      <div className="mx-auto max-w-2xl">
+        <div className="h-5 w-20 animate-pulse rounded bg-card2" />
+        <div className="mt-6 h-48 w-full animate-pulse rounded-[18px] bg-card2" />
+        <div className="mt-6 h-48 w-full animate-pulse rounded-[18px] bg-card2" />
       </div>
     )
   }
 
   if (!family) {
     return (
-      <div className="p-4 space-y-6 max-w-2xl">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/settings">
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-          </Button>
-          <h1 className="font-display text-xl font-bold text-[--white]">Family</h1>
-        </div>
+      <div className="mx-auto max-w-2xl">
+        <Link href="/settings" className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-clay-ink hover:opacity-80">
+          <ArrowLeft className="h-4 w-4" /> Settings
+        </Link>
 
-        <Card className="bg-[--surface] border-[--border]">
-          <CardContent className="pt-6 text-center">
-            <Users className="h-12 w-12 text-[--dim] mx-auto mb-4" />
-            <p className="font-body text-[--muted] mb-4">You&apos;re not part of a family yet</p>
-            <Button asChild>
-              <Link href="/onboarding">Set Up Family</Link>
-            </Button>
-          </CardContent>
-        </Card>
+        <Panel className="p-12 text-center">
+          <Users className="mx-auto mb-4 h-12 w-12 text-faint" />
+          <p className="mb-4 text-[15px] text-mute">You&apos;re not part of a family yet</p>
+          <Link
+            href="/onboarding"
+            className="inline-flex items-center justify-center rounded-xl bg-clay px-4 py-2.5 text-[14px] font-bold text-white hover:opacity-90"
+          >
+            Set Up Family
+          </Link>
+        </Panel>
       </div>
     )
   }
 
   return (
-    <div className="p-4 space-y-6 max-w-2xl">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/settings">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-        <h1 className="font-display text-xl font-bold text-[--white]">Family</h1>
-      </div>
+    <div className="mx-auto max-w-2xl">
+      <Link href="/settings" className="mb-5 inline-flex items-center gap-1.5 text-sm font-bold text-clay-ink hover:opacity-80">
+        <ArrowLeft className="h-4 w-4" /> Settings
+      </Link>
 
       {error && (
-        <Alert variant="destructive">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
+        <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-danger/30 bg-danger/10 px-4 py-3 text-[13.5px] text-danger">
+          <AlertTriangle className="mt-0.5 h-4 w-4 flex-none" />
+          <span>{error}</span>
+        </div>
       )}
 
       {/* Family Members */}
-      <Card className="bg-[--surface] border-[--border]">
-        <CardHeader>
-          <CardTitle className="font-display text-lg flex items-center gap-2">
-            <Users className="h-5 w-5" />
-            Family Members
-          </CardTitle>
-          <CardDescription className="font-body">
-            {members?.length === 1
-              ? 'You are the only member'
-              : `${members?.length} members in your family`}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <div className="mb-3 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">
+        <Users className="h-3.5 w-3.5" />
+        Family Members
+      </div>
+      <Panel className="p-[18px]">
+        <p className="mb-4 text-[13px] text-mute">
+          {members?.length === 1
+            ? 'You are the only member'
+            : `${members?.length} members in your family`}
+        </p>
+        <div className="space-y-3">
           {members?.map((member) => (
-            <div key={member.id} className="flex items-center gap-3 p-3 bg-[--card]/50 rounded-lg">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={member.avatar_url} alt={member.full_name} />
-                <AvatarFallback className="font-display">
-                  {member.full_name?.charAt(0).toUpperCase() || 'U'}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
+            <div key={member.id} className="flex items-center gap-3 rounded-xl bg-card2 p-3">
+              <span className="grid h-10 w-10 flex-none place-items-center overflow-hidden rounded-full bg-clay-soft text-sm font-extrabold text-clay-ink">
+                {member.avatar_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={member.avatar_url} alt={member.full_name} className="h-full w-full object-cover" />
+                ) : (
+                  member.full_name?.charAt(0).toUpperCase() || 'U'
+                )}
+              </span>
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <p className="font-body font-medium text-[--white] truncate">{member.full_name}</p>
+                  <p className="truncate text-[15px] font-semibold text-ink">{member.full_name}</p>
                   {member.is_owner && (
-                    <Badge variant="outline" className="text-xs border-gold/30 text-gold">
-                      <Crown className="h-3 w-3 mr-1" />
+                    <Badge tone="gold">
+                      <Crown className="mr-1 h-3 w-3" />
                       Owner
                     </Badge>
                   )}
                 </div>
-                <p className="font-body text-sm text-[--muted] capitalize">{member.role}</p>
+                <p className="text-[13px] capitalize text-mute">{member.role}</p>
               </div>
             </div>
           ))}
+        </div>
 
-          {/* Invite Partner */}
-          <div className="pt-4 border-t border-[--border] space-y-3">
-            <Label className="font-ui font-semibold text-[11px] uppercase tracking-[0.12em] text-[--muted]">
-              Invite Partner
-            </Label>
-
-            {/* Invite code display */}
-            <div className="flex items-center gap-2">
-              <div className="flex-1 bg-[--card] border border-[--border] rounded-lg px-4 py-3 text-center">
-                <span className="font-mono text-lg tracking-[0.2em] text-copper font-semibold">
-                  {family.invite_code}
-                </span>
-              </div>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={handleCopyInviteCode}
-                className="border-[--border-hover] hover:bg-[--card-hover] shrink-0"
-              >
-                {copied ? <Check className="h-4 w-4 text-sage" /> : <Copy className="h-4 w-4" />}
-              </Button>
-            </div>
-
-            {/* Share invite link */}
-            <Button
-              variant="outline"
-              className="w-full border-copper/30 text-copper hover:bg-copper/10 font-ui"
-              onClick={async () => {
-                if (!family?.invite_code) return
-                try {
-                  const inviteLink = `${window.location.origin}/signup?invite=${family.invite_code}`
-                  await navigator.clipboard.writeText(inviteLink)
-                  toast({ title: 'Invite link copied!', description: 'Share this link with your partner to join your family.' })
-                } catch {
-                  toast({ title: 'Failed to copy link', variant: 'destructive' })
-                }
-              }}
-            >
-              <Copy className="mr-2 h-4 w-4" />
-              Copy Invite Link
-            </Button>
-
-            {/* Regenerate */}
-            {isOwner && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleRegenerateCode}
-                disabled={isRegenerating}
-                className="text-[--muted] hover:text-[--cream] font-ui text-xs"
-              >
-                {isRegenerating ? (
-                  <Loader2 className="mr-2 h-3 w-3 animate-spin" />
-                ) : (
-                  <RefreshCw className="mr-2 h-3 w-3" />
-                )}
-                Regenerate Code
-              </Button>
-            )}
-
-            <p className="font-body text-xs text-[--dim]">
-              Your partner can use this code or link to join your family after signing up.
-            </p>
+        {/* Invite Partner */}
+        <div className="mt-4 space-y-3 border-t border-line2 pt-4">
+          <div className="text-[11px] font-bold uppercase tracking-[1.5px] text-faint">
+            Invite Partner
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Baby Details */}
-      <Card className="bg-[--surface] border-[--border]">
-        <CardHeader>
-          <CardTitle className="font-display text-lg flex items-center gap-2">
-            <Baby className="h-5 w-5" />
-            {babies && babies.length > 1 ? 'Babies' : 'Baby Details'}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {babies?.map((baby: BabyType, index: number) => (
-            <div key={baby.id} className="p-3 bg-[--card]/50 rounded-lg space-y-3">
-              <div className="flex items-center justify-between">
-                <p className="font-body text-[--white] font-medium">
-                  {baby.baby_name || `Baby ${index + 1}`}
-                </p>
-                <Badge variant="outline" className="text-xs border-copper/30 text-copper">
-                  {isPregnancyStage(baby.stage)
-                    ? `Week ${baby.current_week}`
-                    : baby.current_week <= 12
-                      ? `Week ${baby.current_week}`
-                      : `${Math.floor(baby.current_week / 4)} months`
-                  }
-                </Badge>
-              </div>
-              <p className="font-ui text-sm text-[--muted] capitalize">
-                {isPregnancyStage(baby.stage) ? 'Expecting' : 'Post-Birth'}
-                {baby.due_date && isPregnancyStage(baby.stage) && ` · Due ${format(new Date(baby.due_date), 'MMM d, yyyy')}`}
-                {baby.birth_date && ` · Born ${format(new Date(baby.birth_date), 'MMM d, yyyy')}`}
-              </p>
+          {/* Invite code display */}
+          <div className="flex items-center gap-2">
+            <div className="flex-1 rounded-xl border border-line bg-card2 px-4 py-3 text-center">
+              <span className="font-mono text-lg font-semibold tracking-[0.2em] text-clay-ink">
+                {family.invite_code}
+              </span>
             </div>
-          ))}
+            <button
+              onClick={handleCopyInviteCode}
+              className="grid h-[46px] w-[46px] flex-none place-items-center rounded-xl border border-line bg-card text-ink2 hover:bg-card-hover"
+            >
+              {copied ? <Check className="h-4 w-4 text-[--sage]" /> : <Copy className="h-4 w-4" />}
+            </button>
+          </div>
 
-          {/* Legacy single-baby edit form (only if no babies loaded yet or fallback) */}
-          {(!babies || babies.length === 0) && (
-            <>
-              <div className="space-y-2">
-                <Label htmlFor="babyName" className="font-ui font-medium">Baby&apos;s Name (optional)</Label>
-                <Input
-                  id="babyName"
-                  value={babyName}
-                  onChange={(e) => setBabyName(e.target.value)}
-                  placeholder="Enter baby's name"
-                  className="bg-[--card] border-[--border]"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="dueDate" className="font-ui font-medium flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  Due Date
-                </Label>
-                <Input
-                  id="dueDate"
-                  type="date"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                  className="bg-[--card] border-[--border]"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="birthDate" className="font-ui font-medium flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  Birth Date (if born)
-                </Label>
-                <Input
-                  id="birthDate"
-                  type="date"
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
-                  className="bg-[--card] border-[--border]"
-                />
-                <p className="font-body text-xs text-[--dim]">
-                  Setting a birth date will switch your family to post-birth mode
-                </p>
-              </div>
-              <Button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="w-full bg-copper hover:bg-copper/80 font-ui font-semibold"
-              >
-                {isSaving ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="mr-2 h-4 w-4" />
-                    Save Changes
-                  </>
-                )}
-              </Button>
-            </>
+          {/* Share invite link */}
+          <button
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-line bg-card px-4 py-2.5 text-[14px] font-bold text-clay-ink hover:bg-card-hover"
+            onClick={async () => {
+              if (!family?.invite_code) return
+              try {
+                const inviteLink = `${window.location.origin}/signup?invite=${family.invite_code}`
+                await navigator.clipboard.writeText(inviteLink)
+                toast({ title: 'Invite link copied!', description: 'Share this link with your partner to join your family.' })
+              } catch {
+                toast({ title: 'Failed to copy link', variant: 'destructive' })
+              }
+            }}
+          >
+            <Copy className="h-4 w-4" />
+            Copy Invite Link
+          </button>
+
+          {/* Regenerate */}
+          {isOwner && (
+            <button
+              onClick={handleRegenerateCode}
+              disabled={isRegenerating}
+              className="inline-flex items-center gap-2 text-[13px] font-bold text-mute hover:text-ink disabled:opacity-50"
+            >
+              {isRegenerating ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <RefreshCw className="h-3 w-3" />
+              )}
+              Regenerate Code
+            </button>
           )}
 
-          <AddBabyDialog />
-        </CardContent>
-      </Card>
+          <p className="text-[12px] text-faint">
+            Your partner can use this code or link to join your family after signing up.
+          </p>
+        </div>
+      </Panel>
+
+      {/* Baby Details */}
+      <div className="mb-3 mt-7 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">
+        <Baby className="h-3.5 w-3.5" />
+        {babies && babies.length > 1 ? 'Babies' : 'Baby Details'}
+      </div>
+      <Panel className="space-y-4 p-[18px]">
+        {babies?.map((baby: BabyType, index: number) => (
+          <div key={baby.id} className="space-y-3 rounded-xl bg-card2 p-3">
+            <div className="flex items-center justify-between">
+              <p className="text-[15px] font-semibold text-ink">
+                {baby.baby_name || `Baby ${index + 1}`}
+              </p>
+              <Badge tone="clay">
+                {isPregnancyStage(baby.stage)
+                  ? `Week ${baby.current_week}`
+                  : baby.current_week <= 12
+                    ? `Week ${baby.current_week}`
+                    : `${Math.floor(baby.current_week / 4)} months`
+                }
+              </Badge>
+            </div>
+            <p className="text-[13px] capitalize text-mute">
+              {isPregnancyStage(baby.stage) ? 'Expecting' : 'Post-Birth'}
+              {baby.due_date && isPregnancyStage(baby.stage) && ` · Due ${format(new Date(baby.due_date), 'MMM d, yyyy')}`}
+              {baby.birth_date && ` · Born ${format(new Date(baby.birth_date), 'MMM d, yyyy')}`}
+            </p>
+          </div>
+        ))}
+
+        {/* Legacy single-baby edit form (only if no babies loaded yet or fallback) */}
+        {(!babies || babies.length === 0) && (
+          <>
+            <div className="space-y-1.5">
+              <label htmlFor="babyName" className="text-[13px] font-bold text-ink2">Baby&apos;s Name (optional)</label>
+              <input
+                id="babyName"
+                value={babyName}
+                onChange={(e) => setBabyName(e.target.value)}
+                placeholder="Enter baby's name"
+                className="w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-[15px] text-ink outline-none focus:border-clay"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="dueDate" className="flex items-center gap-2 text-[13px] font-bold text-ink2">
+                <Calendar className="h-4 w-4" />
+                Due Date
+              </label>
+              <input
+                id="dueDate"
+                type="date"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className="w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-[15px] text-ink outline-none focus:border-clay"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="birthDate" className="flex items-center gap-2 text-[13px] font-bold text-ink2">
+                <Calendar className="h-4 w-4" />
+                Birth Date (if born)
+              </label>
+              <input
+                id="birthDate"
+                type="date"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+                className="w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-[15px] text-ink outline-none focus:border-clay"
+              />
+              <p className="text-[12px] text-faint">
+                Setting a birth date will switch your family to post-birth mode
+              </p>
+            </div>
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-clay px-4 py-2.5 text-[14px] font-bold text-white hover:opacity-90 disabled:opacity-50"
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  Save Changes
+                </>
+              )}
+            </button>
+          </>
+        )}
+
+        <AddBabyDialog />
+      </Panel>
 
       {/* Leave Family */}
       {!isOwner && (
-        <Card className="bg-[--surface] border-gold/30">
-          <CardHeader>
-            <CardTitle className="font-display text-lg text-gold">Leave Family</CardTitle>
-            <CardDescription className="font-body">
+        <>
+          <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-[--gold]">Leave Family</div>
+          <Panel className="p-[18px]">
+            <p className="mb-4 text-[13px] text-mute">
               Remove yourself from this family
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+            </p>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="outline" className="w-full border-gold/50 text-gold hover:bg-gold/10 font-ui font-semibold">
-                  <UserMinus className="mr-2 h-4 w-4" />
+                <button className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[--gold]/40 bg-card px-4 py-2.5 text-[14px] font-bold text-[--gold] hover:bg-card-hover">
+                  <UserMinus className="h-4 w-4" />
                   Leave Family
-                </Button>
+                </button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="bg-[--surface] border-[--border]">
+              <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="font-display text-[--white]">Leave Family?</AlertDialogTitle>
-                  <AlertDialogDescription className="font-body">
+                  <AlertDialogTitle>Leave Family?</AlertDialogTitle>
+                  <AlertDialogDescription>
                     You will be removed from this family. Your personal data will be preserved,
                     but you&apos;ll lose access to shared family data like tasks and tracker logs.
                     You can join another family or create a new one.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel className="bg-[--card] border-[--border] font-ui">
+                  <AlertDialogCancel>
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleLeaveFamily}
                     disabled={isLeaving}
-                    className="bg-gold hover:bg-gold/80 text-[--bg] font-ui font-semibold"
+                    className="bg-[--gold] text-[--bg] hover:opacity-90"
                   >
                     {isLeaving ? (
                       <>
@@ -451,18 +423,18 @@ export default function FamilyClient() {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-          </CardContent>
-        </Card>
+          </Panel>
+        </>
       )}
 
       {isOwner && members && members.length > 1 && (
-        <Alert className="bg-[--card] border-[--border]">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription className="font-body text-[--cream]">
+        <div className="mt-7 flex items-start gap-2.5 rounded-xl border border-line bg-card px-4 py-3 text-[13.5px] text-ink2">
+          <AlertTriangle className="mt-0.5 h-4 w-4 flex-none text-mute" />
+          <span>
             As the family owner, you cannot leave while other members are present.
             Transfer ownership or have all members leave first.
-          </AlertDescription>
-        </Alert>
+          </span>
+        </div>
       )}
     </div>
   )

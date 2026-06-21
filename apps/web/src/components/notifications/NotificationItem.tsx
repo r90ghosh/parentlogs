@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation'
 import { formatDistanceToNow } from 'date-fns'
 import { Bell, CheckSquare, AlertTriangle, BookOpen, Users, Info, Star, Rocket, PartyPopper, Heart, MailOpen, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Reveal } from '@/components/ui/animations/Reveal'
 import { Notification, NotificationType } from '@tdc/shared/types'
 import { useMarkNotificationRead, useDeleteNotification } from '@/hooks/use-notifications'
 
@@ -51,58 +50,54 @@ export function NotificationItem({
   }
 
   return (
-    <Reveal variant="card" delay={index * 80}>
-      <button
-        onClick={handleClick}
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          handleClick()
+        }
+      }}
+      className={cn(
+        'group flex w-full cursor-pointer items-start gap-3 border-b border-line2 px-[18px] py-[15px] text-left transition-colors last:border-b-0 hover:bg-card-hover',
+        !notification.is_read && 'bg-clay-soft/40'
+      )}
+    >
+      {/* Icon */}
+      <div
         className={cn(
-          'group w-full flex items-start gap-3 px-4 py-3 rounded-lg text-left transition-colors',
-          notification.is_read
-            ? 'bg-[--surface] hover:bg-[--card]'
-            : 'bg-[--card] border-l-2 border-l-copper hover:bg-[--card-hover]'
+          'mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full',
+          notification.is_read ? 'bg-card2' : 'bg-clay-soft'
         )}
       >
-        {/* Icon */}
-        <div className={cn(
-          'mt-0.5 flex-shrink-0 h-9 w-9 rounded-full flex items-center justify-center',
-          notification.is_read ? 'bg-[--card]' : 'bg-copper-dim'
-        )}>
-          <Icon className={cn(
-            'h-4 w-4',
-            notification.is_read ? 'text-[--muted]' : 'text-copper'
-          )} />
-        </div>
+        <Icon className={cn('h-4 w-4', notification.is_read ? 'text-mute' : 'text-clay-ink')} />
+      </div>
 
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          <p className={cn(
-            'font-body text-sm leading-snug',
-            notification.is_read ? 'text-[--cream]' : 'font-medium text-[--white]'
-          )}>
-            {notification.title}
-          </p>
-          <p className="font-body text-xs text-[--muted] mt-0.5 line-clamp-2">
-            {notification.body}
-          </p>
-          <p className="font-ui text-[10px] text-[--dim] mt-1">
-            {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
-          </p>
-        </div>
+      {/* Content */}
+      <div className="min-w-0 flex-1">
+        <p className={cn('text-[14px] leading-snug', notification.is_read ? 'font-semibold text-ink2' : 'font-bold text-ink')}>
+          {notification.title}
+        </p>
+        <p className="mt-0.5 line-clamp-2 text-[12.5px] text-mute">{notification.body}</p>
+        <p className="mt-1 text-[10px] font-semibold text-faint">
+          {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
+        </p>
+      </div>
 
-        {/* Delete button (hover) / Unread dot */}
-        <div className="mt-2 flex-shrink-0 flex items-center">
-          <button
-            type="button"
-            aria-label="Delete notification"
-            onClick={handleDelete}
-            className="sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 transition-opacity text-[--dim] hover:text-coral p-1 -m-1"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </button>
-          {!notification.is_read && (
-            <div className="ml-1 h-2 w-2 rounded-full bg-copper group-hover:hidden" />
-          )}
-        </div>
-      </button>
-    </Reveal>
+      {/* Delete button (hover) / Unread dot */}
+      <div className="mt-2 flex flex-shrink-0 items-center">
+        <button
+          type="button"
+          aria-label="Delete notification"
+          onClick={handleDelete}
+          className="-m-1 p-1 text-faint transition-opacity hover:text-danger focus:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+        </button>
+        {!notification.is_read && <div className="ml-1 h-2 w-2 rounded-full bg-clay group-hover:hidden" />}
+      </div>
+    </div>
   )
 }
