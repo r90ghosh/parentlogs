@@ -78,7 +78,7 @@ export function BabySwitcher() {
                 <Baby size={16} color={isActive ? colors.copper : colors.textMuted} />
               </View>
               <View style={styles.rowTextContainer}>
-                <Text style={[styles.rowName, { color: colors.textSecondary }, isActive && { color: colors.copper, fontFamily: 'Karla-SemiBold' }]}>
+                <Text style={[styles.rowName, { color: colors.textSecondary }, isActive && { color: colors.copper, fontFamily: 'Jakarta-SemiBold' }]}>
                   {baby.baby_name || `Baby ${baby.sort_order + 1}`}
                 </Text>
                 <Text style={[styles.rowMeta, { color: colors.textMuted }]}>
@@ -108,16 +108,16 @@ export function BabySwitcher() {
   }
 
   const containerStyle = {
-    backgroundColor: colors.copperDim,
-    borderColor: colors.copperGlow,
+    backgroundColor: colors.card,
+    borderColor: colors.line,
   }
 
   // Single baby — compact display
   if (!isMultiBaby) {
     return (
       <View style={[styles.singleContainer, containerStyle]}>
-        <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>
-          <Baby size={14} color={colors.copper} />
+        <View style={[styles.iconCircle, { backgroundColor: colors.accentSoft }]}>
+          <Baby size={14} color={colors.accent} />
         </View>
         <View style={styles.textContainer}>
           <Text style={[styles.babyName, { color: colors.textPrimary }]} numberOfLines={1}>
@@ -142,11 +142,11 @@ export function BabySwitcher() {
         style={({ pressed }) => [
           styles.multiContainer,
           containerStyle,
-          pressed && { backgroundColor: colors.copperGlow },
+          pressed && { backgroundColor: colors.cardHover },
         ]}
       >
-        <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>
-          <Baby size={14} color={colors.copper} />
+        <View style={[styles.iconCircle, { backgroundColor: colors.accentSoft }]}>
+          <Baby size={14} color={colors.accent} />
         </View>
         <View style={styles.textContainer}>
           <Text style={[styles.babyName, { color: colors.textPrimary }]} numberOfLines={1}>
@@ -222,11 +222,11 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   babyName: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 13,
   },
   babyMeta: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 10,
     marginTop: 1,
   },
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   sheetTitle: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 13,
     textTransform: 'uppercase',
     letterSpacing: 1.2,
@@ -288,11 +288,11 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   rowName: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 15,
   },
   rowMeta: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
     marginTop: 2,
   },
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   addBabyText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 15,
   },
 })
