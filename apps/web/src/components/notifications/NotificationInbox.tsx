@@ -22,6 +22,7 @@ import {
   useMarkAllNotificationsRead,
   useDeleteReadNotifications,
 } from '@/hooks/use-notifications'
+import { usePageHeader } from '@/components/layouts/topbar-context'
 import { NotificationItem } from './NotificationItem'
 import { Notification } from '@tdc/shared/types'
 
@@ -51,9 +52,9 @@ function groupNotifications(notifications: Notification[]) {
 
 function SectionLabel({ label }: { label: string }) {
   return (
-    <p className="font-ui font-semibold text-[10px] uppercase tracking-[0.12em] text-[--muted] px-1 pt-4 pb-2">
+    <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint first:mt-0">
       {label}
-    </p>
+    </div>
   )
 }
 
@@ -84,6 +85,62 @@ export function NotificationInbox() {
   const hasUnread = notifications.some((n) => !n.is_read)
   const hasRead = notifications.some((n) => n.is_read)
 
+  usePageHeader(
+    {
+      title: 'Notifications',
+      actions: (
+        <div className="flex items-center gap-2">
+          {hasUnread && (
+            <button
+              onClick={() => markAllAsRead.mutate()}
+              disabled={markAllAsRead.isPending}
+              className="rounded-xl border border-line bg-card px-3.5 py-2 text-[13px] font-bold text-ink2 transition-colors hover:bg-card-hover disabled:opacity-50"
+            >
+              Mark all read
+            </button>
+          )}
+          {hasRead && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button
+                  disabled={deleteRead.isPending}
+                  className="rounded-xl border border-line bg-card px-3.5 py-2 text-[13px] font-bold text-mute transition-colors hover:text-danger disabled:opacity-50"
+                >
+                  Clear read
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Clear Read Notifications</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Delete all read notifications? This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => deleteRead.mutate()}
+                    className="bg-clay text-white hover:opacity-90"
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+          <Link
+            href="/settings/notifications"
+            className="grid h-9 w-9 place-items-center rounded-full text-mute transition-colors hover:bg-card-hover hover:text-ink"
+            aria-label="Notification settings"
+          >
+            <Settings className="h-4 w-4" />
+          </Link>
+        </div>
+      ),
+    },
+    [hasUnread, hasRead, markAllAsRead.isPending, deleteRead.isPending]
+  )
+
   // Infinite scroll sentinel
   const sentinelRef = useRef<HTMLDivElement>(null)
 
@@ -104,63 +161,10 @@ export function NotificationInbox() {
     return () => observer.disconnect()
   }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
-  // Header (always visible)
-  const header = (
-    <div className="flex items-center justify-between mb-4">
-      <h1 className="font-display text-2xl font-bold text-[--white]">Notifications</h1>
-      <div className="flex items-center gap-3">
-        {hasUnread && (
-          <button
-            onClick={() => markAllAsRead.mutate()}
-            disabled={markAllAsRead.isPending}
-            className="font-ui text-xs font-medium text-copper hover:text-copper/80 transition-colors disabled:opacity-50"
-          >
-            Mark all read
-          </button>
-        )}
-        {hasRead && (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <button
-                disabled={deleteRead.isPending}
-                className="font-ui text-xs font-medium text-[--dim] hover:text-coral transition-colors disabled:opacity-50"
-              >
-                Clear read
-              </button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="bg-[--surface] border-[--border]">
-              <AlertDialogHeader>
-                <AlertDialogTitle className="font-display text-[--cream]">Clear Read Notifications</AlertDialogTitle>
-                <AlertDialogDescription className="font-body text-[--muted]">
-                  Delete all read notifications? This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="border-[--border-hover] font-ui">Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => deleteRead.mutate()}
-                  className="bg-coral hover:bg-coral/90 text-[--bg] font-ui"
-                >
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
-        <Link
-          href="/settings/notifications"
-          className="text-[--muted] hover:text-[--cream] transition-colors"
-        >
-          <Settings className="h-4 w-4" />
-        </Link>
-      </div>
-    </div>
-  )
-
   // Filter pills
   const filterPills = (
     <div
-      className="flex items-center gap-1.5 overflow-x-auto -mx-4 px-4 mb-4"
+      className="mb-4 flex items-center gap-2 overflow-x-auto"
       style={{ scrollbarWidth: 'none' }}
     >
       {FILTER_OPTIONS.map((option, i) => (
@@ -168,10 +172,10 @@ export function NotificationInbox() {
           key={option.label}
           onClick={() => setActiveFilter(i)}
           className={cn(
-            'flex-shrink-0 px-2.5 py-1.5 rounded-lg font-ui text-xs font-medium transition-all whitespace-nowrap',
+            'flex-shrink-0 whitespace-nowrap rounded-full border px-[15px] py-2 text-[13px] font-bold transition-colors',
             activeFilter === i
-              ? 'bg-copper text-white'
-              : 'bg-[--surface] text-[--muted] hover:bg-[--card]'
+              ? 'border-clay bg-clay text-white'
+              : 'border-line bg-card text-ink2 hover:border-faint'
           )}
         >
           {option.label}
@@ -182,8 +186,7 @@ export function NotificationInbox() {
 
   if (isLoading) {
     return (
-      <div className="p-4 max-w-2xl mx-auto">
-        {header}
+      <div className="mx-auto max-w-2xl">
         {filterPills}
         <ListSkeleton count={5} />
       </div>
@@ -192,8 +195,7 @@ export function NotificationInbox() {
 
   if (!notifications.length) {
     return (
-      <div className="p-4 max-w-2xl mx-auto">
-        {header}
+      <div className="mx-auto max-w-2xl">
         {filterPills}
         <EmptyState
           icon={Bell}
@@ -212,8 +214,7 @@ export function NotificationInbox() {
   let runningIndex = 0
 
   return (
-    <div className="p-4 max-w-2xl mx-auto">
-      {header}
+    <div className="mx-auto max-w-2xl">
       {filterPills}
 
       {/* Grouped notifications */}
@@ -251,7 +252,7 @@ export function NotificationInbox() {
 
       {isFetchingNextPage && (
         <div className="flex justify-center py-4">
-          <Loader2 className="h-5 w-5 animate-spin text-copper" />
+          <Loader2 className="h-5 w-5 animate-spin text-clay-ink" />
         </div>
       )}
     </div>

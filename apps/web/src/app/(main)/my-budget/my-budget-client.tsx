@@ -4,12 +4,6 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useBudgetSummary, useRemoveBudgetItem, useMarkAsPurchased } from '@/hooks/use-budget'
 import { budgetService } from '@/lib/services'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Progress } from '@/components/ui/progress'
 import {
   Dialog,
   DialogContent,
@@ -18,25 +12,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { Panel, Badge } from '@/components/digest'
+import { usePageHeader } from '@/components/layouts/topbar-context'
 import {
   DollarSign,
   Check,
   Trash2,
-  ShoppingCart,
-  TrendingUp,
-  Wallet,
   AlertCircle,
-  RefreshCw,
   Download,
-  ArrowLeft,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import type { FamilyBudgetItem } from '@tdc/shared/types'
 import type { BudgetSummary } from '@tdc/services'
-import { Reveal } from '@/components/ui/animations/Reveal'
-import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
-import { getCategoryStyle } from '@/lib/budget-constants'
 
 export default function MyBudgetClient() {
   const { data: summary, isLoading } = useBudgetSummary() as { data: BudgetSummary | null | undefined, isLoading: boolean }
@@ -125,289 +113,211 @@ export default function MyBudgetClient() {
     toast.success('Budget exported to CSV')
   }
 
+  const totalItems = summary?.familyItems.length ?? 0
+
+  usePageHeader(
+    {
+      title: 'Budget',
+      subtitle: `${totalItems} ${totalItems === 1 ? 'item' : 'items'} tracked`,
+      actions: totalItems > 0 ? (
+        <button
+          onClick={handleExportCSV}
+          className="inline-flex items-center gap-2 rounded-xl border border-line bg-card px-4 py-2.5 text-[14px] font-bold text-ink2 transition-colors hover:bg-card-hover"
+        >
+          <Download className="h-4 w-4" /> Export CSV
+        </button>
+      ) : undefined,
+    },
+    [totalItems]
+  )
+
   if (isLoading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 md:px-8 py-6 space-y-6" role="status" aria-busy="true">
-        <div className="space-y-2">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-4 w-64" />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="mx-auto max-w-3xl" role="status" aria-busy="true">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
-            <Card key={i} className="bg-[--surface] border-[--border]">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <Skeleton className="h-11 w-11 rounded-lg" />
-                  <div className="space-y-2">
-                    <Skeleton className="h-3 w-24" />
-                    <Skeleton className="h-6 w-32" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <div key={i} className="h-24 animate-pulse rounded-[18px] bg-card2" />
           ))}
         </div>
-        <div className="space-y-2">
+        <div className="mt-4 h-16 animate-pulse rounded-[18px] bg-card2" />
+        <div className="mt-4 space-y-2">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Card key={i} className="bg-[--surface] border-[--border]">
-              <CardContent className="py-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Skeleton className="h-5 w-5 rounded" />
-                    <Skeleton className="h-5 w-36" />
-                  </div>
-                  <Skeleton className="h-5 w-20" />
-                </div>
-              </CardContent>
-            </Card>
+            <div key={i} className="h-16 animate-pulse rounded-[18px] bg-card2" />
           ))}
         </div>
       </div>
     )
   }
 
-  const totalItems = summary?.familyItems.length ?? 0
   const estimatedTotal = pendingItems.reduce((sum, i) => sum + (i.estimated_price || 0), 0)
   const purchasedTotal = purchasedItems.reduce((sum, i) => sum + (i.actual_price || i.estimated_price || 0), 0)
   const remainingTotal = estimatedTotal
 
   return (
-    <div className="max-w-4xl mx-auto px-4 md:px-8 py-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/budget">
-              <ArrowLeft className="h-5 w-5 text-[--cream]" />
-            </Link>
-          </Button>
-          <div>
-            <h1 className="text-2xl font-display font-bold text-[--cream]">My Budget</h1>
-            <p className="text-[--muted] mt-0.5 font-body">
-              {totalItems} {totalItems === 1 ? 'item' : 'items'} tracked
-            </p>
-          </div>
-        </div>
-        {totalItems > 0 && (
-          <Button variant="outline" size="sm" className="font-ui" onClick={handleExportCSV}>
-            <Download className="h-4 w-4 mr-2" />
-            Export CSV
-          </Button>
-        )}
-      </div>
-
+    <div className="mx-auto max-w-3xl">
       {/* Empty State */}
       {totalItems === 0 ? (
-        <Reveal variant="card" delay={0}>
-          <Card className="bg-[--surface] border-[--border]">
-            <CardContent className="py-16 text-center">
-              <DollarSign className="h-12 w-12 text-[--dim] mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-[--cream] mb-2 font-display">No items yet</h3>
-              <p className="text-[--muted] mb-6 font-body max-w-sm mx-auto">
-                Browse our curated list of baby essentials and add items to start tracking your budget.
-              </p>
-              <Button asChild className="font-ui">
-                <Link href="/budget">Browse Budget Items</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </Reveal>
+        <Panel className="p-12 text-center">
+          <DollarSign className="mx-auto mb-4 h-10 w-10 text-faint" />
+          <p className="text-[15px] font-semibold text-ink">No items yet</p>
+          <p className="mx-auto mt-1 max-w-sm text-[13px] text-mute">
+            Browse our curated list of baby essentials and add items to start tracking your budget.
+          </p>
+          <Link
+            href="/budget"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-clay px-4 py-2.5 text-[14px] font-bold text-white hover:opacity-90"
+          >
+            Browse Budget Items
+          </Link>
+        </Panel>
       ) : (
         <>
-          {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Reveal variant="card" delay={0}>
-              <Card3DTilt maxTilt={3} gloss>
-                <Card className="bg-[--surface] border-[--border] card-gold-top">
-                  <CardContent className="pt-6">
-                    <div className="flex items-center gap-3">
-                      <div className="p-3 rounded-lg bg-sky/20">
-                        <TrendingUp className="h-5 w-5 text-sky" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-[--muted] font-ui">Estimated Total</p>
-                        <p className="text-xl font-bold text-[--cream] tabular-nums">
-                          {budgetService.formatPrice(estimatedTotal + purchasedTotal)}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Card3DTilt>
-            </Reveal>
-
-            <Reveal variant="card" delay={120}>
-              <Card3DTilt maxTilt={3} gloss>
-                <Card className="bg-[--surface] border-[--border] card-gold-top">
-                  <CardContent className="pt-6">
-                    <div className="flex items-center gap-3">
-                      <div className="p-3 rounded-lg bg-sage/20">
-                        <ShoppingCart className="h-5 w-5 text-sage" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-[--muted] font-ui">Purchased</p>
-                        <p className="text-xl font-bold text-[--cream] tabular-nums">
-                          {budgetService.formatPrice(purchasedTotal)}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Card3DTilt>
-            </Reveal>
-
-            <Reveal variant="card" delay={240}>
-              <Card3DTilt maxTilt={3} gloss>
-                <Card className="bg-[--surface] border-[--border] card-gold-top">
-                  <CardContent className="pt-6">
-                    <div className="flex items-center gap-3">
-                      <div className="p-3 rounded-lg bg-gold/20">
-                        <Wallet className="h-5 w-5 text-gold" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-[--muted] font-ui">Remaining</p>
-                        <p className="text-xl font-bold text-[--cream] tabular-nums">
-                          {budgetService.formatPrice(remainingTotal)}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Card3DTilt>
-            </Reveal>
+          {/* Summary */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <Panel className="p-[18px]">
+              <p className="text-[11px] font-bold uppercase tracking-[1.2px] text-faint">Estimated Total</p>
+              <p className="mt-1.5 text-[20px] font-extrabold tabular-nums text-ink">
+                {budgetService.formatPrice(estimatedTotal + purchasedTotal)}
+              </p>
+            </Panel>
+            <Panel className="p-[18px]">
+              <p className="text-[11px] font-bold uppercase tracking-[1.2px] text-faint">Purchased</p>
+              <p className="mt-1.5 text-[20px] font-extrabold tabular-nums text-ink">
+                {budgetService.formatPrice(purchasedTotal)}
+              </p>
+            </Panel>
+            <Panel className="p-[18px]">
+              <p className="text-[11px] font-bold uppercase tracking-[1.2px] text-faint">Remaining</p>
+              <p className="mt-1.5 text-[20px] font-extrabold tabular-nums text-clay-ink">
+                {budgetService.formatPrice(remainingTotal)}
+              </p>
+            </Panel>
           </div>
 
           {/* Progress */}
-          <Reveal variant="card" delay={360}>
-            <Card className="bg-[--surface] border-[--border]">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-[--muted] font-body">Shopping Progress</span>
-                  <span className="text-sm font-medium text-[--cream] tabular-nums font-ui">
-                    {purchasedItems.length} of {totalItems} items
-                  </span>
-                </div>
-                <Progress
-                  value={(purchasedItems.length / totalItems) * 100}
-                  className="h-2 bg-[--dim]"
-                />
-              </CardContent>
-            </Card>
-          </Reveal>
+          <Panel className="mt-4 p-[18px]">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-[13.5px] font-semibold text-ink">Shopping Progress</span>
+              <span className="text-[13.5px] font-extrabold tabular-nums text-ink">
+                {purchasedItems.length} of {totalItems} items
+              </span>
+            </div>
+            <div className="h-1.5 overflow-hidden rounded-md bg-line">
+              <div
+                className="h-full rounded-md bg-clay"
+                style={{ width: `${totalItems > 0 ? (purchasedItems.length / totalItems) * 100 : 0}%` }}
+              />
+            </div>
+          </Panel>
 
           {/* Pending Items by Category */}
           {pendingByCategory.length > 0 && (
-            <div className="space-y-3">
-              <h2 className="text-sm font-medium text-[--muted] font-ui flex items-center gap-2">
-                <AlertCircle className="h-4 w-4" />
+            <>
+              <div className="mb-3 mt-7 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">
+                <AlertCircle className="h-3.5 w-3.5" />
                 To Buy ({pendingItems.length})
-              </h2>
-              {pendingByCategory.map(([category, items], catIdx) => {
-                const { Icon, colors } = getCategoryStyle(category)
-                return (
-                  <Reveal variant="card" key={category} delay={480 + catIdx * 80}>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 px-1">
-                        <div className={cn('p-1.5 rounded-md', colors.bg)}>
-                          <Icon className={cn('h-4 w-4', colors.text)} />
-                        </div>
-                        <span className="text-sm font-medium text-[--cream] font-body">{category}</span>
-                        <Badge variant="outline" className="text-xs font-ui">{items.length}</Badge>
-                      </div>
-                      {items.map(item => (
-                        <BudgetItemRow
-                          key={item.id}
-                          item={item}
-                          onMarkPurchased={() => setPurchaseDialogItem(item)}
-                          onRemove={() => handleRemoveItem(item.id)}
-                        />
-                      ))}
-                    </div>
-                  </Reveal>
-                )
-              })}
-            </div>
+              </div>
+              {pendingByCategory.map(([category, items]) => (
+                <div key={category} className="mb-5">
+                  <div className="mb-3 flex items-center gap-2">
+                    <span className="text-[12.5px] font-bold uppercase tracking-[0.8px] text-mute">{category}</span>
+                    <Badge tone="neutral">{items.length}</Badge>
+                  </div>
+                  <Panel>
+                    {items.map(item => (
+                      <BudgetItemRow
+                        key={item.id}
+                        item={item}
+                        onMarkPurchased={() => setPurchaseDialogItem(item)}
+                        onRemove={() => handleRemoveItem(item.id)}
+                      />
+                    ))}
+                  </Panel>
+                </div>
+              ))}
+            </>
           )}
 
           {/* Purchased Items by Category */}
           {purchasedByCategory.length > 0 && (
-            <div className="space-y-3">
-              <h2 className="text-sm font-medium text-[--muted] font-ui flex items-center gap-2">
-                <Check className="h-4 w-4" />
+            <>
+              <div className="mb-3 mt-7 flex items-center gap-2 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">
+                <Check className="h-3.5 w-3.5" />
                 Purchased ({purchasedItems.length})
-              </h2>
-              {purchasedByCategory.map(([category, items], catIdx) => {
-                const { Icon, colors } = getCategoryStyle(category)
-                return (
-                  <Reveal variant="card" key={category} delay={catIdx * 80}>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 px-1">
-                        <div className={cn('p-1.5 rounded-md', colors.bg)}>
-                          <Icon className={cn('h-4 w-4', colors.text)} />
-                        </div>
-                        <span className="text-sm font-medium text-[--cream]/70 font-body">{category}</span>
-                        <Badge variant="outline" className="text-xs font-ui">{items.length}</Badge>
-                      </div>
-                      {items.map(item => (
-                        <BudgetItemRow
-                          key={item.id}
-                          item={item}
-                          isPurchased
-                          onRemove={() => handleRemoveItem(item.id)}
-                        />
-                      ))}
-                    </div>
-                  </Reveal>
-                )
-              })}
-            </div>
+              </div>
+              {purchasedByCategory.map(([category, items]) => (
+                <div key={category} className="mb-5">
+                  <div className="mb-3 flex items-center gap-2">
+                    <span className="text-[12.5px] font-bold uppercase tracking-[0.8px] text-mute">{category}</span>
+                    <Badge tone="neutral">{items.length}</Badge>
+                  </div>
+                  <Panel>
+                    {items.map(item => (
+                      <BudgetItemRow
+                        key={item.id}
+                        item={item}
+                        isPurchased
+                        onRemove={() => handleRemoveItem(item.id)}
+                      />
+                    ))}
+                  </Panel>
+                </div>
+              ))}
+            </>
           )}
         </>
       )}
 
       {/* Mark as Purchased Dialog */}
       <Dialog open={!!purchaseDialogItem} onOpenChange={() => setPurchaseDialogItem(null)}>
-        <DialogContent className="bg-[--surface] border-[--border]">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="font-display text-[--cream]">Mark as Purchased</DialogTitle>
-            <DialogDescription className="font-body text-[--muted]">
+            <DialogTitle>Mark as Purchased</DialogTitle>
+            <DialogDescription>
               Enter the actual price you paid (optional)
             </DialogDescription>
           </DialogHeader>
           {purchaseDialogItem && (
             <div className="space-y-4">
-              <div className="p-4 bg-[--card] rounded-lg">
-                <h4 className="font-medium text-[--cream] font-body">{purchaseDialogItem.item}</h4>
-                <p className="text-sm text-[--muted] font-body">
+              <div className="rounded-xl bg-card2 p-4">
+                <h4 className="text-[15px] font-semibold text-ink">{purchaseDialogItem.item}</h4>
+                <p className="text-[13px] text-mute">
                   Estimated: {budgetService.formatPrice(purchaseDialogItem.estimated_price)}
                 </p>
               </div>
               <div>
-                <label className="text-sm text-[--muted] mb-2 block font-ui">
+                <label className="mb-2 block text-[13px] font-semibold text-ink">
                   Actual Price (optional)
                 </label>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[--dim]" />
-                  <Input
+                  <DollarSign className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-faint" />
+                  <input
                     type="number"
                     step="0.01"
                     placeholder="0.00"
                     value={actualPrice}
                     onChange={(e) => setActualPrice(e.target.value)}
-                    className="pl-9 bg-[--card] border-[--border-hover]"
+                    className="w-full rounded-xl border border-line bg-card py-2.5 pl-9 pr-3.5 text-[15px] text-ink outline-none focus:border-clay"
                   />
                 </div>
               </div>
             </div>
           )}
           <DialogFooter>
-            <Button variant="outline" className="font-ui" onClick={() => setPurchaseDialogItem(null)}>
+            <button
+              onClick={() => setPurchaseDialogItem(null)}
+              className="rounded-xl border border-line bg-card px-4 py-2.5 text-[14px] font-bold text-ink2 hover:bg-card-hover"
+            >
               Cancel
-            </Button>
-            <Button className="font-ui" onClick={handleMarkPurchased} disabled={markAsPurchased.isPending}>
-              <Check className="h-4 w-4 mr-2" />
+            </button>
+            <button
+              onClick={handleMarkPurchased}
+              disabled={markAsPurchased.isPending}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-clay px-4 py-2.5 text-[14px] font-bold text-white hover:opacity-90 disabled:opacity-50"
+            >
+              <Check className="h-4 w-4" />
               Mark Purchased
-            </Button>
+            </button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -427,49 +337,44 @@ function BudgetItemRow({
   onRemove: () => void
 }) {
   return (
-    <Card className={cn(
-      'bg-[--surface] border-[--border]',
-      isPurchased && 'opacity-70',
-    )}>
-      <CardContent className="py-3 px-4">
-        <div className="flex items-center gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <span className={cn(
-                'font-medium text-sm font-body',
-                isPurchased ? 'text-[--muted] line-through' : 'text-[--cream]',
-              )}>
-                {item.item}
-              </span>
-              {item.is_custom && (
-                <Badge variant="outline" className="text-xs font-ui">Custom</Badge>
-              )}
-              {item.is_recurring && (
-                <Badge variant="outline" className="text-xs border-sky/50 text-sky font-ui flex items-center gap-1">
-                  <RefreshCw className="h-3 w-3" /> Recurring
-                </Badge>
-              )}
-            </div>
-            <div className="flex items-center gap-2 text-xs text-[--muted] font-ui mt-0.5">
-              <span className="tabular-nums">
-                {isPurchased && item.actual_price
-                  ? `Paid: ${budgetService.formatPrice(item.actual_price)}`
-                  : `Est: ${budgetService.formatPrice(item.estimated_price)}`}
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 shrink-0">
-            {!isPurchased && onMarkPurchased && (
-              <Button size="icon" variant="ghost" onClick={onMarkPurchased}>
-                <Check className="h-4 w-4 text-sage" />
-              </Button>
-            )}
-            <Button size="icon" variant="ghost" onClick={onRemove}>
-              <Trash2 className="h-4 w-4 text-coral" />
-            </Button>
-          </div>
+    <div className="flex items-center gap-3.5 border-b border-line2 px-[18px] py-[15px] last:border-b-0">
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className={cn(
+            'text-[15.5px] font-semibold',
+            isPurchased ? 'text-mute line-through decoration-faint' : 'text-ink',
+          )}>
+            {item.item}
+          </span>
+          {item.is_custom && <Badge tone="neutral">Custom</Badge>}
+          {item.is_recurring && <Badge tone="sage">Recurring</Badge>}
         </div>
-      </CardContent>
-    </Card>
+        <div className="mt-[5px] text-[12.5px] font-medium tabular-nums text-mute">
+          {isPurchased && item.actual_price
+            ? `Paid: ${budgetService.formatPrice(item.actual_price)}`
+            : `Est: ${budgetService.formatPrice(item.estimated_price)}`}
+        </div>
+      </div>
+      <div className="flex flex-none items-center gap-1">
+        {!isPurchased && onMarkPurchased && (
+          <button
+            type="button"
+            onClick={onMarkPurchased}
+            aria-label="Mark purchased"
+            className="grid h-8 w-8 place-items-center rounded-full text-[--sage] transition-colors hover:bg-card-hover"
+          >
+            <Check className="h-4 w-4" />
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={onRemove}
+          aria-label="Remove"
+          className="grid h-8 w-8 place-items-center rounded-full text-faint transition-colors hover:bg-card-hover hover:text-danger"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
   )
 }
