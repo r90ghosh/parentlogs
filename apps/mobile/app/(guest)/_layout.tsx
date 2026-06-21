@@ -46,10 +46,10 @@ export default function GuestLayout() {
             paddingBottom: insets.bottom || 8,
             height: 56 + (insets.bottom || 8),
           },
-          tabBarActiveTintColor: colors.copper,
-          tabBarInactiveTintColor: colors.textDim,
+          tabBarActiveTintColor: colors.accent,
+          tabBarInactiveTintColor: colors.faint,
           tabBarLabelStyle: {
-            fontFamily: 'Karla-Medium',
+            fontFamily: 'Jakarta-Medium',
             fontSize: 11,
           },
         }}

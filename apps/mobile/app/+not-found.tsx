@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontFamily: 'PlayfairDisplay-Bold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 20,
   },
   link: {
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   linkText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 14,
   },
 })

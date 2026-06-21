@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   badgeText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 10,
     lineHeight: 12,
   },
