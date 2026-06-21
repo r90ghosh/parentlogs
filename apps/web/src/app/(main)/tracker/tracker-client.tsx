@@ -1,355 +1,294 @@
 'use client'
 
-import { type LucideIcon } from 'lucide-react'
-import { useUser } from '@/components/user-provider'
-import { useFamily } from '@/hooks/use-family'
-import { useShiftBriefing, useTrackerLogs } from '@/hooks/use-tracker'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
+import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import {
-  Baby,
-  Milk,
-  Moon,
-  Clock,
-  History,
-  BarChart3,
-  Lock,
-} from 'lucide-react'
-import { format, formatDistanceToNow } from 'date-fns'
-import { cn } from '@/lib/utils'
-import { BASIC_LOG_TYPES, PREMIUM_LOG_TYPES, type LogType } from '@tdc/services'
+import { format, formatDistanceToNowStrict, isToday, isSameDay, addDays, subDays } from 'date-fns'
+import { ChevronLeft, ChevronRight, Lock } from 'lucide-react'
+import type { BabyLog } from '@tdc/shared/types'
+import { useUser } from '@/components/user-provider'
+import { useFamily, useFamilyMembers } from '@/hooks/use-family'
+import { useTrackerLogs } from '@/hooks/use-tracker'
+import { BASIC_LOG_TYPES, PREMIUM_LOG_TYPES } from '@tdc/services'
 import { LOG_TYPE_CONFIG } from '@/lib/tracker-constants'
+import { Panel } from '@/components/digest'
 import { MedicalDisclaimer } from '@/components/shared/medical-disclaimer'
-import { Reveal } from '@/components/ui/animations/Reveal'
-import { Card3DTilt } from '@/components/ui/animations/Card3DTilt'
+import { usePageHeader } from '@/components/layouts/topbar-context'
+import { cn } from '@/lib/utils'
 
-export default function TrackerClient() {
-  const { activeBaby } = useUser()
-  const { data: family } = useFamily()
-  const { data: shiftBriefing, isLoading: briefingLoading } = useShiftBriefing()
-  const { data: recentLogs, isLoading: logsLoading } = useTrackerLogs({ limit: 5 })
-
-  // Show preview UI for pregnancy
-  const stage = activeBaby?.stage || family?.stage
-  const isPreview = stage === 'pregnancy'
-
-  return (
-    <div className="p-4 space-y-6 max-w-2xl overflow-x-hidden">
-      {/* Preview Banner for Pregnancy */}
-      {isPreview && (
-        <Reveal variant="card" delay={0}>
-        <Card className="bg-primary-600/20 border-primary-600/30">
-          <CardContent className="py-4 flex items-center gap-3">
-            <Lock className="h-6 w-6 text-primary-400" />
-            <div>
-              <p className="font-medium text-primary-300">Preview Mode</p>
-              <p className="text-sm text-primary-300/70">
-                The baby tracker will unlock after your baby is born. Here's a preview of what you'll be able to track!
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        </Reveal>
-      )}
-
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold font-display text-[--cream]">Baby Tracker</h1>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" disabled={isPreview} asChild={!isPreview}>
-            {isPreview ? (
-              <>
-                <History className="h-4 w-4 mr-1" />
-                History
-              </>
-            ) : (
-              <Link href="/tracker/history">
-                <History className="h-4 w-4 mr-1" />
-                History
-              </Link>
-            )}
-          </Button>
-          <Button variant="outline" size="sm" disabled={isPreview} asChild={!isPreview}>
-            {isPreview ? (
-              <>
-                <BarChart3 className="h-4 w-4 mr-1" />
-                Summary
-              </>
-            ) : (
-              <Link href="/tracker/summary">
-                <BarChart3 className="h-4 w-4 mr-1" />
-                Summary
-              </Link>
-            )}
-          </Button>
-        </div>
-      </div>
-
-      <MedicalDisclaimer className="mb-4" />
-
-      {/* Shift Briefing */}
-      <Reveal delay={80}>
-      <Card3DTilt maxTilt={3} gloss>
-      <Card className={cn("bg-[--surface] border-[--border] shadow-card", isPreview && "opacity-70")}>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg font-display flex items-center gap-2 text-[--cream]">
-            <Clock className="h-5 w-5 text-copper" />
-            Shift Briefing
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {isPreview ? (
-            <div className="grid grid-cols-3 gap-4">
-              <BriefingStat
-                label="Last Feed"
-                value="2h ago"
-                subValue="6 today"
-                icon={Milk}
-                color="text-sky"
-              />
-              <BriefingStat
-                label="Last Diaper"
-                value="45m ago"
-                subValue="4 today"
-                icon={Baby}
-                color="text-gold"
-              />
-              <BriefingStat
-                label="Sleep Today"
-                value="12h"
-                subValue="2h ago"
-                icon={Moon}
-                color="text-rose"
-              />
-            </div>
-          ) : briefingLoading ? (
-            <div className="grid grid-cols-3 gap-4">
-              <Skeleton className="h-16" />
-              <Skeleton className="h-16" />
-              <Skeleton className="h-16" />
-            </div>
-          ) : shiftBriefing ? (
-            <div className="grid grid-cols-3 gap-4">
-              <BriefingStat
-                label="Last Feed"
-                value={shiftBriefing.last_feeding
-                  ? formatDistanceToNow(new Date(shiftBriefing.last_feeding.logged_at), { addSuffix: true })
-                  : 'No logs'}
-                subValue={`${shiftBriefing.total_feedings_today} today`}
-                icon={Milk}
-                color="text-sky"
-              />
-              <BriefingStat
-                label="Last Diaper"
-                value={shiftBriefing.last_diaper
-                  ? formatDistanceToNow(new Date(shiftBriefing.last_diaper.logged_at), { addSuffix: true })
-                  : 'No logs'}
-                subValue={`${shiftBriefing.total_diapers_today} today`}
-                icon={Baby}
-                color="text-gold"
-              />
-              <BriefingStat
-                label="Sleep Today"
-                value={`${shiftBriefing.total_sleep_hours_today}h`}
-                subValue={shiftBriefing.last_sleep
-                  ? formatDistanceToNow(new Date(shiftBriefing.last_sleep.logged_at), { addSuffix: true })
-                  : 'No logs'}
-                icon={Moon}
-                color="text-rose"
-              />
-            </div>
-          ) : (
-            <p className="text-[--muted] text-center py-4 font-body">No data available</p>
-          )}
-        </CardContent>
-      </Card>
-      </Card3DTilt>
-      </Reveal>
-
-      {/* Quick Log Grid - Basic Types */}
-      <Reveal delay={160}>
-      <div className={cn(isPreview && "opacity-70")}>
-        <h2 className="text-lg font-display font-medium text-[--cream] mb-3">Quick Log</h2>
-        <div className="grid grid-cols-3 gap-3">
-          {BASIC_LOG_TYPES.map((type) => {
-            const config = LOG_TYPE_CONFIG[type]
-            return isPreview ? (
-              <div
-                key={type}
-                className={cn(
-                  "flex flex-col items-center gap-2 p-4 rounded-lg border cursor-not-allowed",
-                  config.bgColor,
-                  "border-[--border]"
-                )}
-              >
-                <config.icon className={cn("h-8 w-8", config.color)} />
-                <span className="text-sm font-ui text-[--cream]">{config.label}</span>
-              </div>
-            ) : (
-              <Link
-                key={type}
-                href={`/tracker/log?type=${type}`}
-                className={cn(
-                  "flex flex-col items-center gap-2 p-4 rounded-lg border transition-colors",
-                  config.bgColor,
-                  "border-[--border] hover:border-[--border-hover]"
-                )}
-              >
-                <config.icon className={cn("h-8 w-8", config.color)} />
-                <span className="text-sm font-ui text-[--cream]">{config.label}</span>
-              </Link>
-            )
-          })}
-        </div>
-      </div>
-      </Reveal>
-
-      {/* More Log Types */}
-      <Reveal delay={240}>
-      <div className={cn(isPreview && "opacity-70")}>
-        <h2 className="text-lg font-display font-medium text-[--cream] mb-3">More Logs</h2>
-        <div className="grid grid-cols-4 gap-2">
-          {PREMIUM_LOG_TYPES.map((type) => {
-            const config = LOG_TYPE_CONFIG[type]
-            return isPreview ? (
-              <div
-                key={type}
-                className={cn(
-                  "flex flex-col items-center gap-1.5 p-3 rounded-lg border cursor-not-allowed",
-                  config.bgColor,
-                  "border-[--border]",
-                  "opacity-60"
-                )}
-              >
-                <config.icon className={cn("h-6 w-6", config.color)} />
-                <span className="text-xs font-ui text-[--cream]">{config.label}</span>
-              </div>
-            ) : (
-              <Link
-                key={type}
-                href={`/tracker/log?type=${type}`}
-                className={cn(
-                  "flex flex-col items-center gap-1.5 p-3 rounded-lg border transition-colors",
-                  config.bgColor,
-                  "border-[--border] hover:border-[--border-hover]"
-                )}
-              >
-                <config.icon className={cn("h-6 w-6", config.color)} />
-                <span className="text-xs font-ui text-[--cream]">{config.label}</span>
-              </Link>
-            )
-          })}
-        </div>
-      </div>
-      </Reveal>
-
-      {/* Recent Logs */}
-      <Reveal delay={320}>
-      <div className={cn(isPreview && "opacity-70")}>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-display font-medium text-[--cream]">Recent Activity</h2>
-          {isPreview ? (
-            <span className="text-sm font-ui text-[--dim] cursor-not-allowed">View All</span>
-          ) : (
-            <Link href="/tracker/history" className="text-sm font-ui text-copper hover:text-copper-hover">
-              View All
-            </Link>
-          )}
-        </div>
-        {isPreview ? (
-          <div className="space-y-2">
-            {[
-              { type: 'feeding', time: '2:30 PM', notes: 'Bottle - 4oz' },
-              { type: 'diaper', time: '1:15 PM', notes: 'Wet' },
-              { type: 'sleep', time: '12:00 PM', notes: 'Nap - 45 mins' },
-            ].map((log, idx) => {
-              const config = LOG_TYPE_CONFIG[log.type as LogType]
-              return (
-                <div
-                  key={idx}
-                  className="flex items-center gap-3 p-3 rounded-lg bg-[--surface] border border-[--border]"
-                >
-                  <div className={cn("p-2 rounded-lg", config?.bgColor)}>
-                    {config && <config.icon className={cn("h-4 w-4", config.color)} />}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium font-ui text-[--cream] capitalize">
-                      {log.type.replace('_', ' ')}
-                    </p>
-                    <p className="text-xs font-body text-[--muted]">
-                      {log.time}
-                      {log.notes && ` - ${log.notes}`}
-                    </p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        ) : logsLoading ? (
-          <div className="space-y-2">
-            <Skeleton className="h-14" />
-            <Skeleton className="h-14" />
-            <Skeleton className="h-14" />
-          </div>
-        ) : recentLogs && recentLogs.length > 0 ? (
-          <div className="space-y-2">
-            {recentLogs.map((log) => {
-              const config = LOG_TYPE_CONFIG[log.log_type as LogType]
-              return (
-                <div
-                  key={log.id}
-                  className="flex items-center gap-3 p-3 rounded-lg bg-[--surface] border border-[--border]"
-                >
-                  <div className={cn("p-2 rounded-lg", config?.bgColor)}>
-                    {config && <config.icon className={cn("h-4 w-4", config.color)} />}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium font-ui text-[--cream] capitalize">
-                      {log.log_type.replace('_', ' ')}
-                    </p>
-                    <p className="text-xs font-body text-[--muted]">
-                      {format(new Date(log.logged_at), 'h:mm a')}
-                      {log.notes && ` - ${log.notes}`}
-                    </p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        ) : (
-          <Card className="bg-[--surface] border-[--border] shadow-card">
-            <CardContent className="py-8 text-center">
-              <p className="text-[--muted] font-body">No logs yet. Start tracking!</p>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-      </Reveal>
-    </div>
-  )
+const typeColor: Record<string, string> = {
+  feeding: 'var(--accent)',
+  diaper: 'var(--sage)',
+  sleep: 'var(--sky)',
+  temperature: 'var(--gold)',
+  medicine: 'var(--gold)',
+  vitamin_d: 'var(--gold)',
+  mood: 'var(--rose)',
+  weight: 'var(--ink2)',
+  height: 'var(--ink2)',
+  milestone: 'var(--ink2)',
+  custom: 'var(--muted)',
 }
 
-function BriefingStat({
-  label,
-  value,
-  subValue,
-  icon: Icon,
-  color,
-}: {
-  label: string
-  value: string
-  subValue: string
-  icon: LucideIcon
-  color: string
-}) {
+function fmtDuration(mins?: number) {
+  if (!mins) return ''
+  if (mins < 60) return `${mins}m`
+  const h = Math.floor(mins / 60)
+  const m = mins % 60
+  return m ? `${h}h ${m}m` : `${h}h`
+}
+
+function formatLog(log: BabyLog): string {
+  const d = log.log_data || {}
+  switch (log.log_type) {
+    case 'feeding': {
+      if (d.type === 'bottle') return `Bottle · ${d.amount_oz ?? '?'} oz`
+      if (d.type === 'breast') return `Breast · ${fmtDuration(d.duration_minutes)}${d.side ? ` (${String(d.side)[0].toUpperCase()})` : ''}`
+      if (d.type === 'solid') return 'Solid food'
+      return 'Feeding'
+    }
+    case 'diaper':
+      return `Diaper · ${d.type ?? 'change'}`
+    case 'sleep':
+      return `Sleep · ${fmtDuration(d.duration_minutes) || '—'}`
+    case 'temperature':
+      return `Temp · ${d.value ?? '?'}°${d.unit ?? 'F'}`
+    case 'medicine':
+      return `${d.name ?? 'Medicine'}${d.dosage ? ` · ${d.dosage}` : ''}`
+    case 'vitamin_d':
+      return 'Vitamin D'
+    case 'mood':
+      return `Mood · ${d.level ?? ''}`
+    case 'weight':
+      return `Weight · ${d.value ?? '?'} ${d.unit ?? ''}`
+    case 'height':
+      return `Height · ${d.value ?? '?'} ${d.unit ?? ''}`
+    case 'milestone':
+      return `Milestone · ${d.name ?? ''}`
+    default:
+      return log.log_type.replace('_', ' ')
+  }
+}
+
+function sublineFor(log: BabyLog, byName: string): string {
+  const d = log.log_data || {}
+  if (log.log_type === 'sleep' && d.quality) return `Quality: ${d.quality} · ${byName}`
+  return byName
+}
+
+export default function TrackerClient() {
+  const { user, activeBaby } = useUser()
+  const { data: family } = useFamily()
+  const { data: members } = useFamilyMembers()
+  const { data: allLogs } = useTrackerLogs({ limit: 100 })
+
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+
+  const stage = activeBaby?.stage || family?.stage
+  const isPreview = stage === 'pregnancy'
+  const babyName = activeBaby?.baby_name ?? family?.baby_name
+  const ageWeeks = activeBaby?.current_week ?? family?.current_week
+
+  const nameFor = (id: string) => {
+    if (id === user.id) return 'Logged by you'
+    const m = members?.find((mm) => mm.id === id)
+    return m ? `Logged by ${m.full_name?.split(' ')[0]}` : 'Logged'
+  }
+
+  const dayLogs = useMemo(() => {
+    return (allLogs ?? [])
+      .filter((l) => isSameDay(new Date(l.logged_at), selectedDate))
+      .sort((a, b) => new Date(b.logged_at).getTime() - new Date(a.logged_at).getTime())
+  }, [allLogs, selectedDate])
+
+  const lastOfType = (t: string) => dayLogs.find((l) => l.log_type === t)
+  const feeds = dayLogs.filter((l) => l.log_type === 'feeding').length
+  const changes = dayLogs.filter((l) => l.log_type === 'diaper').length
+  const sleepMins = dayLogs
+    .filter((l) => l.log_type === 'sleep')
+    .reduce((s, l) => s + (l.log_data?.duration_minutes ?? 0), 0)
+
+  const tileLast = (t: string) => {
+    const last = lastOfType(t)
+    if (!last) return 'Tap to log'
+    return isToday(selectedDate)
+      ? `${formatDistanceToNowStrict(new Date(last.logged_at))} ago`
+      : format(new Date(last.logged_at), 'h:mm a')
+  }
+
+  const atGlance = (t: string) => {
+    const last = lastOfType(t)
+    if (!last) return '—'
+    return isToday(selectedDate)
+      ? `${formatDistanceToNowStrict(new Date(last.logged_at))} ago`
+      : format(new Date(last.logged_at), 'h:mm a')
+  }
+
+  const dateLabel = isToday(selectedDate) ? 'Today' : format(selectedDate, 'EEE, MMM d')
+
+  usePageHeader(
+    {
+      title: 'Tracker',
+      subtitle: [babyName, ageWeeks ? `${ageWeeks} weeks old` : null].filter(Boolean).join(' · ') || 'Baby tracker',
+      actions: isPreview ? null : (
+        <div className="flex items-center gap-1.5 rounded-full border border-line bg-card px-1.5 py-1 shadow-[var(--shadow-sm)]">
+          <button
+            type="button"
+            onClick={() => setSelectedDate((d) => subDays(d, 1))}
+            className="grid h-[30px] w-[30px] place-items-center rounded-full bg-line2 text-ink2 transition-opacity hover:opacity-70"
+          >
+            <ChevronLeft className="h-[15px] w-[15px]" />
+          </button>
+          <span className="px-1.5 text-[13px] font-bold text-ink">{dateLabel}</span>
+          <button
+            type="button"
+            onClick={() => setSelectedDate((d) => addDays(d, 1))}
+            disabled={isToday(selectedDate)}
+            className="grid h-[30px] w-[30px] place-items-center rounded-full bg-line2 text-ink2 transition-opacity hover:opacity-70 disabled:opacity-30"
+          >
+            <ChevronRight className="h-[15px] w-[15px]" />
+          </button>
+        </div>
+      ),
+    },
+    [babyName, ageWeeks, dateLabel, isPreview]
+  )
+
+  if (isPreview) {
+    return (
+      <>
+        <MedicalDisclaimer className="mb-5" />
+        <Panel className="border-l-[3px] border-l-clay p-8 text-center">
+          <Lock className="mx-auto h-7 w-7 text-clay-ink" />
+          <h2 className="mt-3 text-[18px] font-extrabold text-ink">Tracker unlocks after birth</h2>
+          <p className="mx-auto mt-2 max-w-md text-[14px] leading-[1.6] text-ink2">
+            Once your baby arrives, log feeds, diapers, sleep and more — and see the whole day as a clean timeline.
+          </p>
+        </Panel>
+      </>
+    )
+  }
+
   return (
-    <div className="text-center">
-      <Icon className={cn("h-5 w-5 mx-auto mb-1", color)} />
-      <p className="text-xs font-ui text-[--muted]">{label}</p>
-      <p className="text-sm font-medium font-ui text-[--cream]">{value}</p>
-      <p className="text-xs font-body text-[--dim]">{subValue}</p>
-    </div>
+    <>
+      <MedicalDisclaimer className="mb-5" />
+
+      <div className="grid grid-cols-1 items-start gap-7 lg:grid-cols-[minmax(0,1fr)_336px]">
+        {/* Main column */}
+        <div className="min-w-0">
+          <div className="mb-3 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">Log now</div>
+          <div className="flex gap-3.5">
+            {BASIC_LOG_TYPES.map((t) => {
+              const config = LOG_TYPE_CONFIG[t]
+              const color = typeColor[t] ?? 'var(--accent)'
+              const Icon = config.icon
+              return (
+                <Link
+                  key={t}
+                  href={`/tracker/log?type=${t}`}
+                  className="flex max-w-[160px] flex-1 flex-col items-center rounded-[18px] border border-line bg-card px-3 py-5 text-center shadow-[var(--shadow-sm)] transition-shadow hover:shadow-[var(--shadow)]"
+                >
+                  <span
+                    className="grid h-[52px] w-[52px] place-items-center rounded-full"
+                    style={{ background: `color-mix(in srgb, ${color} 15%, transparent)` }}
+                  >
+                    <Icon className="h-[26px] w-[26px]" style={{ color }} />
+                  </span>
+                  <span className="mt-3 text-[15px] font-bold text-ink">{config.label}</span>
+                  <span className="mt-0.5 text-[12px] font-semibold text-mute">{tileLast(t)}</span>
+                </Link>
+              )
+            })}
+          </div>
+
+          <div className="mb-3 mt-7 text-[11px] font-bold uppercase tracking-[1.5px] text-faint">More</div>
+          <div className="flex flex-wrap gap-2.5">
+            {PREMIUM_LOG_TYPES.map((t) => {
+              const config = LOG_TYPE_CONFIG[t]
+              const color = typeColor[t] ?? 'var(--muted)'
+              return (
+                <Link
+                  key={t}
+                  href={`/tracker/log?type=${t}`}
+                  className="inline-flex items-center gap-2 rounded-full border border-line bg-card px-[15px] py-2 text-[13px] font-bold text-ink2 transition-colors hover:border-faint"
+                >
+                  <span className="h-2 w-2 rounded-full" style={{ background: color }} />
+                  {config.label}
+                </Link>
+              )
+            })}
+          </div>
+
+          <div className="mb-3 mt-7 flex items-center justify-between">
+            <span className="text-[11px] font-bold uppercase tracking-[1.5px] text-faint">
+              {isToday(selectedDate) ? "Today's timeline" : `${format(selectedDate, 'MMM d')} timeline`}
+            </span>
+            <Link href="/tracker/history" className="text-[12.5px] font-bold text-mute hover:text-clay-ink">
+              History →
+            </Link>
+          </div>
+          <Panel className="px-[22px] py-2">
+            {dayLogs.length === 0 ? (
+              <p className="py-8 text-center text-[14px] text-mute">Nothing logged {isToday(selectedDate) ? 'yet today' : 'this day'}.</p>
+            ) : (
+              dayLogs.map((log, i) => {
+                const color = typeColor[log.log_type] ?? 'var(--muted)'
+                const last = i === dayLogs.length - 1
+                return (
+                  <div key={log.id} className="flex">
+                    <div className="w-14 flex-none pr-0.5 pt-3 text-right text-[12px] font-bold text-mute">
+                      {format(new Date(log.logged_at), 'h:mma').toLowerCase()}
+                    </div>
+                    <div className="flex w-[34px] flex-none flex-col items-center">
+                      <span
+                        className="mt-[15px] h-3 w-3 rounded-full ring-1 ring-line"
+                        style={{ background: color, boxShadow: '0 0 0 2px var(--card)' }}
+                      />
+                      {!last && <span className="w-0.5 flex-1 bg-line" />}
+                    </div>
+                    <div className="flex-1 pb-[15px] pt-[11px]">
+                      <div className="text-[15px] font-semibold text-ink">{formatLog(log)}</div>
+                      <div className="mt-0.5 text-[12.5px] font-medium text-mute">{sublineFor(log, nameFor(log.logged_by))}</div>
+                    </div>
+                  </div>
+                )
+              })
+            )}
+          </Panel>
+        </div>
+
+        {/* Right rail */}
+        <div className="min-w-0">
+          <Panel className="mb-[18px] p-[18px]">
+            <div className="mb-3.5 text-[11px] font-bold uppercase tracking-[1.2px] text-faint">
+              {isToday(selectedDate) ? 'Today so far' : 'That day'}
+            </div>
+            {[
+              { k: 'Feeds', v: feeds ? String(feeds) : '—', accent: false },
+              { k: 'Changes', v: changes ? String(changes) : '—', accent: false },
+              { k: 'Sleep', v: sleepMins ? fmtDuration(sleepMins) : '—', accent: true },
+            ].map((r) => (
+              <div key={r.k} className="flex items-center justify-between border-b border-line2 py-2.5 last:border-b-0">
+                <span className="text-[13.5px] font-semibold text-ink">{r.k}</span>
+                <span className={cn('text-[13.5px] font-extrabold', r.accent ? 'text-clay-ink' : 'text-ink')}>{r.v}</span>
+              </div>
+            ))}
+          </Panel>
+
+          <Panel className="p-[18px]">
+            <div className="mb-3.5 text-[11px] font-bold uppercase tracking-[1.2px] text-faint">At a glance</div>
+            {[
+              { k: 'Last fed', v: atGlance('feeding') },
+              { k: 'Last change', v: atGlance('diaper') },
+              { k: 'Last sleep', v: atGlance('sleep') },
+            ].map((r) => (
+              <div key={r.k} className="flex items-center justify-between border-b border-line2 py-2.5 last:border-b-0">
+                <span className="text-[13.5px] font-semibold text-ink">{r.k}</span>
+                <span className="text-[13.5px] font-extrabold text-ink">{r.v}</span>
+              </div>
+            ))}
+          </Panel>
+        </div>
+      </div>
+    </>
   )
 }
