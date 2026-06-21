@@ -1,6 +1,1 @@
-export { TaskItem } from './TaskItem'
-export { TaskStatsRow } from './TaskStatsRow'
-export { TaskFilterTabs } from './TaskFilterTabs'
-export { TaskSectionHeader } from './TaskSectionHeader'
-export type { StatFilter } from './TaskStatsRow'
-export type { TaskTab } from './TaskFilterTabs'
+export { TaskRow } from './TaskRow'

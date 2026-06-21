@@ -183,13 +183,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   headerLabel: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 11,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
   },
   showAllText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 12,
   },
   phaseRow: {
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
   },
   phaseText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 11,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   pillText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 14,
   },
   currentDot: {
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 3,
   },
   badgeText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 8,
   },
 })

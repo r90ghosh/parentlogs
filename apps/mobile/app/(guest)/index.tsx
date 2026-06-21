@@ -1,8 +1,6 @@
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
-import Animated, { FadeIn } from 'react-native-reanimated'
 import {
   Newspaper,
   Video,
@@ -10,8 +8,6 @@ import {
   ArrowRight,
 } from 'lucide-react-native'
 import { BrandLogoIcon } from '@/components/BrandLogo'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance } from '@/components/animations'
 import { useColors } from '@/hooks/use-colors'
 
 const CONTENT_SECTIONS = [
@@ -20,14 +16,16 @@ const CONTENT_SECTIONS = [
     description: 'Evidence-based guides on pregnancy, birth, and early parenting.',
     icon: Newspaper,
     route: '/(tabs)/more/content' as const,
-    accentKey: 'sky' as const,
+    accentColor: '#5b9bd5',
+    accentBg: 'rgba(91,155,213,0.12)',
   },
   {
     title: 'Video Library',
     description: 'Curated videos covering every stage of the journey.',
     icon: Video,
     route: '/(tabs)/more/videos' as const,
-    accentKey: 'gold' as const,
+    accentColor: '#d4a853',
+    accentBg: 'rgba(212,168,83,0.12)',
   },
 ]
 
@@ -36,37 +34,21 @@ export default function GuestExploreScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
 
-  const accentMap = {
-    copper: { color: colors.copper, bg: colors.copperDim, border: colors.copperGlow },
-    sky: { color: colors.sky, bg: colors.skyDim, border: colors.sky },
-    gold: { color: colors.gold, bg: colors.goldDim, border: colors.goldGlow },
-  }
-
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       {/* Header */}
-      <Animated.View
-        entering={FadeIn.duration(400)}
-        style={[styles.header, { paddingTop: insets.top + 12, borderBottomColor: colors.subtleBg }]}
-      >
+      <View style={[styles.header, { paddingTop: insets.top + 12, borderBottomColor: colors.line }]}>
         <View style={styles.headerLeft}>
           <BrandLogoIcon size={28} />
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>The Dad Center</Text>
+          <Text style={[styles.headerTitle, { color: colors.ink }]}>The Dad Center</Text>
         </View>
         <Pressable
           onPress={() => router.push('/(auth)/signup')}
-          style={styles.signUpButton}
+          style={({ pressed }) => [styles.signUpButton, { backgroundColor: colors.accent, opacity: pressed ? 0.85 : 1 }]}
         >
-          <LinearGradient
-            colors={colors.ctaGradient as unknown as [string, string]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.signUpGradient}
-          >
-            <Text style={[styles.signUpText, { color: colors.bg }]}>Sign Up</Text>
-          </LinearGradient>
+          <Text style={styles.signUpText}>Sign Up</Text>
         </Pressable>
-      </Animated.View>
+      </View>
 
       <ScrollView
         style={styles.scrollView}
@@ -77,80 +59,68 @@ export default function GuestExploreScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Welcome */}
-        <CardEntrance delay={100}>
-          <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>GUEST MODE</Text>
-          <Text style={[styles.welcomeTitle, { color: colors.textPrimary }]}>
+        <View>
+          <Text style={[styles.sectionPreLabel, { color: colors.accent }]}>GUEST MODE</Text>
+          <Text style={[styles.welcomeTitle, { color: colors.ink }]}>
             Explore what's{'\n'}inside
           </Text>
-          <Text style={[styles.welcomeSubtitle, { color: colors.textMuted }]}>
+          <Text style={[styles.welcomeSubtitle, { color: colors.muted }]}>
             Browse our content library. Sign up to unlock personalized
             briefings, task tracking, and partner sync.
           </Text>
-        </CardEntrance>
+        </View>
 
         {/* Content cards */}
-        {CONTENT_SECTIONS.map((section, index) => {
-          const accent = accentMap[section.accentKey]
-          return (
-            <CardEntrance key={section.title} delay={200 + index * 120}>
-              <Pressable onPress={() => router.push(section.route)}>
-                <GlassCard style={styles.contentCard}>
-                  <View style={styles.cardRow}>
-                    <View
-                      style={[
-                        styles.iconContainer,
-                        {
-                          backgroundColor: accent.bg,
-                          borderColor: accent.border,
-                        },
-                      ]}
-                    >
-                      <section.icon
-                        size={22}
-                        color={accent.color}
-                        strokeWidth={1.5}
-                      />
-                    </View>
-                    <View style={styles.cardInfo}>
-                      <Text style={[styles.cardTitle, { color: colors.textPrimary }]}>{section.title}</Text>
-                      <Text style={[styles.cardDescription, { color: colors.textMuted }]}>
-                        {section.description}
-                      </Text>
-                    </View>
-                    <ChevronRight size={18} color={colors.textDim} />
-                  </View>
-                </GlassCard>
-              </Pressable>
-            </CardEntrance>
-          )
-        })}
+        {CONTENT_SECTIONS.map((section) => (
+          <Pressable
+            key={section.title}
+            onPress={() => router.push(section.route)}
+            style={({ pressed }) => [styles.contentCard, { backgroundColor: colors.card, borderColor: colors.line, opacity: pressed ? 0.85 : 1 }]}
+          >
+            <View style={styles.cardRow}>
+              <View
+                style={[
+                  styles.iconContainer,
+                  {
+                    backgroundColor: section.accentBg,
+                    borderColor: colors.line,
+                  },
+                ]}
+              >
+                <section.icon
+                  size={22}
+                  color={section.accentColor}
+                  strokeWidth={1.5}
+                />
+              </View>
+              <View style={styles.cardInfo}>
+                <Text style={[styles.cardTitle, { color: colors.ink }]}>{section.title}</Text>
+                <Text style={[styles.cardDescription, { color: colors.muted }]}>
+                  {section.description}
+                </Text>
+              </View>
+              <ChevronRight size={18} color={colors.faint} />
+            </View>
+          </Pressable>
+        ))}
 
         {/* Sign up nudge */}
-        <CardEntrance delay={600}>
-          <GlassCard style={[styles.nudgeCard, { borderColor: colors.copperGlow }]}>
-            <Text style={[styles.nudgeTitle, { color: colors.textPrimary }]}>
-              Ready for the full experience?
-            </Text>
-            <Text style={[styles.nudgeSubtitle, { color: colors.textMuted }]}>
-              Get personalized weekly briefings, smart task management, and
-              partner sync — all tailored to your due date.
-            </Text>
-            <Pressable
-              onPress={() => router.push('/(auth)/signup')}
-              style={styles.nudgeButton}
-            >
-              <LinearGradient
-                colors={colors.ctaGradient as unknown as [string, string]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.nudgeGradient}
-              >
-                <Text style={[styles.nudgeButtonText, { color: colors.bg }]}>Create Free Account</Text>
-                <ArrowRight size={16} color={colors.bg} />
-              </LinearGradient>
-            </Pressable>
-          </GlassCard>
-        </CardEntrance>
+        <View style={[styles.nudgeCard, { backgroundColor: colors.accentSoft, borderColor: colors.line }]}>
+          <Text style={[styles.nudgeTitle, { color: colors.ink }]}>
+            Ready for the full experience?
+          </Text>
+          <Text style={[styles.nudgeSubtitle, { color: colors.ink2 }]}>
+            Get personalized weekly briefings, smart task management, and
+            partner sync — all tailored to your due date.
+          </Text>
+          <Pressable
+            onPress={() => router.push('/(auth)/signup')}
+            style={({ pressed }) => [styles.nudgeButton, { backgroundColor: colors.accent, opacity: pressed ? 0.85 : 1 }]}
+          >
+            <Text style={styles.nudgeButtonText}>Create Free Account</Text>
+            <ArrowRight size={16} color="#fff" />
+          </Pressable>
+        </View>
       </ScrollView>
     </View>
   )
@@ -182,46 +152,43 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   headerTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 18,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 17,
   },
   signUpButton: {
     borderRadius: 10,
-    overflow: 'hidden',
-  },
-  signUpGradient: {
     paddingVertical: 8,
     paddingHorizontal: 16,
-    borderRadius: 10,
   },
   signUpText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 13,
-    letterSpacing: 0.3,
+    color: '#fff',
   },
 
   // Welcome
   sectionPreLabel: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 11,
-    letterSpacing: 2,
+    letterSpacing: 1.6,
     textTransform: 'uppercase',
     textAlign: 'center',
     marginTop: 28,
     marginBottom: 12,
   },
   welcomeTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 30,
+    fontFamily: 'Jakarta-ExtraBold',
+    fontSize: 28,
     textAlign: 'center',
-    lineHeight: 40,
+    lineHeight: 36,
     marginBottom: 12,
+    letterSpacing: -0.5,
   },
   welcomeSubtitle: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 15,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: 22,
     maxWidth: 320,
     alignSelf: 'center',
     marginBottom: 28,
@@ -230,16 +197,18 @@ const styles = StyleSheet.create({
   // Content cards
   contentCard: {
     padding: 16,
-    marginBottom: 12,
+    marginBottom: 10,
+    borderRadius: 16,
+    borderWidth: 1,
   },
   cardRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
+    width: 46,
+    height: 46,
+    borderRadius: 13,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -250,57 +219,50 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   cardTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
-    marginBottom: 4,
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 15.5,
+    marginBottom: 3,
   },
   cardDescription: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
     lineHeight: 19,
   },
 
   // Nudge card
   nudgeCard: {
-    padding: 24,
-    marginTop: 12,
+    padding: 22,
+    marginTop: 10,
+    borderRadius: 16,
     borderWidth: 1,
+    alignItems: 'center',
   },
   nudgeTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 20,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 18,
     textAlign: 'center',
     marginBottom: 8,
+    letterSpacing: -0.2,
   },
   nudgeSubtitle: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     textAlign: 'center',
-    lineHeight: 22,
+    lineHeight: 21,
     marginBottom: 20,
   },
   nudgeButton: {
-    alignSelf: 'center',
-    borderRadius: 12,
-    overflow: 'hidden',
-    shadowColor: '#c4703f',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 6,
-  },
-  nudgeGradient: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    paddingVertical: 14,
-    paddingHorizontal: 32,
     borderRadius: 12,
+    paddingVertical: 13,
+    paddingHorizontal: 28,
   },
   nudgeButtonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 15,
-    letterSpacing: 0.3,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 14,
+    color: '#fff',
   },
 })

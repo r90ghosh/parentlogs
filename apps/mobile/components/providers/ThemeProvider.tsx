@@ -23,7 +23,9 @@ const THEME_STORAGE_KEY = '@tdc_theme_preference'
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const systemScheme = useColorScheme()
-  const [theme, setThemeState] = useState<Theme>('dark')
+  // V2 default: follow the OS so scheduled dark mode gives the night-friendly
+  // warm-dark digest automatically (§A). A persisted preference still overrides.
+  const [theme, setThemeState] = useState<Theme>('system')
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {

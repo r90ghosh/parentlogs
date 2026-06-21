@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   Alert,
+  ScrollView,
 } from 'react-native'
 import Animated, {
   useAnimatedStyle,
@@ -14,7 +15,6 @@ import Animated, {
   withSpring,
   withTiming,
   runOnJS,
-  FadeInDown,
 } from 'react-native-reanimated'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { useRouter } from 'expo-router'
@@ -112,7 +112,6 @@ function SwipeToDelete({
   const pan = Gesture.Pan()
     .activeOffsetX([-15, 15])
     .onUpdate((event) => {
-      // Only allow swipe left (negative direction)
       translateX.value = Math.min(0, event.translationX)
     })
     .onEnd((event) => {
@@ -142,8 +141,8 @@ function SwipeToDelete({
       <Animated.View
         style={[swipeStyles.deleteAction, { backgroundColor: colors.coral }, deleteActionStyle]}
       >
-        <Trash2 size={18} color={colors.textPrimary} />
-        <Text style={[swipeStyles.deleteText, { color: colors.textPrimary }]}>Delete</Text>
+        <Trash2 size={18} color="#fff" />
+        <Text style={swipeStyles.deleteText}>Delete</Text>
       </Animated.View>
       <GestureDetector gesture={pan}>
         <Animated.View style={animatedStyle}>{children}</Animated.View>
@@ -153,11 +152,7 @@ function SwipeToDelete({
 }
 
 const swipeStyles = StyleSheet.create({
-  container: {
-    position: 'relative',
-    overflow: 'hidden',
-    borderRadius: 12,
-  },
+  container: { position: 'relative', overflow: 'hidden', borderRadius: 12 },
   deleteAction: {
     ...StyleSheet.absoluteFillObject,
     flexDirection: 'row',
@@ -167,10 +162,7 @@ const swipeStyles = StyleSheet.create({
     gap: 8,
     borderRadius: 12,
   },
-  deleteText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 14,
-  },
+  deleteText: { fontFamily: 'Jakarta-SemiBold', fontSize: 14, color: '#fff' },
 })
 
 function NotificationItem({
@@ -192,43 +184,37 @@ function NotificationItem({
         onPress={onPress}
         style={[
           styles.item,
-          { borderColor: colors.border },
-          isUnread
-            ? { backgroundColor: colors.card, borderLeftWidth: 2, borderLeftColor: colors.copper }
-            : { backgroundColor: colors.surface },
+          { borderColor: colors.line, backgroundColor: colors.card },
+          isUnread && { borderLeftWidth: 2, borderLeftColor: colors.accent },
         ]}
       >
         <View
           style={[
             styles.iconCircle,
-            isUnread
-              ? { backgroundColor: colors.copperDim }
-              : { backgroundColor: 'rgba(74,66,57,0.3)' },
+            { backgroundColor: isUnread ? colors.accentSoft : colors.line },
           ]}
         >
-          <Icon size={16} color={isUnread ? colors.copper : colors.textDim} />
+          <Icon size={16} color={isUnread ? colors.accent : colors.muted} />
         </View>
         <View style={styles.itemContent}>
           <View style={styles.itemHeader}>
             <Text
               style={[
                 styles.itemTitle,
-                { color: colors.textSecondary },
-                isUnread && { fontFamily: 'Karla-SemiBold', color: colors.textPrimary },
+                { color: isUnread ? colors.ink : colors.ink2 },
+                isUnread && { fontFamily: 'Jakarta-SemiBold' },
               ]}
               numberOfLines={1}
             >
               {notification.title}
             </Text>
-            {isUnread && <View style={[styles.unreadDot, { backgroundColor: colors.copper }]} />}
+            {isUnread && <View style={[styles.unreadDot, { backgroundColor: colors.accent }]} />}
           </View>
-          <Text style={[styles.itemBody, { color: colors.textSecondary }]} numberOfLines={1}>
+          <Text style={[styles.itemBody, { color: colors.ink2 }]} numberOfLines={1}>
             {notification.body}
           </Text>
-          <Text style={[styles.itemTime, { color: colors.textMuted }]}>
-            {formatDistanceToNow(new Date(notification.created_at), {
-              addSuffix: true,
-            })}
+          <Text style={[styles.itemTime, { color: colors.muted }]}>
+            {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
           </Text>
         </View>
       </Pressable>
@@ -278,7 +264,6 @@ export default function NotificationInboxScreen() {
       if (!notification.is_read) {
         markRead.mutate(notification.id)
       }
-      // Only navigate if URL is a relative path (internal navigation)
       if (notification.url?.startsWith('/')) {
         router.replace(notification.url as never)
       }
@@ -302,22 +287,45 @@ export default function NotificationInboxScreen() {
     })
   }, [markAllRead])
 
+  const inboxHeader = (
+    <View style={[styles.header, { paddingTop: insets.top + 12, borderBottomColor: colors.line }]}>
+      <Text style={[styles.headerTitle, { color: colors.ink }]}>Notifications</Text>
+      <View style={styles.headerRight}>
+        {hasRead && (
+          <Pressable
+            onPress={handleClearRead}
+            style={[styles.clearReadButton, { backgroundColor: colors.card, borderColor: colors.line }]}
+            disabled={deleteReadNotifications.isPending}
+          >
+            <Trash2 size={13} color={colors.muted} />
+            <Text style={[styles.clearReadText, { color: colors.muted }]}>Clear read</Text>
+          </Pressable>
+        )}
+        {hasUnread && (
+          <Pressable
+            onPress={handleMarkAllRead}
+            style={[styles.markAllButton, { backgroundColor: colors.accentSoft }]}
+            disabled={markAllRead.isPending}
+          >
+            <Text style={[styles.markAllText, { color: colors.accentInk }]}>Mark all read</Text>
+          </Pressable>
+        )}
+        <Pressable
+          onPress={() => router.back()}
+          style={[styles.closeButton, { backgroundColor: colors.card, borderColor: colors.line }]}
+        >
+          <X size={20} color={colors.muted} />
+        </Pressable>
+      </View>
+    </View>
+  )
+
   if (isLoading) {
     return (
       <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Notifications</Text>
-          <Pressable
-            onPress={() => router.back()}
-            style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}
-            accessibilityLabel="Close"
-            accessibilityRole="button"
-          >
-            <X size={20} color={colors.textMuted} />
-          </Pressable>
-        </View>
+        {inboxHeader}
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color={colors.copper} size="large" />
+          <ActivityIndicator color={colors.accent} size="large" />
         </View>
       </View>
     )
@@ -326,120 +334,58 @@ export default function NotificationInboxScreen() {
   if (isError) {
     return (
       <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Notifications</Text>
-          <Pressable
-            onPress={() => router.back()}
-            style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}
-            accessibilityLabel="Close"
-            accessibilityRole="button"
-          >
-            <X size={20} color={colors.textMuted} />
-          </Pressable>
-        </View>
+        {inboxHeader}
         <View style={styles.emptyContainer}>
-          <View style={styles.emptyIcon}>
-            <AlertTriangle size={32} color={colors.coral} />
+          <View style={[styles.emptyIcon, { backgroundColor: colors.coralDim }]}>
+            <AlertTriangle size={28} color={colors.coral} />
           </View>
-          <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>Something went wrong</Text>
-          <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
+          <Text style={[styles.emptyTitle, { color: colors.ink }]}>Something went wrong</Text>
+          <Text style={[styles.emptySubtitle, { color: colors.muted }]}>
             We couldn't load your notifications.
           </Text>
           <Pressable
             onPress={() => refetch()}
-            style={[styles.markAllButton, { backgroundColor: colors.copperDim }]}
-            accessibilityLabel="Try again"
-            accessibilityRole="button"
+            style={[styles.markAllButton, { backgroundColor: colors.accentSoft, marginTop: 8 }]}
           >
-            <Text style={[styles.markAllText, { color: colors.copper }]}>Try again</Text>
+            <Text style={[styles.markAllText, { color: colors.accentInk }]}>Try again</Text>
           </Pressable>
         </View>
       </View>
     )
   }
 
-  const inboxHeader = (
-    <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-      <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Notifications</Text>
-      <View style={styles.headerRight}>
-        {hasRead && (
-          <Pressable
-            onPress={handleClearRead}
-            style={[styles.clearReadButton, { backgroundColor: colors.subtleBg }]}
-            disabled={deleteReadNotifications.isPending}
-            accessibilityLabel="Clear read notifications"
-            accessibilityRole="button"
-          >
-            <Trash2 size={14} color={colors.textMuted} />
-            <Text style={[styles.clearReadText, { color: colors.textMuted }]}>Clear read</Text>
-          </Pressable>
-        )}
-        {hasUnread && (
-          <Pressable
-            onPress={handleMarkAllRead}
-            style={[styles.markAllButton, { backgroundColor: colors.copperDim }]}
-            disabled={markAllRead.isPending}
-            accessibilityLabel="Mark all as read"
-            accessibilityRole="button"
-          >
-            <Text style={[styles.markAllText, { color: colors.copper }]}>Mark all as read</Text>
-          </Pressable>
-        )}
-        <Pressable
-          onPress={() => router.back()}
-          style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}
-          accessibilityLabel="Close"
-          accessibilityRole="button"
-        >
-          <X size={20} color={colors.textMuted} />
-        </Pressable>
-      </View>
-    </View>
-  )
-
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-
-      {/* Content */}
       {groups.length === 0 ? (
-        <View style={styles.emptyContainer}>
+        <>
           {inboxHeader}
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40 }}>
-            <View style={[styles.emptyIcon, { backgroundColor: 'rgba(74,66,57,0.2)' }]}>
-              <Bell size={32} color={colors.textDim} />
+          <View style={styles.emptyContainer}>
+            <View style={[styles.emptyIcon, { backgroundColor: colors.card, borderColor: colors.line, borderWidth: 1 }]}>
+              <Bell size={28} color={colors.muted} />
             </View>
-            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No notifications yet</Text>
-            <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
+            <Text style={[styles.emptyTitle, { color: colors.ink }]}>No notifications yet</Text>
+            <Text style={[styles.emptySubtitle, { color: colors.muted }]}>
               When you receive notifications, they will appear here.
             </Text>
           </View>
-        </View>
+        </>
       ) : (
-        <Animated.ScrollView
+        <ScrollView
           style={styles.flex}
-          contentContainerStyle={[
-            styles.scrollContent,
-            { paddingBottom: insets.bottom + 24 },
-          ]}
+          contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 24 }]}
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl
               refreshing={isRefetching}
               onRefresh={refetch}
-              tintColor={colors.copper}
+              tintColor={colors.accent}
             />
           }
         >
           {inboxHeader}
-          {groups.map((group, groupIndex) => (
-            <Animated.View
-              key={group.label}
-              entering={FadeInDown.delay(groupIndex * 100)
-                .springify()
-                .damping(15)
-                .stiffness(100)}
-            >
-              <Text style={[styles.sectionLabel, { color: colors.textMuted }]}>{group.label}</Text>
+          {groups.map((group) => (
+            <View key={group.label}>
+              <Text style={[styles.sectionLabel, { color: colors.faint }]}>{group.label}</Text>
               <View style={styles.sectionList}>
                 {group.data.map((notification) => (
                   <NotificationItem
@@ -450,21 +396,17 @@ export default function NotificationInboxScreen() {
                   />
                 ))}
               </View>
-            </Animated.View>
+            </View>
           ))}
-        </Animated.ScrollView>
+        </ScrollView>
       )}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  flex: {
-    flex: 1,
-  },
+  container: { flex: 1 },
+  flex: { flex: 1 },
 
   // Header
   header: {
@@ -473,64 +415,48 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingBottom: 12,
+    borderBottomWidth: 1,
   },
-  headerTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
-  },
-  headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
+  headerTitle: { fontFamily: 'Jakarta-Bold', fontSize: 20, letterSpacing: -0.4 },
+  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   clearReadButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    paddingVertical: 6,
+    paddingVertical: 7,
     paddingHorizontal: 10,
     borderRadius: 8,
+    borderWidth: 1,
   },
-  clearReadText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 12,
-  },
+  clearReadText: { fontFamily: 'Jakarta-Medium', fontSize: 12 },
   markAllButton: {
-    paddingVertical: 6,
+    paddingVertical: 7,
     paddingHorizontal: 12,
     borderRadius: 8,
   },
-  markAllText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 12,
-  },
+  markAllText: { fontFamily: 'Jakarta-Medium', fontSize: 12 },
   closeButton: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+    borderRadius: 12,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   // Scroll
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-  },
+  scrollContent: { paddingHorizontal: 20, paddingTop: 8 },
 
   // Section
   sectionLabel: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 11,
     textTransform: 'uppercase',
-    letterSpacing: 1.2,
-    marginBottom: 10,
-    marginTop: 16,
-  },
-  sectionList: {
-    gap: 8,
+    letterSpacing: 1.4,
     marginBottom: 8,
+    marginTop: 18,
   },
+  sectionList: { gap: 8, marginBottom: 8 },
 
   // Item
   item: {
@@ -544,73 +470,40 @@ const styles = StyleSheet.create({
   iconCircle: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 2,
+    marginTop: 1,
   },
-  itemContent: {
-    flex: 1,
-    gap: 2,
-  },
+  itemContent: { flex: 1, gap: 2 },
   itemHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 8,
   },
-  itemTitle: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 14,
-    flex: 1,
-  },
-  unreadDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  itemBody: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  itemTime: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 11,
-    marginTop: 4,
-  },
+  itemTitle: { fontFamily: 'Jakarta-Regular', fontSize: 14, flex: 1 },
+  unreadDot: { width: 8, height: 8, borderRadius: 4, flexShrink: 0 },
+  itemBody: { fontFamily: 'Jakarta-Regular', fontSize: 13, lineHeight: 18 },
+  itemTime: { fontFamily: 'Jakarta-Medium', fontSize: 11, marginTop: 4 },
 
-  // Empty
+  // Empty / Loading
   emptyContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 40,
+    gap: 10,
   },
   emptyIcon: {
     width: 64,
     height: 64,
-    borderRadius: 32,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
-  },
-  emptyTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
     marginBottom: 8,
   },
-  emptySubtitle: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 13,
-    textAlign: 'center',
-    lineHeight: 18,
-  },
-
-  // Loading
-  loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  emptyTitle: { fontFamily: 'Jakarta-Bold', fontSize: 18, textAlign: 'center' },
+  emptySubtitle: { fontFamily: 'Jakarta-Regular', fontSize: 14, textAlign: 'center', lineHeight: 21 },
+  loadingContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 })

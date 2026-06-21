@@ -121,20 +121,21 @@ export default function ChangePasswordScreen() {
         >
           {/* Header */}
           <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-            <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-              <ArrowLeft size={20} color={colors.textSecondary} />
+            <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.accentSoft }]}>
+              <ArrowLeft size={20} color={colors.ink2} />
             </Pressable>
-            <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
+            <Text style={[styles.headerTitle, { color: colors.ink }]}>
               {isRecovery ? 'Reset Password' : hasEmailIdentity ? 'Change Password' : 'Set Password'}
             </Text>
             <View style={styles.headerSpacer} />
           </View>
+
           {/* Icon */}
           <View style={styles.iconContainer}>
-            <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>
-              <KeyRound size={28} color={colors.copper} />
+            <View style={[styles.iconCircle, { backgroundColor: colors.accentSoft }]}>
+              <KeyRound size={28} color={colors.accent} />
             </View>
-            <Text style={[styles.description, { color: colors.textMuted }]}>
+            <Text style={[styles.description, { color: colors.muted }]}>
               {isRecovery
                 ? 'Choose a new password for your account.'
                 : hasEmailIdentity
@@ -145,7 +146,7 @@ export default function ChangePasswordScreen() {
 
           {/* Error */}
           {error && (
-            <View style={[styles.errorContainer, { backgroundColor: colors.coralDim, borderColor: 'rgba(212,131,107,0.2)' }]}>
+            <View style={[styles.errorContainer, { backgroundColor: colors.accentSoft, borderColor: colors.coral }]}>
               <Text style={[styles.errorText, { color: colors.coral }]}>{error}</Text>
             </View>
           )}
@@ -154,14 +155,14 @@ export default function ChangePasswordScreen() {
           <View style={styles.form}>
             {requireCurrentPassword && (
               <View style={styles.inputGroup}>
-                <Text style={[styles.label, { color: colors.textSecondary }]}>Current Password</Text>
+                <Text style={[styles.label, { color: colors.muted }]}>Current Password</Text>
                 <View style={styles.inputWrapper}>
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
+                    style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
                     value={currentPassword}
                     onChangeText={setCurrentPassword}
                     placeholder="Enter current password"
-                    placeholderTextColor={colors.textDim}
+                    placeholderTextColor={colors.faint}
                     secureTextEntry={!showCurrentPassword}
                     autoComplete="current-password"
                   />
@@ -170,9 +171,9 @@ export default function ChangePasswordScreen() {
                     style={styles.eyeButton}
                   >
                     {showCurrentPassword ? (
-                      <EyeOff size={18} color={colors.textMuted} />
+                      <EyeOff size={18} color={colors.muted} />
                     ) : (
-                      <Eye size={18} color={colors.textMuted} />
+                      <Eye size={18} color={colors.muted} />
                     )}
                   </Pressable>
                 </View>
@@ -180,14 +181,14 @@ export default function ChangePasswordScreen() {
             )}
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.textSecondary }]}>New Password</Text>
+              <Text style={[styles.label, { color: colors.muted }]}>New Password</Text>
               <View style={styles.inputWrapper}>
                 <TextInput
-                  style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
+                  style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
                   value={newPassword}
                   onChangeText={setNewPassword}
                   placeholder="At least 8 characters"
-                  placeholderTextColor={colors.textDim}
+                  placeholderTextColor={colors.faint}
                   secureTextEntry={!showNewPassword}
                   autoComplete="new-password"
                 />
@@ -196,23 +197,23 @@ export default function ChangePasswordScreen() {
                   style={styles.eyeButton}
                 >
                   {showNewPassword ? (
-                    <EyeOff size={18} color={colors.textMuted} />
+                    <EyeOff size={18} color={colors.muted} />
                   ) : (
-                    <Eye size={18} color={colors.textMuted} />
+                    <Eye size={18} color={colors.muted} />
                   )}
                 </Pressable>
               </View>
-              <Text style={[styles.hint, { color: colors.textDim }]}>Minimum 8 characters</Text>
+              <Text style={[styles.hint, { color: colors.faint }]}>Minimum 8 characters</Text>
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.textSecondary }]}>Confirm New Password</Text>
+              <Text style={[styles.label, { color: colors.muted }]}>Confirm New Password</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
+                style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
                 placeholder="Confirm new password"
-                placeholderTextColor={colors.textDim}
+                placeholderTextColor={colors.faint}
                 secureTextEntry
                 autoComplete="new-password"
               />
@@ -223,15 +224,15 @@ export default function ChangePasswordScreen() {
               disabled={isDisabled}
               style={({ pressed }) => [
                 styles.button,
-                { backgroundColor: colors.copper },
+                { backgroundColor: colors.accent },
                 pressed && styles.buttonPressed,
                 isDisabled && styles.buttonDisabled,
               ]}
             >
               {isLoading ? (
-                <ActivityIndicator color={colors.textPrimary} />
+                <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={[styles.buttonText, { color: colors.textPrimary }]}>
+                <Text style={styles.buttonText}>
                   {isRecovery ? 'Reset Password' : hasEmailIdentity ? 'Change Password' : 'Set Password'}
                 </Text>
               )}
@@ -266,7 +267,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitle: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 16,
   },
   headerSpacer: {
@@ -289,7 +290,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   description: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 15,
     textAlign: 'center',
     lineHeight: 22,
@@ -303,7 +304,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   errorText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 14,
   },
   form: {
@@ -313,8 +314,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   label: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 14,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 13,
   },
   inputWrapper: {
     position: 'relative',
@@ -322,11 +323,11 @@ const styles = StyleSheet.create({
   input: {
     borderRadius: 12,
     borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
     paddingRight: 48,
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 15,
   },
   eyeButton: {
     position: 'absolute',
@@ -336,12 +337,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   hint: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
   },
   button: {
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 14,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 8,
@@ -353,7 +354,8 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
 })

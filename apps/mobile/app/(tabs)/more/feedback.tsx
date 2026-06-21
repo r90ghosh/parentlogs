@@ -57,10 +57,10 @@ export default function FeedbackScreen() {
 
   const feedbackHeader = (
     <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-      <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-        <ArrowLeft size={20} color={colors.textSecondary} />
+      <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.accentSoft }]}>
+        <ArrowLeft size={20} color={colors.ink2} />
       </Pressable>
-      <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Send Feedback</Text>
+      <Text style={[styles.headerTitle, { color: colors.ink }]}>Send Feedback</Text>
       <View style={styles.headerSpacer} />
     </View>
   )
@@ -72,8 +72,8 @@ export default function FeedbackScreen() {
           {feedbackHeader}
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40, gap: 16 }}>
             <CheckCircle size={56} color={colors.sage} />
-            <Text style={[styles.successTitle, { color: colors.textPrimary }]}>Thanks for your feedback!</Text>
-            <Text style={[styles.successSubtitle, { color: colors.textMuted }]}>
+            <Text style={[styles.successTitle, { color: colors.ink }]}>Thanks for your feedback!</Text>
+            <Text style={[styles.successSubtitle, { color: colors.muted }]}>
               We read every message and use it to make the app better.
             </Text>
           </View>
@@ -94,17 +94,17 @@ export default function FeedbackScreen() {
             {feedbackHeader}
             {/* Icon */}
             <View style={styles.iconContainer}>
-              <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>
-                <MessageSquarePlus size={28} color={colors.copper} />
+              <View style={[styles.iconCircle, { backgroundColor: colors.accentSoft }]}>
+                <MessageSquarePlus size={28} color={colors.accent} />
               </View>
-              <Text style={[styles.iconDescription, { color: colors.textMuted }]}>
+              <Text style={[styles.iconDescription, { color: colors.muted }]}>
                 Help us improve The Dad Center. Tell us what's working, what's broken, or what you'd love to see.
               </Text>
             </View>
 
             {/* Error */}
             {submitFeedback.isError && (
-              <View style={[styles.errorContainer, { backgroundColor: colors.coralDim, borderColor: 'rgba(212,131,107,0.2)' }]}>
+              <View style={[styles.errorContainer, { backgroundColor: colors.accentSoft, borderColor: colors.coral }]}>
                 <Text style={[styles.errorText, { color: colors.coral }]}>
                   Something went wrong. Please try again.
                 </Text>
@@ -115,7 +115,7 @@ export default function FeedbackScreen() {
             <View style={styles.form}>
               {/* Type selector */}
               <View style={styles.inputGroup}>
-                <Text style={[styles.label, { color: colors.textSecondary }]}>Type</Text>
+                <Text style={[styles.label, { color: colors.muted }]}>Type</Text>
                 <View style={styles.typeRow}>
                   {FEEDBACK_TYPES.map((ft) => {
                     const isSelected = selectedType === ft.value
@@ -126,14 +126,14 @@ export default function FeedbackScreen() {
                         style={[
                           styles.typePill,
                           isSelected
-                            ? { backgroundColor: colors.copperDim, borderWidth: 1, borderColor: colors.copper }
-                            : { backgroundColor: colors.subtleBg, borderWidth: 1, borderColor: colors.border },
+                            ? { backgroundColor: colors.accent, borderWidth: 1, borderColor: colors.accent }
+                            : { borderWidth: 1, borderColor: colors.line },
                         ]}
                       >
                         <Text
                           style={[
                             styles.typePillText,
-                            { color: isSelected ? colors.copper : colors.textMuted },
+                            { color: isSelected ? '#fff' : colors.muted },
                           ]}
                         >
                           {ft.label}
@@ -146,19 +146,19 @@ export default function FeedbackScreen() {
 
               {/* Message */}
               <View style={styles.inputGroup}>
-                <Text style={[styles.label, { color: colors.textSecondary }]}>Message</Text>
+                <Text style={[styles.label, { color: colors.muted }]}>Message</Text>
                 <TextInput
-                  style={[styles.textArea, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
+                  style={[styles.textArea, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
                   value={message}
                   onChangeText={setMessage}
                   placeholder="Tell us what's on your mind..."
-                  placeholderTextColor={colors.textDim}
+                  placeholderTextColor={colors.faint}
                   multiline
                   maxLength={2000}
                   textAlignVertical="top"
                   autoCapitalize="sentences"
                 />
-                <Text style={[styles.charCount, { color: colors.textMuted }]}>
+                <Text style={[styles.charCount, { color: colors.muted }]}>
                   {charCount} / 2000
                   {charCount > 0 && charCount < 10
                     ? ` (${10 - charCount} more to go)`
@@ -172,15 +172,15 @@ export default function FeedbackScreen() {
                 disabled={isDisabled}
                 style={({ pressed }) => [
                   styles.button,
-                  { backgroundColor: colors.copper },
+                  { backgroundColor: colors.accent },
                   pressed && styles.buttonPressed,
                   isDisabled && styles.buttonDisabled,
                 ]}
               >
                 {submitFeedback.isPending ? (
-                  <ActivityIndicator color={colors.textPrimary} />
+                  <ActivityIndicator color="#fff" />
                 ) : (
-                  <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Submit Feedback</Text>
+                  <Text style={styles.buttonText}>Submit Feedback</Text>
                 )}
               </Pressable>
             </View>
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitle: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 16,
   },
   headerSpacer: {
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   iconDescription: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 15,
     textAlign: 'center',
     lineHeight: 22,
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   errorText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 14,
   },
   form: {
@@ -261,8 +261,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   label: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 14,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 13,
   },
   typeRow: {
     flexDirection: 'row',
@@ -276,28 +276,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   typePillText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 14,
   },
   textArea: {
     borderRadius: 12,
     borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingTop: 14,
-    paddingBottom: 14,
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    paddingHorizontal: 14,
+    paddingTop: 12,
+    paddingBottom: 12,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 15,
     minHeight: 120,
     textAlignVertical: 'top',
   },
   charCount: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
     textAlign: 'right',
   },
   button: {
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 14,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 8,
@@ -309,23 +309,20 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   buttonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
   successContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 40,
-    gap: 16,
   },
   successTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 22,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 20,
     textAlign: 'center',
   },
   successSubtitle: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 15,
     textAlign: 'center',
     lineHeight: 22,

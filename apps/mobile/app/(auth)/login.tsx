@@ -86,7 +86,7 @@ export default function LoginScreen() {
           {/* Header */}
           <View style={styles.header}>
             <BrandLogo size={40} textSize={30} />
-            <Text style={[styles.subtitle, { color: colors.textMuted }]}>
+            <Text style={[styles.subtitle, { color: colors.muted }]}>
               The operating system for modern fatherhood
             </Text>
           </View>
@@ -94,13 +94,13 @@ export default function LoginScreen() {
           {/* Form */}
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.textSecondary }]}>Email</Text>
+              <Text style={[styles.label, { color: colors.muted }]}>Email</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
+                style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
                 value={email}
                 onChangeText={setEmail}
                 placeholder="you@example.com"
-                placeholderTextColor={colors.textDim}
+                placeholderTextColor={colors.faint}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoComplete="email"
@@ -109,13 +109,13 @@ export default function LoginScreen() {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.textSecondary }]}>Password</Text>
+              <Text style={[styles.label, { color: colors.muted }]}>Password</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
+                style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Enter your password"
-                placeholderTextColor={colors.textDim}
+                placeholderTextColor={colors.faint}
                 secureTextEntry
                 autoComplete="password"
               />
@@ -128,7 +128,7 @@ export default function LoginScreen() {
                 }
                 style={styles.forgotPasswordButton}
               >
-                <Text style={[styles.forgotPasswordText, { color: colors.copper }]}>Forgot Password?</Text>
+                <Text style={[styles.forgotPasswordText, { color: colors.accentInk }]}>Forgot Password?</Text>
               </Pressable>
             </View>
 
@@ -137,23 +137,23 @@ export default function LoginScreen() {
               disabled={isLoading}
               style={({ pressed }) => [
                 styles.button,
-                { backgroundColor: colors.copper },
+                { backgroundColor: colors.accent },
                 pressed && styles.buttonPressed,
                 isLoading && styles.buttonDisabled,
               ]}
             >
               {isLoading ? (
-                <ActivityIndicator color={colors.textPrimary} />
+                <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Sign In</Text>
+                <Text style={styles.buttonText}>Sign In</Text>
               )}
             </Pressable>
 
             {/* Divider */}
             <View style={styles.divider}>
-              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
-              <Text style={[styles.dividerText, { color: colors.textDim }]}>or</Text>
-              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+              <View style={[styles.dividerLine, { backgroundColor: colors.line }]} />
+              <Text style={[styles.dividerText, { color: colors.faint }]}>or</Text>
+              <View style={[styles.dividerLine, { backgroundColor: colors.line }]} />
             </View>
 
             {/* Apple Sign In (iOS only, shown above Google per Apple guidelines) */}
@@ -170,7 +170,7 @@ export default function LoginScreen() {
                 {isAppleLoading ? (
                   <ActivityIndicator color="#ffffff" />
                 ) : (
-                  <Text style={styles.appleButtonText}>{'\uF8FF'} Continue with Apple</Text>
+                  <Text style={styles.appleButtonText}>{''} Continue with Apple</Text>
                 )}
               </Pressable>
             )}
@@ -180,27 +180,26 @@ export default function LoginScreen() {
               onPress={handleGoogleSignIn}
               disabled={isGoogleLoading}
               style={({ pressed }) => [
-                styles.googleButton,
-                { backgroundColor: colors.card, borderColor: colors.borderHover },
+                styles.socialButton,
+                { backgroundColor: colors.card, borderColor: colors.line },
                 pressed && styles.buttonPressed,
                 isGoogleLoading && styles.buttonDisabled,
               ]}
             >
               {isGoogleLoading ? (
-                <ActivityIndicator color={colors.textSecondary} />
+                <ActivityIndicator color={colors.ink2} />
               ) : (
-                <Text style={[styles.googleButtonText, { color: colors.textSecondary }]}>Continue with Google</Text>
+                <Text style={[styles.socialButtonText, { color: colors.ink }]}>Continue with Google</Text>
               )}
             </Pressable>
-
           </View>
 
           {/* Footer */}
           <View style={styles.footer}>
-            <Text style={[styles.footerText, { color: colors.textMuted }]}>Don't have an account? </Text>
+            <Text style={[styles.footerText, { color: colors.muted }]}>Don't have an account? </Text>
             <Link href="/(auth)/signup" asChild>
               <Pressable>
-                <Text style={[styles.linkText, { color: colors.copper }]}>Sign Up</Text>
+                <Text style={[styles.linkText, { color: colors.accentInk }]}>Sign Up</Text>
               </Pressable>
             </Link>
           </View>
@@ -226,41 +225,42 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     marginBottom: 48,
+    gap: 12,
   },
   subtitle: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Regular',
+    fontSize: 15,
     textAlign: 'center',
   },
   form: {
     gap: 20,
   },
   inputGroup: {
-    gap: 8,
+    gap: 6,
   },
   label: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 14,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 13,
   },
   input: {
-    borderRadius: 12,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 15,
     borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
   },
   forgotPasswordButton: {
     alignSelf: 'flex-end',
     marginTop: 4,
   },
   forgotPasswordText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 13,
   },
   button: {
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 8,
@@ -272,8 +272,9 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
   divider: {
     flexDirection: 'row',
@@ -285,31 +286,31 @@ const styles = StyleSheet.create({
     height: 1,
   },
   dividerText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
   },
   appleButton: {
     backgroundColor: '#000000',
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
   },
   appleButtonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
     color: '#ffffff',
   },
-  googleButton: {
+  socialButton: {
     borderRadius: 12,
     borderWidth: 1,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  googleButtonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+  socialButtonText: {
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 15,
   },
   footer: {
     flexDirection: 'row',
@@ -318,11 +319,11 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   footerText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
   },
   linkText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 14,
   },
 })

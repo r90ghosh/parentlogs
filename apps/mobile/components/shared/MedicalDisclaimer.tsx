@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   text: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 11,
     textAlign: 'center',
     lineHeight: 16,

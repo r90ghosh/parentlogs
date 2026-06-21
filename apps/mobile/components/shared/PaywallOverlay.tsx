@@ -114,13 +114,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   headline: {
-    fontFamily: 'PlayfairDisplay-Bold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 18,
     textAlign: 'center',
     marginBottom: 8,
   },
   body: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     textAlign: 'center',
     lineHeight: 20,
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   featureText: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
     flex: 1,
   },
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   primaryCtaText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 15,
   },
   secondaryCta: {
@@ -168,11 +168,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   secondaryCtaText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
   },
   guarantee: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 11,
   },
 })

@@ -85,11 +85,11 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   title: {
-    fontFamily: 'Jost-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 17,
   },
   description: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
     marginTop: 4,
   },

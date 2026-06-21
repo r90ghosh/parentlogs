@@ -74,12 +74,12 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   title: {
-    fontFamily: 'Jost-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 18,
     paddingRight: 36,
   },
   description: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     marginTop: 8,
     lineHeight: 20,

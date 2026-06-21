@@ -97,21 +97,21 @@ export default function FamilyScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.header}>
-            <Text style={[styles.step, { color: colors.copper }]}>Step 2 of 4</Text>
-            <Text style={[styles.title, { color: colors.textPrimary }]}>Your family</Text>
-            <Text style={[styles.subtitle, { color: colors.textMuted }]}>
+            <Text style={[styles.step, { color: colors.accent }]}>STEP 2 OF 4</Text>
+            <Text style={[styles.title, { color: colors.ink }]}>Your family</Text>
+            <Text style={[styles.subtitle, { color: colors.muted }]}>
               When is the baby expected? This helps us personalize your timeline.
             </Text>
           </View>
 
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.textSecondary }]}>Due Date</Text>
+              <Text style={[styles.label, { color: colors.muted }]}>Due Date</Text>
               <Pressable
                 onPress={() => setShowDatePicker(true)}
-                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border }]}
+                style={[styles.datePicker, { backgroundColor: colors.bg, borderColor: colors.line }]}
               >
-                <Text style={dueDate ? [styles.inputText, { color: colors.textSecondary }] : [styles.placeholderText, { color: colors.textDim }]}>
+                <Text style={dueDate ? [styles.inputText, { color: colors.ink }] : [styles.placeholderText, { color: colors.faint }]}>
                   {dueDate
                     ? dueDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
                     : 'Select your due date'}
@@ -133,19 +133,19 @@ export default function FamilyScreen() {
                   themeVariant="dark"
                 />
               )}
-              <Text style={[styles.hint, { color: colors.textDim }]}>
+              <Text style={[styles.hint, { color: colors.faint }]}>
                 Select the expected or actual due date
               </Text>
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.textSecondary }]}>Baby's Name (optional)</Text>
+              <Text style={[styles.label, { color: colors.muted }]}>Baby's Name (optional)</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
+                style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
                 value={babyName}
                 onChangeText={setBabyName}
                 placeholder="Baby's name or nickname"
-                placeholderTextColor={colors.textDim}
+                placeholderTextColor={colors.faint}
                 autoCapitalize="words"
               />
             </View>
@@ -156,15 +156,15 @@ export default function FamilyScreen() {
             disabled={isLoading}
             style={({ pressed }) => [
               styles.button,
-              { backgroundColor: colors.copper },
+              { backgroundColor: colors.accent },
               pressed && styles.buttonPressed,
               isLoading && styles.buttonDisabled,
             ]}
           >
             {isLoading ? (
-              <ActivityIndicator color={colors.textPrimary} />
+              <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Continue</Text>
+              <Text style={styles.buttonText}>Continue</Text>
             )}
           </Pressable>
         </ScrollView>
@@ -190,55 +190,64 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   step: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 13,
-    marginBottom: 12,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 11,
+    marginBottom: 14,
     textTransform: 'uppercase',
-    letterSpacing: 1.5,
+    letterSpacing: 1.6,
   },
   title: {
-    fontFamily: 'PlayfairDisplay-Bold',
+    fontFamily: 'Jakarta-ExtraBold',
     fontSize: 28,
     marginBottom: 8,
+    letterSpacing: -0.5,
   },
   subtitle: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Regular',
+    fontSize: 15,
+    lineHeight: 22,
   },
   form: {
-    gap: 24,
+    gap: 20,
     marginBottom: 40,
   },
   inputGroup: {
-    gap: 8,
+    gap: 6,
   },
   label: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 14,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 13,
   },
-  input: {
+  datePicker: {
     borderRadius: 12,
     borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+  },
+  input: {
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 15,
+    borderRadius: 12,
+    borderWidth: 1,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
   },
   inputText: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 15,
   },
   placeholderText: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 15,
   },
   hint: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
+    marginTop: 4,
   },
   button: {
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
   },
   buttonPressed: {
@@ -248,7 +257,8 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
 })

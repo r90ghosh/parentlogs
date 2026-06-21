@@ -1,493 +1,244 @@
-import { useState, useCallback } from 'react'
-import {
-  View,
-  Text,
-  Pressable,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-  RefreshControl,
-  Alert,
-} from 'react-native'
+import { useState, useMemo, useEffect } from 'react'
+import { View, Text, Pressable, ScrollView, Modal, RefreshControl, ActivityIndicator, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import {
-  Check,
-  ChevronDown,
-  ChevronUp,
-  Lock,
-  ClipboardList,
-  Package,
-  Baby,
-  Shield,
-  Heart,
-  Home,
-  Stethoscope,
-  Car,
-  Shirt,
-  RotateCcw,
-} from 'lucide-react-native'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance } from '@/components/animations'
-import { ScreenHeader } from '@/components/ui/ScreenHeader'
-import {
-  useChecklists,
-  useChecklistById,
-  useToggleChecklistItem,
-  useResetChecklist,
-} from '@/hooks/use-checklists'
-import { useColors } from '@/hooks/use-colors'
-import type { ChecklistWithItems } from '@tdc/services'
+import { Check, ChevronDown, Lock, X } from 'lucide-react-native'
 import * as Haptics from 'expo-haptics'
+import { useAuth } from '@/components/providers/AuthProvider'
+import { useColors } from '@/hooks/use-colors'
+import { useChecklists, useChecklistById, useToggleChecklistItem } from '@/hooks/use-checklists'
+import { PhaseChips, SectionLabel } from '@/components/digest'
+import type { ChecklistWithItems } from '@tdc/services'
 
-const CATEGORY_ICONS: Record<string, typeof Package> = {
-  'Hospital': Stethoscope,
-  'Registry': Baby,
-  'Safety': Shield,
-  'Nursery': Home,
-  'Gear': Car,
-  'Clothing': Shirt,
-  'Health': Heart,
+type ChecklistItem = {
+  item_id: string
+  item: string
+  details?: string
+  category: string
+  required: boolean
+  bring_or_do: 'bring' | 'do'
+  completed: boolean
 }
 
-function getCategoryIcon(name: string) {
-  for (const [key, Icon] of Object.entries(CATEGORY_ICONS)) {
-    if (name.toLowerCase().includes(key.toLowerCase())) {
-      return Icon
-    }
-  }
-  return ClipboardList
+function parseWeekRange(wr: string): { start: number; end: number } {
+  const plus = wr?.includes('+')
+  const clean = (wr ?? '').replace('+', '').trim()
+  const parts = clean.split('-').map((s) => parseInt(s.trim(), 10))
+  const start = isNaN(parts[0]) ? 0 : parts[0]
+  const end = plus ? Infinity : parts.length > 1 && !isNaN(parts[1]) ? parts[1] : start
+  return { start, end }
 }
-
-interface ChecklistCardProps {
-  checklist: ChecklistWithItems
-  isExpanded: boolean
-  onToggle: () => void
+function isNow(wr: string, week: number): boolean {
+  const { start, end } = parseWeekRange(wr)
+  return week >= start && week <= end
 }
-
-function ChecklistCard({ checklist, isExpanded, onToggle }: ChecklistCardProps) {
-  const colors = useColors()
-  const toggleItem = useToggleChecklistItem()
-  const resetChecklist = useResetChecklist()
-  const detailQuery = useChecklistById(isExpanded ? checklist.checklist_id : '')
-
-  function handleReset() {
-    Alert.alert(
-      'Reset Checklist?',
-      'This will uncheck all items. This cannot be undone.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Reset',
-          style: 'destructive',
-          onPress: () => {
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)
-            resetChecklist.mutate(checklist.checklist_id)
-          },
-        },
-      ]
-    )
-  }
-  const Icon = getCategoryIcon(checklist.name)
-
-  const items = isExpanded && detailQuery.data?.items
-    ? detailQuery.data.items
-    : []
-
-  return (
-    <GlassCard style={[styles.checklistCard, checklist.is_locked && styles.checklistLocked]}>
-      <Pressable
-        onPress={() => {
-          if (checklist.is_locked) return
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-          onToggle()
-        }}
-        style={styles.checklistHeader}
-      >
-        <View style={[styles.checklistIconWrap, { backgroundColor: colors.copperDim }]}>
-          <Icon size={20} color={checklist.is_locked ? colors.textDim : colors.copper} />
-        </View>
-        <View style={styles.checklistInfo}>
-          <View style={styles.checklistTitleRow}>
-            <Text
-              style={[
-                styles.checklistName,
-                { color: colors.textSecondary },
-                checklist.is_locked && { color: colors.textDim },
-              ]}
-              numberOfLines={1}
-            >
-              {checklist.name}
-            </Text>
-            {checklist.is_locked && <Lock size={14} color={colors.textDim} />}
-          </View>
-          <Text style={[styles.checklistMeta, { color: colors.textMuted }]}>
-            {checklist.progress.completed}/{checklist.progress.total} items
-          </Text>
-        </View>
-        <View style={styles.checklistRight}>
-          {/* Reset button (only when completed > 0 and not locked) */}
-          {!checklist.is_locked && checklist.progress.completed > 0 && (
-            <Pressable
-              onPress={(e) => {
-                e.stopPropagation?.()
-                handleReset()
-              }}
-              hitSlop={8}
-              style={[styles.resetButton, { backgroundColor: colors.coralDim }]}
-            >
-              <RotateCcw size={14} color={colors.coral} />
-            </Pressable>
-          )}
-          {/* Progress circle */}
-          <View style={[styles.progressCircle, { backgroundColor: colors.copperDim }]}>
-            <Text style={[styles.progressText, { color: colors.copper }]}>
-              {checklist.progress.percentage}%
-            </Text>
-          </View>
-          {!checklist.is_locked && (
-            isExpanded ? (
-              <ChevronUp size={18} color={colors.textMuted} />
-            ) : (
-              <ChevronDown size={18} color={colors.textMuted} />
-            )
-          )}
-        </View>
-      </Pressable>
-
-      {/* Progress bar */}
-      <View style={[styles.progressBarOuter, { backgroundColor: colors.subtleBg }]}>
-        <View
-          style={[
-            styles.progressBarInner,
-            {
-              width: `${checklist.progress.percentage}%`,
-              backgroundColor:
-                checklist.progress.percentage === 100 ? colors.sage : colors.copper,
-            },
-          ]}
-        />
-      </View>
-
-      {/* Expanded items */}
-      {isExpanded && (
-        <View style={[styles.checklistItems, { borderTopColor: colors.border }]}>
-          {detailQuery.isLoading ? (
-            <View style={styles.itemsLoading}>
-              <ActivityIndicator color={colors.copper} size="small" />
-            </View>
-          ) : items.length > 0 ? (
-            items.map((item: any) => (
-              <Pressable
-                key={item.item_id}
-                onPress={() => {
-                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
-                  toggleItem.mutate({
-                    checklistId: checklist.checklist_id,
-                    itemId: item.item_id,
-                    completed: !item.completed,
-                  })
-                }}
-                style={[styles.checklistItem, { borderBottomColor: colors.pressed }]}
-              >
-                <View
-                  style={[
-                    styles.itemCheckbox,
-                    { borderColor: colors.textDim },
-                    item.completed && { backgroundColor: colors.sage, borderColor: colors.sage },
-                  ]}
-                >
-                  {item.completed && <Check size={10} color={colors.bg} />}
-                </View>
-                <View style={styles.itemContent}>
-                  <Text
-                    style={[
-                      styles.itemName,
-                      { color: colors.textSecondary },
-                      item.completed && { textDecorationLine: 'line-through', color: colors.textMuted },
-                    ]}
-                  >
-                    {item.item}
-                  </Text>
-                  {item.details ? (
-                    <Text style={[styles.itemDetails, { color: colors.textMuted }]} numberOfLines={2}>
-                      {item.details}
-                    </Text>
-                  ) : null}
-                </View>
-                {item.required && (
-                  <View style={[styles.requiredBadge, { backgroundColor: colors.copperDim }]}>
-                    <Text style={[styles.requiredText, { color: colors.copper }]}>Req</Text>
-                  </View>
-                )}
-              </Pressable>
-            ))
-          ) : (
-            <Text style={[styles.noItemsText, { color: colors.textMuted }]}>No items in this checklist</Text>
-          )}
-        </View>
-      )}
-    </GlassCard>
-  )
+function relevanceKey(wr: string, week: number): number {
+  const { start, end } = parseWeekRange(wr)
+  if (week >= start && week <= end) return 0
+  if (week < start) return start - week
+  return 100000 + (week - end)
 }
 
 export default function ChecklistsScreen() {
-  const insets = useSafeAreaInsets()
   const colors = useColors()
+  const insets = useSafeAreaInsets()
+  const { family } = useAuth()
+  const currentWeek = (family as { current_week?: number })?.current_week ?? 1
+
   const checklistsQuery = useChecklists()
-  const [expandedId, setExpandedId] = useState<string | null>(null)
+  const toggleItem = useToggleChecklistItem()
 
-  const handleRefresh = useCallback(() => {
-    checklistsQuery.refetch()
-  }, [checklistsQuery])
-
-  const renderChecklist = useCallback(
-    ({ item, index }: { item: ChecklistWithItems; index: number }) => (
-      <CardEntrance delay={index * 80}>
-        <ChecklistCard
-          checklist={item}
-          isExpanded={expandedId === item.checklist_id}
-          onToggle={() =>
-            setExpandedId(
-              expandedId === item.checklist_id ? null : item.checklist_id
-            )
-          }
-        />
-      </CardEntrance>
-    ),
-    [expandedId]
+  const lists = useMemo(() => (checklistsQuery.data ?? []) as ChecklistWithItems[], [checklistsQuery.data])
+  const unlocked = useMemo(
+    () => lists.filter((c) => !c.is_locked).sort((a, b) => relevanceKey(a.week_relevant, currentWeek) - relevanceKey(b.week_relevant, currentWeek)),
+    [lists, currentWeek]
   )
 
-  const checklistHeader = (
-    <ScreenHeader title="Checklists" leftAction="close" transparent />
-  )
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [showIndex, setShowIndex] = useState(false)
+
+  useEffect(() => {
+    if (!selectedId && unlocked.length) setSelectedId(unlocked[0].checklist_id)
+  }, [selectedId, unlocked])
+
+  const detailQuery = useChecklistById(selectedId ?? '')
+  const active = detailQuery.data as (ChecklistWithItems & { items?: ChecklistItem[] }) | undefined
+  const items = (active?.items ?? []) as ChecklistItem[]
+
+  const grouped = useMemo(() => {
+    const map = new Map<string, ChecklistItem[]>()
+    for (const it of items) {
+      const key = it.category || 'Other'
+      if (!map.has(key)) map.set(key, [])
+      map.get(key)!.push(it)
+    }
+    return Array.from(map.entries())
+  }, [items])
+
+  const onToggle = (it: ChecklistItem) => {
+    if (!selectedId) return
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+    toggleItem.mutate({ checklistId: selectedId, itemId: it.item_id, completed: !it.completed })
+  }
+
+  // All-lists index buckets
+  const buckets = useMemo(() => {
+    const completed: ChecklistWithItems[] = []
+    const forNow: ChecklistWithItems[] = []
+    const comingUp: ChecklistWithItems[] = []
+    const locked: ChecklistWithItems[] = []
+    for (const c of lists) {
+      if (c.is_locked) locked.push(c)
+      else if (c.progress.percentage === 100) completed.push(c)
+      else if (isNow(c.week_relevant, currentWeek)) forNow.push(c)
+      else comingUp.push(c)
+    }
+    return { forNow, comingUp, completed, locked }
+  }, [lists, currentWeek])
 
   return (
-    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Pressable onPress={() => setShowIndex(true)} hitSlop={8} style={styles.allLists}>
+          <Text style={[styles.allListsText, { color: colors.ink2 }]}>All lists</Text>
+          <ChevronDown size={16} color={colors.ink2} />
+        </Pressable>
+      </View>
 
-      {/* Content */}
-      {checklistsQuery.isLoading ? (
-        <View style={styles.loadingContainer}>
-          {checklistHeader}
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <ActivityIndicator color={colors.copper} size="large" />
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: insets.bottom + 90 }}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={checklistsQuery.isRefetching} onRefresh={() => checklistsQuery.refetch()} tintColor={colors.accent} />}
+      >
+        {unlocked.length > 0 && (
+          <PhaseChips
+            chips={unlocked.map((c) => ({ key: c.checklist_id, label: c.name }))}
+            activeKey={selectedId}
+            onSelect={setSelectedId}
+          />
+        )}
+
+        {!selectedId || detailQuery.isLoading ? (
+          <View style={styles.loading}>
+            <ActivityIndicator color={colors.accent} />
           </View>
-        </View>
-      ) : !checklistsQuery.data || checklistsQuery.data.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          {checklistHeader}
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40, gap: 12 }}>
-            <ClipboardList size={40} color={colors.textDim} />
-            <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>No checklists available</Text>
-            <Text style={[styles.emptySubtitle, { color: colors.textMuted }]}>
-              Checklists will appear here once your family is set up
-            </Text>
-          </View>
-        </View>
-      ) : (
-        <FlatList
-          data={checklistsQuery.data}
-          keyExtractor={(item) => item.checklist_id}
-          renderItem={renderChecklist}
-          numColumns={1}
-          ListHeaderComponent={checklistHeader}
-          contentContainerStyle={[
-            styles.listContent,
-            { paddingBottom: insets.bottom + 24 },
-          ]}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={checklistsQuery.isRefetching}
-              onRefresh={handleRefresh}
-              tintColor={colors.copper}
-            />
-          }
-          ListFooterComponent={
-            <Text style={[styles.disclaimerText, { color: colors.textDim }]}>
-              Medical guidance in checklists is general reference only. Confirm medication dosages and emergency procedures with your pediatrician.
-            </Text>
-          }
-        />
-      )}
+        ) : active ? (
+          <>
+            {/* Hero */}
+            <View style={styles.hero}>
+              <Text style={[styles.heroName, { color: colors.ink }]}>{active.name}</Text>
+              <Text style={[styles.heroMeta, { color: colors.muted }]}>
+                {active.progress.completed} of {active.progress.total} done{active.week_relevant ? ` · Weeks ${active.week_relevant}` : ''}
+              </Text>
+              <View style={[styles.progress, { backgroundColor: colors.line }]}>
+                <View style={[styles.progressFill, { width: `${active.progress.percentage}%`, backgroundColor: active.progress.percentage === 100 ? colors.sage : colors.accent }]} />
+              </View>
+            </View>
+
+            {grouped.map(([cat, catItems]) => (
+              <View key={cat}>
+                <SectionLabel>{cat}</SectionLabel>
+                {catItems.map((it) => (
+                  <Pressable
+                    key={it.item_id}
+                    onPress={() => onToggle(it)}
+                    style={({ pressed }) => [styles.item, { borderBottomColor: colors.line2, backgroundColor: pressed ? colors.cardHover : 'transparent' }]}
+                  >
+                    <View style={[styles.check, { borderColor: it.completed ? colors.sage : colors.line, backgroundColor: it.completed ? colors.sage : 'transparent' }]}>
+                      {it.completed && <Check size={12} color="#fff" strokeWidth={3} />}
+                    </View>
+                    <View style={styles.itemBody}>
+                      <Text style={[styles.itemName, { color: it.completed ? colors.muted : colors.ink, textDecorationLine: it.completed ? 'line-through' : 'none' }]}>
+                        {it.item}
+                      </Text>
+                      {!!it.details && (
+                        <Text style={[styles.itemDetails, { color: colors.muted }]} numberOfLines={2}>{it.details}</Text>
+                      )}
+                    </View>
+                    <View style={styles.itemTags}>
+                      {it.bring_or_do === 'bring' && <Text style={[styles.tag, { color: colors.dotBaby }]}>Pack</Text>}
+                      {!it.required && <Text style={[styles.tag, { color: colors.faint }]}>Optional</Text>}
+                    </View>
+                  </Pressable>
+                ))}
+              </View>
+            ))}
+          </>
+        ) : (
+          <Text style={[styles.empty, { color: colors.muted }]}>No checklists available yet.</Text>
+        )}
+      </ScrollView>
+
+      {/* All-lists index */}
+      <Modal visible={showIndex} transparent animationType="slide" onRequestClose={() => setShowIndex(false)}>
+        <Pressable style={[styles.backdrop, { backgroundColor: colors.overlay }]} onPress={() => setShowIndex(false)}>
+          <Pressable style={[styles.sheet, { backgroundColor: colors.card, paddingBottom: insets.bottom + 16 }]} onPress={(e) => e.stopPropagation()}>
+            <View style={styles.sheetHead}>
+              <Text style={[styles.sheetTitle, { color: colors.ink }]}>All lists</Text>
+              <Pressable onPress={() => setShowIndex(false)} hitSlop={10}><X size={20} color={colors.ink2} /></Pressable>
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false} style={{ maxHeight: 460 }}>
+              {([
+                ['For now', buckets.forNow] as const,
+                ['Coming up', buckets.comingUp] as const,
+                ['Completed', buckets.completed] as const,
+                ['Locked', buckets.locked] as const,
+              ]).map(([label, group]) =>
+                group.length === 0 ? null : (
+                  <View key={label}>
+                    <SectionLabel>{label}</SectionLabel>
+                    {group.map((c) => (
+                      <Pressable
+                        key={c.checklist_id}
+                        onPress={() => {
+                          if (c.is_locked) return
+                          setSelectedId(c.checklist_id)
+                          setShowIndex(false)
+                        }}
+                        style={({ pressed }) => [styles.indexRow, { borderBottomColor: colors.line2, backgroundColor: pressed ? colors.cardHover : 'transparent', opacity: c.is_locked ? 0.6 : 1 }]}
+                      >
+                        <View style={styles.indexBody}>
+                          <Text style={[styles.indexName, { color: colors.ink }]} numberOfLines={1}>{c.name}</Text>
+                          <Text style={[styles.indexMeta, { color: colors.muted }]}>{c.progress.completed}/{c.progress.total} · Weeks {c.week_relevant}</Text>
+                        </View>
+                        {c.is_locked && <Lock size={15} color={colors.faint} />}
+                      </Pressable>
+                    ))}
+                  </View>
+                )
+              )}
+            </ScrollView>
+          </Pressable>
+        </Pressable>
+      </Modal>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-
-  // List
-  listContent: {
-    paddingHorizontal: 20,
-    gap: 12,
-    paddingTop: 8,
-  },
-
-  // Checklist card
-  checklistCard: {
-    overflow: 'hidden',
-    padding: 0,
-  },
-  checklistLocked: {
-    opacity: 0.5,
-  },
-  checklistHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    gap: 12,
-  },
-  checklistIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  checklistInfo: {
-    flex: 1,
-  },
-  checklistTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  checklistName: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 15,
-    flex: 1,
-  },
-  checklistMeta: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 12,
-    marginTop: 2,
-  },
-  checklistRight: {
-    alignItems: 'center',
-    gap: 4,
-  },
-  resetButton: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  // Progress
-  progressCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  progressText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 11,
-  },
-  progressBarOuter: {
-    height: 3,
-    marginHorizontal: 16,
-  },
-  progressBarInner: {
-    height: 3,
-    borderRadius: 1.5,
-  },
-
-  // Expanded items
-  checklistItems: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 8,
-    borderTopWidth: 1,
-    marginTop: 8,
-  },
-  itemsLoading: {
-    paddingVertical: 20,
-    alignItems: 'center',
-  },
-  checklistItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    paddingVertical: 10,
-    gap: 12,
-    borderBottomWidth: 1,
-  },
-  itemCheckbox: {
-    width: 20,
-    height: 20,
-    borderRadius: 6,
-    borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 2,
-  },
-  itemContent: {
-    flex: 1,
-  },
-  itemName: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 14,
-  },
-  itemDetails: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 12,
-    marginTop: 3,
-    lineHeight: 16,
-  },
-  requiredBadge: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-    marginTop: 2,
-  },
-  requiredText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 9,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  noItemsText: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 14,
-    textAlign: 'center',
-    paddingVertical: 16,
-  },
-
-  // Disclaimer
-  disclaimerText: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 11,
-    textAlign: 'center',
-    marginTop: 16,
-    paddingHorizontal: 20,
-    lineHeight: 16,
-  },
-
-  // Loading / Empty
-  loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  emptyContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 40,
-    gap: 12,
-  },
-  emptyTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  emptySubtitle: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 14,
-    textAlign: 'center',
-  },
+  container: { flex: 1 },
+  header: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 2 },
+  allLists: { flexDirection: 'row', alignItems: 'center', gap: 4, alignSelf: 'flex-start' },
+  allListsText: { fontFamily: 'Jakarta-Bold', fontSize: 13, letterSpacing: 0.2, textTransform: 'uppercase' },
+  loading: { paddingVertical: 60, alignItems: 'center' },
+  hero: { paddingHorizontal: 22, paddingTop: 10, paddingBottom: 4 },
+  heroName: { fontFamily: 'Jakarta-ExtraBold', fontSize: 24, letterSpacing: -0.5 },
+  heroMeta: { fontFamily: 'Jakarta-Medium', fontSize: 13.5, marginTop: 6 },
+  progress: { height: 6, borderRadius: 6, overflow: 'hidden', marginTop: 14 },
+  progressFill: { height: '100%', borderRadius: 6 },
+  item: { flexDirection: 'row', alignItems: 'flex-start', gap: 13, paddingVertical: 14, paddingHorizontal: 22, borderBottomWidth: 1 },
+  check: { width: 22, height: 22, borderRadius: 11, borderWidth: 2, alignItems: 'center', justifyContent: 'center', marginTop: 1, flexShrink: 0 },
+  itemBody: { flex: 1, minWidth: 0 },
+  itemName: { fontFamily: 'Jakarta-SemiBold', fontSize: 15.5, lineHeight: 21, letterSpacing: -0.1 },
+  itemDetails: { fontFamily: 'Jakarta-Regular', fontSize: 13, lineHeight: 18, marginTop: 3 },
+  itemTags: { alignItems: 'flex-end', gap: 3, flexShrink: 0 },
+  tag: { fontFamily: 'Jakarta-Bold', fontSize: 10.5, textTransform: 'uppercase', letterSpacing: 0.5 },
+  empty: { fontFamily: 'Jakarta-Medium', fontSize: 14, textAlign: 'center', paddingVertical: 48 },
+  backdrop: { flex: 1, justifyContent: 'flex-end' },
+  sheet: { borderTopLeftRadius: 24, borderTopRightRadius: 24, paddingTop: 16, paddingHorizontal: 4 },
+  sheetHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18, paddingBottom: 6 },
+  sheetTitle: { fontFamily: 'Jakarta-Bold', fontSize: 17 },
+  indexRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 14, paddingHorizontal: 18, borderBottomWidth: 1 },
+  indexBody: { flex: 1, minWidth: 0 },
+  indexName: { fontFamily: 'Jakarta-SemiBold', fontSize: 15 },
+  indexMeta: { fontFamily: 'Jakarta-Medium', fontSize: 12, marginTop: 2 },
 })

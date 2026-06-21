@@ -99,7 +99,7 @@ export default function SignupScreen() {
           {/* Header */}
           <View style={styles.header}>
             <BrandLogo size={40} textSize={30} />
-            <Text style={[styles.subtitle, { color: colors.textMuted }]}>
+            <Text style={[styles.subtitle, { color: colors.muted }]}>
               Join thousands of dads who refuse to wing it
             </Text>
           </View>
@@ -107,26 +107,26 @@ export default function SignupScreen() {
           {/* Form */}
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.textSecondary }]}>Full Name</Text>
+              <Text style={[styles.label, { color: colors.muted }]}>Full Name</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
+                style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
                 value={fullName}
                 onChangeText={setFullName}
                 placeholder="Your name"
-                placeholderTextColor={colors.textDim}
+                placeholderTextColor={colors.faint}
                 autoCapitalize="words"
                 autoComplete="name"
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.textSecondary }]}>Email</Text>
+              <Text style={[styles.label, { color: colors.muted }]}>Email</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
+                style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
                 value={email}
                 onChangeText={setEmail}
                 placeholder="you@example.com"
-                placeholderTextColor={colors.textDim}
+                placeholderTextColor={colors.faint}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoComplete="email"
@@ -135,13 +135,13 @@ export default function SignupScreen() {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.textSecondary }]}>Password</Text>
+              <Text style={[styles.label, { color: colors.muted }]}>Password</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
+                style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
                 value={password}
                 onChangeText={setPassword}
                 placeholder="At least 6 characters"
-                placeholderTextColor={colors.textDim}
+                placeholderTextColor={colors.faint}
                 secureTextEntry
                 autoComplete="new-password"
               />
@@ -155,11 +155,11 @@ export default function SignupScreen() {
               accessibilityState={{ checked: ageConfirmed }}
             >
               {ageConfirmed ? (
-                <CheckSquare size={20} color={colors.copper} />
+                <CheckSquare size={20} color={colors.accent} />
               ) : (
-                <Square size={20} color={colors.textMuted} />
+                <Square size={20} color={colors.muted} />
               )}
-              <Text style={[styles.ageText, { color: colors.textSecondary }]}>I confirm I am 18 years or older</Text>
+              <Text style={[styles.ageText, { color: colors.ink2 }]}>I confirm I am 18 years or older</Text>
             </Pressable>
 
             <Pressable
@@ -167,23 +167,23 @@ export default function SignupScreen() {
               disabled={!ageConfirmed || isLoading}
               style={({ pressed }) => [
                 styles.button,
-                { backgroundColor: colors.copper },
+                { backgroundColor: colors.accent },
                 pressed && styles.buttonPressed,
                 (!ageConfirmed || isLoading) && styles.buttonDisabled,
               ]}
             >
               {isLoading ? (
-                <ActivityIndicator color={colors.textPrimary} />
+                <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Create Account</Text>
+                <Text style={styles.buttonText}>Create Account</Text>
               )}
             </Pressable>
 
             {/* Divider */}
             <View style={styles.divider}>
-              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
-              <Text style={[styles.dividerText, { color: colors.textDim }]}>or</Text>
-              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+              <View style={[styles.dividerLine, { backgroundColor: colors.line }]} />
+              <Text style={[styles.dividerText, { color: colors.faint }]}>or</Text>
+              <View style={[styles.dividerLine, { backgroundColor: colors.line }]} />
             </View>
 
             {/* Apple Sign In (iOS only, shown above Google per Apple guidelines) */}
@@ -200,7 +200,7 @@ export default function SignupScreen() {
                 {isAppleLoading ? (
                   <ActivityIndicator color="#ffffff" />
                 ) : (
-                  <Text style={styles.appleButtonText}>{'\uF8FF'} Continue with Apple</Text>
+                  <Text style={styles.appleButtonText}>{''} Continue with Apple</Text>
                 )}
               </Pressable>
             )}
@@ -210,26 +210,26 @@ export default function SignupScreen() {
               onPress={handleGoogleSignIn}
               disabled={isGoogleLoading}
               style={({ pressed }) => [
-                styles.googleButton,
-                { backgroundColor: colors.card, borderColor: colors.borderHover },
+                styles.socialButton,
+                { backgroundColor: colors.card, borderColor: colors.line },
                 pressed && styles.buttonPressed,
                 isGoogleLoading && styles.buttonDisabled,
               ]}
             >
               {isGoogleLoading ? (
-                <ActivityIndicator color={colors.textSecondary} />
+                <ActivityIndicator color={colors.ink2} />
               ) : (
-                <Text style={[styles.googleButtonText, { color: colors.textSecondary }]}>Continue with Google</Text>
+                <Text style={[styles.socialButtonText, { color: colors.ink }]}>Continue with Google</Text>
               )}
             </Pressable>
           </View>
 
           {/* Footer */}
           <View style={styles.footer}>
-            <Text style={[styles.footerText, { color: colors.textMuted }]}>Already have an account? </Text>
+            <Text style={[styles.footerText, { color: colors.muted }]}>Already have an account? </Text>
             <Link href="/(auth)/login" asChild>
               <Pressable>
-                <Text style={[styles.linkText, { color: colors.copper }]}>Sign In</Text>
+                <Text style={[styles.linkText, { color: colors.accentInk }]}>Sign In</Text>
               </Pressable>
             </Link>
           </View>
@@ -255,29 +255,30 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     marginBottom: 48,
+    gap: 12,
   },
   subtitle: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Regular',
+    fontSize: 15,
     textAlign: 'center',
   },
   form: {
     gap: 20,
   },
   inputGroup: {
-    gap: 8,
+    gap: 6,
   },
   label: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 14,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 13,
   },
   input: {
-    borderRadius: 12,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 15,
     borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
   },
   ageRow: {
     flexDirection: 'row',
@@ -286,13 +287,13 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   ageText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     flex: 1,
   },
   button: {
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 8,
@@ -304,8 +305,9 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
   divider: {
     flexDirection: 'row',
@@ -317,31 +319,31 @@ const styles = StyleSheet.create({
     height: 1,
   },
   dividerText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
   },
   appleButton: {
     backgroundColor: '#000000',
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
   },
   appleButtonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
     color: '#ffffff',
   },
-  googleButton: {
+  socialButton: {
     borderRadius: 12,
     borderWidth: 1,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  googleButtonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+  socialButtonText: {
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 15,
   },
   footer: {
     flexDirection: 'row',
@@ -350,11 +352,11 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   footerText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
   },
   linkText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 14,
   },
 })

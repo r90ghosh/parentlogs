@@ -18,10 +18,8 @@ import {
   ChevronUp,
   Mail,
 } from 'lucide-react-native'
-import { LinearGradient } from 'expo-linear-gradient'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance } from '@/components/animations'
 import { useColors } from '@/hooks/use-colors'
+import { SectionLabel } from '@/components/digest'
 
 if (
   Platform.OS === 'android' &&
@@ -150,15 +148,16 @@ export default function FaqScreen() {
       >
         {/* Header */}
         <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>FAQ</Text>
-          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
-            <X size={20} color={colors.textMuted} />
+          <Text style={[styles.headerTitle, { color: colors.ink }]}>FAQ</Text>
+          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.accentSoft }]}>
+            <X size={20} color={colors.muted} />
           </Pressable>
         </View>
+
         {FAQ_CATEGORIES.map((category, catIndex) => (
-          <CardEntrance key={category.title} delay={catIndex * 100}>
-            <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>{category.title}</Text>
-            <GlassCard style={styles.section}>
+          <View key={category.title}>
+            <SectionLabel>{category.title}</SectionLabel>
+            <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.line }]}>
               {category.items.map((item, itemIndex) => {
                 const key = `${catIndex}-${itemIndex}`
                 const isExpanded = expandedKey === key
@@ -167,53 +166,43 @@ export default function FaqScreen() {
                   <Pressable
                     key={key}
                     onPress={() => toggleFaq(key)}
-                    style={[
+                    style={({ pressed }) => [
                       styles.faqRow,
-                      !isLast && [styles.faqRowBorder, { borderBottomColor: colors.subtleBg }],
+                      !isLast && { borderBottomWidth: 1, borderBottomColor: colors.line2 },
+                      pressed && { backgroundColor: colors.cardHover },
                     ]}
                   >
                     <View style={styles.faqHeader}>
-                      <Text style={[styles.faqQuestion, { color: colors.textSecondary }]}>{item.q}</Text>
+                      <Text style={[styles.faqQuestion, { color: colors.ink }]}>{item.q}</Text>
                       {isExpanded ? (
-                        <ChevronUp size={16} color={colors.textMuted} />
+                        <ChevronUp size={16} color={colors.muted} />
                       ) : (
-                        <ChevronDown size={16} color={colors.textMuted} />
+                        <ChevronDown size={16} color={colors.muted} />
                       )}
                     </View>
                     {isExpanded && (
-                      <Text style={[styles.faqAnswer, { color: colors.textMuted }]}>{item.a}</Text>
+                      <Text style={[styles.faqAnswer, { color: colors.muted }]}>{item.a}</Text>
                     )}
                   </Pressable>
                 )
               })}
-            </GlassCard>
-          </CardEntrance>
+            </View>
+          </View>
         ))}
 
         {/* Contact CTA */}
-        <CardEntrance delay={FAQ_CATEGORIES.length * 100}>
-          <Pressable
-            onPress={() =>
-              Linking.openURL('mailto:info@thedadcenter.com')
-            }
-            style={[styles.contactCard, { borderColor: colors.copperDim }]}
-          >
-            <LinearGradient
-              colors={[colors.copperDim, colors.goldDim]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.contactGradient}
-            >
-              <View style={[styles.contactIconCircle, { backgroundColor: colors.copperDim }]}>
-                <Mail size={20} color={colors.copper} />
-              </View>
-              <Text style={[styles.contactTitle, { color: colors.textPrimary }]}>Still have questions?</Text>
-              <Text style={[styles.contactSubtitle, { color: colors.textMuted }]}>
-                Tap to email us — we typically respond within 24 hours.
-              </Text>
-            </LinearGradient>
-          </Pressable>
-        </CardEntrance>
+        <Pressable
+          onPress={() => Linking.openURL('mailto:info@thedadcenter.com')}
+          style={[styles.contactCard, { backgroundColor: colors.accentSoft, borderColor: colors.line }]}
+        >
+          <View style={[styles.contactIconCircle, { backgroundColor: colors.card }]}>
+            <Mail size={20} color={colors.accent} />
+          </View>
+          <Text style={[styles.contactTitle, { color: colors.ink }]}>Still have questions?</Text>
+          <Text style={[styles.contactSubtitle, { color: colors.muted }]}>
+            Tap to email us — we typically respond within 24 hours.
+          </Text>
+        </Pressable>
       </ScrollView>
     </View>
   )
@@ -235,7 +224,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   headerTitle: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 16,
   },
   closeButton: {
@@ -250,28 +239,18 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
 
-  // Section
-  sectionTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 13,
-    textTransform: 'uppercase',
-    letterSpacing: 1.2,
-    marginBottom: 12,
-    marginTop: 8,
-  },
-  section: {
+  // Card
+  card: {
+    borderRadius: 16,
+    borderWidth: 1,
     overflow: 'hidden',
-    marginBottom: 24,
-    padding: 0,
+    marginBottom: 4,
   },
 
   // FAQ
   faqRow: {
-    paddingVertical: 16,
+    paddingVertical: 15,
     paddingHorizontal: 16,
-  },
-  faqRowBorder: {
-    borderBottomWidth: 1,
   },
   faqHeader: {
     flexDirection: 'row',
@@ -279,13 +258,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   faqQuestion: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 15,
     flex: 1,
     marginRight: 12,
   },
   faqAnswer: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     lineHeight: 22,
     marginTop: 10,
@@ -293,15 +272,13 @@ const styles = StyleSheet.create({
 
   // Contact CTA
   contactCard: {
-    borderRadius: 12,
-    overflow: 'hidden',
-    marginBottom: 24,
+    borderRadius: 16,
     borderWidth: 1,
-  },
-  contactGradient: {
     alignItems: 'center',
     paddingVertical: 28,
     paddingHorizontal: 20,
+    marginTop: 8,
+    marginBottom: 24,
   },
   contactIconCircle: {
     width: 44,
@@ -312,12 +289,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   contactTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 18,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 17,
     marginBottom: 6,
   },
   contactSubtitle: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     textAlign: 'center',
     lineHeight: 21,

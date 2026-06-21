@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   label: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 14,
   },
   inputWrapper: {
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 16,
     paddingHorizontal: 16,
     height: '100%',
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   error: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
   },
 })

@@ -1,11 +1,7 @@
 import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native'
 import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
-import Animated, { FadeIn } from 'react-native-reanimated'
 import { Check, Crown, Sparkles, ArrowRight } from 'lucide-react-native'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance } from '@/components/animations'
 import { useColors } from '@/hooks/use-colors'
 
 const PLANS = [
@@ -60,95 +56,83 @@ export default function GuestPricingScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        <Animated.View entering={FadeIn.duration(400)}>
-          <Text style={[styles.preLabel, { color: colors.copper }]}>PRICING</Text>
-          <Text style={[styles.title, { color: colors.textPrimary }]}>
+        <View>
+          <Text style={[styles.preLabel, { color: colors.accent }]}>PRICING</Text>
+          <Text style={[styles.title, { color: colors.ink }]}>
             One price.{'\n'}Whole family.
           </Text>
-          <Text style={[styles.subtitle, { color: colors.textMuted }]}>
+          <Text style={[styles.subtitle, { color: colors.muted }]}>
             Both partners share one subscription. Start free, upgrade when
             you're ready.
           </Text>
-        </Animated.View>
+        </View>
 
         {/* Plan cards */}
         <View style={styles.plansContainer}>
-          {PLANS.map((plan, index) => (
-            <CardEntrance key={plan.name} delay={200 + index * 120}>
-              <View style={{ marginTop: plan.badge ? 10 : 0 }}>
-                {plan.badge && (
-                  <View style={[styles.planBadge, { backgroundColor: colors.gold }]}>
-                    <Sparkles size={10} color={colors.bg} />
-                    <Text style={[styles.planBadgeText, { color: colors.bg }]}>{plan.badge}</Text>
-                  </View>
-                )}
-                <View
-                  style={[
-                    styles.planCard,
-                    { borderColor: colors.border, backgroundColor: colors.card },
-                    plan.highlight && { borderColor: colors.goldGlow, backgroundColor: colors.goldDim },
-                  ]}
-                >
-                  <View style={styles.planHeader}>
-                    {plan.name === 'Lifetime' && (
-                      <Crown
-                        size={16}
-                        color={colors.gold}
-                        style={{ marginRight: 6 }}
-                      />
-                    )}
-                    <Text style={[styles.planName, { color: colors.textPrimary }]}>{plan.name}</Text>
-                  </View>
-
-                  <View style={styles.planPriceRow}>
-                    <Text style={[styles.planPrice, { color: colors.textPrimary }]}>{plan.price}</Text>
-                    {plan.period ? (
-                      <Text style={[styles.planPeriod, { color: colors.textMuted }]}>{plan.period}</Text>
-                    ) : null}
-                  </View>
-                  <Text style={[styles.planSubtitle, { color: colors.textMuted }]}>{plan.subtitle}</Text>
+          {PLANS.map((plan) => (
+            <View key={plan.name} style={{ marginTop: plan.badge ? 10 : 0 }}>
+              {plan.badge && (
+                <View style={[styles.planBadge, { backgroundColor: colors.gold }]}>
+                  <Sparkles size={10} color="#fff" />
+                  <Text style={styles.planBadgeText}>{plan.badge}</Text>
                 </View>
+              )}
+              <View
+                style={[
+                  styles.planCard,
+                  { borderColor: colors.line, backgroundColor: colors.card },
+                  plan.highlight && { borderColor: colors.accent, borderWidth: 2 },
+                ]}
+              >
+                <View style={styles.planHeader}>
+                  {plan.name === 'Lifetime' && (
+                    <Crown
+                      size={16}
+                      color={colors.gold}
+                      style={{ marginRight: 6 }}
+                    />
+                  )}
+                  <Text style={[styles.planName, { color: colors.ink }]}>{plan.name}</Text>
+                </View>
+
+                <View style={styles.planPriceRow}>
+                  <Text style={[styles.planPrice, { color: colors.ink }]}>{plan.price}</Text>
+                  {plan.period ? (
+                    <Text style={[styles.planPeriod, { color: colors.muted }]}>{plan.period}</Text>
+                  ) : null}
+                </View>
+                <Text style={[styles.planSubtitle, { color: colors.muted }]}>{plan.subtitle}</Text>
               </View>
-            </CardEntrance>
+            </View>
           ))}
         </View>
 
         {/* Feature list */}
-        <CardEntrance delay={600}>
-          <Text style={[styles.includedLabel, { color: colors.copper }]}>WHAT'S INCLUDED</Text>
-          <GlassCard style={styles.featuresCard}>
-            {FEATURES.map((feat) => (
-              <View key={feat} style={styles.featureRow}>
-                <Check size={16} color={colors.sage} />
-                <Text style={[styles.featureText, { color: colors.textSecondary }]}>{feat}</Text>
-              </View>
-            ))}
-          </GlassCard>
-        </CardEntrance>
+        <Text style={[styles.includedLabel, { color: colors.accent }]}>WHAT'S INCLUDED</Text>
+        <View style={[styles.featuresCard, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          {FEATURES.map((feat) => (
+            <View key={feat} style={styles.featureRow}>
+              <Check size={16} color={colors.sage} />
+              <Text style={[styles.featureText, { color: colors.ink2 }]}>{feat}</Text>
+            </View>
+          ))}
+        </View>
 
         {/* CTA */}
-        <CardEntrance delay={800}>
-          <Pressable
-            onPress={() => router.push('/(auth)/signup')}
-            style={({ pressed }) => [
-              styles.ctaWrapper,
-              pressed && styles.ctaPressed,
-            ]}
-          >
-            <LinearGradient
-              colors={colors.ctaGradient as unknown as [string, string]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.ctaGradient}
-            >
-              <Text style={[styles.ctaText, { color: colors.bg }]}>Start Free</Text>
-              <ArrowRight size={18} color={colors.bg} />
-            </LinearGradient>
-          </Pressable>
-          <Text style={[styles.noCreditCard, { color: colors.textMuted }]}>
-            No credit card required. Cancel anytime.
-          </Text>
-        </CardEntrance>
+        <Pressable
+          onPress={() => router.push('/(auth)/signup')}
+          style={({ pressed }) => [
+            styles.ctaWrapper,
+            { backgroundColor: colors.accent },
+            pressed && styles.ctaPressed,
+          ]}
+        >
+          <Text style={styles.ctaText}>Start Free</Text>
+          <ArrowRight size={18} color="#fff" />
+        </Pressable>
+        <Text style={[styles.noCreditCard, { color: colors.muted }]}>
+          No credit card required. Cancel anytime.
+        </Text>
       </ScrollView>
     </View>
   )
@@ -167,25 +151,26 @@ const styles = StyleSheet.create({
 
   // Title
   preLabel: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 11,
-    letterSpacing: 2,
+    letterSpacing: 1.6,
     textTransform: 'uppercase',
     textAlign: 'center',
     marginBottom: 12,
   },
   title: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 30,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 28,
     textAlign: 'center',
-    lineHeight: 40,
+    lineHeight: 36,
     marginBottom: 12,
+    letterSpacing: -0.4,
   },
   subtitle: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 15,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: 22,
     maxWidth: 300,
     alignSelf: 'center',
     marginBottom: 28,
@@ -193,31 +178,32 @@ const styles = StyleSheet.create({
 
   // Plans
   plansContainer: {
-    gap: 12,
+    gap: 10,
     marginBottom: 28,
   },
   planCard: {
-    padding: 20,
+    padding: 18,
     borderWidth: 1,
-    borderRadius: 12,
+    borderRadius: 16,
   },
   planBadge: {
     alignSelf: 'flex-end',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 8,
     marginBottom: -6,
     marginRight: 16,
     zIndex: 1,
   },
   planBadgeText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 10,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
+    color: '#fff',
   },
   planHeader: {
     flexDirection: 'row',
@@ -225,8 +211,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   planName: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 15.5,
   },
   planPriceRow: {
     flexDirection: 'row',
@@ -234,32 +220,35 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   planPrice: {
-    fontFamily: 'PlayfairDisplay-Bold',
+    fontFamily: 'Jakarta-ExtraBold',
     fontSize: 28,
+    letterSpacing: -0.5,
   },
   planPeriod: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     marginLeft: 2,
   },
   planSubtitle: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
   },
 
   // Features
   includedLabel: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 11,
-    letterSpacing: 2,
+    letterSpacing: 1.6,
     textTransform: 'uppercase',
     textAlign: 'center',
     marginBottom: 12,
   },
   featuresCard: {
-    padding: 20,
+    padding: 18,
     gap: 14,
     marginBottom: 28,
+    borderRadius: 16,
+    borderWidth: 1,
   },
   featureRow: {
     flexDirection: 'row',
@@ -267,42 +256,33 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   featureText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     flex: 1,
   },
 
   // CTA
   ctaWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
     alignSelf: 'center',
-    borderRadius: 14,
-    overflow: 'hidden',
-    shadowColor: '#c4703f',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 8,
+    borderRadius: 12,
+    paddingVertical: 15,
+    paddingHorizontal: 40,
   },
   ctaPressed: {
     opacity: 0.85,
     transform: [{ scale: 0.97 }],
   },
-  ctaGradient: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 16,
-    paddingHorizontal: 40,
-    borderRadius: 14,
-  },
   ctaText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
-    letterSpacing: 0.5,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
   noCreditCard: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
     textAlign: 'center',
     marginTop: 12,

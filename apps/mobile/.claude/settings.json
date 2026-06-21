@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd apps/mobile && npx tsc -p tsconfig.json --noEmit || exit 2"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -8,11 +8,9 @@ import {
 } from 'react-native'
 import { Link, useRouter } from 'expo-router'
 import { useAuth } from '@/components/providers/AuthProvider'
-import { BrandLogoIcon } from '@/components/BrandLogo'
+import { BrandLogo } from '@/components/BrandLogo'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
 import { BlurView } from 'expo-blur'
-import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated'
 import {
   BookOpen,
   CheckSquare,
@@ -27,8 +25,6 @@ import {
 } from 'lucide-react-native'
 import * as Haptics from 'expo-haptics'
 import * as WebBrowser from 'expo-web-browser'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance, StaggerList } from '@/components/animations'
 import { useColors } from '@/hooks/use-colors'
 import { useTheme } from '@/components/providers/ThemeProvider'
 
@@ -89,7 +85,7 @@ const APP_HIGHLIGHTS = [
     icon: CheckSquare,
   },
   {
-    week: '0\u20133 Months',
+    week: '0–3 Months',
     title: 'The Fourth Trimester',
     quote: 'Set up feeding station. Learn swaddle technique. Track feeds and diapers. Split night shifts fairly. — From day one, you know what to do.',
     icon: Activity,
@@ -145,14 +141,14 @@ export default function LandingScreen() {
       {/* Theme toggle */}
       <Pressable
         onPress={toggleTheme}
-        style={[styles.themeToggle, { top: insets.top + 12, backgroundColor: colors.subtleBg }]}
+        style={[styles.themeToggle, { top: insets.top + 12, backgroundColor: colors.card, borderColor: colors.line }]}
         accessibilityLabel={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         accessibilityRole="button"
       >
         {isDark ? (
           <Sun size={18} color={colors.gold} />
         ) : (
-          <Moon size={18} color={colors.copper} />
+          <Moon size={18} color={colors.accent} />
         )}
       </Pressable>
 
@@ -168,20 +164,16 @@ export default function LandingScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* ====== HERO SECTION ====== */}
-        <Animated.View
-          entering={FadeIn.duration(600)}
-          style={styles.heroSection}
-        >
-          <Text style={[styles.preLabel, { color: colors.copper }]}>FOR MODERN DADS</Text>
+        <View style={styles.heroSection}>
+          <Text style={[styles.preLabel, { color: colors.accent }]}>FOR MODERN DADS</Text>
 
-          <BrandLogoIcon size={56} />
-          <Text style={[styles.heroTitle, { color: colors.textPrimary }]}>The Dad Center</Text>
+          <BrandLogo size={48} textSize={28} />
 
-          <Text style={[styles.heroSubtitle, { color: colors.copper }]}>
+          <Text style={[styles.heroSubtitle, { color: colors.accent }]}>
             The operating system for modern fatherhood
           </Text>
 
-          <Text style={[styles.heroDescription, { color: colors.textMuted }]}>
+          <Text style={[styles.heroDescription, { color: colors.muted }]}>
             Week-by-week guidance, actionable tasks, and zero fluff. Finally, a
             parenting app that respects your intelligence.
           </Text>
@@ -191,35 +183,30 @@ export default function LandingScreen() {
             <Pressable
               style={({ pressed }) => [
                 styles.ctaButtonWrapper,
-                { shadowColor: colors.copper },
+                { backgroundColor: colors.accent },
                 pressed && styles.ctaButtonPressed,
               ]}
             >
-              <LinearGradient
-                colors={colors.ctaGradient as unknown as [string, string]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.ctaGradient}
-              >
-                <Text style={[styles.ctaText, { color: colors.bg }]}>Get Started</Text>
-                <ArrowRight size={18} color={colors.bg} />
-              </LinearGradient>
+              <View style={styles.ctaInner}>
+                <Text style={styles.ctaText}>Get Started</Text>
+                <ArrowRight size={18} color="#fff" />
+              </View>
             </Pressable>
           </Link>
 
           {/* Sign In Link */}
           <View style={styles.signInRow}>
-            <Text style={[styles.signInLabel, { color: colors.textMuted }]}>Already have an account? </Text>
+            <Text style={[styles.signInLabel, { color: colors.muted }]}>Already have an account? </Text>
             <Link href="/(auth)/login" asChild>
               <Pressable>
-                <Text style={[styles.signInLink, { color: colors.copper }]}>Sign In</Text>
+                <Text style={[styles.signInLink, { color: colors.accentInk }]}>Sign In</Text>
               </Pressable>
             </Link>
           </View>
 
           {/* Browse as Guest */}
           <Pressable onPress={handleBrowseAsGuest} style={styles.guestRow}>
-            <Text style={[styles.guestText, { color: colors.textMuted }]}>Browse as Guest</Text>
+            <Text style={[styles.guestText, { color: colors.muted }]}>Browse as Guest</Text>
           </Pressable>
 
           {/* Trust stats */}
@@ -230,235 +217,203 @@ export default function LandingScreen() {
               { value: 'Evidence', label: 'Based' },
             ].map((stat) => (
               <View key={stat.label} style={styles.statItem}>
-                <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stat.value}</Text>
-                <Text style={[styles.statLabel, { color: colors.textMuted }]}>{stat.label}</Text>
+                <Text style={[styles.statValue, { color: colors.ink }]}>{stat.value}</Text>
+                <Text style={[styles.statLabel, { color: colors.muted }]}>{stat.label}</Text>
               </View>
             ))}
           </View>
-        </Animated.View>
+        </View>
 
         {/* ====== FEATURES SECTION ====== */}
         <View style={styles.section}>
-          <CardEntrance delay={100}>
-            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>FEATURES</Text>
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-              Everything you need,{'\n'}nothing you don't
-            </Text>
-          </CardEntrance>
+          <Text style={[styles.sectionPreLabel, { color: colors.accent }]}>FEATURES</Text>
+          <Text style={[styles.sectionTitle, { color: colors.ink }]}>
+            Everything you need,{'\n'}nothing you don't
+          </Text>
 
           <View style={styles.featuresGrid}>
-            {FEATURES.map((feature, index) => (
-              <CardEntrance key={feature.title} delay={200 + index * 120}>
-                <GlassCard style={styles.featureCard}>
-                  <View style={[styles.featureIconContainer, { backgroundColor: colors.copperDim, borderColor: colors.copperGlow }]}>
-                    <feature.icon size={22} color={colors.copper} strokeWidth={1.5} />
-                  </View>
-                  <Text style={[styles.featureTitle, { color: colors.textPrimary }]}>{feature.title}</Text>
-                  <Text style={[styles.featureDescription, { color: colors.textMuted }]}>
-                    {feature.description}
-                  </Text>
-                </GlassCard>
-              </CardEntrance>
+            {FEATURES.map((feature) => (
+              <View
+                key={feature.title}
+                style={[styles.featureCard, { backgroundColor: colors.card, borderColor: colors.line }]}
+              >
+                <View style={[styles.featureIconContainer, { backgroundColor: colors.accentSoft }]}>
+                  <feature.icon size={22} color={colors.accent} strokeWidth={1.5} />
+                </View>
+                <Text style={[styles.featureTitle, { color: colors.ink }]}>{feature.title}</Text>
+                <Text style={[styles.featureDescription, { color: colors.muted }]}>
+                  {feature.description}
+                </Text>
+              </View>
             ))}
           </View>
         </View>
 
         {/* ====== HOW IT WORKS SECTION ====== */}
         <View style={styles.section}>
-          <CardEntrance delay={100}>
-            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>HOW IT WORKS</Text>
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Up and running{'\n'}in 2 minutes</Text>
-          </CardEntrance>
+          <Text style={[styles.sectionPreLabel, { color: colors.accent }]}>HOW IT WORKS</Text>
+          <Text style={[styles.sectionTitle, { color: colors.ink }]}>Up and running{'\n'}in 2 minutes</Text>
 
-          <StaggerList staggerMs={100}>
-            {STEPS.map((step) => (
-              <View key={step.number} style={styles.stepRow}>
-                <View style={styles.stepNumberContainer}>
-                  <LinearGradient
-                    colors={colors.ctaGradient as unknown as [string, string]}
-                    style={styles.stepNumberGradient}
-                  >
-                    <Text style={[styles.stepNumber, { color: colors.bg }]}>{step.number}</Text>
-                  </LinearGradient>
-                  {step.number !== '3' && <View style={[styles.stepLine, { backgroundColor: colors.copperGlow }]} />}
+          {STEPS.map((step) => (
+            <View key={step.number} style={styles.stepRow}>
+              <View style={styles.stepNumberContainer}>
+                <View style={[styles.stepNumberCircle, { backgroundColor: colors.accent }]}>
+                  <Text style={styles.stepNumber}>{step.number}</Text>
                 </View>
-                <View style={styles.stepContent}>
-                  <Text style={[styles.stepTitle, { color: colors.textPrimary }]}>{step.title}</Text>
-                  <Text style={[styles.stepDescription, { color: colors.textMuted }]}>
-                    {step.description}
-                  </Text>
-                </View>
+                {step.number !== '3' && <View style={[styles.stepLine, { backgroundColor: colors.line }]} />}
               </View>
-            ))}
-          </StaggerList>
+              <View style={styles.stepContent}>
+                <Text style={[styles.stepTitle, { color: colors.ink }]}>{step.title}</Text>
+                <Text style={[styles.stepDescription, { color: colors.muted }]}>
+                  {step.description}
+                </Text>
+              </View>
+            </View>
+          ))}
         </View>
 
         {/* ====== INSIDE THE APP SECTION ====== */}
         <View style={styles.section}>
-          <CardEntrance delay={100}>
-            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>INSIDE THE APP</Text>
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-              Your Roadmap{'\n'}at Every Stage
-            </Text>
-          </CardEntrance>
+          <Text style={[styles.sectionPreLabel, { color: colors.accent }]}>INSIDE THE APP</Text>
+          <Text style={[styles.sectionTitle, { color: colors.ink }]}>
+            Your Roadmap{'\n'}at Every Stage
+          </Text>
 
-          {APP_HIGHLIGHTS.map((highlight, index) => (
-            <CardEntrance key={highlight.week} delay={200 + index * 120}>
-              <GlassCard style={styles.testimonialCard}>
-                {/* Week badge + icon */}
-                <View style={styles.attributionRow}>
-                  <LinearGradient
-                    colors={colors.ctaGradient as unknown as [string, string]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.avatarCircle}
-                  >
-                    <highlight.icon size={16} color={colors.textPrimary} />
-                  </LinearGradient>
-                  <View>
-                    <Text style={[styles.authorName, { color: colors.textPrimary }]}>{highlight.week}</Text>
-                    <Text style={[styles.authorContext, { color: colors.textMuted }]}>
-                      {highlight.title}
-                    </Text>
-                  </View>
+          {APP_HIGHLIGHTS.map((highlight) => (
+            <View
+              key={highlight.week}
+              style={[styles.highlightCard, { backgroundColor: colors.card, borderColor: colors.line }]}
+            >
+              {/* Week badge + icon */}
+              <View style={styles.attributionRow}>
+                <View style={[styles.avatarCircle, { backgroundColor: colors.accentSoft }]}>
+                  <highlight.icon size={16} color={colors.accent} />
                 </View>
+                <View>
+                  <Text style={[styles.authorName, { color: colors.ink }]}>{highlight.week}</Text>
+                  <Text style={[styles.authorContext, { color: colors.muted }]}>
+                    {highlight.title}
+                  </Text>
+                </View>
+              </View>
 
-                {/* Quote text */}
-                <Text style={[styles.quoteText, { marginTop: 12, color: colors.textSecondary }]}>
-                  {highlight.quote}
-                </Text>
-              </GlassCard>
-            </CardEntrance>
+              <Text style={[styles.quoteText, { color: colors.ink2 }]}>
+                {highlight.quote}
+              </Text>
+            </View>
           ))}
         </View>
 
         {/* ====== PRICING SECTION ====== */}
         <View style={styles.section}>
-          <CardEntrance delay={100}>
-            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>PRICING</Text>
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-              One price.{'\n'}Whole family.
-            </Text>
-          </CardEntrance>
+          <Text style={[styles.sectionPreLabel, { color: colors.accent }]}>PRICING</Text>
+          <Text style={[styles.sectionTitle, { color: colors.ink }]}>
+            One price.{'\n'}Whole family.
+          </Text>
 
           <View style={styles.plansContainer}>
-            {PLANS.map((plan, index) => (
-              <CardEntrance key={plan.name} delay={200 + index * 120}>
-                <GlassCard
-                  style={[
-                    styles.planCard,
-                    { borderColor: colors.border },
-                    plan.highlight && { borderColor: colors.goldGlow, backgroundColor: colors.goldDim },
-                  ]}
-                >
-                  {plan.badge && (
-                    <View style={[styles.planBadge, { backgroundColor: colors.gold }]}>
-                      <Sparkles size={10} color={colors.bg} />
-                      <Text style={[styles.planBadgeText, { color: colors.bg }]}>{plan.badge}</Text>
-                    </View>
+            {PLANS.map((plan) => (
+              <View
+                key={plan.name}
+                style={[
+                  styles.planCard,
+                  { backgroundColor: colors.card, borderColor: colors.line },
+                  plan.highlight && { borderColor: colors.accent, borderWidth: 2 },
+                ]}
+              >
+                {plan.badge && (
+                  <View style={[styles.planBadge, { backgroundColor: colors.gold }]}>
+                    <Sparkles size={10} color="#fff" />
+                    <Text style={styles.planBadgeText}>{plan.badge}</Text>
+                  </View>
+                )}
+
+                <View style={styles.planHeader}>
+                  {plan.name === 'Lifetime' && (
+                    <Crown size={16} color={colors.gold} style={{ marginRight: 6 }} />
                   )}
+                  <Text style={[styles.planName, { color: colors.ink }]}>{plan.name}</Text>
+                </View>
 
-                  <View style={styles.planHeader}>
-                    {plan.name === 'Lifetime' && (
-                      <Crown size={16} color={colors.gold} style={{ marginRight: 6 }} />
-                    )}
-                    <Text style={[styles.planName, { color: colors.textPrimary }]}>{plan.name}</Text>
-                  </View>
+                <View style={styles.planPriceRow}>
+                  <Text style={[styles.planPrice, { color: colors.ink }]}>{plan.price}</Text>
+                  {plan.period ? (
+                    <Text style={[styles.planPeriod, { color: colors.muted }]}>{plan.period}</Text>
+                  ) : null}
+                </View>
+                <Text style={[styles.planSubtitle, { color: colors.muted }]}>{plan.subtitle}</Text>
 
-                  <View style={styles.planPriceRow}>
-                    <Text style={[styles.planPrice, { color: colors.textPrimary }]}>{plan.price}</Text>
-                    {plan.period ? (
-                      <Text style={[styles.planPeriod, { color: colors.textMuted }]}>{plan.period}</Text>
-                    ) : null}
-                  </View>
-                  <Text style={[styles.planSubtitle, { color: colors.textMuted }]}>{plan.subtitle}</Text>
-
-                  {/* Feature checks */}
-                  <View style={styles.planFeatures}>
-                    {[
-                      'All weekly briefings',
-                      'Full task timeline',
-                      'Partner sync',
-                    ].map((feat) => (
-                      <View key={feat} style={styles.planFeatureRow}>
-                        <Check size={14} color={colors.sage} />
-                        <Text style={[styles.planFeatureText, { color: colors.textSecondary }]}>{feat}</Text>
-                      </View>
-                    ))}
-                  </View>
-                </GlassCard>
-              </CardEntrance>
+                {/* Feature checks */}
+                <View style={styles.planFeatures}>
+                  {[
+                    'All weekly briefings',
+                    'Full task timeline',
+                    'Partner sync',
+                  ].map((feat) => (
+                    <View key={feat} style={styles.planFeatureRow}>
+                      <Check size={14} color={colors.sage} />
+                      <Text style={[styles.planFeatureText, { color: colors.ink2 }]}>{feat}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
             ))}
           </View>
 
           {/* Start Free CTA */}
-          <CardEntrance delay={600}>
-            <Link href="/(auth)/signup" asChild>
-              <Pressable
-                style={({ pressed }) => [
-                  styles.ctaButtonWrapper,
-                  { shadowColor: colors.copper },
-                  pressed && styles.ctaButtonPressed,
-                ]}
-              >
-                <LinearGradient
-                  colors={colors.ctaGradient as unknown as [string, string]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.ctaGradient}
-                >
-                  <Text style={[styles.ctaText, { color: colors.bg }]}>Start Free</Text>
-                  <ArrowRight size={18} color={colors.bg} />
-                </LinearGradient>
-              </Pressable>
-            </Link>
-            <Text style={[styles.noCreditCard, { color: colors.textMuted }]}>
-              No credit card required. Cancel anytime.
-            </Text>
-          </CardEntrance>
+          <Link href="/(auth)/signup" asChild>
+            <Pressable
+              style={({ pressed }) => [
+                styles.ctaButtonWrapper,
+                { backgroundColor: colors.accent },
+                pressed && styles.ctaButtonPressed,
+              ]}
+            >
+              <View style={styles.ctaInner}>
+                <Text style={styles.ctaText}>Start Free</Text>
+                <ArrowRight size={18} color="#fff" />
+              </View>
+            </Pressable>
+          </Link>
+          <Text style={[styles.noCreditCard, { color: colors.muted }]}>
+            No credit card required. Cancel anytime.
+          </Text>
         </View>
 
         {/* ====== FINAL CTA SECTION ====== */}
         <View style={[styles.section, styles.finalCtaSection]}>
-          <CardEntrance delay={100}>
-            <Text style={[styles.finalCtaTitle, { color: colors.textPrimary }]}>
-              Ready to stop{'\n'}winging it?
-            </Text>
-            <Text style={[styles.finalCtaSubtitle, { color: colors.textMuted }]}>
-              Join thousands of prepared dads who refuse to leave fatherhood to
-              chance.
-            </Text>
+          <Text style={[styles.finalCtaTitle, { color: colors.ink }]}>
+            Ready to stop{'\n'}winging it?
+          </Text>
+          <Text style={[styles.finalCtaSubtitle, { color: colors.muted }]}>
+            Join thousands of prepared dads who refuse to leave fatherhood to
+            chance.
+          </Text>
 
-            <Link href="/(auth)/signup" asChild>
-              <Pressable
-                style={({ pressed }) => [
-                  styles.ctaButtonWrapper,
-                  { shadowColor: colors.copper },
-                  pressed && styles.ctaButtonPressed,
-                ]}
-              >
-                <LinearGradient
-                  colors={colors.ctaGradient as unknown as [string, string]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.ctaGradient}
-                >
-                  <Text style={[styles.ctaText, { color: colors.bg }]}>Get Started Free</Text>
-                  <ArrowRight size={18} color={colors.bg} />
-                </LinearGradient>
-              </Pressable>
-            </Link>
+          <Link href="/(auth)/signup" asChild>
+            <Pressable
+              style={({ pressed }) => [
+                styles.ctaButtonWrapper,
+                { backgroundColor: colors.accent },
+                pressed && styles.ctaButtonPressed,
+              ]}
+            >
+              <View style={styles.ctaInner}>
+                <Text style={styles.ctaText}>Get Started Free</Text>
+                <ArrowRight size={18} color="#fff" />
+              </View>
+            </Pressable>
+          </Link>
 
-            <View style={styles.legalLinks}>
-              <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')}>
-                <Text style={[styles.legalLink, { color: colors.textDim }]}>Privacy Policy</Text>
-              </Pressable>
-              <Text style={[styles.legalDot, { color: colors.textDim }]}>{'\u00B7'}</Text>
-              <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/terms')}>
-                <Text style={[styles.legalLink, { color: colors.textDim }]}>Terms of Service</Text>
-              </Pressable>
-            </View>
-          </CardEntrance>
+          <View style={styles.legalLinks}>
+            <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/privacy')}>
+              <Text style={[styles.legalLink, { color: colors.faint }]}>Privacy Policy</Text>
+            </Pressable>
+            <Text style={[styles.legalDot, { color: colors.faint }]}>{'·'}</Text>
+            <Pressable onPress={() => WebBrowser.openBrowserAsync('https://thedadcenter.com/terms')}>
+              <Text style={[styles.legalLink, { color: colors.faint }]}>Terms of Service</Text>
+            </Pressable>
+          </View>
         </View>
       </ScrollView>
 
@@ -482,19 +437,14 @@ function StickyBottomBar({ bottomInset }: { bottomInset: number }) {
         <Pressable
           style={({ pressed }) => [
             styles.stickyButtonWrapper,
-            { shadowColor: colors.copper },
+            { backgroundColor: colors.accent },
             pressed && styles.ctaButtonPressed,
           ]}
         >
-          <LinearGradient
-            colors={colors.ctaGradient as unknown as [string, string]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.stickyGradient}
-          >
-            <Text style={[styles.stickyButtonText, { color: colors.bg }]}>Get Started</Text>
-            <ArrowRight size={16} color={colors.bg} />
-          </LinearGradient>
+          <View style={styles.stickyGradient}>
+            <Text style={styles.stickyButtonText}>Get Started</Text>
+            <ArrowRight size={16} color="#fff" />
+          </View>
         </Pressable>
       </Link>
     </View>
@@ -502,21 +452,18 @@ function StickyBottomBar({ bottomInset }: { bottomInset: number }) {
 
   if (Platform.OS === 'ios') {
     return (
-      <Animated.View entering={FadeInDown.delay(800).springify()}>
-        <BlurView tint={colors.blurTint} intensity={colors.blurIntensity} style={[styles.stickyContainer, { borderTopColor: colors.border }]}>
-          {content}
-        </BlurView>
-      </Animated.View>
+      <BlurView tint={colors.blurTint} intensity={colors.blurIntensity} style={[styles.stickyContainer, { borderTopColor: colors.line }]}>
+        {content}
+      </BlurView>
     )
   }
 
   return (
-    <Animated.View
-      entering={FadeInDown.delay(800).springify()}
-      style={[styles.stickyContainer, styles.stickyAndroid, { borderTopColor: colors.border, backgroundColor: colors.glassBg }]}
+    <View
+      style={[styles.stickyContainer, styles.stickyAndroid, { borderTopColor: colors.line, backgroundColor: colors.card }]}
     >
       {content}
-    </Animated.View>
+    </View>
   )
 }
 
@@ -532,7 +479,8 @@ const styles = StyleSheet.create({
     zIndex: 10,
     width: 38,
     height: 38,
-    borderRadius: 19,
+    borderRadius: 12,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -549,26 +497,21 @@ const styles = StyleSheet.create({
     marginBottom: 56,
   },
   preLabel: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 11,
     letterSpacing: 2,
     textTransform: 'uppercase',
-    marginBottom: 16,
-  },
-  heroTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 36,
-    textAlign: 'center',
-    marginBottom: 12,
+    marginBottom: 20,
   },
   heroSubtitle: {
-    fontFamily: 'Jost-Medium',
-    fontSize: 18,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 16,
     textAlign: 'center',
-    marginBottom: 16,
+    marginTop: 16,
+    marginBottom: 14,
   },
   heroDescription: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 15,
     textAlign: 'center',
     lineHeight: 24,
@@ -579,30 +522,25 @@ const styles = StyleSheet.create({
   // CTA Button (shared)
   ctaButtonWrapper: {
     alignSelf: 'center',
-    borderRadius: 14,
-    overflow: 'hidden',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 8,
+    borderRadius: 12,
   },
   ctaButtonPressed: {
     opacity: 0.85,
     transform: [{ scale: 0.97 }],
   },
-  ctaGradient: {
+  ctaInner: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    paddingVertical: 16,
+    paddingVertical: 15,
     paddingHorizontal: 40,
-    borderRadius: 14,
+    borderRadius: 12,
   },
   ctaText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
-    letterSpacing: 0.5,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
 
   // Sign In
@@ -613,11 +551,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   signInLabel: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
   },
   signInLink: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 14,
   },
 
@@ -626,7 +564,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   guestText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     textAlign: 'center',
   },
@@ -641,12 +579,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statValue: {
-    fontFamily: 'PlayfairDisplay-Bold',
+    fontFamily: 'Jakarta-ExtraBold',
     fontSize: 20,
     marginBottom: 2,
   },
   statLabel: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 11,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
@@ -657,7 +595,7 @@ const styles = StyleSheet.create({
     marginBottom: 56,
   },
   sectionPreLabel: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 11,
     letterSpacing: 2,
     textTransform: 'uppercase',
@@ -665,11 +603,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sectionTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 28,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 26,
     textAlign: 'center',
-    lineHeight: 36,
+    lineHeight: 34,
     marginBottom: 28,
+    letterSpacing: -0.4,
   },
 
   // Features
@@ -678,23 +617,24 @@ const styles = StyleSheet.create({
   },
   featureCard: {
     padding: 20,
+    borderRadius: 16,
+    borderWidth: 1,
   },
   featureIconContainer: {
     width: 44,
     height: 44,
-    borderRadius: 22,
-    borderWidth: 1,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 14,
   },
   featureTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 15.5,
     marginBottom: 6,
   },
   featureDescription: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     lineHeight: 21,
   },
@@ -707,23 +647,24 @@ const styles = StyleSheet.create({
   stepNumberContainer: {
     alignItems: 'center',
     marginRight: 16,
-    width: 36,
+    width: 34,
   },
-  stepNumberGradient: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  stepNumberCircle: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   stepNumber: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
   stepLine: {
-    width: 2,
+    width: 1,
     flex: 1,
-    marginTop: 8,
+    marginTop: 6,
     borderRadius: 1,
   },
   stepContent: {
@@ -731,27 +672,28 @@ const styles = StyleSheet.create({
     paddingTop: 4,
   },
   stepTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 15.5,
     marginBottom: 4,
   },
   stepDescription: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     lineHeight: 21,
   },
 
-  // Testimonials
-  testimonialCard: {
+  // App Highlights
+  highlightCard: {
     padding: 20,
+    borderRadius: 16,
+    borderWidth: 1,
     marginBottom: 12,
   },
   quoteText: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 15,
-    lineHeight: 24,
-    fontStyle: 'italic',
-    marginBottom: 16,
+    fontFamily: 'Jakarta-Regular',
+    fontSize: 14.5,
+    lineHeight: 22,
+    marginTop: 12,
   },
   attributionRow: {
     flexDirection: 'row',
@@ -759,19 +701,18 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   avatarCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 34,
+    height: 34,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'hidden',
   },
   authorName: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 13,
   },
   authorContext: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 11,
     marginTop: 1,
   },
@@ -783,6 +724,7 @@ const styles = StyleSheet.create({
   },
   planCard: {
     padding: 20,
+    borderRadius: 16,
     borderWidth: 1,
   },
   planBadge: {
@@ -794,13 +736,14 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingHorizontal: 10,
     paddingVertical: 3,
-    borderRadius: 10,
+    borderRadius: 8,
   },
   planBadgeText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 10,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
+    color: '#fff',
   },
   planHeader: {
     flexDirection: 'row',
@@ -808,8 +751,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   planName: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 15.5,
   },
   planPriceRow: {
     flexDirection: 'row',
@@ -817,16 +760,17 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   planPrice: {
-    fontFamily: 'PlayfairDisplay-Bold',
+    fontFamily: 'Jakarta-ExtraBold',
     fontSize: 28,
+    letterSpacing: -0.5,
   },
   planPeriod: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
     marginLeft: 2,
   },
   planSubtitle: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
     marginBottom: 14,
   },
@@ -839,11 +783,11 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   planFeatureText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
   },
   noCreditCard: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
     textAlign: 'center',
     marginTop: 12,
@@ -856,14 +800,15 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   finalCtaTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 30,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 28,
     textAlign: 'center',
-    lineHeight: 40,
+    lineHeight: 36,
     marginBottom: 12,
+    letterSpacing: -0.4,
   },
   finalCtaSubtitle: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 15,
     textAlign: 'center',
     lineHeight: 24,
@@ -877,12 +822,12 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   legalLink: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
     textDecorationLine: 'underline',
   },
   legalDot: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
   },
 
@@ -901,11 +846,6 @@ const styles = StyleSheet.create({
   },
   stickyButtonWrapper: {
     borderRadius: 12,
-    overflow: 'hidden',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 6,
   },
   stickyGradient: {
     flexDirection: 'row',
@@ -916,8 +856,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   stickyButtonText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 15,
-    letterSpacing: 0.5,
+    color: '#fff',
   },
 })

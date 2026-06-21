@@ -6,9 +6,7 @@ import { ShieldCheck } from 'lucide-react-native'
 import { useArticle } from '@/hooks/use-content'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useColors } from '@/hooks/use-colors'
-import { CardEntrance } from '@/components/animations'
 import { ScreenHeader } from '@/components/ui'
-import { GlassCard } from '@/components/glass'
 
 // --- Lightweight markdown block types ---
 type MdBlock =
@@ -85,7 +83,7 @@ export default function ArticleScreen() {
       <View style={styles.container}>
         <ScreenHeader title="Article" />
         <View style={styles.loadingContainer}>
-          <ActivityIndicator color={colors.copper} size="large" />
+          <ActivityIndicator color={colors.accent} size="large" />
         </View>
       </View>
     )
@@ -96,8 +94,8 @@ export default function ArticleScreen() {
       <View style={styles.container}>
         <ScreenHeader title="Article" />
         <View style={styles.errorContainer}>
-          <Text style={[styles.errorTitle, { color: colors.textPrimary }]}>Article not found</Text>
-          <Text style={[styles.errorSubtitle, { color: colors.textMuted }]}>
+          <Text style={[styles.errorTitle, { color: colors.ink }]}>Article not found</Text>
+          <Text style={[styles.errorSubtitle, { color: colors.muted }]}>
             This article may have been removed or is unavailable.
           </Text>
         </View>
@@ -108,142 +106,126 @@ export default function ArticleScreen() {
   return (
     <View style={styles.container}>
       <ScrollView
-        contentContainerStyle={[
-          styles.scrollContent,
-          { paddingBottom: insets.bottom + 24 },
-        ]}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 32 }]}
         showsVerticalScrollIndicator={false}
       >
         <ScreenHeader title="Article" />
-        <CardEntrance delay={0}>
-          {/* Title */}
-          <Text style={[styles.title, { color: colors.textPrimary }]}>{article.title}</Text>
 
-          {/* Reviewed badge */}
-          {article.reviewed_by ? (
-            <View style={[styles.reviewedBadge, { backgroundColor: colors.sageDim }]}>
-              <ShieldCheck size={14} color={colors.sage} />
-              <Text style={[styles.reviewedText, { color: colors.sage }]}>Reviewed by {article.reviewed_by}</Text>
-            </View>
-          ) : null}
+        {/* Title */}
+        <Text style={[styles.title, { color: colors.ink }]}>{article.title}</Text>
 
-          {/* Published date */}
-          {article.published_at ? (
-            <Text style={[styles.publishedDate, { color: colors.textMuted }]}>{formatDate(article.published_at)}</Text>
-          ) : null}
+        {/* Reviewed badge */}
+        {article.reviewed_by ? (
+          <View style={[styles.reviewedBadge, { backgroundColor: colors.sageDim }]}>
+            <ShieldCheck size={14} color={colors.sage} />
+            <Text style={[styles.reviewedText, { color: colors.sage }]}>Reviewed by {article.reviewed_by}</Text>
+          </View>
+        ) : null}
 
-          {/* Divider */}
-          <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        {/* Published date */}
+        {article.published_at ? (
+          <Text style={[styles.publishedDate, { color: colors.muted }]}>{formatDate(article.published_at)}</Text>
+        ) : null}
 
-          {/* Content body or paywall */}
-          {isLocked ? (
-            <GlassCard style={styles.paywallContainer}>
-              <Text style={[styles.paywallTitle, { color: colors.gold }]}>Premium Content</Text>
-              <Text style={[styles.paywallText, { color: colors.textMuted }]}>
-                This article is available to premium subscribers. Upgrade to unlock the full library of expert-reviewed articles.
-              </Text>
-              <Pressable
-                onPress={() => router.push('/(screens)/upgrade')}
-                style={[styles.upgradeButton, { backgroundColor: colors.copper }]}
-              >
-                <Text style={[styles.upgradeButtonText, { color: colors.textPrimary }]}>Upgrade Now</Text>
-              </Pressable>
-            </GlassCard>
-          ) : (
-            <>
-              {contentBlocks.map((block, idx) => {
-                switch (block.type) {
-                  case 'h1':
-                    return (
-                      <Text key={idx} style={[styles.heading1, { color: colors.textPrimary }]}>
-                        {block.text}
-                      </Text>
-                    )
-                  case 'h2':
-                    return (
-                      <Text key={idx} style={[styles.heading2, { color: colors.textPrimary }]}>
-                        {block.text}
-                      </Text>
-                    )
-                  case 'h3':
-                    return (
-                      <Text key={idx} style={[styles.heading3, { color: colors.textPrimary }]}>
-                        {block.text}
-                      </Text>
-                    )
-                  case 'bullet':
-                    return (
-                      <View key={idx} style={styles.bulletRow}>
-                        <Text style={[styles.bulletDot, { color: colors.copper }]}>{'\u2022'}</Text>
-                        <Text style={[styles.bodyText, { color: colors.textSecondary, flex: 1 }]}>
-                          {renderInlineMarkdown(
-                            block.text,
-                            styles.bodyText,
-                            { fontFamily: 'Jost-SemiBold' }
-                          )}
-                        </Text>
-                      </View>
-                    )
-                  case 'spacer':
-                    return <View key={idx} style={styles.paragraphSpacer} />
-                  default:
-                    return (
-                      <Text key={idx} style={[styles.bodyText, { color: colors.textSecondary }]}>
+        {/* Divider */}
+        <View style={[styles.divider, { backgroundColor: colors.line }]} />
+
+        {/* Content body or paywall */}
+        {isLocked ? (
+          <View style={[styles.paywallContainer, { backgroundColor: colors.card, borderColor: colors.line }]}>
+            <Text style={[styles.paywallTitle, { color: colors.gold }]}>Premium Content</Text>
+            <Text style={[styles.paywallText, { color: colors.ink2 }]}>
+              This article is available to premium subscribers. Upgrade to unlock the full library of expert-reviewed articles.
+            </Text>
+            <Pressable
+              onPress={() => router.push('/(screens)/upgrade')}
+              style={[styles.upgradeButton, { backgroundColor: colors.accent }]}
+            >
+              <Text style={styles.upgradeButtonText}>Upgrade Now</Text>
+            </Pressable>
+          </View>
+        ) : (
+          <>
+            {contentBlocks.map((block, idx) => {
+              switch (block.type) {
+                case 'h1':
+                  return (
+                    <Text key={idx} style={[styles.heading1, { color: colors.ink }]}>
+                      {block.text}
+                    </Text>
+                  )
+                case 'h2':
+                  return (
+                    <Text key={idx} style={[styles.heading2, { color: colors.ink }]}>
+                      {block.text}
+                    </Text>
+                  )
+                case 'h3':
+                  return (
+                    <Text key={idx} style={[styles.heading3, { color: colors.ink }]}>
+                      {block.text}
+                    </Text>
+                  )
+                case 'bullet':
+                  return (
+                    <View key={idx} style={styles.bulletRow}>
+                      <Text style={[styles.bulletDot, { color: colors.accent }]}>{'•'}</Text>
+                      <Text style={[styles.bodyText, { color: colors.ink2, flex: 1 }]}>
                         {renderInlineMarkdown(
                           block.text,
                           styles.bodyText,
-                          { fontFamily: 'Jost-SemiBold' }
+                          { fontFamily: 'Jakarta-SemiBold', color: colors.ink }
                         )}
                       </Text>
-                    )
-                }
-              })}
+                    </View>
+                  )
+                case 'spacer':
+                  return <View key={idx} style={styles.paragraphSpacer} />
+                default:
+                  return (
+                    <Text key={idx} style={[styles.bodyText, { color: colors.ink2 }]}>
+                      {renderInlineMarkdown(
+                        block.text,
+                        styles.bodyText,
+                        { fontFamily: 'Jakarta-SemiBold', color: colors.ink }
+                      )}
+                    </Text>
+                  )
+              }
+            })}
 
-              {/* Sources */}
-              {article.sources && article.sources.length > 0 ? (
-                <>
-                  <View style={[styles.divider, { backgroundColor: colors.border }]} />
-                  <Text style={[styles.sourcesHeader, { color: colors.textPrimary }]}>Sources</Text>
-                  {(Array.isArray(article.sources) ? article.sources : [article.sources]).map(
-                    (source, idx) => (
-                      <Text key={idx} style={[styles.sourcesText, { color: colors.textMuted }]}>
-                        {'\u2022'} {source}
-                      </Text>
-                    )
-                  )}
-                </>
-              ) : null}
+            {/* Sources */}
+            {article.sources && article.sources.length > 0 ? (
+              <>
+                <View style={[styles.divider, { backgroundColor: colors.line }]} />
+                <Text style={[styles.sourcesHeader, { color: colors.ink }]}>Sources</Text>
+                {(Array.isArray(article.sources) ? article.sources : [article.sources]).map(
+                  (source, idx) => (
+                    <Text key={idx} style={[styles.sourcesText, { color: colors.muted }]}>
+                      {'•'} {source}
+                    </Text>
+                  )
+                )}
+              </>
+            ) : null}
 
-              {/* Medical Disclaimer */}
-              <Text style={[styles.medicalDisclaimer, { color: colors.textDim }]}>
-                This article is for informational purposes only and does not constitute medical advice. Always consult your healthcare provider for medical decisions.
-              </Text>
-            </>
-          )}
-        </CardEntrance>
+            {/* Medical Disclaimer */}
+            <Text style={[styles.medicalDisclaimer, { color: colors.faint }]}>
+              This article is for informational purposes only and does not constitute medical advice. Always consult your healthcare provider for medical decisions.
+            </Text>
+          </>
+        )}
       </ScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'transparent',
-  },
-
-  // Scroll content
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-  },
+  container: { flex: 1, backgroundColor: 'transparent' },
+  scrollContent: { paddingHorizontal: 22, paddingTop: 20 },
 
   // Title
-  title: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 24,
-    lineHeight: 32,
-  },
+  title: { fontFamily: 'Jakarta-Bold', fontSize: 24, lineHeight: 32, letterSpacing: -0.3 },
 
   // Reviewed badge
   reviewedBadge: {
@@ -251,59 +233,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 5,
     borderRadius: 8,
     alignSelf: 'flex-start',
     marginTop: 12,
   },
-  reviewedText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 12,
-  },
+  reviewedText: { fontFamily: 'Jakarta-Medium', fontSize: 12 },
 
   // Published date
-  publishedDate: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 12,
-    marginTop: 8,
-  },
+  publishedDate: { fontFamily: 'Jakarta-Regular', fontSize: 12, marginTop: 8 },
 
   // Divider
-  divider: {
-    height: 1,
-    marginVertical: 20,
-  },
+  divider: { height: 1, marginVertical: 20 },
 
   // Headings
-  heading1: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 22,
-    lineHeight: 30,
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  heading2: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 19,
-    lineHeight: 26,
-    marginTop: 18,
-    marginBottom: 8,
-  },
-  heading3: {
-    fontFamily: 'Jost-SemiBold',
-    fontSize: 17,
-    lineHeight: 24,
-    marginTop: 16,
-    marginBottom: 6,
-  },
+  heading1: { fontFamily: 'Jakarta-Bold', fontSize: 22, lineHeight: 30, letterSpacing: -0.2, marginTop: 20, marginBottom: 10 },
+  heading2: { fontFamily: 'Jakarta-Bold', fontSize: 19, lineHeight: 26, letterSpacing: -0.1, marginTop: 18, marginBottom: 8 },
+  heading3: { fontFamily: 'Jakarta-SemiBold', fontSize: 17, lineHeight: 24, marginTop: 16, marginBottom: 6 },
 
   // Body content
-  bodyText: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
-    lineHeight: 26,
-    marginBottom: 12,
-  },
+  bodyText: { fontFamily: 'Jakarta-Regular', fontSize: 16, lineHeight: 26, marginBottom: 12 },
   bulletRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -311,30 +260,16 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     paddingLeft: 4,
   },
-  bulletDot: {
-    fontSize: 16,
-    lineHeight: 26,
-  },
-  paragraphSpacer: {
-    height: 8,
-  },
+  bulletDot: { fontSize: 16, lineHeight: 26 },
+  paragraphSpacer: { height: 8 },
 
   // Sources
-  sourcesHeader: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 14,
-    marginBottom: 8,
-  },
-  sourcesText: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 13,
-    lineHeight: 20,
-    marginBottom: 4,
-  },
+  sourcesHeader: { fontFamily: 'Jakarta-SemiBold', fontSize: 14, marginBottom: 8 },
+  sourcesText: { fontFamily: 'Jakarta-Regular', fontSize: 13, lineHeight: 20, marginBottom: 4 },
 
   // Medical disclaimer
   medicalDisclaimer: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 11,
     textAlign: 'center',
     marginTop: 24,
@@ -347,50 +282,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 32,
     paddingHorizontal: 20,
+    borderRadius: 16,
+    borderWidth: 1,
   },
-  paywallTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 20,
-    marginBottom: 12,
-  },
-  paywallText: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 15,
-    textAlign: 'center',
-    lineHeight: 22,
-    marginBottom: 24,
-  },
-  upgradeButton: {
-    paddingHorizontal: 32,
-    paddingVertical: 14,
-    borderRadius: 12,
-  },
-  upgradeButtonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 15,
-  },
+  paywallTitle: { fontFamily: 'Jakarta-Bold', fontSize: 20, marginBottom: 12 },
+  paywallText: { fontFamily: 'Jakarta-Regular', fontSize: 15, textAlign: 'center', lineHeight: 22, marginBottom: 24 },
+  upgradeButton: { paddingHorizontal: 32, paddingVertical: 14, borderRadius: 12 },
+  upgradeButtonText: { fontFamily: 'Jakarta-Bold', fontSize: 15, color: '#fff' },
 
   // Loading / Error
-  loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  errorContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 40,
-    gap: 12,
-  },
-  errorTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  errorSubtitle: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 14,
-    textAlign: 'center',
-  },
+  loadingContainer: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  errorContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40, gap: 12 },
+  errorTitle: { fontFamily: 'Jakarta-Bold', fontSize: 20, textAlign: 'center' },
+  errorSubtitle: { fontFamily: 'Jakarta-Regular', fontSize: 14, textAlign: 'center', lineHeight: 21 },
 })

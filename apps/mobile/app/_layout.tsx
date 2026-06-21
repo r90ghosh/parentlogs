@@ -33,6 +33,12 @@ function RootLayout() {
     'Karla-Regular': require('../assets/fonts/Karla-Regular.ttf'),
     'Karla-Medium': require('../assets/fonts/Karla-Medium.ttf'),
     'Karla-SemiBold': require('../assets/fonts/Karla-SemiBold.ttf'),
+    // v2 Digest primary UI sans — Plus Jakarta Sans (weights 400/500/600/700/800)
+    'Jakarta-Regular': require('../assets/fonts/PlusJakartaSans-Regular.ttf'),
+    'Jakarta-Medium': require('../assets/fonts/PlusJakartaSans-Medium.ttf'),
+    'Jakarta-SemiBold': require('../assets/fonts/PlusJakartaSans-SemiBold.ttf'),
+    'Jakarta-Bold': require('../assets/fonts/PlusJakartaSans-Bold.ttf'),
+    'Jakarta-ExtraBold': require('../assets/fonts/PlusJakartaSans-ExtraBold.ttf'),
   })
 
   const [fontsTimedOut, setFontsTimedOut] = useState(false)

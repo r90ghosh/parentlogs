@@ -92,25 +92,26 @@ export default function EditProfileScreen() {
         >
           {/* Header */}
           <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-            <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-              <ArrowLeft size={20} color={colors.textSecondary} />
+            <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.accentSoft }]}>
+              <ArrowLeft size={20} color={colors.ink2} />
             </Pressable>
-            <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Edit Profile</Text>
+            <Text style={[styles.headerTitle, { color: colors.ink }]}>Edit Profile</Text>
             <View style={styles.headerSpacer} />
           </View>
+
           {/* Icon */}
           <View style={styles.iconContainer}>
-            <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>
-              <User size={28} color={colors.copper} />
+            <View style={[styles.iconCircle, { backgroundColor: colors.accentSoft }]}>
+              <User size={28} color={colors.accent} />
             </View>
-            <Text style={[styles.description, { color: colors.textMuted }]}>
+            <Text style={[styles.description, { color: colors.muted }]}>
               Update your name and role so your partner sees the right info.
             </Text>
           </View>
 
           {/* Error */}
           {error && (
-            <View style={[styles.errorContainer, { backgroundColor: colors.coralDim, borderColor: 'rgba(212,131,107,0.2)' }]}>
+            <View style={[styles.errorContainer, { backgroundColor: colors.accentSoft, borderColor: colors.coral }]}>
               <Text style={[styles.errorText, { color: colors.coral }]}>{error}</Text>
             </View>
           )}
@@ -118,20 +119,20 @@ export default function EditProfileScreen() {
           {/* Form */}
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.textSecondary }]}>Name</Text>
+              <Text style={[styles.label, { color: colors.muted }]}>Name</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
+                style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
                 value={name}
                 onChangeText={setName}
                 placeholder="Your name"
-                placeholderTextColor={colors.textDim}
+                placeholderTextColor={colors.faint}
                 autoCapitalize="words"
                 autoComplete="name"
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.textSecondary }]}>Role</Text>
+              <Text style={[styles.label, { color: colors.muted }]}>Role</Text>
               <View style={styles.pillRow}>
                 {ROLES.map((role) => {
                   const isSelected = selectedRole === role
@@ -142,14 +143,14 @@ export default function EditProfileScreen() {
                       style={[
                         styles.pill,
                         isSelected
-                          ? { backgroundColor: colors.copper }
-                          : { backgroundColor: colors.subtleBg, borderWidth: 1, borderColor: colors.border },
+                          ? { backgroundColor: colors.accent }
+                          : { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.line },
                       ]}
                     >
                       <Text
                         style={[
                           styles.pillText,
-                          { color: isSelected ? colors.textPrimary : colors.textMuted },
+                          { color: isSelected ? '#fff' : colors.muted },
                         ]}
                       >
                         {ROLE_LABELS[role]}
@@ -165,15 +166,15 @@ export default function EditProfileScreen() {
               disabled={isDisabled}
               style={({ pressed }) => [
                 styles.button,
-                { backgroundColor: colors.copper },
+                { backgroundColor: colors.accent },
                 pressed && styles.buttonPressed,
                 isDisabled && styles.buttonDisabled,
               ]}
             >
               {isLoading ? (
-                <ActivityIndicator color={colors.textPrimary} />
+                <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Save Changes</Text>
+                <Text style={styles.buttonText}>Save Changes</Text>
               )}
             </Pressable>
           </View>
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitle: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 16,
   },
   headerSpacer: {
@@ -229,7 +230,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   description: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 15,
     textAlign: 'center',
     lineHeight: 22,
@@ -243,7 +244,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   errorText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 14,
   },
   form: {
@@ -253,16 +254,16 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   label: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 14,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 13,
   },
   input: {
     borderRadius: 12,
     borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 15,
   },
   pillRow: {
     flexDirection: 'row',
@@ -274,12 +275,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   pillText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 14,
   },
   button: {
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 14,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 8,
@@ -291,7 +292,8 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
 })

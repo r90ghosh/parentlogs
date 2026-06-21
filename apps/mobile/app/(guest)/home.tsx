@@ -8,8 +8,6 @@ import {
 import { Link } from 'expo-router'
 import { BrandLogoIcon } from '@/components/BrandLogo'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { LinearGradient } from 'expo-linear-gradient'
-import Animated, { FadeIn } from 'react-native-reanimated'
 import {
   BookOpen,
   CheckSquare,
@@ -17,8 +15,6 @@ import {
   DollarSign,
   ArrowRight,
 } from 'lucide-react-native'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance, StaggerList } from '@/components/animations'
 import { useColors } from '@/hooks/use-colors'
 
 const FEATURES = [
@@ -76,7 +72,7 @@ const APP_HIGHLIGHTS = [
     icon: CheckSquare,
   },
   {
-    week: '0\u20133 Months',
+    week: '0–3 Months',
     title: 'The Fourth Trimester',
     quote: 'Set up feeding station. Learn swaddle technique. Track feeds and diapers. Split night shifts fairly. — From day one, you know what to do.',
     icon: Activity,
@@ -101,37 +97,30 @@ export default function GuestHome() {
         showsVerticalScrollIndicator={false}
       >
         {/* Hero */}
-        <Animated.View entering={FadeIn.duration(600)} style={styles.heroSection}>
-          <Text style={[styles.preLabel, { color: colors.copper }]}>FOR MODERN DADS</Text>
-          <BrandLogoIcon size={56} />
-          <Text style={[styles.heroTitle, { color: colors.textPrimary }]}>The Dad Center</Text>
-          <Text style={[styles.heroSubtitle, { color: colors.copper }]}>
+        <View style={styles.heroSection}>
+          <Text style={[styles.preLabel, { color: colors.accent }]}>FOR MODERN DADS</Text>
+          <BrandLogoIcon size={52} />
+          <Text style={[styles.heroTitle, { color: colors.ink }]}>The Dad Center</Text>
+          <Text style={[styles.heroSubtitle, { color: colors.accent }]}>
             The operating system for modern fatherhood
           </Text>
-          <Text style={[styles.heroDescription, { color: colors.textMuted }]}>
+          <Text style={[styles.heroDescription, { color: colors.muted }]}>
             Week-by-week guidance, actionable tasks, and zero fluff. Finally, a
             parenting app that respects your intelligence.
           </Text>
 
           <Link href="/(auth)/signup" asChild>
-            <Pressable style={({ pressed }) => [styles.ctaWrapper, pressed && styles.ctaPressed]}>
-              <LinearGradient
-                colors={colors.ctaGradient as unknown as [string, string]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.ctaGradient}
-              >
-                <Text style={[styles.ctaText, { color: colors.bg }]}>Get Started Free</Text>
-                <ArrowRight size={18} color={colors.bg} />
-              </LinearGradient>
+            <Pressable style={({ pressed }) => [styles.ctaWrapper, { backgroundColor: colors.accent }, pressed && styles.ctaPressed]}>
+              <Text style={styles.ctaText}>Get Started Free</Text>
+              <ArrowRight size={18} color="#fff" />
             </Pressable>
           </Link>
 
           <View style={styles.signInRow}>
-            <Text style={[styles.signInLabel, { color: colors.textMuted }]}>Already have an account? </Text>
+            <Text style={[styles.signInLabel, { color: colors.muted }]}>Already have an account? </Text>
             <Link href="/(auth)/login" asChild>
               <Pressable>
-                <Text style={[styles.signInLink, { color: colors.copper }]}>Sign In</Text>
+                <Text style={[styles.signInLink, { color: colors.accentInk }]}>Sign In</Text>
               </Pressable>
             </Link>
           </View>
@@ -143,110 +132,84 @@ export default function GuestHome() {
               { value: 'Evidence', label: 'Based' },
             ].map((stat) => (
               <View key={stat.label} style={styles.statItem}>
-                <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stat.value}</Text>
-                <Text style={[styles.statLabel, { color: colors.textMuted }]}>{stat.label}</Text>
+                <Text style={[styles.statValue, { color: colors.ink }]}>{stat.value}</Text>
+                <Text style={[styles.statLabel, { color: colors.muted }]}>{stat.label}</Text>
               </View>
             ))}
           </View>
-        </Animated.View>
+        </View>
 
         {/* Features */}
         <View style={styles.section}>
-          <CardEntrance delay={100}>
-            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>FEATURES</Text>
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-              Everything you need,{'\n'}nothing you don't
-            </Text>
-          </CardEntrance>
+          <Text style={[styles.sectionPreLabel, { color: colors.accent }]}>FEATURES</Text>
+          <Text style={[styles.sectionTitle, { color: colors.ink }]}>
+            Everything you need,{'\n'}nothing you don't
+          </Text>
           <View style={styles.featuresGrid}>
-            {FEATURES.map((feature, index) => (
-              <CardEntrance key={feature.title} delay={200 + index * 120}>
-                <GlassCard style={styles.featureCard}>
-                  <View style={[styles.featureIconContainer, { backgroundColor: colors.copperDim, borderColor: colors.copperGlow }]}>
-                    <feature.icon size={22} color={colors.copper} strokeWidth={1.5} />
-                  </View>
-                  <Text style={[styles.featureTitle, { color: colors.textPrimary }]}>{feature.title}</Text>
-                  <Text style={[styles.featureDescription, { color: colors.textMuted }]}>{feature.description}</Text>
-                </GlassCard>
-              </CardEntrance>
+            {FEATURES.map((feature) => (
+              <View key={feature.title} style={[styles.featureCard, { backgroundColor: colors.card, borderColor: colors.line }]}>
+                <View style={[styles.featureIconContainer, { backgroundColor: colors.accentSoft }]}>
+                  <feature.icon size={22} color={colors.accent} strokeWidth={1.5} />
+                </View>
+                <Text style={[styles.featureTitle, { color: colors.ink }]}>{feature.title}</Text>
+                <Text style={[styles.featureDescription, { color: colors.muted }]}>{feature.description}</Text>
+              </View>
             ))}
           </View>
         </View>
 
         {/* How It Works */}
         <View style={styles.section}>
-          <CardEntrance delay={100}>
-            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>HOW IT WORKS</Text>
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Up and running{'\n'}in 2 minutes</Text>
-          </CardEntrance>
-          <StaggerList staggerMs={100}>
-            {STEPS.map((step) => (
-              <View key={step.number} style={styles.stepRow}>
-                <View style={styles.stepNumberContainer}>
-                  <LinearGradient colors={colors.ctaGradient as unknown as [string, string]} style={styles.stepNumberGradient}>
-                    <Text style={[styles.stepNumber, { color: colors.bg }]}>{step.number}</Text>
-                  </LinearGradient>
-                  {step.number !== '3' && <View style={[styles.stepLine, { backgroundColor: colors.copperGlow }]} />}
+          <Text style={[styles.sectionPreLabel, { color: colors.accent }]}>HOW IT WORKS</Text>
+          <Text style={[styles.sectionTitle, { color: colors.ink }]}>Up and running{'\n'}in 2 minutes</Text>
+          {STEPS.map((step) => (
+            <View key={step.number} style={styles.stepRow}>
+              <View style={styles.stepNumberContainer}>
+                <View style={[styles.stepNumberCircle, { backgroundColor: colors.accent }]}>
+                  <Text style={styles.stepNumber}>{step.number}</Text>
                 </View>
-                <View style={styles.stepContent}>
-                  <Text style={[styles.stepTitle, { color: colors.textPrimary }]}>{step.title}</Text>
-                  <Text style={[styles.stepDescription, { color: colors.textMuted }]}>{step.description}</Text>
-                </View>
+                {step.number !== '3' && <View style={[styles.stepLine, { backgroundColor: colors.line }]} />}
               </View>
-            ))}
-          </StaggerList>
+              <View style={styles.stepContent}>
+                <Text style={[styles.stepTitle, { color: colors.ink }]}>{step.title}</Text>
+                <Text style={[styles.stepDescription, { color: colors.muted }]}>{step.description}</Text>
+              </View>
+            </View>
+          ))}
         </View>
 
         {/* Inside The App */}
         <View style={styles.section}>
-          <CardEntrance delay={100}>
-            <Text style={[styles.sectionPreLabel, { color: colors.copper }]}>INSIDE THE APP</Text>
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Your Roadmap{'\n'}at Every Stage</Text>
-          </CardEntrance>
-          {APP_HIGHLIGHTS.map((highlight, index) => (
-            <CardEntrance key={highlight.week} delay={200 + index * 120}>
-              <GlassCard style={styles.highlightCard}>
-                <View style={styles.attributionRow}>
-                  <LinearGradient
-                    colors={colors.ctaGradient as unknown as [string, string]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.avatarCircle}
-                  >
-                    <highlight.icon size={16} color={colors.textPrimary} />
-                  </LinearGradient>
-                  <View>
-                    <Text style={[styles.authorName, { color: colors.textPrimary }]}>{highlight.week}</Text>
-                    <Text style={[styles.authorContext, { color: colors.textMuted }]}>{highlight.title}</Text>
-                  </View>
+          <Text style={[styles.sectionPreLabel, { color: colors.accent }]}>INSIDE THE APP</Text>
+          <Text style={[styles.sectionTitle, { color: colors.ink }]}>Your Roadmap{'\n'}at Every Stage</Text>
+          {APP_HIGHLIGHTS.map((highlight) => (
+            <View key={highlight.week} style={[styles.highlightCard, { backgroundColor: colors.card, borderColor: colors.line }]}>
+              <View style={styles.attributionRow}>
+                <View style={[styles.avatarCircle, { backgroundColor: colors.accentSoft }]}>
+                  <highlight.icon size={16} color={colors.accent} />
                 </View>
-                <Text style={[styles.quoteText, { color: colors.textSecondary }]}>{highlight.quote}</Text>
-              </GlassCard>
-            </CardEntrance>
+                <View>
+                  <Text style={[styles.authorName, { color: colors.ink }]}>{highlight.week}</Text>
+                  <Text style={[styles.authorContext, { color: colors.muted }]}>{highlight.title}</Text>
+                </View>
+              </View>
+              <Text style={[styles.quoteText, { color: colors.ink2 }]}>{highlight.quote}</Text>
+            </View>
           ))}
         </View>
 
         {/* Final CTA */}
         <View style={[styles.section, styles.finalCta]}>
-          <CardEntrance delay={100}>
-            <Text style={[styles.finalCtaTitle, { color: colors.textPrimary }]}>Ready to stop{'\n'}winging it?</Text>
-            <Text style={[styles.finalCtaSubtitle, { color: colors.textMuted }]}>
-              Join thousands of prepared dads who refuse to leave fatherhood to chance.
-            </Text>
-            <Link href="/(auth)/signup" asChild>
-              <Pressable style={({ pressed }) => [styles.ctaWrapper, pressed && styles.ctaPressed]}>
-                <LinearGradient
-                  colors={colors.ctaGradient as unknown as [string, string]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.ctaGradient}
-                >
-                  <Text style={[styles.ctaText, { color: colors.bg }]}>Get Started Free</Text>
-                  <ArrowRight size={18} color={colors.bg} />
-                </LinearGradient>
-              </Pressable>
-            </Link>
-          </CardEntrance>
+          <Text style={[styles.finalCtaTitle, { color: colors.ink }]}>Ready to stop{'\n'}winging it?</Text>
+          <Text style={[styles.finalCtaSubtitle, { color: colors.muted }]}>
+            Join thousands of prepared dads who refuse to leave fatherhood to chance.
+          </Text>
+          <Link href="/(auth)/signup" asChild>
+            <Pressable style={({ pressed }) => [styles.ctaWrapper, { backgroundColor: colors.accent }, pressed && styles.ctaPressed]}>
+              <Text style={styles.ctaText}>Get Started Free</Text>
+              <ArrowRight size={18} color="#fff" />
+            </Pressable>
+          </Link>
         </View>
       </ScrollView>
     </View>
@@ -259,52 +222,51 @@ const styles = StyleSheet.create({
   scrollContent: { paddingHorizontal: 24 },
 
   heroSection: { alignItems: 'center', marginBottom: 56 },
-  preLabel: { fontFamily: 'Karla-SemiBold', fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', marginBottom: 16 },
-  heroTitle: { fontFamily: 'PlayfairDisplay-Bold', fontSize: 36, textAlign: 'center', marginBottom: 12 },
-  heroSubtitle: { fontFamily: 'Jost-Medium', fontSize: 18, textAlign: 'center', marginBottom: 16 },
-  heroDescription: { fontFamily: 'Jost-Regular', fontSize: 15, textAlign: 'center', lineHeight: 24, maxWidth: 320, marginBottom: 32 },
+  preLabel: { fontFamily: 'Jakarta-Bold', fontSize: 11, letterSpacing: 1.6, textTransform: 'uppercase', marginBottom: 16 },
+  heroTitle: { fontFamily: 'Jakarta-ExtraBold', fontSize: 30, textAlign: 'center', marginBottom: 10, letterSpacing: -0.5 },
+  heroSubtitle: { fontFamily: 'Jakarta-Medium', fontSize: 16, textAlign: 'center', marginBottom: 14 },
+  heroDescription: { fontFamily: 'Jakarta-Regular', fontSize: 15, textAlign: 'center', lineHeight: 23, maxWidth: 320, marginBottom: 28 },
 
-  ctaWrapper: { alignSelf: 'center', borderRadius: 14, overflow: 'hidden', shadowColor: '#c4703f', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 8 },
+  ctaWrapper: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, alignSelf: 'center', borderRadius: 12, paddingVertical: 15, paddingHorizontal: 36 },
   ctaPressed: { opacity: 0.85, transform: [{ scale: 0.97 }] },
-  ctaGradient: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 16, paddingHorizontal: 40, borderRadius: 14 },
-  ctaText: { fontFamily: 'Karla-SemiBold', fontSize: 16, letterSpacing: 0.5 },
+  ctaText: { fontFamily: 'Jakarta-Bold', fontSize: 15, color: '#fff' },
 
-  signInRow: { flexDirection: 'row', alignItems: 'center', marginTop: 20, marginBottom: 32 },
-  signInLabel: { fontFamily: 'Karla-Regular', fontSize: 14 },
-  signInLink: { fontFamily: 'Karla-SemiBold', fontSize: 14 },
+  signInRow: { flexDirection: 'row', alignItems: 'center', marginTop: 18, marginBottom: 28 },
+  signInLabel: { fontFamily: 'Jakarta-Regular', fontSize: 14 },
+  signInLink: { fontFamily: 'Jakarta-SemiBold', fontSize: 14 },
 
   statsRow: { flexDirection: 'row', justifyContent: 'center', gap: 24 },
   statItem: { alignItems: 'center' },
-  statValue: { fontFamily: 'PlayfairDisplay-Bold', fontSize: 20, marginBottom: 2 },
-  statLabel: { fontFamily: 'Karla-Regular', fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.8 },
+  statValue: { fontFamily: 'Jakarta-ExtraBold', fontSize: 20, marginBottom: 2 },
+  statLabel: { fontFamily: 'Jakarta-Regular', fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.8 },
 
   section: { marginBottom: 56 },
-  sectionPreLabel: { fontFamily: 'Karla-SemiBold', fontSize: 11, letterSpacing: 2, textTransform: 'uppercase', textAlign: 'center', marginBottom: 12 },
-  sectionTitle: { fontFamily: 'PlayfairDisplay-Bold', fontSize: 28, textAlign: 'center', lineHeight: 36, marginBottom: 28 },
+  sectionPreLabel: { fontFamily: 'Jakarta-Bold', fontSize: 11, letterSpacing: 1.6, textTransform: 'uppercase', textAlign: 'center', marginBottom: 12 },
+  sectionTitle: { fontFamily: 'Jakarta-Bold', fontSize: 26, textAlign: 'center', lineHeight: 34, marginBottom: 24, letterSpacing: -0.4 },
 
-  featuresGrid: { gap: 12 },
-  featureCard: { padding: 20 },
-  featureIconContainer: { width: 44, height: 44, borderRadius: 22, borderWidth: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
-  featureTitle: { fontFamily: 'Karla-SemiBold', fontSize: 16, marginBottom: 6 },
-  featureDescription: { fontFamily: 'Jost-Regular', fontSize: 14, lineHeight: 21 },
+  featuresGrid: { gap: 10 },
+  featureCard: { padding: 18, borderRadius: 16, borderWidth: 1 },
+  featureIconContainer: { width: 42, height: 42, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
+  featureTitle: { fontFamily: 'Jakarta-SemiBold', fontSize: 15.5, marginBottom: 5 },
+  featureDescription: { fontFamily: 'Jakarta-Regular', fontSize: 14, lineHeight: 21 },
 
-  stepRow: { flexDirection: 'row', marginBottom: 24 },
-  stepNumberContainer: { alignItems: 'center', marginRight: 16, width: 36 },
-  stepNumberGradient: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
-  stepNumber: { fontFamily: 'Karla-SemiBold', fontSize: 16 },
-  stepLine: { width: 2, flex: 1, marginTop: 8, borderRadius: 1 },
+  stepRow: { flexDirection: 'row', marginBottom: 22 },
+  stepNumberContainer: { alignItems: 'center', marginRight: 16, width: 34 },
+  stepNumberCircle: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  stepNumber: { fontFamily: 'Jakarta-Bold', fontSize: 15, color: '#fff' },
+  stepLine: { width: 1, flex: 1, marginTop: 6, borderRadius: 1 },
   stepContent: { flex: 1, paddingTop: 4 },
-  stepTitle: { fontFamily: 'Karla-SemiBold', fontSize: 16, marginBottom: 4 },
-  stepDescription: { fontFamily: 'Jost-Regular', fontSize: 14, lineHeight: 21 },
+  stepTitle: { fontFamily: 'Jakarta-SemiBold', fontSize: 15.5, marginBottom: 4 },
+  stepDescription: { fontFamily: 'Jakarta-Regular', fontSize: 14, lineHeight: 21 },
 
-  highlightCard: { padding: 20, marginBottom: 12 },
-  quoteText: { fontFamily: 'Jost-Regular', fontSize: 15, lineHeight: 24, fontStyle: 'italic', marginTop: 12 },
+  highlightCard: { padding: 18, borderRadius: 16, borderWidth: 1, marginBottom: 10 },
+  quoteText: { fontFamily: 'Jakarta-Regular', fontSize: 14.5, lineHeight: 22, marginTop: 12 },
   attributionRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  avatarCircle: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
-  authorName: { fontFamily: 'Karla-SemiBold', fontSize: 13 },
-  authorContext: { fontFamily: 'Karla-Regular', fontSize: 11, marginTop: 1 },
+  avatarCircle: { width: 32, height: 32, borderRadius: 9, alignItems: 'center', justifyContent: 'center' },
+  authorName: { fontFamily: 'Jakarta-SemiBold', fontSize: 13 },
+  authorContext: { fontFamily: 'Jakarta-Regular', fontSize: 11, marginTop: 1 },
 
   finalCta: { alignItems: 'center', paddingTop: 24, marginBottom: 24 },
-  finalCtaTitle: { fontFamily: 'PlayfairDisplay-Bold', fontSize: 30, textAlign: 'center', lineHeight: 40, marginBottom: 12 },
-  finalCtaSubtitle: { fontFamily: 'Jost-Regular', fontSize: 15, textAlign: 'center', lineHeight: 24, maxWidth: 300, marginBottom: 28 },
+  finalCtaTitle: { fontFamily: 'Jakarta-Bold', fontSize: 26, textAlign: 'center', lineHeight: 34, marginBottom: 12, letterSpacing: -0.4 },
+  finalCtaSubtitle: { fontFamily: 'Jakarta-Regular', fontSize: 15, textAlign: 'center', lineHeight: 23, maxWidth: 300, marginBottom: 24 },
 })

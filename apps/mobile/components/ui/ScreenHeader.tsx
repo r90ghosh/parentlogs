@@ -142,12 +142,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontFamily: 'Jost-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 18,
     textAlign: 'center',
   },
   subtitle: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
     textAlign: 'center',
     marginTop: 2,

@@ -1,10 +1,9 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native'
 import { useRouter } from 'expo-router'
-import { LinearGradient } from 'expo-linear-gradient'
-import { CheckCircle2 } from 'lucide-react-native'
-import { CardEntrance } from '@/components/animations'
+import { Check } from 'lucide-react-native'
 import * as Haptics from 'expo-haptics'
 import { useColors } from '@/hooks/use-colors'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const PREMIUM_FEATURES = [
   'Full pregnancy & postpartum timeline',
@@ -17,6 +16,7 @@ const PREMIUM_FEATURES = [
 export default function UpgradeSuccessScreen() {
   const router = useRouter()
   const colors = useColors()
+  const insets = useSafeAreaInsets()
 
   const handleExplore = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
@@ -24,123 +24,88 @@ export default function UpgradeSuccessScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       <View style={styles.content}>
-        {/* Celebration emoji */}
-        <CardEntrance delay={0}>
-          <View style={styles.emojiContainer}>
-            <Text style={styles.emoji}>🎉</Text>
-          </View>
-        </CardEntrance>
+        {/* Brandmark */}
+        <View style={[styles.brandmark, { backgroundColor: colors.accentSoft, borderColor: colors.accent + '40', borderWidth: 1 }]}>
+          <Text style={[styles.brandmarkText, { color: colors.accent }]}>TDC</Text>
+        </View>
 
         {/* Title */}
-        <CardEntrance delay={120}>
-          <Text style={[styles.title, { color: colors.textPrimary }]}>Welcome to Premium!</Text>
-        </CardEntrance>
+        <Text style={[styles.title, { color: colors.ink }]}>You're in.</Text>
 
         {/* Subtitle */}
-        <CardEntrance delay={240}>
-          <Text style={[styles.subtitle, { color: colors.textMuted }]}>
-            You now have full access to everything
-          </Text>
-        </CardEntrance>
+        <Text style={[styles.subtitle, { color: colors.ink2 }]}>
+          Full access unlocked. Everything you need for the journey ahead.
+        </Text>
 
         {/* Feature list */}
-        <View style={styles.featureList}>
+        <View style={[styles.featureList, { backgroundColor: colors.card, borderColor: colors.line }]}>
           {PREMIUM_FEATURES.map((feature, index) => (
-            <CardEntrance key={feature} delay={360 + index * 80}>
-              <View style={[styles.featureRow, { backgroundColor: colors.sageDim, borderColor: 'rgba(107,143,113,0.12)' }]}>
-                <CheckCircle2 size={20} color={colors.sage} />
-                <Text style={[styles.featureText, { color: colors.textSecondary }]}>{feature}</Text>
+            <View
+              key={feature}
+              style={[
+                styles.featureRow,
+                index < PREMIUM_FEATURES.length - 1 && { borderBottomColor: colors.line2, borderBottomWidth: 1 },
+              ]}
+            >
+              <View style={[styles.checkCircle, { backgroundColor: colors.sageDim }]}>
+                <Check size={12} color={colors.sage} strokeWidth={3} />
               </View>
-            </CardEntrance>
+              <Text style={[styles.featureText, { color: colors.ink2 }]}>{feature}</Text>
+            </View>
           ))}
         </View>
 
         {/* CTA button */}
-        <CardEntrance delay={800}>
-          <Pressable
-            onPress={handleExplore}
-            style={({ pressed }) => [
-              styles.button,
-              pressed && styles.buttonPressed,
-            ]}
-          >
-            <LinearGradient
-              colors={[colors.copper, colors.coral]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.buttonGradient}
-            >
-              <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Start Exploring</Text>
-            </LinearGradient>
-          </Pressable>
-        </CardEntrance>
+        <Pressable
+          onPress={handleExplore}
+          style={({ pressed }) => [styles.button, { backgroundColor: colors.accent, opacity: pressed ? 0.88 : 1 }]}
+        >
+          <Text style={styles.buttonText}>Start Exploring</Text>
+        </Pressable>
       </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'transparent',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
-  emojiContainer: {
+  container: { flex: 1, backgroundColor: 'transparent' },
+  content: { flex: 1, justifyContent: 'center', paddingHorizontal: 28 },
+  brandmark: {
+    width: 64,
+    height: 64,
+    borderRadius: 18,
     alignItems: 'center',
-    marginBottom: 20,
+    justifyContent: 'center',
+    marginBottom: 24,
+    alignSelf: 'center',
   },
-  emoji: {
-    fontSize: 72,
-  },
-  title: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 28,
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 36,
-  },
+  brandmarkText: { fontFamily: 'Jakarta-ExtraBold', fontSize: 18, letterSpacing: -0.5 },
+  title: { fontFamily: 'Jakarta-ExtraBold', fontSize: 32, textAlign: 'center', letterSpacing: -0.8, marginBottom: 10 },
+  subtitle: { fontFamily: 'Jakarta-Regular', fontSize: 15, textAlign: 'center', lineHeight: 22, marginBottom: 32 },
   featureList: {
-    gap: 12,
-    marginBottom: 40,
+    borderRadius: 16,
+    borderWidth: 1,
+    overflow: 'hidden',
+    marginBottom: 32,
   },
   featureRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
-    borderRadius: 12,
     paddingVertical: 14,
     paddingHorizontal: 16,
-    borderWidth: 1,
   },
-  featureText: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 15,
-    flex: 1,
-  },
-  button: {
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  buttonPressed: {
-    opacity: 0.85,
-  },
-  buttonGradient: {
-    paddingVertical: 16,
+  checkCircle: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
   },
-  buttonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
-  },
+  featureText: { fontFamily: 'Jakarta-Regular', fontSize: 15, flex: 1 },
+  button: { borderRadius: 12, paddingVertical: 14, alignItems: 'center' },
+  buttonText: { fontFamily: 'Jakarta-Bold', fontSize: 15, color: '#fff' },
 })

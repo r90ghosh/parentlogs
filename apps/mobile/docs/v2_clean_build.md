@@ -137,6 +137,8 @@ Add to `lib/colors.ts` by **retuning the existing `light` palette to warm-paper*
 | dot · tip | `#9C8A56` | `#B6A471` | tiny scanning dot |
 | dot · next | `#6F9079` | `#89AC94` | tiny scanning dot |
 
+> **⚠️ Dark palette finalized 2026-06-20 — "Black A · Pure Flat (OLED)".** The warm-dark column above is **superseded**: user picked a true-black neutral scheme (warm cast was "too much on the eye"). Live values are in `lib/colors.ts` `dark` (the source of truth); reference mockup `docs/briefing-black-a-flat.html`. Key dark tokens: bg `#000000`, surface `#0a0a0b`, card `#101012`, ink `#f4f4f6`, ink2 `#a0a0a6`, muted `#7c7c82`, faint `#56565b`, line `rgba(255,255,255,0.07)`, line2 `rgba(255,255,255,0.045)`, accent `#d2814e`, accentInk `#e2965f`, accentSoft `rgba(210,129,78,0.10)`. **Light (warm-paper) is unchanged.** Layout is identical in both themes — flat rows + hairline dividers, no cards.
+
 - [ ] Retune `light` palette → warm-paper values above.
 - [ ] Retune `dark` palette → warm-dark digest values above (keeps night reading; sheds the luxury copper/gold heaviness as screens migrate).
 - [ ] Confirm app default theme is `system` (set in the theme provider / first-run default).
@@ -593,6 +595,7 @@ No post-birth content needs building. The real issue found was **taxonomy incons
 ---
 
 ## Selection Log
+- **2026-06-20** — Dark theme finalized: **"Black A · Pure Flat (OLED)"** (true `#000` canvas, flat rows + hairline dividers, neutral greys, single clay accent). Picked from 3 mockups (`docs/briefing-black-{a-flat,b-carded,c-editorial}.html`); the original warm-dark was rejected as "too much on the eye". Applied in `lib/colors.ts` `dark`; light (warm-paper) unchanged. Layout is theme-agnostic so no component changes were needed. Ref kept: `docs/briefing-black-a-flat.html`.
 - **2026-06-19** — Briefing: chose **Digest** (light + feed). Plan added (§2.1). Foundation §1 introduced.
 - **2026-06-19** — §A resolved: **theme-aware Digest** (warm-paper + warm-dark), default `system`. Dark stays for 3am reading; layout is shared, only colors switch. §1.2 now has both palettes.
 - **2026-06-19** — Tasks: chose **Today List + Now/Upcoming/Done nav** (§2.2). Phase chips replace the 104-week pill bar; calendar mode dropped (pending §D confirm). No DB work — pure client derivation.

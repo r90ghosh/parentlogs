@@ -14,7 +14,6 @@ import { useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   X,
-  Users,
   Baby,
   Calendar,
   Copy,
@@ -30,9 +29,8 @@ import {
   useRegenerateInviteCode,
 } from '@/hooks/use-family'
 import { familyService } from '@/lib/services'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance } from '@/components/animations'
 import { useColors } from '@/hooks/use-colors'
+import { SectionLabel } from '@/components/digest'
 import * as Haptics from 'expo-haptics'
 
 function formatDate(dateStr: string | null | undefined): string {
@@ -167,7 +165,6 @@ export default function FamilyScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-
       <ScrollView
         style={styles.flex}
         contentContainerStyle={[
@@ -178,196 +175,187 @@ export default function FamilyScreen() {
       >
         {/* Header */}
         <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Family</Text>
-          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.subtleBg }]}>
-            <X size={20} color={colors.textMuted} />
+          <Text style={[styles.headerTitle, { color: colors.ink }]}>Family</Text>
+          <Pressable onPress={() => router.back()} style={[styles.closeButton, { backgroundColor: colors.accentSoft }]}>
+            <X size={20} color={colors.muted} />
           </Pressable>
         </View>
+
         {/* Section 1: Family Details */}
-        <CardEntrance delay={0}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Family Details</Text>
-          <GlassCard style={styles.section}>
-            <View style={[styles.inputRow, { borderBottomColor: colors.border }]}>
-              <View style={styles.inputLabelRow}>
-                <Baby size={18} color={colors.rose} />
-                <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Baby Name</Text>
-              </View>
-              <TextInput
-                style={[styles.textInput, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
-                value={babyName}
-                onChangeText={setBabyName}
-                placeholder="Baby's name or nickname"
-                placeholderTextColor={colors.textDim}
-                autoCapitalize="words"
-              />
+        <SectionLabel>Family Details</SectionLabel>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <View style={[styles.inputRow, { borderBottomColor: colors.line2 }]}>
+            <View style={styles.inputLabelRow}>
+              <Baby size={18} color={colors.rose} />
+              <Text style={[styles.inputLabel, { color: colors.ink2 }]}>Baby Name</Text>
             </View>
+            <TextInput
+              style={[styles.textInput, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
+              value={babyName}
+              onChangeText={setBabyName}
+              placeholder="Baby's name or nickname"
+              placeholderTextColor={colors.faint}
+              autoCapitalize="words"
+            />
+          </View>
 
-            <View style={[styles.detailRow, { borderBottomColor: colors.border }]}>
-              <View style={styles.detailRowLeft}>
-                <Calendar size={18} color={colors.sky} />
-                <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Due Date</Text>
-              </View>
-              <Text style={[styles.detailValue, { color: colors.textMuted }]}>
-                {formatDate(familyData?.due_date ?? family?.due_date)}
-              </Text>
+          <View style={[styles.detailRow, { borderBottomColor: colors.line2 }]}>
+            <View style={styles.detailRowLeft}>
+              <Calendar size={18} color={colors.sky} />
+              <Text style={[styles.detailLabel, { color: colors.ink2 }]}>Due Date</Text>
             </View>
+            <Text style={[styles.detailValue, { color: colors.muted }]}>
+              {formatDate(familyData?.due_date ?? family?.due_date)}
+            </Text>
+          </View>
 
-            <View style={[styles.detailRow, styles.lastRow]}>
-              <View style={styles.detailRowLeft}>
-                <Calendar size={18} color={colors.sage} />
-                <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Birth Date</Text>
-              </View>
-              <Text style={[styles.detailValue, { color: colors.textMuted }]}>
-                {formatDate(familyData?.birth_date)}
-              </Text>
+          <View style={styles.detailRow}>
+            <View style={styles.detailRowLeft}>
+              <Calendar size={18} color={colors.sage} />
+              <Text style={[styles.detailLabel, { color: colors.ink2 }]}>Birth Date</Text>
             </View>
+            <Text style={[styles.detailValue, { color: colors.muted }]}>
+              {formatDate(familyData?.birth_date)}
+            </Text>
+          </View>
 
-            <View style={styles.dateHintContainer}>
-              <Text style={[styles.dateHint, { color: colors.textDim }]}>
-                Edit dates in the web app at thedadcenter.com
-              </Text>
-            </View>
+          <View style={styles.dateHintContainer}>
+            <Text style={[styles.dateHint, { color: colors.faint }]}>
+              Edit dates in the web app at thedadcenter.com
+            </Text>
+          </View>
 
-            {isDirty && (
-              <Pressable
-                onPress={handleSaveBabyName}
-                disabled={updateFamily.isPending}
-                style={({ pressed }) => [
-                  styles.saveButton,
-                  { backgroundColor: colors.copper },
-                  pressed && styles.saveButtonPressed,
-                  updateFamily.isPending && styles.saveButtonDisabled,
-                ]}
-              >
-                {updateFamily.isPending ? (
-                  <ActivityIndicator color={colors.textPrimary} size="small" />
-                ) : (
-                  <Text style={[styles.saveButtonText, { color: colors.textPrimary }]}>Save</Text>
-                )}
-              </Pressable>
-            )}
-          </GlassCard>
-        </CardEntrance>
-
-        {/* Section 2: Members */}
-        <CardEntrance delay={80}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Members</Text>
-          <GlassCard style={styles.section}>
-            {membersLoading ? (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator color={colors.copper} size="small" />
-              </View>
-            ) : members && members.length > 0 ? (
-              members.map((member, index) => (
-                <View
-                  key={member.id}
-                  style={[
-                    styles.memberRow,
-                    { borderBottomColor: colors.border },
-                    index === members.length - 1 && styles.lastRow,
-                  ]}
-                >
-                  <View style={styles.memberLeft}>
-                    <View style={[styles.avatar, { backgroundColor: colors.copperGlow }]}>
-                      <Text style={[styles.avatarText, { color: colors.copper }]}>
-                        {(member.full_name || member.email || '?')
-                          .charAt(0)
-                          .toUpperCase()}
-                      </Text>
-                    </View>
-                    <View>
-                      <Text style={[styles.memberName, { color: colors.textSecondary }]}>
-                        {member.full_name || 'Unknown'}
-                      </Text>
-                      <Text style={[styles.memberRole, { color: colors.textMuted }]}>
-                        {member.role
-                          ? member.role.charAt(0).toUpperCase() +
-                            member.role.slice(1)
-                          : 'Member'}
-                      </Text>
-                    </View>
-                  </View>
-                  {member.is_owner && (
-                    <Crown size={16} color={colors.gold} />
-                  )}
-                </View>
-              ))
-            ) : (
-              <View style={styles.emptyContainer}>
-                <Text style={[styles.emptyText, { color: colors.textDim }]}>No members found</Text>
-              </View>
-            )}
-          </GlassCard>
-        </CardEntrance>
-
-        {/* Section 3: Invite Code */}
-        <CardEntrance delay={160}>
-          <Text style={[styles.sectionTitle, { color: colors.textMuted }]}>Invite Code</Text>
-          <GlassCard style={styles.section}>
-            <View style={[styles.inviteCodeContainer, { borderBottomColor: colors.border }]}>
-              <Text style={[styles.inviteCodeValue, { color: colors.sage }]}>
-                {family?.invite_code || '------'}
-              </Text>
-
-              <View style={styles.inviteActions}>
-                <Pressable
-                  onPress={handleCopyInviteCode}
-                  style={[styles.inviteActionButton, { backgroundColor: colors.sageDim }]}
-                >
-                  <Copy size={18} color={colors.sage} />
-                  <Text style={[styles.inviteActionLabel, { color: colors.sage }]}>Copy</Text>
-                </Pressable>
-                <Pressable
-                  onPress={handleShareInviteCode}
-                  style={[styles.inviteActionButton, { backgroundColor: colors.sageDim }]}
-                >
-                  <Share2 size={18} color={colors.sage} />
-                  <Text style={[styles.inviteActionLabel, { color: colors.sage }]}>Share</Text>
-                </Pressable>
-              </View>
-            </View>
-
+          {isDirty && (
             <Pressable
-              onPress={handleRegenerateCode}
-              disabled={regenerateInviteCode.isPending}
+              onPress={handleSaveBabyName}
+              disabled={updateFamily.isPending}
               style={({ pressed }) => [
-                styles.regenerateButton,
-                pressed && { backgroundColor: colors.pressed },
+                styles.saveButton,
+                { backgroundColor: colors.accent },
+                pressed && styles.saveButtonPressed,
+                updateFamily.isPending && styles.saveButtonDisabled,
               ]}
             >
-              {regenerateInviteCode.isPending ? (
-                <ActivityIndicator color={colors.textMuted} size="small" />
+              {updateFamily.isPending ? (
+                <ActivityIndicator color="#fff" size="small" />
               ) : (
-                <>
-                  <RefreshCw size={14} color={colors.textMuted} />
-                  <Text style={[styles.regenerateText, { color: colors.textMuted }]}>Regenerate Code</Text>
-                </>
+                <Text style={styles.saveButtonText}>Save</Text>
               )}
             </Pressable>
-          </GlassCard>
-        </CardEntrance>
+          )}
+        </View>
+
+        {/* Section 2: Members */}
+        <SectionLabel>Members</SectionLabel>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          {membersLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator color={colors.accent} size="small" />
+            </View>
+          ) : members && members.length > 0 ? (
+            members.map((member, index) => (
+              <View
+                key={member.id}
+                style={[
+                  styles.memberRow,
+                  index < members.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.line2 },
+                ]}
+              >
+                <View style={styles.memberLeft}>
+                  <View style={[styles.avatar, { backgroundColor: colors.accentSoft }]}>
+                    <Text style={[styles.avatarText, { color: colors.accentInk }]}>
+                      {(member.full_name || member.email || '?')
+                        .charAt(0)
+                        .toUpperCase()}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={[styles.memberName, { color: colors.ink2 }]}>
+                      {member.full_name || 'Unknown'}
+                    </Text>
+                    <Text style={[styles.memberRole, { color: colors.muted }]}>
+                      {member.role
+                        ? member.role.charAt(0).toUpperCase() +
+                          member.role.slice(1)
+                        : 'Member'}
+                    </Text>
+                  </View>
+                </View>
+                {member.is_owner && (
+                  <Crown size={16} color={colors.gold} />
+                )}
+              </View>
+            ))
+          ) : (
+            <View style={styles.emptyContainer}>
+              <Text style={[styles.emptyText, { color: colors.faint }]}>No members found</Text>
+            </View>
+          )}
+        </View>
+
+        {/* Section 3: Invite Code */}
+        <SectionLabel>Invite Code</SectionLabel>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <View style={[styles.inviteCodeContainer, { borderBottomColor: colors.line2 }]}>
+            <Text style={[styles.inviteCodeValue, { color: colors.sage }]}>
+              {family?.invite_code || '------'}
+            </Text>
+
+            <View style={styles.inviteActions}>
+              <Pressable
+                onPress={handleCopyInviteCode}
+                style={[styles.inviteActionButton, { backgroundColor: colors.accentSoft }]}
+              >
+                <Copy size={18} color={colors.sage} />
+                <Text style={[styles.inviteActionLabel, { color: colors.sage }]}>Copy</Text>
+              </Pressable>
+              <Pressable
+                onPress={handleShareInviteCode}
+                style={[styles.inviteActionButton, { backgroundColor: colors.accentSoft }]}
+              >
+                <Share2 size={18} color={colors.sage} />
+                <Text style={[styles.inviteActionLabel, { color: colors.sage }]}>Share</Text>
+              </Pressable>
+            </View>
+          </View>
+
+          <Pressable
+            onPress={handleRegenerateCode}
+            disabled={regenerateInviteCode.isPending}
+            style={({ pressed }) => [
+              styles.regenerateButton,
+              pressed && { backgroundColor: colors.cardHover },
+            ]}
+          >
+            {regenerateInviteCode.isPending ? (
+              <ActivityIndicator color={colors.muted} size="small" />
+            ) : (
+              <>
+                <RefreshCw size={14} color={colors.muted} />
+                <Text style={[styles.regenerateText, { color: colors.muted }]}>Regenerate Code</Text>
+              </>
+            )}
+          </Pressable>
+        </View>
 
         {/* Section 4: Leave Family */}
-        <CardEntrance delay={240}>
-          <Text style={[styles.dangerSectionTitle, { color: colors.coral }]}>Danger Zone</Text>
-          <GlassCard style={[styles.dangerSection, { borderColor: 'rgba(212,131,107,0.15)' }]}>
-            <Pressable
-              onPress={handleLeaveFamily}
-              style={({ pressed }) => [
-                styles.leaveButton,
-                { backgroundColor: colors.coralDim, borderColor: 'rgba(212,131,107,0.2)' },
-                pressed && { backgroundColor: 'rgba(212,131,107,0.18)' },
-              ]}
-            >
-              <LogOut size={18} color={colors.coral} />
-              <Text style={[styles.leaveButtonText, { color: colors.coral }]}>Leave Family</Text>
-            </Pressable>
-            <Text style={[styles.leaveDescription, { color: colors.textDim }]}>
-              This will remove you from this family. You will need a new invite
-              code to rejoin.
-            </Text>
-          </GlassCard>
-        </CardEntrance>
+        <SectionLabel>Danger Zone</SectionLabel>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.coral }]}>
+          <Pressable
+            onPress={handleLeaveFamily}
+            style={({ pressed }) => [
+              styles.leaveButton,
+              { backgroundColor: pressed ? colors.cardHover : 'transparent' },
+            ]}
+          >
+            <LogOut size={18} color={colors.coral} />
+            <Text style={[styles.leaveButtonText, { color: colors.coral }]}>Leave Family</Text>
+          </Pressable>
+          <Text style={[styles.leaveDescription, { color: colors.faint }]}>
+            This will remove you from this family. You will need a new invite
+            code to rejoin.
+          </Text>
+        </View>
       </ScrollView>
     </View>
   )
@@ -388,7 +376,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   headerTitle: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 16,
   },
   closeButton: {
@@ -403,25 +391,18 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
 
-  // Section
-  sectionTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 13,
-    textTransform: 'uppercase',
-    letterSpacing: 1.2,
-    marginBottom: 12,
-    marginTop: 8,
-  },
-  section: {
+  // Card
+  card: {
+    borderRadius: 16,
+    borderWidth: 1,
     overflow: 'hidden',
-    marginBottom: 24,
-    padding: 0,
+    marginBottom: 4,
   },
 
   // Family Details
   inputRow: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingVertical: 15,
     borderBottomWidth: 1,
   },
   inputLabelRow: {
@@ -431,41 +412,37 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   inputLabel: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 15,
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 15.5,
   },
   textInput: {
     borderRadius: 12,
     borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 15,
   },
 
   detailRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
+    paddingVertical: 15,
     paddingHorizontal: 16,
-    borderBottomWidth: 1,
   },
   detailRowLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 14,
   },
   detailLabel: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 15,
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 15.5,
   },
   detailValue: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
-  },
-  lastRow: {
-    borderBottomWidth: 0,
   },
 
   dateHintContainer: {
@@ -473,13 +450,13 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   dateHint: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
   },
 
   saveButton: {
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 14,
     alignItems: 'center',
     marginHorizontal: 16,
     marginBottom: 16,
@@ -491,8 +468,9 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   saveButtonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
 
   // Members
@@ -504,9 +482,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
+    paddingVertical: 15,
     paddingHorizontal: 16,
-    borderBottomWidth: 1,
   },
   memberLeft: {
     flexDirection: 'row',
@@ -521,15 +498,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   avatarText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 16,
   },
   memberName: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 15,
   },
   memberRole: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
     marginTop: 2,
   },
@@ -538,7 +515,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 14,
   },
 
@@ -550,7 +527,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   inviteCodeValue: {
-    fontFamily: 'Jost-Medium',
+    fontFamily: 'Jakarta-Bold',
     fontSize: 24,
     letterSpacing: 3,
     marginBottom: 20,
@@ -568,7 +545,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   inviteActionLabel: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 14,
   },
   regenerateButton: {
@@ -580,39 +557,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   regenerateText: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
   },
 
   // Leave Family
-  dangerSectionTitle: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 13,
-    textTransform: 'uppercase',
-    letterSpacing: 1.2,
-    marginBottom: 12,
-    marginTop: 8,
-  },
-  dangerSection: {
-    overflow: 'hidden',
-    marginBottom: 24,
-    padding: 0,
-  },
   leaveButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
-    paddingVertical: 16,
+    paddingVertical: 15,
     paddingHorizontal: 16,
-    borderWidth: 1,
-    borderRadius: 0,
   },
   leaveButtonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 15,
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 15.5,
   },
   leaveDescription: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 12,
     lineHeight: 18,
     paddingHorizontal: 16,

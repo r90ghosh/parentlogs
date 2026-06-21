@@ -1,32 +1,20 @@
-import { useCallback, useState } from 'react'
-import {
-  View,
-  Text,
-  ScrollView,
-  RefreshControl,
-  Pressable,
-  ActivityIndicator,
-  StyleSheet,
-} from 'react-native'
+import { useCallback, useState, useMemo } from 'react'
+import { View, Text, ScrollView, RefreshControl, Pressable, ActivityIndicator, StyleSheet } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useQueryClient } from '@tanstack/react-query'
-import { ChevronLeft, ChevronRight, Check, Square } from 'lucide-react-native'
+import { ChevronLeft, ChevronRight, Check } from 'lucide-react-native'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { useColors } from '@/hooks/use-colors'
 import { MedicalDisclaimer } from '@/components/shared/MedicalDisclaimer'
 import { useBriefingByWeek } from '@/hooks/use-briefings'
+import { useBriefingDone } from '@/hooks/use-briefing-done'
 import { useTasks, useCompleteTask } from '@/hooks/use-tasks'
 import { isPregnancyStage } from '@tdc/shared/utils/pregnancy-utils'
-import {
-  getBabySize,
-  formatWeight,
-  formatLength,
-} from '@tdc/shared/utils/baby-sizes'
-import { GlassCard } from '@/components/glass'
-import { CardEntrance, StaggerList } from '@/components/animations'
-import { BriefingSection, FieldNotesCallout, BriefingProgressBar } from '@/components/briefing'
+import { getBabySize } from '@tdc/shared/utils/baby-sizes'
 import type { FamilyStage } from '@tdc/shared/types'
+import { buildBriefingDigest, categoryColor } from '@/lib/briefing-digest'
+import { DigestRow, DigestHero, FieldNoteCard, SectionLabel } from '@/components/digest'
 import { startOfWeek, endOfWeek, isWithinInterval, parseISO } from 'date-fns'
 
 export default function BriefingWeekScreen() {
@@ -42,6 +30,7 @@ export default function BriefingWeekScreen() {
   const isPregnancy = isPregnancyStage(stage)
   const maxWeek = isPregnancy ? 40 : 104
   const week = parseInt(weekId, 10) || currentWeek
+  const role = profile?.role ?? 'dad'
 
   const [refreshing, setRefreshing] = useState(false)
 
@@ -49,9 +38,13 @@ export default function BriefingWeekScreen() {
   const { data: allTasks } = useTasks()
   const completeTask = useCompleteTask()
   const babySize = isPregnancy ? getBabySize(week) : undefined
-  const role = profile?.role ?? 'dad'
+  const { done, toggle } = useBriefingDone(profile?.family_id, stage, week)
 
-  // Filter tasks due this calendar week
+  const digest = useMemo(
+    () => (briefing ? buildBriefingDigest(briefing, babySize, role, { isPregnancy }) : null),
+    [briefing, babySize, role, isPregnancy]
+  )
+
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
   const weekEnd = endOfWeek(new Date(), { weekStartsOn: 1 })
   const thisWeekTasks = (allTasks ?? []).filter((task) => {
@@ -69,221 +62,131 @@ export default function BriefingWeekScreen() {
     setRefreshing(false)
   }, [queryClient, stage, week])
 
-  const navigateWeek = (direction: -1 | 1) => {
-    const next = week + direction
-    if (next >= 1 && next <= maxWeek) {
-      router.setParams({ weekId: String(next) })
-    }
+  const navigateWeek = (dir: -1 | 1) => {
+    const next = week + dir
+    if (next >= 1 && next <= maxWeek) router.setParams({ weekId: String(next) })
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: 'transparent' }]}>
-      {/* Fixed Header */}
-      <View style={[styles.header, { paddingTop: 8, backgroundColor: colors.overlay, borderBottomColor: colors.border }]}>
-        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-          <ChevronLeft size={22} color={colors.textPrimary} />
+    <View style={styles.container}>
+      {/* Fixed header */}
+      <View style={[styles.header, { borderBottomColor: colors.line }]}>
+        <Pressable onPress={() => router.back()} hitSlop={8} style={styles.iconBtn}>
+          <ChevronLeft size={24} color={colors.ink} />
         </Pressable>
         <View style={styles.headerNav}>
-          <Pressable
-            onPress={() => navigateWeek(-1)}
-            disabled={week <= 1}
-            style={[styles.navButton, { backgroundColor: colors.subtleBg }, week <= 1 && styles.navButtonDisabled]}
-          >
-            <ChevronLeft size={18} color={week <= 1 ? colors.textDim : colors.textSecondary} />
+          <Pressable onPress={() => navigateWeek(-1)} disabled={week <= 1} hitSlop={8} style={[styles.iconBtn, week <= 1 && styles.disabled]}>
+            <ChevronLeft size={18} color={colors.ink2} />
           </Pressable>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Week {week}</Text>
-          <Pressable
-            onPress={() => navigateWeek(1)}
-            disabled={week >= maxWeek}
-            style={[
-              styles.navButton,
-              { backgroundColor: colors.subtleBg },
-              week >= maxWeek && styles.navButtonDisabled,
-            ]}
-          >
-            <ChevronRight
-              size={18}
-              color={week >= maxWeek ? colors.textDim : colors.textSecondary}
-            />
+          <Text style={[styles.headerTitle, { color: colors.ink }]}>Week {week}</Text>
+          <Pressable onPress={() => navigateWeek(1)} disabled={week >= maxWeek} hitSlop={8} style={[styles.iconBtn, week >= maxWeek && styles.disabled]}>
+            <ChevronRight size={18} color={colors.ink2} />
           </Pressable>
         </View>
-        <View style={styles.headerSpacer} />
+        <View style={styles.iconBtn} />
       </View>
 
       <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={[
-          styles.scrollContent,
-          {
-            paddingTop: 60,
-            paddingBottom: insets.bottom + 90,
-          },
-        ]}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={colors.copper}
-          />
-        }
+        contentContainerStyle={{ paddingBottom: insets.bottom + 90 }}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.accent} />}
         showsVerticalScrollIndicator={false}
       >
         {isLoading && (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={colors.copper} />
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color={colors.accent} />
           </View>
         )}
 
         {!isLoading && !briefing && (
-          <CardEntrance delay={0}>
-            <GlassCard style={styles.emptyCard}>
-              <Text style={[styles.emptyText, { color: colors.textMuted }]}>
-                No briefing available for Week {week}.
-              </Text>
-            </GlassCard>
-          </CardEntrance>
+          <View style={styles.empty}>
+            <Text style={[styles.emptyText, { color: colors.muted }]}>No briefing available for Week {week}.</Text>
+          </View>
         )}
 
-        {!isLoading && briefing && (
+        {!isLoading && briefing && digest && (
           <>
-            {/* Hero */}
-            <CardEntrance delay={0}>
-              <View style={styles.hero}>
-                <Text style={[styles.weekLabel, { color: colors.copper }]}>
-                  WEEK {briefing.week}
-                  {week === currentWeek && (
-                    <Text style={{ color: colors.gold }}> — THIS WEEK</Text>
-                  )}
-                </Text>
-                <Text style={[styles.heroTitle, { color: colors.textPrimary }]}>{briefing.title}</Text>
-                <BriefingProgressBar week={week} isPregnancy={isPregnancy} />
-                {babySize && (
-                  <View style={[styles.babySizeRow, { backgroundColor: colors.pressed }]}>
-                    <Text style={styles.babySizeEmoji}>{babySize.emoji}</Text>
-                    <View>
-                      <Text style={[styles.babySizeFruit, { color: colors.textSecondary }]}>
-                        Baby is the size of a {babySize.fruit}
-                      </Text>
-                      <Text style={[styles.babySizeDetail, { color: colors.textMuted }]}>
-                        {formatLength(babySize)} long, {formatWeight(babySize)}
-                      </Text>
-                    </View>
-                  </View>
-                )}
-              </View>
-            </CardEntrance>
+            <DigestHero
+              title={`Week ${week}`}
+              sub={`${digest.hero.sub}${week === currentWeek ? ' · this week' : ''}`}
+              progressPct={digest.hero.progressPct}
+              tldr={digest.hero.tldr}
+            />
 
-            <StaggerList staggerMs={100}>
-              <BriefingSection title="Baby Update" icon="👶" accentColor={colors.sky}>
-                <Text style={[styles.sectionBody, { color: colors.textSecondary }]}>{briefing.baby_update}</Text>
-              </BriefingSection>
+            <SectionLabel>The full briefing</SectionLabel>
+            {digest.items.map((item) =>
+              item.categoryKey === 'do' ? (
+                <DigestRow
+                  key={item.key}
+                  category={{ label: item.label, color: categoryColor(item.categoryKey, colors) }}
+                  headline={item.headline}
+                  checkable
+                  checked={item.doIndex != null ? !!done[item.doIndex] : undefined}
+                  onToggleCheck={item.doIndex != null ? () => toggle(item.doIndex!) : undefined}
+                />
+              ) : (
+                <FullSection
+                  key={item.key}
+                  label={item.label}
+                  color={categoryColor(item.categoryKey, colors)}
+                  body={item.detail || item.headline}
+                  ink={colors.ink2}
+                  line={colors.line2}
+                />
+              )
+            )}
 
-              <BriefingSection
-                title={role === 'dad' ? "What She's Experiencing" : 'Your Body'}
-                icon="💝"
-                accentColor={colors.rose}
-              >
-                <Text style={[styles.sectionBody, { color: colors.textSecondary }]}>{briefing.mom_update}</Text>
-              </BriefingSection>
+            {digest.fieldNote && <FieldNoteCard quote={digest.fieldNote} />}
 
-              <BriefingSection
-                title="Your Focus This Week"
-                icon="🎯"
-                accentColor={colors.copper}
-              >
-                <Text style={[styles.sectionIntro, { color: colors.textSecondary }]}>
-                  Here's what to focus on this week:
-                </Text>
-                {briefing.dad_focus.map((item: string, idx: number) => (
-                  <View key={idx} style={styles.focusItem}>
-                    <View style={[styles.focusBullet, { backgroundColor: colors.copper }]} />
-                    <Text style={[styles.focusText, { color: colors.textSecondary }]}>{item}</Text>
-                  </View>
-                ))}
-              </BriefingSection>
-
-              {briefing.field_notes && (
-                <FieldNotesCallout notes={briefing.field_notes} />
-              )}
-
-              <BriefingSection
-                title="Relationship Check-In"
-                icon="💜"
-                accentColor={colors.purple}
-              >
-                <Text style={[styles.sectionBody, { color: colors.textSecondary }]}>
-                  {briefing.relationship_tip}
-                </Text>
-              </BriefingSection>
-
-              {briefing.coming_up && (
-                <BriefingSection
-                  title="Coming Up"
-                  icon="📆"
-                  accentColor={colors.gold}
-                >
-                  <Text style={[styles.sectionBody, { color: colors.textSecondary }]}>{briefing.coming_up}</Text>
-                </BriefingSection>
-              )}
-            </StaggerList>
+            {digest.next && (
+              <FullSection
+                label={digest.next.label}
+                color={categoryColor(digest.next.categoryKey, colors)}
+                body={digest.next.detail || digest.next.headline}
+                ink={colors.ink2}
+                line={colors.line2}
+              />
+            )}
 
             {thisWeekTasks.length > 0 && (
-              <BriefingSection
-                title="This Week's Tasks"
-                icon="✅"
-                accentColor={colors.copper}
-              >
-                {thisWeekTasks.map((task) => (
-                  <Pressable
-                    key={task.id}
-                    onPress={() => completeTask.mutate(task.id)}
-                    style={[weekTaskStyles.row, { borderBottomColor: colors.subtleBg }]}
-                  >
-                    <View
-                      style={[
-                        weekTaskStyles.checkbox,
-                        { borderColor: colors.textDim },
-                        task.status === 'completed' && { backgroundColor: colors.sage, borderColor: colors.sage },
-                      ]}
-                    >
-                      {task.status === 'completed' && (
-                        <Check size={11} color={colors.bg} />
-                      )}
-                    </View>
-                    <Text
-                      style={[
-                        weekTaskStyles.taskTitle,
-                        { color: colors.textSecondary },
-                        task.status === 'completed' && { textDecorationLine: 'line-through', color: colors.textMuted },
-                      ]}
-                      numberOfLines={2}
-                    >
-                      {task.title}
-                    </Text>
-                  </Pressable>
-                ))}
-              </BriefingSection>
-            )}
-
-            {briefing.medical_source && (
-              <CardEntrance delay={400}>
-                <View style={[styles.sourceFooter, { borderTopColor: colors.border }]}>
-                  <View style={[styles.sourceBadge, { backgroundColor: colors.sageDim }]}>
-                    <Text style={[styles.sourceBadgeText, { color: colors.sage }]}>
-                      Source-Referenced
-                    </Text>
-                  </View>
-                  <Text style={[styles.sourceText, { color: colors.textMuted }]}>
-                    Sources: {briefing.medical_source}
-                  </Text>
+              <>
+                <SectionLabel>This week's tasks</SectionLabel>
+                <View style={styles.taskWrap}>
+                  {thisWeekTasks.map((task) => {
+                    const completed = task.status === 'completed'
+                    return (
+                      <Pressable
+                        key={task.id}
+                        onPress={() => completeTask.mutate(task.id)}
+                        style={[styles.taskRow, { borderBottomColor: colors.line2 }]}
+                      >
+                        <View
+                          style={[
+                            styles.taskCheck,
+                            { borderColor: completed ? colors.accent : colors.line, backgroundColor: completed ? colors.accent : 'transparent' },
+                          ]}
+                        >
+                          {completed && <Check size={12} color="#fff" strokeWidth={3} />}
+                        </View>
+                        <Text
+                          style={[
+                            styles.taskTitle,
+                            { color: completed ? colors.muted : colors.ink, textDecorationLine: completed ? 'line-through' : 'none' },
+                          ]}
+                          numberOfLines={2}
+                        >
+                          {task.title}
+                        </Text>
+                      </Pressable>
+                    )
+                  })}
                 </View>
-              </CardEntrance>
+              </>
             )}
 
-            {/* Medical Disclaimer */}
-            <CardEntrance delay={450}>
-              <MedicalDisclaimer />
-            </CardEntrance>
+            <Text style={[styles.fsrc, { color: colors.faint }]}>
+              Source-referenced{briefing.medical_source ? ` · ${briefing.medical_source}` : ''} · Not medical advice
+            </Text>
+            <MedicalDisclaimer />
           </>
         )}
       </ScrollView>
@@ -291,181 +194,47 @@ export default function BriefingWeekScreen() {
   )
 }
 
+function FullSection({ label, color, body, ink, line }: { label: string; color: string; body: string; ink: string; line: string }) {
+  return (
+    <View style={[fs.section, { borderBottomColor: line }]}>
+      <View style={fs.catRow}>
+        <View style={[fs.dot, { backgroundColor: color }]} />
+        <Text style={[fs.cat, { color }]}>{label}</Text>
+      </View>
+      <Text style={[fs.body, { color: ink }]}>{body}</Text>
+    </View>
+  )
+}
+
+const fs = StyleSheet.create({
+  section: { paddingHorizontal: 24, paddingVertical: 16, borderBottomWidth: 1 },
+  catRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 },
+  dot: { width: 6, height: 6, borderRadius: 3 },
+  cat: { fontFamily: 'Jakarta-Bold', fontSize: 11, letterSpacing: 1.2, textTransform: 'uppercase' },
+  body: { fontFamily: 'Jakarta-Regular', fontSize: 15, lineHeight: 24 },
+})
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
   header: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 50,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
+    paddingTop: 8,
     paddingBottom: 12,
     borderBottomWidth: 1,
   },
-  backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerNav: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  navButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  navButtonDisabled: {
-    opacity: 0.4,
-  },
-  headerTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 18,
-  },
-  headerSpacer: {
-    width: 36,
-  },
-  scroll: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 16,
-  },
-  loadingContainer: {
-    paddingVertical: 80,
-    alignItems: 'center',
-  },
-  emptyCard: {
-    padding: 32,
-    alignItems: 'center',
-    marginTop: 24,
-  },
-  emptyText: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  hero: {
-    paddingVertical: 16,
-    paddingHorizontal: 4,
-    marginBottom: 8,
-  },
-  weekLabel: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 12,
-    letterSpacing: 1.5,
-    marginBottom: 6,
-  },
-  heroTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 24,
-    lineHeight: 32,
-    marginBottom: 12,
-  },
-  babySizeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    borderRadius: 12,
-    padding: 12,
-  },
-  babySizeEmoji: {
-    fontSize: 32,
-  },
-  babySizeFruit: {
-    fontFamily: 'Jost-Medium',
-    fontSize: 15,
-  },
-  babySizeDetail: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 13,
-    marginTop: 2,
-  },
-  sectionBody: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 15,
-    lineHeight: 23,
-  },
-  sectionIntro: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 15,
-    marginBottom: 12,
-  },
-  focusItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 10,
-    marginBottom: 10,
-  },
-  focusBullet: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    marginTop: 8,
-  },
-  focusText: {
-    flex: 1,
-    fontFamily: 'Jost-Regular',
-    fontSize: 15,
-    lineHeight: 22,
-  },
-  sourceFooter: {
-    marginTop: 16,
-    paddingTop: 16,
-    borderTopWidth: 1,
-  },
-  sourceBadge: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  sourceBadgeText: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 11,
-  },
-  sourceText: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 12,
-    lineHeight: 18,
-  },
-})
-
-const weekTaskStyles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 10,
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderRadius: 6,
-    borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 1,
-    flexShrink: 0,
-  },
-  taskTitle: {
-    flex: 1,
-    fontFamily: 'Jost-Regular',
-    fontSize: 14,
-    lineHeight: 20,
-  },
+  iconBtn: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
+  headerNav: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  headerTitle: { fontFamily: 'Jakarta-Bold', fontSize: 16 },
+  disabled: { opacity: 0.35 },
+  loading: { paddingVertical: 80, alignItems: 'center' },
+  empty: { paddingHorizontal: 24, paddingVertical: 48, alignItems: 'center' },
+  emptyText: { fontFamily: 'Jakarta-Medium', fontSize: 15, textAlign: 'center' },
+  taskWrap: { paddingTop: 2 },
+  taskRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, paddingVertical: 14, paddingHorizontal: 24, borderBottomWidth: 1 },
+  taskCheck: { width: 22, height: 22, borderRadius: 11, borderWidth: 2, alignItems: 'center', justifyContent: 'center', marginTop: 1, flexShrink: 0 },
+  taskTitle: { flex: 1, fontFamily: 'Jakarta-SemiBold', fontSize: 15, lineHeight: 22 },
+  fsrc: { fontFamily: 'Jakarta-Medium', fontSize: 11, textAlign: 'center', paddingTop: 18, paddingHorizontal: 24, letterSpacing: 0.3 },
 })
