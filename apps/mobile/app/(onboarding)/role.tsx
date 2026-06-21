@@ -48,9 +48,9 @@ export default function RoleScreen() {
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={[styles.step, { color: colors.copper }]}>Step 1 of 4</Text>
-          <Text style={[styles.title, { color: colors.textPrimary }]}>Who are you?</Text>
-          <Text style={[styles.subtitle, { color: colors.textMuted }]}>
+          <Text style={[styles.step, { color: colors.accent }]}>STEP 1 OF 4</Text>
+          <Text style={[styles.title, { color: colors.ink }]}>Who are you?</Text>
+          <Text style={[styles.subtitle, { color: colors.muted }]}>
             We'll personalize your experience based on your role
           </Text>
         </View>
@@ -62,8 +62,8 @@ export default function RoleScreen() {
               onPress={() => handleSelect(role.key)}
               style={[
                 styles.option,
-                { backgroundColor: colors.card, borderColor: colors.border },
-                selectedRole === role.key && { borderColor: colors.copper, backgroundColor: colors.copperDim },
+                { backgroundColor: colors.card, borderColor: colors.line },
+                selectedRole === role.key && { borderColor: colors.accent, backgroundColor: colors.accentSoft },
               ]}
             >
               <Text style={styles.emoji}>{role.emoji}</Text>
@@ -71,13 +71,13 @@ export default function RoleScreen() {
                 <Text
                   style={[
                     styles.optionLabel,
-                    { color: colors.textSecondary },
-                    selectedRole === role.key && { color: colors.textPrimary },
+                    { color: colors.ink2 },
+                    selectedRole === role.key && { color: colors.ink },
                   ]}
                 >
                   {role.label}
                 </Text>
-                <Text style={[styles.optionSublabel, { color: colors.textMuted }]}>{role.sublabel}</Text>
+                <Text style={[styles.optionSublabel, { color: colors.muted }]}>{role.sublabel}</Text>
               </View>
             </Pressable>
           ))}
@@ -88,15 +88,15 @@ export default function RoleScreen() {
           disabled={!selectedRole || isLoading}
           style={({ pressed }) => [
             styles.button,
-            { backgroundColor: colors.copper },
+            { backgroundColor: colors.accent },
             pressed && styles.buttonPressed,
             (!selectedRole || isLoading) && styles.buttonDisabled,
           ]}
         >
           {isLoading ? (
-            <ActivityIndicator color={colors.textPrimary} />
+            <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Continue</Text>
+            <Text style={styles.buttonText}>Continue</Text>
           )}
         </Pressable>
       </View>
@@ -117,51 +117,53 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   step: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 13,
-    marginBottom: 12,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 11,
+    marginBottom: 14,
     textTransform: 'uppercase',
-    letterSpacing: 1.5,
+    letterSpacing: 1.6,
   },
   title: {
-    fontFamily: 'PlayfairDisplay-Bold',
+    fontFamily: 'Jakarta-ExtraBold',
     fontSize: 28,
     marginBottom: 8,
+    letterSpacing: -0.5,
   },
   subtitle: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Regular',
+    fontSize: 15,
+    lineHeight: 22,
   },
   options: {
-    gap: 12,
+    gap: 10,
     marginBottom: 40,
   },
   option: {
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 16,
-    borderWidth: 1.5,
-    padding: 20,
+    borderWidth: 1,
+    padding: 18,
     gap: 16,
   },
   emoji: {
-    fontSize: 32,
+    fontSize: 30,
   },
   optionText: {
     flex: 1,
   },
   optionLabel: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 18,
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 16,
     marginBottom: 2,
   },
   optionSublabel: {
-    fontFamily: 'Karla-Regular',
-    fontSize: 14,
+    fontFamily: 'Jakarta-Regular',
+    fontSize: 13,
   },
   button: {
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
   },
   buttonPressed: {
@@ -171,7 +173,8 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   buttonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
 })

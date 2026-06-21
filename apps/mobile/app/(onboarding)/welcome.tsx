@@ -52,11 +52,11 @@ export default function WelcomeScreen() {
     const Icon = item.icon
     return (
       <View style={styles.slide}>
-        <View style={[styles.iconCircle, { backgroundColor: `${item.color}26` }]}>
+        <View style={[styles.iconCircle, { backgroundColor: `${item.color}20` }]}>
           <Icon size={36} color={item.color} />
         </View>
-        <Text style={[styles.title, { color: colors.textPrimary }]}>{item.title}</Text>
-        <Text style={[styles.description, { color: colors.textMuted }]}>{item.description}</Text>
+        <Text style={[styles.title, { color: colors.ink }]}>{item.title}</Text>
+        <Text style={[styles.description, { color: colors.muted }]}>{item.description}</Text>
       </View>
     )
   }
@@ -87,8 +87,8 @@ export default function WelcomeScreen() {
               style={[
                 styles.dot,
                 i === currentIndex
-                  ? [styles.activeDot, { backgroundColor: colors.copper }]
-                  : [styles.inactiveDot, { backgroundColor: colors.textDim }],
+                  ? [styles.activeDot, { backgroundColor: colors.accent }]
+                  : [styles.inactiveDot, { backgroundColor: colors.line }],
               ]}
             />
           ))}
@@ -96,14 +96,14 @@ export default function WelcomeScreen() {
 
         <Pressable
           onPress={isLastSlide ? goToRole : goToNext}
-          style={({ pressed }) => [styles.button, { backgroundColor: colors.copper }, pressed && { opacity: 0.85 }]}
+          style={({ pressed }) => [styles.button, { backgroundColor: colors.accent }, pressed && { opacity: 0.85 }]}
         >
-          <Text style={[styles.buttonText, { color: colors.textPrimary }]}>{isLastSlide ? 'Get Started' : 'Next'}</Text>
+          <Text style={styles.buttonText}>{isLastSlide ? 'Get Started' : 'Next'}</Text>
         </Pressable>
 
         {!isLastSlide && (
           <Pressable onPress={goToRole}>
-            <Text style={[styles.skipText, { color: colors.textMuted }]}>Skip</Text>
+            <Text style={[styles.skipText, { color: colors.muted }]}>Skip</Text>
           </Pressable>
         )}
       </View>
@@ -120,27 +120,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 40,
   },
   iconCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 72,
+    height: 72,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
   title: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 28,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 26,
     textAlign: 'center',
-    marginTop: 32,
+    marginTop: 28,
+    letterSpacing: -0.3,
   },
   description: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Regular',
+    fontSize: 15,
     textAlign: 'center',
-    lineHeight: 24,
-    paddingHorizontal: 40,
-    marginTop: 16,
+    lineHeight: 23,
+    marginTop: 14,
   },
   bottomSection: {
     position: 'absolute',
@@ -156,28 +157,29 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   dot: {
-    height: 8,
-    borderRadius: 4,
+    height: 6,
+    borderRadius: 3,
   },
   activeDot: {
     width: 20,
   },
   inactiveDot: {
-    width: 8,
+    width: 6,
   },
   button: {
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
   },
   buttonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
   skipText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 14,
     textAlign: 'center',
-    marginTop: 12,
+    marginTop: 14,
   },
 })

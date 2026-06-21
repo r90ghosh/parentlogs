@@ -13,6 +13,7 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import { ArrowLeft, Mail, CheckCircle } from 'lucide-react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { BrandLogo } from '@/components/BrandLogo'
 import { supabase } from '@/lib/supabase'
 import { useColors } from '@/hooks/use-colors'
 
@@ -63,12 +64,12 @@ export default function ForgotPasswordScreen() {
           <View style={[styles.successIconCircle, { backgroundColor: colors.sageDim }]}>
             <CheckCircle size={32} color={colors.sage} />
           </View>
-          <Text style={[styles.successTitle, { color: colors.textPrimary }]}>Check your email</Text>
-          <Text style={[styles.successDescription, { color: colors.textMuted }]}>
+          <Text style={[styles.successTitle, { color: colors.ink }]}>Check your email</Text>
+          <Text style={[styles.successDescription, { color: colors.muted }]}>
             We sent a password reset link to{'\n'}
-            <Text style={[styles.successEmail, { color: colors.textSecondary }]}>{email.trim()}</Text>
+            <Text style={[styles.successEmail, { color: colors.ink2 }]}>{email.trim()}</Text>
           </Text>
-          <Text style={[styles.successHint, { color: colors.textDim }]}>
+          <Text style={[styles.successHint, { color: colors.faint }]}>
             Click the link to reset your password in your browser. Once done,
             come back here and sign in with your new password.
           </Text>
@@ -77,11 +78,11 @@ export default function ForgotPasswordScreen() {
             onPress={() => router.back()}
             style={({ pressed }) => [
               styles.backToLoginButton,
-              { backgroundColor: colors.card, borderColor: colors.borderHover },
+              { backgroundColor: colors.card, borderColor: colors.line },
               pressed && styles.buttonPressed,
             ]}
           >
-            <Text style={[styles.backToLoginText, { color: colors.copper }]}>Back to Login</Text>
+            <Text style={[styles.backToLoginText, { color: colors.accentInk }]}>Back to Login</Text>
           </Pressable>
         </View>
       </View>
@@ -92,8 +93,8 @@ export default function ForgotPasswordScreen() {
     <View style={[styles.container, { backgroundColor: 'transparent' }]}>
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
-        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.subtleBg }]}>
-          <ArrowLeft size={20} color={colors.textSecondary} />
+        <Pressable onPress={() => router.back()} style={[styles.backButton, { backgroundColor: colors.card, borderColor: colors.line }]}>
+          <ArrowLeft size={20} color={colors.ink2} />
         </Pressable>
       </View>
 
@@ -108,13 +109,14 @@ export default function ForgotPasswordScreen() {
           ]}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Icon + title */}
+          {/* Brand + icon + title */}
           <View style={styles.iconContainer}>
-            <View style={[styles.iconCircle, { backgroundColor: colors.copperDim }]}>
-              <Mail size={28} color={colors.copper} />
+            <BrandLogo size={36} textSize={24} />
+            <View style={[styles.iconCircle, { backgroundColor: colors.accentSoft }]}>
+              <Mail size={28} color={colors.accent} />
             </View>
-            <Text style={[styles.title, { color: colors.textPrimary }]}>Forgot Password?</Text>
-            <Text style={[styles.description, { color: colors.textMuted }]}>
+            <Text style={[styles.title, { color: colors.ink }]}>Forgot Password?</Text>
+            <Text style={[styles.description, { color: colors.muted }]}>
               Enter your email and we'll send you a link to reset your password.
             </Text>
           </View>
@@ -129,13 +131,13 @@ export default function ForgotPasswordScreen() {
           {/* Form */}
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.textSecondary }]}>Email</Text>
+              <Text style={[styles.label, { color: colors.muted }]}>Email</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
+                style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
                 value={email}
                 onChangeText={setEmail}
                 placeholder="you@example.com"
-                placeholderTextColor={colors.textDim}
+                placeholderTextColor={colors.faint}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoComplete="email"
@@ -149,15 +151,15 @@ export default function ForgotPasswordScreen() {
               disabled={isLoading}
               style={({ pressed }) => [
                 styles.button,
-                { backgroundColor: colors.copper },
+                { backgroundColor: colors.accent },
                 pressed && styles.buttonPressed,
                 isLoading && styles.buttonDisabled,
               ]}
             >
               {isLoading ? (
-                <ActivityIndicator color={colors.textPrimary} />
+                <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={[styles.buttonText, { color: colors.textPrimary }]}>Send Reset Link</Text>
+                <Text style={styles.buttonText}>Send Reset Link</Text>
               )}
             </Pressable>
           </View>
@@ -183,34 +185,35 @@ const styles = StyleSheet.create({
   backButton: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+    borderRadius: 10,
+    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 24,
-    paddingTop: 32,
+    paddingTop: 24,
   },
   iconContainer: {
     alignItems: 'center',
     marginBottom: 32,
+    gap: 16,
   },
   iconCircle: {
     width: 56,
     height: 56,
-    borderRadius: 28,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
   },
   title: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 24,
-    marginBottom: 12,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 22,
+    letterSpacing: -0.3,
   },
   description: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 15,
     textAlign: 'center',
     lineHeight: 22,
@@ -224,30 +227,30 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   errorText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 14,
   },
   form: {
     gap: 20,
   },
   inputGroup: {
-    gap: 8,
+    gap: 6,
   },
   label: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 14,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 13,
   },
   input: {
-    borderRadius: 12,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 15,
     borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
   },
   button: {
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 8,
@@ -259,8 +262,9 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
 
   // Success state
@@ -269,36 +273,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 32,
+    gap: 12,
   },
   successIconCircle: {
     width: 64,
     height: 64,
-    borderRadius: 32,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 24,
+    marginBottom: 8,
   },
   successTitle: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 24,
-    marginBottom: 12,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 22,
+    letterSpacing: -0.3,
   },
   successDescription: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 16,
     textAlign: 'center',
     lineHeight: 24,
-    marginBottom: 8,
   },
   successEmail: {
-    fontFamily: 'Jost-Medium',
+    fontFamily: 'Jakarta-Medium',
   },
   successHint: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Regular',
     fontSize: 13,
     textAlign: 'center',
     lineHeight: 20,
-    marginBottom: 32,
+    marginBottom: 20,
   },
   backToLoginButton: {
     borderRadius: 12,
@@ -307,7 +311,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
   },
   backToLoginText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 15,
   },
 })

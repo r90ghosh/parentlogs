@@ -17,8 +17,6 @@ import { useAuth } from '@/components/providers/AuthProvider'
 import { UserPlus, Share2, Copy } from 'lucide-react-native'
 import * as Clipboard from 'expo-clipboard'
 import * as Haptics from 'expo-haptics'
-import Animated, { FadeInDown } from 'react-native-reanimated'
-import { GlassCard } from '@/components/glass'
 import { useColors } from '@/hooks/use-colors'
 
 export default function InviteScreen() {
@@ -96,90 +94,75 @@ export default function InviteScreen() {
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
         >
-          <Animated.View
-            entering={FadeInDown.delay(200).springify().damping(12)}
-            style={styles.iconContainer}
-          >
-            <View style={[styles.iconCircle, { backgroundColor: colors.goldDim, borderColor: colors.goldGlow }]}>
+          <View style={styles.iconContainer}>
+            <View style={[styles.iconCircle, { backgroundColor: colors.goldDim }]}>
               <UserPlus size={28} color={colors.gold} />
             </View>
-          </Animated.View>
+          </View>
 
-          <Animated.View
-            entering={FadeInDown.delay(400).springify().damping(12)}
-          >
-            <Text style={[styles.step, { color: colors.copper }]}>Step 3 of 4</Text>
-            <Text style={[styles.title, { color: colors.textPrimary }]}>Invite your partner</Text>
-            <Text style={[styles.subtitle, { color: colors.textMuted }]}>
+          <View>
+            <Text style={[styles.step, { color: colors.accent }]}>STEP 3 OF 4</Text>
+            <Text style={[styles.title, { color: colors.ink }]}>Invite your partner</Text>
+            <Text style={[styles.subtitle, { color: colors.muted }]}>
               One subscription covers both of you. Share access so you can track
               everything together.
             </Text>
-          </Animated.View>
+          </View>
 
           {/* Invite code card */}
           {inviteCode && (
-            <Animated.View
-              entering={FadeInDown.delay(550).springify().damping(12)}
-            >
-              <GlassCard style={[styles.codeCard, { borderColor: colors.goldGlow }]}>
-                <View style={[styles.codeAccent, { backgroundColor: colors.gold }]} />
-                <View style={styles.codeInner}>
-                  <Text style={[styles.codeLabel, { color: colors.textMuted }]}>Your family invite code</Text>
-                  <View style={styles.codeRow}>
-                    <Text style={[styles.codeText, { color: colors.gold }]}>{inviteCode}</Text>
-                    <Pressable onPress={handleCopyCode} style={[styles.copyButton, { backgroundColor: colors.goldDim, borderColor: colors.goldGlow }]}>
-                      <Copy size={16} color={codeCopied ? colors.sage : colors.gold} />
-                      <Text style={[styles.copyText, { color: colors.gold }, codeCopied && { color: colors.sage }]}>
-                        {codeCopied ? 'Copied' : 'Copy'}
-                      </Text>
-                    </Pressable>
-                  </View>
+            <View style={[styles.codeCard, { backgroundColor: colors.card, borderColor: colors.line }]}>
+              <View style={[styles.codeAccent, { backgroundColor: colors.gold }]} />
+              <View style={styles.codeInner}>
+                <Text style={[styles.codeLabel, { color: colors.muted }]}>Your family invite code</Text>
+                <View style={styles.codeRow}>
+                  <Text style={[styles.codeText, { color: colors.gold }]}>{inviteCode}</Text>
+                  <Pressable onPress={handleCopyCode} style={[styles.copyButton, { backgroundColor: colors.goldDim, borderColor: colors.line }]}>
+                    <Copy size={16} color={codeCopied ? colors.sage : colors.gold} />
+                    <Text style={[styles.copyText, { color: codeCopied ? colors.sage : colors.gold }]}>
+                      {codeCopied ? 'Copied' : 'Copy'}
+                    </Text>
+                  </Pressable>
                 </View>
-              </GlassCard>
-            </Animated.View>
+              </View>
+            </View>
           )}
 
           {/* Email input */}
-          <Animated.View
-            entering={FadeInDown.delay(650).springify().damping(12)}
-            style={styles.form}
-          >
+          <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.textSecondary }]}>Partner's email (optional)</Text>
+              <Text style={[styles.label, { color: colors.muted }]}>Partner's email (optional)</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.card, borderColor: colors.border, color: colors.textSecondary }]}
+                style={[styles.input, { backgroundColor: colors.bg, borderColor: colors.line, color: colors.ink }]}
                 value={email}
                 onChangeText={setEmail}
                 placeholder="partner@email.com"
-                placeholderTextColor={colors.textDim}
+                placeholderTextColor={colors.faint}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
               />
             </View>
-          </Animated.View>
+          </View>
 
           {/* Actions */}
-          <Animated.View
-            entering={FadeInDown.delay(800).springify().damping(12)}
-            style={styles.actions}
-          >
+          <View style={styles.actions}>
             <Pressable
               onPress={handleSendEmail}
               disabled={isSending}
               style={({ pressed }) => [
                 styles.sendButton,
-                { backgroundColor: colors.copper },
+                { backgroundColor: colors.accent },
                 pressed && styles.buttonPressed,
                 isSending && styles.buttonDisabled,
               ]}
             >
               {isSending ? (
-                <ActivityIndicator color={colors.textPrimary} />
+                <ActivityIndicator color="#fff" />
               ) : (
                 <>
-                  <Share2 size={18} color={colors.textPrimary} />
-                  <Text style={[styles.sendButtonText, { color: colors.textPrimary }]}>Share Invite</Text>
+                  <Share2 size={18} color="#fff" />
+                  <Text style={styles.sendButtonText}>Share Invite</Text>
                 </>
               )}
             </Pressable>
@@ -188,11 +171,11 @@ export default function InviteScreen() {
               onPress={handleShareInvite}
               style={({ pressed }) => [
                 styles.shareSystemButton,
-                { backgroundColor: colors.goldDim, borderColor: colors.goldGlow },
+                { backgroundColor: colors.card, borderColor: colors.line },
                 pressed && styles.buttonPressed,
               ]}
             >
-              <Text style={[styles.shareSystemText, { color: colors.gold }]}>Share via other apps</Text>
+              <Text style={[styles.shareSystemText, { color: colors.ink }]}>Share via other apps</Text>
             </Pressable>
 
             <Pressable
@@ -202,9 +185,9 @@ export default function InviteScreen() {
                 pressed && styles.buttonPressed,
               ]}
             >
-              <Text style={[styles.skipText, { color: colors.textMuted }]}>Skip for now</Text>
+              <Text style={[styles.skipText, { color: colors.muted }]}>Skip for now</Text>
             </Pressable>
-          </Animated.View>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -229,52 +212,53 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   iconCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    borderWidth: 1,
+    width: 60,
+    height: 60,
+    borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
   },
   step: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 13,
-    marginBottom: 12,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 11,
+    marginBottom: 14,
     textTransform: 'uppercase',
-    letterSpacing: 1.5,
+    letterSpacing: 1.6,
     textAlign: 'center',
   },
   title: {
-    fontFamily: 'PlayfairDisplay-Bold',
-    fontSize: 28,
+    fontFamily: 'Jakarta-ExtraBold',
+    fontSize: 26,
     textAlign: 'center',
     marginBottom: 8,
+    letterSpacing: -0.4,
   },
   subtitle: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Regular',
+    fontSize: 15,
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: 22,
   },
 
   // Invite code card
   codeCard: {
     overflow: 'hidden',
     flexDirection: 'row',
-    padding: 0,
+    borderRadius: 16,
+    borderWidth: 1,
     marginTop: 28,
   },
   codeAccent: {
     width: 3,
-    borderTopLeftRadius: 12,
-    borderBottomLeftRadius: 12,
+    borderTopLeftRadius: 16,
+    borderBottomLeftRadius: 16,
   },
   codeInner: {
     flex: 1,
     padding: 16,
   },
   codeLabel: {
-    fontFamily: 'Karla-Regular',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 12,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
@@ -286,8 +270,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   codeText: {
-    fontFamily: 'Jost-SemiBold',
-    fontSize: 22,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 20,
     letterSpacing: 2,
   },
   copyButton: {
@@ -300,7 +284,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   copyText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 13,
   },
 
@@ -309,37 +293,38 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   inputGroup: {
-    gap: 8,
+    gap: 6,
   },
   label: {
-    fontFamily: 'Karla-Medium',
-    fontSize: 14,
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 13,
   },
   input: {
+    fontFamily: 'Jakarta-Medium',
+    fontSize: 15,
     borderRadius: 12,
     borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
   },
 
   // Actions
   actions: {
-    marginTop: 32,
-    gap: 12,
+    marginTop: 28,
+    gap: 10,
   },
   sendButton: {
     borderRadius: 12,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     gap: 10,
   },
   sendButtonText: {
-    fontFamily: 'Karla-SemiBold',
-    fontSize: 16,
+    fontFamily: 'Jakarta-Bold',
+    fontSize: 15,
+    color: '#fff',
   },
   shareSystemButton: {
     borderWidth: 1,
@@ -348,7 +333,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   shareSystemText: {
-    fontFamily: 'Karla-SemiBold',
+    fontFamily: 'Jakarta-SemiBold',
     fontSize: 15,
   },
   skipButton: {
@@ -356,7 +341,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   skipText: {
-    fontFamily: 'Karla-Medium',
+    fontFamily: 'Jakarta-Medium',
     fontSize: 15,
   },
   buttonPressed: {
