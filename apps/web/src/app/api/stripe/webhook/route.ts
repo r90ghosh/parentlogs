@@ -80,6 +80,13 @@ export async function POST(request: NextRequest) {
         break
       }
 
+      case 'customer.subscription.trial_will_end': {
+        // Stripe fires this ~3 days before a trial converts to a paid charge.
+        const subscription = event.data.object as Stripe.Subscription
+        await handleTrialWillEnd(subscription)
+        break
+      }
+
       case 'invoice.payment_succeeded': {
         const invoice = event.data.object as Stripe.Invoice
         await handlePaymentSucceeded(invoice)
@@ -247,12 +254,45 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
       .neq('id', userId) // Don't double-update the subscriber
   }
 
-  const isNewSubscription = subscription.status === 'active'
-    && tier === 'premium'
-    && (Date.now() / 1000 - subscription.created) < 300
-  if (isNewSubscription) {
+  const isNew = tier === 'premium' && (Date.now() / 1000 - subscription.created) < 300
+  if (isNew && subscription.status === 'trialing') {
+    const planLabel = subscription.metadata?.plan
+    triggerEmail('trial_started', userId, {
+      plan: planLabel,
+      trial_days: 30,
+      price_label: priceLabelForPlan(planLabel),
+    }).catch((err) => console.error('Email trigger failed:', err))
+  } else if (isNew && subscription.status === 'active') {
     triggerEmail('subscription_confirmed', userId, { plan: 'premium' }).catch((err) => console.error('Email trigger failed:', err))
   }
+}
+
+// Maps a checkout plan key to a human price label for trial emails.
+function priceLabelForPlan(plan?: string | null): string {
+  if (plan === 'yearly') return '$39.99/year'
+  if (plan === 'monthly') return '$4.99/month'
+  return 'your plan'
+}
+
+async function handleTrialWillEnd(subscription: Stripe.Subscription) {
+  const customerId = subscription.customer as string
+
+  const { data: subRecord } = await getSupabaseAdmin()
+    .from('subscriptions')
+    .select('user_id')
+    .eq('stripe_customer_id', customerId)
+    .single()
+
+  if (!subRecord) return
+
+  const trialEnd = subscription.trial_end ?? Math.floor(Date.now() / 1000)
+  const daysRemaining = Math.max(1, Math.ceil((trialEnd - Date.now() / 1000) / (60 * 60 * 24)))
+  const planLabel = subscription.metadata?.plan
+
+  triggerEmail('trial_ending', subRecord.user_id, {
+    days_remaining: daysRemaining,
+    price_label: priceLabelForPlan(planLabel),
+  }).catch((err) => console.error('Email trigger failed:', err))
 }
 
 async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {

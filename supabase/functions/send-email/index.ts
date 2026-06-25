@@ -45,6 +45,8 @@ const TRANSACTIONAL_TYPES = new Set([
   "partner_joined",
   "subscription_confirmed",
   "subscription_expiring",
+  "trial_started",
+  "trial_ending",
   "payment_failed",
 ]);
 
@@ -170,6 +172,10 @@ function generateEmail(
       return subscriptionConfirmedEmail(firstName, data.plan as string);
     case "subscription_expiring":
       return subscriptionExpiringEmail(firstName, data.days_remaining as number);
+    case "trial_started":
+      return trialStartedEmail(firstName, data.trial_days as number, data.price_label as string);
+    case "trial_ending":
+      return trialEndingEmail(firstName, data.days_remaining as number, data.price_label as string);
     case "payment_failed":
       return paymentFailedEmail(firstName);
     case "weekly_briefing":
@@ -281,6 +287,55 @@ function subscriptionExpiringEmail(firstName: string, daysRemaining?: number): E
       </p>
       ${ctaButton("Keep full access", `${APP_URL}/upgrade`)}`,
       `Your premium access expires in ${days} days.`
+    ),
+  };
+}
+
+function trialStartedEmail(firstName: string, trialDays?: number, priceLabel?: string): EmailContent {
+  const days = trialDays ?? 30;
+  const durationLabel = days >= 28 && days <= 31 ? "1 month" : `${days} days`;
+  const afterLine = priceLabel && priceLabel !== "your plan"
+    ? `After your trial, your subscription continues at ${priceLabel} — cancel anytime before then and you won't be charged.`
+    : `Cancel anytime before your trial ends and you won't be charged.`;
+  return {
+    subject: "Your free trial is active",
+    html: baseTemplate(
+      `<h1 style="${h1Style}">You're in, ${firstName}.</h1>
+      <p style="${pStyle}">
+        Your ${durationLabel} free trial is active — your whole family has full Premium access,
+        no charge today. Here's what's unlocked:
+      </p>
+      <ul style="${pStyle} padding-left: 20px;">
+        <li style="margin-bottom: 8px;">Unlimited push notifications</li>
+        <li style="margin-bottom: 8px;">Full weekly briefings (every week, not just 4)</li>
+        <li style="margin-bottom: 8px;">Complete task library across all stages</li>
+        <li style="margin-bottom: 8px;">Budget planner with pricing data</li>
+      </ul>
+      <p style="${pStyle}">${afterLine}</p>
+      ${ctaButton("Start exploring", `${APP_URL}/dashboard`)}`,
+      `Your ${durationLabel} free trial is active.`
+    ),
+  };
+}
+
+function trialEndingEmail(firstName: string, daysRemaining?: number, priceLabel?: string): EmailContent {
+  const days = daysRemaining ?? 3;
+  const priceLine = priceLabel && priceLabel !== "your plan"
+    ? `your subscription begins at ${priceLabel}`
+    : "your subscription begins";
+  return {
+    subject: `Your free trial ends in ${days} day${days !== 1 ? "s" : ""}`,
+    html: baseTemplate(
+      `<h1 style="${h1Style}">Heads up, ${firstName}.</h1>
+      <p style="${pStyle}">
+        Your free trial ends in ${days} day${days !== 1 ? "s" : ""}, and ${priceLine}.
+        If The Dad Center is helping, there's nothing to do — full access just continues.
+      </p>
+      <p style="${pStyle}">
+        Not feeling it? Cancel before the trial ends and you won't be charged.
+      </p>
+      ${ctaButton("Manage subscription", `${APP_URL}/settings/subscription`)}`,
+      `Your free trial ends in ${days} days.`
     ),
   };
 }

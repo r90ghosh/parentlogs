@@ -124,6 +124,7 @@ function UpgradeContent() {
             <span className="text-[32px] font-extrabold text-ink">$4.99</span>
             <span className="text-[14px] text-mute">/mo</span>
           </div>
+          <p className="mt-2 text-[13px] font-bold text-[--sage]">1 month free trial</p>
           <ul className="mt-5 space-y-2.5">
             <li className="flex items-center gap-2 text-[15px] text-ink2">
               <Check className="h-4 w-4 flex-none text-[--sage]" />
@@ -157,7 +158,8 @@ function UpgradeContent() {
             <span className="text-[32px] font-extrabold text-ink">$39.99</span>
             <span className="text-[14px] text-mute">/yr</span>
           </div>
-          <p className="mt-2 text-[13px] font-bold text-clay-ink">Just $3.33/mo — Save 33%</p>
+          <p className="mt-2 text-[13px] font-bold text-[--sage]">1 month free trial</p>
+          <p className="mt-1 text-[13px] font-bold text-clay-ink">Just $3.33/mo — Save 33%</p>
           <ul className="mt-5 space-y-2.5">
             <li className="flex items-center gap-2 text-[15px] text-ink2">
               <Check className="h-4 w-4 flex-none text-[--sage]" />
@@ -221,10 +223,15 @@ function UpgradeContent() {
               Processing...
             </>
           ) : (
-            <>Get {selectedPlan === 'lifetime' ? 'Lifetime' : 'Premium'} access</>
+            <>{selectedPlan === 'lifetime' ? 'Get Lifetime access' : 'Start 1-month free trial'}</>
           )}
         </button>
-        <p className="mt-3 text-[13px] text-mute">Secure payment powered by Stripe</p>
+        {selectedPlan !== 'lifetime' && (
+          <p className="mt-3 text-[13px] font-bold text-clay-ink">
+            1 month free, then {selectedPlan === 'yearly' ? '$39.99/yr' : '$4.99/mo'}. Cancel anytime.
+          </p>
+        )}
+        <p className="mt-1 text-[13px] text-mute">Secure payment powered by Stripe</p>
       </div>
 
       {/* Feature Comparison */}
@@ -265,7 +272,7 @@ function UpgradeContent() {
       {/* Trust signals */}
       <div className="mt-10 space-y-1.5 text-center text-[13px] text-mute">
         <p>Questions? Contact us at info@thedadcenter.com</p>
-        <p>Free for 30 days — no credit card needed</p>
+        <p>Cancel anytime before your 1-month trial ends and you won&apos;t be charged</p>
       </div>
     </div>
   )

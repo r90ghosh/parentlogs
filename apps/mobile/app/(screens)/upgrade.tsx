@@ -94,6 +94,18 @@ function getPackageForPlan(
   )
 }
 
+// Returns a human label like "1 month" / "2 weeks" when the package carries a
+// FREE introductory offer (price === 0), otherwise null. The trial is configured
+// as a "Free Trial" Introductory Offer in App Store Connect — this just reflects
+// whatever Apple/RevenueCat reports, so the UI is correct whether or not it's set up.
+function getFreeTrialLabel(pkg: PurchasesPackage | null): string | null {
+  const intro = pkg?.product.introPrice
+  if (!intro || intro.price !== 0) return null
+  const n = intro.periodNumberOfUnits
+  const unit = (intro.periodUnit ?? 'DAY').toLowerCase()
+  return `${n} ${unit}${n > 1 ? 's' : ''}`
+}
+
 export default function UpgradeScreen() {
   const insets = useSafeAreaInsets()
   const router = useRouter()
@@ -119,6 +131,10 @@ export default function UpgradeScreen() {
         }
       })
     : FALLBACK_PLANS
+
+  const selectedPkg = getPackageForPlan(currentOffering, selectedPlan)
+  const trialLabel = selectedPlan === 'lifetime' ? null : getFreeTrialLabel(selectedPkg)
+  const selectedPriceLabel = plans.find((p) => p.key === selectedPlan)?.price ?? ''
 
   async function handlePurchase() {
     const pkg = getPackageForPlan(currentOffering, selectedPlan)
@@ -294,7 +310,7 @@ export default function UpgradeScreen() {
         <Pressable
           onPress={handlePurchase}
           disabled={purchasing}
-          accessibilityLabel={purchasing ? 'Purchasing...' : `Subscribe ${selectedPlan === 'lifetime' ? 'one-time' : 'now'}`}
+          accessibilityLabel={purchasing ? 'Purchasing...' : selectedPlan === 'lifetime' ? 'Purchase one-time' : trialLabel ? 'Start free trial' : 'Subscribe now'}
           accessibilityRole="button"
           style={[
             styles.purchaseButton,
@@ -306,11 +322,19 @@ export default function UpgradeScreen() {
             <ActivityIndicator color="#fff" />
           ) : (
             <Text style={styles.purchaseText}>
-              Subscribe{' '}
-              {selectedPlan === 'lifetime' ? '(One-Time)' : 'Now'}
+              {selectedPlan === 'lifetime'
+                ? 'Purchase (One-Time)'
+                : trialLabel
+                  ? 'Start Free Trial'
+                  : 'Subscribe Now'}
             </Text>
           )}
         </Pressable>
+        {trialLabel && (
+          <Text style={[styles.trialNote, { color: colors.accentInk }]}>
+            {`${trialLabel} free, then ${selectedPriceLabel}. Cancel anytime.`}
+          </Text>
+        )}
 
         {/* Restore + Legal */}
         <Pressable
@@ -330,9 +354,10 @@ export default function UpgradeScreen() {
           )}
         </Pressable>
         <Text style={[styles.legalText, { color: colors.faint }]}>
-          Payment will be charged to your{' '}
-          {Platform.OS === 'ios' ? 'Apple ID' : 'Google Play account'} at
-          confirmation of purchase. Subscription automatically renews unless
+          {trialLabel
+            ? `Your ${trialLabel} free trial starts at confirmation of purchase. After the trial, payment will be charged to your ${Platform.OS === 'ios' ? 'Apple ID' : 'Google Play account'}. `
+            : `Payment will be charged to your ${Platform.OS === 'ios' ? 'Apple ID' : 'Google Play account'} at confirmation of purchase. `}
+          Subscription automatically renews unless
           canceled at least 24 hours before the end of the current period.
           Your account will be charged for renewal within 24 hours prior to
           the end of the current period at the cost of the chosen plan. You
@@ -550,6 +575,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Jakarta-Bold',
     fontSize: 15,
     color: '#fff',
+  },
+  trialNote: {
+    fontFamily: 'Jakarta-SemiBold',
+    fontSize: 13,
+    textAlign: 'center',
+    marginTop: -6,
+    marginBottom: 10,
   },
 
   // Restore + Legal

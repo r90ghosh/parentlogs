@@ -61,6 +61,19 @@ export async function POST(request: NextRequest) {
     const config = PRICING_CONFIG[plan]
     const isLifetime = plan === 'lifetime'
 
+    // Free trial is offered only to first-time subscribers. If this customer has ever
+    // had a subscription (active, canceled, trialing, etc.), don't grant another trial —
+    // this prevents cancel-and-resubscribe trial farming. (Apple enforces this natively on iOS.)
+    let trialDays = 0
+    if (!isLifetime) {
+      const priorSubs = await stripe.subscriptions.list({
+        customer: customerId,
+        status: 'all',
+        limit: 1,
+      })
+      trialDays = priorSubs.data.length === 0 ? 30 : 0
+    }
+
     const appUrl = process.env.NEXT_PUBLIC_APP_URL
     if (!appUrl) {
       console.error('NEXT_PUBLIC_APP_URL is not set')
@@ -95,6 +108,10 @@ export async function POST(request: NextRequest) {
         plan,
       },
       subscription_data: isLifetime ? undefined : {
+        // 1-month free trial for first-time subscribers (see trialDays guard above).
+        // Card is collected upfront and charged when the trial ends unless the user
+        // cancels first. Webhook treats `trialing` status as premium.
+        ...(trialDays > 0 ? { trial_period_days: trialDays } : {}),
         metadata: {
           user_id: user.id,
           plan,

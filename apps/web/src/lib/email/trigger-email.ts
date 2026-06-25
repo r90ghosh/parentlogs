@@ -4,6 +4,8 @@ type EmailType =
   | 'partner_joined'
   | 'subscription_confirmed'
   | 'subscription_expiring'
+  | 'trial_started'
+  | 'trial_ending'
   | 'payment_failed'
   | 'weekly_briefing'
   | 'overdue_digest'

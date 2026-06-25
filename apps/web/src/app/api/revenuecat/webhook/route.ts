@@ -234,9 +234,12 @@ async function handleActiveSubscription(event: RevenueCatEvent) {
       .neq('id', userId) // Don't double-update the subscriber
   }
 
-  // Trigger confirmation email for initial purchases
+  // Trigger the right email for initial purchases: trial-start vs paid confirmation.
+  // (Apple/RevenueCat don't emit a reliable "trial will end" event, so there's no
+  // iOS equivalent of the Stripe trial_will_end reminder.)
   if (event.type === 'INITIAL_PURCHASE' || event.type === 'NON_RENEWING_PURCHASE') {
-    triggerEmail('subscription_confirmed', userId, { plan: tier }).catch((err) =>
+    const emailType = event.period_type === 'TRIAL' ? 'trial_started' : 'subscription_confirmed'
+    triggerEmail(emailType, userId, { plan: tier, trial_days: 30 }).catch((err) =>
       console.error('[RevenueCat Webhook] Email trigger failed:', err)
     )
   }
